@@ -1,0 +1,7 @@
+[Ll]ibrary/
+[Pp]enteract/
+
+# Ignore hotreloading files
+Penterac_.dll
+Penterac_.pdb
+_scene_snapshot.temp
