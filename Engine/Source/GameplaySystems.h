@@ -43,6 +43,7 @@ namespace GameplaySystems {
 
 		return nullptr;
 	}
+
 }; // namespace GameplaySystems
 
 namespace Debug {
@@ -407,6 +408,7 @@ namespace Input {
 	TESSERACT_ENGINE_API bool GetKeyCodeUp(KEYCODE keycode);
 	TESSERACT_ENGINE_API bool GetKeyCodeRepeat(KEYCODE keycode);
 	TESSERACT_ENGINE_API bool GetKeyCode(KEYCODE keycode);
+
 }; // namespace Input
 
 namespace Screen {
@@ -444,16 +446,18 @@ namespace SceneManager {
 }; // namespace SceneManager
 
 namespace Physics {
-	TESSERACT_ENGINE_API GameObject* Raycast(const float3& start, const float3& end, const int mask);
+	TESSERACT_ENGINE_API GameObject* Raycast(const float3& start, const float3& end,const int mask);
 }
 
 namespace Colors {
+
 	TESSERACT_ENGINE_API float3 Red();
 	TESSERACT_ENGINE_API float3 White();
 	TESSERACT_ENGINE_API float3 Blue();
 	TESSERACT_ENGINE_API float3 Orange();
 	TESSERACT_ENGINE_API float3 Green();
-} // namespace Colors
+
+}
 
 namespace Camera {
 	TESSERACT_ENGINE_API bool CheckObjectInsideFrustum(GameObject* gameObject);
