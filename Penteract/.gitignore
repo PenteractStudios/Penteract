@@ -1,0 +1,6 @@
+[Ll]ibrary/
+[Pp]enteract/
+[Pp]ackage/
+
+# Ignore hotreloading files
+_scene_snapshot.temp
