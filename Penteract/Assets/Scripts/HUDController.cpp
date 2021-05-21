@@ -131,8 +131,8 @@ void HUDController::UpdateHP(float currentHp, float altHp) {
         UpdateCanvasHP(onimaruHealthSecondCanvas, altHp, true);
     }
     else {
-        UpdateCanvasHP(onimaruHealthMainCanvas, altHp, false);
-        UpdateCanvasHP(fangHealthSecondCanvas, currentHp, true);
+        UpdateCanvasHP(onimaruHealthMainCanvas, currentHp, false);
+        UpdateCanvasHP(fangHealthSecondCanvas, altHp, true);
     }
 }
 
