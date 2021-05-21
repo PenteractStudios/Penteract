@@ -123,10 +123,8 @@ void PlayerController::LookAtMouse() {
 	if (camera && compCamera) {
 		float2 mousePos = Input::GetMousePositionNormalized();
 		LineSegment ray = compCamera->frustum.UnProjectLineSegment(mousePos.x, mousePos.y);
-		float3 cameraGlobalPos = camera->GetComponent<ComponentTransform>()->GetGlobalPosition();
 		Plane p = Plane(transform->GetGlobalPosition(), float3(0, 1, 0));
 		facePointDir = float3(0, 0, 0);
-		cameraGlobalPos.z = 0;
 		facePointDir = p.ClosestPoint(ray) - (transform->GetGlobalPosition());
 		Quat quat = transform->GetRotation();
 		float angle = Atan2(facePointDir.x, facePointDir.z);
