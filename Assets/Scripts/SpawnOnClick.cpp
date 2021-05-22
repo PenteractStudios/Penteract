@@ -20,7 +20,7 @@ void SpawnOnClick::Start() {
 }
 
 void SpawnOnClick::Update() {
-	if (Input::GetMouseButtonUp(0))	{
+	if (Input::GetKeyCode(Input::KEYCODE::KEY_LCTRL) && Input::GetKeyCode(Input::KEYCODE::KEY_LSHIFT) && Input::GetMouseButtonUp(0)) {
 		ResourcePrefab* prefab = GameplaySystems::GetResource<ResourcePrefab>(prefabId);
 		if (prefab != nullptr) {
 			UID prefabId = prefab->BuildPrefab(gameObject);
