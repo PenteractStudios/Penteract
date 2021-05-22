@@ -385,8 +385,12 @@ void PlayerController::Update() {
 	if (!hudControllerScript) return;
 
 	if (firstTime) {
-		hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
-		hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
+		if (fang->IsActive()) {
+			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
+		}
+		else {
+			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
+		}
 		firstTime = false;
 	}
 
