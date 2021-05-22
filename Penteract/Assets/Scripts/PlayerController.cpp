@@ -236,11 +236,13 @@ void PlayerController::SwitchCharacter() {
 			Debug::Log("Swaping to onimaru...");
 			fang->Disable();
 			onimaru->Enable();
+			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
 		}
 		else {
 			Debug::Log("Swaping to fang...");
 			onimaru->Disable();
 			fang->Enable();
+			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
 		}
 		switchCooldownRemaing = switchCooldown;
 	}
@@ -384,6 +386,7 @@ void PlayerController::Update() {
 
 	if (firstTime) {
 		hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
+		hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
 		firstTime = false;
 	}
 
