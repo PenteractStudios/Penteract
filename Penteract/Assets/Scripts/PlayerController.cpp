@@ -253,6 +253,7 @@ void PlayerController::ReceiveEvent(TesseractEvent& e) {
 		if ((fangAnimation->currentState->name == "Death" && lifePointsFang <= 0) || (onimaruAnimation->currentState->name == "Death" && lifePointsOni <= 0)) {
 			SceneManager::ChangeScene("Assets/Scenes/LoseScene.scene");
 		}
+		break;
 	}
 }
 
