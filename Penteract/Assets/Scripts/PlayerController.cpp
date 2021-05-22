@@ -248,6 +248,12 @@ void PlayerController::SwitchCharacter() {
 
 void PlayerController::ReceiveEvent(TesseractEvent& e) {
 
+	switch (e.type) {
+	case TesseractEventType::ANIMATION_FINISHED:
+		if ((fangAnimation->currentState->name == "Death" && lifePointsFang <= 0) || (onimaruAnimation->currentState->name == "Death" && lifePointsOni <= 0)) {
+			SceneManager::ChangeScene("Assets/Scenes/LoseScene.scene");
+		}
+	}
 }
 
 void PlayerController::HitDetected() {
@@ -337,6 +343,13 @@ void PlayerController::PlayAnimation(MovementDirection md, bool isFang) {
 		break;
 	}
 
+	if (lifePointsFang <= 0) {
+		animation->SendTrigger(fangAnimation->currentState->name + PlayerController::states[9]);
+	}
+	else if (lifePointsOni <= 0) {
+		animation->SendTrigger(fangAnimation->currentState->name + PlayerController::states[9]);
+	}
+
 }
 
 bool PlayerController::CanShoot() {
@@ -395,10 +408,6 @@ void PlayerController::Update() {
 		--lifePointsOni;
 		hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
 		hitTaken = false;
-	}
-
-	if (lifePointsFang <= 0 || lifePointsOni <= 0) {
-		SceneManager::ChangeScene("Assets/Scenes/LoseScene.scene");
 	}
 
 	float realDashCooldown = 1.0f - (dashCooldownRemaing / dashCooldown);
