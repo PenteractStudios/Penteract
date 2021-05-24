@@ -181,11 +181,13 @@ void PlayerController::SwitchCharacter() {
 			Debug::Log("Swaping to onimaru...");
 			fang->Disable();
 			onimaru->Enable();
+			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
 		}
 		else {
 			Debug::Log("Swaping to fang...");
 			onimaru->Disable();
 			fang->Enable();
+			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
 		}
 		switchCooldownRemaing = switchCooldown;
 		if(hudControllerScript){
@@ -423,6 +425,15 @@ void PlayerController::Update() {
 	Dash();
 	UpdatePlayerStats();
 	UpdateCameraPosition();
+	if (firstTime) {
+		if (fang->IsActive()) {
+			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
+		}
+		else {
+			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
+		}
+		firstTime = false;
+	}
 
 	MovementDirection md;
 	md = GetInputMovementDirection();
