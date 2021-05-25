@@ -110,13 +110,13 @@ void PlayerController::Start() {
 
 void PlayerController::MoveTo(MovementDirection md) {
 	float modifier = 1.0f;
-	float3 newPosition = transform->GetPosition();
+	float3 newPosition = transform->GetGlobalPosition();
 	if (Input::GetKeyCode(Input::KEYCODE::KEY_LSHIFT)) {
 		modifier = 2.0f;
 	}
 	float movementSpeed = ((fang->IsActive()) ? fangMovementSpeed : onimaruMovementSpeed);
 	newPosition += GetDirection(md) * movementSpeed * Time::GetDeltaTime() * modifier;
-	transform->SetPosition(newPosition);
+	transform->SetGlobalPosition(newPosition);
 }
 
 void PlayerController::LookAtMouse() {
@@ -411,9 +411,11 @@ void PlayerController::UpdatePlayerStats() {
 }
 
 void PlayerController::UpdateCameraPosition() {
-	cameraTransform->SetPosition(float3(transform->GetGlobalPosition().x + cameraOffsetX,
-		transform->GetGlobalPosition().y + cameraOffsetY,
-		(transform->GetGlobalPosition().z + cameraOffsetZ)));
+	float3 playerGlobalPos = transform->GetGlobalPosition();
+	cameraTransform->SetGlobalPosition(float3(
+		playerGlobalPos.x + cameraOffsetX,
+		playerGlobalPos.y + cameraOffsetY,
+		playerGlobalPos.z + cameraOffsetZ));
 }
 
 void PlayerController::Update() {
