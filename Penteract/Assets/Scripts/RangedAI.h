@@ -2,6 +2,7 @@
 
 #include "Scripting/Script.h"
 #include "AIMovement.h"
+#include "Components/ComponentAudioSource.h"
 
 class RangedAI : public Script {
 	GENERATE_BODY(RangedAI);
@@ -22,7 +23,13 @@ private:
 
 public:
 	UID playerUID = 0;
+	UID meshUID = 0;
+	UID meshUID1 = 0;
+	UID meshUID2 = 0;
 	GameObject* player = nullptr;
+	GameObject* meshObj = nullptr;
+	GameObject* meshObj1 = nullptr;
+	GameObject* meshObj2 = nullptr;
 
 	int maxMovementSpeed = 8;
 	int fallingSpeed = 30;
@@ -48,5 +55,7 @@ private:
 	int damageRecieved = 0;
 	float timeStunned = 0.0f;
 	float attackTimePool = 0.0f;
+
+	ComponentAudioSource* shootAudioSource = nullptr;
 };
 

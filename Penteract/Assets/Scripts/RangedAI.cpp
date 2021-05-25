@@ -8,6 +8,9 @@
 
 EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, meshUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
+		MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
 		MEMBER(MemberType::INT, maxMovementSpeed),
 		MEMBER(MemberType::INT, lifePoints),
 		MEMBER(MemberType::FLOAT, searchRadius),
@@ -21,6 +24,9 @@ GENERATE_BODY_IMPL(RangedAI);
 
 void RangedAI::Start() {
 	player = GameplaySystems::GetGameObject(playerUID);
+	meshObj = GameplaySystems::GetGameObject(meshUID);
+	meshObj1 = GameplaySystems::GetGameObject(meshUID1);
+	meshObj2 = GameplaySystems::GetGameObject(meshUID2);
 	animation = GetOwner().GetParent()->GetComponent<ComponentAnimation>();
 	parentTransform = GetOwner().GetParent()->GetComponent<ComponentTransform>();
 }
@@ -128,13 +134,15 @@ bool RangedAI::CharacterInSight(const GameObject* character) {
 }
 
 bool RangedAI::CharacterInRange(const GameObject* character) {
+
+	if (meshObj) return Camera::CheckObjectInsideFrustum(meshObj)&& Camera::CheckObjectInsideFrustum(meshObj1)&& Camera::CheckObjectInsideFrustum(meshObj2);
+
 	ComponentTransform* target = character->GetComponent<ComponentTransform>();
 	if (target) {
 		float3 posTarget = target->GetGlobalPosition();
 		return posTarget.Distance(parentTransform->GetGlobalPosition()) < attackRange;
 	}
 
-	return false;
 }
 
 bool RangedAI::CharacterTooClose(const GameObject* character) {
@@ -185,5 +193,31 @@ void RangedAI::ShootPlayerInRange() {
 	if (CharacterInRange(player)) {
 		Debug::Log("Shoot");
 		attackTimePool = 1.0f / attackSpeed;
+
+		if (shootAudioSource)
+			shootAudioSource->Play();
+		//if (fang->IsActive()) {
+		//	fangCompParticle->Play();
+		//} else {
+		//	onimaruCompParticle->Play();
+		//}
+
+		float3 start = parentTransform->GetPosition();
+		float3 end = parentTransform->GetGlobalRotation() * float3(0, 0, 1);
+		end.Normalize();
+		end *= attackRange;
+		int mask = static_cast<int>(MaskType::PLAYER);
+		GameObject* hitGo = Physics::Raycast(start, start + end, mask);
+		if (hitGo) {
+
+			//AIMovement* enemyScript = GET_SCRIPT(hitGo, AIMovement);
+			//if (fang->IsActive()) enemyScript->HitDetected(3);
+			//else enemyScript->HitDetected();
+
+			Debug::Log("HitGo");
+
+		}
+
+
 	}
 }
