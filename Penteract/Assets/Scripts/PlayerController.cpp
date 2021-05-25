@@ -66,7 +66,7 @@ void PlayerController::Start() {
 	if (player) {
 		transform = player->GetComponent<ComponentTransform>();
 		if (transform) {
-			initialPosition = transform->GetPosition();
+			initialPosition = transform->GetGlobalPosition();
 		}
 		shootAudioSource = player->GetComponent<ComponentAudioSource>();
 	}
@@ -137,7 +137,7 @@ void PlayerController::InitDash(MovementDirection md) {
 	if(CanDash()){
 		dashDirection = GetDirection(md);
 		dashMovementDirection = md;
-		dashDestination = transform->GetPosition();
+		dashDestination = transform->GetGlobalPosition();
 		dashDestination += dashDistance * dashDirection;
 		dashCooldownRemaing = dashCooldown;
 		dashInCooldown = true;
@@ -153,9 +153,9 @@ void PlayerController::InitDash(MovementDirection md) {
 
 void PlayerController::Dash() {
 	if (dashing) {
-		float3 newPosition = transform->GetPosition();
+		float3 newPosition = transform->GetGlobalPosition();
 		newPosition += dashSpeed * Time::GetDeltaTime() * dashDirection;
-		transform->SetPosition(newPosition);
+		transform->SetGlobalPosition(newPosition);
 		if (std::abs(std::abs(newPosition.x) - std::abs(dashDestination.x)) < dashError &&
 			std::abs(std::abs(newPosition.z) - std::abs(dashDestination.z)) < dashError) {
 			dashing = false;
@@ -218,7 +218,7 @@ void PlayerController::Shoot() {
 			onimaruCompParticle->Play();
 		}
 
-		float3 start = transform->GetPosition();
+		float3 start = transform->GetGlobalPosition(); //(boundingBox->GetLocalMaxPointAABB() + boundingBox->GetLocalMinPointAABB()) / 2;
 		float3 end = transform->GetGlobalRotation() * float3(0, 0, 1);
 		end.Normalize();
 		end *= distanceRayCast;
