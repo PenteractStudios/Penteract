@@ -28,13 +28,12 @@ public:
 
 	void Start() override;
 	void Update() override;
-	void ReceiveEvent(TesseractEvent& e) override;
 
 	void HitDetected();
 
 public:
 
-	GameObject* gameObject = nullptr;
+	GameObject* player = nullptr;
 	GameObject* camera = nullptr;
 	GameObject* fang = nullptr;
 	GameObject* onimaru = nullptr;
@@ -78,7 +77,7 @@ public:
 
 private:
 
-	void PlayAnimation(MovementDirection md, bool isFang);
+	void PlayAnimation(MovementDirection md);
 	void MoveTo(MovementDirection md);
 	void InitDash(MovementDirection md);
 	void Dash();
@@ -86,6 +85,8 @@ private:
 	void CheckCoolDowns();
 	void SwitchCharacter();
 	void Shoot();
+	void UpdatePlayerStats();
+	void UpdateCameraPosition();
 	bool CanDash();
 	bool CanSwitch();
 	bool CanShoot();
@@ -114,7 +115,7 @@ private:
 	MovementDirection dashMovementDirection = MovementDirection::NONE;
 	ComponentTransform* transform = nullptr;
 	ComponentCamera* compCamera = nullptr;
-
+	ComponentTransform* cameraTransform = nullptr;
 	//Animation
 	ComponentAnimation* fangAnimation = nullptr;
 	State* fangCurrentState = nullptr;
