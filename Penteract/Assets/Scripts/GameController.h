@@ -8,6 +8,7 @@ class GameObject;
 class ComponentCamera;
 class ComponentTransform;
 
+struct TesseractEvent;
 
 class GameController : public Script {
 	GENERATE_BODY(GameController);
@@ -16,6 +17,7 @@ public:
 
 	void Start() override;
 	void Update() override;
+	void ReceiveEvent(TesseractEvent& e) override;
 
 	void Rotate(float2 mouseMotion, Frustum* frustum, ComponentTransform* transform);
 
