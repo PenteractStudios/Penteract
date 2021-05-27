@@ -1,5 +1,6 @@
 #include "PlayerController.h"
 
+#include "Resources/ResourcePrefab.h"
 #include "GameObject.h"
 #include "GameplaySystems.h"
 #include "TesseractEvent.h"
@@ -17,7 +18,6 @@
 #include <string>
 
 #define PI 3.14159
-#define AUDIOSOURCE_NULL_MSG "shootAudioSource is NULL"
 
 EXPOSE_MEMBERS(PlayerController) {
 	// Add members here to expose them to the engine. Example:
@@ -51,11 +51,11 @@ EXPOSE_MEMBERS(PlayerController) {
 GENERATE_BODY_IMPL(PlayerController);
 
 void PlayerController::Start() {
-	player = GameplaySystems::GetGameObject(mainNodeUID);
+	gameObject = GameplaySystems::GetGameObject(mainNodeUID);
 	fang = GameplaySystems::GetGameObject(fangUID);
+	fangGun = GameplaySystems::GetGameObject(fangGunUID);
 	onimaru = GameplaySystems::GetGameObject(onimaruUID);
 	camera = GameplaySystems::GetGameObject(cameraUID);
-	fangGun = GameplaySystems::GetGameObject(fangGunUID);
 
 	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
 	if (canvasGO) {
@@ -63,28 +63,25 @@ void PlayerController::Start() {
 	}
 
 	//animation
-	fangParticle = GameplaySystems::GetGameObject(fangParticleUID);
 	onimaruParticle = GameplaySystems::GetGameObject(onimaruParticleUID);
 
-	if (player) {
-		transform = player->GetComponent<ComponentTransform>();
-		if (transform) {
-			initialPosition = transform->GetGlobalPosition();
-		}
-		shootAudioSource = player->GetComponent<ComponentAudioSource>();
+	if (gameObject) {
+		transform = gameObject->GetComponent<ComponentTransform>();
+		shootAudioSource = gameObject->GetComponent<ComponentAudioSource>();
 	}
 	if (camera) {
 		compCamera = camera->GetComponent<ComponentCamera>();
-		if (compCamera) {
-			GameplaySystems::SetRenderCamera(compCamera);
-		}
-		cameraTransform = camera->GetComponent<ComponentTransform>();
+		if (compCamera) GameplaySystems::SetRenderCamera(compCamera);
+	}
+	if (transform) {
+		initialPosition = transform->GetPosition();
 	}
 	if (fang) {
 		fang->Enable();
 		fangAnimation = fang->GetComponent<ComponentAnimation>();
 		if (fangAnimation) {
 			fangCurrentState = fangAnimation->GetCurrentState();
+			fangAnimation->SendTrigger("RunBackwardHurt");
 		}
 	}
 	if (onimaru) {
@@ -92,11 +89,10 @@ void PlayerController::Start() {
 		onimaruAnimation = onimaru->GetComponent<ComponentAnimation>();
 		if (onimaruAnimation) {
 			onimaruCurrentState = onimaruAnimation->GetCurrentState();
+			onimaruAnimation->SendTrigger("");
 		}
 	}
-	if (fangParticle) {
-		fangCompParticle = fangParticle->GetComponent<ComponentParticleSystem>();
-	}
+
 	if (onimaruParticle) {
 		onimaruCompParticle = onimaruParticle->GetComponent<ComponentParticleSystem>();
 	}
@@ -112,53 +108,82 @@ void PlayerController::Start() {
 }
 
 void PlayerController::MoveTo(MovementDirection md) {
-	float modifier = 1.0f;
-	float3 newPosition = transform->GetGlobalPosition();
-	if (Input::GetKeyCode(Input::KEYCODE::KEY_LSHIFT)) {
-		modifier = 2.0f;
+	if (transform) {
+		float modifier = 1.0f;
+		float3 newPosition = transform->GetPosition();
+		if (Input::GetKeyCode(Input::KEYCODE::KEY_LSHIFT)) {
+			modifier = 2.0f;
+		}
+		float movementSpeed = ((fang->IsActive()) ? fangMovementSpeed : onimaruMovementSpeed);
+		newPosition += GetDirection(md) * movementSpeed * Time::GetDeltaTime() * modifier;
+		transform->SetPosition(newPosition);
 	}
-	float movementSpeed = ((fang->IsActive()) ? fangMovementSpeed : onimaruMovementSpeed);
-	newPosition += GetDirection(md) * movementSpeed * Time::GetDeltaTime() * modifier;
-	transform->SetGlobalPosition(newPosition);
 }
 
 void PlayerController::LookAtMouse() {
-	if (camera && compCamera) {
-		float2 mousePos = Input::GetMousePositionNormalized();
-		LineSegment ray = compCamera->frustum.UnProjectLineSegment(mousePos.x, mousePos.y);
-		Plane p = Plane(transform->GetGlobalPosition(), float3(0, 1, 0));
-		facePointDir = float3(0, 0, 0);
-		facePointDir = p.ClosestPoint(ray) - (transform->GetGlobalPosition());
-		Quat quat = transform->GetRotation();
-		float angle = Atan2(facePointDir.x, facePointDir.z);
-		Quat rotation = quat.RotateAxisAngle(float3(0, 1, 0), angle);
-		transform->SetRotation(rotation);
+	float2 mousePos = Input::GetMousePositionNormalized();
+	LineSegment ray = compCamera->frustum.UnProjectLineSegment(mousePos.x, mousePos.y);
+	float3 cameraGlobalPos = camera->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	Plane p = Plane(transform->GetGlobalPosition(), float3(0, 1, 0));
+	facePointDir = float3(0, 0, 0);
+	cameraGlobalPos.z = 0;
+	facePointDir = p.ClosestPoint(ray) - (transform->GetGlobalPosition());
+	Quat quat = transform->GetRotation();
+	float angle = Atan2(facePointDir.x, facePointDir.z);
+	Quat rotation = quat.RotateAxisAngle(float3(0, 1, 0), angle);
+	transform->SetRotation(rotation);
+}
+
+float3 PlayerController::GetDirection(MovementDirection md) const {
+	float3 direction = float3(0, 0, 0);
+	switch (md)
+	{
+	case MovementDirection::UP:
+		direction = float3(0, 0, -1);
+		break;
+	case MovementDirection::UP_LEFT:
+		direction = float3(-1, 0, -1);
+		break;
+	case MovementDirection::UP_RIGHT:
+		direction = float3(1, 0, -1);
+		break;
+	case MovementDirection::DOWN:
+		direction = float3(0, 0, 1);
+		break;
+	case MovementDirection::DOWN_LEFT:
+		direction = float3(-1, 0, 1);
+		break;
+	case MovementDirection::DOWN_RIGHT:
+		direction = float3(1, 0, 1);
+		break;
+	case MovementDirection::RIGHT:
+		direction = float3(1, 0, 0);
+		break;
+	case MovementDirection::LEFT:
+		direction = float3(-1, 0, 0);
+		break;
+	default:
+		break;
 	}
+	return direction;
 }
 
 void PlayerController::InitDash(MovementDirection md) {
-	if(CanDash()){
-		dashDirection = GetDirection(md);
-		dashMovementDirection = md;
-		dashDestination = transform->GetGlobalPosition();
-		dashDestination += dashDistance * dashDirection;
-		dashCooldownRemaing = dashCooldown;
-		dashInCooldown = true;
-		dashing = true;
-		if (shootAudioSource) {
-			dashAudioSource->Play();
-		}
-		else {
-			Debug::Log(AUDIOSOURCE_NULL_MSG);
-		}
-	}
+	dashDirection = GetDirection(md);
+	dashMovementDirection = md;
+	dashDestination = transform->GetPosition();
+	dashDestination += dashDistance * dashDirection;
+	dashCooldownRemaing = dashCooldown;
+	dashInCooldown = true;
+	dashing = true;
+	dashAudioSource->Play();
 }
 
 void PlayerController::Dash() {
 	if (dashing) {
-		float3 newPosition = transform->GetGlobalPosition();
+		float3 newPosition = transform->GetPosition();
 		newPosition += dashSpeed * Time::GetDeltaTime() * dashDirection;
-		transform->SetGlobalPosition(newPosition);
+		transform->SetPosition(newPosition);
 		if (std::abs(std::abs(newPosition.x) - std::abs(dashDestination.x)) < dashError &&
 			std::abs(std::abs(newPosition.z) - std::abs(dashDestination.z)) < dashError) {
 			dashing = false;
@@ -170,77 +195,7 @@ bool PlayerController::CanDash() {
 	return !dashing && !dashInCooldown && fang->IsActive();
 }
 
-bool PlayerController::CanSwitch() {
-	return !switchInCooldown;
-}
-
-void PlayerController::SwitchCharacter() {
-	if (!fang) return;
-	if (!onimaru) return;
-	if (CanSwitch()) {
-		switchInCooldown = true;
-		switchAudioSource->Play();
-		if (fang->IsActive()) {
-			Debug::Log("Swaping to onimaru...");
-			fang->Disable();
-			onimaru->Enable();
-			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
-		}
-		else {
-			Debug::Log("Swaping to fang...");
-			onimaru->Disable();
-			fang->Enable();
-			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
-		}
-		switchCooldownRemaing = switchCooldown;
-		if(hudControllerScript){
-			hudControllerScript->ChangePlayerHUD();
-		}
-	}
-}
-
-bool PlayerController::CanShoot() {
-	return !shooting && ((fang && fangCompParticle) || (onimaru && onimaruCompParticle));
-}
-
-void PlayerController::Shoot() {
-	if (CanShoot()) {
-		if (shootAudioSource) {
-			shootAudioSource->Play();
-		}
-		else {
-			Debug::Log(AUDIOSOURCE_NULL_MSG);
-		}
-
-		shootCooldownRemaing = shootCooldown;
-		shooting = true;
-		if (fang->IsActive()) {
-			fangCompParticle->Play();
-		}
-		else {
-			onimaruCompParticle->Play();
-		}
-
-		float3 start = transform->GetGlobalPosition(); //(boundingBox->GetLocalMaxPointAABB() + boundingBox->GetLocalMinPointAABB()) / 2;
-		float3 end = transform->GetGlobalRotation() * float3(0, 0, 1);
-		end.Normalize();
-		end *= distanceRayCast;
-		int mask = static_cast<int>(MaskType::ENEMY);
-		GameObject* hitGo = Physics::Raycast(start, start + end, mask);
-		if (hitGo) {
-			AIMovement* enemyScript = GET_SCRIPT(hitGo, AIMovement);
-			if (fang->IsActive()) enemyScript->HitDetected(3);
-			else enemyScript->HitDetected();
-		}
-	}
-}
-
-void PlayerController::HitDetected() {
-	hitTaken = true;
-}
-
 void PlayerController::CheckCoolDowns() {
-
 	if (dashCooldownRemaing <= 0.f) {
 		dashCooldownRemaing = 0.f;
 		dashInCooldown = false;
@@ -267,6 +222,37 @@ void PlayerController::CheckCoolDowns() {
 	}
 }
 
+bool PlayerController::CanSwitch() {
+	return !switchInCooldown;
+}
+
+void PlayerController::SwitchCharacter() {
+	if (!fang) return;
+	if (!onimaru) return;
+	if (CanSwitch()) {
+		switchInCooldown = true;
+		switchAudioSource->Play();
+		if (fang->IsActive()) {
+			Debug::Log("Swaping to onimaru...");
+			fang->Disable();
+			onimaru->Enable();
+		}
+		else {
+			Debug::Log("Swaping to fang...");
+			onimaru->Disable();
+			fang->Enable();
+		}
+		switchCooldownRemaing = switchCooldown;
+	}
+}
+
+void PlayerController::ReceiveEvent(TesseractEvent& e) {
+}
+
+void PlayerController::HitDetected() {
+	hitTaken = true;
+}
+
 MovementDirection PlayerController::GetInputMovementDirection() const {
 	MovementDirection md = MovementDirection::NONE;
 	if (Input::GetKeyCode(Input::KEYCODE::KEY_W)) {
@@ -291,40 +277,6 @@ MovementDirection PlayerController::GetInputMovementDirection() const {
 	return md;
 }
 
-float3 PlayerController::GetDirection(MovementDirection md) const {
-	float3 direction = float3(0, 0, 0);
-	switch (md)
-	{
-	case MovementDirection::UP:
-		direction = float3(0, 0, -1);
-		break;
-	case MovementDirection::UP_LEFT:
-		direction = float3(-0.5, 0, -0.5);
-		break;
-	case MovementDirection::UP_RIGHT:
-		direction = float3(0.5, 0, -0.5);
-		break;
-	case MovementDirection::DOWN:
-		direction = float3(0, 0, 1);
-		break;
-	case MovementDirection::DOWN_LEFT:
-		direction = float3(-0.5, 0, 0.5);
-		break;
-	case MovementDirection::DOWN_RIGHT:
-		direction = float3(0.5, 0, 0.5);
-		break;
-	case MovementDirection::RIGHT:
-		direction = float3(1, 0, 0);
-		break;
-	case MovementDirection::LEFT:
-		direction = float3(-1, 0, 0);
-		break;
-	default:
-		break;
-	}
-	return direction;
-}
-
 int PlayerController::GetMouseDirectionState(MovementDirection input) {
 	float3 inputDirection = GetDirection(input);
 	float dot = Dot(inputDirection.Normalized(), facePointDir.Normalized());
@@ -342,14 +294,14 @@ int PlayerController::GetMouseDirectionState(MovementDirection input) {
 	else {
 		return 3; //RunLeft
 	}
+	return 0;
 }
 
-void PlayerController::PlayAnimation(MovementDirection md) {
-
+void PlayerController::PlayAnimation(MovementDirection md, bool isFang) {
 	ComponentAnimation* animation = nullptr;
 	State* currentState = nullptr;
 
-	if (fang->IsActive()) {
+	if (isFang) {
 		animation = fangAnimation;
 		currentState = fangCurrentState;
 	}
@@ -387,77 +339,103 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 	}
 }
 
-void PlayerController::UpdatePlayerStats() {
-	if (hudControllerScript){
-		if (firstTime) {
-			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
-			firstTime = false;
-		}
-
-		if (hitTaken && fang->IsActive() && lifePointsFang > 0) {
-			--lifePointsFang;
-			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
-			hitTaken = false;
-		}
-		else if (hitTaken && onimaru->IsActive() && lifePointsOni > 0) {
-			--lifePointsOni;
-			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
-			hitTaken = false;
-		}
-
-		float realDashCooldown = 1.0f - (dashCooldownRemaing / dashCooldown);
-		float realSwitchCooldown = 1.0f - (switchCooldownRemaing / switchCooldown);
-		hudControllerScript->UpdateCooldowns(0.0f, 0.0f, 0.0f, realDashCooldown, 0.0f, 0.0f, realSwitchCooldown);
-
-		if (lifePointsFang <= 0 || lifePointsOni <= 0) {
-			SceneManager::ChangeScene("Assets/Scenes/LoseScene.scene");
-		}
-	}
+bool PlayerController::CanShoot() {
+	return !shooting;
 }
 
-void PlayerController::UpdateCameraPosition() {
-	float3 playerGlobalPos = transform->GetGlobalPosition();
-	cameraTransform->SetGlobalPosition(float3(
-		playerGlobalPos.x + cameraOffsetX,
-		playerGlobalPos.y + cameraOffsetY,
-		playerGlobalPos.z + cameraOffsetZ));
+void PlayerController::Shoot() {
+	ComponentTransform* transform = GetOwner().GetComponent<ComponentTransform>();
+	shootAudioSource->Play();
+	shootCooldownRemaing = shootCooldown;
+	shooting = true;
+	if (fang->IsActive()) {
+		//ResourcePrefab* prefab = GameplaySystems::GetResource<ResourcePrefab>(fangTrailUID);
+		//FangGuntransform = fangGun->GetComponent<ComponentTransform>();
+		//if (prefab != nullptr) {
+			//GameplaySystems::Instantiate(prefab, FangGuntransform->GetGlobalPosition(), transform->GetGlobalRotation());
+			//float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
+			//GameObject* secondTrail = GameplaySystems::Instantiate(prefab, FangGuntransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
+			//fangCompParticle->Play();
+		//}
+	}
+	else {
+		onimaruCompParticle->Play();
+	}
+
+	float3 start = transform->GetPosition();
+	float3 end = transform->GetGlobalRotation() * float3(0, 0, 1);
+	end.Normalize();
+	end *= distanceRayCast;
+	int mask = static_cast<int>(MaskType::ENEMY);
+	GameObject* hitGo = Physics::Raycast(start, start + end, mask);
+	if (hitGo) {
+		AIMovement* enemyScript = GET_SCRIPT(hitGo, AIMovement);
+		if (fang->IsActive()) enemyScript->HitDetected(3);
+		else enemyScript->HitDetected();
+	}
 }
 
 void PlayerController::Update() {
-	if (!player) return;
+	if (!gameObject) return;
 	if (!camera) return;
 	if (!transform) return;
+	if (!fangCompParticle) return;
+	if (!onimaruCompParticle) return;
+	if (!fangParticle) return;
+	if (!onimaruParticle) return;
+	if (!shootAudioSource) return;
+	if (!hudControllerScript) return;
 
-	CheckCoolDowns();
-	Dash();
-	UpdatePlayerStats();
-	UpdateCameraPosition();
 	if (firstTime) {
-		if (fang->IsActive()) {
-			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
-		}
-		else {
-			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
-		}
+		hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
 		firstTime = false;
 	}
 
-	MovementDirection md;
-	md = GetInputMovementDirection();
-	if (Input::GetMouseButtonDown(2)) {
-		InitDash(md);
+	if (hitTaken && fang->IsActive() && lifePointsFang > 0) {
+		--lifePointsFang;
+		hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
+		hitTaken = false;
 	}
-	if (!dashing) {
-		LookAtMouse();
-		MoveTo(md);
-		if (Input::GetKeyCode(Input::KEYCODE::KEY_R)) SwitchCharacter();
+	else if (hitTaken && onimaru->IsActive() && lifePointsOni > 0) {
+		--lifePointsOni;
+		hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
+		hitTaken = false;
 	}
-	if (fang->IsActive()) {
-		if (Input::GetMouseButtonDown(0)) Shoot();
-	}else {
-		if (Input::GetMouseButtonRepeat(0)) Shoot();
-	}
-	
-	PlayAnimation(md);
 
+	if (lifePointsFang <= 0 || lifePointsOni <= 0) {
+		SceneManager::ChangeScene("Assets/Scenes/LoseScene.scene");
+	}
+
+	float realDashCooldown = 1.0f - (dashCooldownRemaing / dashCooldown);
+	float realSwitchCooldown = 1.0f - (switchCooldownRemaing / switchCooldown);
+	hudControllerScript->UpdateCooldowns(0.0f, 0.0f, 0.0f, realDashCooldown, 0.0f, 0.0f, realSwitchCooldown);
+
+	ComponentTransform* cameraTransform = camera->GetComponent<ComponentTransform>();
+	gameObject = GameplaySystems::GetGameObject(mainNodeUID);
+	cameraTransform->SetPosition(float3(transform->GetGlobalPosition().x + cameraOffsetX,
+		transform->GetGlobalPosition().y + cameraOffsetY,
+		(transform->GetGlobalPosition().z + cameraOffsetZ)));
+	CheckCoolDowns();
+	if (cameraTransform) {
+		MovementDirection md = MovementDirection::NONE;
+		md = GetInputMovementDirection();
+		if (CanDash() && Input::GetMouseButtonDown(2)) {
+			InitDash(md);
+		}
+		Dash();
+		if (!dashing) {
+			LookAtMouse();
+			if (md != MovementDirection::NONE) {
+				MoveTo(md);
+			}
+			if (CanSwitch() && Input::GetKeyCode(Input::KEYCODE::KEY_R)) {
+				SwitchCharacter();
+				hudControllerScript->ChangePlayerHUD();
+			}
+		}
+		PlayAnimation(md, fang->IsActive());
+	}
+	if (CanShoot() && Input::GetMouseButtonRepeat(0)) {
+		Shoot();
+	}
 }

@@ -117,10 +117,13 @@ private:
 	float3 dashDestination = float3(0, 0, 0);
 	float3 dashDirection = float3(0, 0, 0);
 	float3 facePointDir = float3(0, 0, 0);
+
 	MovementDirection dashMovementDirection = MovementDirection::NONE;
 	ComponentTransform* transform = nullptr;
 	ComponentCamera* compCamera = nullptr;
 	ComponentTransform* cameraTransform = nullptr;
+	ComponentTransform* FangGuntransform = nullptr;
+
 	//Animation
 	ComponentAnimation* fangAnimation = nullptr;
 	State* fangCurrentState = nullptr;
