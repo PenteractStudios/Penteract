@@ -16,8 +16,7 @@ static enum Cooldowns {
 	TOTAL
 };
 
-class HUDController : public Script
-{
+class HUDController : public Script {
 	GENERATE_BODY(HUDController);
 
 public:
@@ -90,12 +89,12 @@ private:
 
 	static const float4 colorMagenta;
 	static const float4 colorWhite;
-	
+
 	static const float4 colorMagentaDarkened;
 	static const float4 colorWhiteDarkened;
 
 	ComponentText* scoreText = nullptr;
-
+	static int prevLives;
 	int score = 0;
 };
 
