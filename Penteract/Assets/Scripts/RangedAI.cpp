@@ -31,26 +31,21 @@ void RangedAI::Start() {
 	parentTransform = GetOwner().GetParent()->GetComponent<ComponentTransform>();
 }
 
-void RangedAI::ReceiveEvent(TesseractEvent& e) {
-	switch (e.type) {
-	case TesseractEventType::ANIMATION_FINISHED:
+void RangedAI::OnAnimationFinished() {
+	if (state == AIState::SPAWN) {
+		animation->SendTrigger("SpawnIdle");
+		state = AIState::IDLE;
+	} else if (state == AIState::HURT && lifePoints > 0) {
+		animation->SendTrigger("HurtIdle");
+		state = AIState::IDLE;
+	}
 
-		if (state == AIState::SPAWN) {
-			animation->SendTrigger("SpawnIdle");
-			state = AIState::IDLE;
-		} else if (state == AIState::HURT && lifePoints > 0) {
-			animation->SendTrigger("HurtIdle");
-			state = AIState::IDLE;
-		}
-
-		else if (state == AIState::HURT && lifePoints <= 0) {
-			//animation->SendTrigger("HurtDeath");
-			Debug::Log("Death");
-			state = AIState::DEATH;
-		} else if (state == AIState::DEATH) {
-			dead = true;
-		}
-		break;
+	else if (state == AIState::HURT && lifePoints <= 0) {
+		//animation->SendTrigger("HurtDeath");
+		Debug::Log("Death");
+		state = AIState::DEATH;
+	} else if (state == AIState::DEATH) {
+		dead = true;
 	}
 }
 
