@@ -6,7 +6,7 @@
         1.0,
         1.0
     ],
-    "DiffuseMap": 16322470842293649681,
+    "DiffuseMap": 13546835643564088179,
     "SpecularColor": [
         0.15000000596046449,
         0.15000000596046449,
@@ -15,8 +15,10 @@
     ],
     "SpecularMap": 0,
     "Metalness": 0.0,
-    "MetallicMap": 1410359008926242835,
-    "NormalMap": 13083867482604073351,
+    "MetallicMap": 18298432007526616510,
+    "NormalMap": 6175844889234788126,
+    "EmissiveMap": 0,
+    "AmbientOcclusionMap": 0,
     "Smoothness": 1.0,
     "HasSmoothnessInAlphaChannel": true,
     "Tiling": [
