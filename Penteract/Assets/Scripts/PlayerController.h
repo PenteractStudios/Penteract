@@ -17,7 +17,7 @@ class State;
 struct TesseractEvent;
 
 enum class MovementDirection {
-		NONE = 0, UP = 1, UP_LEFT = 2, LEFT = 3, DOWN_LEFT = 4, DOWN = 5, DOWN_RIGHT = 6, RIGHT = 7, UP_RIGHT = 8
+	NONE = 0, UP = 1, UP_LEFT = 2, LEFT = 3, DOWN_LEFT = 4, DOWN = 5, DOWN_RIGHT = 6, RIGHT = 7, UP_RIGHT = 8
 };
 
 class PlayerController : public Script
@@ -38,12 +38,17 @@ public:
 	GameObject* camera = nullptr;
 	GameObject* fang = nullptr;
 	GameObject* onimaru = nullptr;
-	GameObject* fangParticle = nullptr;
+	GameObject* fangTrail = nullptr;
+	GameObject* fangGun = nullptr;
+
 	GameObject* onimaruParticle = nullptr;
 
 	UID fangUID = 0;
 	UID onimaruUID = 0;
-	UID fangParticleUID = 0;
+
+	UID fangTrailUID = 0;
+	UID fangGunUID = 0;
+
 	UID onimaruParticleUID = 0;
 	UID mainNodeUID = 0;
 	UID cameraUID = 0;
@@ -70,7 +75,7 @@ public:
 	float shootCooldown = 0.1f;
 	bool firstTime = true;
 
-	std::vector<std::string> states {"Idle" ,
+	std::vector<std::string> states{ "Idle" ,
 								"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
 								"DashBackward", "DashForward" , "DashLeft" , "DashRight" ,
 								"Death" , "Hurt" , "LeftShot" , "RightShot"
@@ -110,7 +115,7 @@ private:
 	float3 initialPosition = float3(0, 0, 0);
 	float3 dashDestination = float3(0, 0, 0);
 	float3 dashDirection = float3(0, 0, 0);
-	float3 facePointDir = float3(0,0,0);
+	float3 facePointDir = float3(0, 0, 0);
 	MovementDirection dashMovementDirection = MovementDirection::NONE;
 	ComponentTransform* transform = nullptr;
 	ComponentCamera* compCamera = nullptr;
@@ -132,4 +137,3 @@ private:
 
 	HUDController* hudControllerScript = nullptr;
 };
-
