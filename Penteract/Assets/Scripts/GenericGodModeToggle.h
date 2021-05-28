@@ -3,6 +3,7 @@
 #include "Scripting/Script.h"
 
 class GameObject;
+class ComponentToggle;
 
 class GenericGodModeToggle : public Script {
 	GENERATE_BODY(GenericGodModeToggle);
@@ -17,6 +18,8 @@ public:
 	void OnToggled(bool toggled_) override;
 
 private:
+	GameObject* gameObject = nullptr;
 	GameObject* godController = nullptr;
+	ComponentToggle* toggle = nullptr;
 };
 

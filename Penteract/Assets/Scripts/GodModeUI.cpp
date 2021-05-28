@@ -22,10 +22,9 @@ void GodModeUI::Start() {
             if (toggle) {
                 // Debug::Log(toggle->IsChecked() ? "is checked" : "isn't checked");
 			    children.push_back(child);
-            }            
+            }
 		}
 	}
-	
 }
 
 void GodModeUI::Update() {

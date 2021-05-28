@@ -7,7 +7,7 @@
     ],
     "QuadtreeMaxDepth": 4,
     "QuadtreeElementsPerNode": 200,
-    "GameCamera": 18237724406183638005,
+    "GameCamera": 18069853456435426804,
     "AmbientLight": [
         0.0,
         0.0,
@@ -260,7 +260,13 @@
                         "Id": 3947407245127620073,
                         "Active": true,
                         "Script": 8368790707010592280,
-                        "Values": null
+                        "Values": [
+                            {
+                                "Name": "uiCanvasUID",
+                                "Type": "GameObjectUID",
+                                "Value": 5026241383945616261
+                            }
+                        ]
                     }
                 ],
                 "Children": [
@@ -686,6 +692,19 @@
                                         "AlphaTransparency": false,
                                         "IsFill": false,
                                         "FillValue": 0.8999999761581421
+                                    },
+                                    {
+                                        "Type": "Script",
+                                        "Id": 451838802849017752,
+                                        "Active": true,
+                                        "Script": 6707620942478976228,
+                                        "Values": [
+                                            {
+                                                "Name": "godControllerUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 9596883327661299272
+                                            }
+                                        ]
                                     }
                                 ],
                                 "Children": [
@@ -1055,6 +1074,24 @@
                                         "AlphaTransparency": false,
                                         "IsFill": false,
                                         "FillValue": 1.0
+                                    },
+                                    {
+                                        "Type": "Script",
+                                        "Id": 10158131067563271692,
+                                        "Active": true,
+                                        "Script": 6707620942478976228,
+                                        "Values": [
+                                            {
+                                                "Name": "godControllerUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 9596883327661299272
+                                            },
+                                            {
+                                                "Name": "index",
+                                                "Type": "UInt",
+                                                "Value": 1
+                                            }
+                                        ]
                                     }
                                 ],
                                 "Children": [
@@ -1424,6 +1461,24 @@
                                         "AlphaTransparency": false,
                                         "IsFill": false,
                                         "FillValue": 1.0
+                                    },
+                                    {
+                                        "Type": "Script",
+                                        "Id": 16825724688339258385,
+                                        "Active": true,
+                                        "Script": 6707620942478976228,
+                                        "Values": [
+                                            {
+                                                "Name": "godControllerUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 9596883327661299272
+                                            },
+                                            {
+                                                "Name": "index",
+                                                "Type": "UInt",
+                                                "Value": 2
+                                            }
+                                        ]
                                     }
                                 ],
                                 "Children": [
@@ -1793,6 +1848,24 @@
                                         "AlphaTransparency": false,
                                         "IsFill": false,
                                         "FillValue": 1.0
+                                    },
+                                    {
+                                        "Type": "Script",
+                                        "Id": 5854719836632947957,
+                                        "Active": true,
+                                        "Script": 6707620942478976228,
+                                        "Values": [
+                                            {
+                                                "Name": "godControllerUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 9596883327661299272
+                                            },
+                                            {
+                                                "Name": "index",
+                                                "Type": "UInt",
+                                                "Value": 4
+                                            }
+                                        ]
                                     }
                                 ],
                                 "Children": [
