@@ -15,6 +15,8 @@ public:
 	void Start() override;
 	void Update() override;
 
+	void Spawn();
+
 private:
 	GameObject* gameObject = nullptr;
 	GameObject* camera = nullptr;

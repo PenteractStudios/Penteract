@@ -20,7 +20,11 @@ void SpawnOnClick::Start() {
 }
 
 void SpawnOnClick::Update() {
-	if (Input::GetKeyCode(Input::KEYCODE::KEY_LCTRL) && Input::GetKeyCode(Input::KEYCODE::KEY_LSHIFT) && Input::GetMouseButtonUp(0)) {
+	Spawn();
+}
+
+void SpawnOnClick::Spawn() {
+	if (Input::GetKeyCode(Input::KEYCODE::KEY_LCTRL) && Input::GetMouseButtonUp(0)) {
 		ResourcePrefab* prefab = GameplaySystems::GetResource<ResourcePrefab>(prefabId);
 		if (prefab != nullptr) {
 			UID prefabId = prefab->BuildPrefab(gameObject);
@@ -38,7 +42,7 @@ float3 SpawnOnClick::DetectMouseLocation() {
 		LineSegment ray = compCamera->frustum.UnProjectLineSegment(mousePos.x, mousePos.y);
 
 		Plane p = Plane(compTransform->GetGlobalPosition(), float3(0, 1, 0));
-		
+
 		return p.ClosestPoint(ray);
 	}
 }

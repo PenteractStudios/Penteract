@@ -20,12 +20,12 @@ EXPOSE_MEMBERS(GameController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, pauseUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, hudUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, enemySpawnPointsUID),
 	MEMBER(MemberType::FLOAT, speed),
 	MEMBER(MemberType::FLOAT, rotationSpeedX),
 	MEMBER(MemberType::FLOAT, rotationSpeedY),
 	MEMBER(MemberType::FLOAT, focusDistance),
-	MEMBER(MemberType::FLOAT, transitionSpeed)
+	MEMBER(MemberType::FLOAT, transitionSpeed),
+	MEMBER(MemberType::GAME_OBJECT_UID, godModeControllerUID),
 };
 
 GENERATE_BODY_IMPL(GameController);
@@ -55,6 +55,7 @@ void GameController::Start() {
 
 	Debug::SetGodModeOn(false);
 	if (gameCamera && godCamera) godModeAvailable = true;
+	godModeController = GameplaySystems::GetGameObject(godModeControllerUID);
 }
 
 void GameController::Update() {
@@ -66,10 +67,12 @@ void GameController::Update() {
 				camera = gameCamera->GetComponent<ComponentCamera>();
 				GameplaySystems::SetRenderCamera(camera);
 				Debug::SetGodModeOn(false);
+				godModeController->Disable();
 			} else {
 				camera = godCamera->GetComponent<ComponentCamera>();
 				GameplaySystems::SetRenderCamera(camera);
 				Debug::SetGodModeOn(true);
+				godModeController->Enable();
 			}
 		}
 	}
@@ -213,10 +216,6 @@ void GameController::Update() {
 				skybox->Enable();
 			}
 		}
-		// --- Spawn Enemies
-		if(Input::GetKeyCodeDown(Input::KEYCODE::KEY_L)) {
-			SpawnEnemies();
-		}
 	}
 }
 
@@ -238,12 +237,5 @@ void GameController::DoTransition() {
 			transitionFinished = true;
 			gameCamera->GetComponent<ComponentTransform>()->SetPosition(finalPosition);
 		}
-	}
-}
-
-void GameController::SpawnEnemies() {
-	GameObject* spawnGO = GameplaySystems::GetGameObject(enemySpawnPointsUID);
-	for (auto& child : spawnGO->GetChildren()) {
-		if(!child->IsActive()) child->Enable();
 	}
 }
