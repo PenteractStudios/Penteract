@@ -5,8 +5,8 @@
 class ComponentImage;
 class ComponentTransform2D;
 
-class HealthLostFeedback : public Script {
-	GENERATE_BODY(HealthLostFeedback);
+class HealthLostInstantFeedback : public Script {
+	GENERATE_BODY(HealthLostInstantFeedback);
 
 public:
 
@@ -15,15 +15,14 @@ public:
 	void Play();
 public:
 	float growthDuration = 0.25f;
-	float fadeOutDuration = 1.5f;
-	float growthMaxScale = 0.3f;
+	float fadeOutDuration = 0.75f;
+	float growthMaxScale = 1.3f;
 	UID imageUID = 0;
 	ComponentImage* image = nullptr;
 	ComponentTransform2D* transform = nullptr;
 	float2 originalSize = { 0,0 };
 private:
-	bool playing;
-
+	bool playing = false;
 	float growthTimer = 0;
 	float fadeOutTimer = 0;
 

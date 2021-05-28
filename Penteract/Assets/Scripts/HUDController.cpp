@@ -4,7 +4,7 @@
 #include "Components/UI/ComponentImage.h"
 #include "GameplaySystems.h"
 
-#include "HealthLostFeedback.h"
+#include "HealthLostInstantFeedback.h"
 
 EXPOSE_MEMBERS(HUDController) {
 	// Add members here to expose them to the engine. Example:
@@ -241,14 +241,16 @@ void HUDController::UpdateCanvasHP(GameObject* targetCanvas, int health, bool da
 	}
 
 	if (prevLives < health) {
-
-		HealthLostFeedback* fb = GET_SCRIPT(targetCanvas->GetChildren()[prevLives], HealthLostFeedback);
-
-		if (fb) {
-			fb->Play();
-		}
-
+		OnHealthLost(targetCanvas, health);
 		prevLives = health;
+
 	}
 
+}
+
+void HUDController::OnHealthLost(GameObject* targetCanvas, int health) {
+	HealthLostInstantFeedback* fb = GET_SCRIPT(targetCanvas->GetChildren()[prevLives], HealthLostInstantFeedback);
+	if (fb) {
+		fb->Play();
+	}
 }

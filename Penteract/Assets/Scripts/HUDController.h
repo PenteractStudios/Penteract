@@ -63,7 +63,7 @@ private:
 	static void UpdateFangCooldowns(GameObject* fangSkillCanvas);
 	static void UpdateOnimaruCooldowns(GameObject* onimaruSkillCanvas);
 	static void UpdateCanvasHP(GameObject* targetCanvas, int health, bool darkened);
-
+	static void OnHealthLost(GameObject* targetCanvas, int health);
 private:
 	static GameObject* fang;
 	static GameObject* onimaru;

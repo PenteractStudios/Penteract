@@ -1,10 +1,10 @@
-#include "HealthLostFeedback.h"
+#include "HealthLostInstantFeedback.h"
 #include "GameplaySystems.h"
 
 #include "Components/UI/ComponentImage.h"
 #include "Components/UI/ComponentTransform2D.h"
 
-EXPOSE_MEMBERS(HealthLostFeedback) {
+EXPOSE_MEMBERS(HealthLostInstantFeedback) {
 	MEMBER(MemberType::FLOAT, growthDuration),
 	MEMBER(MemberType::FLOAT, growthMaxScale),
 	MEMBER(MemberType::FLOAT, fadeOutDuration),
@@ -12,19 +12,18 @@ EXPOSE_MEMBERS(HealthLostFeedback) {
 
 };
 
-GENERATE_BODY_IMPL(HealthLostFeedback);
+GENERATE_BODY_IMPL(HealthLostInstantFeedback);
 
-void HealthLostFeedback::Play() {
+void HealthLostInstantFeedback::Play() {
 	playing = true;
 	growthTimer = 0;
 	fadeOutTimer = 0;
 }
 
-void HealthLostFeedback::Start() {
+void HealthLostInstantFeedback::Start() {
 	GameObject* obj = GameplaySystems::GetGameObject(imageUID);
 
 	if (obj) {
-
 		image = obj->GetComponent<ComponentImage>();
 		transform = obj->GetComponent <ComponentTransform2D>();
 	}
@@ -32,7 +31,7 @@ void HealthLostFeedback::Start() {
 	originalSize = transform->GetSize();
 }
 
-void HealthLostFeedback::Update() {
+void HealthLostInstantFeedback::Update() {
 
 	if (!transform || !image)return;
 
