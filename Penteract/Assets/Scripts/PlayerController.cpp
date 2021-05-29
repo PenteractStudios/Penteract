@@ -106,6 +106,12 @@ void PlayerController::Start() {
 		dashAudioSource = aux->GetComponent<ComponentAudioSource>();
 	}
 	firstTime = true;
+
+	agent = GetOwner().GetComponent<ComponentAgent>();
+	if (agent) {
+		agent->SetMaxSpeed(fangMovementSpeed);
+		agent->SetMaxAcceleration(9999);
+	}
 }
 
 void PlayerController::MoveTo(MovementDirection md) {
@@ -114,9 +120,14 @@ void PlayerController::MoveTo(MovementDirection md) {
 	if (Input::GetKeyCode(Input::KEYCODE::KEY_LSHIFT)) {
 		modifier = 2.0f;
 	}
+	Debug::Log(("pos actual x: " + std::to_string(newPosition.x) + "y: " + std::to_string(newPosition.y) + "z: " + std::to_string(newPosition.z)).c_str());
 	float movementSpeed = ((fang->IsActive()) ? fangMovementSpeed : onimaruMovementSpeed);
-	newPosition += GetDirection(md) * movementSpeed * Time::GetDeltaTime() * modifier;
-	transform->SetGlobalPosition(newPosition);
+	//newPosition += GetDirection(md) * movementSpeed * Time::GetDeltaTime() * modifier;
+	newPosition += GetDirection(md) * movementSpeed * modifier;
+	agent->SetMoveTarget(newPosition, false);
+	
+	Debug::Log(("x: " + std::to_string(newPosition.x) + "y: " + std::to_string(newPosition.y) + "z: " + std::to_string(newPosition.z)).c_str());
+	//transform->SetGlobalPosition(newPosition);
 }
 
 void PlayerController::LookAtMouse() {

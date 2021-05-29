@@ -11,7 +11,7 @@ class ComponentAudioSource;
 class ComponentParticleSystem;
 
 class HUDController;
-
+class ComponentAgent;
 class ComponentAnimation;
 class State;
 struct TesseractEvent;
@@ -39,6 +39,7 @@ public:
 	GameObject* onimaru = nullptr;
 	GameObject* fangParticle = nullptr;
 	GameObject* onimaruParticle = nullptr;
+	ComponentAgent* agent = nullptr;
 
 	UID fangUID = 0;
 	UID onimaruUID = 0;
