@@ -84,10 +84,6 @@ void AIMovement::Update() {
         break;
     }
 
-    if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_K)) {
-        hitTaken = true;
-    }
-
     if(dead){
         if (timeToDie > 0) {
             timeToDie -= Time::GetDeltaTime();
@@ -102,41 +98,34 @@ void AIMovement::Update() {
     	
 }
 
-void AIMovement::ReceiveEvent(TesseractEvent& e)
+void AIMovement::OnAnimationFinished()
 {
-    switch (e.type)
-    {
-    default:
-        break;
-    //case TesseractEventType::ANIMATION_FINISHED:
-    //
-    //    if (state == AIState::SPAWN) {
-    //        animation->SendTrigger("SpawnIdle");
-    //        state = AIState::IDLE;
-    //    }
-    //
-    //    else if(state == AIState::ATTACK)
-    //    {
-    //        PlayerController* playerController = GET_SCRIPT(player, PlayerController);
-    //        playerController->HitDetected();
-    //        animation->SendTrigger("AttackIdle");
-    //        state = AIState::IDLE;
-    //    }
-    //    else if (state == AIState::HURT && lifePoints > 0) {
-    //        animation->SendTrigger("HurtIdle");
-    //        state = AIState::IDLE;
-    //    }
-    //
-    //    else if (state == AIState::HURT && lifePoints <= 0) {
-    //        animation->SendTrigger("HurtDeath");
-    //        Debug::Log("Death");
-    //        state = AIState::DEATH;
-    //    }
-    //    else if (state == AIState::DEATH) {
-    //        dead = true;
-    //    }
-    //    break;
+    if (state == AIState::SPAWN) {
+        animation->SendTrigger("SpawnIdle");
+        state = AIState::IDLE;
     }
+    
+    else if(state == AIState::ATTACK)
+    {
+        PlayerController* playerController = GET_SCRIPT(player, PlayerController);
+        playerController->HitDetected();
+        animation->SendTrigger("AttackIdle");
+        state = AIState::IDLE;
+    }
+    else if (state == AIState::HURT && lifePoints > 0) {
+        animation->SendTrigger("HurtIdle");
+        state = AIState::IDLE;
+    }
+    
+    else if (state == AIState::HURT && lifePoints <= 0) {
+        animation->SendTrigger("HurtDeath");
+        Debug::Log("Death");
+        state = AIState::DEATH;
+    }
+    else if (state == AIState::DEATH) {
+        dead = true;
+    }
+        
 }
 
 void AIMovement::HitDetected(int damage_) {
