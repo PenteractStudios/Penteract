@@ -17,11 +17,10 @@ class State;
 struct TesseractEvent;
 
 enum class MovementDirection {
-		NONE = 0, UP = 1, UP_LEFT = 2, LEFT = 3, DOWN_LEFT = 4, DOWN = 5, DOWN_RIGHT = 6, RIGHT = 7, UP_RIGHT = 8
+	NONE = 0, UP = 1, UP_LEFT = 2, LEFT = 3, DOWN_LEFT = 4, DOWN = 5, DOWN_RIGHT = 6, RIGHT = 7, UP_RIGHT = 8
 };
 
-class PlayerController : public Script
-{
+class PlayerController : public Script {
 	GENERATE_BODY(PlayerController);
 
 public:
@@ -32,7 +31,7 @@ public:
 	void HitDetected();
 
 public:
-
+	bool debugGetHit = false;
 	GameObject* player = nullptr;
 	GameObject* camera = nullptr;
 	GameObject* fang = nullptr;
@@ -69,7 +68,7 @@ public:
 	float shootCooldown = 0.1f;
 	bool firstTime = true;
 
-	std::vector<std::string> states {"Idle" ,
+	std::vector<std::string> states{ "Idle" ,
 								"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
 								"DashBackward", "DashForward" , "DashLeft" , "DashRight" ,
 								"Death" , "Hurt" , "LeftShot" , "RightShot"
@@ -111,7 +110,7 @@ private:
 	float3 initialPosition = float3(0, 0, 0);
 	float3 dashDestination = float3(0, 0, 0);
 	float3 dashDirection = float3(0, 0, 0);
-	float3 facePointDir = float3(0,0,0);
+	float3 facePointDir = float3(0, 0, 0);
 	MovementDirection dashMovementDirection = MovementDirection::NONE;
 	ComponentTransform* transform = nullptr;
 	ComponentCamera* compCamera = nullptr;

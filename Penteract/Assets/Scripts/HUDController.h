@@ -1,4 +1,5 @@
 #pragma once
+#pragma once
 
 #include "Scripting/Script.h"
 
@@ -16,8 +17,7 @@ static enum Cooldowns {
 	TOTAL
 };
 
-class HUDController : public Script
-{
+class HUDController : public Script {
 	GENERATE_BODY(HUDController);
 
 public:
@@ -53,7 +53,7 @@ public:
 		float switchCooldown);
 
 	static void UpdateHP(float currentHp, float altHp);
-
+	static void UpdateDurableHPLoss(GameObject* targetCanvas);
 	static void ChangePlayerHUD();
 
 	void UpdateScore(int score_);
@@ -64,7 +64,7 @@ private:
 	static void UpdateFangCooldowns(GameObject* fangSkillCanvas);
 	static void UpdateOnimaruCooldowns(GameObject* onimaruSkillCanvas);
 	static void UpdateCanvasHP(GameObject* targetCanvas, int health, bool darkened);
-
+	static void OnLifeTaken(int health);
 private:
 	static GameObject* fang;
 	static GameObject* onimaru;
@@ -90,12 +90,17 @@ private:
 
 	static const float4 colorMagenta;
 	static const float4 colorWhite;
-	
+
 	static const float4 colorMagentaDarkened;
 	static const float4 colorWhiteDarkened;
 
-	ComponentText* scoreText = nullptr;
+	static int prevLives;
+	static float remainingTimes[];
 
+	static std::vector<int>remainingTimeActiveIndexes;
+
+	ComponentText* scoreText = nullptr;
+	static float timeToFade;
 	int score = 0;
 };
 
