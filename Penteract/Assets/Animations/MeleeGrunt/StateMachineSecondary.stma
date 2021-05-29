@@ -1,5 +1,5 @@
 {
-  "InitialState": 3935240463884374110,
+  "InitialState": 0,
   "Clips": [
     5057364487778647476,
     8939075078309002931,
@@ -344,35 +344,14 @@
   ],
   "Bones": [
     "RightElbow",
-    "CenterEyeDir",
-    "CenterHead",
     "RightBicepPiece",
     "LeftForearmPiece",
-    "RightKnee",
-    "RigthLegPiece",
-    "RightThighPiece",
     "LeftElbow",
-    "RightFoot",
-    "LeftHip",
     "LeftShoulderPiece",
-    "CenterChestPiece",
-    "RightHip",
-    "InnerCore",
-    "CenterBackPiece",
-    "CenterHipPiece",
-    "CenterHip",
     "RightForearmPiece",
-    "CenterNeck",
     "LeftBicepPiece",
-    "LeftToe",
-    "LeftFoot",
-    "LeftKnee",
-    "LeftLegPiece",
     "LeftShoulder",
-    "LeftThigh",
-    "OuterCore",
     "RightShoulder",
-    "RightShoulderPiece",
-    "RightToe"
+    "RightShoulderPiece"
   ]
 }
