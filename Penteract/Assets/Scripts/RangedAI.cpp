@@ -29,6 +29,9 @@ void RangedAI::Start() {
 	meshObj2 = GameplaySystems::GetGameObject(meshUID2);
 	animation = GetOwner().GetParent()->GetComponent<ComponentAnimation>();
 	parentTransform = GetOwner().GetParent()->GetComponent<ComponentTransform>();
+
+	ComponentBoundingBox* bb = meshObj->GetComponent<ComponentBoundingBox>();
+	bbCenter = (bb->GetLocalMinPointAABB() + bb->GetLocalMaxPointAABB()) / 2;
 }
 
 void RangedAI::OnAnimationFinished() {
@@ -66,7 +69,9 @@ void RangedAI::Update() {
 
 	if (state != AIState::DEATH && state != AIState::HURT) {
 		attackTimePool = Max(attackTimePool - Time::GetDeltaTime(), 0.0f);
-		if (attackTimePool == 0) ShootPlayerInRange();
+		if (attackTimePool == 0) {
+			ShootPlayerInRange();
+		}
 	}
 
 	switch (state) {
@@ -77,11 +82,19 @@ void RangedAI::Update() {
 		state = AIState::IDLE;
 		break;
 	case AIState::IDLE:
+		//For now, player will usually attack on Idle, so orientation should be here as well
 		if (player) {
 			if (CharacterInSight(player)) {
 				animation->SendTrigger("IdleRun");
 				state = AIState::RUN;
 			}
+
+			float3 direction = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - parentTransform->GetGlobalPosition();
+			if (state != AIState::START) {
+				Quat newRotation = Quat::LookAt(float3(0, 0, 1), direction.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
+				parentTransform->SetGlobalRotation(newRotation);
+			}
+
 		}
 		break;
 	case AIState::RUN:
@@ -130,7 +143,7 @@ bool RangedAI::CharacterInSight(const GameObject* character) {
 
 bool RangedAI::CharacterInRange(const GameObject* character) {
 
-	if (meshObj) return Camera::CheckObjectInsideFrustum(meshObj)&& Camera::CheckObjectInsideFrustum(meshObj1)&& Camera::CheckObjectInsideFrustum(meshObj2);
+	if (meshObj) return Camera::CheckObjectInsideFrustum(meshObj) && Camera::CheckObjectInsideFrustum(meshObj1) && Camera::CheckObjectInsideFrustum(meshObj2);
 
 	ComponentTransform* target = character->GetComponent<ComponentTransform>();
 	if (target) {
@@ -197,7 +210,7 @@ void RangedAI::ShootPlayerInRange() {
 		//	onimaruCompParticle->Play();
 		//}
 
-		float3 start = parentTransform->GetPosition();
+		float3 start = parentTransform->GetGlobalPosition() + bbCenter;
 		float3 end = parentTransform->GetGlobalRotation() * float3(0, 0, 1);
 		end.Normalize();
 		end *= attackRange;
@@ -208,8 +221,8 @@ void RangedAI::ShootPlayerInRange() {
 			//AIMovement* enemyScript = GET_SCRIPT(hitGo, AIMovement);
 			//if (fang->IsActive()) enemyScript->HitDetected(3);
 			//else enemyScript->HitDetected();
-
-			Debug::Log("HitGo");
+			std::string message = "HitGo " + hitGo->name;
+			Debug::Log(message.c_str());
 
 		}
 

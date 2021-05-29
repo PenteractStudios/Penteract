@@ -13,7 +13,7 @@ public:
 	void Update() override;
 	void OnAnimationFinished() override;
 	void HitDetected(int damage_ = 1);
-	void ShootPlayerInRange();;
+	void ShootPlayerInRange();
 private:
 	bool CharacterInSight(const GameObject* character);
 	bool CharacterInRange(const GameObject* character);
@@ -47,6 +47,7 @@ public:
 	float attackSpeed = 0.5f; //Shots per second
 
 private:
+	float3 bbCenter = float3(0, 0, 0);
 	float3 velocity = float3(0, 0, 0);
 	AIState state = AIState::START;
 	bool hitTaken = false;
