@@ -98,14 +98,14 @@ void PlayerController::Start() {
 	if (onimaruParticle) {
 		onimaruCompParticle = onimaruParticle->GetComponent<ComponentParticleSystem>();
 	}
-	//if (switchAudioSourceUID) {
-	//	GameObject* aux = GameplaySystems::GetGameObject(switchAudioSourceUID);
-	//	switchAudioSource = aux->GetComponent<ComponentAudioSource>();
-	//}
-	//if (dashAudioSourceUID) {
-	//	GameObject* aux = GameplaySystems::GetGameObject(dashAudioSourceUID);
-	//	dashAudioSource = aux->GetComponent<ComponentAudioSource>();
-	//}
+	/*if (switchAudioSourceUID) {
+		GameObject* aux = GameplaySystems::GetGameObject(switchAudioSourceUID);
+		switchAudioSource = aux->GetComponent<ComponentAudioSource>();
+	}
+	if (dashAudioSourceUID) {
+		GameObject* aux = GameplaySystems::GetGameObject(dashAudioSourceUID);
+		dashAudioSource = aux->GetComponent<ComponentAudioSource>();
+	}*/
 	firstTime = true;
 }
 
@@ -256,6 +256,26 @@ void PlayerController::CheckCoolDowns() {
 	} else {
 		shootCooldownRemaing -= Time::GetDeltaTime();
 	}
+
+	if (onimaru->IsActive() && lifePointsFang != FANG_MAX_HEALTH) {
+		if (fangRecovering >= fangRecoveryTime) {
+			lifePointsFang += 1.0f;
+			fangRecovering = 0.0f;
+		}
+		else {
+			fangRecovering += Time::GetDeltaTime();
+		}
+	}
+
+	if (fang->IsActive() && lifePointsOni != ONIMARU_MAX_HEALTH) {
+		if (onimaruRecovering >= onimaruRecoveryTime) {
+			lifePointsOni += 1.0f;
+			onimaruRecovering = 0.0f;
+		}
+		else {
+			onimaruRecovering += Time::GetDeltaTime();
+		}
+	}
 }
 
 MovementDirection PlayerController::GetInputMovementDirection() const {
@@ -396,6 +416,15 @@ void PlayerController::UpdatePlayerStats() {
 			--lifePointsOni;
 			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
 			debugGetHit = false;
+		}
+
+		if (fang->IsActive()) {
+			float currentRecoveredHealth = 1 - (onimaruRecoveryTime - onimaruRecovering);
+			hudControllerScript->HealthRegeneration(lifePointsOni, currentRecoveredHealth);
+		}
+		else {
+			float realRecoveryCooldown = 1 - (fangRecoveryTime - fangRecovering);
+			hudControllerScript->HealthRegeneration(lifePointsFang, realRecoveryCooldown);
 		}
 
 		float realDashCooldown = 1.0f - (dashCooldownRemaing / dashCooldown);

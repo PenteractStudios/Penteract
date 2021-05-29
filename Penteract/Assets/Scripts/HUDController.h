@@ -55,6 +55,7 @@ public:
 	static void UpdateHP(float currentHp, float altHp);
 	static void UpdateDurableHPLoss(GameObject* targetCanvas);
 	static void ChangePlayerHUD();
+	static void HealthRegeneration(float currentHp, float hpRecovered);
 
 	void UpdateScore(int score_);
 

@@ -2,6 +2,7 @@
 
 #include "GameObject.h"
 #include "Components/UI/ComponentImage.h"
+#include "HealthRegeneration.h"
 #include "GameplaySystems.h"
 
 #define MAX_HEALTH 7
@@ -115,6 +116,15 @@ void HUDController::ChangePlayerHUD() {
 	} else {
 		onimaruCanvas->Disable();
 		fangCanvas->Enable();
+	}
+}
+
+void HUDController::HealthRegeneration(float currentHp, float hpRecovered) {
+	if (fang->IsActive()) {
+		ComponentImage* healthBar = onimaruHealthSecondCanvas->GetChildren()[currentHp - 1]->GetComponent<ComponentImage>();
+		if (healthBar->IsFill()) {
+			healthBar->SetFillValue(hpRecovered);
+		}
 	}
 }
 
