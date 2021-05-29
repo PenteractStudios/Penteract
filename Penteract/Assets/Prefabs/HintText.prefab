@@ -1,6 +1,6 @@
 {
     "Root": {
-        "Name": "DialogText",
+        "Name": "HintText",
         "Active": true,
         "RootBoneName": "",
         "Mask": 0,
@@ -56,6 +56,27 @@
             {
                 "Type": "Canvas",
                 "Active": true
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 1850093179158141424,
+                "Values": [
+                    {
+                        "Name": "startPosition",
+                        "Type": "Float3",
+                        "Value": [
+                            0.0,
+                            300.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "Name": "appearAnimationTime",
+                        "Type": "Float",
+                        "Value": 0.5
+                    }
+                ]
             }
         ],
         "Children": [
