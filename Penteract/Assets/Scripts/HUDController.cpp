@@ -5,6 +5,7 @@
 #include "GameplaySystems.h"
 
 #include "HealthLostInstantFeedback.h"
+#define MAX_HEALTH 7
 
 EXPOSE_MEMBERS(HUDController) {
 	// Add members here to expose them to the engine. Example:
@@ -21,7 +22,8 @@ EXPOSE_MEMBERS(HUDController) {
 		MEMBER(MemberType::GAME_OBJECT_UID, swapingSkillCanvasUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, scoreTextUID)
+		MEMBER(MemberType::GAME_OBJECT_UID, scoreTextUID),
+		MEMBER(MemberType::FLOAT, timeToFadeDurableHealthFeedbackInternal)
 };
 
 GENERATE_BODY_IMPL(HUDController);
@@ -42,7 +44,6 @@ GameObject* HUDController::onimaruHealthMainCanvas = nullptr;
 GameObject* HUDController::fangHealthSecondCanvas = nullptr;
 GameObject* HUDController::onimaruHealthSecondCanvas = nullptr;
 GameObject* HUDController::swapingSkillCanvas = nullptr;
-int HUDController::prevLives = 7;
 
 std::array<float, Cooldowns::TOTAL> HUDController::cooldowns;
 
@@ -52,8 +53,19 @@ const float4 HUDController::colorWhite = float4(255, 255, 255, 255) / 255;
 
 const float4 HUDController::colorMagentaDarkened = float4(236, 60, 137, 128) / 255;
 const float4 HUDController::colorWhiteDarkened = float4(255, 255, 255, 128) / 255;
+int HUDController::prevLives = MAX_HEALTH;
+
+float HUDController::remainingTimes[MAX_HEALTH] = { 0,0,0,0,0,0,0 };
+float HUDController::timeToFadeDurableHealthFeedback = 2.0f;
+std::vector<int>HUDController::remainingTimeActiveIndexes;
 
 void HUDController::Start() {
+	//Resetting preLives and remainingTimes just in case
+	prevLives = MAX_HEALTH;
+	for (int i = 0; i < MAX_HEALTH; i++) {
+		remainingTimes[i] = 0;
+	}
+	timeToFadeDurableHealthFeedback = timeToFadeDurableHealthFeedbackInternal;
 
 	fangCanvas = GameplaySystems::GetGameObject(fangMainCanvasUID);
 	onimaruCanvas = GameplaySystems::GetGameObject(onimaruMainCanvasUID);
@@ -137,9 +149,53 @@ void HUDController::UpdateHP(float currentHp, float altHp) {
 	}
 }
 
+void HUDController::UpdateDurableHPLoss(GameObject* targetCanvas) {
+	if (remainingTimeActiveIndexes.size() > 0) {
+		std::vector<std::vector<int>::iterator>vectorIndexesToRemove;
+
+		for (std::vector<int>::iterator it = remainingTimeActiveIndexes.begin(); it != remainingTimeActiveIndexes.end(); ++it) {
+			remainingTimes[(*it)] -= Time::GetDeltaTime();
+
+			if (remainingTimes[(*it)] <= 0) {
+				remainingTimes[(*it)] = 0;
+				vectorIndexesToRemove.push_back(it);
+			}
+
+			//We need a GetColor
+			float delta = remainingTimes[(*it)] / timeToFadeDurableHealthFeedback;
+
+			ComponentImage* image = targetCanvas->GetChildren()[(*it)]->GetComponent<ComponentImage>();
+
+			//We need access to image->SetAlphaTransparency
+			image->SetColor(float4(1, 1, 1, delta));
+
+
+
+		}
+
+		for (int i = 0; i < vectorIndexesToRemove.size(); i++) {
+			remainingTimeActiveIndexes.erase(vectorIndexesToRemove[i]);
+		}
+
+	}
+}
+
 void HUDController::UpdateComponents() {
 
 	if (!fang || !onimaru) return;
+
+	if (fangHealthMainCanvas) {
+		if (fangHealthMainCanvas->IsActive()) {
+			UpdateDurableHPLoss(fangHealthMainCanvas);
+		}
+	}
+
+	if (onimaruHealthMainCanvas) {
+		if (onimaruHealthMainCanvas->IsActive()) {
+			UpdateDurableHPLoss(onimaruHealthMainCanvas);
+		}
+	}
+
 	if (!fangSkillsMainCanvas || !onimaruSkillsMainCanvas || !fangSkillsSecondCanvas || !onimaruSkillsSecondCanvas) return;
 	if (!fangHealthMainCanvas || !onimaruHealthMainCanvas || !fangHealthSecondCanvas || !onimaruHealthSecondCanvas) return;
 	if (!swapingSkillCanvas) return;
@@ -225,9 +281,49 @@ void HUDController::UpdateOnimaruCooldowns(GameObject* onimaruSkillCanvas) {
 	}
 }
 
+//void HUDController::UpdateCanvasHP(GameObject* targetCanvas, int health, bool darkened) {
+//	float4 magentaToSet = darkened ? colorMagentaDarkened : colorMagenta;
+//	float4 whiteToSet = darkened ? colorWhiteDarkened : colorWhite;
+//
+//	int i = 0;
+//	for (GameObject* hpGameObject : targetCanvas->GetChildren()) {
+//		ComponentImage* hpComponent = hpGameObject->GetComponent<ComponentImage>();
+//		if (i < health) {
+//			hpComponent->SetColor(magentaToSet);
+//		} else {
+//			hpComponent->SetColor(whiteToSet);
+//		}
+//		i++;
+//	}
+//
+//	if (prevLives < health) {
+//		OnHealthLost(targetCanvas, health);
+//		prevLives = health;
+//
+//	}
+//
+//}
+
+void HUDController::OnHealthLost(GameObject* targetCanvas, int health) {
+	GameObject* obj = targetCanvas->GetChildren()[health];
+
+	remainingTimeActiveIndexes.push_back(health);
+	remainingTimes[health] = timeToFadeDurableHealthFeedback;
+
+	if (!obj) return;
+
+	HealthLostInstantFeedback* fb = GET_SCRIPT(obj, HealthLostInstantFeedback);
+
+	if (!fb) return;
+
+	fb->Play();
+
+
+}
+
 void HUDController::UpdateCanvasHP(GameObject* targetCanvas, int health, bool darkened) {
 	float4 magentaToSet = darkened ? colorMagentaDarkened : colorMagenta;
-	float4 whiteToSet = darkened ? colorWhiteDarkened : colorWhite;
+	//float4 whiteToSet = darkened ? colorWhiteDarkened : colorWhite;
 
 	int i = 0;
 	for (GameObject* hpGameObject : targetCanvas->GetChildren()) {
@@ -235,22 +331,13 @@ void HUDController::UpdateCanvasHP(GameObject* targetCanvas, int health, bool da
 		if (i < health) {
 			hpComponent->SetColor(magentaToSet);
 		} else {
-			hpComponent->SetColor(whiteToSet);
+			//hpComponent->SetColor(whiteToSet);
 		}
 		i++;
 	}
 
-	if (prevLives < health) {
+	if (prevLives > health) {
 		OnHealthLost(targetCanvas, health);
 		prevLives = health;
-
-	}
-
-}
-
-void HUDController::OnHealthLost(GameObject* targetCanvas, int health) {
-	HealthLostInstantFeedback* fb = GET_SCRIPT(targetCanvas->GetChildren()[prevLives], HealthLostInstantFeedback);
-	if (fb) {
-		fb->Play();
 	}
 }

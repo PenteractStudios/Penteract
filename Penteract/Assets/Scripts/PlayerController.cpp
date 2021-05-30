@@ -42,7 +42,8 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, onimaruMovementSpeed),
 	MEMBER(MemberType::FLOAT, shootCooldown),
 	MEMBER(MemberType::INT, lifePointsFang),
-	MEMBER(MemberType::INT, lifePointsOni)
+	MEMBER(MemberType::INT, lifePointsOni),
+	MEMBER(MemberType::BOOL, debugGetHit)
 
 };
 
@@ -97,14 +98,14 @@ void PlayerController::Start() {
 	if (onimaruParticle) {
 		onimaruCompParticle = onimaruParticle->GetComponent<ComponentParticleSystem>();
 	}
-	if (switchAudioSourceUID) {
-		GameObject* aux = GameplaySystems::GetGameObject(switchAudioSourceUID);
-		switchAudioSource = aux->GetComponent<ComponentAudioSource>();
-	}
-	if (dashAudioSourceUID) {
-		GameObject* aux = GameplaySystems::GetGameObject(dashAudioSourceUID);
-		dashAudioSource = aux->GetComponent<ComponentAudioSource>();
-	}
+	//if (switchAudioSourceUID) {
+	//	GameObject* aux = GameplaySystems::GetGameObject(switchAudioSourceUID);
+	//	switchAudioSource = aux->GetComponent<ComponentAudioSource>();
+	//}
+	//if (dashAudioSourceUID) {
+	//	GameObject* aux = GameplaySystems::GetGameObject(dashAudioSourceUID);
+	//	dashAudioSource = aux->GetComponent<ComponentAudioSource>();
+	//}
 	firstTime = true;
 }
 
@@ -134,7 +135,7 @@ void PlayerController::LookAtMouse() {
 }
 
 void PlayerController::InitDash(MovementDirection md) {
-	if(CanDash()){
+	if (CanDash()) {
 		dashDirection = GetDirection(md);
 		dashMovementDirection = md;
 		dashDestination = transform->GetGlobalPosition();
@@ -144,8 +145,7 @@ void PlayerController::InitDash(MovementDirection md) {
 		dashing = true;
 		if (shootAudioSource) {
 			dashAudioSource->Play();
-		}
-		else {
+		} else {
 			Debug::Log(AUDIOSOURCE_NULL_MSG);
 		}
 	}
@@ -182,15 +182,14 @@ void PlayerController::SwitchCharacter() {
 			fang->Disable();
 			onimaru->Enable();
 			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
-		}
-		else {
+		} else {
 			Debug::Log("Swaping to fang...");
 			onimaru->Disable();
 			fang->Enable();
 			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
 		}
 		switchCooldownRemaing = switchCooldown;
-		if(hudControllerScript){
+		if (hudControllerScript) {
 			hudControllerScript->ChangePlayerHUD();
 		}
 	}
@@ -204,8 +203,7 @@ void PlayerController::Shoot() {
 	if (CanShoot()) {
 		if (shootAudioSource) {
 			shootAudioSource->Play();
-		}
-		else {
+		} else {
 			Debug::Log(AUDIOSOURCE_NULL_MSG);
 		}
 
@@ -213,8 +211,7 @@ void PlayerController::Shoot() {
 		shooting = true;
 		if (fang->IsActive()) {
 			fangCompParticle->Play();
-		}
-		else {
+		} else {
 			onimaruCompParticle->Play();
 		}
 
@@ -242,24 +239,21 @@ void PlayerController::CheckCoolDowns() {
 		dashCooldownRemaing = 0.f;
 		dashInCooldown = false;
 		dashMovementDirection = MovementDirection::NONE;
-	}
-	else {
+	} else {
 		dashCooldownRemaing -= Time::GetDeltaTime();
 	}
 
 	if (switchCooldownRemaing <= 0.f) {
 		switchCooldownRemaing = 0.f;
 		switchInCooldown = false;
-	}
-	else {
+	} else {
 		switchCooldownRemaing -= Time::GetDeltaTime();
 	}
 
 	if (shootCooldownRemaing <= 0.f) {
 		shootCooldownRemaing = 0.f;
 		shooting = false;
-	}
-	else {
+	} else {
 		shootCooldownRemaing -= Time::GetDeltaTime();
 	}
 }
@@ -291,8 +285,7 @@ MovementDirection PlayerController::GetInputMovementDirection() const {
 
 float3 PlayerController::GetDirection(MovementDirection md) const {
 	float3 direction = float3(0, 0, 0);
-	switch (md)
-	{
+	switch (md) {
 	case MovementDirection::UP:
 		direction = float3(0, 0, -1);
 		break;
@@ -383,7 +376,7 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 }
 
 void PlayerController::UpdatePlayerStats() {
-	if (hudControllerScript){
+	if (hudControllerScript) {
 		if (firstTime) {
 			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
 			firstTime = false;
@@ -393,11 +386,16 @@ void PlayerController::UpdatePlayerStats() {
 			--lifePointsFang;
 			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
 			hitTaken = false;
-		}
-		else if (hitTaken && onimaru->IsActive() && lifePointsOni > 0) {
+		} else if (hitTaken && onimaru->IsActive() && lifePointsOni > 0) {
 			--lifePointsOni;
 			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
 			hitTaken = false;
+		} else if (debugGetHit) {
+			--lifePointsFang;
+			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
+			--lifePointsOni;
+			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
+			debugGetHit = false;
 		}
 
 		float realDashCooldown = 1.0f - (dashCooldownRemaing / dashCooldown);
@@ -430,8 +428,7 @@ void PlayerController::Update() {
 	if (firstTime) {
 		if (fang->IsActive()) {
 			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
-		}
-		else {
+		} else {
 			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
 		}
 		firstTime = false;
@@ -449,10 +446,10 @@ void PlayerController::Update() {
 	}
 	if (fang->IsActive()) {
 		if (Input::GetMouseButtonDown(0)) Shoot();
-	}else {
+	} else {
 		if (Input::GetMouseButtonRepeat(0)) Shoot();
 	}
-	
+
 	PlayAnimation(md);
 
 }

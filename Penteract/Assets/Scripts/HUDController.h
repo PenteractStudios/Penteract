@@ -1,4 +1,5 @@
 #pragma once
+#pragma once
 
 #include "Scripting/Script.h"
 
@@ -23,6 +24,15 @@ public:
 
 	void Start() override;
 	void Update() override;
+	static void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3,
+		float fangCooldown1, float fangCooldown2, float fangCooldown3,
+		float switchCooldown);
+
+	static void UpdateHP(float currentHp, float altHp);
+	static void UpdateDurableHPLoss(GameObject* targetCanvas);
+	static void ChangePlayerHUD();
+
+	void UpdateScore(int score_);
 
 public:
 	UID fangUID = 0;
@@ -46,17 +56,7 @@ public:
 	UID swapingSkillCanvasUID = 0;
 
 	UID scoreTextUID = 0;
-
-	static void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3,
-		float fangCooldown1, float fangCooldown2, float fangCooldown3,
-		float switchCooldown);
-
-	static void UpdateHP(float currentHp, float altHp);
-
-	static void ChangePlayerHUD();
-
-	void UpdateScore(int score_);
-
+	float timeToFadeDurableHealthFeedbackInternal;
 private:
 	static void UpdateComponents();
 	static void UpdateCommonSkill();
@@ -65,6 +65,7 @@ private:
 	static void UpdateCanvasHP(GameObject* targetCanvas, int health, bool darkened);
 	static void OnHealthLost(GameObject* targetCanvas, int health);
 private:
+	static float timeToFadeDurableHealthFeedback;
 	static GameObject* fang;
 	static GameObject* onimaru;
 
@@ -93,8 +94,12 @@ private:
 	static const float4 colorMagentaDarkened;
 	static const float4 colorWhiteDarkened;
 
-	ComponentText* scoreText = nullptr;
 	static int prevLives;
+	static float remainingTimes[];
+
+	static std::vector<int>remainingTimeActiveIndexes;
+
+	ComponentText* scoreText = nullptr;
 	int score = 0;
 };
 
