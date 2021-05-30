@@ -2,9 +2,9 @@
 
 #include "GameObject.h"
 #include "Components/UI/ComponentImage.h"
-#include "HealthRegeneration.h"
 #include "GameplaySystems.h"
 
+// We should get this from the character class
 #define MAX_HEALTH 7
 
 EXPOSE_MEMBERS(HUDController) {
@@ -121,9 +121,34 @@ void HUDController::ChangePlayerHUD() {
 
 void HUDController::HealthRegeneration(float currentHp, float hpRecovered) {
 	if (fang->IsActive()) {
-		ComponentImage* healthBar = onimaruHealthSecondCanvas->GetChildren()[currentHp - 1]->GetComponent<ComponentImage>();
+		ComponentImage* healthBar = onimaruHealthSecondCanvas->GetChildren()[currentHp]->GetComponent<ComponentImage>();
 		if (healthBar->IsFill()) {
 			healthBar->SetFillValue(hpRecovered);
+		}
+	}
+	else {
+		ComponentImage* healthBar = fangHealthSecondCanvas->GetChildren()[currentHp]->GetComponent<ComponentImage>();
+		if (healthBar->IsFill()) {
+			healthBar->SetFillValue(hpRecovered);
+		}
+	}
+}
+
+void HUDController::ResetHealthFill(float currentHp) {
+	if (fang->IsActive()) {
+		for (int pos = currentHp; pos < MAX_HEALTH; ++pos) {
+			ComponentImage* healthBar = onimaruHealthSecondCanvas->GetChildren()[pos]->GetComponent<ComponentImage>();
+			if (healthBar->IsFill()) {
+				healthBar->SetFillValue(0.0f);
+			}
+		}
+	}
+	else if (onimaru->IsActive()) {
+		for (int pos = currentHp; pos < MAX_HEALTH; ++pos) {
+			ComponentImage* healthBar = fangHealthSecondCanvas->GetChildren()[pos]->GetComponent<ComponentImage>();
+			if (healthBar->IsFill()) {
+				healthBar->SetFillValue(0.0f);
+			}
 		}
 	}
 }
@@ -307,7 +332,7 @@ void HUDController::UpdateCanvasHP(GameObject* targetCanvas, int health, bool da
 		if (i < health) {
 			hpComponent->SetColor(magentaToSet);
 		} else {
-			//hpComponent->SetColor(whiteToSet);
+			hpComponent->SetColor(whiteToSet);
 		}
 		i++;
 	}

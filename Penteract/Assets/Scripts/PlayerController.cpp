@@ -43,6 +43,8 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, shootCooldown),
 	MEMBER(MemberType::INT, lifePointsFang),
 	MEMBER(MemberType::INT, lifePointsOni),
+	MEMBER(MemberType::INT, onimaruRecoveryRate),
+	MEMBER(MemberType::INT, fangRecoveryRate),
 	MEMBER(MemberType::BOOL, debugGetHit)
 
 };
@@ -98,14 +100,14 @@ void PlayerController::Start() {
 	if (onimaruParticle) {
 		onimaruCompParticle = onimaruParticle->GetComponent<ComponentParticleSystem>();
 	}
-	/*if (switchAudioSourceUID) {
+	if (switchAudioSourceUID) {
 		GameObject* aux = GameplaySystems::GetGameObject(switchAudioSourceUID);
 		switchAudioSource = aux->GetComponent<ComponentAudioSource>();
 	}
 	if (dashAudioSourceUID) {
 		GameObject* aux = GameplaySystems::GetGameObject(dashAudioSourceUID);
 		dashAudioSource = aux->GetComponent<ComponentAudioSource>();
-	}*/
+	}
 	firstTime = true;
 }
 
@@ -182,11 +184,15 @@ void PlayerController::SwitchCharacter() {
 			fang->Disable();
 			onimaru->Enable();
 			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
+			hudControllerScript->ResetHealthFill(lifePointsFang);
+			fangRecovering = 0.0f;
 		} else {
 			Debug::Log("Swaping to fang...");
 			onimaru->Disable();
 			fang->Enable();
 			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
+			hudControllerScript->ResetHealthFill(lifePointsOni);
+			onimaruRecovering = 0.0f;
 		}
 		switchCooldownRemaing = switchCooldown;
 		if (hudControllerScript) {
@@ -258,7 +264,7 @@ void PlayerController::CheckCoolDowns() {
 	}
 
 	if (onimaru->IsActive() && lifePointsFang != FANG_MAX_HEALTH) {
-		if (fangRecovering >= fangRecoveryTime) {
+		if (fangRecovering >= fangRecoveryRate) {
 			lifePointsFang += 1.0f;
 			fangRecovering = 0.0f;
 		}
@@ -268,7 +274,7 @@ void PlayerController::CheckCoolDowns() {
 	}
 
 	if (fang->IsActive() && lifePointsOni != ONIMARU_MAX_HEALTH) {
-		if (onimaruRecovering >= onimaruRecoveryTime) {
+		if (onimaruRecovering >= onimaruRecoveryRate) {
 			lifePointsOni += 1.0f;
 			onimaruRecovering = 0.0f;
 		}
@@ -418,13 +424,15 @@ void PlayerController::UpdatePlayerStats() {
 			debugGetHit = false;
 		}
 
-		if (fang->IsActive()) {
-			float currentRecoveredHealth = 1 - (onimaruRecoveryTime - onimaruRecovering);
-			hudControllerScript->HealthRegeneration(lifePointsOni, currentRecoveredHealth);
+		if (fang->IsActive() && lifePointsOni != ONIMARU_MAX_HEALTH) {
+			Debug::Log("Recovering Onimaru...");
+			float healthRecovered = (onimaruRecovering / onimaruRecoveryRate);
+			hudControllerScript->HealthRegeneration(lifePointsOni, healthRecovered);
 		}
-		else {
-			float realRecoveryCooldown = 1 - (fangRecoveryTime - fangRecovering);
-			hudControllerScript->HealthRegeneration(lifePointsFang, realRecoveryCooldown);
+		else if (onimaru->IsActive() && lifePointsFang != FANG_MAX_HEALTH) {
+			Debug::Log("Recovering Fang...");
+			float healthRecovered = (fangRecovering / fangRecoveryRate);
+			hudControllerScript->HealthRegeneration(lifePointsFang, healthRecovered);
 		}
 
 		float realDashCooldown = 1.0f - (dashCooldownRemaing / dashCooldown);

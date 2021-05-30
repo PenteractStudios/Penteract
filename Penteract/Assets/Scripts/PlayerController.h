@@ -16,7 +16,9 @@ class ComponentAnimation;
 class State;
 struct TesseractEvent;
 
-#define ONIMARU_MAX_HEALTH 7.0f
+// We should get these two values from the Character class
+
+#define ONIMARU_MAX_HEALTH 7.0f 
 #define FANG_MAX_HEALTH 7.0f
 
 enum class MovementDirection {
@@ -70,8 +72,8 @@ public:
 	float cameraOffsetX = 0.f;
 	float shootCooldown = 0.1f;
 
-	float fangRecoveryTime = 1.0f;
-	float onimaruRecoveryTime = 1.0f;
+	int fangRecoveryRate = 1.0f;
+	int onimaruRecoveryRate = 1.0f;
 
 	bool firstTime = true;
 
