@@ -22,10 +22,11 @@ void GenericGodModeToggle::Start() {
 	godController = GameplaySystems::GetGameObject(godControllerUID);
 }
 
-void GenericGodModeToggle::Update() {
-}
+void GenericGodModeToggle::Update() {}
 
 void GenericGodModeToggle::OnToggled(bool toggled_) {
-	GodModeController* gmControllerScript = GET_SCRIPT(godController, GodModeController);
-	gmControllerScript->OnChildToggle(index, toggle->IsChecked());
+	if (godController) {
+		GodModeController* gmControllerScript = GET_SCRIPT(godController, GodModeController);
+		gmControllerScript->OnChildToggle(index, toggle->IsChecked());
+	}
 }

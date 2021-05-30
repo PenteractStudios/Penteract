@@ -7,7 +7,7 @@
     ],
     "QuadtreeMaxDepth": 4,
     "QuadtreeElementsPerNode": 200,
-    "GameCamera": 18069853456435426804,
+    "GameCamera": 15508783612616103378,
     "AmbientLight": [
         0.0,
         0.0,
@@ -115,9 +115,9 @@
                         "Id": 4207010868678575109,
                         "Active": true,
                         "Position": [
-                            2.0,
-                            3.0,
-                            -5.0
+                            0.0,
+                            4.0,
+                            -12.0
                         ],
                         "Rotation": [
                             0.0,
@@ -131,9 +131,9 @@
                             1.0
                         ],
                         "LocalEulerAngles": [
-                            -0.0,
                             0.0,
-                            -0.0
+                            0.0,
+                            0.0
                         ]
                     },
                     {
@@ -142,9 +142,9 @@
                         "Active": true,
                         "Frustum": {
                             "Pos": [
-                                2.0,
-                                3.0,
-                                -5.0
+                                0.0,
+                                4.0,
+                                -12.0
                             ],
                             "Up": [
                                 0.0,
@@ -265,6 +265,21 @@
                                 "Name": "uiCanvasUID",
                                 "Type": "GameObjectUID",
                                 "Value": 5026241383945616261
+                            },
+                            {
+                                "Name": "spawnMeleeUID",
+                                "Type": "GameObjectUID",
+                                "Value": 12975027554602095818
+                            },
+                            {
+                                "Name": "spawnRangedUID",
+                                "Type": "GameObjectUID",
+                                "Value": 7761595668359703340
+                            },
+                            {
+                                "Name": "toggleEnemiesUID",
+                                "Type": "GameObjectUID",
+                                "Value": 5294511759219233811
                             }
                         ]
                     }
@@ -272,7 +287,7 @@
                 "Children": [
                     {
                         "Id": 12975027554602095818,
-                        "Name": "SpawnOnClick",
+                        "Name": "SpawnMelee",
                         "Active": false,
                         "ActiveHierarchy": true,
                         "RootBoneId": 0,
@@ -313,17 +328,22 @@
                                     {
                                         "Name": "cameraUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 11531142493655444923
+                                        "Value": 6504565400223609016
                                     },
                                     {
                                         "Name": "prefabId",
                                         "Type": "PrefabResourceUID",
-                                        "Value": 11253665877865958739
+                                        "Value": 564339191826698320
                                     },
                                     {
                                         "Name": "godModeUID",
                                         "Type": "GameObjectUID",
                                         "Value": 11128356192968719727
+                                    },
+                                    {
+                                        "Name": "enemiesUID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 5294511759219233811
                                     }
                                 ]
                             }
@@ -378,7 +398,7 @@
                                     {
                                         "Name": "prefabId",
                                         "Type": "PrefabResourceUID",
-                                        "Value": 11529684182123475847
+                                        "Value": 564339191826698320
                                     }
                                 ]
                             }
@@ -669,7 +689,7 @@
                                         "Type": "Toggle",
                                         "Id": 3529276464476500007,
                                         "Active": true,
-                                        "IsOn": true,
+                                        "IsOn": false,
                                         "EnabledImageID": 11741005602604975902,
                                         "ClickedColor": [
                                             0.6399999856948853,
@@ -799,7 +819,7 @@
                                             {
                                                 "Type": "Image",
                                                 "Id": 716217297368260304,
-                                                "Active": true,
+                                                "Active": false,
                                                 "TextureId": 0,
                                                 "Color": [
                                                     9.999989742937033e-7,
@@ -1051,7 +1071,7 @@
                                         "Type": "Toggle",
                                         "Id": 5714717256567366086,
                                         "Active": true,
-                                        "IsOn": true,
+                                        "IsOn": false,
                                         "EnabledImageID": 9965820204754839815,
                                         "ClickedColor": [
                                             0.6399999856948853,
@@ -1186,7 +1206,7 @@
                                             {
                                                 "Type": "Image",
                                                 "Id": 841921370332528723,
-                                                "Active": true,
+                                                "Active": false,
                                                 "TextureId": 0,
                                                 "Color": [
                                                     0.0,
@@ -2099,15 +2119,15 @@
                                 "Id": 7506277262703173766,
                                 "Active": true,
                                 "Position": [
-                                    -121.39800262451172,
-                                    59.23099899291992,
-                                    38.10300064086914
+                                    0.0,
+                                    4.0,
+                                    -12.0
                                 ],
                                 "Rotation": [
-                                    0.06666433811187744,
-                                    0.9097523093223572,
-                                    -0.376836895942688,
-                                    0.16093693673610688
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
                                 ],
                                 "Scale": [
                                     1.0,
@@ -2115,9 +2135,9 @@
                                     1.0
                                 ],
                                 "LocalEulerAngles": [
-                                    133.20700073242188,
-                                    14.038999557495118,
-                                    -165.5189971923828
+                                    0.0,
+                                    0.0,
+                                    0.0
                                 ]
                             },
                             {
@@ -2126,25 +2146,85 @@
                                 "Active": true,
                                 "Frustum": {
                                     "Pos": [
-                                        -121.39800262451172,
-                                        59.23099899291992,
-                                        38.10300064086914
+                                        0.0,
+                                        4.0,
+                                        -12.0
                                     ],
                                     "Up": [
-                                        0.2425900101661682,
-                                        0.7070995569229126,
-                                        -0.6641989946365356
+                                        0.0,
+                                        1.0,
+                                        0.0
                                     ],
                                     "Front": [
-                                        0.2425822615623474,
-                                        -0.7071139812469482,
-                                        -0.6641865968704224
+                                        0.0,
+                                        0.0,
+                                        1.0
                                     ],
                                     "NearPlaneDistance": 0.10000000149011612,
                                     "FarPlaneDistance": 200.0,
                                     "HorizontalFov": 1.9112790822982789,
                                     "VerticalFov": 1.3089970350265504
                                 }
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Id": 7761595668359703340,
+                        "Name": "SpawnRanged",
+                        "Active": false,
+                        "ActiveHierarchy": false,
+                        "RootBoneId": 0,
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Id": 4643688732709617744,
+                                "Active": true,
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "Script",
+                                "Id": 9117281901600303347,
+                                "Active": true,
+                                "Script": 5647085299474518,
+                                "Values": [
+                                    {
+                                        "Name": "cameraUID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 6504565400223609016
+                                    },
+                                    {
+                                        "Name": "prefabId",
+                                        "Type": "PrefabResourceUID",
+                                        "Value": 564339191826698320
+                                    },
+                                    {
+                                        "Name": "enemiesUID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 5294511759219233811
+                                    }
+                                ]
                             }
                         ],
                         "Children": null

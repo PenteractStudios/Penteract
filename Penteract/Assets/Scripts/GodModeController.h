@@ -11,6 +11,10 @@ class GodModeController : public Script {
 
 public:
 	UID uiCanvasUID = 0;
+	UID spawnMeleeUID = 0;
+	UID spawnRangedUID = 0;
+	UID toggleEnemiesUID = 0;
+	UID invincibleUID = 0;
 
 public:
 	void Start() override;
@@ -20,7 +24,10 @@ public:
 private:
 	GameObject* gameObject = nullptr;
 	GameObject* uiCanvas = nullptr;
+	GameObject* spawnMelee = nullptr;
+	GameObject* spawnRanged = nullptr;
+	GameObject* toggleEnemies = nullptr;
+	GameObject* invincible = nullptr;
 
-	std::vector<GameObject*> children;
 	std::vector<ComponentToggle*> toggles;
 };

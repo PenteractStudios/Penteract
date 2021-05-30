@@ -9,7 +9,8 @@
 
 EXPOSE_MEMBERS(SpawnOnClick) {
 	MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, prefabId)
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, prefabId),
+	MEMBER(MemberType::GAME_OBJECT_UID, enemiesUID)
 };
 
 GENERATE_BODY_IMPL(SpawnOnClick);
@@ -17,17 +18,14 @@ GENERATE_BODY_IMPL(SpawnOnClick);
 void SpawnOnClick::Start() {
 	gameObject = &GetOwner();
 	camera = GameplaySystems::GetGameObject(cameraUID);
+	enemies = GameplaySystems::GetGameObject(enemiesUID);
 }
 
 void SpawnOnClick::Update() {
-	Spawn();
-}
-
-void SpawnOnClick::Spawn() {
 	if (Input::GetKeyCode(Input::KEYCODE::KEY_LCTRL) && Input::GetMouseButtonUp(0)) {
 		ResourcePrefab* prefab = GameplaySystems::GetResource<ResourcePrefab>(prefabId);
 		if (prefab != nullptr) {
-			UID prefabId = prefab->BuildPrefab(gameObject);
+			UID prefabId = prefab->BuildPrefab(enemies);
 			GameObject* go = GameplaySystems::GetGameObject(prefabId);
 			go->GetComponent<ComponentTransform>()->SetPosition(DetectMouseLocation());
 		}
@@ -36,7 +34,7 @@ void SpawnOnClick::Spawn() {
 
 float3 SpawnOnClick::DetectMouseLocation() {
 	float2 mousePos = Input::GetMousePositionNormalized();
-	ComponentTransform* compTransform = gameObject->GetComponent<ComponentTransform>();
+	ComponentTransform* compTransform = enemies->GetComponent<ComponentTransform>();
 	if (camera && compTransform) {
 		ComponentCamera* compCamera = camera->GetComponent<ComponentCamera>();
 		LineSegment ray = compCamera->frustum.UnProjectLineSegment(mousePos.x, mousePos.y);

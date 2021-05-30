@@ -22,4 +22,3 @@ private:
 	GameObject* godController = nullptr;
 	ComponentToggle* toggle = nullptr;
 };
-
