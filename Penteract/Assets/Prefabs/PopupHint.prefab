@@ -70,6 +70,16 @@
                             300.0,
                             0.0
                         ]
+                    },
+                    {
+                        "Name": "appearAnimationTime",
+                        "Type": "Float",
+                        "Value": 0.30000001192092898
+                    },
+                    {
+                        "Name": "disappearAnimationTime",
+                        "Type": "Float",
+                        "Value": 0.30000001192092898
                     }
                 ]
             }
