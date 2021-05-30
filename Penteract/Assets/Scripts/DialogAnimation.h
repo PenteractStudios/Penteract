@@ -16,13 +16,15 @@ public:
 	float appearAnimationTime = .5f;
 	float disappearAnimationTime = .5f;
 	float currentTime = 0.0f;
+	float duration = 5.0f;
 
 private:
-	void TransitionUIElementsColor(bool fromTransparent);
+	void TransitionUIElementsColor(bool appearing = true, bool mustLerp = true);
 	void RetrieveUIComponents(GameObject* current);
 
 private:
 	bool startAnimationFinished = false;
+	bool endAnimationFinished = false;
 	std::vector<Component*> uiComponents;
 	std::vector<float4> uiColors;
 };
