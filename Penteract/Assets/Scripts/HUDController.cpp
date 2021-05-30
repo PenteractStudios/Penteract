@@ -121,15 +121,25 @@ void HUDController::ChangePlayerHUD() {
 
 void HUDController::HealthRegeneration(float currentHp, float hpRecovered) {
 	if (fang->IsActive()) {
-		ComponentImage* healthBar = onimaruHealthSecondCanvas->GetChildren()[currentHp]->GetComponent<ComponentImage>();
-		if (healthBar->IsFill()) {
-			healthBar->SetFillValue(hpRecovered);
+		const GameObject* healthSlot = onimaruHealthSecondCanvas->GetChildren()[currentHp];
+		if (healthSlot) {
+			for (GameObject* healthComponents : healthSlot->GetChildren()) {
+				ComponentImage* healthFill = healthComponents->GetComponent<ComponentImage>();
+				if (healthFill->IsFill()) {
+					healthFill->SetFillValue(hpRecovered);
+				}
+			}
 		}
 	}
 	else {
-		ComponentImage* healthBar = fangHealthSecondCanvas->GetChildren()[currentHp]->GetComponent<ComponentImage>();
-		if (healthBar->IsFill()) {
-			healthBar->SetFillValue(hpRecovered);
+		const GameObject* healthSlot = fangHealthSecondCanvas->GetChildren()[currentHp];
+		if (healthSlot) {
+			for (GameObject* healthComponents : healthSlot->GetChildren()) {
+				ComponentImage* healthFill = healthComponents->GetComponent<ComponentImage>();
+				if (healthFill->IsFill()) {
+					healthFill->SetFillValue(hpRecovered);
+				}
+			}
 		}
 	}
 }
@@ -137,17 +147,23 @@ void HUDController::HealthRegeneration(float currentHp, float hpRecovered) {
 void HUDController::ResetHealthFill(float currentHp) {
 	if (fang->IsActive()) {
 		for (int pos = currentHp; pos < MAX_HEALTH; ++pos) {
-			ComponentImage* healthBar = onimaruHealthSecondCanvas->GetChildren()[pos]->GetComponent<ComponentImage>();
-			if (healthBar->IsFill()) {
-				healthBar->SetFillValue(0.0f);
+			const GameObject* healthSlot = onimaruHealthSecondCanvas->GetChildren()[pos];
+			for (GameObject* healthComponents : healthSlot->GetChildren()) {
+				ComponentImage* healthFill = healthComponents->GetComponent<ComponentImage>();
+				if (healthFill->IsFill()) {
+					healthFill->SetFillValue(0.0f);
+				}
 			}
 		}
 	}
 	else if (onimaru->IsActive()) {
 		for (int pos = currentHp; pos < MAX_HEALTH; ++pos) {
-			ComponentImage* healthBar = fangHealthSecondCanvas->GetChildren()[pos]->GetComponent<ComponentImage>();
-			if (healthBar->IsFill()) {
-				healthBar->SetFillValue(0.0f);
+			const GameObject* healthSlot = fangHealthSecondCanvas->GetChildren()[pos];
+			for (GameObject* healthComponents : healthSlot->GetChildren()) {
+				ComponentImage* healthFill = healthComponents->GetComponent<ComponentImage>();
+				if (healthFill->IsFill()) {
+					healthFill->SetFillValue(0.0f);
+				}
 			}
 		}
 	}
@@ -175,10 +191,10 @@ void HUDController::UpdateHP(float currentHp, float altHp) {
 	if (!fang || !onimaru) return;
 	if (fang->IsActive()) {
 		UpdateCanvasHP(fangHealthMainCanvas, currentHp, false);
-		UpdateCanvasHP(onimaruHealthSecondCanvas, altHp, true);
+		//UpdateCanvasHP(onimaruHealthSecondCanvas, altHp, true); // Talk to David about this comment
 	} else {
 		UpdateCanvasHP(onimaruHealthMainCanvas, currentHp, false);
-		UpdateCanvasHP(fangHealthSecondCanvas, altHp, true);
+		//UpdateCanvasHP(fangHealthSecondCanvas, altHp, true); // Talk to David about this comment
 	}
 }
 
