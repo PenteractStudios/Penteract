@@ -22,8 +22,8 @@ GENERATE_BODY_IMPL(AIMovement);
 
 void AIMovement::Start() {
     player = GameplaySystems::GetGameObject(playerUID);
-    animation = GetOwner().GetParent()->GetComponent<ComponentAnimation>();   
-    parentTransform = GetOwner().GetParent()->GetComponent<ComponentTransform>();
+    animation = GetOwner().GetComponent<ComponentAnimation>();   
+    parentTransform = GetOwner().GetComponent<ComponentTransform>();
     GameObject* canvas = GameplaySystems::GetGameObject(canvasUID);
     if (canvas) {
         hudControllerScript = GET_SCRIPT(canvas, HUDController);
@@ -51,7 +51,7 @@ void AIMovement::Update() {
     switch (state)
     {
     case AIState::START:
-        if (Camera::CheckObjectInsideFrustum(&GetOwner())) {
+        if (Camera::CheckObjectInsideFrustum(GetOwner().GetChildren()[0])) {
             Seek(float3(parentTransform->GetGlobalPosition().x, 0, parentTransform->GetGlobalPosition().z), fallingSpeed);
             if (parentTransform->GetGlobalPosition().y < 2.7 + 0e-5f) {
                 animation->SendTrigger("StartSpawn");
