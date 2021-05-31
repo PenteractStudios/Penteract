@@ -12,6 +12,8 @@ public:
 	void Update() override;
 public:
 	int speed = 200;
+
+private:
 	float life = 0.2f;
 	float restLife = 0.0f;
 	bool itsVertical = false;
