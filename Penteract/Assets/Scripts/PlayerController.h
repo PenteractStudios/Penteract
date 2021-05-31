@@ -119,7 +119,7 @@ private:
 	float3 facePointDir = float3(0, 0, 0);
 	MovementDirection dashMovementDirection = MovementDirection::NONE;
 	ComponentTransform* transform = nullptr;
-	ComponentTransform* FangGuntransform = nullptr;
+	ComponentTransform* fangGunTransform = nullptr;
 	ComponentCamera* compCamera = nullptr;
 	ComponentTransform* cameraTransform = nullptr;
 	//Animation
