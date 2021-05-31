@@ -22,28 +22,30 @@
 EXPOSE_MEMBERS(PlayerController) {
 	// Add members here to expose them to the engine. Example:
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangParticleUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruParticleUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, switchAudioSourceUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, dashAudioSourceUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
-	MEMBER(MemberType::FLOAT, distanceRayCast),
-	MEMBER(MemberType::FLOAT, switchCooldown),
-	MEMBER(MemberType::FLOAT, dashCooldown),
-	MEMBER(MemberType::FLOAT, dashSpeed),
-	MEMBER(MemberType::FLOAT, dashDistance),
-	MEMBER(MemberType::FLOAT, cameraOffsetZ),
-	MEMBER(MemberType::FLOAT, cameraOffsetY),
-	MEMBER(MemberType::FLOAT, cameraOffsetX),
-	MEMBER(MemberType::FLOAT, fangMovementSpeed),
-	MEMBER(MemberType::FLOAT, onimaruMovementSpeed),
-	MEMBER(MemberType::FLOAT, shootCooldown),
-	MEMBER(MemberType::INT, lifePointsFang),
-	MEMBER(MemberType::INT, lifePointsOni)
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
+		MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, fangGunUID),
 
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruParticleUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, switchAudioSourceUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, dashAudioSourceUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
+		MEMBER(MemberType::FLOAT, fangSpeedAtack),
+		MEMBER(MemberType::FLOAT, distanceRayCast),
+		MEMBER(MemberType::FLOAT, switchCooldown),
+		MEMBER(MemberType::FLOAT, dashCooldown),
+		MEMBER(MemberType::FLOAT, dashSpeed),
+		MEMBER(MemberType::FLOAT, dashDistance),
+		MEMBER(MemberType::FLOAT, cameraOffsetZ),
+		MEMBER(MemberType::FLOAT, cameraOffsetY),
+		MEMBER(MemberType::FLOAT, cameraOffsetX),
+		MEMBER(MemberType::FLOAT, fangMovementSpeed),
+		MEMBER(MemberType::FLOAT, onimaruMovementSpeed),
+		MEMBER(MemberType::FLOAT, shootCooldown),
+		MEMBER(MemberType::INT, lifePointsFang),
+		MEMBER(MemberType::INT, lifePointsOni)
 };
 
 GENERATE_BODY_IMPL(PlayerController);
@@ -53,14 +55,13 @@ void PlayerController::Start() {
 	fang = GameplaySystems::GetGameObject(fangUID);
 	onimaru = GameplaySystems::GetGameObject(onimaruUID);
 	camera = GameplaySystems::GetGameObject(cameraUID);
-
+	fangGun = GameplaySystems::GetGameObject(fangGunUID);
 	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
 	if (canvasGO) {
 		hudControllerScript = GET_SCRIPT(canvasGO, HUDController);
 	}
 
 	//animation
-	fangParticle = GameplaySystems::GetGameObject(fangParticleUID);
 	onimaruParticle = GameplaySystems::GetGameObject(onimaruParticleUID);
 
 	if (player) {
@@ -90,9 +91,6 @@ void PlayerController::Start() {
 		if (onimaruAnimation) {
 			onimaruCurrentState = onimaruAnimation->GetCurrentState();
 		}
-	}
-	if (fangParticle) {
-		fangCompParticle = fangParticle->GetComponent<ComponentParticleSystem>();
 	}
 	if (onimaruParticle) {
 		onimaruCompParticle = onimaruParticle->GetComponent<ComponentParticleSystem>();
@@ -134,7 +132,7 @@ void PlayerController::LookAtMouse() {
 }
 
 void PlayerController::InitDash(MovementDirection md) {
-	if(CanDash()){
+	if (CanDash()) {
 		dashDirection = GetDirection(md);
 		dashMovementDirection = md;
 		dashDestination = transform->GetGlobalPosition();
@@ -190,7 +188,7 @@ void PlayerController::SwitchCharacter() {
 			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
 		}
 		switchCooldownRemaing = switchCooldown;
-		if(hudControllerScript){
+		if (hudControllerScript) {
 			hudControllerScript->ChangePlayerHUD();
 		}
 	}
@@ -201,6 +199,9 @@ bool PlayerController::CanShoot() {
 }
 
 void PlayerController::Shoot() {
+	ComponentTransform* transform = GetOwner().GetComponent<ComponentTransform>();
+	FangGuntransform = fangGun->GetComponent<ComponentTransform>();
+
 	if (CanShoot()) {
 		if (shootAudioSource) {
 			shootAudioSource->Play();
@@ -208,16 +209,21 @@ void PlayerController::Shoot() {
 		else {
 			Debug::Log(AUDIOSOURCE_NULL_MSG);
 		}
-
 		shootCooldownRemaing = shootCooldown;
 		shooting = true;
 		if (fang->IsActive()) {
-			fangCompParticle->Play();
+			ResourcePrefab* prefab = GameplaySystems::GetResource<ResourcePrefab>(fangTrailUID);
+			if (prefab != nullptr) {
+				//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
+				//fangGun->GetComponent<ComponentParticleSystem>()->Play();
+				GameplaySystems::Instantiate(prefab, FangGuntransform->GetGlobalPosition(), transform->GetGlobalRotation());
+				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
+				GameObject* secondTrail = GameplaySystems::Instantiate(prefab, FangGuntransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
+			}
 		}
 		else {
 			onimaruCompParticle->Play();
 		}
-
 		float3 start = transform->GetGlobalPosition(); //(boundingBox->GetLocalMaxPointAABB() + boundingBox->GetLocalMinPointAABB()) / 2;
 		float3 end = transform->GetGlobalRotation() * float3(0, 0, 1);
 		end.Normalize();
@@ -237,7 +243,6 @@ void PlayerController::HitDetected() {
 }
 
 void PlayerController::CheckCoolDowns() {
-
 	if (dashCooldownRemaing <= 0.f) {
 		dashCooldownRemaing = 0.f;
 		dashInCooldown = false;
@@ -265,7 +270,6 @@ void PlayerController::CheckCoolDowns() {
 }
 
 MovementDirection PlayerController::GetInputMovementDirection() const {
-
 	MovementDirection md = MovementDirection::NONE;
 	if (Input::GetKeyCode(Input::KEYCODE::KEY_W)) {
 		md = MovementDirection::UP;
@@ -330,24 +334,27 @@ int PlayerController::GetMouseDirectionState(MovementDirection input) {
 
 	if (dot > 0.707) {
 		return 2; //RunForward
-	} else if (dot < -0.707) {
+	}
+	else if (dot < -0.707) {
 		return 1; //RunBackward
-	} else if (cross.y > 0) {
+	}
+	else if (cross.y > 0) {
 		return 4; //RunRight
-	} else {
+	}
+	else {
 		return 3; //RunLeft
 	}
 }
 
 void PlayerController::PlayAnimation(MovementDirection md) {
-
 	ComponentAnimation* animation = nullptr;
 	State* currentState = nullptr;
 
 	if (fang->IsActive()) {
 		animation = fangAnimation;
 		currentState = fangCurrentState;
-	} else {
+	}
+	else {
 		animation = onimaruAnimation;
 		currentState = onimaruCurrentState;
 	}
@@ -379,11 +386,10 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 		animation->SendTrigger(currentState->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
 		break;
 	}
-
 }
 
 void PlayerController::UpdatePlayerStats() {
-	if (hudControllerScript){
+	if (hudControllerScript) {
 		if (firstTime) {
 			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
 			firstTime = false;
@@ -448,11 +454,18 @@ void PlayerController::Update() {
 		if (Input::GetKeyCode(Input::KEYCODE::KEY_R)) SwitchCharacter();
 	}
 	if (fang->IsActive()) {
-		if (Input::GetMouseButtonDown(0)) Shoot();
-	}else {
+		if (fantRestTimeToAtack <= 0) {
+			if (Input::GetMouseButtonDown(0)) {
+				Shoot();
+				fantRestTimeToAtack = (1 / fangSpeedAtack);
+			}
+		}
+		else {
+			fantRestTimeToAtack -= Time::GetDeltaTime();
+		}
+	}
+	else {
 		if (Input::GetMouseButtonRepeat(0)) Shoot();
 	}
-	
 	PlayAnimation(md);
-
 }
