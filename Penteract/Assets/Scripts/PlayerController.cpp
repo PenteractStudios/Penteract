@@ -62,7 +62,6 @@ void PlayerController::Start() {
 	}
 
 	//animation
-	//fangParticle = GameplaySystems::GetGameObject(fangParticleUID);
 	onimaruParticle = GameplaySystems::GetGameObject(onimaruParticleUID);
 
 	if (player) {
@@ -93,9 +92,6 @@ void PlayerController::Start() {
 			onimaruCurrentState = onimaruAnimation->GetCurrentState();
 		}
 	}
-	//if (fangParticle) {
-	//	fangCompParticle = fangParticle->GetComponent<ComponentParticleSystem>();
-	//}
 	if (onimaruParticle) {
 		onimaruCompParticle = onimaruParticle->GetComponent<ComponentParticleSystem>();
 	}
@@ -207,29 +203,27 @@ void PlayerController::Shoot() {
 	FangGuntransform = fangGun->GetComponent<ComponentTransform>();
 
 	if (CanShoot()) {
-		/*if (shootAudioSource) {
+		if (shootAudioSource) {
 			shootAudioSource->Play();
 		}
 		else {
 			Debug::Log(AUDIOSOURCE_NULL_MSG);
-		}*/
-
+		}
 		shootCooldownRemaing = shootCooldown;
 		shooting = true;
 		if (fang->IsActive()) {
 			ResourcePrefab* prefab = GameplaySystems::GetResource<ResourcePrefab>(fangTrailUID);
 			if (prefab != nullptr) {
+				//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
 				//fangGun->GetComponent<ComponentParticleSystem>()->Play();
 				GameplaySystems::Instantiate(prefab, FangGuntransform->GetGlobalPosition(), transform->GetGlobalRotation());
 				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
 				GameObject* secondTrail = GameplaySystems::Instantiate(prefab, FangGuntransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
-				/*fangCompParticle->Play();*/
 			}
 		}
 		else {
 			onimaruCompParticle->Play();
 		}
-
 		float3 start = transform->GetGlobalPosition(); //(boundingBox->GetLocalMaxPointAABB() + boundingBox->GetLocalMinPointAABB()) / 2;
 		float3 end = transform->GetGlobalRotation() * float3(0, 0, 1);
 		end.Normalize();
@@ -459,8 +453,6 @@ void PlayerController::Update() {
 		MoveTo(md);
 		if (Input::GetKeyCode(Input::KEYCODE::KEY_R)) SwitchCharacter();
 	}
-
-
 	if (fang->IsActive()) {
 		if (fantRestTimeToAtack <= 0) {
 			if (Input::GetMouseButtonDown(0)) {
@@ -475,6 +467,5 @@ void PlayerController::Update() {
 	else {
 		if (Input::GetMouseButtonRepeat(0)) Shoot();
 	}
-
 	PlayAnimation(md);
 }
