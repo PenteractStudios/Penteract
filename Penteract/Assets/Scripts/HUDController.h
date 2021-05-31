@@ -53,6 +53,8 @@ public:
 	UID fangHealthSecondCanvasUID = 0;
 	UID onimaruHealthSecondCanvasUID = 0;
 
+	UID lowHealthWarningEffectUID = 0;
+
 	UID swapingSkillCanvasUID = 0;
 
 	UID scoreTextUID = 0;
@@ -82,6 +84,8 @@ private:
 	static GameObject* fangHealthSecondCanvas;
 	static GameObject* onimaruHealthSecondCanvas;
 
+	static GameObject* lowHealthWarningEffect;
+
 	static GameObject* swapingSkillCanvas;
 
 	static std::array<float, Cooldowns::TOTAL> cooldowns;
@@ -96,6 +100,7 @@ private:
 
 	static int prevLives;
 	static float remainingTimes[];
+	static bool lowHPWarningActive;
 
 	static std::vector<int>remainingTimeActiveIndexes;
 
