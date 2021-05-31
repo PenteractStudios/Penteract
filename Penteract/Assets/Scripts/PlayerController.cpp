@@ -178,7 +178,9 @@ void PlayerController::Dash() {
 }
 
 bool PlayerController::CanDash() {
-	return !dashing && !dashInCooldown && fang->IsActive();
+	//TODO: DELETE BEFORE IMPLEMENT DASH WITH NAVMESH
+	//return !dashing && !dashInCooldown && fang->IsActive();
+	return false;
 }
 
 bool PlayerController::CanSwitch() {
