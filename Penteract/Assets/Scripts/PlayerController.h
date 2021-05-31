@@ -14,6 +14,7 @@ class HUDController;
 class ComponentAgent;
 class ComponentAnimation;
 class State;
+class ResourcePrefab;
 struct TesseractEvent;
 
 enum class MovementDirection {
@@ -37,14 +38,22 @@ public:
 	GameObject* camera = nullptr;
 	GameObject* fang = nullptr;
 	GameObject* onimaru = nullptr;
-	GameObject* fangParticle = nullptr;
+
+	GameObject* fangGun = nullptr;
+	GameObject* onimaruGun = nullptr;
+
 	GameObject* onimaruParticle = nullptr;
 	ComponentAgent* agent = nullptr;
 
 	UID fangUID = 0;
+	UID fangTrailUID = 0;
+	UID fangGunUID = 0;
+
 	UID onimaruUID = 0;
-	UID fangParticleUID = 0;
 	UID onimaruParticleUID = 0;
+	UID onimaruTrailUID = 0;
+	UID onimaruGunUID = 0;
+
 	UID mainNodeUID = 0;
 	UID cameraUID = 0;
 
@@ -54,9 +63,11 @@ public:
 	UID dashAudioSourceUID = 0;
 
 	bool hitTaken = false;
-	int lifePointsFang = 7;
-	int lifePointsOni = 7;
+	float lifePointsFang = 7.f;
+	float lifePointsOni = 7.f;
 
+	float fangAttackSpeed = 1.f;
+	float onimaruAttackSpeed = 1.f;
 	float distanceRayCast = 2.f;
 	float dashCooldown = 5.f; //seconds
 	float switchCooldown = 5.f;
@@ -99,14 +110,15 @@ private:
 private:
 
 	float dashError = 2.f;
-	float dashCooldownRemaing = 0.f;
+	float dashCooldownRemaining = 0.f;
 	bool dashInCooldown = false;
 	bool dashing = false;
 
-	float switchCooldownRemaing = 0.f;
+	float switchCooldownRemaining = 0.f;
 	bool switchInCooldown = false;
 
-	float shootCooldownRemaing = 0.f;
+	float fangAttackCooldownRemaining = 0.f;
+	float onimaruAttackCooldownRemaining = 0.f;
 	bool shooting = false;
 
 	float3 initialPosition = float3(0, 0, 0);
@@ -115,13 +127,19 @@ private:
 	float3 facePointDir = float3(0, 0, 0);
 	MovementDirection dashMovementDirection = MovementDirection::NONE;
 	ComponentTransform* transform = nullptr;
+	ComponentTransform* fangGunTransform = nullptr;
+	ComponentTransform* onimaruGunTransform = nullptr;
 	ComponentCamera* compCamera = nullptr;
 	ComponentTransform* cameraTransform = nullptr;
+
 	//Animation
 	ComponentAnimation* fangAnimation = nullptr;
 	State* fangCurrentState = nullptr;
 	ComponentAnimation* onimaruAnimation = nullptr;
 	State* onimaruCurrentState = nullptr;
+
+	ResourcePrefab* fangTrail = nullptr;
+	ResourcePrefab* onimaruTrail = nullptr;
 
 	//Particles
 	ComponentParticleSystem* fangCompParticle = nullptr;
@@ -134,4 +152,3 @@ private:
 
 	HUDController* hudControllerScript = nullptr;
 };
-
