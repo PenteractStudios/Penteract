@@ -241,7 +241,7 @@ void PlayerController::Shoot() {
 		int mask = static_cast<int>(MaskType::ENEMY);
 		GameObject* hitGo = Physics::Raycast(start, start + end, mask);
 		if (hitGo) {
-			AIMovement* enemyScript = GET_SCRIPT(hitGo, AIMovement);
+			AIMovement* enemyScript = GET_SCRIPT(hitGo->GetParent(), AIMovement);
 			if (fang->IsActive()) enemyScript->HitDetected(3);
 			else enemyScript->HitDetected();
 		}
