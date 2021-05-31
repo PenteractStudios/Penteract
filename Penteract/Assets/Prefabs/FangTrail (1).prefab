@@ -1,0 +1,48 @@
+{
+    "Root": {
+        "Name": "FangTrail",
+        "Active": true,
+        "RootBoneName": "",
+        "Mask": 0,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Active": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "LocalEulerAngles": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ]
+            },
+            {
+                "Type": "Trail",
+                "Active": true,
+                "ShaderId": 12036155749463492658,
+                "TextureId": 16268726512351030084
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 709869534139279052,
+                "Values": null
+            }
+        ],
+        "Children": null
+    }
+}

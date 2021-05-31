@@ -37,17 +37,15 @@ public:
 	GameObject* camera = nullptr;
 	GameObject* fang = nullptr;
 	GameObject* onimaru = nullptr;
-	GameObject* fangTrail = nullptr;
-	GameObject* fangGun = nullptr;
 
+	GameObject* fangGun = nullptr;
 	GameObject* onimaruParticle = nullptr;
 
 	UID fangUID = 0;
-	UID onimaruUID = 0;
-
 	UID fangTrailUID = 0;
 	UID fangGunUID = 0;
 
+	UID onimaruUID = 0;
 	UID onimaruParticleUID = 0;
 	UID mainNodeUID = 0;
 	UID cameraUID = 0;
@@ -117,13 +115,11 @@ private:
 	float3 dashDestination = float3(0, 0, 0);
 	float3 dashDirection = float3(0, 0, 0);
 	float3 facePointDir = float3(0, 0, 0);
-
 	MovementDirection dashMovementDirection = MovementDirection::NONE;
 	ComponentTransform* transform = nullptr;
+	ComponentTransform* FangGuntransform = nullptr;
 	ComponentCamera* compCamera = nullptr;
 	ComponentTransform* cameraTransform = nullptr;
-	ComponentTransform* FangGuntransform = nullptr;
-
 	//Animation
 	ComponentAnimation* fangAnimation = nullptr;
 	State* fangCurrentState = nullptr;
