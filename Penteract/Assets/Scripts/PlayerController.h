@@ -59,6 +59,8 @@ public:
 	int lifePointsFang = 7;
 	int lifePointsOni = 7;
 
+	float fangSpeedAtack = 1.f;
+	float fantRestTimeToAtack = 0;
 	float distanceRayCast = 2.f;
 	float dashCooldown = 5.f; //seconds
 	float switchCooldown = 5.f;

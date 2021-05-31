@@ -32,6 +32,7 @@ EXPOSE_MEMBERS(PlayerController) {
 		MEMBER(MemberType::GAME_OBJECT_UID, switchAudioSourceUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, dashAudioSourceUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
+		MEMBER(MemberType::FLOAT, fangSpeedAtack),
 		MEMBER(MemberType::FLOAT, distanceRayCast),
 		MEMBER(MemberType::FLOAT, switchCooldown),
 		MEMBER(MemberType::FLOAT, dashCooldown),
@@ -224,21 +225,21 @@ void PlayerController::Shoot() {
 				GameObject* secondTrail = GameplaySystems::Instantiate(prefab, FangGuntransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
 				/*fangCompParticle->Play();*/
 			}
-			else {
-				onimaruCompParticle->Play();
-			}
+		}
+		else {
+			onimaruCompParticle->Play();
+		}
 
-			float3 start = transform->GetGlobalPosition(); //(boundingBox->GetLocalMaxPointAABB() + boundingBox->GetLocalMinPointAABB()) / 2;
-			float3 end = transform->GetGlobalRotation() * float3(0, 0, 1);
-			end.Normalize();
-			end *= distanceRayCast;
-			int mask = static_cast<int>(MaskType::ENEMY);
-			GameObject* hitGo = Physics::Raycast(start, start + end, mask);
-			if (hitGo) {
-				AIMovement* enemyScript = GET_SCRIPT(hitGo, AIMovement);
-				if (fang->IsActive()) enemyScript->HitDetected(3);
-				else enemyScript->HitDetected();
-			}
+		float3 start = transform->GetGlobalPosition(); //(boundingBox->GetLocalMaxPointAABB() + boundingBox->GetLocalMinPointAABB()) / 2;
+		float3 end = transform->GetGlobalRotation() * float3(0, 0, 1);
+		end.Normalize();
+		end *= distanceRayCast;
+		int mask = static_cast<int>(MaskType::ENEMY);
+		GameObject* hitGo = Physics::Raycast(start, start + end, mask);
+		if (hitGo) {
+			AIMovement* enemyScript = GET_SCRIPT(hitGo, AIMovement);
+			if (fang->IsActive()) enemyScript->HitDetected(3);
+			else enemyScript->HitDetected();
 		}
 	}
 }
@@ -458,8 +459,18 @@ void PlayerController::Update() {
 		MoveTo(md);
 		if (Input::GetKeyCode(Input::KEYCODE::KEY_R)) SwitchCharacter();
 	}
+
+
 	if (fang->IsActive()) {
-		if (Input::GetMouseButtonDown(0)) Shoot();
+		if (fantRestTimeToAtack <= 0) {
+			if (Input::GetMouseButtonDown(0)) {
+				Shoot();
+				fantRestTimeToAtack = (1 / fangSpeedAtack);
+			}
+		}
+		else {
+			fantRestTimeToAtack -= Time::GetDeltaTime();
+		}
 	}
 	else {
 		if (Input::GetMouseButtonRepeat(0)) Shoot();
