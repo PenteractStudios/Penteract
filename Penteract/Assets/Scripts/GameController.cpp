@@ -64,8 +64,6 @@ void GameController::Update() {
 		if (godModeAvailable) {
 			Debug::ToggleDebugMode();
 			if (Debug::IsGodModeOn()) {
-				camera = gameCamera->GetComponent<ComponentCamera>();
-				GameplaySystems::SetRenderCamera(camera);
 				Debug::SetGodModeOn(false);
 				if (showWireframe) { // If Wireframe enabled when leaving God Mode, update to Shaded
 					Debug::UpdateShadingMode("Shaded");
@@ -76,8 +74,6 @@ void GameController::Update() {
 				if (showWireframe) { // If Wireframe enabled when entering GodMode, update to Wireframe
 					Debug::UpdateShadingMode("Wireframe");
 				}
-				camera = godCamera->GetComponent<ComponentCamera>();
-				GameplaySystems::SetRenderCamera(camera);
 				Debug::SetGodModeOn(true);
 				godModeController->Enable();
 			}

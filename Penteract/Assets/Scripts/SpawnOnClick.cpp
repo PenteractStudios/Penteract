@@ -9,8 +9,8 @@
 
 EXPOSE_MEMBERS(SpawnOnClick) {
 	MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, prefabId),
-	MEMBER(MemberType::GAME_OBJECT_UID, enemiesUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, enemiesUID),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, prefabUID)
 };
 
 GENERATE_BODY_IMPL(SpawnOnClick);
@@ -23,7 +23,7 @@ void SpawnOnClick::Start() {
 
 void SpawnOnClick::Update() {
 	if (Input::GetKeyCode(Input::KEYCODE::KEY_LCTRL) && Input::GetMouseButtonUp(0)) {
-		ResourcePrefab* prefab = GameplaySystems::GetResource<ResourcePrefab>(prefabId);
+		ResourcePrefab* prefab = GameplaySystems::GetResource<ResourcePrefab>(prefabUID);
 		if (prefab != nullptr) {
 			UID prefabId = prefab->BuildPrefab(enemies);
 			GameObject* go = GameplaySystems::GetGameObject(prefabId);

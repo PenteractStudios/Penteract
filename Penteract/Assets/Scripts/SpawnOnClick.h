@@ -9,7 +9,7 @@ class SpawnOnClick : public Script {
 
 public:
 	UID cameraUID = 0;
-	UID prefabId = 0;
+	UID prefabUID = 0;
 	UID enemiesUID = 0;
 
 public:
