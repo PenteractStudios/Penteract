@@ -4,5 +4,6 @@
   "BeginIndex": 188,
   "EndIndex": 228,
   "Loop": true,
-  "Speed": 1.0
+  "Speed": 1.0,
+  "DurationByKeyframesSize": 0.0436904766
 }
