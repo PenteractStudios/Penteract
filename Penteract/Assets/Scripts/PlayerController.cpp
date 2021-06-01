@@ -200,7 +200,7 @@ bool PlayerController::CanShoot() {
 
 void PlayerController::Shoot() {
 	ComponentTransform* transform = GetOwner().GetComponent<ComponentTransform>();
-	FangGuntransform = fangGun->GetComponent<ComponentTransform>();
+	fangGunTransform = fangGun->GetComponent<ComponentTransform>();
 
 	if (CanShoot()) {
 		if (shootAudioSource) {
@@ -216,9 +216,9 @@ void PlayerController::Shoot() {
 			if (prefab != nullptr) {
 				//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
 				//fangGun->GetComponent<ComponentParticleSystem>()->Play();
-				GameplaySystems::Instantiate(prefab, FangGuntransform->GetGlobalPosition(), transform->GetGlobalRotation());
+				GameplaySystems::Instantiate(prefab, fangGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
 				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
-				GameObject* secondTrail = GameplaySystems::Instantiate(prefab, FangGuntransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
+				GameObject* secondTrail = GameplaySystems::Instantiate(prefab, fangGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
 			}
 		}
 		else {
