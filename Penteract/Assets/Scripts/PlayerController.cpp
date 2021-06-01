@@ -18,6 +18,7 @@
 
 #define PI 3.14159
 #define AUDIOSOURCE_NULL_MSG "shootAudioSource is NULL"
+#define MAX_ACCELERATION 9999
 
 EXPOSE_MEMBERS(PlayerController) {
 	// Add members here to expose them to the engine. Example:
@@ -39,7 +40,7 @@ EXPOSE_MEMBERS(PlayerController) {
 		MEMBER(MemberType::FLOAT, switchCooldown),
 		MEMBER(MemberType::FLOAT, dashCooldown),
 		MEMBER(MemberType::FLOAT, dashSpeed),
-		MEMBER(MemberType::FLOAT, dashDistance),
+		MEMBER(MemberType::FLOAT, dashDuration),
 		MEMBER(MemberType::FLOAT, cameraOffsetZ),
 		MEMBER(MemberType::FLOAT, cameraOffsetY),
 		MEMBER(MemberType::FLOAT, cameraOffsetX),
@@ -120,7 +121,7 @@ void PlayerController::Start() {
 	agent = GetOwner().GetComponent<ComponentAgent>();
 	if (agent) {
 		agent->SetMaxSpeed(fangMovementSpeed);
-		agent->SetMaxAcceleration(9999);
+		agent->SetMaxAcceleration(MAX_ACCELERATION);
 	}
 }
 
@@ -131,7 +132,7 @@ void PlayerController::MoveTo(MovementDirection md) {
 		modifier = 2.0f;
 	}
 	float movementSpeed = ((fang->IsActive()) ? fangMovementSpeed : onimaruMovementSpeed);
-	
+
 	//with navigation
 	newPosition += GetDirection(md) * movementSpeed * modifier;
 	agent->SetMoveTarget(newPosition, false);
@@ -154,38 +155,39 @@ void PlayerController::LookAtMouse() {
 
 void PlayerController::InitDash(MovementDirection md) {
 	if (CanDash()) {
-		dashDirection = GetDirection(md);
-		dashMovementDirection = md;
-		dashDestination = transform->GetGlobalPosition();
-		dashDestination += dashDistance * dashDirection;
-		dashCooldownRemaining = dashCooldown;
-		dashInCooldown = true;
-		dashing = true;
-		if (shootAudioSource) {
-			dashAudioSource->Play();
+		if(md != MovementDirection::NONE){
+			dashDirection = GetDirection(md);
+			dashMovementDirection = md;
 		}
 		else {
-			Debug::Log(AUDIOSOURCE_NULL_MSG);
+			dashDirection = facePointDir;
 		}
+			dashCooldownRemaining = dashCooldown;
+			dashRemaining = dashDuration;
+			dashInCooldown = true;
+			dashing = true;
+			agent->SetMaxSpeed(dashSpeed);
+			if (shootAudioSource) {
+				dashAudioSource->Play();
+			}
+			else {
+				Debug::Log(AUDIOSOURCE_NULL_MSG);
+			}
 	}
 }
 
 void PlayerController::Dash() {
 	if (dashing) {
 		float3 newPosition = transform->GetGlobalPosition();
-		newPosition += dashSpeed * Time::GetDeltaTime() * dashDirection;
-		transform->SetGlobalPosition(newPosition);
-		if (std::abs(std::abs(newPosition.x) - std::abs(dashDestination.x)) < dashError &&
-			std::abs(std::abs(newPosition.z) - std::abs(dashDestination.z)) < dashError) {
-			dashing = false;
-		}
+		newPosition += dashSpeed * dashDirection;
+		agent->SetMoveTarget(newPosition, false);
+
 	}
 }
 
 bool PlayerController::CanDash() {
 	//TODO: DELETE BEFORE IMPLEMENT DASH WITH NAVMESH
-	//return !dashing && !dashInCooldown && fang->IsActive();
-	return false;
+	return !dashing && !dashInCooldown && fang->IsActive();
 }
 
 bool PlayerController::CanSwitch() {
@@ -218,13 +220,13 @@ void PlayerController::SwitchCharacter() {
 }
 
 bool PlayerController::CanShoot() {
-	
+
 	return !shooting && ((fang->IsActive() && fangTrail) || (onimaru->IsActive() && onimaruTrail));
 }
 
 void PlayerController::Shoot() {
 	ComponentTransform* transform = GetOwner().GetComponent<ComponentTransform>();
-	
+
 	if (CanShoot()) {
 		if (shootAudioSource) {
 			shootAudioSource->Play();
@@ -232,7 +234,7 @@ void PlayerController::Shoot() {
 		else {
 			Debug::Log(AUDIOSOURCE_NULL_MSG);
 		}
-		
+
 		shooting = true;
 		if (fang->IsActive()) {
 			fangAttackCooldownRemaining = 1.f / fangAttackSpeed;
@@ -282,7 +284,8 @@ void PlayerController::CheckCoolDowns() {
 		switchCooldownRemaining -= Time::GetDeltaTime();
 	}
 
-	if(fang->IsActive()){
+	if (fang->IsActive()) {
+		//Dash Cooldown
 		if (dashCooldownRemaining <= 0.f) {
 			dashCooldownRemaining = 0.f;
 			dashInCooldown = false;
@@ -291,6 +294,16 @@ void PlayerController::CheckCoolDowns() {
 		else {
 			dashCooldownRemaining -= Time::GetDeltaTime();
 		}
+		//Dash duration
+		if (dashRemaining <= 0) {
+			dashRemaining = 0.f;
+			dashing = false;
+			agent->SetMaxSpeed(fangMovementSpeed);
+		}
+		else {
+			dashRemaining -= Time::GetDeltaTime();
+		}
+
 		if (fangAttackCooldownRemaining <= 0) {
 			fangAttackCooldownRemaining = 0.f;
 			shooting = false;

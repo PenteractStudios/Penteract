@@ -69,12 +69,15 @@ public:
 	float fangAttackSpeed = 1.f;
 	float onimaruAttackSpeed = 1.f;
 	float distanceRayCast = 2.f;
-	float dashCooldown = 5.f; //seconds
 	float switchCooldown = 5.f;
+
 	float fangMovementSpeed = 10.f;
 	float onimaruMovementSpeed = 6.f;
+
+	float dashCooldown = 5.f;
 	float dashSpeed = 100.f;
-	float dashDistance = 10.f;
+	float dashDuration = 0.1f;
+
 	float cameraOffsetZ = 20.f;
 	float cameraOffsetY = 10.f;
 	float cameraOffsetX = 0.f;
@@ -109,10 +112,12 @@ private:
 
 private:
 
-	float dashError = 2.f;
 	float dashCooldownRemaining = 0.f;
 	bool dashInCooldown = false;
 	bool dashing = false;
+
+
+	float dashRemaining = 0.f;
 
 	float switchCooldownRemaining = 0.f;
 	bool switchInCooldown = false;
