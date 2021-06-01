@@ -51,8 +51,7 @@ EXPOSE_MEMBERS(PlayerController) {
 		MEMBER(MemberType::INT, lifePointsOni)
 
 };
-GameObject* fangBoundingBoxOwner = nullptr;
-GameObject* onimaruBoundingBoxOwner = nullptr;
+
 GENERATE_BODY_IMPL(PlayerController);
 
 void PlayerController::Start() {
@@ -187,7 +186,6 @@ void PlayerController::Dash() {
 }
 
 bool PlayerController::CanDash() {
-	//TODO: DELETE BEFORE IMPLEMENT DASH WITH NAVMESH
 	return !dashing && !dashInCooldown && fang->IsActive();
 }
 
