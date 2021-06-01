@@ -3,6 +3,7 @@
 #include "Scripting/Script.h"
 
 class GameObject;
+class ResourcePrefab;
 
 class SpawnOnClick : public Script {
 	GENERATE_BODY(SpawnOnClick);
