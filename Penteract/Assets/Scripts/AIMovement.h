@@ -26,7 +26,7 @@ public:
 
 	void Start() override;
 	void Update() override;
-	void ReceiveEvent(TesseractEvent& e) override;
+	void OnAnimationFinished() override;
 	void HitDetected(int damage_ = 1);
 
 private:
