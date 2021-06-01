@@ -52,6 +52,7 @@ void AIMovement::Update() {
             animation->SendTrigger("AttackHurt");
         }
         lifePoints -= damageRecieved;
+        //agent->SetMoveTarget(parentTransform->GetGlobalPosition());
         state = AIState::HURT;
         hitTaken = false;
     }
@@ -97,7 +98,6 @@ void AIMovement::Update() {
             timeToDie -= Time::GetDeltaTime();
         }
         else {
-            agent->RemoveAgentFromCrowd();
             GameplaySystems::DestroyGameObject(&GetOwner());
             if (hudControllerScript) {
                 hudControllerScript->UpdateScore(10);
@@ -130,6 +130,8 @@ void AIMovement::OnAnimationFinished()
     else if (state == AIState::HURT && lifePoints <= 0) {
         animation->SendTrigger("HurtDeath");
         Debug::Log("Death");
+        //agent->SetMoveTarget(parentTransform->GetGlobalPosition());
+        agent->RemoveAgentFromCrowd();
         state = AIState::DEATH;
     }
     else if (state == AIState::DEATH) {
