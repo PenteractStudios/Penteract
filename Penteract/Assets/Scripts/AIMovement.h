@@ -2,9 +2,9 @@
 
 #include "Scripting/Script.h"
 
-struct TesseractEvent;
 class ComponentAnimation;
 class ComponentTransform;
+class ComponentAgent;
 
 class HUDController;
 
@@ -41,6 +41,7 @@ public:
 	UID canvasUID = 0;
 
 	GameObject* player = nullptr;
+	ComponentAgent* agent = nullptr;
 	
 	int maxSpeed = 8;
 	int fallingSpeed = 30;

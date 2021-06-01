@@ -22,6 +22,13 @@ GENERATE_BODY_IMPL(AIMovement);
 
 void AIMovement::Start() {
     player = GameplaySystems::GetGameObject(playerUID);
+    agent = GetOwner().GetComponent<ComponentAgent>();
+    if (agent) {
+        agent->SetMaxSpeed(maxSpeed);
+        agent->SetMaxAcceleration(9999);
+        agent->SetAgentObstacleAvoidance(true);
+        agent->RemoveAgentFromCrowd();
+    }
     animation = GetOwner().GetComponent<ComponentAnimation>();   
     parentTransform = GetOwner().GetComponent<ComponentTransform>();
     GameObject* canvas = GameplaySystems::GetGameObject(canvasUID);
@@ -89,7 +96,7 @@ void AIMovement::Update() {
             timeToDie -= Time::GetDeltaTime();
         }
         else {
-            GameplaySystems::DestroyGameObject(GetOwner().GetParent());
+            GameplaySystems::DestroyGameObject(&GetOwner());
             if (hudControllerScript) {
                 hudControllerScript->UpdateScore(10);
             }
@@ -103,6 +110,7 @@ void AIMovement::OnAnimationFinished()
     if (state == AIState::SPAWN) {
         animation->SendTrigger("SpawnIdle");
         state = AIState::IDLE;
+        agent->AddAgentToCrowd();
     }
     
     else if(state == AIState::ATTACK)
@@ -120,6 +128,7 @@ void AIMovement::OnAnimationFinished()
     else if (state == AIState::HURT && lifePoints <= 0) {
         animation->SendTrigger("HurtDeath");
         Debug::Log("Death");
+        agent->RemoveAgentFromCrowd();
         state = AIState::DEATH;
     }
     else if (state == AIState::DEATH) {
@@ -165,8 +174,13 @@ void AIMovement::Seek(const float3& newPosition, int speed)
 
     position += velocity * Time::GetDeltaTime();
 
-    parentTransform->SetGlobalPosition(position);
-
+    if (state == AIState::START) {
+        parentTransform->SetGlobalPosition(position);
+    }
+    else {
+        agent->SetMoveTarget(newPosition, true);
+    }
+    
     if (state != AIState::START) {
         Quat newRotation = Quat::LookAt(float3(0, 0, 1), direction.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
         parentTransform->SetGlobalRotation(newRotation);
