@@ -8,7 +8,7 @@
 
 EXPOSE_MEMBERS(GenericGodModeToggle) {
 	MEMBER(MemberType::GAME_OBJECT_UID, godControllerUID),
-		MEMBER(MemberType::UINT, index)
+	MEMBER(MemberType::UINT, index)
 };
 
 GENERATE_BODY_IMPL(GenericGodModeToggle);
