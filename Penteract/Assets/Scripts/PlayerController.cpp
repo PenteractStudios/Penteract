@@ -51,7 +51,8 @@ EXPOSE_MEMBERS(PlayerController) {
 		MEMBER(MemberType::INT, lifePointsOni)
 
 };
-
+GameObject* fangBoundingBoxOwner = nullptr;
+GameObject* onimaruBoundingBoxOwner = nullptr;
 GENERATE_BODY_IMPL(PlayerController);
 
 void PlayerController::Start() {
@@ -155,24 +156,24 @@ void PlayerController::LookAtMouse() {
 
 void PlayerController::InitDash(MovementDirection md) {
 	if (CanDash()) {
-		if(md != MovementDirection::NONE){
+		if (md != MovementDirection::NONE) {
 			dashDirection = GetDirection(md);
 			dashMovementDirection = md;
 		}
 		else {
 			dashDirection = facePointDir;
 		}
-			dashCooldownRemaining = dashCooldown;
-			dashRemaining = dashDuration;
-			dashInCooldown = true;
-			dashing = true;
-			agent->SetMaxSpeed(dashSpeed);
-			if (shootAudioSource) {
-				dashAudioSource->Play();
-			}
-			else {
-				Debug::Log(AUDIOSOURCE_NULL_MSG);
-			}
+		dashCooldownRemaining = dashCooldown;
+		dashRemaining = dashDuration;
+		dashInCooldown = true;
+		dashing = true;
+		agent->SetMaxSpeed(dashSpeed);
+		if (shootAudioSource) {
+			dashAudioSource->Play();
+		}
+		else {
+			Debug::Log(AUDIOSOURCE_NULL_MSG);
+		}
 	}
 }
 
@@ -236,6 +237,7 @@ void PlayerController::Shoot() {
 		}
 
 		shooting = true;
+		float3 start;
 		if (fang->IsActive()) {
 			fangAttackCooldownRemaining = 1.f / fangAttackSpeed;
 			if (fangTrail) {
@@ -245,6 +247,7 @@ void PlayerController::Shoot() {
 				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
 				GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
 			}
+			start = fangGunTransform->GetGlobalPosition();
 		}
 		else {
 			//TODO: SUB WITH ONIMARU SHOOT
@@ -254,9 +257,9 @@ void PlayerController::Shoot() {
 				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
 				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
 			}
+			start = onimaruGunTransform->GetGlobalPosition();
 		}
 
-		float3 start = transform->GetGlobalPosition(); //(boundingBox->GetLocalMaxPointAABB() + boundingBox->GetLocalMinPointAABB()) / 2;
 		float3 end = transform->GetGlobalRotation() * float3(0, 0, 1);
 		end.Normalize();
 		end *= distanceRayCast;

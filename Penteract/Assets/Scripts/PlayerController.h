@@ -9,7 +9,6 @@ class ComponentTransform;
 class ComponentCamera;
 class ComponentAudioSource;
 class ComponentParticleSystem;
-
 class HUDController;
 class ComponentAgent;
 class ComponentAnimation;
@@ -45,6 +44,7 @@ public:
 	GameObject* onimaruParticle = nullptr;
 	ComponentAgent* agent = nullptr;
 
+
 	UID fangUID = 0;
 	UID fangTrailUID = 0;
 	UID fangGunUID = 0;
@@ -56,7 +56,6 @@ public:
 
 	UID mainNodeUID = 0;
 	UID cameraUID = 0;
-
 	UID canvasUID = 0;
 
 	UID switchAudioSourceUID = 0;
@@ -115,8 +114,6 @@ private:
 	float dashCooldownRemaining = 0.f;
 	bool dashInCooldown = false;
 	bool dashing = false;
-
-
 	float dashRemaining = 0.f;
 
 	float switchCooldownRemaining = 0.f;
@@ -136,7 +133,6 @@ private:
 	ComponentTransform* onimaruGunTransform = nullptr;
 	ComponentCamera* compCamera = nullptr;
 	ComponentTransform* cameraTransform = nullptr;
-
 	//Animation
 	ComponentAnimation* fangAnimation = nullptr;
 	State* fangCurrentState = nullptr;
