@@ -143,7 +143,7 @@ void PlayerController::InitDash(MovementDirection md) {
 		dashCooldownRemaing = dashCooldown;
 		dashInCooldown = true;
 		dashing = true;
-		if (shootAudioSource) {
+		if (dashAudioSource) {
 			dashAudioSource->Play();
 		} else {
 			Debug::Log(AUDIOSOURCE_NULL_MSG);
