@@ -28,7 +28,6 @@ void AIMovement::Start() {
         agent->SetMaxAcceleration(9999);
         agent->SetAgentObstacleAvoidance(true);
         agent->RemoveAgentFromCrowd();
-        //agent->AddAgentToCrowd();
     }
     animation = GetOwner().GetComponent<ComponentAnimation>();   
     parentTransform = GetOwner().GetComponent<ComponentTransform>();
@@ -52,7 +51,6 @@ void AIMovement::Update() {
             animation->SendTrigger("AttackHurt");
         }
         lifePoints -= damageRecieved;
-        //agent->SetMoveTarget(parentTransform->GetGlobalPosition());
         state = AIState::HURT;
         hitTaken = false;
     }
@@ -130,7 +128,6 @@ void AIMovement::OnAnimationFinished()
     else if (state == AIState::HURT && lifePoints <= 0) {
         animation->SendTrigger("HurtDeath");
         Debug::Log("Death");
-        //agent->SetMoveTarget(parentTransform->GetGlobalPosition());
         agent->RemoveAgentFromCrowd();
         state = AIState::DEATH;
     }
