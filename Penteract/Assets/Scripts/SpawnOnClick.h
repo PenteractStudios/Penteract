@@ -20,6 +20,7 @@ private:
 	GameObject* gameObject = nullptr;
 	GameObject* camera = nullptr;
 	GameObject* enemies = nullptr;
+	ResourcePrefab* prefab = nullptr;
 	
 private:	
 	float3 DetectMouseLocation();

@@ -19,11 +19,11 @@ void SpawnOnClick::Start() {
 	gameObject = &GetOwner();
 	camera = GameplaySystems::GetGameObject(cameraUID);
 	enemies = GameplaySystems::GetGameObject(enemiesUID);
+	prefab = GameplaySystems::GetResource<ResourcePrefab>(prefabUID);
 }
 
 void SpawnOnClick::Update() {
 	if (Input::GetKeyCode(Input::KEYCODE::KEY_LCTRL) && Input::GetMouseButtonUp(0)) {
-		ResourcePrefab* prefab = GameplaySystems::GetResource<ResourcePrefab>(prefabUID);
 		if (prefab != nullptr) {
 			UID prefabId = prefab->BuildPrefab(enemies);
 			GameObject* go = GameplaySystems::GetGameObject(prefabId);
