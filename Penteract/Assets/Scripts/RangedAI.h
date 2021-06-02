@@ -37,8 +37,8 @@ private:
 	void ChangeState(RangeAIState newState);
 
 	bool CharacterInSight(const GameObject* character);
-	bool CharacterInRange(const GameObject* character);
-	bool CharacterShootable(const GameObject* character, bool useForward);
+	bool CharacterInRange(const GameObject* character, float range, bool useRange);
+	bool FindsRayToCharacter(const GameObject* character, bool useForward);
 	bool CharacterTooClose(const GameObject* character);
 	void Seek(const float3& newPosition, int speed);
 	void Flee(const float3& fromPosition, int speed);
@@ -71,6 +71,7 @@ public:
 	bool dead = false;
 
 	float attackRange = 18;
+	float approachOffset = 0.5f;
 
 	float fleeingRange = 10.f;
 	float fleeingEvaluateDistance = 5.0f;

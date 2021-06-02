@@ -9,20 +9,20 @@
 
 EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
-		MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
-		MEMBER(MemberType::GAME_OBJECT_UID, meshUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
-		MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
-		MEMBER(MemberType::INT, maxMovementSpeed),
-		MEMBER(MemberType::INT, lifePoints),
-		MEMBER(MemberType::FLOAT, searchRadius),
-		MEMBER(MemberType::FLOAT, attackRange),
-		MEMBER(MemberType::FLOAT, timeToDie),
-		MEMBER(MemberType::FLOAT, attackSpeed),
-		MEMBER(MemberType::FLOAT, fleeingRange),
-		MEMBER(MemberType::GAME_OBJECT_UID, agentObjectUID),
-		MEMBER(MemberType::BOOL, foundRayToPlayer)
+	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
+	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
+	MEMBER(MemberType::GAME_OBJECT_UID, meshUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
+	MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
+	MEMBER(MemberType::INT, maxMovementSpeed),
+	MEMBER(MemberType::INT, lifePoints),
+	MEMBER(MemberType::FLOAT, searchRadius),
+	MEMBER(MemberType::FLOAT, attackRange),
+	MEMBER(MemberType::FLOAT, timeToDie),
+	MEMBER(MemberType::FLOAT, attackSpeed),
+	MEMBER(MemberType::FLOAT, fleeingRange),
+	MEMBER(MemberType::GAME_OBJECT_UID, agentObjectUID),
+	MEMBER(MemberType::BOOL, foundRayToPlayer)
 };
 
 GENERATE_BODY_IMPL(RangedAI);
@@ -127,7 +127,13 @@ void RangedAI::UpdateState() {
 					ChangeState(RangeAIState::FLEE);
 					break;
 				}
-				if (CharacterShootable(player, false)) {
+
+				if (!CharacterInRange(player, attackRange, true)) {
+					ChangeState(RangeAIState::APPROACH);
+					break;
+				}
+
+				if (FindsRayToCharacter(player, false)) {
 					OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - parentTransform->GetGlobalPosition());
 				} else {
 					ChangeState(RangeAIState::APPROACH);
@@ -137,8 +143,10 @@ void RangedAI::UpdateState() {
 		break;
 	case RangeAIState::APPROACH:
 		if (CharacterInSight(player)) {
-			if (!CharacterInRange(player) && !CharacterShootable(player, false)) {
-				Seek(player->GetComponent<ComponentTransform>()->GetGlobalPosition(), maxMovementSpeed);
+			if (!CharacterInRange(player, attackRange * approachOffset, true) || !FindsRayToCharacter(player, false)) {
+				if (!CharacterTooClose(player)) {
+					Seek(player->GetComponent<ComponentTransform>()->GetGlobalPosition(), maxMovementSpeed);
+				}
 			} else {
 				ChangeState(RangeAIState::IDLE);
 			}
@@ -195,19 +203,23 @@ bool RangedAI::CharacterInSight(const GameObject* character) {
 	return false;
 }
 
-bool RangedAI::CharacterInRange(const GameObject* character) {
+bool RangedAI::CharacterInRange(const GameObject* character, float range, bool useRange) {
 
-	if (meshObj) return Camera::CheckObjectInsideFrustum(meshObj) && Camera::CheckObjectInsideFrustum(meshObj1) && Camera::CheckObjectInsideFrustum(meshObj2);
+	if (meshObj) {
+		if (!useRange) {
+			return Camera::CheckObjectInsideFrustum(meshObj) && Camera::CheckObjectInsideFrustum(meshObj1) && Camera::CheckObjectInsideFrustum(meshObj2);
+		}
+	}
 
 	ComponentTransform* target = character->GetComponent<ComponentTransform>();
 	if (target) {
 		float3 posTarget = target->GetGlobalPosition();
-		return posTarget.Distance(parentTransform->GetGlobalPosition()) < attackRange;
+		return posTarget.Distance(parentTransform->GetGlobalPosition()) < range;
 	}
-
+	return false;
 }
 
-bool RangedAI::CharacterShootable(const GameObject* character, bool useForward) {
+bool RangedAI::FindsRayToCharacter(const GameObject* character, bool useForward) {
 	float3 start = parentTransform->GetGlobalPosition();// +parentTransform->GetLocalMatrix().Mul(float4(bbCenter, 1)).xyz();
 
 	float3 dir = float3(0, 0, 0);
@@ -242,6 +254,14 @@ bool RangedAI::CharacterShootable(const GameObject* character, bool useForward) 
 	int mask = static_cast<int>(MaskType::PLAYER);
 	GameObject* hitGo = Physics::Raycast(start, start + dir * attackRange, mask);
 
+
+	if (!hitGo) {
+		mask = static_cast<int>(MaskType::ENEMY);
+		hitGo = Physics::Raycast(start, start + dir * attackRange, mask);
+	}
+
+
+
 	//std::string message = "Ray from: ";
 	//message += std::to_string(start.x);
 	//message += ",";
@@ -265,6 +285,7 @@ bool RangedAI::CharacterShootable(const GameObject* character, bool useForward) 
 	return foundRayToPlayer;
 
 	if (hitGo == activePlayerMeshObj) {
+		Debug::Log("RayHit");
 
 		return true;
 	}
@@ -272,13 +293,8 @@ bool RangedAI::CharacterShootable(const GameObject* character, bool useForward) 
 }
 
 bool RangedAI::CharacterTooClose(const GameObject* character) {
-	ComponentTransform* target = character->GetComponent<ComponentTransform>();
-	if (target) {
-		float3 posTarget = target->GetGlobalPosition();
-		return posTarget.Distance(parentTransform->GetGlobalPosition()) < fleeingRange;
-	}
 
-	return false;
+	return CharacterInRange(character, fleeingRange, true);
 }
 
 void RangedAI::Seek(const float3& newPosition, int speed) {
@@ -363,7 +379,7 @@ std::string RangedAI::StateToString(RangeAIState state) {
 
 void RangedAI::ShootPlayerInRange() {
 	if (!player) return;
-	if (CharacterInRange(player)) {
+	if (CharacterInRange(player, attackRange, true)) {
 		Debug::Log("Shoot");
 		attackTimePool = 1.0f / attackSpeed;
 
