@@ -22,7 +22,9 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::FLOAT, attackSpeed),
 	MEMBER(MemberType::FLOAT, fleeingRange),
 	MEMBER(MemberType::GAME_OBJECT_UID, agentObjectUID),
-	MEMBER(MemberType::BOOL, foundRayToPlayer)
+	MEMBER(MemberType::BOOL, foundRayToPlayer),
+	MEMBER(MemberType::FLOAT, fleeingEvaluateDistance)
+		
 };
 
 GENERATE_BODY_IMPL(RangedAI);
@@ -342,14 +344,10 @@ void RangedAI::Flee(const float3& fromPosition, int speed) {
 
 	} else {
 		float3 position = parentTransform->GetGlobalPosition();
-		float3 direction = (position - fromPosition).Normalized() * fleeingEvaluateDistance;
-
-		agent->SetMoveTarget(direction, true);
-
+		float3 direction = (position - fromPosition).Normalized();
+		float3 newPosition = position + direction * fleeingEvaluateDistance;
+		agent->SetMoveTarget(newPosition, true);
 		OrientateTo(agent->GetVelocity());
-		//agent->SetMoveTarget(newPosition, true);
-		//Quat newRotation = Quat::LookAt(float3(0, 0, 1), agent->GetVelocity().Normalized(), float3(0, 1, 0), float3(0, 1, 0));
-		//parentTransform->SetGlobalRotation(newRotation);
 	}
 }
 
