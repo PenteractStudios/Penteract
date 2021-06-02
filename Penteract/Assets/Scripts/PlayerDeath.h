@@ -18,5 +18,7 @@ public:
 
 	GameObject* player = nullptr;
 
+	bool dead = false;
+
 };
 

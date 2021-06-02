@@ -275,6 +275,11 @@ void PlayerController::HitDetected() {
 	hitTaken = true;
 }
 
+bool PlayerController::IsDead()
+{
+	return (lifePointsFang <= 0 || lifePointsOni <= 0);
+}
+
 void PlayerController::CheckCoolDowns() {
 
 	if (switchCooldownRemaining <= 0.f) {
@@ -425,7 +430,7 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 	}
 
 	if (md == MovementDirection::NONE) {
-		if (dead) {
+		if (IsDead()) {
 			animation->SendTrigger(currentState->name + PlayerController::states[9]);
 		}
 		else {
@@ -461,8 +466,7 @@ void PlayerController::UpdatePlayerStats() {
 		float realSwitchCooldown = 1.0f - (switchCooldownRemaining / switchCooldown);
 		hudControllerScript->UpdateCooldowns(0.0f, 0.0f, 0.0f, realDashCooldown, 0.0f, 0.0f, realSwitchCooldown);
 
-		if (lifePointsFang <= 0 || lifePointsOni <= 0) {
-			dead = true;
+		if (IsDead()) {
 			PlayAnimation(MovementDirection::NONE);
 		}
 	}
@@ -486,7 +490,7 @@ void PlayerController::Update() {
 	UpdatePlayerStats();
 	UpdateCameraPosition();
 
-	if (!dead) {
+	if (!IsDead()) {
 		
 		if (firstTime) {
 			if (fang->IsActive()) {
@@ -518,9 +522,3 @@ void PlayerController::Update() {
 	}
 }
 
-void PlayerController::OnAnimationFinished()
-{
-	if (dead) {
-		SceneManager::ChangeScene("Assets/Scenes/LoseScene.scene");
-	}
-}
