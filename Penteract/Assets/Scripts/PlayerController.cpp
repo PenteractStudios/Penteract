@@ -235,7 +235,6 @@ void PlayerController::Shoot() {
 			Debug::Log(AUDIOSOURCE_NULL_MSG);
 		}
 
-		shootCooldownRemaing = ((fang->IsActive()) ? fangCharacter.shootCooldown : onimaruCharacter.shootCooldown);
 		shooting = true;
 		float3 start;
 		if (fang->IsActive()) {
