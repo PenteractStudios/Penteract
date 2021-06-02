@@ -13,7 +13,6 @@ enum class AIState {
 	SPAWN,
 	IDLE,
 	RUN,
-	HURT,
 	ATTACK,
 	DEATH
 };
