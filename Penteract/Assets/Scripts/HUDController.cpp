@@ -5,7 +5,10 @@
 #include "GameplaySystems.h"
 
 #include "HealthLostInstantFeedback.h"
+#include "LowHPWarning.h"
+
 #define MAX_HEALTH 7
+#define LOW_HEALTH_WARNING 2
 
 EXPOSE_MEMBERS(HUDController) {
 	// Add members here to expose them to the engine. Example:
@@ -23,6 +26,7 @@ EXPOSE_MEMBERS(HUDController) {
 		MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, scoreTextUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, lowHealthWarningEffectUID),
 		MEMBER(MemberType::FLOAT, timeToFadeDurableHealthFeedbackInternal)
 };
 
@@ -44,6 +48,7 @@ GameObject* HUDController::onimaruHealthMainCanvas = nullptr;
 GameObject* HUDController::fangHealthSecondCanvas = nullptr;
 GameObject* HUDController::onimaruHealthSecondCanvas = nullptr;
 GameObject* HUDController::swapingSkillCanvas = nullptr;
+GameObject* HUDController::lowHealthWarningEffect = nullptr;
 
 std::array<float, Cooldowns::TOTAL> HUDController::cooldowns;
 
@@ -54,6 +59,7 @@ const float4 HUDController::colorWhite = float4(255, 255, 255, 255) / 255;
 const float4 HUDController::colorMagentaDarkened = float4(236, 60, 137, 128) / 255;
 const float4 HUDController::colorWhiteDarkened = float4(255, 255, 255, 128) / 255;
 int HUDController::prevLives = MAX_HEALTH;
+bool HUDController::lowHPWarningActive = false;
 
 float HUDController::remainingTimes[MAX_HEALTH] = { 0,0,0,0,0,0,0 };
 float HUDController::timeToFadeDurableHealthFeedback = 2.0f;
@@ -83,6 +89,8 @@ void HUDController::Start() {
 
 	fang = GameplaySystems::GetGameObject(fangUID);
 	onimaru = GameplaySystems::GetGameObject(onimaruUID);
+
+	lowHealthWarningEffect = GameplaySystems::GetGameObject(lowHealthWarningEffectUID);
 
 	GameObject* text = GameplaySystems::GetGameObject(scoreTextUID);
 	if (text) scoreText = text->GetComponent<ComponentText>();
@@ -146,6 +154,25 @@ void HUDController::UpdateHP(float currentHp, float altHp) {
 	} else {
 		UpdateCanvasHP(onimaruHealthMainCanvas, currentHp, false);
 		UpdateCanvasHP(fangHealthSecondCanvas, altHp, true);
+	}
+
+	bool activateEffect = currentHp <= LOW_HEALTH_WARNING || altHp <= LOW_HEALTH_WARNING ? true : false;
+
+	if (lowHealthWarningEffect) {
+		if (activateEffect) {
+			if (!lowHPWarningActive) {
+				LowHPWarning* effect = GET_SCRIPT(lowHealthWarningEffect, LowHPWarning);
+				effect->Play();
+				lowHPWarningActive = true;
+			}
+		}
+		else {
+			if (lowHPWarningActive) {
+				LowHPWarning* effect = GET_SCRIPT(lowHealthWarningEffect, LowHPWarning);
+				effect->Stop();
+				lowHPWarningActive = false;
+			}
+		}
 	}
 }
 
@@ -324,7 +351,6 @@ void HUDController::OnHealthLost(GameObject* targetCanvas, int health) {
 void HUDController::UpdateCanvasHP(GameObject* targetCanvas, int health, bool darkened) {
 	float4 magentaToSet = darkened ? colorMagentaDarkened : colorMagenta;
 	//float4 whiteToSet = darkened ? colorWhiteDarkened : colorWhite;
-
 	int i = 0;
 	for (GameObject* hpGameObject : targetCanvas->GetChildren()) {
 		ComponentImage* hpComponent = hpGameObject->GetComponent<ComponentImage>();
