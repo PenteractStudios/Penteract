@@ -28,6 +28,7 @@ public:
 
 	void Start() override;
 	void Update() override;
+	void OnAnimationFinished() override;
 
 	void HitDetected();
 
@@ -122,6 +123,8 @@ private:
 	float fangAttackCooldownRemaining = 0.f;
 	float onimaruAttackCooldownRemaining = 0.f;
 	bool shooting = false;
+
+	bool dead = false;
 
 	float3 initialPosition = float3(0, 0, 0);
 	float3 dashDestination = float3(0, 0, 0);
