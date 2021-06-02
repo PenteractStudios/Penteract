@@ -7,6 +7,7 @@
 
 class ComponentAgent;
 class ComponentAudioSource;
+class ResourcePrefab;
 
 enum class RangeAIState {
 	START,
@@ -54,7 +55,13 @@ public:
 	UID meshUID1 = 0;
 	UID meshUID2 = 0;
 	UID agentObjectUID = 0;
+	UID trailPrefabUID = 0;
+	ResourcePrefab* shootTrailPrefab = nullptr;
 	GameObject* player = nullptr;
+
+	GameObject* fangMeshObj = nullptr;
+	GameObject* onimaruMeshObj = nullptr;
+
 	GameObject* meshObj = nullptr;
 	GameObject* meshObj1 = nullptr;
 	GameObject* meshObj2 = nullptr;
@@ -70,10 +77,10 @@ public:
 	float maxStunnedTime = 0.5f;
 	bool dead = false;
 
-	float attackRange = 18;
-	float approachOffset = 0.5f;
+	float attackRange = 20.0f;
+	float approachOffset = 4.0f;
 
-	float fleeingRange = 10.f;
+	float fleeingRange = 7.f;
 	float fleeingEvaluateDistance = 5.0f;
 
 

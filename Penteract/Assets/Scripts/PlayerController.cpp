@@ -5,6 +5,7 @@
 #include "TesseractEvent.h"
 
 #include "AIMovement.h"
+#include "RangedAI.h"
 #include "HUDController.h"
 
 #include "Math/Quat.h"
@@ -158,8 +159,7 @@ void PlayerController::InitDash(MovementDirection md) {
 		if (md != MovementDirection::NONE) {
 			dashDirection = GetDirection(md);
 			dashMovementDirection = md;
-		}
-		else {
+		} else {
 			dashDirection = facePointDir;
 		}
 		dashCooldownRemaining = dashCooldown;
@@ -169,8 +169,7 @@ void PlayerController::InitDash(MovementDirection md) {
 		agent->SetMaxSpeed(dashSpeed);
 		if (shootAudioSource) {
 			dashAudioSource->Play();
-		}
-		else {
+		} else {
 			Debug::Log(AUDIOSOURCE_NULL_MSG);
 		}
 	}
@@ -204,8 +203,7 @@ void PlayerController::SwitchCharacter() {
 			fang->Disable();
 			onimaru->Enable();
 			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
-		}
-		else {
+		} else {
 			Debug::Log("Swaping to fang...");
 			onimaru->Disable();
 			fang->Enable();
@@ -229,8 +227,7 @@ void PlayerController::Shoot() {
 	if (CanShoot()) {
 		if (shootAudioSource) {
 			shootAudioSource->Play();
-		}
-		else {
+		} else {
 			Debug::Log(AUDIOSOURCE_NULL_MSG);
 		}
 
@@ -246,8 +243,7 @@ void PlayerController::Shoot() {
 				GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
 			}
 			start = fangGunTransform->GetGlobalPosition();
-		}
-		else {
+		} else {
 			//TODO: SUB WITH ONIMARU SHOOT
 			onimaruAttackCooldownRemaining = 1.f / onimaruAttackSpeed;
 			if (onimaruTrail) {
@@ -264,9 +260,25 @@ void PlayerController::Shoot() {
 		int mask = static_cast<int>(MaskType::ENEMY);
 		GameObject* hitGo = Physics::Raycast(start, start + end, mask);
 		if (hitGo) {
+			//TODO centralize information in a shader class called EnemyStats?
+
 			AIMovement* enemyScript = GET_SCRIPT(hitGo->GetParent(), AIMovement);
-			if (fang->IsActive()) enemyScript->HitDetected(3);
-			else enemyScript->HitDetected();
+
+			if (enemyScript) {
+				if (fang->IsActive()) {
+					enemyScript->HitDetected(3);
+				} else {
+					enemyScript->HitDetected();
+				}
+			} else {
+				RangedAI* rangedAI = GET_SCRIPT(hitGo->GetParent(), RangedAI);
+
+				if (fang->IsActive()) {
+					rangedAI->HitDetected(3);
+				} else {
+					rangedAI->HitDetected();
+				}
+			}
 		}
 	}
 }
@@ -280,8 +292,7 @@ void PlayerController::CheckCoolDowns() {
 	if (switchCooldownRemaining <= 0.f) {
 		switchCooldownRemaining = 0.f;
 		switchInCooldown = false;
-	}
-	else {
+	} else {
 		switchCooldownRemaining -= Time::GetDeltaTime();
 	}
 
@@ -291,8 +302,7 @@ void PlayerController::CheckCoolDowns() {
 			dashCooldownRemaining = 0.f;
 			dashInCooldown = false;
 			dashMovementDirection = MovementDirection::NONE;
-		}
-		else {
+		} else {
 			dashCooldownRemaining -= Time::GetDeltaTime();
 		}
 		//Dash duration
@@ -300,16 +310,14 @@ void PlayerController::CheckCoolDowns() {
 			dashRemaining = 0.f;
 			dashing = false;
 			agent->SetMaxSpeed(fangMovementSpeed);
-		}
-		else {
+		} else {
 			dashRemaining -= Time::GetDeltaTime();
 		}
 
 		if (fangAttackCooldownRemaining <= 0) {
 			fangAttackCooldownRemaining = 0.f;
 			shooting = false;
-		}
-		else {
+		} else {
 			fangAttackCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
@@ -317,8 +325,7 @@ void PlayerController::CheckCoolDowns() {
 		if (onimaruAttackCooldownRemaining <= 0) {
 			onimaruAttackCooldownRemaining = 0.f;
 			shooting = false;
-		}
-		else {
+		} else {
 			onimaruAttackCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
@@ -350,8 +357,7 @@ MovementDirection PlayerController::GetInputMovementDirection() const {
 
 float3 PlayerController::GetDirection(MovementDirection md) const {
 	float3 direction;
-	switch (md)
-	{
+	switch (md) {
 	case MovementDirection::UP:
 		direction = float3(0, 0, -1);
 		break;
@@ -389,14 +395,11 @@ int PlayerController::GetMouseDirectionState(MovementDirection input) {
 
 	if (dot > 0.707) {
 		return 2; //RunForward
-	}
-	else if (dot < -0.707) {
+	} else if (dot < -0.707) {
 		return 1; //RunBackward
-	}
-	else if (cross.y > 0) {
+	} else if (cross.y > 0) {
 		return 4; //RunRight
-	}
-	else {
+	} else {
 		return 3; //RunLeft
 	}
 }
@@ -408,8 +411,7 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 	if (fang->IsActive()) {
 		animation = fangAnimation;
 		currentState = fangCurrentState;
-	}
-	else {
+	} else {
 		animation = onimaruAnimation;
 		currentState = onimaruCurrentState;
 	}
@@ -426,8 +428,7 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 
 	if (md == MovementDirection::NONE) {
 		animation->SendTrigger(currentState->name + PlayerController::states[0]);
-	}
-	else {
+	} else {
 		animation->SendTrigger(currentState->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
 	}
 
@@ -445,8 +446,7 @@ void PlayerController::UpdatePlayerStats() {
 			--lifePointsFang;
 			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
 			hitTaken = false;
-		}
-		else if (hitTaken && onimaru->IsActive() && lifePointsOni > 0) {
+		} else if (hitTaken && onimaru->IsActive() && lifePointsOni > 0) {
 			--lifePointsOni;
 			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
 			hitTaken = false;
@@ -482,8 +482,7 @@ void PlayerController::Update() {
 	if (firstTime) {
 		if (fang->IsActive()) {
 			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
-		}
-		else {
+		} else {
 			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
 		}
 		firstTime = false;
@@ -501,8 +500,7 @@ void PlayerController::Update() {
 	}
 	if (fang->IsActive()) {
 		if (Input::GetMouseButtonDown(0)) Shoot();
-	}
-	else {
+	} else {
 		if (Input::GetMouseButtonRepeat(0)) Shoot();
 	}
 	PlayAnimation(md);

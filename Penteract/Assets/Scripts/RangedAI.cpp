@@ -6,26 +6,32 @@
 #include "Components/ComponentTransform.h"
 #include "Components/ComponentAudioSource.h"
 #include "Components/ComponentAgent.h"
+#include "Resources/ResourcePrefab.h"
 
+//clang-format off
 EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
-	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
-	MEMBER(MemberType::GAME_OBJECT_UID, meshUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
-	MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
-	MEMBER(MemberType::INT, maxMovementSpeed),
-	MEMBER(MemberType::INT, lifePoints),
-	MEMBER(MemberType::FLOAT, searchRadius),
-	MEMBER(MemberType::FLOAT, attackRange),
-	MEMBER(MemberType::FLOAT, timeToDie),
-	MEMBER(MemberType::FLOAT, attackSpeed),
-	MEMBER(MemberType::FLOAT, fleeingRange),
-	MEMBER(MemberType::GAME_OBJECT_UID, agentObjectUID),
-	MEMBER(MemberType::BOOL, foundRayToPlayer),
-	MEMBER(MemberType::FLOAT, fleeingEvaluateDistance)
-		
-};
+		MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
+		MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
+		MEMBER(MemberType::GAME_OBJECT_UID, meshUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
+		MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
+		MEMBER(MemberType::INT, maxMovementSpeed),
+		MEMBER(MemberType::INT, lifePoints),
+		MEMBER(MemberType::FLOAT, searchRadius),
+		MEMBER(MemberType::FLOAT, attackRange),
+		MEMBER(MemberType::FLOAT, timeToDie),
+		MEMBER(MemberType::FLOAT, attackSpeed),
+		MEMBER(MemberType::FLOAT, fleeingRange),
+		MEMBER(MemberType::GAME_OBJECT_UID, agentObjectUID),
+		MEMBER(MemberType::BOOL, foundRayToPlayer),
+		MEMBER(MemberType::FLOAT, fleeingEvaluateDistance),
+		MEMBER(MemberType::PREFAB_RESOURCE_UID, trailPrefabUID),
+
+		MEMBER(MemberType::FLOAT, approachOffset) //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
+
+};//clang-format on
+
 
 GENERATE_BODY_IMPL(RangedAI);
 
@@ -34,11 +40,13 @@ void RangedAI::Start() {
 	meshObj = GameplaySystems::GetGameObject(meshUID);
 	meshObj1 = GameplaySystems::GetGameObject(meshUID1);
 	meshObj2 = GameplaySystems::GetGameObject(meshUID2);
-	animation = GetOwner().GetParent()->GetComponent<ComponentAnimation>();
-	parentTransform = GetOwner().GetParent()->GetComponent<ComponentTransform>();
-
+	animation = GetOwner().GetComponent<ComponentAnimation>();
+	parentTransform = GetOwner().GetComponent<ComponentTransform>();
+	fangMeshObj = GameplaySystems::GetGameObject(playerMeshUIDFang);
+	onimaruMeshObj = GameplaySystems::GetGameObject(playerMeshUIDOnimaru);
 	ComponentBoundingBox* bb = meshObj->GetComponent<ComponentBoundingBox>();
 	bbCenter = (bb->GetLocalMinPointAABB() + bb->GetLocalMaxPointAABB()) / 2;
+	shootTrailPrefab = GameplaySystems::GetResource<ResourcePrefab>(trailPrefabUID);
 
 	// TODO: ADD CHECK PLS
 	agent = GameplaySystems::GetGameObject(agentObjectUID)->GetComponent<ComponentAgent>();
@@ -46,6 +54,7 @@ void RangedAI::Start() {
 }
 
 void RangedAI::OnAnimationFinished() {
+	if (animation == nullptr) return;
 	if (state == RangeAIState::SPAWN) {
 		animation->SendTrigger("SpawnIdle");
 		state = RangeAIState::IDLE;
@@ -74,7 +83,7 @@ void RangedAI::Update() {
 		}
 
 		lifePoints -= damageRecieved;
-		state = RangeAIState::HURT;
+		ChangeState(RangeAIState::HURT);
 		hitTaken = false;
 	}
 
@@ -103,10 +112,15 @@ void RangedAI::EnterState(RangeAIState newState) {
 		animation->SendTrigger("IdleRun");
 		break;
 	case RangeAIState::HURT:
-
+		Debug::Log("Hurt");
+		ChangeState(RangeAIState::DEATH);
 		break;
 	case RangeAIState::DEATH:
-
+		if (lifePoints <= 0) {
+			animation->SendTrigger("HurtDeath");
+			Debug::Log("Death");
+			agent->RemoveAgentFromCrowd();
+		}
 		break;
 	}
 }
@@ -146,7 +160,7 @@ void RangedAI::UpdateState() {
 		break;
 	case RangeAIState::APPROACH:
 		if (CharacterInSight(player)) {
-			if (!CharacterInRange(player, attackRange * approachOffset, true) || !FindsRayToCharacter(player, false)) {
+			if (!CharacterInRange(player, attackRange - approachOffset, true) || !FindsRayToCharacter(player, false)) {
 				if (!CharacterTooClose(player)) {
 					Seek(player->GetComponent<ComponentTransform>()->GetGlobalPosition(), maxMovementSpeed);
 				}
@@ -223,54 +237,39 @@ bool RangedAI::CharacterInRange(const GameObject* character, float range, bool u
 }
 
 bool RangedAI::FindsRayToCharacter(const GameObject* character, bool useForward) {
-	//float3 start = parentTransform->GetGlobalPosition();// +parentTransform->GetLocalMatrix().Mul(float4(bbCenter, 1)).xyz();
-	ComponentBoundingBox* box = GetOwner().GetComponent<ComponentBoundingBox>();
-	float y = (box->GetWorldAABB().maxPoint + box->GetWorldAABB().minPoint).y / 2;
-	float3 offset(0, y, 0);
-	float3 start = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + offset;
+	ComponentBoundingBox* box = meshObj->GetComponent<ComponentBoundingBox>();
+	float3 offset(0, 0, 0);
 
-	//float3 dir = float3(0, 0, 0);
-
-	//float3 playerMeshBoundingBoxCenter = float3(0, 0, 0);
-	//ComponentBoundingBox* bb = nullptr;
-	//ComponentTransform* activePlayerMeshTransform = nullptr;
-	//
-	//GameObject* activePlayerMeshObj = nullptr;
-	//
-	//activePlayerMeshObj = GameplaySystems::GetGameObject(playerMeshUIDFang);
-	//
-	//if (!activePlayerMeshObj->IsActive()) {
-	//	activePlayerMeshObj = GameplaySystems::GetGameObject(playerMeshUIDOnimaru);
-	//}
-
-	//bb = activePlayerMeshObj->GetComponent<ComponentBoundingBox>();
-	//activePlayerMeshTransform = activePlayerMeshObj->GetComponent<ComponentTransform>();
-
-	//if (bb) {
-	//	playerMeshBoundingBoxCenter = (bb->GetLocalMinPointAABB() + bb->GetLocalMaxPointAABB()) / 2;
-	//	playerMeshBoundingBoxCenter = activePlayerMeshTransform->GetGlobalMatrix().Mul(float4(playerMeshBoundingBoxCenter, 1)).xyz();
-	//}
-
-	//if (useForward) {
-	//	dir = parentTransform->GetGlobalRotation() * float3(0, 0, 1);
-	//} else {
-	//	dir = activePlayerMeshTransform->GetGlobalPosition() + playerMeshBoundingBoxCenter - start;
-	//}
-
-	float3 end = GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation() * float3(0, 0, 1);
-	//dir.Normalize();
-	int mask = static_cast<int>(MaskType::PLAYER);
-	GameObject* hitGo = Physics::Raycast(start, start + end * attackRange, mask);
-
-
-	if (!hitGo) {
-		mask = static_cast<int>(MaskType::ENEMY);
-		//hitGo = Physics::Raycast(start, start + end * attackRange, mask);
-		Debug::Log("Hit!");
-		return true;
+	if (box) {
+		float y = (box->GetWorldAABB().maxPoint + box->GetWorldAABB().minPoint).y / 4;
+		offset.y = y;
 	}
 
 
+	float3 start = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + offset;
+
+	GameObject* activePlayerMeshObj = fangMeshObj;
+
+	if (!activePlayerMeshObj->IsActive()) {
+		activePlayerMeshObj = onimaruMeshObj;
+	}
+
+	float3 dir = GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation() * float3(0, 0, 1);
+
+	if (!useForward) {
+		dir = activePlayerMeshObj->GetComponent<ComponentTransform>()->GetGlobalPosition() - start;
+		dir.y = 0;
+		dir.Normalize();
+	}
+
+	int mask = static_cast<int>(MaskType::PLAYER);
+	GameObject* hitGo = Physics::Raycast(start, start + dir * attackRange, mask);
+
+	//if (hitGo) {
+	//	Debug::Log("Hit!");
+	//}
+
+	return hitGo != nullptr;
 
 	//std::string message = "Ray from: ";
 	//message += std::to_string(start.x);
@@ -291,15 +290,6 @@ bool RangedAI::FindsRayToCharacter(const GameObject* character, bool useForward)
 	//}
 
 	//Debug::Log(message.c_str());
-
-	//return foundRayToPlayer;
-	//
-	//if (hitGo == activePlayerMeshObj) {
-	//	Debug::Log("RayHit");
-	//
-	//	return true;
-	//}
-	return false;
 }
 
 bool RangedAI::CharacterTooClose(const GameObject* character) {
@@ -387,31 +377,49 @@ void RangedAI::ShootPlayerInRange() {
 	if (!player) return;
 	if (CharacterInRange(player, attackRange, true)) {
 		Debug::Log("Shoot");
+
+		if (shootTrailPrefab) {
+			//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
+			ComponentBoundingBox* box = meshObj->GetComponent<ComponentBoundingBox>();
+			float offsetY = (box->GetWorldAABB().minPoint.y + box->GetWorldAABB().maxPoint.y) / 4;
+
+			GameplaySystems::Instantiate(shootTrailPrefab, GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + float3(0, offsetY, 0), GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation());
+			float3 frontTrail = GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
+			GameplaySystems::Instantiate(shootTrailPrefab, GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + float3(0, offsetY, 0), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation()));
+		}
+
 		attackTimePool = 1.0f / attackSpeed;
 
 		if (shootAudioSource)
 			shootAudioSource->Play();
+
+
+
+		if (FindsRayToCharacter(player, true)) {
+			Debug::Log("Player was shot");
+		}
+
 		//if (fang->IsActive()) {
 		//	fangCompParticle->Play();
 		//} else {
 		//	onimaruCompParticle->Play();
 		//}
 
-		float3 start = parentTransform->GetGlobalPosition() + bbCenter;
-		float3 end = parentTransform->GetGlobalRotation() * float3(0, 0, 1);
-		end.Normalize();
-		end *= attackRange;
-		int mask = static_cast<int>(MaskType::PLAYER);
-		GameObject* hitGo = Physics::Raycast(start, start + end, mask);
-		if (hitGo) {
+		//float3 start = parentTransform->GetGlobalPosition() + bbCenter;
+		//float3 end = parentTransform->GetGlobalRotation() * float3(0, 0, 1);
+		//end.Normalize();
+		//end *= attackRange;
+		//int mask = static_cast<int>(MaskType::PLAYER);
+		//GameObject* hitGo = Physics::Raycast(start, start + end, mask);
+		//if (hitGo) {
 
-			//AIMovement* enemyScript = GET_SCRIPT(hitGo, AIMovement);
-			//if (fang->IsActive()) enemyScript->HitDetected(3);
-			//else enemyScript->HitDetected();
-			std::string message = "HitGo " + hitGo->name;
-			Debug::Log(message.c_str());
+		//	//AIMovement* enemyScript = GET_SCRIPT(hitGo, AIMovement);
+		//	//if (fang->IsActive()) enemyScript->HitDetected(3);
+		//	//else enemyScript->HitDetected();
+		//	std::string message = "HitGo " + hitGo->name;
+		//	Debug::Log(message.c_str());
 
-		}
+		//}
 
 
 	}
