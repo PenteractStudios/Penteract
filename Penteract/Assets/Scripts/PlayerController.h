@@ -72,6 +72,7 @@ public:
 	float distanceRayCast = 2.f;
 	float switchCooldown = 5.f;
 
+	float dashCooldown = 5.f;
 	float dashSpeed = 100.f;
 	float dashDuration = 0.1f;
 
