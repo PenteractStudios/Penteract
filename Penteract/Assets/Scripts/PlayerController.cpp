@@ -486,11 +486,11 @@ void PlayerController::Update() {
 	if (!transform) return;
 	
 	CheckCoolDowns();
-	Dash();
 	UpdatePlayerStats();
-	UpdateCameraPosition();
 
 	if (!IsDead()) {
+		Dash();
+		UpdateCameraPosition();
 		
 		if (firstTime) {
 			if (fang->IsActive()) {
@@ -519,6 +519,9 @@ void PlayerController::Update() {
 			if (Input::GetMouseButtonRepeat(0)) Shoot();
 		}
 		PlayAnimation(md);
+	}
+	else {
+		agent->RemoveAgentFromCrowd();
 	}
 }
 
