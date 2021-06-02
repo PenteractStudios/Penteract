@@ -6,3 +6,16 @@ void Character::Hit(int damage) {
 		isAlive = false;
 	}
 }
+
+void Character::Accelerate(int acceleration)
+{
+	speed += acceleration;
+}
+
+void Character::Decelerate(int deceleration)
+{
+	speed -= deceleration;
+	if (speed < 0.0f) {
+		speed = 0.0f;
+	}
+}

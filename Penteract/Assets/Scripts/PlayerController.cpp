@@ -38,11 +38,12 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, cameraOffsetZ),
 	MEMBER(MemberType::FLOAT, cameraOffsetY),
 	MEMBER(MemberType::FLOAT, cameraOffsetX),
-	MEMBER(MemberType::FLOAT, fangMovementSpeed),
-	MEMBER(MemberType::FLOAT, onimaruMovementSpeed),
-	MEMBER(MemberType::FLOAT, shootCooldown),
-	MEMBER(MemberType::INT, lifePointsFang),
-	MEMBER(MemberType::INT, lifePointsOni)
+	MEMBER(MemberType::FLOAT, fangCharacter.speed),
+	MEMBER(MemberType::FLOAT, onimaruCharacter.speed),
+	MEMBER(MemberType::FLOAT, fangCharacter.shootCooldown),
+	MEMBER(MemberType::FLOAT, onimaruCharacter.shootCooldown),
+	MEMBER(MemberType::INT, fangCharacter.lifeSlots),
+	MEMBER(MemberType::INT, onimaruCharacter.lifeSlots)
 
 };
 
@@ -114,7 +115,7 @@ void PlayerController::MoveTo(MovementDirection md) {
 	if (Input::GetKeyCode(Input::KEYCODE::KEY_LSHIFT)) {
 		modifier = 2.0f;
 	}
-	float movementSpeed = ((fang->IsActive()) ? fangMovementSpeed : onimaruMovementSpeed);
+	float movementSpeed = ((fang->IsActive()) ? fangCharacter.speed : onimaruCharacter.speed);
 	newPosition += GetDirection(md) * movementSpeed * Time::GetDeltaTime() * modifier;
 	transform->SetGlobalPosition(newPosition);
 }
@@ -181,13 +182,13 @@ void PlayerController::SwitchCharacter() {
 			Debug::Log("Swaping to onimaru...");
 			fang->Disable();
 			onimaru->Enable();
-			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
+			hudControllerScript->UpdateHP(onimaruCharacter.lifeSlots, fangCharacter.lifeSlots);
 		}
 		else {
 			Debug::Log("Swaping to fang...");
 			onimaru->Disable();
 			fang->Enable();
-			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
+			hudControllerScript->UpdateHP(fangCharacter.lifeSlots, onimaruCharacter.lifeSlots);
 		}
 		switchCooldownRemaing = switchCooldown;
 		if(hudControllerScript){
@@ -209,7 +210,7 @@ void PlayerController::Shoot() {
 			Debug::Log(AUDIOSOURCE_NULL_MSG);
 		}
 
-		shootCooldownRemaing = shootCooldown;
+		shootCooldownRemaing = ((fang->IsActive()) ? fangCharacter.shootCooldown : onimaruCharacter.shootCooldown);
 		shooting = true;
 		if (fang->IsActive()) {
 			fangCompParticle->Play();
@@ -385,18 +386,18 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 void PlayerController::UpdatePlayerStats() {
 	if (hudControllerScript){
 		if (firstTime) {
-			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
+			hudControllerScript->UpdateHP(fangCharacter.lifeSlots, onimaruCharacter.lifeSlots);
 			firstTime = false;
 		}
 
-		if (hitTaken && fang->IsActive() && lifePointsFang > 0) {
-			--lifePointsFang;
-			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
+		if (hitTaken && fang->IsActive() && fangCharacter.lifeSlots > 0) {
+			--fangCharacter.lifeSlots;
+			hudControllerScript->UpdateHP(fangCharacter.lifeSlots, onimaruCharacter.lifeSlots);
 			hitTaken = false;
 		}
-		else if (hitTaken && onimaru->IsActive() && lifePointsOni > 0) {
-			--lifePointsOni;
-			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
+		else if (hitTaken && onimaru->IsActive() && onimaruCharacter.lifeSlots > 0) {
+			--onimaruCharacter.lifeSlots;
+			hudControllerScript->UpdateHP(onimaruCharacter.lifeSlots, fangCharacter.lifeSlots);
 			hitTaken = false;
 		}
 
@@ -404,7 +405,7 @@ void PlayerController::UpdatePlayerStats() {
 		float realSwitchCooldown = 1.0f - (switchCooldownRemaing / switchCooldown);
 		hudControllerScript->UpdateCooldowns(0.0f, 0.0f, 0.0f, realDashCooldown, 0.0f, 0.0f, realSwitchCooldown);
 
-		if (lifePointsFang <= 0 || lifePointsOni <= 0) {
+		if (fangCharacter.lifeSlots <= 0 || onimaruCharacter.lifeSlots <= 0) {
 			SceneManager::ChangeScene("Assets/Scenes/LoseScene.scene");
 		}
 	}
@@ -429,10 +430,10 @@ void PlayerController::Update() {
 	UpdateCameraPosition();
 	if (firstTime) {
 		if (fang->IsActive()) {
-			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
+			hudControllerScript->UpdateHP(fangCharacter.lifeSlots, onimaruCharacter.lifeSlots);
 		}
 		else {
-			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
+			hudControllerScript->UpdateHP(onimaruCharacter.lifeSlots, fangCharacter.lifeSlots);
 		}
 		firstTime = false;
 	}

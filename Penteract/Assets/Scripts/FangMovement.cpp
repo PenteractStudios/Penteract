@@ -10,7 +10,7 @@ EXPOSE_MEMBERS(FangMovement) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, hitGOUID),
-	MEMBER(MemberType::INT, speed),
+	MEMBER(MemberType::INT, character.speed),
 	MEMBER(MemberType::INT, distanceRayCast),
 	MEMBER(MemberType::FLOAT, cameraXPosition)
 };
@@ -18,9 +18,6 @@ EXPOSE_MEMBERS(FangMovement) {
 GENERATE_BODY_IMPL(FangMovement);
 
 void FangMovement::Start() {
-	character = Character();
-	character.lifeSlots = 10;
-
 	fang = GameplaySystems::GetGameObject(fangUID);
 	camera = GameplaySystems::GetGameObject(cameraUID);
 	Debug::Log("Fang movement Start Log");
@@ -66,28 +63,28 @@ void FangMovement::Update() {
 			if (Input::GetKeyCode(Input::KEYCODE::KEY_W)) {
 				if (transform) {
 					float3 newPosition = transform->GetPosition();
-					newPosition.z -= speed * Time::GetDeltaTime() * modifier;
+					newPosition.z -= character.speed * Time::GetDeltaTime() * modifier;
 					transform->SetPosition(newPosition);
 				}
 			}
 			if (Input::GetKeyCode(Input::KEYCODE::KEY_A)) {
 				if (transform) {
 					float3 newPosition = transform->GetPosition();
-					newPosition.x -= speed * Time::GetDeltaTime() * modifier;
+					newPosition.x -= character.speed * Time::GetDeltaTime() * modifier;
 					transform->SetPosition(newPosition);
 				}
 			}
 			if (Input::GetKeyCode(Input::KEYCODE::KEY_S)) {
 				if (transform) {
 					float3 newPosition = transform->GetPosition();
-					newPosition.z += speed * Time::GetDeltaTime() * modifier;
+					newPosition.z += character.speed * Time::GetDeltaTime() * modifier;
 					transform->SetPosition(newPosition);
 				}
 			}
 			if (Input::GetKeyCode(Input::KEYCODE::KEY_D)) {
 				if (transform) {
 					float3 newPosition = transform->GetPosition();
-					newPosition.x += speed * Time::GetDeltaTime() * modifier;
+					newPosition.x += character.speed * Time::GetDeltaTime() * modifier;
 					transform->SetPosition(newPosition);
 				}
 			}

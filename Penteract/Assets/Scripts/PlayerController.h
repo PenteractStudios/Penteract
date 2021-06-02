@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Character.h"
 #include "Scripting/Script.h"
 #include "Math/float3.h"
 #include <vector>
@@ -53,20 +54,18 @@ public:
 	UID dashAudioSourceUID = 0;
 
 	bool hitTaken = false;
-	int lifePointsFang = 7;
-	int lifePointsOni = 7;
+
+	Character fangCharacter = Character(3, 15.0f, 1.1f); // 7, 10.0f, 0.1f
+	Character onimaruCharacter = Character(7, 6.0f, 0.1f);
 
 	float distanceRayCast = 2.f;
 	float dashCooldown = 5.f; //seconds
 	float switchCooldown = 5.f;
-	float fangMovementSpeed = 10.f;
-	float onimaruMovementSpeed = 6.f;
 	float dashSpeed = 100.f;
 	float dashDistance = 10.f;
 	float cameraOffsetZ = 20.f;
 	float cameraOffsetY = 10.f;
 	float cameraOffsetX = 0.f;
-	float shootCooldown = 0.1f;
 	bool firstTime = true;
 
 	std::vector<std::string> states {"Idle" ,
