@@ -41,18 +41,23 @@ void AIMovement::Update() {
     if (!GetOwner().IsActive()) return;
 
     if (hitTaken && lifePoints > 0) {
-        if (state == AIState::IDLE || state == AIState::HURT) {
-            animation->SendTrigger("IdleHurt");
+        lifePoints -= damageRecieved;
+        hitTaken = false;
+    }
+
+    if (lifePoints <= 0) {
+        if (state == AIState::ATTACK) {
+            animation->SendTrigger("AttackDeath");
+        }
+        else if (state == AIState::IDLE) {
+            animation->SendTrigger("IdleDeath");
         }
         else if (state == AIState::RUN) {
-            animation->SendTrigger("RunHurt");
+            animation->SendTrigger("RunDeath");
         }
-        else if (state == AIState::ATTACK) {
-            animation->SendTrigger("AttackHurt");
-        }
-        lifePoints -= damageRecieved;
-        state = AIState::HURT;
-        hitTaken = false;
+        Debug::Log("Death");
+        agent->RemoveAgentFromCrowd();
+        state = AIState::DEATH;
     }
 
     switch (state)
@@ -82,8 +87,6 @@ void AIMovement::Update() {
             animation->SendTrigger("RunAttack");
             state = AIState::ATTACK;
         }
-        break;
-    case AIState::HURT:                
         break;
     case AIState::ATTACK:
         break;
@@ -120,17 +123,7 @@ void AIMovement::OnAnimationFinished()
         animation->SendTrigger("AttackIdle");
         state = AIState::IDLE;
     }
-    else if (state == AIState::HURT && lifePoints > 0) {
-        animation->SendTrigger("HurtIdle");
-        state = AIState::IDLE;
-    }
-    
-    else if (state == AIState::HURT && lifePoints <= 0) {
-        animation->SendTrigger("HurtDeath");
-        Debug::Log("Death");
-        agent->RemoveAgentFromCrowd();
-        state = AIState::DEATH;
-    }
+
     else if (state == AIState::DEATH) {
         dead = true;
     }
