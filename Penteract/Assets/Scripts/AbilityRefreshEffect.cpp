@@ -44,9 +44,12 @@ void AbilityRefreshEffect::Update() {
 
 	effectTimer = Min(totalEffectTime, effectTimer + Time::GetDeltaTime());
 
+	float deltaA = effectTimer / totalEffectTime;
+	float deltaB = Min(1.0f, effectTimer * 1.2f / totalEffectTime);
+
 	//DO EFFECT
-	skillImageTransform2D->SetScale(float3::Lerp(effectScaleVector, originalScaleVector, effectTimer / totalEffectTime));
-	effectTransform2D->SetScale(float3::Lerp(effectScaleVector, originalEffectScaleVector, effectTimer / totalEffectTime));
+	skillImageTransform2D->SetScale(float3::Lerp(effectScaleVector, originalScaleVector, deltaA));
+	effectTransform2D->SetScale(float3::Lerp(effectScaleVector, originalEffectScaleVector, deltaB));
 
 	if (effectTimer == totalEffectTime) {
 		isPlaying = false;
