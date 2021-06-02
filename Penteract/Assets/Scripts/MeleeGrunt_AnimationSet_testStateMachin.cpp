@@ -91,24 +91,24 @@ void MeleeGrunt_AnimationSet_testStateMachin::Update() {
 }
 
 void MeleeGrunt_AnimationSet_testStateMachin::ReceiveEvent(TesseractEvent& e) {
-	switch (e.type) {
-	case TesseractEventType::ANIMATION_FINISHED:
-		Debug::Log("ANIMATION_FINISHED!!");
-
-		if (currentState != animation->GetCurrentState())
-		{
-			currentState = animation->GetCurrentState();
-		}
-
-		if (currentState->name == "StateHurt") {
-			animation->SendTrigger("HurtIdle");
-		}
-		if (currentState->name == "StateAttack") {
-			animation->SendTrigger("AttackIdle");
-		}
-
-		break;
-	default:
-		break;
-	}
+	//switch (e.type) {
+	//case TesseractEventType::ANIMATION_FINISHED:
+	//	Debug::Log("ANIMATION_FINISHED!!");
+	//
+	//	if (currentState != animation->GetCurrentState())
+	//	{
+	//		currentState = animation->GetCurrentState();
+	//	}
+	//
+	//	if (currentState->name == "StateHurt") {
+	//		animation->SendTrigger("HurtIdle");
+	//	}
+	//	if (currentState->name == "StateAttack") {
+	//		animation->SendTrigger("AttackIdle");
+	//	}
+	//
+	//	break;
+	//default:
+	//	break;
+	//}
 }

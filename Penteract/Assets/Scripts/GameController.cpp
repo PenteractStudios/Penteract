@@ -20,12 +20,12 @@ EXPOSE_MEMBERS(GameController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, pauseUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, hudUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, enemySpawnPointsUID),
 	MEMBER(MemberType::FLOAT, speed),
 	MEMBER(MemberType::FLOAT, rotationSpeedX),
 	MEMBER(MemberType::FLOAT, rotationSpeedY),
 	MEMBER(MemberType::FLOAT, focusDistance),
-	MEMBER(MemberType::FLOAT, transitionSpeed)
+	MEMBER(MemberType::FLOAT, transitionSpeed),
+	MEMBER(MemberType::GAME_OBJECT_UID, godModeControllerUID),
 };
 
 GENERATE_BODY_IMPL(GameController);
@@ -55,6 +55,7 @@ void GameController::Start() {
 
 	Debug::SetGodModeOn(false);
 	if (gameCamera && godCamera) godModeAvailable = true;
+	godModeController = GameplaySystems::GetGameObject(godModeControllerUID);
 }
 
 void GameController::Update() {
@@ -63,13 +64,18 @@ void GameController::Update() {
 		if (godModeAvailable) {
 			Debug::ToggleDebugMode();
 			if (Debug::IsGodModeOn()) {
-				camera = gameCamera->GetComponent<ComponentCamera>();
-				GameplaySystems::SetRenderCamera(camera);
 				Debug::SetGodModeOn(false);
-			} else {
-				camera = godCamera->GetComponent<ComponentCamera>();
-				GameplaySystems::SetRenderCamera(camera);
+				if (showWireframe) { // If Wireframe enabled when leaving God Mode, update to Shaded
+					Debug::UpdateShadingMode("Shaded");
+				}
+				godModeController->Disable();
+			}
+			else {
+				if (showWireframe) { // If Wireframe enabled when entering GodMode, update to Wireframe
+					Debug::UpdateShadingMode("Wireframe");
+				}
 				Debug::SetGodModeOn(true);
+				godModeController->Enable();
 			}
 		}
 	}
@@ -77,7 +83,8 @@ void GameController::Update() {
 	if (pauseCanvas) {
 		if (pauseCanvas->IsActive()) {
 			isPaused = true;
-		} else {
+		}
+		else {
 			isPaused = false;
 		}
 	}
@@ -88,7 +95,8 @@ void GameController::Update() {
 				Time::PauseGame();
 				if (hudCanvas) hudCanvas->Disable();
 				pauseCanvas->Enable();
-			} else {
+			}
+			else {
 				Time::ResumeGame();
 				if (hudCanvas) hudCanvas->Enable();
 				pauseCanvas->Disable();
@@ -164,7 +172,8 @@ void GameController::Update() {
 				Rotate(Input::GetMouseMotion(), cameraGodMode->GetFrustum(), transform);
 				vec newFocus = transform->GetPosition() + transform->GetLocalMatrix().Col3(2) * focusDistance;
 				transform->SetPosition(transform->GetPosition() + (oldFocus - newFocus));
-			} else {
+			}
+			else {
 				// --- Panning
 				Rotate(Input::GetMouseMotion(), cameraGodMode->GetFrustum(), transform);
 			}
@@ -179,7 +188,8 @@ void GameController::Update() {
 		if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_X)) {
 			if (showWireframe) {
 				Debug::UpdateShadingMode("Shaded");
-			} else {
+			}
+			else {
 				Debug::UpdateShadingMode("Wireframe");
 			}
 			showWireframe = !showWireframe;
@@ -190,7 +200,7 @@ void GameController::Update() {
 		}
 		// --- Show/Hide Bounding Boxes
 		if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_V)) {
-			Debug::ToggleDrawBBoxes(); //TODO: Disabled until better level building
+			Debug::ToggleDrawBBoxes();
 		}
 		// --- Show/Hide Animation Bones
 		if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_B)) {
@@ -209,14 +219,21 @@ void GameController::Update() {
 			ComponentSkyBox* skybox = gameCamera->GetComponent<ComponentSkyBox>();
 			if (skybox->IsActive()) {
 				skybox->Disable();
-			} else {
+			}
+			else {
 				skybox->Enable();
 			}
 		}
-		// --- Spawn Enemies
-		if(Input::GetKeyCodeDown(Input::KEYCODE::KEY_L)) {
-			SpawnEnemies();
-		}
+	}
+}
+
+void GameController::ReceiveEvent(TesseractEvent& e) {
+	switch (e.type) {
+	case TesseractEventType::PRESSED_STOP:
+		if (showWireframe) Debug::UpdateShadingMode("Shaded");
+		break;
+	default:
+		break;
 	}
 }
 
@@ -234,16 +251,10 @@ void GameController::DoTransition() {
 		if (currentPosition.x > finalPosition.x) {
 			currentPosition.x -= transitionSpeed * Time::GetDeltaTime();
 			gameCamera->GetComponent<ComponentTransform>()->SetPosition(currentPosition);
-		} else {
+		}
+		else {
 			transitionFinished = true;
 			gameCamera->GetComponent<ComponentTransform>()->SetPosition(finalPosition);
 		}
-	}
-}
-
-void GameController::SpawnEnemies() {
-	GameObject* spawnGO = GameplaySystems::GetGameObject(enemySpawnPointsUID);
-	for (auto& child : spawnGO->GetChildren()) {
-		if(!child->IsActive()) child->Enable();
 	}
 }

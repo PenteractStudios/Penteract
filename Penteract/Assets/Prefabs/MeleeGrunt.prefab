@@ -3,7 +3,7 @@
         "Name": "MeleeGrunt",
         "Active": true,
         "RootBoneName": "CenterHip",
-        "Mask": 0,
+        "Mask": 2,
         "Components": [
             {
                 "Type": "Transform",
@@ -33,8 +33,31 @@
             {
                 "Type": "Animation",
                 "Active": true,
-                "StateMachineId": 4566963390717869434,
-                "InitalState": 6232389412078675400
+                "StateMachineId": 4566963390717869434
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 6803541990823883369,
+                "Values": [
+                    {
+                        "Name": "playerUID",
+                        "Type": "GameObjectUID",
+                        "Value": 8960886680822700415
+                    },
+                    {
+                        "Name": "canvasUID",
+                        "Type": "GameObjectUID",
+                        "Value": 17773628572955029428
+                    }
+                ]
+            },
+            {
+                "Type": "Agent",
+                "Active": true,
+                "MaxSpeed": 5.0,
+                "MaxAcceleration": 8.0,
+                "AvoidingObstacle": true
             }
         ],
         "Children": [
@@ -85,23 +108,6 @@
                             28.645626068115236,
                             138.970458984375,
                             16.807958602905275
-                        ]
-                    },
-                    {
-                        "Type": "Script",
-                        "Active": true,
-                        "Script": 6803541990823883369,
-                        "Values": [
-                            {
-                                "Name": "playerUID",
-                                "Type": "GameObjectUID",
-                                "Value": 8960886680822700415
-                            },
-                            {
-                                "Name": "canvasUID",
-                                "Type": "GameObjectUID",
-                                "Value": 17773628572955029428
-                            }
                         ]
                     }
                 ],
