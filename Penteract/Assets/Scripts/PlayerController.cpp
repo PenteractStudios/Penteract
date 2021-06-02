@@ -34,8 +34,6 @@ EXPOSE_MEMBERS(PlayerController) {
 		MEMBER(MemberType::GAME_OBJECT_UID, switchAudioSourceUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, dashAudioSourceUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
-		MEMBER(MemberType::FLOAT, fangAttackSpeed),
-		MEMBER(MemberType::FLOAT, onimaruAttackSpeed),
 		MEMBER(MemberType::FLOAT, distanceRayCast),
 		MEMBER(MemberType::FLOAT, switchCooldown),
 		MEMBER(MemberType::FLOAT, dashCooldown),
@@ -49,7 +47,9 @@ EXPOSE_MEMBERS(PlayerController) {
 		MEMBER(MemberType::FLOAT, fangCharacter.movementSpeed),
 		MEMBER(MemberType::FLOAT, onimaruCharacter.movementSpeed),
 		MEMBER(MemberType::FLOAT, fangCharacter.shootCooldown),
-		MEMBER(MemberType::FLOAT, onimaruCharacter.shootCooldown)
+		MEMBER(MemberType::FLOAT, onimaruCharacter.shootCooldown),
+		MEMBER(MemberType::FLOAT, fangCharacter.attackSpeed),
+		MEMBER(MemberType::FLOAT, onimaruCharacter.attackSpeed),
 };
 
 GENERATE_BODY_IMPL(PlayerController);
@@ -238,7 +238,7 @@ void PlayerController::Shoot() {
 		shooting = true;
 		float3 start;
 		if (fang->IsActive()) {
-			fangAttackCooldownRemaining = 1.f / fangAttackSpeed;
+			fangAttackCooldownRemaining = 1.f / fangCharacter.attackSpeed;
 			if (fangTrail) {
 				//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
 				//fangGun->GetComponent<ComponentParticleSystem>()->Play();
@@ -250,7 +250,7 @@ void PlayerController::Shoot() {
 		}
 		else {
 			//TODO: SUB WITH ONIMARU SHOOT
-			onimaruAttackCooldownRemaining = 1.f / onimaruAttackSpeed;
+			onimaruAttackCooldownRemaining = 1.f / onimaruCharacter.attackSpeed;
 			if (onimaruTrail) {
 				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
 				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);

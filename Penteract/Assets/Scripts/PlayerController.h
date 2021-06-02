@@ -64,11 +64,9 @@ public:
 
 	bool hitTaken = false;
 
-	Character fangCharacter = Character(7, 10.0f, 0.1f);
-	Character onimaruCharacter = Character(7, 6.0f, 0.1f);
+	Character fangCharacter = Character(7.0f, 10.0f, 0.1f, 1.0f);
+	Character onimaruCharacter = Character(7.0f, 6.0f, 0.1f, 1.0f);
 
-	float fangAttackSpeed = 1.f;
-	float onimaruAttackSpeed = 1.f;
 	float distanceRayCast = 2.f;
 	float switchCooldown = 5.f;
 

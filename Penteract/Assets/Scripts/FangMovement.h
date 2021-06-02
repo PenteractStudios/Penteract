@@ -26,5 +26,5 @@ private:
 	GameObject* camera = nullptr;
 	GameObject* fang = nullptr;
 	GameObject* hitGo = nullptr;
-	Character character = Character(10, 10.0f, 1.0f);
+	Character character = Character();
 };
