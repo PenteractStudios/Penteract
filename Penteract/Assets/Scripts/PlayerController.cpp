@@ -6,6 +6,7 @@
 
 #include "AIMovement.h"
 #include "HUDController.h"
+#include "OnimaruBullet.h"
 
 #include "Math/Quat.h"
 #include "Geometry/Plane.h"
@@ -27,7 +28,8 @@ EXPOSE_MEMBERS(PlayerController) {
 		MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
 		MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
-		MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruTrailUID),
+		MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruBulletUID),
+
 		MEMBER(MemberType::GAME_OBJECT_UID, fangGunUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, onimaruParticleUID),
@@ -100,7 +102,7 @@ void PlayerController::Start() {
 			onimaruGunTransform = onimaruGun->GetComponent<ComponentTransform>();
 		}
 		onimaruAnimation = onimaru->GetComponent<ComponentAnimation>();
-		onimaruTrail = GameplaySystems::GetResource<ResourcePrefab>(onimaruTrailUID);
+		onimaruBullet = GameplaySystems::GetResource<ResourcePrefab>(onimaruBulletUID);
 		if (onimaruAnimation) {
 			onimaruCurrentState = onimaruAnimation->GetCurrentState();
 		}
@@ -220,7 +222,7 @@ void PlayerController::SwitchCharacter() {
 
 bool PlayerController::CanShoot() {
 
-	return !shooting && ((fang->IsActive() && fangTrail) || (onimaru->IsActive() && onimaruTrail));
+	return !shooting && ((fang->IsActive() && fangTrail) || (onimaru->IsActive() && onimaruBullet));
 }
 
 void PlayerController::Shoot() {
@@ -250,10 +252,12 @@ void PlayerController::Shoot() {
 		else {
 			//TODO: SUB WITH ONIMARU SHOOT
 			onimaruAttackCooldownRemaining = 1.f / onimaruAttackSpeed;
-			if (onimaruTrail) {
-				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
-				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
-				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
+			if (onimaruBullet) {
+				GameObject* bullet = GameplaySystems::Instantiate(onimaruBullet, onimaruGunTransform->GetGlobalPosition(), Quat(0.0f,0.0f,0.0f,0.0f));
+				if (bullet) {
+					onimaruBulletcript = GET_SCRIPT(bullet, OnimaruBullet);
+					onimaruBulletcript->SetOnimaruDirection(onimaruGunTransform->GetGlobalRotation());
+				}
 			}
 			start = onimaruGunTransform->GetGlobalPosition();
 		}

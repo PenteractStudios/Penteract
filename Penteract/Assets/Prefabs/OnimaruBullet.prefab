@@ -1,0 +1,72 @@
+{
+    "Root": {
+        "Name": "OnimaruBullet",
+        "Active": true,
+        "RootBoneName": "",
+        "Mask": 0,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Active": true,
+                "Position": [
+                    -136.73731994628907,
+                    6.442291259765625,
+                    0.05256497859954834
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    5.0,
+                    5.0,
+                    5.0
+                ],
+                "LocalEulerAngles": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ]
+            },
+            {
+                "Type": "Billboard",
+                "Active": true,
+                "ShaderId": 11379545950448947673,
+                "TextureId": 14183213195150175674,
+                "Ytiles": 2,
+                "Xtiles": 5,
+                "AnimationSpeed": 10.0,
+                "InitColor": [
+                    0.0,
+                    1.0,
+                    0.970238208770752
+                ],
+                "FinalColor": [
+                    0.0,
+                    1.0,
+                    0.9404764175415039
+                ]
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 6758366606889375335,
+                "Values": [
+                    {
+                        "Name": "life",
+                        "Type": "Float",
+                        "Value": 5.0
+                    },
+                    {
+                        "Name": "speed",
+                        "Type": "Int",
+                        "Value": 50
+                    }
+                ]
+            }
+        ],
+        "Children": null
+    }
+}
