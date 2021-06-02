@@ -1,6 +1,6 @@
 {
     "Root": {
-        "Name": "Player",
+        "Name": "Player1",
         "Active": true,
         "RootBoneName": "",
         "Mask": 0,
@@ -94,26 +94,6 @@
                         "Name": "cameraOffsetX",
                         "Type": "Float",
                         "Value": -6.0
-                    },
-                    {
-                        "Name": "fangTrailUID",
-                        "Type": "PrefabResourceUID",
-                        "Value": 165003076921335927
-                    },
-                    {
-                        "Name": "onimaruTrailUID",
-                        "Type": "PrefabResourceUID",
-                        "Value": 165003076921335927
-                    },
-                    {
-                        "Name": "fangGunUID",
-                        "Type": "GameObjectUID",
-                        "Value": 15734666931762491428
-                    },
-                    {
-                        "Name": "onimaruGunUID",
-                        "Type": "GameObjectUID",
-                        "Value": 2707824235752519966
                     }
                 ]
             },
@@ -130,13 +110,6 @@
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
                 "OuterGain": 0.0
-            },
-            {
-                "Type": "Agent",
-                "Active": true,
-                "MaxSpeed": 5.0,
-                "MaxAcceleration": 8.0,
-                "AvoidingObstacle": false
             }
         ],
         "Children": [
@@ -182,7 +155,7 @@
                         "Name": "Onimaru",
                         "Active": true,
                         "RootBoneName": "",
-                        "Mask": 0,
+                        "Mask": 8,
                         "Components": [
                             {
                                 "Type": "Transform",
@@ -6188,7 +6161,7 @@
                         "Name": "Fang_LowPoly",
                         "Active": true,
                         "RootBoneName": "",
-                        "Mask": 0,
+                        "Mask": 8,
                         "Components": [
                             {
                                 "Type": "Transform",

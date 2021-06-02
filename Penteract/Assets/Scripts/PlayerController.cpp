@@ -95,7 +95,7 @@ void PlayerController::Start() {
 	}
 	if (onimaru) {
 		onimaru->Disable();
-		onimaruGun = GameplaySystems::GetGameObject(fangGunUID);
+		onimaruGun = GameplaySystems::GetGameObject(onimaruGunUID);
 		if (onimaruGun) {
 			onimaruGunTransform = onimaruGun->GetComponent<ComponentTransform>();
 		}
@@ -477,7 +477,6 @@ void PlayerController::Update() {
 
 	CheckCoolDowns();
 	Dash();
-	UpdatePlayerStats();
 	UpdateCameraPosition();
 	if (firstTime) {
 		if (fang->IsActive()) {
@@ -506,4 +505,5 @@ void PlayerController::Update() {
 		if (Input::GetMouseButtonRepeat(0)) Shoot();
 	}
 	PlayAnimation(md);
+	UpdatePlayerStats();
 }

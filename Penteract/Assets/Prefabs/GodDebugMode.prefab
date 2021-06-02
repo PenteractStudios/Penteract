@@ -38,12 +38,12 @@
                     {
                         "Name": "uiCanvasUID",
                         "Type": "GameObjectUID",
-                        "Value": 17862301077739093975
+                        "Value": 15933564065168254855
                     },
                     {
                         "Name": "spawnMeleeUID",
                         "Type": "GameObjectUID",
-                        "Value": 6545903693762027749
+                        "Value": 15339366562216642983
                     },
                     {
                         "Name": "enemiesUID",
@@ -58,7 +58,7 @@
                     {
                         "Name": "spawnRangedUID",
                         "Type": "GameObjectUID",
-                        "Value": 17563331003369146534
+                        "Value": 3614678847707435221
                     },
                     {
                         "Name": "gameCameraUID",
@@ -68,12 +68,17 @@
                     {
                         "Name": "debugEnemiesUID",
                         "Type": "GameObjectUID",
-                        "Value": 12270434322959628002
+                        "Value": 11291014142674098594
                     },
                     {
                         "Name": "godCameraUID",
                         "Type": "GameObjectUID",
                         "Value": 5035480018265416016
+                    },
+                    {
+                        "Name": "invincibleUID",
+                        "Type": "GameObjectUID",
+                        "Value": 7183221282410255805
                     }
                 ]
             }
@@ -133,12 +138,12 @@
                             {
                                 "Name": "enemiesUID",
                                 "Type": "GameObjectUID",
-                                "Value": 12270434322959628002
+                                "Value": 11291014142674098594
                             },
                             {
                                 "Name": "prefabUID",
                                 "Type": "PrefabResourceUID",
-                                "Value": 564339191826698320
+                                "Value": 17022539209527519003
                             }
                         ]
                     }
@@ -439,7 +444,7 @@
                                 "Type": "Toggle",
                                 "Active": false,
                                 "IsOn": false,
-                                "EnabledImageID": 14287906909327506491,
+                                "EnabledImageID": 17579959660393884557,
                                 "ClickedColor": [
                                     0.6399999856948853,
                                     0.6399999856948853,
@@ -469,7 +474,7 @@
                                     {
                                         "Name": "godControllerUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 16644941071528309700
+                                        "Value": 16807537134596512090
                                     }
                                 ]
                             }
@@ -799,7 +804,7 @@
                                 "Type": "Toggle",
                                 "Active": false,
                                 "IsOn": false,
-                                "EnabledImageID": 5078328149279208925,
+                                "EnabledImageID": 7674698143404500089,
                                 "ClickedColor": [
                                     0.6399999856948853,
                                     0.6399999856948853,
@@ -829,7 +834,7 @@
                                     {
                                         "Name": "godControllerUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 16644941071528309700
+                                        "Value": 16807537134596512090
                                     },
                                     {
                                         "Name": "index",
@@ -1164,7 +1169,7 @@
                                 "Type": "Toggle",
                                 "Active": false,
                                 "IsOn": true,
-                                "EnabledImageID": 9833276929470337739,
+                                "EnabledImageID": 5062373536031828618,
                                 "ClickedColor": [
                                     0.6399999856948853,
                                     0.6399999856948853,
@@ -1194,7 +1199,7 @@
                                     {
                                         "Name": "godControllerUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 16644941071528309700
+                                        "Value": 16807537134596512090
                                     },
                                     {
                                         "Name": "index",
@@ -1529,7 +1534,7 @@
                                 "Type": "Toggle",
                                 "Active": false,
                                 "IsOn": false,
-                                "EnabledImageID": 10673934652441513677,
+                                "EnabledImageID": 12516161247913784878,
                                 "ClickedColor": [
                                     0.6399999856948853,
                                     0.6399999856948853,
@@ -1559,7 +1564,7 @@
                                     {
                                         "Name": "godControllerUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 16644941071528309700
+                                        "Value": 16807537134596512090
                                     },
                                     {
                                         "Name": "index",
@@ -1894,7 +1899,7 @@
                                 "Type": "Toggle",
                                 "Active": false,
                                 "IsOn": true,
-                                "EnabledImageID": 3934530567421293021,
+                                "EnabledImageID": 11676657863257086701,
                                 "ClickedColor": [
                                     0.6399999856948853,
                                     0.6399999856948853,
@@ -1924,7 +1929,7 @@
                                     {
                                         "Name": "godControllerUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 16644941071528309700
+                                        "Value": 16807537134596512090
                                     },
                                     {
                                         "Name": "index",
@@ -2259,7 +2264,7 @@
                                 "Type": "Toggle",
                                 "Active": false,
                                 "IsOn": false,
-                                "EnabledImageID": 13373982985972999117,
+                                "EnabledImageID": 12494532123350874976,
                                 "ClickedColor": [
                                     0.6399999856948853,
                                     0.6399999856948853,
@@ -2289,7 +2294,7 @@
                                     {
                                         "Name": "godControllerUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 16644941071528309700
+                                        "Value": 16807537134596512090
                                     },
                                     {
                                         "Name": "index",
@@ -2557,7 +2562,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 200.0,
-                            "HorizontalFov": 1.9097892045974732,
+                            "HorizontalFov": 1.9273024797439576,
                             "VerticalFov": 1.3089970350265504
                         }
                     }
@@ -2613,13 +2618,47 @@
                             {
                                 "Name": "enemiesUID",
                                 "Type": "GameObjectUID",
-                                "Value": 12270434322959628002
+                                "Value": 11291014142674098594
                             },
                             {
                                 "Name": "prefabUID",
                                 "Type": "PrefabResourceUID",
-                                "Value": 564339191826698320
+                                "Value": 17022539209527519003
                             }
+                        ]
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "TBD-Invincible",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": false,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
                         ]
                     }
                 ],
