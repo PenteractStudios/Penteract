@@ -1,21 +1,21 @@
 #include "Character.h"
 
 void Character::Hit(int damage) {
-	lifeSlots -= damage;
-	if (lifeSlots <= 0) {
+	lifePoints -= damage;
+	if (lifePoints <= 0) {
 		isAlive = false;
 	}
 }
 
 void Character::Accelerate(int acceleration)
 {
-	speed += acceleration;
+	movementSpeed += acceleration;
 }
 
 void Character::Decelerate(int deceleration)
 {
-	speed -= deceleration;
-	if (speed < 0.0f) {
-		speed = 0.0f;
+	movementSpeed -= deceleration;
+	if (movementSpeed < 0.0f) {
+		movementSpeed = 0.0f;
 	}
 }

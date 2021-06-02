@@ -5,9 +5,9 @@ class Character
 public:
 
 	Character() {}
-	Character(int lifeSlots_, float speed_, float shootCooldown_)
-		: lifeSlots(lifeSlots_)
-		, speed(speed_)
+	Character(int lifePoints_, float movementSpeed_, float shootCooldown_)
+		: lifePoints(lifePoints_)
+		, movementSpeed(movementSpeed_)
 		, shootCooldown(shootCooldown_) {
 	}
 
@@ -20,8 +20,7 @@ public:
 	bool isEnemy = false;
 	bool isBoss = false;
 
-	int lifeSlots = 3;
-	float speed = 1.0f;
+	int lifePoints = 3;
+	float movementSpeed = 1.0f;
 	float shootCooldown = 0.1f;
 };
-
