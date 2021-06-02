@@ -9,15 +9,15 @@ class ComponentTransform;
 class ComponentCamera;
 class ComponentAudioSource;
 class ComponentParticleSystem;
-
 class HUDController;
-
+class ComponentAgent;
 class ComponentAnimation;
 class State;
+class ResourcePrefab;
 struct TesseractEvent;
 
 enum class MovementDirection {
-		NONE = 0, UP = 1, UP_LEFT = 2, LEFT = 3, DOWN_LEFT = 4, DOWN = 5, DOWN_RIGHT = 6, RIGHT = 7, UP_RIGHT = 8
+	NONE = 0, UP = 1, UP_LEFT = 2, LEFT = 3, DOWN_LEFT = 4, DOWN = 5, DOWN_RIGHT = 6, RIGHT = 7, UP_RIGHT = 8
 };
 
 class PlayerController : public Script
@@ -37,39 +37,53 @@ public:
 	GameObject* camera = nullptr;
 	GameObject* fang = nullptr;
 	GameObject* onimaru = nullptr;
-	GameObject* fangParticle = nullptr;
+
+	GameObject* fangGun = nullptr;
+	GameObject* onimaruGun = nullptr;
+
 	GameObject* onimaruParticle = nullptr;
+	ComponentAgent* agent = nullptr;
+
 
 	UID fangUID = 0;
+	UID fangTrailUID = 0;
+	UID fangGunUID = 0;
+
 	UID onimaruUID = 0;
-	UID fangParticleUID = 0;
 	UID onimaruParticleUID = 0;
+	UID onimaruTrailUID = 0;
+	UID onimaruGunUID = 0;
+
 	UID mainNodeUID = 0;
 	UID cameraUID = 0;
-
 	UID canvasUID = 0;
 
 	UID switchAudioSourceUID = 0;
 	UID dashAudioSourceUID = 0;
 
 	bool hitTaken = false;
-	int lifePointsFang = 7;
-	int lifePointsOni = 7;
+	float lifePointsFang = 7.f;
+	float lifePointsOni = 7.f;
 
+	float fangAttackSpeed = 1.f;
+	float onimaruAttackSpeed = 1.f;
 	float distanceRayCast = 2.f;
-	float dashCooldown = 5.f; //seconds
 	float switchCooldown = 5.f;
+
 	float fangMovementSpeed = 10.f;
 	float onimaruMovementSpeed = 6.f;
+
+	float dashCooldown = 5.f;
 	float dashSpeed = 100.f;
-	float dashDistance = 10.f;
+	float dashDuration = 0.1f;
+
 	float cameraOffsetZ = 20.f;
 	float cameraOffsetY = 10.f;
 	float cameraOffsetX = 0.f;
 	float shootCooldown = 0.1f;
 	bool firstTime = true;
 
-	std::vector<std::string> states {"Idle" ,
+	std::vector<std::string> states{ "Idle" ,
 								"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
 								"DashBackward", "DashForward" , "DashLeft" , "DashRight" ,
 								"Death" , "Hurt" , "LeftShot" , "RightShot"
@@ -97,23 +111,26 @@ private:
 
 private:
 
-	float dashError = 2.f;
-	float dashCooldownRemaing = 0.f;
+	float dashCooldownRemaining = 0.f;
 	bool dashInCooldown = false;
 	bool dashing = false;
+	float dashRemaining = 0.f;
 
-	float switchCooldownRemaing = 0.f;
+	float switchCooldownRemaining = 0.f;
 	bool switchInCooldown = false;
 
-	float shootCooldownRemaing = 0.f;
+	float fangAttackCooldownRemaining = 0.f;
+	float onimaruAttackCooldownRemaining = 0.f;
 	bool shooting = false;
 
 	float3 initialPosition = float3(0, 0, 0);
 	float3 dashDestination = float3(0, 0, 0);
 	float3 dashDirection = float3(0, 0, 0);
-	float3 facePointDir = float3(0,0,0);
+	float3 facePointDir = float3(0, 0, 0);
 	MovementDirection dashMovementDirection = MovementDirection::NONE;
 	ComponentTransform* transform = nullptr;
+	ComponentTransform* fangGunTransform = nullptr;
+	ComponentTransform* onimaruGunTransform = nullptr;
 	ComponentCamera* compCamera = nullptr;
 	ComponentTransform* cameraTransform = nullptr;
 	//Animation
@@ -121,6 +138,9 @@ private:
 	State* fangCurrentState = nullptr;
 	ComponentAnimation* onimaruAnimation = nullptr;
 	State* onimaruCurrentState = nullptr;
+
+	ResourcePrefab* fangTrail = nullptr;
+	ResourcePrefab* onimaruTrail = nullptr;
 
 	//Particles
 	ComponentParticleSystem* fangCompParticle = nullptr;
@@ -133,4 +153,3 @@ private:
 
 	HUDController* hudControllerScript = nullptr;
 };
-
