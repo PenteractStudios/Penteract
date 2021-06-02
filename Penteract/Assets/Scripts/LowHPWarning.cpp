@@ -6,6 +6,7 @@
 
 EXPOSE_MEMBERS(LowHPWarning) {
     MEMBER(MemberType::FLOAT, effectTime),
+    MEMBER(MemberType::FLOAT, fadeOutTime),
     MEMBER(MemberType::GAME_OBJECT_UID, effectUID)
 };
 
@@ -15,18 +16,19 @@ void LowHPWarning::Start() {
     effect = GameplaySystems::GetGameObject(effectUID);
     if (effect) {
         vignette = effect->GetComponent<ComponentImage>();
+        if (vignette) {
+            color = vignette->GetColor();
+        }
         effect->Disable();
     }
-    Debug::Log("Script initialization");
 }
 
 void LowHPWarning::Update() {
     if (!effect || !vignette) return;
     if (playing) {
-        fadeOutTime = effectTime / 2.0f;
-        bool doFadeOut = effectCurrentTime >= fadeOutTime ? true : false;
+        bool doFadeOut = effectTime - effectCurrentTime <= fadeOutTime ? true : false;
         if (effectCurrentTime >= effectTime) {
-            vignette->SetColor(float4(190.f/255.f, 0, 67.f/255.0f, 0.5f));
+            vignette->SetColor(float4(color.x, color.y, color.z, color.w));
             effectCurrentTime = 0.0f;
             fadeOutCurrentTime = 0.0f;
         }
@@ -34,8 +36,8 @@ void LowHPWarning::Update() {
             if (doFadeOut) {
                 if (fadeOutCurrentTime <= fadeOutTime) {
                     float delta = fadeOutCurrentTime / fadeOutTime;
-                    float fadeValue = Lerp(0.5, 0, delta);
-                    vignette->SetColor(float4(190.f / 255.f, 0, 67.f / 255.0f, fadeValue));
+                    float fadeValue = Lerp(color.w, 0, delta);
+                    vignette->SetColor(float4(color.x, color.y, color.z, fadeValue));
                     fadeOutCurrentTime += Time::GetDeltaTime();
                 }
             }

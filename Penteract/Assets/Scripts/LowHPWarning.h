@@ -5,14 +5,14 @@
 class ComponentImage;
 class GameObject;
 
-class LowHPWarning : public Script
-{
+class LowHPWarning : public Script {
 	GENERATE_BODY(LowHPWarning);
 
 public:
 
 	UID effectUID = 0;
-	float effectTime = 1.0f; // In seconds
+	float effectTime = 2.0f; // In seconds
+	float fadeOutTime = 1.0f;
 
 public:
 
@@ -23,9 +23,11 @@ public:
 
 private:
 	bool playing = false;
-	float fadeOutTime = 0.0f;
+
 	float fadeOutCurrentTime = 0.0f;
 	float effectCurrentTime = 0.0f;
+	float4 color = { 1, 0, 0, 0.5f };
+
 	GameObject* effect = nullptr;
 	ComponentImage* vignette = nullptr;
 };
