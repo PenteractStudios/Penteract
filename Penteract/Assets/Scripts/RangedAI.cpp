@@ -38,6 +38,7 @@ void RangedAI::Start() {
 	ComponentBoundingBox* bb = meshObj->GetComponent<ComponentBoundingBox>();
 	bbCenter = (bb->GetLocalMinPointAABB() + bb->GetLocalMaxPointAABB()) / 2;
 
+	// TODO: ADD CHECK PLS
 	agent = GameplaySystems::GetGameObject(agentObjectUID)->GetComponent<ComponentAgent>();
 
 }
@@ -220,44 +221,51 @@ bool RangedAI::CharacterInRange(const GameObject* character, float range, bool u
 }
 
 bool RangedAI::FindsRayToCharacter(const GameObject* character, bool useForward) {
-	float3 start = parentTransform->GetGlobalPosition();// +parentTransform->GetLocalMatrix().Mul(float4(bbCenter, 1)).xyz();
+	//float3 start = parentTransform->GetGlobalPosition();// +parentTransform->GetLocalMatrix().Mul(float4(bbCenter, 1)).xyz();
+	ComponentBoundingBox* box = GetOwner().GetComponent<ComponentBoundingBox>();
+	float y = (box->GetWorldAABB().maxPoint + box->GetWorldAABB().minPoint).y / 2;
+	float3 offset(0, y, 0);
+	float3 start = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + offset;
 
-	float3 dir = float3(0, 0, 0);
+	//float3 dir = float3(0, 0, 0);
 
-	float3 playerMeshBoundingBoxCenter = float3(0, 0, 0);
+	//float3 playerMeshBoundingBoxCenter = float3(0, 0, 0);
 	//ComponentBoundingBox* bb = nullptr;
-	ComponentTransform* activePlayerMeshTransform = nullptr;
-
-	GameObject* activePlayerMeshObj = nullptr;
-
-	activePlayerMeshObj = GameplaySystems::GetGameObject(playerMeshUIDFang);
-
-	if (!activePlayerMeshObj->IsActive()) {
-		activePlayerMeshObj = GameplaySystems::GetGameObject(playerMeshUIDOnimaru);
-	}
+	//ComponentTransform* activePlayerMeshTransform = nullptr;
+	//
+	//GameObject* activePlayerMeshObj = nullptr;
+	//
+	//activePlayerMeshObj = GameplaySystems::GetGameObject(playerMeshUIDFang);
+	//
+	//if (!activePlayerMeshObj->IsActive()) {
+	//	activePlayerMeshObj = GameplaySystems::GetGameObject(playerMeshUIDOnimaru);
+	//}
 
 	//bb = activePlayerMeshObj->GetComponent<ComponentBoundingBox>();
-	activePlayerMeshTransform = activePlayerMeshObj->GetComponent<ComponentTransform>();
+	//activePlayerMeshTransform = activePlayerMeshObj->GetComponent<ComponentTransform>();
 
 	//if (bb) {
 	//	playerMeshBoundingBoxCenter = (bb->GetLocalMinPointAABB() + bb->GetLocalMaxPointAABB()) / 2;
 	//	playerMeshBoundingBoxCenter = activePlayerMeshTransform->GetGlobalMatrix().Mul(float4(playerMeshBoundingBoxCenter, 1)).xyz();
 	//}
 
-	if (useForward) {
-		dir = parentTransform->GetGlobalRotation() * float3(0, 0, 1);
-	} else {
-		dir = activePlayerMeshTransform->GetGlobalPosition() + playerMeshBoundingBoxCenter - start;
-	}
+	//if (useForward) {
+	//	dir = parentTransform->GetGlobalRotation() * float3(0, 0, 1);
+	//} else {
+	//	dir = activePlayerMeshTransform->GetGlobalPosition() + playerMeshBoundingBoxCenter - start;
+	//}
 
-	dir.Normalize();
+	float3 end = GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation() * float3(0, 0, 1);
+	//dir.Normalize();
 	int mask = static_cast<int>(MaskType::PLAYER);
-	GameObject* hitGo = Physics::Raycast(start, start + dir * attackRange, mask);
+	GameObject* hitGo = Physics::Raycast(start, start + end * attackRange, mask);
 
 
 	if (!hitGo) {
 		mask = static_cast<int>(MaskType::ENEMY);
-		hitGo = Physics::Raycast(start, start + dir * attackRange, mask);
+		//hitGo = Physics::Raycast(start, start + end * attackRange, mask);
+		Debug::Log("Hit!");
+		return true;
 	}
 
 
@@ -282,13 +290,13 @@ bool RangedAI::FindsRayToCharacter(const GameObject* character, bool useForward)
 
 	//Debug::Log(message.c_str());
 
-	return foundRayToPlayer;
-
-	if (hitGo == activePlayerMeshObj) {
-		Debug::Log("RayHit");
-
-		return true;
-	}
+	//return foundRayToPlayer;
+	//
+	//if (hitGo == activePlayerMeshObj) {
+	//	Debug::Log("RayHit");
+	//
+	//	return true;
+	//}
 	return false;
 }
 
