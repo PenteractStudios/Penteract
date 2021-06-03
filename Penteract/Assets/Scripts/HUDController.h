@@ -30,7 +30,7 @@ public:
 
 	static void UpdateHP(float currentHp, float altHp);
 	static void UpdateDurableHPLoss(GameObject* targetCanvas);
-	static void ChangePlayerHUD();
+	static void ChangePlayerHUD(int fangLives, int oniLives);
 	void UpdateScore(int score_);
 
 public:

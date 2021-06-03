@@ -216,7 +216,7 @@ void PlayerController::SwitchCharacter() {
 		}
 		switchCooldownRemaining = switchCooldown;
 		if (hudControllerScript) {
-			hudControllerScript->ChangePlayerHUD();
+			hudControllerScript->ChangePlayerHUD(lifePointsFang, lifePointsOni);
 		}
 	}
 }
