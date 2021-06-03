@@ -66,8 +66,8 @@ public:
 	UID dashAudioSourceUID = 0;
 
 	bool hitTaken = false;
-	float lifePointsFang = 7.f;
-	float lifePointsOni = 7.f;
+	int lifePointsFang = 7;
+	int lifePointsOni = 7;
 
 	float fangAttackSpeed = 1.f;
 	float onimaruAttackSpeed = 1.f;
