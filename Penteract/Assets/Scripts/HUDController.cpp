@@ -271,121 +271,37 @@ void HUDController::UpdateHP(float currentHp, float altHp) {
 		}
 	}
 }
-//
-//void HUDController::UpdateDurableHPLoss(GameObject* targetCanvas) {
-//	bool isFang = (targetCanvas->GetID() == fangHealthMainCanvas->GetID());
-//
-//	std::vector<int>& indexes = isFang ? remainingTimeActiveIndexesFang : remainingTimeActiveIndexesOni;
-//	std::string message = "";
-//
-//	for (int i = 0; i < 7; i++) {
-//		message += "i:";
-//		message += std::to_string(i);
-//		message += std::to_string(isFang ? remainingTimesFang[i] : remainingTimesOni[i]);
-//		if (i < 6)
-//			message += ",";
-//	}
-//
-//	Debug::Log(message.c_str());
-//
-//	if (indexes.size() > 0) {
-//		std::vector<std::vector<int>::iterator>vectorIndexesToRemove;
-//
-//		for (std::vector<int>::iterator it = indexes.begin(); it != indexes.end(); ++it) {
-//			//times[(*it)] -= Time::GetDeltaTime();
-//
-//			//if (times[(*it)] <= 0) {
-//			//	times[(*it)] = 0;
-//			//	vectorIndexesToRemove.push_back(it);
-//			//}
-//
-//			////We need a GetColor
-//			//float delta = times[(*it)] / timeToFadeDurableHealthFeedback;		
-//			//
-//
-//
-//			isFang ? remainingTimesFang[(*it)] : remainingTimesOni[(*it)] -= Time::GetDeltaTime();
-//
-//			if (isFang ? remainingTimesFang[(*it)] : remainingTimesOni[(*it)] <= 0) {
-//				isFang ? remainingTimesFang[(*it)] : remainingTimesOni[(*it)] = 0;
-//				vectorIndexesToRemove.push_back(it);
-//			}
-//
-//			//We need a GetColor
-//			float delta = isFang ? remainingTimesFang[(*it)] : remainingTimesOni[(*it)] / timeToFadeDurableHealthFeedback;
-//
-//
-//			//TODO GetChildren()[(*it)] Becomes GetChildren()[(*it)].GetChildren()[1] //Because BG -> HP -> Effect (hierarchy)
-//			ComponentImage* image = targetCanvas->GetChildren()[*it]->GetChildren()[1]->GetComponent<ComponentImage>();//targetCanvas->GetChildren()[(*it)]->GetComponent<ComponentImage>();
-//
-//			//We need access to image->SetAlphaTransparency
-//			image->SetColor(float4(1, 1, 1, delta));
-//		}
-//
-//		for (int i = 0; i < vectorIndexesToRemove.size(); i++) {
-//			indexes.erase(vectorIndexesToRemove[i]);
-//		}
-//
-//	}
-//}
-
-
 
 void HUDController::UpdateDurableHPLoss(GameObject* targetCanvas) {
 	bool isFang = (targetCanvas->GetID() == fangHealthMainCanvas->GetID());
 
 	std::vector<int>& indexes = isFang ? remainingTimeActiveIndexesFang : remainingTimeActiveIndexesOni;
 
+	float* remainingTimes = isFang ? remainingTimesFang : remainingTimesOni;
+
 	if (indexes.size() > 0) {
 		std::vector<std::vector<int>::iterator>vectorIndexesToRemove;
 
 		for (std::vector<int>::iterator it = indexes.begin(); it != indexes.end(); ++it) {
-			if (isFang) {
-				remainingTimesFang[(*it)] -= Time::GetDeltaTime();
+			remainingTimes[(*it)] -= Time::GetDeltaTime();
 
-				if (remainingTimesFang[(*it)] <= 0) {
-					remainingTimesFang[(*it)] = 0;
-					vectorIndexesToRemove.push_back(it);
-				}
-
-				float delta = remainingTimesFang[(*it)] / timeToFadeDurableHealthFeedback;
-
-
-				ComponentImage* image = targetCanvas->GetChildren()[*it]->GetChildren()[1]->GetComponent<ComponentImage>();
-				//We need access to image->SetAlphaTransparency
-
-
-				if (delta < 0.5) {
-					delta = (delta - 0) / (0.5 - 0);
-					image->SetColor(float4(1, 1, 1, delta));
-				} else {
-					image->SetColor(float4(1, 1, 1, 1));
-				}
-
-
-			} else {
-				remainingTimesOni[(*it)] -= Time::GetDeltaTime();
-
-
-				if (remainingTimesOni[(*it)] <= 0) {
-					remainingTimesOni[(*it)] = 0;
-					vectorIndexesToRemove.push_back(it);
-				}
-
-				float delta = remainingTimesOni[(*it)] / timeToFadeDurableHealthFeedback;
-
-
-				ComponentImage* image = targetCanvas->GetChildren()[*it]->GetChildren()[1]->GetComponent<ComponentImage>();
-				//We need access to image->SetAlphaTransparency
-				if (delta < 0.5) {
-					delta = (delta - 0) / (0.5 - 0);
-					image->SetColor(float4(1, 1, 1, delta));
-				} else {
-					image->SetColor(float4(1, 1, 1, 1));
-				}
-
+			if (remainingTimes[(*it)] <= 0) {
+				remainingTimes[(*it)] = 0;
+				vectorIndexesToRemove.push_back(it);
 			}
 
+			float delta = remainingTimes[(*it)] / timeToFadeDurableHealthFeedback;
+
+
+			ComponentImage* image = targetCanvas->GetChildren()[*it]->GetChildren()[1]->GetComponent<ComponentImage>();
+			//We need access to image->SetAlphaTransparency to prevent possible errors
+			if (delta < 0.5) {
+				//Remapping
+				delta = (delta) / (0.5f);
+				image->SetColor(float4(1.0f, 1.0f, 1.0f, delta));
+			} else {
+				image->SetColor(float4(1.0f, 1.0f, 1.0f, 1.0f));
+			}
 		}
 
 		for (int i = 0; i < vectorIndexesToRemove.size(); i++) {
@@ -393,6 +309,10 @@ void HUDController::UpdateDurableHPLoss(GameObject* targetCanvas) {
 		}
 
 	}
+
+
+
+
 }
 
 
