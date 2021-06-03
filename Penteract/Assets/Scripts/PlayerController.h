@@ -30,6 +30,7 @@ public:
 	void Update() override;
 
 	void HitDetected();
+	bool IsDead();
 
 public:
 
