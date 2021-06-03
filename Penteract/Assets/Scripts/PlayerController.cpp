@@ -48,7 +48,9 @@ EXPOSE_MEMBERS(PlayerController) {
 		MEMBER(MemberType::FLOAT, onimaruMovementSpeed),
 		MEMBER(MemberType::FLOAT, shootCooldown),
 		MEMBER(MemberType::INT, lifePointsFang),
-		MEMBER(MemberType::INT, lifePointsOni)
+		MEMBER(MemberType::INT, lifePointsOni),
+		MEMBER(MemberType::BOOL, useSmoothCamera),
+		MEMBER(MemberType::FLOAT, smoothCameraSpeed)
 
 };
 
@@ -474,10 +476,15 @@ void PlayerController::UpdatePlayerStats() {
 
 void PlayerController::UpdateCameraPosition() {
 	float3 playerGlobalPos = transform->GetGlobalPosition();
-	cameraTransform->SetGlobalPosition(float3(
-		playerGlobalPos.x + cameraOffsetX,
-		playerGlobalPos.y + cameraOffsetY,
-		playerGlobalPos.z + cameraOffsetZ));
+
+	float3 desiredPosition = playerGlobalPos + float3(cameraOffsetX, cameraOffsetY, cameraOffsetZ);
+	float3 smoothedPosition = desiredPosition;
+
+	if (useSmoothCamera) {
+		smoothedPosition = float3::Lerp(cameraTransform->GetGlobalPosition(), desiredPosition, smoothCameraSpeed * Time::GetDeltaTime());
+	}
+	
+	cameraTransform->SetGlobalPosition(smoothedPosition);
 }
 
 void PlayerController::Update() {
