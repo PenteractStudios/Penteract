@@ -100,10 +100,10 @@ void AIMovement::Update() {
             timeToDie -= Time::GetDeltaTime();
         }
         else {
-            GameplaySystems::DestroyGameObject(&GetOwner());
             if (hudControllerScript) {
                 hudControllerScript->UpdateScore(10);
             }
+            GameplaySystems::DestroyGameObject(&GetOwner());            
         }
     }
     	
