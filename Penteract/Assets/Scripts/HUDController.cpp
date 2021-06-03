@@ -120,7 +120,7 @@ void HUDController::Update() {
 	if (!fangCanvas || !onimaruCanvas) return;
 }
 
-void HUDController::ChangePlayerHUD() {
+void HUDController::ChangePlayerHUD(int fangLives, int oniLives) {
 	if (!fang || !onimaru) return;
 
 	if (!fang->IsActive()) {
@@ -137,6 +137,10 @@ void HUDController::ChangePlayerHUD() {
 		remainingTimesFang[i] = 0;
 		remainingTimesOni[i] = 0;
 	}
+
+	prevLivesFang = fangLives;
+	prevLivesOni = oniLives;
+
 }
 
 void HUDController::HealthRegeneration(float currentHp, float hpRecovered) {

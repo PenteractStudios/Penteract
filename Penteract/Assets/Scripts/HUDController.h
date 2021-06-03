@@ -32,7 +32,7 @@ public:
 	static void UpdateDurableHPLoss(GameObject* targetCanvas);
 	static void HealthRegeneration(float currentHp, float hpRecovered);
 	static void ResetHealthFill(float currentHp);
-	static void ChangePlayerHUD();
+	static void ChangePlayerHUD(int fangLives, int oniLives);
 	void UpdateScore(int score_);
 
 public:
