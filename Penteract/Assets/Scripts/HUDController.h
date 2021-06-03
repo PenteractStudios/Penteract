@@ -30,6 +30,8 @@ public:
 
 	static void UpdateHP(float currentHp, float altHp);
 	static void UpdateDurableHPLoss(GameObject* targetCanvas);
+	static void HealthRegeneration(float currentHp, float hpRecovered);
+	static void ResetHealthFill(float currentHp);
 	static void ChangePlayerHUD(int fangLives, int oniLives);
 	void UpdateScore(int score_);
 
@@ -57,7 +59,9 @@ public:
 	UID swapingSkillCanvasUID = 0;
 
 	UID scoreTextUID = 0;
+
 	float timeToFadeDurableHealthFeedbackInternal;
+
 private:
 	static void UpdateComponents();
 	static void UpdateCommonSkill();
@@ -65,6 +69,9 @@ private:
 	static void UpdateOnimaruCooldowns(GameObject* onimaruSkillCanvas);
 	static void UpdateCanvasHP(GameObject* targetCanvas, int health, bool darkened);
 	static void OnHealthLost(GameObject* targetCanvas, int health);
+	static void StopHealthLostInstantEffects(GameObject* targetCanvas);
+	static void LoadHealthFeedbackStates(GameObject* targetCanvas, int health);
+
 private:
 	static float timeToFadeDurableHealthFeedback;
 	static GameObject* fang;
