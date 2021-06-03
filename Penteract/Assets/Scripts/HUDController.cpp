@@ -120,15 +120,27 @@ void HUDController::Update() {
 	if (!fangCanvas || !onimaruCanvas) return;
 }
 
+void HUDController::StopHealthLostInstantEffects(GameObject* targetCanvas) {
+	for (int i = 0; i < MAX_HEALTH; i++) {
+		GameObject* obj = targetCanvas->GetChildren()[i];
+		if (!obj) return;
+		HealthLostInstantFeedback* fb = GET_SCRIPT(obj, HealthLostInstantFeedback);
+		if (!fb) return;
+		fb->Stop();
+	}
+}
+
 void HUDController::ChangePlayerHUD(int fangLives, int oniLives) {
 	if (!fang || !onimaru) return;
 
 	if (!fang->IsActive()) {
 		fangCanvas->Disable();
 		onimaruCanvas->Enable();
+		StopHealthLostInstantEffects(onimaruHealthMainCanvas);
 	} else {
 		onimaruCanvas->Disable();
 		fangCanvas->Enable();
+		StopHealthLostInstantEffects(fangHealthMainCanvas);
 	}
 
 	remainingTimeActiveIndexesFang.clear();
@@ -221,7 +233,7 @@ void HUDController::UpdateHP(float currentHp, float altHp) {
 		//UpdateCanvasHP(fangHealthSecondCanvas, altHp, true);
 	}
 
-	bool activateEffect = currentHp <= LOW_HEALTH_WARNING || altHp <= LOW_HEALTH_WARNING ? true : false;
+	bool activateEffect = currentHp <= LOW_HEALTH_WARNING ? true : false;
 
 	if (lowHealthWarningEffect) {
 		if (activateEffect) {
@@ -262,7 +274,7 @@ void HUDController::UpdateDurableHPLoss(GameObject* targetCanvas) {
 
 
 			//TODO GetChildren()[(*it)] Becomes GetChildren()[(*it)].GetChildren()[1] //Because BG -> HP -> Effect (hierarchy)
-			ComponentImage* image = targetCanvas->GetChildren()[(*it)]->GetComponent<ComponentImage>();
+			ComponentImage* image = targetCanvas->GetChildren()[*it]->GetChildren()[1]->GetComponent<ComponentImage>();//targetCanvas->GetChildren()[(*it)]->GetComponent<ComponentImage>();
 
 			//We need access to image->SetAlphaTransparency
 			image->SetColor(float4(1, 1, 1, delta));
@@ -411,7 +423,7 @@ void HUDController::UpdateCanvasHP(GameObject* targetCanvas, int health, bool da
 	float4 whiteToSet = darkened ? colorWhiteDarkened : colorWhite;
 	int i = 0;
 	for (GameObject* hpGameObject : targetCanvas->GetChildren()) {
-		ComponentImage* hpComponent = hpGameObject->GetComponent<ComponentImage>();
+		ComponentImage* hpComponent = hpGameObject->GetChildren()[1]->GetComponent<ComponentImage>();
 		if (i < health) {
 			hpComponent->SetColor(magentaToSet);
 		} else {

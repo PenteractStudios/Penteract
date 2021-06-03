@@ -69,6 +69,7 @@ private:
 	static void UpdateOnimaruCooldowns(GameObject* onimaruSkillCanvas);
 	static void UpdateCanvasHP(GameObject* targetCanvas, int health, bool darkened);
 	static void OnHealthLost(GameObject* targetCanvas, int health);
+	static void StopHealthLostInstantEffects(GameObject* targetCanavs);
 private:
 	static float timeToFadeDurableHealthFeedback;
 	static GameObject* fang;

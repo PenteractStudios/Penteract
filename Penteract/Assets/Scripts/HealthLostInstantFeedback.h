@@ -13,6 +13,7 @@ public:
 	void Start() override;
 	void Update() override;
 	void Play();
+	void Stop();
 public:
 	float growthDuration = 0.25f;
 	float fadeOutDuration = 0.75f;
