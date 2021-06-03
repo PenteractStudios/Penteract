@@ -24,6 +24,14 @@ public:
 
 	void Start() override;
 	void Update() override;
+	static void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3,
+		float fangCooldown1, float fangCooldown2, float fangCooldown3,
+		float switchCooldown);
+
+	static void UpdateHP(float currentHp, float altHp);
+	static void UpdateDurableHPLoss(GameObject* targetCanvas);
+	static void ChangePlayerHUD(int fangLives, int oniLives);
+	void UpdateScore(int score_);
 
 public:
 	UID fangUID = 0;
@@ -44,28 +52,21 @@ public:
 	UID fangHealthSecondCanvasUID = 0;
 	UID onimaruHealthSecondCanvasUID = 0;
 
+	UID lowHealthWarningEffectUID = 0;
+
 	UID swapingSkillCanvasUID = 0;
 
 	UID scoreTextUID = 0;
-
-	static void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3,
-		float fangCooldown1, float fangCooldown2, float fangCooldown3,
-		float switchCooldown);
-
-	static void UpdateHP(float currentHp, float altHp);
-	static void UpdateDurableHPLoss(GameObject* targetCanvas);
-	static void ChangePlayerHUD();
-
-	void UpdateScore(int score_);
-
+	float timeToFadeDurableHealthFeedbackInternal;
 private:
 	static void UpdateComponents();
 	static void UpdateCommonSkill();
 	static void UpdateFangCooldowns(GameObject* fangSkillCanvas);
 	static void UpdateOnimaruCooldowns(GameObject* onimaruSkillCanvas);
 	static void UpdateCanvasHP(GameObject* targetCanvas, int health, bool darkened);
-	static void OnLifeTaken(int health);
+	static void OnHealthLost(GameObject* targetCanvas, int health);
 private:
+	static float timeToFadeDurableHealthFeedback;
 	static GameObject* fang;
 	static GameObject* onimaru;
 
@@ -82,6 +83,8 @@ private:
 	static GameObject* fangHealthSecondCanvas;
 	static GameObject* onimaruHealthSecondCanvas;
 
+	static GameObject* lowHealthWarningEffect;
+
 	static GameObject* swapingSkillCanvas;
 
 	static std::array<float, Cooldowns::TOTAL> cooldowns;
@@ -94,13 +97,18 @@ private:
 	static const float4 colorMagentaDarkened;
 	static const float4 colorWhiteDarkened;
 
-	static int prevLives;
-	static float remainingTimes[];
+	static int prevLivesFang;
+	static int prevLivesOni;
 
-	static std::vector<int>remainingTimeActiveIndexes;
+	static bool lowHPWarningActive;
+
+	static float remainingTimesFang[];
+	static float remainingTimesOni[];
+
+	static std::vector<int>remainingTimeActiveIndexesFang;
+	static std::vector<int>remainingTimeActiveIndexesOni;
 
 	ComponentText* scoreText = nullptr;
-	static float timeToFade;
 	int score = 0;
 };
 

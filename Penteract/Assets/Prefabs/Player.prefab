@@ -9,9 +9,9 @@
                 "Type": "Transform",
                 "Active": true,
                 "Position": [
-                    11.877874374389649,
-                    2.700000047683716,
-                    0.0
+                    -163.3995819091797,
+                    3.0,
+                    -35.36500930786133
                 ],
                 "Rotation": [
                     0.0,
@@ -20,9 +20,9 @@
                     1.0
                 ],
                 "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
+                    0.8500000238418579,
+                    0.8500000238418579,
+                    0.8500000238418579
                 ],
                 "LocalEulerAngles": [
                     -0.0,
@@ -68,7 +68,7 @@
                     {
                         "Name": "canvasUID",
                         "Type": "GameObjectUID",
-                        "Value": 3859675704142277968
+                        "Value": 17773628572955029428
                     },
                     {
                         "Name": "fangParticleUID",
@@ -84,6 +84,36 @@
                         "Name": "distanceRayCast",
                         "Type": "Float",
                         "Value": 15.0
+                    },
+                    {
+                        "Name": "cameraOffsetY",
+                        "Type": "Float",
+                        "Value": 24.0
+                    },
+                    {
+                        "Name": "cameraOffsetX",
+                        "Type": "Float",
+                        "Value": -6.0
+                    },
+                    {
+                        "Name": "fangTrailUID",
+                        "Type": "PrefabResourceUID",
+                        "Value": 165003076921335927
+                    },
+                    {
+                        "Name": "onimaruTrailUID",
+                        "Type": "PrefabResourceUID",
+                        "Value": 165003076921335927
+                    },
+                    {
+                        "Name": "fangGunUID",
+                        "Type": "GameObjectUID",
+                        "Value": 15734666931762491428
+                    },
+                    {
+                        "Name": "onimaruGunUID",
+                        "Type": "GameObjectUID",
+                        "Value": 2707824235752519966
                     }
                 ]
             },
@@ -100,6 +130,13 @@
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
                 "OuterGain": 0.0
+            },
+            {
+                "Type": "Agent",
+                "Active": true,
+                "MaxSpeed": 5.0,
+                "MaxAcceleration": 8.0,
+                "AvoidingObstacle": false
             }
         ],
         "Children": [
@@ -137,8 +174,7 @@
                     {
                         "Type": "Animation",
                         "Active": true,
-                        "StateMachineId": 3386770174613434618,
-                        "InitalState": 6232389001078677701
+                        "StateMachineId": 3386770174613434618
                     }
                 ],
                 "Children": [
@@ -504,6 +540,7 @@
                                                                                                 "LifeParticle": 0.10000000149011612,
                                                                                                 "Ytiles": 1,
                                                                                                 "Xtiles": 1,
+                                                                                                "AnimationSpeed": 0.0,
                                                                                                 "InitColor": [
                                                                                                     1.0,
                                                                                                     0.0,
@@ -3520,7 +3557,7 @@
             },
             {
                 "Name": "Fang",
-                "Active": false,
+                "Active": true,
                 "RootBoneName": "CenterHip",
                 "Mask": 0,
                 "Components": [
@@ -3552,8 +3589,7 @@
                     {
                         "Type": "Animation",
                         "Active": false,
-                        "StateMachineId": 6152599141429887326,
-                        "InitalState": 6232389412078677701
+                        "StateMachineId": 6152599141429887326
                     }
                 ],
                 "Children": [
@@ -4659,6 +4695,7 @@
                                                                                                                         "LifeParticle": 0.10000000149011612,
                                                                                                                         "Ytiles": 1,
                                                                                                                         "Xtiles": 1,
+                                                                                                                        "AnimationSpeed": 0.0,
                                                                                                                         "InitColor": [
                                                                                                                             0.9509803652763367,
                                                                                                                             0.041954997926950458,
@@ -5276,6 +5313,7 @@
                                                                                                                         "LifeParticle": 5.0,
                                                                                                                         "Ytiles": 1,
                                                                                                                         "Xtiles": 1,
+                                                                                                                        "AnimationSpeed": 0.0,
                                                                                                                         "InitColor": [
                                                                                                                             1.0,
                                                                                                                             1.0,
