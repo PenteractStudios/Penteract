@@ -275,6 +275,11 @@ void PlayerController::HitDetected() {
 	hitTaken = true;
 }
 
+bool PlayerController::IsDead()
+{
+	return (lifePointsFang <= 0 || lifePointsOni <= 0);
+}
+
 void PlayerController::CheckCoolDowns() {
 
 	if (switchCooldownRemaining <= 0.f) {
@@ -425,7 +430,12 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 	}
 
 	if (md == MovementDirection::NONE) {
-		animation->SendTrigger(currentState->name + PlayerController::states[0]);
+		if (IsDead()) {
+			animation->SendTrigger(currentState->name + PlayerController::states[9]);
+		}
+		else {
+			animation->SendTrigger(currentState->name + PlayerController::states[0]);
+		}
 	}
 	else {
 		animation->SendTrigger(currentState->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
@@ -456,8 +466,8 @@ void PlayerController::UpdatePlayerStats() {
 		float realSwitchCooldown = 1.0f - (switchCooldownRemaining / switchCooldown);
 		hudControllerScript->UpdateCooldowns(0.0f, 0.0f, 0.0f, realDashCooldown, 0.0f, 0.0f, realSwitchCooldown);
 
-		if (lifePointsFang <= 0 || lifePointsOni <= 0) {
-			SceneManager::ChangeScene("Assets/Scenes/LoseScene.scene");
+		if (IsDead()) {
+			PlayAnimation(MovementDirection::NONE);
 		}
 	}
 }
@@ -474,36 +484,44 @@ void PlayerController::Update() {
 	if (!player) return;
 	if (!camera) return;
 	if (!transform) return;
-
+	
 	CheckCoolDowns();
-	Dash();
 	UpdatePlayerStats();
-	UpdateCameraPosition();
-	if (firstTime) {
+
+	if (!IsDead()) {
+		Dash();
+		UpdateCameraPosition();
+		
+		if (firstTime) {
+			if (fang->IsActive()) {
+				hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
+			}
+			else {
+				hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
+			}
+			firstTime = false;
+		}
+
+		MovementDirection md;
+		md = GetInputMovementDirection();
+		if (Input::GetMouseButtonDown(2)) {
+			InitDash(md);
+		}
+		if (!dashing) {
+			LookAtMouse();
+			MoveTo(md);
+			if (Input::GetKeyCode(Input::KEYCODE::KEY_R)) SwitchCharacter();
+		}
 		if (fang->IsActive()) {
-			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
+			if (Input::GetMouseButtonDown(0)) Shoot();
 		}
 		else {
-			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
+			if (Input::GetMouseButtonRepeat(0)) Shoot();
 		}
-		firstTime = false;
-	}
-
-	MovementDirection md;
-	md = GetInputMovementDirection();
-	if (Input::GetMouseButtonDown(2)) {
-		InitDash(md);
-	}
-	if (!dashing) {
-		LookAtMouse();
-		MoveTo(md);
-		if (Input::GetKeyCode(Input::KEYCODE::KEY_R)) SwitchCharacter();
-	}
-	if (fang->IsActive()) {
-		if (Input::GetMouseButtonDown(0)) Shoot();
+		PlayAnimation(md);
 	}
 	else {
-		if (Input::GetMouseButtonRepeat(0)) Shoot();
+		agent->RemoveAgentFromCrowd();
 	}
-	PlayAnimation(md);
 }
+
