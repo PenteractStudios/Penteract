@@ -51,8 +51,6 @@ void CheckpointManager::CheckDistanceWithCheckpoints() {
 		if (runtimeCheckpointPositions[i].Distance(transform->GetGlobalPosition()) < distanceThreshold) {
 			checkPointCloseEnough = i;
 			checkpoint = i;
-			std::string message = "New point is " + std::to_string(i);
-			Debug::Log(message.c_str());
 
 		}
 	}
