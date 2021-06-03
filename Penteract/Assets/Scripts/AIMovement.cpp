@@ -12,12 +12,12 @@
 EXPOSE_MEMBERS(AIMovement) {
     MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
     MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
-    MEMBER(MemberType::INT, gruntStats.lifePoints),
-    MEMBER(MemberType::INT, gruntStats.movementSpeed),
-    MEMBER(MemberType::INT, gruntStats.fallingSpeed),
-    MEMBER(MemberType::FLOAT, gruntStats.searchRadius),
-    MEMBER(MemberType::FLOAT, gruntStats.meleeRange),
-    MEMBER(MemberType::FLOAT, gruntStats.timeToDie)
+    MEMBER(MemberType::INT, gruntCharacter.lifePoints),
+    MEMBER(MemberType::FLOAT, gruntCharacter.movementSpeed),
+    MEMBER(MemberType::INT, gruntCharacter.fallingSpeed),
+    MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
+    MEMBER(MemberType::FLOAT, gruntCharacter.meleeRange),
+    MEMBER(MemberType::FLOAT, gruntCharacter.timeToDie)
 };
 
 GENERATE_BODY_IMPL(AIMovement);
@@ -26,7 +26,7 @@ void AIMovement::Start() {
     player = GameplaySystems::GetGameObject(playerUID);
     agent = GetOwner().GetComponent<ComponentAgent>();
     if (agent) {
-        agent->SetMaxSpeed(gruntStats.movementSpeed);
+        agent->SetMaxSpeed(gruntCharacter.movementSpeed);
         agent->SetMaxAcceleration(MAX_ACCELERATION);
         agent->SetAgentObstacleAvoidance(true);
         agent->RemoveAgentFromCrowd();
@@ -42,12 +42,12 @@ void AIMovement::Start() {
 void AIMovement::Update() {
     if (!GetOwner().IsActive()) return;
 
-    if (hitTaken && gruntStats.lifePoints > 0) {
-        gruntStats.lifePoints -= damageRecieved;
+    if (hitTaken && gruntCharacter.lifePoints > 0) {
+        gruntCharacter.lifePoints -= damageRecieved;
         hitTaken = false;
     }
 
-    if (gruntStats.lifePoints <= 0) {
+    if (gruntCharacter.lifePoints <= 0) {
         if (state == AIState::ATTACK) {
             animation->SendTrigger("AttackDeath");
         }
@@ -66,7 +66,7 @@ void AIMovement::Update() {
     {
     case AIState::START:
         if (Camera::CheckObjectInsideFrustum(GetOwner().GetChildren()[0])) {
-            Seek(float3(parentTransform->GetGlobalPosition().x, 0, parentTransform->GetGlobalPosition().z), gruntStats.fallingSpeed);
+            Seek(float3(parentTransform->GetGlobalPosition().x, 0, parentTransform->GetGlobalPosition().z), gruntCharacter.fallingSpeed);
             if (parentTransform->GetGlobalPosition().y < 2.7 + 0e-5f) {
                 animation->SendTrigger("StartSpawn");
                 state = AIState::SPAWN;
@@ -84,7 +84,7 @@ void AIMovement::Update() {
         }
         break;
     case AIState::RUN:
-        Seek(player->GetComponent<ComponentTransform>()->GetGlobalPosition(), gruntStats.movementSpeed);
+        Seek(player->GetComponent<ComponentTransform>()->GetGlobalPosition(), gruntCharacter.movementSpeed);
         if (CharacterInMeleeRange(player)) {
             animation->SendTrigger("RunAttack");
             state = AIState::ATTACK;
@@ -96,9 +96,9 @@ void AIMovement::Update() {
         break;
     }
 
-    if(!gruntCharacter.IsAlive){
-        if (gruntStats.timeToDie > 0) {
-            gruntStats.timeToDie -= Time::GetDeltaTime();
+    if(!gruntCharacter.isAlive){
+        if (gruntCharacter.timeToDie > 0) {
+            gruntCharacter.timeToDie -= Time::GetDeltaTime();
         }
         else {
             if (hudControllerScript) {
@@ -142,7 +142,7 @@ bool AIMovement::CharacterInSight(const GameObject* character)
     ComponentTransform* target = character->GetComponent<ComponentTransform>();
     if (target) {
         float3 posTarget = target->GetGlobalPosition();
-        return posTarget.Distance(parentTransform->GetGlobalPosition()) < gruntStats.searchRadius;
+        return posTarget.Distance(parentTransform->GetGlobalPosition()) < gruntCharacter.searchRadius;
     }
 
     return false;
@@ -153,13 +153,13 @@ bool AIMovement::CharacterInMeleeRange(const GameObject* character)
     ComponentTransform* target = character->GetComponent<ComponentTransform>();
     if (target) {
         float3 posTarget = target->GetGlobalPosition();
-        return posTarget.Distance(parentTransform->GetGlobalPosition()) < gruntStats.meleeRange;
+        return posTarget.Distance(parentTransform->GetGlobalPosition()) < gruntCharacter.meleeRange;
     }
 
     return false;
 }
 
-void AIMovement::Seek(const float3& newPosition, int speed)
+void AIMovement::Seek(const float3& newPosition, float speed)
 {
 
     float3 position = parentTransform->GetGlobalPosition();

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Enemy.h"
 #include "Scripting/Script.h"
 
 class ComponentAnimation;
@@ -31,7 +32,7 @@ public:
 private:
 	bool CharacterInSight(const GameObject* character);
 	bool CharacterInMeleeRange(const GameObject* character);
-	void Seek(const float3& newPosition, int speed);
+	void Seek(const float3& newPosition, float speed);
 
 
 public:
@@ -42,7 +43,7 @@ public:
 	GameObject* player = nullptr;
 	ComponentAgent* agent = nullptr;
 
-	Enemy gruntCharacter = Enemy(5, 8.0f, 30, 40.f. 5.f);
+	Enemy gruntCharacter = Enemy(5, 8.0f, 30, 40.f, 5.f, 5.f);
 
 private:
 

@@ -10,6 +10,8 @@ public:
 	void Accelerate(int acceleration);
 	void Decelerate(int deceleration);
 
+	void SetTotalLifePoints(int totalLifePoints);
+
 public:
 	bool isAlive = true;
 

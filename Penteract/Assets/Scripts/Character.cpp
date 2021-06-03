@@ -29,3 +29,8 @@ void Character::Decelerate(int deceleration_)
 		movementSpeed = 0.0f;
 	}
 }
+
+void Character::SetTotalLifePoints(int totalLifePoints_)
+{
+	totalLifePoints = totalLifePoints_;
+}

@@ -14,11 +14,11 @@ public:
 		, timeToDie(timeToDie_) {
 		lifePoints = lifePoints_;
 		movementSpeed = movementSpeed_;
-		totalLifePoints = lifePoints;
+		SetTotalLifePoints(lifePoints);
 	}
 
 	// ------- Core Functions ------ //
-	void SetFallingSpeed(float fallingSpeed);
+	void SetFallingSpeed(int fallingSpeed);
 	void SetSearchRadius(float searchRadius);
 	void SetMeleeRange(float meleeRange);
 	void SetTimeToDie(float timeToDie);

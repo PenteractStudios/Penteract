@@ -12,7 +12,7 @@ public:
 		, attackSpeed(attackSpeed_) {
 		lifePoints = lifePoints_;
 		movementSpeed = movementSpeed_;
-		totalLifePoints = lifePoints;
+		SetTotalLifePoints(lifePoints);
 	}
 
 	// ------- Core Functions ------ //
