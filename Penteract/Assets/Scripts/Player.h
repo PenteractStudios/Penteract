@@ -7,11 +7,12 @@ public:
 	// ------- Contructors ------- //
 	Player() {};
 
-	Player(int lifePoints_, float movementSpeed_, float shootCooldown_, float attackSpeed_)
+	Player(int lifePoints_, float movementSpeed_, int damageHit_, float shootCooldown_, float attackSpeed_)
 		: shootCooldown(shootCooldown_)
-		, attackSpeed(attackSpeed_) {
+		, attackSpeed(attackSpeed_){
 		lifePoints = lifePoints_;
 		movementSpeed = movementSpeed_;
+		damageHit = damageHit_;
 		SetTotalLifePoints(lifePoints);
 	}
 

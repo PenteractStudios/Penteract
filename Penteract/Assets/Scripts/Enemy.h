@@ -7,13 +7,14 @@ public:
 	// ------- Contructors ------- //
 	Enemy() {};
 
-	Enemy(int lifePoints_, float movementSpeed_, int fallingSpeed_, float searchRadius_, float meleeRange_, float timeToDie_)
+	Enemy(int lifePoints_, float movementSpeed_, int damageHit_, int fallingSpeed_, float searchRadius_, float meleeRange_, float timeToDie_)
 		: fallingSpeed(fallingSpeed_)
 		, searchRadius(searchRadius_) 
 		, meleeRange(meleeRange_)
 		, timeToDie(timeToDie_) {
 		lifePoints = lifePoints_;
 		movementSpeed = movementSpeed_;
+		damageHit = damageHit_;
 		SetTotalLifePoints(lifePoints);
 	}
 

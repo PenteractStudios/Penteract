@@ -11,12 +11,14 @@ public:
 	void Decelerate(int deceleration);
 
 	void SetTotalLifePoints(int totalLifePoints);
+	void SetDamageHit(int damageHit);
 
 public:
 	bool isAlive = true;
 
 	int lifePoints = 1;
 	float movementSpeed = 1.0f;
+	int damageHit = 1;
 
 private:
 	int totalLifePoints = 1;

@@ -14,6 +14,7 @@ EXPOSE_MEMBERS(AIMovement) {
     MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
     MEMBER(MemberType::INT, gruntCharacter.lifePoints),
     MEMBER(MemberType::FLOAT, gruntCharacter.movementSpeed),
+    MEMBER(MemberType::INT, gruntCharacter.damageHit),
     MEMBER(MemberType::INT, gruntCharacter.fallingSpeed),
     MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
     MEMBER(MemberType::FLOAT, gruntCharacter.meleeRange),
@@ -43,7 +44,7 @@ void AIMovement::Update() {
     if (!GetOwner().IsActive()) return;
 
     if (hitTaken && gruntCharacter.lifePoints > 0) {
-        gruntCharacter.lifePoints -= damageRecieved;
+        gruntCharacter.Hit(damageRecieved);
         hitTaken = false;
     }
 
@@ -121,7 +122,7 @@ void AIMovement::OnAnimationFinished()
     else if(state == AIState::ATTACK)
     {
         PlayerController* playerController = GET_SCRIPT(player, PlayerController);
-        playerController->HitDetected();
+        playerController->HitDetected(gruntCharacter.damageHit);
         animation->SendTrigger("AttackIdle");
         state = AIState::IDLE;
     }
@@ -133,7 +134,7 @@ void AIMovement::OnAnimationFinished()
 }
 
 void AIMovement::HitDetected(int damage_) {
-    damageRecieved = damage_;
+    gruntCharacter.Hit(damage_);
     hitTaken = true;
 }
 

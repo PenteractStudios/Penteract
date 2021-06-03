@@ -45,7 +45,7 @@ void FangMovement::Update() {
 					material->diffuseColor = float4(Colors::Red(), 1.0);
 				}
 				AIMovement* enemyScript = static_cast<AIMovement*>(hitGo->GetComponent<ComponentScript>()->GetScriptInstance());
-				enemyScript->HitDetected();
+				enemyScript->HitDetected(character.damageHit);
 
 			} else {
 				hitGOUID = 0;

@@ -30,7 +30,7 @@ public:
 	void Start() override;
 	void Update() override;
 
-	void HitDetected();
+	void HitDetected(int damage);
 	bool IsDead();
 
 public:
@@ -65,8 +65,8 @@ public:
 
 	bool hitTaken = false;
 
-	Player fangCharacter = Player(7, 10.0f, 0.1f, 1.0f);
-	Player onimaruCharacter = Player(7, 6.0f, 0.1f, 1.0f);
+	Player fangCharacter = Player(7, 10.0f, 3, 0.1f, 1.0f);
+	Player onimaruCharacter = Player(7, 6.0f, 1, 0.1f, 1.0f);
 
 	float distanceRayCast = 2.f;
 	float switchCooldown = 5.f;

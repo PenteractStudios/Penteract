@@ -27,7 +27,7 @@ public:
 	void Start() override;
 	void Update() override;
 	void OnAnimationFinished() override;
-	void HitDetected(int damage_ = 1);
+	void HitDetected(int damage_);
 
 private:
 	bool CharacterInSight(const GameObject* character);
@@ -43,7 +43,7 @@ public:
 	GameObject* player = nullptr;
 	ComponentAgent* agent = nullptr;
 
-	Enemy gruntCharacter = Enemy(5, 8.0f, 30, 40.f, 5.f, 5.f);
+	Enemy gruntCharacter = Enemy(5, 8.0f, 1, 30, 40.f, 5.f, 5.f);
 
 private:
 

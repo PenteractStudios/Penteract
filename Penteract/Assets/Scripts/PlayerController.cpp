@@ -23,33 +23,35 @@
 EXPOSE_MEMBERS(PlayerController) {
 	// Add members here to expose them to the engine. Example:
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
-		MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
-		MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruTrailUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangGunUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruParticleUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, switchAudioSourceUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, dashAudioSourceUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
-		MEMBER(MemberType::FLOAT, distanceRayCast),
-		MEMBER(MemberType::FLOAT, switchCooldown),
-		MEMBER(MemberType::FLOAT, dashCooldown),
-		MEMBER(MemberType::FLOAT, dashSpeed),
-		MEMBER(MemberType::FLOAT, dashDuration),
-		MEMBER(MemberType::FLOAT, cameraOffsetZ),
-		MEMBER(MemberType::FLOAT, cameraOffsetY),
-		MEMBER(MemberType::FLOAT, cameraOffsetX),
-		MEMBER(MemberType::INT, fangCharacter.lifePoints),
-		MEMBER(MemberType::INT, onimaruCharacter.lifePoints),
-		MEMBER(MemberType::FLOAT, fangCharacter.movementSpeed),
-		MEMBER(MemberType::FLOAT, onimaruCharacter.movementSpeed),
-		MEMBER(MemberType::FLOAT, fangCharacter.shootCooldown),
-		MEMBER(MemberType::FLOAT, onimaruCharacter.shootCooldown),
-		MEMBER(MemberType::FLOAT, fangCharacter.attackSpeed),
-		MEMBER(MemberType::FLOAT, onimaruCharacter.attackSpeed),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruTrailUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangGunUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruParticleUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, switchAudioSourceUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dashAudioSourceUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
+	MEMBER(MemberType::FLOAT, distanceRayCast),
+	MEMBER(MemberType::FLOAT, switchCooldown),
+	MEMBER(MemberType::FLOAT, dashCooldown),
+	MEMBER(MemberType::FLOAT, dashSpeed),
+	MEMBER(MemberType::FLOAT, dashDuration),
+	MEMBER(MemberType::FLOAT, cameraOffsetZ),
+	MEMBER(MemberType::FLOAT, cameraOffsetY),
+	MEMBER(MemberType::FLOAT, cameraOffsetX),
+	MEMBER(MemberType::INT, fangCharacter.lifePoints),
+	MEMBER(MemberType::FLOAT, fangCharacter.movementSpeed),
+	MEMBER(MemberType::INT, fangCharacter.damageHit),
+	MEMBER(MemberType::FLOAT, fangCharacter.shootCooldown),
+	MEMBER(MemberType::FLOAT, fangCharacter.attackSpeed),
+	MEMBER(MemberType::INT, onimaruCharacter.lifePoints),
+	MEMBER(MemberType::FLOAT, onimaruCharacter.movementSpeed),
+	MEMBER(MemberType::INT, onimaruCharacter.damageHit),
+	MEMBER(MemberType::FLOAT, onimaruCharacter.shootCooldown),
+	MEMBER(MemberType::FLOAT, onimaruCharacter.attackSpeed),
 };
 
 GENERATE_BODY_IMPL(PlayerController);
@@ -266,13 +268,18 @@ void PlayerController::Shoot() {
 		GameObject* hitGo = Physics::Raycast(start, start + end, mask);
 		if (hitGo) {
 			AIMovement* enemyScript = GET_SCRIPT(hitGo->GetParent(), AIMovement);
-			if (fang->IsActive()) enemyScript->HitDetected(3);
-			else enemyScript->HitDetected();
+			if (fang->IsActive()) enemyScript->HitDetected(fangCharacter.damageHit);
+			else enemyScript->HitDetected(onimaruCharacter.damageHit);
 		}
 	}
 }
 
-void PlayerController::HitDetected() {
+void PlayerController::HitDetected(int damage) {
+	if (fang->IsActive()) {
+		fangCharacter.Hit(damage);
+	} else {
+		onimaruCharacter.Hit(damage);
+	}
 	hitTaken = true;
 }
 

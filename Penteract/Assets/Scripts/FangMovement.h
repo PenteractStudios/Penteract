@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Scripting/Script.h"
-#include "Character.h"
+#include "Player.h"
 
 class GameObject;
 class AIMovement;
@@ -26,5 +26,5 @@ private:
 	GameObject* camera = nullptr;
 	GameObject* fang = nullptr;
 	GameObject* hitGo = nullptr;
-	Character character = Character();
+	Player character = Player(7, 10.0f, 3, 0.1f, 1.0f);
 };

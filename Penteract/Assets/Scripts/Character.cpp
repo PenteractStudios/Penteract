@@ -34,3 +34,8 @@ void Character::SetTotalLifePoints(int totalLifePoints_)
 {
 	totalLifePoints = totalLifePoints_;
 }
+
+void Character::SetDamageHit(int damageHit_)
+{
+	damageHit = damageHit_;
+}
