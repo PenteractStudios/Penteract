@@ -6,7 +6,10 @@
 class GameObject;
 class ComponentText;
 
-static enum Cooldowns {
+#define MAX_HEALTH 7
+#define LOW_HEALTH_WARNING 2
+
+enum Cooldowns {
 	FANG_SKILL_1,
 	FANG_SKILL_2,
 	FANG_SKILL_3,
@@ -24,13 +27,13 @@ public:
 
 	void Start() override;
 	void Update() override;
-	static void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3,
+	void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3,
 		float fangCooldown1, float fangCooldown2, float fangCooldown3,
 		float switchCooldown);
 
-	static void UpdateHP(float currentHp, float altHp);
-	static void UpdateDurableHPLoss(GameObject* targetCanvas);
-	static void ChangePlayerHUD(int fangLives, int oniLives);
+	void UpdateHP(float currentHp, float altHp);
+	void UpdateDurableHPLoss(GameObject* targetCanvas);
+	void ChangePlayerHUD(int fangLives, int oniLives);
 	void UpdateScore(int score_);
 
 public:
@@ -57,56 +60,60 @@ public:
 	UID swapingSkillCanvasUID = 0;
 
 	UID scoreTextUID = 0;
-	float timeToFadeDurableHealthFeedbackInternal;
+	float timeToFadeDurableHealthFeedbackInternal = 2.0f;
+
 private:
-	static void UpdateComponents();
-	static void UpdateCommonSkill();
-	static void UpdateFangCooldowns(GameObject* fangSkillCanvas);
-	static void UpdateOnimaruCooldowns(GameObject* onimaruSkillCanvas);
-	static void UpdateCanvasHP(GameObject* targetCanvas, int health, bool darkened);
-	static void OnHealthLost(GameObject* targetCanvas, int health);
+	void UpdateComponents();
+	void UpdateCommonSkill();
+	void UpdateFangCooldowns(GameObject* fangSkillCanvas);
+	void UpdateOnimaruCooldowns(GameObject* onimaruSkillCanvas);
+	void UpdateCanvasHP(GameObject* targetCanvas, int health, bool darkened);
+	void OnHealthLost(GameObject* targetCanvas, int health);
+
 private:
-	static float timeToFadeDurableHealthFeedback;
-	static GameObject* fang;
-	static GameObject* onimaru;
+	GameObject* fang = nullptr;
+	GameObject* onimaru = nullptr;
 
-	static GameObject* fangCanvas;
-	static GameObject* onimaruCanvas;
+	GameObject* fangCanvas = nullptr;
+	GameObject* onimaruCanvas = nullptr;
 
-	static GameObject* fangSkillsMainCanvas;
-	static GameObject* onimaruSkillsMainCanvas;
-	static GameObject* fangSkillsSecondCanvas;
-	static GameObject* onimaruSkillsSecondCanvas;
+	GameObject* fangSkillsMainCanvas = nullptr;
+	GameObject* onimaruSkillsMainCanvas = nullptr;
+	GameObject* fangSkillsSecondCanvas = nullptr;
+	GameObject* onimaruSkillsSecondCanvas = nullptr;
 
-	static GameObject* fangHealthMainCanvas;
-	static GameObject* onimaruHealthMainCanvas;
-	static GameObject* fangHealthSecondCanvas;
-	static GameObject* onimaruHealthSecondCanvas;
+	GameObject* fangHealthMainCanvas = nullptr;
+	GameObject* onimaruHealthMainCanvas = nullptr;
+	GameObject* fangHealthSecondCanvas = nullptr;
+	GameObject* onimaruHealthSecondCanvas = nullptr;
 
-	static GameObject* lowHealthWarningEffect;
+	GameObject* lowHealthWarningEffect = nullptr;
 
-	static GameObject* swapingSkillCanvas;
+	GameObject* swapingSkillCanvas = nullptr;
 
-	static std::array<float, Cooldowns::TOTAL> cooldowns;
+	float cooldowns[Cooldowns::TOTAL];
 
 	/* COLORS */
 
-	static const float4 colorMagenta;
-	static const float4 colorWhite;
+	const float4 colorMagenta = float4(236, 60, 137, 255) / 255;
+	const float4 colorWhite = float4(255, 255, 255, 255) / 255;
 
-	static const float4 colorMagentaDarkened;
-	static const float4 colorWhiteDarkened;
+	const float4 colorMagentaDarkened = float4(236, 60, 137, 128) / 255;
+	const float4 colorWhiteDarkened = float4(255, 255, 255, 128) / 255;
 
-	static int prevLivesFang;
-	static int prevLivesOni;
 
-	static bool lowHPWarningActive;
+	int prevLivesFang = MAX_HEALTH;
+	int prevLivesOni = MAX_HEALTH;
 
-	static float remainingTimesFang[];
-	static float remainingTimesOni[];
+	bool lowHPWarningActive = false;
 
-	static std::vector<int>remainingTimeActiveIndexesFang;
-	static std::vector<int>remainingTimeActiveIndexesOni;
+	float timeToFadeDurableHealthFeedback = 0.0f;
+
+	float remainingTimesFang[MAX_HEALTH] = { 0,0,0,0,0,0,0 };
+	float remainingTimesOni[MAX_HEALTH] = { 0,0,0,0,0,0,0 };
+
+	std::vector<int>remainingTimeActiveIndexesFang;
+	std::vector<int>remainingTimeActiveIndexesOni;
 
 	ComponentText* scoreText = nullptr;
 	int score = 0;
