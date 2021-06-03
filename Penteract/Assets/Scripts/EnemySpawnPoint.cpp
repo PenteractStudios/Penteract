@@ -14,11 +14,11 @@ GENERATE_BODY_IMPL(EnemySpawnPoint);
 
 void EnemySpawnPoint::Start() {
 	gameObject = &GetOwner();
+	prefab = GameplaySystems::GetResource<ResourcePrefab>(prefabId);
 }
 
 void EnemySpawnPoint::Update() {
 	for (; iterator < amountOfEnemies; ++iterator) {
-		ResourcePrefab* prefab = GameplaySystems::GetResource<ResourcePrefab>(prefabId);
 		if (prefab != nullptr) {
 			UID prefabId = prefab->BuildPrefab(gameObject);
 			GameObject* go = GameplaySystems::GetGameObject(prefabId);
@@ -31,7 +31,7 @@ void EnemySpawnPoint::Update() {
 				}
 			}
 			if (goTransform && goBounds) {
-				float3 newPosition = goTransform->GetPosition();
+				float3 newPosition = float3(0, 0, 0);
 				float newXval = goBounds->GetLocalMaxPointAABB().x - abs(goBounds->GetLocalMinPointAABB().x);
 				newXval = newXval < 1.f ? 1.f : newXval;
 				newPosition.x += iterator * offset * newXval;
