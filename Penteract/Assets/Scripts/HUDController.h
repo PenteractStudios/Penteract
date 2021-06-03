@@ -31,7 +31,6 @@ public:
 	static void UpdateHP(float currentHp, float altHp);
 	static void UpdateDurableHPLoss(GameObject* targetCanvas);
 	static void ChangePlayerHUD();
-
 	void UpdateScore(int score_);
 
 public:
@@ -98,11 +97,16 @@ private:
 	static const float4 colorMagentaDarkened;
 	static const float4 colorWhiteDarkened;
 
-	static int prevLives;
-	static float remainingTimes[];
+	static int prevLivesFang;
+	static int prevLivesOni;
+
 	static bool lowHPWarningActive;
 
-	static std::vector<int>remainingTimeActiveIndexes;
+	static float remainingTimesFang[];
+	static float remainingTimesOni[];
+
+	static std::vector<int>remainingTimeActiveIndexesFang;
+	static std::vector<int>remainingTimeActiveIndexesOni;
 
 	ComponentText* scoreText = nullptr;
 	int score = 0;
