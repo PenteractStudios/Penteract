@@ -277,7 +277,7 @@ void PlayerController::HitDetected() {
 }
 
 bool PlayerController::IsDead(){
-	return (fangCharacter.lifePoints <= 0 || onimaruCharacter.lifePoints <= 0);
+	return (!fangCharacter.isAlive || !onimaruCharacter.isAlive);
 }
 
 void PlayerController::CheckCoolDowns() {
