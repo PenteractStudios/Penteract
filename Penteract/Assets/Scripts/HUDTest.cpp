@@ -23,9 +23,9 @@ void HUDTest::Start() {
 }
 
 void HUDTest::Update() {
-    //if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_SPACE)) {
-    //    HUDController::ChangePlayerHUD();
-    //}
+    if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_SPACE)) {
+        HUDController::ChangePlayerHUD(0, 0);
+    }
 
     //HUDController::UpdateCooldowns(cooldown1, cooldown2, cooldown3, cooldown4, cooldown5, cooldown6, cooldown7);
     //HUDController::UpdateHP(fangHP, onimaruHP);

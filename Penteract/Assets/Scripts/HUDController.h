@@ -31,6 +31,8 @@ public:
 
 	static void UpdateHP(float currentHp, float altHp);
 	static void UpdateDurableHPLoss(GameObject* targetCanvas);
+	static void HealthRegeneration(float currentHp, float hpRecovered);
+	static void ResetHealthFill(float currentHp);
 	static void ChangePlayerHUD(int fangLives, int oniLives);
 	void UpdateScore(int score_);
 	static void SetCooldownRetreival(Cooldowns cooldown);
@@ -59,6 +61,7 @@ public:
 
 
 	UID scoreTextUID = 0;
+
 	float timeToFadeDurableHealthFeedbackInternal;
 	static bool abilityCoolDownsRetreived[];
 
@@ -69,12 +72,10 @@ private:
 	static void UpdateOnimaruCooldowns(GameObject* onimaruSkillCanvas, bool isMain);
 	static void UpdateCanvasHP(GameObject* targetCanvas, int health, bool darkened);
 	static void OnHealthLost(GameObject* targetCanvas, int health);
-	//static void PlayFangCoolDownFinishedEffect(GameObject* fangSkillCanvas, int enumIndex);
-	//static void PlayOnimaruCoolDownFinishedEffect(GameObject* onimaruSkillCanvas, int enumIndex);
-	//static void PlayCommonSkillCoolDownFinishedEffect(GameObject* commonSkillCanvas, int enumIndex);
-
 	static void AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canvas);
 	static void PlayCoolDownEffect(AbilityRefreshEffect* effect, Cooldowns cooldown);
+	static void StopHealthLostInstantEffects(GameObject* targetCanvas);
+	static void LoadHealthFeedbackStates(GameObject* targetCanvas, int health);
 
 private:
 	static float timeToFadeDurableHealthFeedback;
