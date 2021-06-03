@@ -32,7 +32,7 @@ private:
 	bool CharacterInSight(const GameObject* character);
 	bool CharacterInMeleeRange(const GameObject* character);
 	void Seek(const float3& newPosition, int speed);
-	
+
 
 public:
 
@@ -41,19 +41,12 @@ public:
 
 	GameObject* player = nullptr;
 	ComponentAgent* agent = nullptr;
-	
-	int maxSpeed = 8;
-	int fallingSpeed = 30;
-	float searchRadius = 40.f;
-	float meleeRange = 5.f;
-	int lifePoints = 5;
-	float timeToDie = 5.f;
-	bool dead = false;
 
+	Enemy gruntCharacter = Enemy(5, 8.0f, 30, 40.f. 5.f);
 
 private:
 
-	float3 velocity = float3(0, 0, 0);	
+	float3 velocity = float3(0, 0, 0);
 	AIState state = AIState::START;
 	bool hitTaken = false;
 	ComponentAnimation* animation = nullptr;
@@ -63,4 +56,3 @@ private:
 	HUDController* hudControllerScript = nullptr;
 
 };
-

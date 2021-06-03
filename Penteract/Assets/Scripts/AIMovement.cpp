@@ -7,15 +7,17 @@
 #include "PlayerController.h"
 #include "HUDController.h"
 
+#define MAX_ACCELERATION 9999
+
 EXPOSE_MEMBERS(AIMovement) {
     MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
     MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
-    MEMBER(MemberType::INT, maxSpeed),
-    MEMBER(MemberType::INT, lifePoints),
-    MEMBER(MemberType::FLOAT, searchRadius),
-    MEMBER(MemberType::FLOAT, meleeRange),
-    MEMBER(MemberType::FLOAT, timeToDie)
-
+    MEMBER(MemberType::INT, gruntStats.lifePoints),
+    MEMBER(MemberType::INT, gruntStats.movementSpeed),
+    MEMBER(MemberType::INT, gruntStats.fallingSpeed),
+    MEMBER(MemberType::FLOAT, gruntStats.searchRadius),
+    MEMBER(MemberType::FLOAT, gruntStats.meleeRange),
+    MEMBER(MemberType::FLOAT, gruntStats.timeToDie)
 };
 
 GENERATE_BODY_IMPL(AIMovement);
@@ -24,12 +26,12 @@ void AIMovement::Start() {
     player = GameplaySystems::GetGameObject(playerUID);
     agent = GetOwner().GetComponent<ComponentAgent>();
     if (agent) {
-        agent->SetMaxSpeed(maxSpeed);
-        agent->SetMaxAcceleration(9999);
+        agent->SetMaxSpeed(gruntStats.movementSpeed);
+        agent->SetMaxAcceleration(MAX_ACCELERATION);
         agent->SetAgentObstacleAvoidance(true);
         agent->RemoveAgentFromCrowd();
     }
-    animation = GetOwner().GetComponent<ComponentAnimation>();   
+    animation = GetOwner().GetComponent<ComponentAnimation>();
     parentTransform = GetOwner().GetComponent<ComponentTransform>();
     GameObject* canvas = GameplaySystems::GetGameObject(canvasUID);
     if (canvas) {
@@ -40,12 +42,12 @@ void AIMovement::Start() {
 void AIMovement::Update() {
     if (!GetOwner().IsActive()) return;
 
-    if (hitTaken && lifePoints > 0) {
-        lifePoints -= damageRecieved;
+    if (hitTaken && gruntStats.lifePoints > 0) {
+        gruntStats.lifePoints -= damageRecieved;
         hitTaken = false;
     }
 
-    if (lifePoints <= 0) {
+    if (gruntStats.lifePoints <= 0) {
         if (state == AIState::ATTACK) {
             animation->SendTrigger("AttackDeath");
         }
@@ -64,14 +66,14 @@ void AIMovement::Update() {
     {
     case AIState::START:
         if (Camera::CheckObjectInsideFrustum(GetOwner().GetChildren()[0])) {
-            Seek(float3(parentTransform->GetGlobalPosition().x, 0, parentTransform->GetGlobalPosition().z), fallingSpeed);
+            Seek(float3(parentTransform->GetGlobalPosition().x, 0, parentTransform->GetGlobalPosition().z), gruntStats.fallingSpeed);
             if (parentTransform->GetGlobalPosition().y < 2.7 + 0e-5f) {
                 animation->SendTrigger("StartSpawn");
                 state = AIState::SPAWN;
             }
         }
         break;
-    case AIState::SPAWN:                
+    case AIState::SPAWN:
         break;
     case AIState::IDLE:
         if (player) {
@@ -82,7 +84,7 @@ void AIMovement::Update() {
         }
         break;
     case AIState::RUN:
-        Seek(player->GetComponent<ComponentTransform>()->GetGlobalPosition(), maxSpeed);
+        Seek(player->GetComponent<ComponentTransform>()->GetGlobalPosition(), gruntStats.movementSpeed);
         if (CharacterInMeleeRange(player)) {
             animation->SendTrigger("RunAttack");
             state = AIState::ATTACK;
@@ -94,18 +96,18 @@ void AIMovement::Update() {
         break;
     }
 
-    if(dead){
-        if (timeToDie > 0) {
-            timeToDie -= Time::GetDeltaTime();
+    if(!gruntCharacter.IsAlive){
+        if (gruntStats.timeToDie > 0) {
+            gruntStats.timeToDie -= Time::GetDeltaTime();
         }
         else {
             if (hudControllerScript) {
                 hudControllerScript->UpdateScore(10);
             }
-            GameplaySystems::DestroyGameObject(&GetOwner());            
+            GameplaySystems::DestroyGameObject(&GetOwner());
         }
     }
-    	
+
 }
 
 void AIMovement::OnAnimationFinished()
@@ -115,7 +117,7 @@ void AIMovement::OnAnimationFinished()
         state = AIState::IDLE;
         agent->AddAgentToCrowd();
     }
-    
+
     else if(state == AIState::ATTACK)
     {
         PlayerController* playerController = GET_SCRIPT(player, PlayerController);
@@ -125,9 +127,9 @@ void AIMovement::OnAnimationFinished()
     }
 
     else if (state == AIState::DEATH) {
-        dead = true;
+        gruntCharacter.isAlive = false;
     }
-        
+
 }
 
 void AIMovement::HitDetected(int damage_) {
@@ -140,7 +142,7 @@ bool AIMovement::CharacterInSight(const GameObject* character)
     ComponentTransform* target = character->GetComponent<ComponentTransform>();
     if (target) {
         float3 posTarget = target->GetGlobalPosition();
-        return posTarget.Distance(parentTransform->GetGlobalPosition()) < searchRadius;
+        return posTarget.Distance(parentTransform->GetGlobalPosition()) < gruntStats.searchRadius;
     }
 
     return false;
@@ -151,7 +153,7 @@ bool AIMovement::CharacterInMeleeRange(const GameObject* character)
     ComponentTransform* target = character->GetComponent<ComponentTransform>();
     if (target) {
         float3 posTarget = target->GetGlobalPosition();
-        return posTarget.Distance(parentTransform->GetGlobalPosition()) < meleeRange;
+        return posTarget.Distance(parentTransform->GetGlobalPosition()) < gruntStats.meleeRange;
     }
 
     return false;
@@ -173,7 +175,7 @@ void AIMovement::Seek(const float3& newPosition, int speed)
     else {
         agent->SetMoveTarget(newPosition, true);
     }
-    
+
     if (state != AIState::START) {
         Quat newRotation = Quat::LookAt(float3(0, 0, 1), direction.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
         parentTransform->SetGlobalRotation(newRotation);
