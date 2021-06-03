@@ -61,7 +61,7 @@ public:
 	UID scoreTextUID = 0;
 
 	float timeToFadeDurableHealthFeedbackInternal;
-	
+
 private:
 	static void UpdateComponents();
 	static void UpdateCommonSkill();
@@ -69,7 +69,9 @@ private:
 	static void UpdateOnimaruCooldowns(GameObject* onimaruSkillCanvas);
 	static void UpdateCanvasHP(GameObject* targetCanvas, int health, bool darkened);
 	static void OnHealthLost(GameObject* targetCanvas, int health);
-	static void StopHealthLostInstantEffects(GameObject* targetCanavs);
+	static void StopHealthLostInstantEffects(GameObject* targetCanvas);
+	static void LoadHealthFeedbackStates(GameObject* targetCanvas, int health);
+
 private:
 	static float timeToFadeDurableHealthFeedback;
 	static GameObject* fang;

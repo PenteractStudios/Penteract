@@ -60,6 +60,8 @@ void HealthLostInstantFeedback::Update() {
 
 			float scaleValue = Lerp(1, growthMaxScale, delta);
 			transform->SetSize(float2(originalSize.x * scaleValue, originalSize.y * scaleValue));
+			image->SetColor(float4(1, 0, 0, 1));
+
 			//Grow
 		} else if (fadeOutTimer < fadeOutDuration) {
 			fadeOutTimer = Min(fadeOutTimer + Time::GetDeltaTime(), fadeOutDuration);
