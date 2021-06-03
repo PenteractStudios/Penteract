@@ -74,7 +74,8 @@ void AIMovement::Update() {
     case AIState::SPAWN:                
         break;
     case AIState::IDLE:
-        if (player) {
+        PlayerController* playerController = GET_SCRIPT(player, PlayerController);
+        if (!playerController.IsDead()) {
             if (CharacterInSight(player)) {
                 animation->SendTrigger("IdleRun");
                 state = AIState::RUN;
