@@ -19,7 +19,7 @@ public:
 	float totalEffectTime = 0;
 	float effectScale = 0;
 	UID effectMember1UID = 0;
-	UID skillImageObjectUID = 0;
+	UID skillParentObjectUID = 0;
 	bool debugPlay = false;
 private:
 
@@ -30,7 +30,7 @@ private:
 	bool isPlaying = false;
 
 	ComponentImage* effectMember1 = nullptr;
-	ComponentTransform2D* skillImageTransform2D = nullptr;
+	ComponentTransform2D* skillObjTransform2D = nullptr;
 	ComponentTransform2D* effectTransform2D = nullptr;
 
 
