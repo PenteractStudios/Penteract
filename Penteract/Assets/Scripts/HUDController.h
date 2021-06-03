@@ -5,6 +5,7 @@
 
 class GameObject;
 class ComponentText;
+class AbilityRefreshEffect;
 
 static enum Cooldowns {
 	FANG_SKILL_1,
@@ -32,7 +33,7 @@ public:
 	static void UpdateDurableHPLoss(GameObject* targetCanvas);
 	static void ChangePlayerHUD(int fangLives, int oniLives);
 	void UpdateScore(int score_);
-
+	static void SetCooldownRetreival(Cooldowns cooldown);
 public:
 	UID fangUID = 0;
 	UID onimaruUID = 0;
@@ -56,26 +57,24 @@ public:
 
 	UID swapingSkillCanvasUID = 0;
 
-	UID fangSkillCooldownEffectCanvasUID = 0;
-	UID onimaruSkillCooldownEffectCanvasUID = 0;
-	UID swappingSkillCooldownEffectCanvasUID = 0;
-
 
 	UID scoreTextUID = 0;
 	float timeToFadeDurableHealthFeedbackInternal;
+	static bool abilityCoolDownsRetreived[];
+
 private:
 	static void UpdateComponents();
 	static void UpdateCommonSkill();
-	static void UpdateFangCooldowns(GameObject* fangSkillCanvas, GameObject* fangCoolDownEffectCanvas, bool isMain);
-	static void UpdateOnimaruCooldowns(GameObject* onimaruSkillCanvas, GameObject* onimaruCoolDownEffectCanvas, bool isMain);
+	static void UpdateFangCooldowns(GameObject* fangSkillCanvas, bool isMain);
+	static void UpdateOnimaruCooldowns(GameObject* onimaruSkillCanvas, bool isMain);
 	static void UpdateCanvasHP(GameObject* targetCanvas, int health, bool darkened);
 	static void OnHealthLost(GameObject* targetCanvas, int health);
 	//static void PlayFangCoolDownFinishedEffect(GameObject* fangSkillCanvas, int enumIndex);
 	//static void PlayOnimaruCoolDownFinishedEffect(GameObject* onimaruSkillCanvas, int enumIndex);
 	//static void PlayCommonSkillCoolDownFinishedEffect(GameObject* commonSkillCanvas, int enumIndex);
 
-	static void AbilityCoolDownEffectCheck(Cooldowns cooldown);
-
+	static void AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canvas);
+	static void PlayCoolDownEffect(AbilityRefreshEffect* effect, Cooldowns cooldown);
 
 private:
 	static float timeToFadeDurableHealthFeedback;
@@ -99,10 +98,6 @@ private:
 
 	static GameObject* swapingSkillCanvas;
 
-	//Skill Cooldown Effects
-	static GameObject* fangSkillCooldownEffectCanvas;
-	static GameObject* onimaruSkillCooldownEffectCanvas;
-	static GameObject* swappingSkillCooldownEffectCanvas;
 
 
 	static std::array<float, Cooldowns::TOTAL> cooldowns;
@@ -123,7 +118,6 @@ private:
 
 	static float remainingTimesFang[];
 	static float remainingTimesOni[];
-	static bool abilityCoolDownsRetreived[];
 
 	static std::vector<int>remainingTimeActiveIndexesFang;
 	static std::vector<int>remainingTimeActiveIndexesOni;

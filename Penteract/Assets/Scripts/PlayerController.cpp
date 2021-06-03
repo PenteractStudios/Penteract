@@ -156,13 +156,23 @@ void PlayerController::LookAtMouse() {
 }
 
 void PlayerController::InitDash(MovementDirection md) {
+	Debug::Log("V");
 	if (CanDash()) {
+		Debug::Log("G");
+
+		HUDController::SetCooldownRetreival(Cooldowns::FANG_SKILL_1);
+
+		std::string message = HUDController::abilityCoolDownsRetreived[Cooldowns::FANG_SKILL_1] ? "True " : "False ";
+
+		Debug::Log(message.c_str());
+
 		if (md != MovementDirection::NONE) {
 			dashDirection = GetDirection(md);
 			dashMovementDirection = md;
 		} else {
 			dashDirection = facePointDir;
 		}
+
 		dashCooldownRemaining = dashCooldown;
 		dashRemaining = dashDuration;
 		dashInCooldown = true;
