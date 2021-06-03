@@ -30,8 +30,7 @@ public:
 
 	static void UpdateHP(float currentHp, float altHp);
 	static void UpdateDurableHPLoss(GameObject* targetCanvas);
-	static void ChangePlayerHUD();
-
+	static void ChangePlayerHUD(int fangLives, int oniLives);
 	void UpdateScore(int score_);
 
 public:
@@ -52,6 +51,8 @@ public:
 
 	UID fangHealthSecondCanvasUID = 0;
 	UID onimaruHealthSecondCanvasUID = 0;
+
+	UID lowHealthWarningEffectUID = 0;
 
 	UID swapingSkillCanvasUID = 0;
 
@@ -94,6 +95,8 @@ private:
 	static GameObject* fangHealthSecondCanvas;
 	static GameObject* onimaruHealthSecondCanvas;
 
+	static GameObject* lowHealthWarningEffect;
+
 	static GameObject* swapingSkillCanvas;
 
 	//Skill Cooldown Effects
@@ -112,10 +115,18 @@ private:
 	static const float4 colorMagentaDarkened;
 	static const float4 colorWhiteDarkened;
 
-	static int prevLives;
-	static float remainingTimes[];
+
+	static int prevLivesFang;
+	static int prevLivesOni;
+
+	static bool lowHPWarningActive;
+
+	static float remainingTimesFang[];
+	static float remainingTimesOni[];
 	static bool abilityCoolDownsRetreived[];
-	static std::vector<int>remainingTimeActiveIndexes;
+
+	static std::vector<int>remainingTimeActiveIndexesFang;
+	static std::vector<int>remainingTimeActiveIndexesOni;
 
 	ComponentText* scoreText = nullptr;
 	int score = 0;

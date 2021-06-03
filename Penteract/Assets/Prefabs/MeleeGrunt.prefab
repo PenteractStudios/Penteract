@@ -3,7 +3,7 @@
         "Name": "MeleeGrunt",
         "Active": true,
         "RootBoneName": "CenterHip",
-        "Mask": 0,
+        "Mask": 2,
         "Components": [
             {
                 "Type": "Transform",
@@ -51,6 +51,13 @@
                         "Value": 17773628572955029428
                     }
                 ]
+            },
+            {
+                "Type": "Agent",
+                "Active": true,
+                "MaxSpeed": 5.0,
+                "MaxAcceleration": 8.0,
+                "AvoidingObstacle": true
             }
         ],
         "Children": [
