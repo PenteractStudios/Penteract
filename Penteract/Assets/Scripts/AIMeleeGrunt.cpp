@@ -2,10 +2,10 @@
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
-#include "TesseractEvent.h"
 
 #include "PlayerController.h"
 #include "HUDController.h"
+#include "AIMovement.h"
 
 EXPOSE_MEMBERS(AIMeleeGrunt) {
     MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
@@ -30,11 +30,12 @@ void AIMeleeGrunt::Start() {
         agent->RemoveAgentFromCrowd();
     }
     animation = GetOwner().GetComponent<ComponentAnimation>();
-    parentTransform = GetOwner().GetComponent<ComponentTransform>();
+    ownerTransform = GetOwner().GetComponent<ComponentTransform>();
     GameObject* canvas = GameplaySystems::GetGameObject(canvasUID);
     if (canvas) {
         hudControllerScript = GET_SCRIPT(canvas, HUDController);
     }
+    movementScript = GET_SCRIPT(&GetOwner(), AIMovement);
 }
 
 void AIMeleeGrunt::Update() {
@@ -64,8 +65,8 @@ void AIMeleeGrunt::Update() {
     {
     case AIState::START:
         if (Camera::CheckObjectInsideFrustum(GetOwner().GetChildren()[0])) {
-            Seek(float3(parentTransform->GetGlobalPosition().x, 0, parentTransform->GetGlobalPosition().z), fallingSpeed);
-            if (parentTransform->GetGlobalPosition().y < 2.7 + 0e-5f) {
+            movementScript->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), fallingSpeed);
+            if (ownerTransform->GetGlobalPosition().y < 2.7 + 0e-5f) {
                 animation->SendTrigger("StartSpawn");
                 state = AIState::SPAWN;
             }
@@ -82,7 +83,7 @@ void AIMeleeGrunt::Update() {
         }
         break;
     case AIState::RUN:
-        Seek(player->GetComponent<ComponentTransform>()->GetGlobalPosition(), maxSpeed);
+        movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), maxSpeed);
         if (CharacterInMeleeRange(player)) {
             animation->SendTrigger("RunAttack");
             state = AIState::ATTACK;
@@ -140,7 +141,7 @@ bool AIMeleeGrunt::CharacterInSight(const GameObject* character)
     ComponentTransform* target = character->GetComponent<ComponentTransform>();
     if (target) {
         float3 posTarget = target->GetGlobalPosition();
-        return posTarget.Distance(parentTransform->GetGlobalPosition()) < searchRadius;
+        return posTarget.Distance(ownerTransform->GetGlobalPosition()) < searchRadius;
     }
 
     return false;
@@ -151,31 +152,8 @@ bool AIMeleeGrunt::CharacterInMeleeRange(const GameObject* character)
     ComponentTransform* target = character->GetComponent<ComponentTransform>();
     if (target) {
         float3 posTarget = target->GetGlobalPosition();
-        return posTarget.Distance(parentTransform->GetGlobalPosition()) < meleeRange;
+        return posTarget.Distance(ownerTransform->GetGlobalPosition()) < meleeRange;
     }
 
     return false;
-}
-
-void AIMeleeGrunt::Seek(const float3& newPosition, int speed)
-{
-
-    float3 position = parentTransform->GetGlobalPosition();
-    float3 direction = newPosition - position;
-
-    velocity = direction.Normalized() * speed;
-
-    position += velocity * Time::GetDeltaTime();
-
-    if (state == AIState::START) {
-        parentTransform->SetGlobalPosition(position);
-    }
-    else {
-        agent->SetMoveTarget(newPosition, true);
-    }
-
-    if (state != AIState::START) {
-        Quat newRotation = Quat::LookAt(float3(0, 0, 1), direction.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
-        parentTransform->SetGlobalRotation(newRotation);
-    }
 }

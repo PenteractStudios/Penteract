@@ -7,6 +7,7 @@ class ComponentTransform;
 class ComponentAgent;
 
 class HUDController;
+class AIMovement;
 
 enum class AIState {
 	START,
@@ -31,8 +32,6 @@ public:
 private:
 	bool CharacterInSight(const GameObject* character);
 	bool CharacterInMeleeRange(const GameObject* character);
-	void Seek(const float3& newPosition, int speed);
-
 
 public:
 
@@ -57,10 +56,11 @@ private:
 	AIState state = AIState::START;
 	bool hitTaken = false;
 	ComponentAnimation* animation = nullptr;
-	ComponentTransform* parentTransform = nullptr;
+	ComponentTransform* ownerTransform = nullptr;
 	int damageRecieved = 0;
 
 	HUDController* hudControllerScript = nullptr;
+	AIMovement* movementScript = nullptr;
 
 };
 
