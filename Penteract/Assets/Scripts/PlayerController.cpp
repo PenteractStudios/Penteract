@@ -48,7 +48,9 @@ EXPOSE_MEMBERS(PlayerController) {
 		MEMBER(MemberType::FLOAT, onimaruMovementSpeed),
 		MEMBER(MemberType::FLOAT, shootCooldown),
 		MEMBER(MemberType::INT, lifePointsFang),
-		MEMBER(MemberType::INT, lifePointsOni)
+		MEMBER(MemberType::INT, lifePointsOni),
+		MEMBER(MemberType::BOOL, useSmoothCamera),
+		MEMBER(MemberType::FLOAT, smoothCameraSpeed)
 
 };
 
@@ -136,7 +138,6 @@ void PlayerController::MoveTo(MovementDirection md) {
 	//with navigation
 	newPosition += GetDirection(md) * movementSpeed * modifier;
 	agent->SetMoveTarget(newPosition, false);
-
 }
 
 void PlayerController::LookAtMouse() {
@@ -181,7 +182,6 @@ void PlayerController::Dash() {
 		float3 newPosition = transform->GetGlobalPosition();
 		newPosition += dashSpeed * dashDirection;
 		agent->SetMoveTarget(newPosition, false);
-
 	}
 }
 
@@ -219,7 +219,6 @@ void PlayerController::SwitchCharacter() {
 }
 
 bool PlayerController::CanShoot() {
-
 	return !shooting && ((fang->IsActive() && fangTrail) || (onimaru->IsActive() && onimaruTrail));
 }
 
@@ -281,7 +280,6 @@ bool PlayerController::IsDead()
 }
 
 void PlayerController::CheckCoolDowns() {
-
 	if (switchCooldownRemaining <= 0.f) {
 		switchCooldownRemaining = 0.f;
 		switchInCooldown = false;
@@ -355,8 +353,7 @@ MovementDirection PlayerController::GetInputMovementDirection() const {
 
 float3 PlayerController::GetDirection(MovementDirection md) const {
 	float3 direction;
-	switch (md)
-	{
+	switch (md) {
 	case MovementDirection::UP:
 		direction = float3(0, 0, -1);
 		break;
@@ -440,8 +437,6 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 	else {
 		animation->SendTrigger(currentState->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
 	}
-
-
 }
 
 void PlayerController::UpdatePlayerStats() {
@@ -474,17 +469,23 @@ void PlayerController::UpdatePlayerStats() {
 
 void PlayerController::UpdateCameraPosition() {
 	float3 playerGlobalPos = transform->GetGlobalPosition();
-	cameraTransform->SetGlobalPosition(float3(
-		playerGlobalPos.x + cameraOffsetX,
-		playerGlobalPos.y + cameraOffsetY,
-		playerGlobalPos.z + cameraOffsetZ));
+
+	float3 desiredPosition = playerGlobalPos + float3(cameraOffsetX, cameraOffsetY, cameraOffsetZ);
+	float3 smoothedPosition = desiredPosition;
+
+	if (useSmoothCamera) {
+		smoothedPosition = float3::Lerp(cameraTransform->GetGlobalPosition(), desiredPosition, smoothCameraSpeed * Time::GetDeltaTime());
+	}
+	
+	cameraTransform->SetGlobalPosition(smoothedPosition);
 }
 
 void PlayerController::Update() {
 	if (!player) return;
 	if (!camera) return;
 	if (!transform) return;
-	
+	if (!agent) return;
+
 	CheckCoolDowns();
 	UpdatePlayerStats();
 
