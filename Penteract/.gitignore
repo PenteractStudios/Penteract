@@ -7,3 +7,6 @@ _scene_snapshot.temp
 
 # Ignore the imgui ini file
 imgui.ini
+
+# Ignore visual studio folders
+**/.vs
