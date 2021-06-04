@@ -58,7 +58,6 @@ void AIMovement::Update() {
         else if (state == AIState::RUN) {
             animation->SendTrigger("RunDeath");
         }
-        Debug::Log("Death");
         agent->RemoveAgentFromCrowd();
         state = AIState::DEATH;
     }
