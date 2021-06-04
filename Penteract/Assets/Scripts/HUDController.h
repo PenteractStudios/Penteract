@@ -5,11 +5,12 @@
 
 class GameObject;
 class ComponentText;
+class AbilityRefreshEffect;
 
 #define MAX_HEALTH 7
 #define LOW_HEALTH_WARNING 2
 
-enum Cooldowns {
+enum class Cooldowns {
 	FANG_SKILL_1,
 	FANG_SKILL_2,
 	FANG_SKILL_3,
@@ -22,7 +23,6 @@ enum Cooldowns {
 
 class HUDController : public Script {
 	GENERATE_BODY(HUDController);
-
 public:
 
 	void Start() override;
@@ -36,10 +36,13 @@ public:
 	void ChangePlayerHUD(int fangLives, int oniLives);
 	void HealthRegeneration(float currentHp, float hpRecovered);
 	void ResetHealthFill(float currentHp);
-	
+
 	void UpdateScore(int score_);
+	void SetCooldownRetreival(Cooldowns cooldown);
 
 public:
+
+
 	UID fangUID = 0;
 	UID onimaruUID = 0;
 
@@ -62,21 +65,28 @@ public:
 
 	UID swapingSkillCanvasUID = 0;
 
+
 	UID scoreTextUID = 0;
-	
+
 	float timeToFadeDurableHealthFeedbackInternal = 2.0f;
 
 private:
 	void UpdateComponents();
 	void UpdateCommonSkill();
-	void UpdateFangCooldowns(GameObject* fangSkillCanvas);
-	void UpdateOnimaruCooldowns(GameObject* onimaruSkillCanvas);
+	void UpdateFangCooldowns(GameObject* fangSkillCanvas, bool isMain);
+	void UpdateOnimaruCooldowns(GameObject* onimaruSkillCanvas, bool isMain);
 	void UpdateCanvasHP(GameObject* targetCanvas, int health, bool darkened);
 	void OnHealthLost(GameObject* targetCanvas, int health);
 	void StopHealthLostInstantEffects(GameObject* targetCanvas);
 	void LoadHealthFeedbackStates(GameObject* targetCanvas, int health);
+	void AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canvas);
+	void PlayCoolDownEffect(AbilityRefreshEffect* effect, Cooldowns cooldown);
 
 private:
+
+
+
+
 	GameObject* fang = nullptr;
 	GameObject* onimaru = nullptr;
 
@@ -97,7 +107,7 @@ private:
 
 	GameObject* swapingSkillCanvas = nullptr;
 
-	float cooldowns[Cooldowns::TOTAL];
+	float cooldowns[static_cast<int>(Cooldowns::TOTAL)];
 
 	/* COLORS */
 
@@ -117,6 +127,7 @@ private:
 
 	float remainingTimesFang[MAX_HEALTH] = { 0,0,0,0,0,0,0 };
 	float remainingTimesOni[MAX_HEALTH] = { 0,0,0,0,0,0,0 };
+	bool abilityCoolDownsRetreived[static_cast<int>(Cooldowns::TOTAL)] = { true,true,true,true,true,true,true };
 
 	std::vector<int>remainingTimeActiveIndexesFang;
 	std::vector<int>remainingTimeActiveIndexesOni;

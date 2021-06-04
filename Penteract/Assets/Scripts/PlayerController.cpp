@@ -160,12 +160,18 @@ void PlayerController::LookAtMouse() {
 
 void PlayerController::InitDash(MovementDirection md) {
 	if (CanDash()) {
+
+		if (hudControllerScript) {
+			hudControllerScript->SetCooldownRetreival(Cooldowns::FANG_SKILL_1);
+		}
+
 		if (md != MovementDirection::NONE) {
 			dashDirection = GetDirection(md);
 			dashMovementDirection = md;
 		} else {
 			dashDirection = facePointDir;
 		}
+
 		dashCooldownRemaining = dashCooldown;
 		dashRemaining = dashDuration;
 		dashInCooldown = true;
