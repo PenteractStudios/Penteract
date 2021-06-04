@@ -22,6 +22,9 @@ GENERATE_BODY_IMPL(AIMeleeGrunt);
 
 void AIMeleeGrunt::Start() {
     player = GameplaySystems::GetGameObject(playerUID);
+    if (player) {
+        playerController = GET_SCRIPT(player, PlayerController);
+    }
     agent = GetOwner().GetComponent<ComponentAgent>();
     if (agent) {
         agent->SetMaxSpeed(maxSpeed);
