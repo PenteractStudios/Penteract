@@ -4,7 +4,7 @@
 #include "GameplaySystems.h"
 #include "TesseractEvent.h"
 
-#include "AIMovement.h"
+#include "AIMeleeGrunt.h"
 #include "HUDController.h"
 
 #include "Math/Quat.h"
@@ -263,7 +263,7 @@ void PlayerController::Shoot() {
 		int mask = static_cast<int>(MaskType::ENEMY);
 		GameObject* hitGo = Physics::Raycast(start, start + end, mask);
 		if (hitGo) {
-			AIMovement* enemyScript = GET_SCRIPT(hitGo->GetParent(), AIMovement);
+			AIMeleeGrunt* enemyScript = GET_SCRIPT(hitGo->GetParent(), AIMeleeGrunt);
 			if (fang->IsActive()) enemyScript->HitDetected(3);
 			else enemyScript->HitDetected();
 		}

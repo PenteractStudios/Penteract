@@ -43,6 +43,13 @@ void AIMeleeGrunt::Start() {
 
 void AIMeleeGrunt::Update() {
     if (!GetOwner().IsActive()) return;
+    if (!player) return;
+    if (!agent) return;
+    if (!movementScript) return;
+    if (!hudControllerScript) return;
+    if (!playerController) return;
+    if (!ownerTransform) return;
+    if (!animation) return;
 
     if (hitTaken && lifePoints > 0) {
         lifePoints -= damageRecieved;
@@ -78,8 +85,8 @@ void AIMeleeGrunt::Update() {
     case AIState::SPAWN:
         break;
     case AIState::IDLE:
-        if (player) {
-            if (CharacterInSight(player)) {
+        if (!playerController->IsDead()) {
+            if (movementScript->CharacterInSight(player, searchRadius)) {
                 animation->SendTrigger("IdleRun");
                 state = AIState::RUN;
             }
@@ -87,7 +94,7 @@ void AIMeleeGrunt::Update() {
         break;
     case AIState::RUN:
         movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), maxSpeed);
-        if (CharacterInMeleeRange(player)) {
+        if (movementScript->CharacterInMeleeRange(player, meleeRange)) {
             animation->SendTrigger("RunAttack");
             state = AIState::ATTACK;
         }
@@ -122,7 +129,6 @@ void AIMeleeGrunt::OnAnimationFinished()
 
     else if (state == AIState::ATTACK)
     {
-        PlayerController* playerController = GET_SCRIPT(player, PlayerController);
         playerController->HitDetected();
         animation->SendTrigger("AttackIdle");
         state = AIState::IDLE;
@@ -137,26 +143,4 @@ void AIMeleeGrunt::OnAnimationFinished()
 void AIMeleeGrunt::HitDetected(int damage_) {
     damageRecieved = damage_;
     hitTaken = true;
-}
-
-bool AIMeleeGrunt::CharacterInSight(const GameObject* character)
-{
-    ComponentTransform* target = character->GetComponent<ComponentTransform>();
-    if (target) {
-        float3 posTarget = target->GetGlobalPosition();
-        return posTarget.Distance(ownerTransform->GetGlobalPosition()) < searchRadius;
-    }
-
-    return false;
-}
-
-bool AIMeleeGrunt::CharacterInMeleeRange(const GameObject* character)
-{
-    ComponentTransform* target = character->GetComponent<ComponentTransform>();
-    if (target) {
-        float3 posTarget = target->GetGlobalPosition();
-        return posTarget.Distance(ownerTransform->GetGlobalPosition()) < meleeRange;
-    }
-
-    return false;
 }

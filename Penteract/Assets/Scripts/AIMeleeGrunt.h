@@ -2,21 +2,15 @@
 
 #include "Scripting/Script.h"
 
+#include "AIState.h"
+
 class ComponentAnimation;
 class ComponentTransform;
 class ComponentAgent;
 
 class HUDController;
+class PlayerController;
 class AIMovement;
-
-enum class AIState {
-	START,
-	SPAWN,
-	IDLE,
-	RUN,
-	ATTACK,
-	DEATH
-};
 
 class AIMeleeGrunt : public Script
 {
@@ -28,10 +22,6 @@ public:
 	void Update() override;
 	void OnAnimationFinished() override;
 	void HitDetected(int damage_ = 1);
-
-private:
-	bool CharacterInSight(const GameObject* character);
-	bool CharacterInMeleeRange(const GameObject* character);
 
 public:
 
@@ -49,7 +39,6 @@ public:
 	float timeToDie = 5.f;
 	bool dead = false;
 
-
 private:
 
 	float3 velocity = float3(0, 0, 0);
@@ -60,6 +49,7 @@ private:
 	int damageRecieved = 0;
 
 	HUDController* hudControllerScript = nullptr;
+	PlayerController* playerController = nullptr;
 	AIMovement* movementScript = nullptr;
 
 };

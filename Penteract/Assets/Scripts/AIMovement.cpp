@@ -3,8 +3,6 @@
 #include "GameObject.h"
 #include "GameplaySystems.h"
 
-#include "AIMeleeGrunt.h"
-
 EXPOSE_MEMBERS(AIMovement) {
     
 };
@@ -20,7 +18,7 @@ void AIMovement::Update() {
     
 }
 
-void AIMovement::Seek(const AIState state, const float3& newPosition, int speed)
+void AIMovement::Seek(AIState state, const float3& newPosition, int speed)
 {
 
     float3 position = ownerTransform->GetGlobalPosition();
@@ -43,4 +41,26 @@ void AIMovement::Seek(const AIState state, const float3& newPosition, int speed)
         Quat newRotation = Quat::LookAt(float3(0, 0, 1), direction.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
         ownerTransform->SetGlobalRotation(newRotation);
     }
+}
+
+bool AIMovement::CharacterInSight(const GameObject* character, const float searchRadius)
+{
+    ComponentTransform* target = character->GetComponent<ComponentTransform>();
+    if (target) {
+        float3 posTarget = target->GetGlobalPosition();
+        return posTarget.Distance(ownerTransform->GetGlobalPosition()) < searchRadius;
+    }
+
+    return false;
+}
+
+bool AIMovement::CharacterInMeleeRange(const GameObject* character, const float meleeRange)
+{
+    ComponentTransform* target = character->GetComponent<ComponentTransform>();
+    if (target) {
+        float3 posTarget = target->GetGlobalPosition();
+        return posTarget.Distance(ownerTransform->GetGlobalPosition()) < meleeRange;
+    }
+
+    return false;
 }
