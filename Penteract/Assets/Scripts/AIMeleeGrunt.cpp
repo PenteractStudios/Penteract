@@ -95,6 +95,7 @@ void AIMeleeGrunt::Update() {
     case AIState::RUN:
         movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), maxSpeed);
         if (movementScript->CharacterInMeleeRange(player, meleeRange)) {
+            agent->RemoveAgentFromCrowd();
             animation->SendTrigger("RunAttack");
             state = AIState::ATTACK;
         }
@@ -131,6 +132,7 @@ void AIMeleeGrunt::OnAnimationFinished()
     {
         playerController->HitDetected();
         animation->SendTrigger("AttackIdle");
+        agent->AddAgentToCrowd();
         state = AIState::IDLE;
     }
 
