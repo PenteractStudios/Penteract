@@ -391,9 +391,7 @@ void HUDController::UpdateFangCooldowns(GameObject* fangSkillCanvas, bool isMain
 				if (image->IsFill()) {
 					switch (skill) {
 					case Cooldowns::FANG_SKILL_1:
-						if (isMain) {
-							AbilityCoolDownEffectCheck(FANG_SKILL_1, fangSkillCanvas);
-						}
+						if (isMain) AbilityCoolDownEffectCheck(FANG_SKILL_1, fangSkillCanvas);
 						image->SetFillValue(cooldowns[Cooldowns::FANG_SKILL_1]);
 						break;
 					case Cooldowns::FANG_SKILL_2:

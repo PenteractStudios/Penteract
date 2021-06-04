@@ -63,8 +63,6 @@ void AbilityRefreshEffect::Play() {
 	if (!skillObjTransform2D) return;
 	if (effectMember1) {
 		effectMember1->Enable();
-		bool active = effectMember1->IsActive();
-
 	}
 	originalScaleVector = skillObjTransform2D->GetScale();
 	originalEffectScaleVector = effectTransform2D->GetScale();
