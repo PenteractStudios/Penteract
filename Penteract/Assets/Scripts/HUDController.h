@@ -10,20 +10,21 @@ class AbilityRefreshEffect;
 #define MAX_HEALTH 7
 #define LOW_HEALTH_WARNING 2
 
-enum class Cooldowns {
-	FANG_SKILL_1,
-	FANG_SKILL_2,
-	FANG_SKILL_3,
-	ONIMARU_SKILL_1,
-	ONIMARU_SKILL_2,
-	ONIMARU_SKILL_3,
-	SWITCH_SKILL,
-	TOTAL
-};
+
 
 class HUDController : public Script {
 	GENERATE_BODY(HUDController);
 public:
+	enum class Cooldowns {
+		FANG_SKILL_1,
+		FANG_SKILL_2,
+		FANG_SKILL_3,
+		ONIMARU_SKILL_1,
+		ONIMARU_SKILL_2,
+		ONIMARU_SKILL_3,
+		SWITCH_SKILL,
+		TOTAL
+	};
 
 	void Start() override;
 	void Update() override;

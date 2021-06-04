@@ -111,7 +111,7 @@ void PlayerController::Start() {
 	if (onimaruParticle) {
 		onimaruCompParticle = onimaruParticle->GetComponent<ComponentParticleSystem>();
 	}
-	
+
 	GameObject* aux = GameplaySystems::GetGameObject(switchAudioSourceUID);
 	if (aux) {
 		switchAudioSource = aux->GetComponent<ComponentAudioSource>();
@@ -162,7 +162,7 @@ void PlayerController::InitDash(MovementDirection md) {
 	if (CanDash()) {
 
 		if (hudControllerScript) {
-			hudControllerScript->SetCooldownRetreival(Cooldowns::FANG_SKILL_1);
+			hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_1);
 		}
 
 		if (md != MovementDirection::NONE) {
@@ -338,8 +338,7 @@ void PlayerController::CheckCoolDowns() {
 		if (fangRecovering >= fangRecoveryRate) {
 			lifePointsFang += 1.0f;
 			fangRecovering = 0.0f;
-		}
-		else {
+		} else {
 			fangRecovering += Time::GetDeltaTime();
 		}
 	}
@@ -348,8 +347,7 @@ void PlayerController::CheckCoolDowns() {
 		if (onimaruRecovering >= onimaruRecoveryRate) {
 			lifePointsOni += 1.0f;
 			onimaruRecovering = 0.0f;
-		}
-		else {
+		} else {
 			onimaruRecovering += Time::GetDeltaTime();
 		}
 	}
@@ -490,8 +488,7 @@ void PlayerController::UpdatePlayerStats() {
 			Debug::Log("Recovering Onimaru...");
 			float healthRecovered = (onimaruRecovering / onimaruRecoveryRate);
 			hudControllerScript->HealthRegeneration(lifePointsOni, healthRecovered);
-		}
-		else if (onimaru->IsActive() && lifePointsFang != FANG_MAX_HEALTH) {
+		} else if (onimaru->IsActive() && lifePointsFang != FANG_MAX_HEALTH) {
 			Debug::Log("Recovering Fang...");
 			float healthRecovered = (fangRecovering / fangRecoveryRate);
 			hudControllerScript->HealthRegeneration(lifePointsFang, healthRecovered);
