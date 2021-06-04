@@ -90,6 +90,10 @@ public:
 	/* Fang & onimaru damage */
 	int onimaruDamage = 1;
 	int fangDamage = 3;
+	
+	//Camera
+	bool useSmoothCamera = true;
+	float smoothCameraSpeed = 5.0f;
 
 	std::vector<std::string> states{ "Idle" ,
 								"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
