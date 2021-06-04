@@ -7,13 +7,13 @@ class ComponentTransform;
 class ComponentAgent;
 
 class HUDController;
+class PlayerController;
 
 enum class AIState {
 	START,
 	SPAWN,
 	IDLE,
 	RUN,
-	HURT,
 	ATTACK,
 	DEATH
 };
@@ -62,6 +62,7 @@ private:
 	int damageRecieved = 0;
 
 	HUDController* hudControllerScript = nullptr;
+	PlayerController* playerController = nullptr;
 
 };
 

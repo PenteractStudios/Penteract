@@ -30,6 +30,7 @@ public:
 	void Update() override;
 
 	void HitDetected();
+	bool IsDead();
 
 public:
 
@@ -82,6 +83,10 @@ public:
 	float cameraOffsetX = 0.f;
 	float shootCooldown = 0.1f;
 	bool firstTime = true;
+
+	//Camera
+	bool useSmoothCamera = true;
+	float smoothCameraSpeed = 5.0f;
 
 	std::vector<std::string> states{ "Idle" ,
 								"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,

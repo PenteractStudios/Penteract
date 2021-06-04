@@ -22,6 +22,9 @@ GENERATE_BODY_IMPL(AIMovement);
 
 void AIMovement::Start() {
     player = GameplaySystems::GetGameObject(playerUID);
+    if (player) {
+        playerController = GET_SCRIPT(player, PlayerController);
+    }
     agent = GetOwner().GetComponent<ComponentAgent>();
     if (agent) {
         agent->SetMaxSpeed(maxSpeed);
@@ -41,18 +44,23 @@ void AIMovement::Update() {
     if (!GetOwner().IsActive()) return;
 
     if (hitTaken && lifePoints > 0) {
-        if (state == AIState::IDLE || state == AIState::HURT) {
-            animation->SendTrigger("IdleHurt");
+        lifePoints -= damageRecieved;
+        hitTaken = false;
+    }
+
+    if (lifePoints <= 0) {
+        if (state == AIState::ATTACK) {
+            animation->SendTrigger("AttackDeath");
+        }
+        else if (state == AIState::IDLE) {
+            animation->SendTrigger("IdleDeath");
         }
         else if (state == AIState::RUN) {
-            animation->SendTrigger("RunHurt");
+            animation->SendTrigger("RunDeath");
         }
-        else if (state == AIState::ATTACK) {
-            animation->SendTrigger("AttackHurt");
-        }
-        lifePoints -= damageRecieved;
-        state = AIState::HURT;
-        hitTaken = false;
+        Debug::Log("Death");
+        agent->RemoveAgentFromCrowd();
+        state = AIState::DEATH;
     }
 
     switch (state)
@@ -68,8 +76,8 @@ void AIMovement::Update() {
         break;
     case AIState::SPAWN:                
         break;
-    case AIState::IDLE:
-        if (player) {
+    case AIState::IDLE:        
+        if (!playerController->IsDead()) {
             if (CharacterInSight(player)) {
                 animation->SendTrigger("IdleRun");
                 state = AIState::RUN;
@@ -79,11 +87,10 @@ void AIMovement::Update() {
     case AIState::RUN:
         Seek(player->GetComponent<ComponentTransform>()->GetGlobalPosition(), maxSpeed);
         if (CharacterInMeleeRange(player)) {
+            agent->RemoveAgentFromCrowd();
             animation->SendTrigger("RunAttack");
             state = AIState::ATTACK;
         }
-        break;
-    case AIState::HURT:                
         break;
     case AIState::ATTACK:
         break;
@@ -96,10 +103,10 @@ void AIMovement::Update() {
             timeToDie -= Time::GetDeltaTime();
         }
         else {
-            GameplaySystems::DestroyGameObject(&GetOwner());
             if (hudControllerScript) {
                 hudControllerScript->UpdateScore(10);
             }
+            GameplaySystems::DestroyGameObject(&GetOwner());            
         }
     }
     	
@@ -115,22 +122,12 @@ void AIMovement::OnAnimationFinished()
     
     else if(state == AIState::ATTACK)
     {
-        PlayerController* playerController = GET_SCRIPT(player, PlayerController);
         playerController->HitDetected();
         animation->SendTrigger("AttackIdle");
+        agent->AddAgentToCrowd();
         state = AIState::IDLE;
     }
-    else if (state == AIState::HURT && lifePoints > 0) {
-        animation->SendTrigger("HurtIdle");
-        state = AIState::IDLE;
-    }
-    
-    else if (state == AIState::HURT && lifePoints <= 0) {
-        animation->SendTrigger("HurtDeath");
-        Debug::Log("Death");
-        agent->RemoveAgentFromCrowd();
-        state = AIState::DEATH;
-    }
+
     else if (state == AIState::DEATH) {
         dead = true;
     }
