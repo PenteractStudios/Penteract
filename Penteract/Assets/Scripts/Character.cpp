@@ -10,7 +10,7 @@ void Character::Hit(int damage_) {
 void Character::Recover(int recoveryLife_)
 {
 	int difference = totalLifePoints - lifePoints;
-	if (difference > recoveryLife_) {
+	if (recoveryLife_ > difference) {
 		lifePoints = totalLifePoints;
 	} else {
 		lifePoints += recoveryLife_;
