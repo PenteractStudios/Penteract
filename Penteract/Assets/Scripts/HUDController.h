@@ -7,7 +7,10 @@ class GameObject;
 class ComponentText;
 class AbilityRefreshEffect;
 
-static enum Cooldowns {
+#define MAX_HEALTH 7
+#define LOW_HEALTH_WARNING 2
+
+enum Cooldowns {
 	FANG_SKILL_1,
 	FANG_SKILL_2,
 	FANG_SKILL_3,
@@ -25,17 +28,19 @@ public:
 
 	void Start() override;
 	void Update() override;
-	static void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3,
+	void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3,
 		float fangCooldown1, float fangCooldown2, float fangCooldown3,
 		float switchCooldown);
 
-	static void UpdateHP(float currentHp, float altHp);
-	static void UpdateDurableHPLoss(GameObject* targetCanvas);
-	static void HealthRegeneration(float currentHp, float hpRecovered);
-	static void ResetHealthFill(float currentHp);
-	static void ChangePlayerHUD(int fangLives, int oniLives);
+	void UpdateHP(float currentHp, float altHp);
+	void UpdateDurableHPLoss(GameObject* targetCanvas);
+	void ChangePlayerHUD(int fangLives, int oniLives);
+	void HealthRegeneration(float currentHp, float hpRecovered);
+	void ResetHealthFill(float currentHp);
+
 	void UpdateScore(int score_);
-	static void SetCooldownRetreival(Cooldowns cooldown);
+	void SetCooldownRetreival(Cooldowns cooldown);
+
 public:
 	UID fangUID = 0;
 	UID onimaruUID = 0;
@@ -62,66 +67,65 @@ public:
 
 	UID scoreTextUID = 0;
 
-	float timeToFadeDurableHealthFeedbackInternal;
-	static bool abilityCoolDownsRetreived[];
+	float timeToFadeDurableHealthFeedbackInternal = 2.0f;
 
 private:
-	static void UpdateComponents();
-	static void UpdateCommonSkill();
-	static void UpdateFangCooldowns(GameObject* fangSkillCanvas, bool isMain);
-	static void UpdateOnimaruCooldowns(GameObject* onimaruSkillCanvas, bool isMain);
-	static void UpdateCanvasHP(GameObject* targetCanvas, int health, bool darkened);
-	static void OnHealthLost(GameObject* targetCanvas, int health);
-	static void AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canvas);
-	static void PlayCoolDownEffect(AbilityRefreshEffect* effect, Cooldowns cooldown);
-	static void StopHealthLostInstantEffects(GameObject* targetCanvas);
-	static void LoadHealthFeedbackStates(GameObject* targetCanvas, int health);
+	void UpdateComponents();
+	void UpdateCommonSkill();
+	void UpdateFangCooldowns(GameObject* fangSkillCanvas,bool isMain);
+	void UpdateOnimaruCooldowns(GameObject* onimaruSkillCanvas,bool isMain);
+	void UpdateCanvasHP(GameObject* targetCanvas, int health, bool darkened);
+	void OnHealthLost(GameObject* targetCanvas, int health);
+	void StopHealthLostInstantEffects(GameObject* targetCanvas);
+	void LoadHealthFeedbackStates(GameObject* targetCanvas, int health);
+	void AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canvas);
+	void PlayCoolDownEffect(AbilityRefreshEffect* effect, Cooldowns cooldown);
 
 private:
-	static float timeToFadeDurableHealthFeedback;
-	static GameObject* fang;
-	static GameObject* onimaru;
+	GameObject* fang = nullptr;
+	GameObject* onimaru = nullptr;
 
-	static GameObject* fangCanvas;
-	static GameObject* onimaruCanvas;
+	GameObject* fangCanvas = nullptr;
+	GameObject* onimaruCanvas = nullptr;
 
-	static GameObject* fangSkillsMainCanvas;
-	static GameObject* onimaruSkillsMainCanvas;
-	static GameObject* fangSkillsSecondCanvas;
-	static GameObject* onimaruSkillsSecondCanvas;
+	GameObject* fangSkillsMainCanvas = nullptr;
+	GameObject* onimaruSkillsMainCanvas = nullptr;
+	GameObject* fangSkillsSecondCanvas = nullptr;
+	GameObject* onimaruSkillsSecondCanvas = nullptr;
 
-	static GameObject* fangHealthMainCanvas;
-	static GameObject* onimaruHealthMainCanvas;
-	static GameObject* fangHealthSecondCanvas;
-	static GameObject* onimaruHealthSecondCanvas;
+	GameObject* fangHealthMainCanvas = nullptr;
+	GameObject* onimaruHealthMainCanvas = nullptr;
+	GameObject* fangHealthSecondCanvas = nullptr;
+	GameObject* onimaruHealthSecondCanvas = nullptr;
 
-	static GameObject* lowHealthWarningEffect;
+	GameObject* lowHealthWarningEffect = nullptr;
 
-	static GameObject* swapingSkillCanvas;
+	GameObject* swapingSkillCanvas = nullptr;
 
-
-
-	static std::array<float, Cooldowns::TOTAL> cooldowns;
+	float cooldowns[Cooldowns::TOTAL];
 
 	/* COLORS */
 
-	static const float4 colorMagenta;
-	static const float4 colorWhite;
+	const float4 colorMagenta = float4(236, 60, 137, 255) / 255;
+	const float4 colorWhite = float4(255, 255, 255, 255) / 255;
 
-	static const float4 colorMagentaDarkened;
-	static const float4 colorWhiteDarkened;
+	const float4 colorMagentaDarkened = float4(236, 60, 137, 128) / 255;
+	const float4 colorWhiteDarkened = float4(255, 255, 255, 128) / 255;
 
 
-	static int prevLivesFang;
-	static int prevLivesOni;
+	int prevLivesFang = MAX_HEALTH;
+	int prevLivesOni = MAX_HEALTH;
 
-	static bool lowHPWarningActive;
+	bool lowHPWarningActive = false;
 
-	static float remainingTimesFang[];
-	static float remainingTimesOni[];
+	float timeToFadeDurableHealthFeedback = 0.0f;
 
-	static std::vector<int>remainingTimeActiveIndexesFang;
-	static std::vector<int>remainingTimeActiveIndexesOni;
+	float remainingTimesFang[MAX_HEALTH] = { 0,0,0,0,0,0,0 };
+	float remainingTimesOni[MAX_HEALTH] = { 0,0,0,0,0,0,0 };
+	bool abilityCoolDownsRetreived[Cooldowns::TOTAL] = { true,true,true,true,true,true,true };
+
+	std::vector<int>remainingTimeActiveIndexesFang;
+	std::vector<int>remainingTimeActiveIndexesOni;
 
 	ComponentText* scoreText = nullptr;
 	int score = 0;

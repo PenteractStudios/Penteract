@@ -7,9 +7,6 @@
 #include "LowHPWarning.h"
 #include "GameplaySystems.h"
 
-// We should get this from the character class
-#define MAX_HEALTH 7
-#define LOW_HEALTH_WARNING 2
 
 EXPOSE_MEMBERS(HUDController) {
 	// Add members here to expose them to the engine. Example:
@@ -33,45 +30,6 @@ EXPOSE_MEMBERS(HUDController) {
 };
 
 GENERATE_BODY_IMPL(HUDController);
-
-GameObject* HUDController::fangCanvas = nullptr;
-GameObject* HUDController::onimaruCanvas = nullptr;
-
-GameObject* HUDController::fang = nullptr;
-GameObject* HUDController::onimaru = nullptr;
-
-GameObject* HUDController::fangSkillsMainCanvas = nullptr;
-GameObject* HUDController::onimaruSkillsMainCanvas = nullptr;
-GameObject* HUDController::fangSkillsSecondCanvas = nullptr;
-GameObject* HUDController::onimaruSkillsSecondCanvas = nullptr;
-
-GameObject* HUDController::fangHealthMainCanvas = nullptr;
-GameObject* HUDController::onimaruHealthMainCanvas = nullptr;
-GameObject* HUDController::fangHealthSecondCanvas = nullptr;
-GameObject* HUDController::onimaruHealthSecondCanvas = nullptr;
-GameObject* HUDController::swapingSkillCanvas = nullptr;
-GameObject* HUDController::lowHealthWarningEffect = nullptr;
-
-
-std::array<float, Cooldowns::TOTAL> HUDController::cooldowns;
-
-
-const float4 HUDController::colorMagenta = float4(236, 60, 137, 255) / 255;
-const float4 HUDController::colorWhite = float4(255, 255, 255, 255) / 255;
-
-const float4 HUDController::colorMagentaDarkened = float4(236, 60, 137, 128) / 255;
-const float4 HUDController::colorWhiteDarkened = float4(255, 255, 255, 128) / 255;
-int HUDController::prevLivesFang = MAX_HEALTH;
-int HUDController::prevLivesOni = MAX_HEALTH;
-bool HUDController::lowHPWarningActive = false;
-
-float HUDController::remainingTimesFang[MAX_HEALTH] = { 0,0,0,0,0,0,0 };
-float HUDController::remainingTimesOni[MAX_HEALTH] = { 0,0,0,0,0,0,0 };
-bool HUDController::abilityCoolDownsRetreived[Cooldowns::TOTAL] = { true,true,true,true,true,true,true };
-
-float HUDController::timeToFadeDurableHealthFeedback = 2.0f;
-std::vector<int>HUDController::remainingTimeActiveIndexesOni;
-std::vector<int>HUDController::remainingTimeActiveIndexesFang;
 
 void HUDController::Start() {
 	//Resetting preLives and remainingTimes just in case
@@ -120,13 +78,9 @@ void HUDController::Start() {
 		LoadHealthFeedbackStates(fangHealthMainCanvas, MAX_HEALTH);
 	}
 
-	cooldowns[Cooldowns::FANG_SKILL_1] = 0;
-	cooldowns[Cooldowns::FANG_SKILL_2] = 0;
-	cooldowns[Cooldowns::FANG_SKILL_3] = 0;
-	cooldowns[Cooldowns::ONIMARU_SKILL_1] = 0;
-	cooldowns[Cooldowns::ONIMARU_SKILL_2] = 0;
-	cooldowns[Cooldowns::ONIMARU_SKILL_3] = 0;
-	cooldowns[Cooldowns::SWITCH_SKILL] = 0;
+	for (int i = 0; i < Cooldowns::TOTAL; ++i) {
+		cooldowns[i] = 0;
+	}
 }
 
 void HUDController::Update() {
@@ -244,7 +198,7 @@ void HUDController::UpdateScore(int score_) {
 }
 
 void HUDController::SetCooldownRetreival(Cooldowns cooldown) {
-	HUDController::abilityCoolDownsRetreived[cooldown] = false;
+	abilityCoolDownsRetreived[cooldown] = false;
 }
 
 

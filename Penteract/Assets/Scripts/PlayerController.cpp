@@ -161,7 +161,9 @@ void PlayerController::LookAtMouse() {
 void PlayerController::InitDash(MovementDirection md) {
 	if (CanDash()) {
 
-		HUDController::SetCooldownRetreival(Cooldowns::FANG_SKILL_1);
+		if (hudControllerScript) {
+			hudControllerScript->SetCooldownRetreival(Cooldowns::FANG_SKILL_1);
+		}
 
 		if (md != MovementDirection::NONE) {
 			dashDirection = GetDirection(md);
