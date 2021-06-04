@@ -22,6 +22,9 @@ GENERATE_BODY_IMPL(AIMovement);
 
 void AIMovement::Start() {
     player = GameplaySystems::GetGameObject(playerUID);
+    if (player) {
+        playerController = GET_SCRIPT(player, PlayerController);
+    }
     agent = GetOwner().GetComponent<ComponentAgent>();
     if (agent) {
         agent->SetMaxSpeed(maxSpeed);
@@ -73,8 +76,8 @@ void AIMovement::Update() {
         break;
     case AIState::SPAWN:                
         break;
-    case AIState::IDLE:
-        if (player) {
+    case AIState::IDLE:        
+        if (!playerController->IsDead()) {
             if (CharacterInSight(player)) {
                 animation->SendTrigger("IdleRun");
                 state = AIState::RUN;
@@ -84,6 +87,7 @@ void AIMovement::Update() {
     case AIState::RUN:
         Seek(player->GetComponent<ComponentTransform>()->GetGlobalPosition(), maxSpeed);
         if (CharacterInMeleeRange(player)) {
+            agent->RemoveAgentFromCrowd();
             animation->SendTrigger("RunAttack");
             state = AIState::ATTACK;
         }
@@ -118,9 +122,9 @@ void AIMovement::OnAnimationFinished()
     
     else if(state == AIState::ATTACK)
     {
-        PlayerController* playerController = GET_SCRIPT(player, PlayerController);
         playerController->HitDetected();
         animation->SendTrigger("AttackIdle");
+        agent->AddAgentToCrowd();
         state = AIState::IDLE;
     }
 
