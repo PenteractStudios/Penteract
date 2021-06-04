@@ -9,16 +9,16 @@
 EXPOSE_MEMBERS(GodModeController) {
 	/* UI toggles*/
 	MEMBER(MemberType::GAME_OBJECT_UID, uiCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, spawnMeleeUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, spawnRangedUID),
-	/* Enemy groups*/
-	MEMBER(MemberType::GAME_OBJECT_UID, enemiesUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, debugEnemiesUID),
-	/* Cameras */
-	MEMBER(MemberType::GAME_OBJECT_UID, godCameraUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, gameCameraUID),
-	/* Other scripts*/
-	MEMBER(MemberType::GAME_OBJECT_UID, invincibleUID)
+		MEMBER(MemberType::GAME_OBJECT_UID, spawnMeleeUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, spawnRangedUID),
+		/* Enemy groups*/
+		MEMBER(MemberType::GAME_OBJECT_UID, enemiesUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, debugEnemiesUID),
+		/* Cameras */
+		MEMBER(MemberType::GAME_OBJECT_UID, godCameraUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, gameCameraUID),
+		/* Other scripts*/
+		MEMBER(MemberType::GAME_OBJECT_UID, invincibleUID)
 };
 
 GENERATE_BODY_IMPL(GodModeController);
@@ -85,36 +85,37 @@ void GodModeController::OnChildToggle(unsigned int index, bool isChecked) {
 		break;
 	case 3:
 		if (isChecked) {
-			if (invincible) invincible->Enable();
-		}
-		else {
-			if (invincible) invincible->Disable();
-		}
-		break;
-	case 4:
-		if (isChecked) {
 			if (toggles[index + 1]->IsChecked()) {
 				toggles[index + 1]->SetChecked(false);
 			}
 			if (gameCamera) {
 				GameplaySystems::SetRenderCamera(gameCamera->GetComponent<ComponentCamera>());
 			}
-		} else if (!toggles[index + 1]->IsChecked()) {
+		}
+		else if (!toggles[index + 1]->IsChecked()) {
 			toggles[index]->SetChecked(true);
 		}
 		break;
-	case 5:
+	case 4:
 		if (isChecked) {
 			if (toggles[index - 1]->IsChecked()) {
 				toggles[index - 1]->SetChecked(false);
 			}
-			
+
 			if (godCamera) {
 				GameplaySystems::SetRenderCamera(godCamera->GetComponent<ComponentCamera>());
 			}
 		}
 		else if (!toggles[index - 1]->IsChecked()) {
 			toggles[index]->SetChecked(true);
+		}
+		break;
+	case 5:
+		if (isChecked) {
+			if (invincible) invincible->Enable();
+		}
+		else {
+			if (invincible) invincible->Disable();
 		}
 		break;
 

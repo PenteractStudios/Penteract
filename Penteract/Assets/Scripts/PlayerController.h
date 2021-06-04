@@ -84,6 +84,10 @@ public:
 	float shootCooldown = 0.1f;
 	bool firstTime = true;
 
+	//Camera
+	bool useSmoothCamera = true;
+	float smoothCameraSpeed = 5.0f;
+
 	std::vector<std::string> states{ "Idle" ,
 								"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
 								"DashBackward", "DashForward" , "DashLeft" , "DashRight" ,
