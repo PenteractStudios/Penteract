@@ -40,6 +40,7 @@ public:
 
 	void UpdateScore(int score_);
 	void SetCooldownRetreival(Cooldowns cooldown);
+	static float MapValue01(float value, float min, float max);
 
 public:
 

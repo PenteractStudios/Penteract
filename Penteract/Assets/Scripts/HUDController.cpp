@@ -201,6 +201,10 @@ void HUDController::SetCooldownRetreival(Cooldowns cooldown) {
 	abilityCoolDownsRetreived[static_cast<int>(cooldown)] = false;
 }
 
+float  HUDController::MapValue01(float value, float min, float max) {
+	return (value - min) / (max - min);
+}
+
 
 
 void HUDController::UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown) {
@@ -270,7 +274,7 @@ void HUDController::UpdateDurableHPLoss(GameObject* targetCanvas) {
 			//We need access to image->SetAlphaTransparency to prevent possible errors
 			if (delta < 0.5) {
 				//Remapping
-				delta = (delta) / (0.5f);
+				delta = (delta - 0) / (0 - 0.5f);
 				image->SetColor(float4(1.0f, 1.0f, 1.0f, delta));
 			} else {
 				image->SetColor(float4(1.0f, 1.0f, 1.0f, 1.0f));
@@ -323,15 +327,23 @@ void HUDController::UpdateComponents() {
 
 void HUDController::UpdateCommonSkill() {
 	std::vector<GameObject*> children = swapingSkillCanvas->GetChildren();
-	for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); ++it) {
-		ComponentImage* image = (*it)->GetComponent<ComponentImage>();
+	if (children.size() > 2) {
+		//Hardcoded value in hierarchy, changing the hierarchy without changing the index or the other way around will result in this not working properly
+		ComponentImage* image = children[3]->GetComponent<ComponentImage>();
 		if (image) {
-			if (image->IsFill()) {
-				image->SetFillValue(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
-				AbilityCoolDownEffectCheck(static_cast<Cooldowns>(Cooldowns::SWITCH_SKILL), swapingSkillCanvas);
-			}
+			image->SetFillValue(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
+			AbilityCoolDownEffectCheck(static_cast<Cooldowns>(Cooldowns::SWITCH_SKILL), swapingSkillCanvas);
 		}
 	}
+	//for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); ++it) {
+	//	ComponentImage* image = (*it)->GetComponent<ComponentImage>();
+	//	if (image) {
+	//		if (image->IsFill()) {
+	//			image->SetFillValue(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
+	//			AbilityCoolDownEffectCheck(static_cast<Cooldowns>(Cooldowns::SWITCH_SKILL), swapingSkillCanvas);
+	//		}
+	//	}
+	//}
 }
 
 
@@ -341,7 +353,7 @@ void HUDController::UpdateFangCooldowns(GameObject* fangSkillCanvas, bool isMain
 	for (std::vector<GameObject*>::iterator it = skills.begin(); it != skills.end(); ++it) {
 
 		if ((*it)->GetChildren().size() > 0) {
-			ComponentImage* image = (*it)->GetChildren()[1]->GetComponent<ComponentImage>();
+			ComponentImage* image = (*it)->GetChildren()[2]->GetComponent<ComponentImage>();
 			if (image) {
 				if (image->IsFill()) {
 					if (isMain) AbilityCoolDownEffectCheck(static_cast<Cooldowns>(skill), fangSkillCanvas);
@@ -374,18 +386,18 @@ void HUDController::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* c
 				if (cooldown < Cooldowns::ONIMARU_SKILL_1) {
 					if (canvas->GetChildren().size() > 0) {
 						if (canvas->GetChildren()[static_cast<int>(cooldown)]->GetChildren().size() > 4) {
-							ef = GET_SCRIPT(canvas->GetChildren()[static_cast<int>(cooldown)]->GetChildren()[4], AbilityRefreshEffect);
+							ef = GET_SCRIPT(canvas->GetChildren()[static_cast<int>(cooldown)]->GetChildren()[0], AbilityRefreshEffect);
 						}
 					}
 				} else if (cooldown < Cooldowns::SWITCH_SKILL) {
 					if (canvas->GetChildren().size() > 0) {
 						if (canvas->GetChildren()[static_cast<int>(cooldown) - 3]->GetChildren().size() > 4) {
-							ef = GET_SCRIPT(canvas->GetChildren()[static_cast<int>(cooldown) - 3]->GetChildren()[4], AbilityRefreshEffect);
+							ef = GET_SCRIPT(canvas->GetChildren()[static_cast<int>(cooldown) - 3]->GetChildren()[0], AbilityRefreshEffect);
 						}
 					}
 				} else {
-					if (canvas->GetChildren().size() > 4) {
-						ef = GET_SCRIPT(canvas->GetChildren()[4], AbilityRefreshEffect);
+					if (canvas->GetChildren().size() > 0) {
+						ef = GET_SCRIPT(canvas->GetChildren()[2], AbilityRefreshEffect);
 					}
 				}
 
@@ -397,7 +409,25 @@ void HUDController::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* c
 }
 
 void HUDController::UpdateOnimaruCooldowns(GameObject* onimaruSkillCanvas, bool isMain) {
-	std::vector<GameObject*> children = onimaruSkillCanvas->GetChildren();
+
+	std::vector<GameObject*> skills = onimaruSkillCanvas->GetChildren();
+	int skill = static_cast<int>(Cooldowns::ONIMARU_SKILL_1);
+	for (std::vector<GameObject*>::iterator it = skills.begin(); it != skills.end(); ++it) {
+
+		if ((*it)->GetChildren().size() > 0) {
+			ComponentImage* image = (*it)->GetChildren()[2]->GetComponent<ComponentImage>();
+			if (image) {
+				if (image->IsFill()) {
+					if (isMain) AbilityCoolDownEffectCheck(static_cast<Cooldowns>(skill), onimaruSkillCanvas);
+					image->SetFillValue(cooldowns[skill]);
+				}
+			}
+		}
+
+		++skill;
+	}
+
+	/*std::vector<GameObject*> children = onimaruSkillCanvas->GetChildren();
 	int skill = static_cast<int>(Cooldowns::ONIMARU_SKILL_1);
 	for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); ++it) {
 		std::vector<GameObject*> skills = (*it)->GetChildren();
@@ -420,7 +450,7 @@ void HUDController::UpdateOnimaruCooldowns(GameObject* onimaruSkillCanvas, bool 
 						case static_cast<int>(Cooldowns::ONIMARU_SKILL_3) : {
 							if (isMain) AbilityCoolDownEffectCheck(Cooldowns::ONIMARU_SKILL_3, onimaruSkillCanvas);
 							image->SetFillValue(cooldowns[static_cast<int>(Cooldowns::ONIMARU_SKILL_3)]);
-							break; 
+							break;
 						}
 						default:
 							break;
@@ -429,7 +459,7 @@ void HUDController::UpdateOnimaruCooldowns(GameObject* onimaruSkillCanvas, bool 
 			}
 		}
 		++skill;
-	}
+	}*/
 }
 
 void HUDController::OnHealthLost(GameObject* targetCanvas, int health) {

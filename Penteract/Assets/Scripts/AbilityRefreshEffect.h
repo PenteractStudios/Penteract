@@ -27,6 +27,10 @@ private:
 	float3 originalEffectScaleVector = float3(0, 0, 0);
 	float3 originalScaleVector = float3(0, 0, 0);
 	float effectTimer = 0;
+
+	float originalAlpha = 0;
+	float3 originalColor = float3(0, 0, 0);
+
 	bool isPlaying = false;
 
 	ComponentImage* effectMember1 = nullptr;
