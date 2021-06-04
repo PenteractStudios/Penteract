@@ -15,7 +15,23 @@ EXPOSE_MEMBERS(HealthLostInstantFeedback) {
 GENERATE_BODY_IMPL(HealthLostInstantFeedback);
 
 void HealthLostInstantFeedback::Play() {
+	if (image) {
+		image->Enable();
+		image->SetColor(float4(1, 1, 1, 1));
+	}
+	if (transform) transform->SetSize(float2(originalSize.x, originalSize.y));
 	playing = true;
+	growthTimer = 0;
+	fadeOutTimer = 0;
+}
+
+void HealthLostInstantFeedback::Stop() {
+	if (image) {
+		image->Disable();
+		image->SetColor(float4(1, 1, 1, 1));
+	}
+	if (transform) transform->SetSize(float2(originalSize.x, originalSize.y));
+	playing = false;
 	growthTimer = 0;
 	fadeOutTimer = 0;
 }
@@ -29,6 +45,7 @@ void HealthLostInstantFeedback::Start() {
 	}
 
 	originalSize = transform->GetSize();
+	if (image) image->Disable();
 }
 
 void HealthLostInstantFeedback::Update() {
@@ -43,6 +60,8 @@ void HealthLostInstantFeedback::Update() {
 
 			float scaleValue = Lerp(1, growthMaxScale, delta);
 			transform->SetSize(float2(originalSize.x * scaleValue, originalSize.y * scaleValue));
+			image->SetColor(float4(1, 0, 0, 1));
+
 			//Grow
 		} else if (fadeOutTimer < fadeOutDuration) {
 			fadeOutTimer = Min(fadeOutTimer + Time::GetDeltaTime(), fadeOutDuration);

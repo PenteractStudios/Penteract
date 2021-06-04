@@ -16,6 +16,11 @@ class State;
 class ResourcePrefab;
 struct TesseractEvent;
 
+// We should get these two values from the Character class
+
+#define ONIMARU_MAX_HEALTH 7.0f 
+#define FANG_MAX_HEALTH 7.0f
+
 enum class MovementDirection {
 	NONE = 0, UP = 1, UP_LEFT = 2, LEFT = 3, DOWN_LEFT = 4, DOWN = 5, DOWN_RIGHT = 6, RIGHT = 7, UP_RIGHT = 8
 };
@@ -80,6 +85,10 @@ public:
 	float cameraOffsetY = 10.f;
 	float cameraOffsetX = 0.f;
 	float shootCooldown = 0.1f;
+
+	int fangRecoveryRate = 1.0f;
+	int onimaruRecoveryRate = 1.0f;
+
 	bool firstTime = true;
 
 	std::vector<std::string> states{ "Idle" ,
@@ -121,6 +130,9 @@ private:
 	float fangAttackCooldownRemaining = 0.f;
 	float onimaruAttackCooldownRemaining = 0.f;
 	bool shooting = false;
+
+	float fangRecovering = 0.f;
+	float onimaruRecovering = 0.f;
 
 	float3 initialPosition = float3(0, 0, 0);
 	float3 dashDestination = float3(0, 0, 0);
