@@ -199,6 +199,8 @@ bool PlayerController::CanSwitch() {
 void PlayerController::SwitchCharacter() {
 	if (!fang) return;
 	if (!onimaru) return;
+	if (!agent) return;
+
 	if (CanSwitch()) {
 		switchInCooldown = true;
 		switchAudioSource->Play();
@@ -324,6 +326,7 @@ void PlayerController::CheckCoolDowns() {
 		}
 	}
 	if (onimaru->IsActive()) {
+		agent->SetMaxSpeed(onimaruCharacter.movementSpeed);
 		if (onimaruAttackCooldownRemaining <= 0) {
 			onimaruAttackCooldownRemaining = 0.f;
 			shooting = false;
@@ -453,11 +456,11 @@ void PlayerController::UpdatePlayerStats() {
 			firstTime = false;
 		}
 
-		if (hitTaken && fang->IsActive() && fangCharacter.isAlive) {
+		if (hitTaken && fang->IsActive() && fangCharacter.lifePoints >= 0) {
 			hudControllerScript->UpdateHP(fangCharacter.lifePoints, onimaruCharacter.lifePoints);
 			hitTaken = false;
 		}
-		else if (hitTaken && onimaru->IsActive() && onimaruCharacter.isAlive) {
+		else if (hitTaken && onimaru->IsActive() && onimaruCharacter.lifePoints >= 0) {
 			hudControllerScript->UpdateHP(onimaruCharacter.lifePoints, fangCharacter.lifePoints);
 			hitTaken = false;
 		}

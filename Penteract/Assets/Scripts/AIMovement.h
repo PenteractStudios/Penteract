@@ -8,6 +8,7 @@ class ComponentTransform;
 class ComponentAgent;
 
 class HUDController;
+class PlayerController;
 
 enum class AIState {
 	START,
@@ -55,5 +56,6 @@ private:
 	int damageRecieved = 0;
 
 	HUDController* hudControllerScript = nullptr;
+	PlayerController* playerController = nullptr;
 
 };

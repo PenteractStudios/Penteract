@@ -25,6 +25,9 @@ GENERATE_BODY_IMPL(AIMovement);
 
 void AIMovement::Start() {
     player = GameplaySystems::GetGameObject(playerUID);
+    if (player) {
+        playerController = GET_SCRIPT(player, PlayerController);
+    }
     agent = GetOwner().GetComponent<ComponentAgent>();
     if (agent) {
         agent->SetMaxSpeed(gruntCharacter.movementSpeed);
@@ -48,12 +51,12 @@ void AIMovement::Update() {
         agent->SetMaxSpeed(gruntCharacter.movementSpeed);
     }
 
-    if (hitTaken && gruntCharacter.lifePoints > 0) {
+    if (hitTaken && gruntCharacter.isAlive) {
         gruntCharacter.Hit(damageRecieved);
         hitTaken = false;
     }
 
-    if (gruntCharacter.lifePoints <= 0) {
+    if (!gruntCharacter.isAlive) {
         if (state == AIState::ATTACK) {
             animation->SendTrigger("AttackDeath");
         }
@@ -81,8 +84,8 @@ void AIMovement::Update() {
         break;
     case AIState::SPAWN:
         break;
-    case AIState::IDLE:
-        if (player) {
+    case AIState::IDLE:        
+        if (!playerController->IsDead()) {
             if (CharacterInSight(player)) {
                 animation->SendTrigger("IdleRun");
                 state = AIState::RUN;
@@ -92,6 +95,7 @@ void AIMovement::Update() {
     case AIState::RUN:
         Seek(player->GetComponent<ComponentTransform>()->GetGlobalPosition(), gruntCharacter.movementSpeed);
         if (CharacterInMeleeRange(player)) {
+            agent->RemoveAgentFromCrowd();
             animation->SendTrigger("RunAttack");
             state = AIState::ATTACK;
         }
@@ -126,9 +130,9 @@ void AIMovement::OnAnimationFinished()
 
     else if(state == AIState::ATTACK)
     {
-        PlayerController* playerController = GET_SCRIPT(player, PlayerController);
         playerController->HitDetected(gruntCharacter.damageHit);
         animation->SendTrigger("AttackIdle");
+        agent->AddAgentToCrowd();
         state = AIState::IDLE;
     }
 
