@@ -453,13 +453,11 @@ void PlayerController::UpdatePlayerStats() {
 			firstTime = false;
 		}
 
-		if (hitTaken && fang->IsActive() && fangCharacter.lifePoints > 0) {
-			--fangCharacter.lifePoints;
+		if (hitTaken && fang->IsActive() && fangCharacter.isAlive) {
 			hudControllerScript->UpdateHP(fangCharacter.lifePoints, onimaruCharacter.lifePoints);
 			hitTaken = false;
 		}
-		else if (hitTaken && onimaru->IsActive() && onimaruCharacter.lifePoints > 0) {
-			--onimaruCharacter.lifePoints;
+		else if (hitTaken && onimaru->IsActive() && onimaruCharacter.isAlive) {
 			hudControllerScript->UpdateHP(onimaruCharacter.lifePoints, fangCharacter.lifePoints);
 			hitTaken = false;
 		}

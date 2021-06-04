@@ -42,6 +42,11 @@ void AIMovement::Start() {
 
 void AIMovement::Update() {
     if (!GetOwner().IsActive()) return;
+    if (!agent) return;
+
+    if (agent) {
+        agent->SetMaxSpeed(gruntCharacter.movementSpeed);
+    }
 
     if (hitTaken && gruntCharacter.lifePoints > 0) {
         gruntCharacter.Hit(damageRecieved);
@@ -134,7 +139,7 @@ void AIMovement::OnAnimationFinished()
 }
 
 void AIMovement::HitDetected(int damage_) {
-    gruntCharacter.Hit(damage_);
+    damageRecieved = damage_;
     hitTaken = true;
 }
 
