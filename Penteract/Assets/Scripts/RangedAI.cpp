@@ -3,6 +3,8 @@
 #include "GameObject.h"
 #include "GameplaySystems.h"
 #include "PlayerController.h"
+#include "HUDController.h"
+
 #include "Components/ComponentTransform.h"
 #include "Components/ComponentAudioSource.h"
 #include "Components/ComponentAgent.h"
@@ -27,7 +29,7 @@ EXPOSE_MEMBERS(RangedAI) {
 		MEMBER(MemberType::BOOL, foundRayToPlayer),
 		MEMBER(MemberType::FLOAT, fleeingEvaluateDistance),
 		MEMBER(MemberType::PREFAB_RESOURCE_UID, trailPrefabUID),
-
+		MEMBER(MemberType::GAME_OBJECT_UID, hudControllerObjUID),
 		MEMBER(MemberType::FLOAT, approachOffset) //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
 
 };//clang-format on
@@ -48,6 +50,15 @@ void RangedAI::Start() {
 	bbCenter = (bb->GetLocalMinPointAABB() + bb->GetLocalMaxPointAABB()) / 2;
 	shootTrailPrefab = GameplaySystems::GetResource<ResourcePrefab>(trailPrefabUID);
 
+	GameObject* hudControllerObj = GameplaySystems::GetGameObject(hudControllerObjUID);
+	if (hudControllerObj) {
+		hudControllerScript = GET_SCRIPT(hudControllerObj, HUDController);
+	}
+
+	if (player) {
+		playerController = GET_SCRIPT(player, PlayerController);
+	}
+
 	// TODO: ADD CHECK PLS
 	agent = GameplaySystems::GetGameObject(agentObjectUID)->GetComponent<ComponentAgent>();
 
@@ -58,15 +69,6 @@ void RangedAI::OnAnimationFinished() {
 	if (state == RangeAIState::SPAWN) {
 		animation->SendTrigger("SpawnIdle");
 		state = RangeAIState::IDLE;
-	} else if (state == RangeAIState::HURT && lifePoints > 0) {
-		animation->SendTrigger("HurtIdle");
-		state = RangeAIState::IDLE;
-	}
-
-	else if (state == RangeAIState::HURT && lifePoints <= 0) {
-		//animation->SendTrigger("HurtDeath");
-		Debug::Log("Death");
-		state = RangeAIState::DEATH;
 	} else if (state == RangeAIState::DEATH) {
 		dead = true;
 	}
@@ -76,18 +78,14 @@ void RangedAI::Update() {
 	if (!GetOwner().IsActive()) return;
 
 	if (hitTaken && lifePoints > 0) {
-		if (state == RangeAIState::IDLE || state == RangeAIState::HURT) {
-			animation->SendTrigger("IdleHurt");
-		} else if (state == RangeAIState::FLEE) {
-			animation->SendTrigger("RunHurt");
-		}
-
 		lifePoints -= damageRecieved;
-		ChangeState(RangeAIState::HURT);
 		hitTaken = false;
+		if (lifePoints <= 0) {
+			ChangeState(RangeAIState::DEATH);
+		}
 	}
 
-	if (state == RangeAIState::IDLE || state == RangeAIState::APPROACH) {
+	if (state == RangeAIState::IDLE || state == RangeAIState::APPROACH || state == RangeAIState::FLEE) {
 		attackTimePool = Max(attackTimePool - Time::GetDeltaTime(), 0.0f);
 		if (attackTimePool == 0) {
 			ShootPlayerInRange();
@@ -111,16 +109,15 @@ void RangedAI::EnterState(RangeAIState newState) {
 	case RangeAIState::FLEE:
 		animation->SendTrigger("IdleRun");
 		break;
-	case RangeAIState::HURT:
-		Debug::Log("Hurt");
-		ChangeState(RangeAIState::DEATH);
-		break;
 	case RangeAIState::DEATH:
-		if (lifePoints <= 0) {
-			animation->SendTrigger("HurtDeath");
-			Debug::Log("Death");
-			agent->RemoveAgentFromCrowd();
+		if (state == RangeAIState::IDLE) {
+			animation->SendTrigger("IdleDeath");
+		} else if (state == RangeAIState::APPROACH) {
+			animation->SendTrigger("RunDeath");
 		}
+		Debug::Log("Death");
+		agent->RemoveAgentFromCrowd();
+		state = RangeAIState::DEATH;
 		break;
 	}
 }
@@ -177,15 +174,20 @@ void RangedAI::UpdateState() {
 			ChangeState(RangeAIState::IDLE);
 		}
 		break;
-	case RangeAIState::HURT:
-		if (timeStunned > maxStunnedTime) {
-			ChangeState(RangeAIState::IDLE);
-			timeStunned = 0;
-		} else {
-			timeStunned += Time::GetDeltaTime();
-		}
-		break;
 	case RangeAIState::DEATH:
+		if (dead) {
+			if (dead) {
+				if (timeToDie > 0) {
+					timeToDie -= Time::GetDeltaTime();
+				} else {
+					if (hudControllerScript) {
+						hudControllerScript->UpdateScore(10);
+					}
+					GameplaySystems::DestroyGameObject(&GetOwner());
+				}
+			}
+		}
+
 		break;
 	default:
 		break;
@@ -366,8 +368,6 @@ std::string RangedAI::StateToString(RangeAIState state) {
 		return "Shoot";
 	case RangeAIState::FLEE:
 		return "Flee";
-	case RangeAIState::HURT:
-		return "Hurt";
 	case RangeAIState::DEATH:
 		return "Death";
 	}

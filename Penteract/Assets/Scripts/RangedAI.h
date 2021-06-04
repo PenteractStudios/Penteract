@@ -8,6 +8,8 @@
 class ComponentAgent;
 class ComponentAudioSource;
 class ResourcePrefab;
+class HUDController;
+class PlayerController;
 
 enum class RangeAIState {
 	START,
@@ -16,7 +18,6 @@ enum class RangeAIState {
 	APPROACH,
 	SHOOT,
 	FLEE,
-	HURT,
 	DEATH
 };
 
@@ -56,8 +57,14 @@ public:
 	UID meshUID2 = 0;
 	UID agentObjectUID = 0;
 	UID trailPrefabUID = 0;
+	UID hudControllerObjUID = 0;
+
+
 	ResourcePrefab* shootTrailPrefab = nullptr;
 	GameObject* player = nullptr;
+
+	HUDController* hudControllerScript = nullptr;
+	PlayerController* playerController = nullptr;
 
 	GameObject* fangMeshObj = nullptr;
 	GameObject* onimaruMeshObj = nullptr;
@@ -74,7 +81,6 @@ public:
 	int lifePoints = 5;
 	float timeToDie = 5.f;
 
-	float maxStunnedTime = 0.5f;
 	bool dead = false;
 
 	float attackRange = 20.0f;
@@ -95,7 +101,6 @@ private:
 	ComponentAnimation* animation = nullptr;
 	ComponentTransform* parentTransform = nullptr;
 	int damageRecieved = 0;
-	float timeStunned = 0.0f;
 	float attackTimePool = 0.0f;
 
 	ComponentAudioSource* shootAudioSource = nullptr;
