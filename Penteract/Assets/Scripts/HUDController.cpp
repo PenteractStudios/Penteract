@@ -177,7 +177,7 @@ void HUDController::HealthRegeneration(float currentHp, float hpRecovered) {
 	}
 }
 
-void HUDController::ResetHealthFill(float currentHp) {
+void HUDController::ResetHealthRegenerationEffects(float currentHp) {
 	if (fang->IsActive()) {
 		for (int pos = currentHp; pos < MAX_HEALTH; ++pos) {
 			const GameObject* healthSlot = onimaruHealthSecondCanvas->GetChildren()[pos];
@@ -185,6 +185,8 @@ void HUDController::ResetHealthFill(float currentHp) {
 				ComponentImage* healthFill = healthComponents->GetComponent<ComponentImage>();
 				if (healthFill->IsFill()) {
 					healthFill->SetFillValue(0.0f);
+					FullHealthBarFeedback* healthScript = GET_SCRIPT(healthSlot, FullHealthBarFeedback);
+					if (healthScript) healthScript->Reset();
 				}
 			}
 		}
@@ -195,6 +197,8 @@ void HUDController::ResetHealthFill(float currentHp) {
 				ComponentImage* healthFill = healthComponents->GetComponent<ComponentImage>();
 				if (healthFill->IsFill()) {
 					healthFill->SetFillValue(0.0f);
+					FullHealthBarFeedback* healthScript = GET_SCRIPT(healthSlot, FullHealthBarFeedback);
+					if (healthScript) healthScript->Reset();
 				}
 			}
 		}

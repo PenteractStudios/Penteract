@@ -36,7 +36,7 @@ public:
 	void UpdateDurableHPLoss(GameObject* targetCanvas);
 	void ChangePlayerHUD(int fangLives, int oniLives);
 	void HealthRegeneration(float currentHp, float hpRecovered);
-	void ResetHealthFill(float currentHp);
+	void ResetHealthRegenerationEffects(float currentHp);
 
 	void UpdateScore(int score_);
 	void SetCooldownRetreival(Cooldowns cooldown);

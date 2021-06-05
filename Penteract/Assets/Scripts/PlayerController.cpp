@@ -216,13 +216,13 @@ void PlayerController::SwitchCharacter() {
 			fang->Disable();
 			onimaru->Enable();
 			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
-			hudControllerScript->ResetHealthFill(lifePointsFang);
+			hudControllerScript->ResetHealthRegenerationEffects(lifePointsFang);
 			fangRecovering = 0.0f;
 		} else {
 			onimaru->Disable();
 			fang->Enable();
 			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
-			hudControllerScript->ResetHealthFill(lifePointsOni);
+			hudControllerScript->ResetHealthRegenerationEffects(lifePointsOni);
 			onimaruRecovering = 0.0f;
 		}
 		switchCooldownRemaining = switchCooldown;
@@ -484,11 +484,9 @@ void PlayerController::UpdatePlayerStats() {
 		}
 
 		if (fang->IsActive() && lifePointsOni != ONIMARU_MAX_HEALTH) {
-			Debug::Log("Recovering Onimaru...");
 			float healthRecovered = (onimaruRecovering / onimaruRecoveryRate);
 			hudControllerScript->HealthRegeneration(lifePointsOni, healthRecovered);
 		} else if (onimaru->IsActive() && lifePointsFang != FANG_MAX_HEALTH) {
-			Debug::Log("Recovering Fang...");
 			float healthRecovered = (fangRecovering / fangRecoveryRate);
 			hudControllerScript->HealthRegeneration(lifePointsFang, healthRecovered);
 		}
