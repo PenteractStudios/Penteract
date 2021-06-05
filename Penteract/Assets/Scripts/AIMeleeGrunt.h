@@ -21,6 +21,7 @@ public:
 	void Start() override;
 	void Update() override;
 	void OnAnimationFinished() override;
+	void OnAnimationSecondaryFinished() override;
 	void HitDetected(int damage_ = 1);
 
 public:
@@ -33,7 +34,7 @@ public:
 
 	int maxSpeed = 8;
 	int fallingSpeed = 30;
-	float searchRadius = 40.f;
+	float searchRadius = 30.f;
 	float meleeRange = 5.f;
 	int lifePoints = 5;
 	float timeToDie = 5.f;

@@ -58,7 +58,8 @@ void AIMeleeGrunt::Update() {
 
     if (lifePoints <= 0) {
         if (state == AIState::ATTACK) {
-            animation->SendTrigger("AttackDeath");
+            animation->SendTrigger("RunDeath");
+            animation->SendTriggerSecondary("AttackDeath");
         }
         else if (state == AIState::IDLE) {
             animation->SendTrigger("IdleDeath");
@@ -87,6 +88,7 @@ void AIMeleeGrunt::Update() {
         if (!playerController->IsDead()) {
             if (movementScript->CharacterInSight(player, searchRadius)) {
                 animation->SendTrigger("IdleRun");
+                animation->SendTriggerSecondary("IdleRun");
                 state = AIState::RUN;
             }
         }
@@ -94,8 +96,7 @@ void AIMeleeGrunt::Update() {
     case AIState::RUN:
         movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), maxSpeed);
         if (movementScript->CharacterInMeleeRange(player, meleeRange)) {
-            agent->RemoveAgentFromCrowd();
-            animation->SendTrigger("RunAttack");
+            animation->SendTriggerSecondary("RunAttack");
             state = AIState::ATTACK;
         }
         break;
@@ -125,20 +126,23 @@ void AIMeleeGrunt::OnAnimationFinished()
         animation->SendTrigger("SpawnIdle");
         state = AIState::IDLE;
         agent->AddAgentToCrowd();
-    }
-
-    else if (state == AIState::ATTACK)
-    {
-        playerController->HitDetected();
-        animation->SendTrigger("AttackIdle");
-        agent->AddAgentToCrowd();
-        state = AIState::IDLE;
-    }
+    }    
 
     else if (state == AIState::DEATH) {
         dead = true;
     }
 
+}
+
+void AIMeleeGrunt::OnAnimationSecondaryFinished()
+{
+    if (state == AIState::ATTACK)
+    {
+        playerController->HitDetected();
+        animation->SendTrigger("RunIdle");
+        animation->SendTriggerSecondary("AttackIdle");
+        state = AIState::IDLE;
+    }
 }
 
 void AIMeleeGrunt::HitDetected(int damage_) {
