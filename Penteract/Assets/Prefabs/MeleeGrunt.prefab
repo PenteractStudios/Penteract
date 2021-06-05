@@ -33,7 +33,8 @@
             {
                 "Type": "Animation",
                 "Active": true,
-                "StateMachineId": 4566963390717869434
+                "StateMachinePrincipalId": 4566963390717869434,
+                "StateMachineSecondaryId": 7899810481417861229
             },
             {
                 "Type": "Script",
