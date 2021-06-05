@@ -21,7 +21,7 @@ public:
 	void Start() override;
 	void Update() override;
 	void OnAnimationFinished() override;
-	void HitDetected(int damage_ = 1);
+	void OnCollision(const GameObject& collidedWith) override;
 
 public:
 
@@ -43,10 +43,8 @@ private:
 
 	float3 velocity = float3(0, 0, 0);
 	AIState state = AIState::START;
-	bool hitTaken = false;
 	ComponentAnimation* animation = nullptr;
 	ComponentTransform* ownerTransform = nullptr;
-	int damageRecieved = 0;
 
 	HUDController* hudControllerScript = nullptr;
 	PlayerController* playerController = nullptr;

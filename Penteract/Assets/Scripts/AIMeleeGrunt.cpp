@@ -51,25 +51,6 @@ void AIMeleeGrunt::Update() {
     if (!ownerTransform) return;
     if (!animation) return;
 
-    if (hitTaken && lifePoints > 0) {
-        lifePoints -= damageRecieved;
-        hitTaken = false;
-    }
-
-    if (lifePoints <= 0) {
-        if (state == AIState::ATTACK) {
-            animation->SendTrigger("AttackDeath");
-        }
-        else if (state == AIState::IDLE) {
-            animation->SendTrigger("IdleDeath");
-        }
-        else if (state == AIState::RUN) {
-            animation->SendTrigger("RunDeath");
-        }
-        agent->RemoveAgentFromCrowd();
-        state = AIState::DEATH;
-    }
-
     switch (state)
     {
     case AIState::START:
@@ -129,7 +110,6 @@ void AIMeleeGrunt::OnAnimationFinished()
 
     else if (state == AIState::ATTACK)
     {
-        playerController->HitDetected();
         animation->SendTrigger("AttackIdle");
         agent->AddAgentToCrowd();
         state = AIState::IDLE;
@@ -141,7 +121,28 @@ void AIMeleeGrunt::OnAnimationFinished()
 
 }
 
-void AIMeleeGrunt::HitDetected(int damage_) {
-    damageRecieved = damage_;
-    hitTaken = true;
+void AIMeleeGrunt::OnCollision(const GameObject& collidedWith)
+{
+    if (lifePoints > 0 && playerController) {
+        if (collidedWith.name == "FangBullet") {
+            lifePoints -= playerController->fangDamage;
+        }
+        else if (collidedWith.name == "OnimaruBullet") {
+            lifePoints -= playerController->onimaruDamage;
+        }
+    }
+
+    if (lifePoints <= 0) {
+        if (state == AIState::ATTACK) {
+            animation->SendTrigger("AttackDeath");
+        }
+        else if (state == AIState::IDLE) {
+            animation->SendTrigger("IdleDeath");
+        }
+        else if (state == AIState::RUN) {
+            animation->SendTrigger("RunDeath");
+        }
+        agent->RemoveAgentFromCrowd();
+        state = AIState::DEATH;
+    }
 }
