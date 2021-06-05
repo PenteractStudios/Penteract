@@ -36,9 +36,9 @@
                 "Script": 4413934008247911625,
                 "Values": [
                     {
-                        "Name": "mainNodeUID",
+                        "Name": "dashAudioSourceUID",
                         "Type": "GameObjectUID",
-                        "Value": 8960886680822700415
+                        "Value": 10251782958241248981
                     },
                     {
                         "Name": "onimaruUID",
@@ -46,9 +46,9 @@
                         "Value": 12976891070772388993
                     },
                     {
-                        "Name": "dashAudioSourceUID",
+                        "Name": "mainNodeUID",
                         "Type": "GameObjectUID",
-                        "Value": 10251782958241248981
+                        "Value": 8960886680822700415
                     },
                     {
                         "Name": "fangUID",
@@ -56,14 +56,14 @@
                         "Value": 17630836846266351934
                     },
                     {
-                        "Name": "onimaruParticleUID",
-                        "Type": "GameObjectUID",
-                        "Value": 5146792884566556316
-                    },
-                    {
                         "Name": "cameraUID",
                         "Type": "GameObjectUID",
                         "Value": 680618938873982628
+                    },
+                    {
+                        "Name": "onimaruParticleUID",
+                        "Type": "GameObjectUID",
+                        "Value": 5146792884566556316
                     },
                     {
                         "Name": "canvasUID",
