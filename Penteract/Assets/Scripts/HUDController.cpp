@@ -34,7 +34,7 @@ void HUDController::Start() {
 	//Resetting preLives and remainingTimes just in case
 	prevLivesFang = prevLivesOni = MAX_HEALTH;
 	for (int i = 0; i < MAX_HEALTH; i++) {
-		remainingTimesFang[i] = remainingTimesOni[i] = 0;
+		remainingDurableHealthTimesFang[i] = remainingDurableHealthTimesOni[i] = 0;
 	}
 
 	for (int i = 0; i < 6; i++) {
@@ -134,8 +134,8 @@ void HUDController::ChangePlayerHUD(int fangLives, int oniLives) {
 	remainingTimeActiveIndexesFang.clear();
 	remainingTimeActiveIndexesOni.clear();
 	for (int i = 0; i < MAX_HEALTH; i++) {
-		remainingTimesFang[i] = 0;
-		remainingTimesOni[i] = 0;
+		remainingDurableHealthTimesFang[i] = 0;
+		remainingDurableHealthTimesOni[i] = 0;
 	}
 	abilityCoolDownsRetreived[static_cast<int>(Cooldowns::SWITCH_SKILL)] = false;
 
@@ -254,13 +254,12 @@ void HUDController::UpdateDurableHPLoss(GameObject* targetCanvas) {
 
 	std::vector<int>& indexes = isFang ? remainingTimeActiveIndexesFang : remainingTimeActiveIndexesOni;
 
-	float* remainingTimes = isFang ? remainingTimesFang : remainingTimesOni;
+	float* remainingTimes = isFang ? remainingDurableHealthTimesFang : remainingDurableHealthTimesOni;
 
 	if (indexes.size() > 0) {
 		std::vector<std::vector<int>::iterator>vectorIndexesToRemove;
 
 		for (std::vector<int>::iterator it = indexes.begin(); it != indexes.end(); ++it) {
-			remainingTimes[(*it)] -= Time::GetDeltaTime();
 
 			if (remainingTimes[(*it)] <= 0) {
 				remainingTimes[(*it)] = 0;
@@ -272,13 +271,21 @@ void HUDController::UpdateDurableHPLoss(GameObject* targetCanvas) {
 
 			ComponentImage* image = targetCanvas->GetChildren()[*it]->GetChildren()[1]->GetComponent<ComponentImage>();
 			//We need access to image->SetAlphaTransparency to prevent possible errors
-			if (delta < 0.5) {
+			if (delta < 0.5f) {
+
 				//Remapping
-				delta = (delta - 0) / (0 - 0.5f);
+				delta = (delta) / (0.5f);
+				std::string message = "i: ";
+				message += std::to_string(remainingTimes[(*it)]);
+				message += "Delta: ";
+				message += std::to_string(delta);
+				Debug::Log(message.c_str());
+
 				image->SetColor(float4(1.0f, 1.0f, 1.0f, delta));
 			} else {
 				image->SetColor(float4(1.0f, 1.0f, 1.0f, 1.0f));
 			}
+			remainingTimes[(*it)] -= Time::GetDeltaTime();
 		}
 
 		for (int i = 0; i < vectorIndexesToRemove.size(); i++) {
@@ -352,14 +359,26 @@ void HUDController::UpdateFangCooldowns(GameObject* fangSkillCanvas, bool isMain
 	int skill = static_cast<int>(Cooldowns::FANG_SKILL_1);
 	for (std::vector<GameObject*>::iterator it = skills.begin(); it != skills.end(); ++it) {
 
-		if ((*it)->GetChildren().size() > 0) {
-			ComponentImage* image = (*it)->GetChildren()[2]->GetComponent<ComponentImage>();
-			if (image) {
-				if (image->IsFill()) {
-					if (isMain) AbilityCoolDownEffectCheck(static_cast<Cooldowns>(skill), fangSkillCanvas);
-					image->SetFillValue(cooldowns[skill]);
+		if ((*it)->GetChildren().size() > 1) {
+			ComponentImage* image = nullptr;
+			if (isMain) {
+				AbilityCoolDownEffectCheck(static_cast<Cooldowns>(skill), fangSkillCanvas);
+				image = (*it)->GetChildren()[2]->GetComponent<ComponentImage>();
+				if (image) {
+					if (image->IsFill()) {
+						image->SetFillValue(cooldowns[skill]);
+					}
+				}
+			} else {
+				image = (*it)->GetChildren()[1]->GetComponent<ComponentImage>();
+				if (image) {
+					if (image->IsFill()) {
+						image->SetFillValue(cooldowns[skill]);
+					}
 				}
 			}
+
+
 		}
 
 		++skill;
@@ -414,14 +433,19 @@ void HUDController::UpdateOnimaruCooldowns(GameObject* onimaruSkillCanvas, bool 
 	int skill = static_cast<int>(Cooldowns::ONIMARU_SKILL_1);
 	for (std::vector<GameObject*>::iterator it = skills.begin(); it != skills.end(); ++it) {
 
-		if ((*it)->GetChildren().size() > 0) {
-			ComponentImage* image = (*it)->GetChildren()[2]->GetComponent<ComponentImage>();
+		if ((*it)->GetChildren().size() > 1) {
+			ComponentImage* image = nullptr;
+			if (isMain) {
+				AbilityCoolDownEffectCheck(static_cast<Cooldowns>(skill), onimaruSkillCanvas);
+			}
+
+			image = (*it)->GetChildren()[isMain ? 2 : 1]->GetComponent<ComponentImage>();
 			if (image) {
 				if (image->IsFill()) {
-					if (isMain) AbilityCoolDownEffectCheck(static_cast<Cooldowns>(skill), onimaruSkillCanvas);
 					image->SetFillValue(cooldowns[skill]);
 				}
 			}
+
 		}
 
 		++skill;
@@ -473,10 +497,10 @@ void HUDController::OnHealthLost(GameObject* targetCanvas, int health) {
 
 	if (isFang) {
 		remainingTimeActiveIndexesFang.push_back(health);
-		remainingTimesFang[health] = timeToFadeDurableHealthFeedback;
+		remainingDurableHealthTimesFang[health] = timeToFadeDurableHealthFeedback;
 	} else {
 		remainingTimeActiveIndexesOni.push_back(health);
-		remainingTimesOni[health] = timeToFadeDurableHealthFeedback;
+		remainingDurableHealthTimesOni[health] = timeToFadeDurableHealthFeedback;
 	}
 
 

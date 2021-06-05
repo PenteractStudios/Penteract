@@ -298,26 +298,26 @@ void PlayerController::CheckCoolDowns() {
 		switchCooldownRemaining -= Time::GetDeltaTime();
 	}
 
-	if (fang->IsActive()) {
-		//Dash Cooldown
-		if (dashCooldownRemaining <= 0.f) {
-			dashCooldownRemaining = 0.f;
-			dashInCooldown = false;
-			dashMovementDirection = MovementDirection::NONE;
-		} else {
-			dashCooldownRemaining -= Time::GetDeltaTime();
+	//Dash Cooldown
+	if (dashCooldownRemaining <= 0.f) {
+		dashCooldownRemaining = 0.f;
+		dashInCooldown = false;
+		dashMovementDirection = MovementDirection::NONE;
+	} else {
+		dashCooldownRemaining -= Time::GetDeltaTime();
+	}
+	//Dash duration
+	if (dashRemaining <= 0) {
+		dashRemaining = 0.f;
+		dashing = false;
+		if (agent) {
+			agent->SetMaxSpeed(fangMovementSpeed);
 		}
-		//Dash duration
-		if (dashRemaining <= 0) {
-			dashRemaining = 0.f;
-			dashing = false;
-			if (agent) {
-				agent->SetMaxSpeed(fangMovementSpeed);
-			}
-		} else {
-			dashRemaining -= Time::GetDeltaTime();
-		}
+	} else {
+		dashRemaining -= Time::GetDeltaTime();
+	}
 
+	if (fang->IsActive()) {
 		if (fangAttackCooldownRemaining <= 0) {
 			fangAttackCooldownRemaining = 0.f;
 			shooting = false;
@@ -325,6 +325,7 @@ void PlayerController::CheckCoolDowns() {
 			fangAttackCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
+
 	if (onimaru->IsActive()) {
 		if (onimaruAttackCooldownRemaining <= 0) {
 			onimaruAttackCooldownRemaining = 0.f;

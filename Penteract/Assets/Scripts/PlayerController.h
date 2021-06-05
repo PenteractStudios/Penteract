@@ -18,8 +18,8 @@ struct TesseractEvent;
 
 // We should get these two values from the Character class
 
-#define ONIMARU_MAX_HEALTH 7.0f 
-#define FANG_MAX_HEALTH 7.0f
+#define ONIMARU_MAX_HEALTH 10.0f 
+#define FANG_MAX_HEALTH 10.0f
 
 enum class MovementDirection {
 	NONE = 0, UP = 1, UP_LEFT = 2, LEFT = 3, DOWN_LEFT = 4, DOWN = 5, DOWN_RIGHT = 6, RIGHT = 7, UP_RIGHT = 8
@@ -66,8 +66,8 @@ public:
 	UID dashAudioSourceUID = 0;
 
 	bool hitTaken = false;
-	int lifePointsFang = 7;
-	int lifePointsOni = 7;
+	int lifePointsFang = 10;
+	int lifePointsOni = 10;
 
 	float fangAttackSpeed = 1.f;
 	float onimaruAttackSpeed = 1.f;

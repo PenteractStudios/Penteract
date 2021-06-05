@@ -7,7 +7,7 @@ class GameObject;
 class ComponentText;
 class AbilityRefreshEffect;
 
-#define MAX_HEALTH 7
+#define MAX_HEALTH 10
 #define LOW_HEALTH_WARNING 2
 
 
@@ -127,8 +127,8 @@ private:
 
 	float timeToFadeDurableHealthFeedback = 0.0f;
 
-	float remainingTimesFang[MAX_HEALTH] = { 0,0,0,0,0,0,0 };
-	float remainingTimesOni[MAX_HEALTH] = { 0,0,0,0,0,0,0 };
+	float remainingDurableHealthTimesFang[MAX_HEALTH] = { 0,0,0,0,0,0,0,0,0,0 };
+	float remainingDurableHealthTimesOni[MAX_HEALTH] = { 0,0,0,0,0,0,0,0,0,0 };
 	bool abilityCoolDownsRetreived[static_cast<int>(Cooldowns::TOTAL)] = { true,true,true,true,true,true,true };
 
 	std::vector<int>remainingTimeActiveIndexesFang;
