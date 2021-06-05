@@ -20,6 +20,7 @@ void AIMovement::Update() {
 
 void AIMovement::Seek(AIState state, const float3& newPosition, int speed)
 {
+    if (!ownerTransform) return;
 
     float3 position = ownerTransform->GetGlobalPosition();
     float3 direction = newPosition - position;
@@ -46,7 +47,7 @@ void AIMovement::Seek(AIState state, const float3& newPosition, int speed)
 bool AIMovement::CharacterInSight(const GameObject* character, const float searchRadius)
 {
     ComponentTransform* target = character->GetComponent<ComponentTransform>();
-    if (target) {
+    if (target && ownerTransform) {
         float3 posTarget = target->GetGlobalPosition();
         return posTarget.Distance(ownerTransform->GetGlobalPosition()) < searchRadius;
     }
@@ -57,7 +58,7 @@ bool AIMovement::CharacterInSight(const GameObject* character, const float searc
 bool AIMovement::CharacterInMeleeRange(const GameObject* character, const float meleeRange)
 {
     ComponentTransform* target = character->GetComponent<ComponentTransform>();
-    if (target) {
+    if (target && ownerTransform) {
         float3 posTarget = target->GetGlobalPosition();
         return posTarget.Distance(ownerTransform->GetGlobalPosition()) < meleeRange;
     }

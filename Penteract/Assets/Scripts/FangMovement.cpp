@@ -48,7 +48,9 @@ void FangMovement::Update() {
 					material->diffuseColor = float4(Colors::Red(), 1.0);
 				}
 				AIMeleeGrunt* enemyScript = static_cast<AIMeleeGrunt*>(hitGo->GetComponent<ComponentScript>()->GetScriptInstance());
-				enemyScript->HitDetected();
+				if (enemyScript) {
+					enemyScript->HitDetected();
+				}
 
 			} else {
 				hitGOUID = 0;
