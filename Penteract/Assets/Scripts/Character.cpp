@@ -17,19 +17,6 @@ void Character::Recover(int recoveryLife_)
 	}
 }
 
-void Character::Accelerate(int acceleration_)
-{
-	movementSpeed += acceleration_;
-}
-
-void Character::Decelerate(int deceleration_)
-{
-	movementSpeed -= deceleration_;
-	if (movementSpeed < 0.0f) {
-		movementSpeed = 0.0f;
-	}
-}
-
 void Character::SetTotalLifePoints(int totalLifePoints_)
 {
 	totalLifePoints = totalLifePoints_;

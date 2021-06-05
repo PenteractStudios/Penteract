@@ -7,8 +7,6 @@ public:
 
 	void Hit(int damage);
 	void Recover(int recoveryLife);
-	void Accelerate(int acceleration);
-	void Decelerate(int deceleration);
 
 	void SetTotalLifePoints(int totalLifePoints);
 	void SetDamageHit(int damageHit);
