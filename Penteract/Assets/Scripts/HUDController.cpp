@@ -117,6 +117,44 @@ void HUDController::LoadHealthFeedbackStates(GameObject* targetCanvas, int healt
 	}
 }
 
+void HUDController::LoadCooldownFeedbackStates(GameObject* canvas, int startingIndex) {
+	std::vector<GameObject*> skills = canvas->GetChildren();
+	int skill = startingIndex;
+	for (std::vector<GameObject*>::iterator it = skills.begin(); it != skills.end(); ++it) {
+
+		ComponentImage* image = nullptr;
+		if ((*it)->GetChildren().size() > 5) {
+			//Cooldown does not return 1, meaning that it is ON Cooldown
+			if (cooldowns[skill] < 1) {
+				//Button Up is disabled, Button Down is enabled
+				(*it)->GetChildren()[5]->Disable();
+				(*it)->GetChildren()[6]->Enable();
+			} else {
+
+				//Button Up is enabled, Button Down is disabled
+				(*it)->GetChildren()[5]->Enable();
+				(*it)->GetChildren()[6]->Disable();
+			}
+
+			image = (*it)->GetChildren()[2]->GetComponent<ComponentImage>();
+			if (image) {
+
+				if (cooldowns[skill] < 1) {
+					image->SetColor(float4(colorBlueForCD, 0.3f + cooldowns[skill]));
+				} else {
+					image->SetColor(colorMagenta);
+				}
+
+				if (image->IsFill()) {
+					image->SetFillValue(cooldowns[skill]);
+				}
+			}
+		}
+
+		++skill;
+	}
+}
+
 void HUDController::ChangePlayerHUD(int fangLives, int oniLives) {
 	if (!fang || !onimaru) return;
 
@@ -125,11 +163,13 @@ void HUDController::ChangePlayerHUD(int fangLives, int oniLives) {
 		onimaruCanvas->Enable();
 		StopHealthLostInstantEffects(onimaruHealthMainCanvas);
 		LoadHealthFeedbackStates(onimaruHealthMainCanvas, oniLives);
+		LoadCooldownFeedbackStates(onimaruSkillsMainCanvas, static_cast<int>(Cooldowns::ONIMARU_SKILL_1));
 	} else {
 		onimaruCanvas->Disable();
 		fangCanvas->Enable();
 		StopHealthLostInstantEffects(fangHealthMainCanvas);
 		LoadHealthFeedbackStates(fangHealthMainCanvas, fangLives);
+		LoadCooldownFeedbackStates(fangSkillsMainCanvas, static_cast<int>(Cooldowns::FANG_SKILL_1));
 	}
 
 	remainingTimeActiveIndexesFang.clear();
@@ -280,11 +320,6 @@ void HUDController::UpdateDurableHPLoss(GameObject* targetCanvas) {
 
 				//Remapping
 				delta = (delta) / (0.5f);
-				std::string message = "i: ";
-				message += std::to_string(remainingTimes[(*it)]);
-				message += "Delta: ";
-				message += std::to_string(delta);
-				Debug::Log(message.c_str());
 
 				image->SetColor(float4(1.0f, 1.0f, 1.0f, delta));
 			} else {
@@ -431,6 +466,13 @@ void HUDController::UpdateVisualCooldowns(GameObject* canvas, bool isMain, int s
 
 				image = (*it)->GetChildren()[2]->GetComponent<ComponentImage>();
 				if (image) {
+
+					if (cooldowns[skill] < 1) {
+						image->SetColor(float4(colorBlueForCD, 0.3f + cooldowns[skill]));
+					} else {
+						image->SetColor(colorMagenta);
+					}
+
 					if (image->IsFill()) {
 						image->SetFillValue(cooldowns[skill]);
 					}
