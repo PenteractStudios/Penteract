@@ -2,7 +2,6 @@
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
-#include "TesseractEvent.h"
 
 #include "AIMeleeGrunt.h"
 #include "HUDController.h"
@@ -220,8 +219,28 @@ bool PlayerController::CanShoot() {
 	return !shooting && ((fang->IsActive() && fangTrail) || (onimaru->IsActive() && onimaruTrail));
 }
 
+void PlayerController::GetAnimationStatus(ComponentAnimation*& animation, State*& currentState)
+{
+	if (fang->IsActive()) {
+		animation = fangAnimation;
+		currentState = fangCurrentState;
+	}
+	else {
+		animation = onimaruAnimation;
+		currentState = onimaruCurrentState;
+	}
+
+	if (currentState != animation->GetCurrentState()) {
+		currentState = animation->GetCurrentState();
+	}
+}
+
 void PlayerController::Shoot() {
 	ComponentTransform* transform = GetOwner().GetComponent<ComponentTransform>();
+	ComponentAnimation* animation = nullptr;
+	State* currentState = nullptr;
+
+	GetAnimationStatus(animation, currentState);
 
 	if (CanShoot()) {
 		if (shootAudioSource) {
@@ -242,6 +261,12 @@ void PlayerController::Shoot() {
 				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
 				GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
 			}
+			if (rightShot) {
+				animation->SendTriggerSecondary(currentState->name + PlayerController::states[12]);				
+			}
+			else {
+				animation->SendTriggerSecondary(currentState->name + PlayerController::states[11]);
+			}
 			start = fangGunTransform->GetGlobalPosition();
 		}
 		else {
@@ -252,6 +277,8 @@ void PlayerController::Shoot() {
 				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
 				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
 			}
+			animation->SendTriggerSecondary(currentState->name + PlayerController::states[13]);
+
 			start = onimaruGunTransform->GetGlobalPosition();
 		}
 
@@ -419,18 +446,7 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 	ComponentAnimation* animation = nullptr;
 	State* currentState = nullptr;
 
-	if (fang->IsActive()) {
-		animation = fangAnimation;
-		currentState = fangCurrentState;
-	}
-	else {
-		animation = onimaruAnimation;
-		currentState = onimaruCurrentState;
-	}
-
-	if (currentState != animation->GetCurrentState()) {
-		currentState = animation->GetCurrentState();
-	}
+	GetAnimationStatus(animation, currentState);
 
 	int dashAnimation = 0;
 	if (dashing) {
@@ -529,7 +545,19 @@ void PlayerController::Update() {
 			if (Input::GetMouseButtonDown(0)) Shoot();
 		}
 		else {
-			if (Input::GetMouseButtonRepeat(0)) Shoot();
+			if (Input::GetMouseButtonDown(0) || Input::GetMouseButtonRepeat(0)) {
+				Shoot();
+			}
+			else if(Input::GetMouseButtonUp(0)){
+				if (onimaruAnimation) {
+					ComponentAnimation* animation = nullptr;
+					State* currentState = nullptr;
+
+					GetAnimationStatus(animation, currentState);
+
+					animation->SendTriggerSecondary(PlayerController::states[13] + currentState->name);
+				}
+			}
 		}
 		PlayAnimation(md);
 	}

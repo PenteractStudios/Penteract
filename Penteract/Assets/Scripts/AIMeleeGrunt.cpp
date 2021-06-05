@@ -66,6 +66,7 @@ void AIMeleeGrunt::Update() {
         }
         else if (state == AIState::RUN) {
             animation->SendTrigger("RunDeath");
+            animation->SendTriggerSecondary("RunDeath");
         }
         agent->RemoveAgentFromCrowd();
         state = AIState::DEATH;

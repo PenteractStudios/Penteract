@@ -34,6 +34,7 @@ public:
 	void SetInvincible(bool status);
 	void SetOverpower(bool status);
 	void SetNoCooldown(bool status);
+	void GetAnimationStatus(ComponentAnimation*& animation, State*& currentState);
 
 public:
 
@@ -64,6 +65,9 @@ public:
 
 	UID switchAudioSourceUID = 0;
 	UID dashAudioSourceUID = 0;
+
+	bool rightShot = true;
+	bool shooting = false;
 
 	bool hitTaken = false;
 	float lifePointsFang = 7.f;
@@ -98,7 +102,7 @@ public:
 	std::vector<std::string> states{ "Idle" ,
 								"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
 								"DashBackward", "DashForward" , "DashLeft" , "DashRight" ,
-								"Death" , "Hurt" , "LeftShot" , "RightShot"
+								"Death" , "Hurt" , "LeftShot" , "RightShot", "Shooting"
 	};
 
 private:
@@ -133,7 +137,6 @@ private:
 
 	float fangAttackCooldownRemaining = 0.f;
 	float onimaruAttackCooldownRemaining = 0.f;
-	bool shooting = false;
 	bool invincibleMode = false;
 	int overpowerMode = 1;
 	bool noCooldownMode = false;
