@@ -17,11 +17,9 @@ EXPOSE_MEMBERS(MeleeGrunt_AnimationSet_testStateMachin) {
 GENERATE_BODY_IMPL(MeleeGrunt_AnimationSet_testStateMachin);
 
 void MeleeGrunt_AnimationSet_testStateMachin::Start() {
-	GameObject* goAnimated = GameplaySystems::GetGameObject("RootNode");
-	if (goAnimated) {
-		animation = goAnimated->GetComponent<ComponentAnimation>();
-		currentState = animation->GetCurrentState();
-	}
+	GameObject goAnimated = GetOwner();
+	animation = goAnimated.GetComponent<ComponentAnimation>();
+	currentState = animation->GetCurrentState();
 }
 
 void MeleeGrunt_AnimationSet_testStateMachin::Update() {
@@ -34,30 +32,37 @@ void MeleeGrunt_AnimationSet_testStateMachin::Update() {
 		currentState = animation->GetCurrentState();
 	}
 
+	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_0)) {
+		animation->SendTriggerSecondary("IdleAttack");
+	}
 	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_1)) {
 		animation->SendTrigger("SpawnIdle");
 	}
 	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_2)) {
 		animation->SendTrigger("IdleRun");
 	}
+
 	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_3)) {
-		animation->SendTrigger("IdleHurt");
-	}
+		animation->SendTriggerSecondary("RunAttack");
+	}	
 	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_4)) {
-		animation->SendTrigger("IdleAttack");
+		animation->SendTriggerSecondary("RunHurt");
 	}
+
 	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_5)) {
-		animation->SendTrigger("IdleDeath");
+		animation->SendTriggerSecondary("AttackRun");
 	}
 	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_6)) {
-		animation->SendTrigger("RunIdle");
+		animation->SendTriggerSecondary("HurtRun");
 	}
+
 	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_7)) {
 		animation->SendTrigger("RunHurt");
 	}
 	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_8)) {
 		animation->SendTrigger("RunAttack");
 	}
+
 	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_9)) {
 		animation->SendTrigger("RunDeath");
 	}
@@ -90,25 +95,34 @@ void MeleeGrunt_AnimationSet_testStateMachin::Update() {
 	}
 }
 
-void MeleeGrunt_AnimationSet_testStateMachin::ReceiveEvent(TesseractEvent& e) {
-	//switch (e.type) {
-	//case TesseractEventType::ANIMATION_FINISHED:
-	//	Debug::Log("ANIMATION_FINISHED!!");
-	//
-	//	if (currentState != animation->GetCurrentState())
-	//	{
-	//		currentState = animation->GetCurrentState();
-	//	}
-	//
-	//	if (currentState->name == "StateHurt") {
-	//		animation->SendTrigger("HurtIdle");
-	//	}
-	//	if (currentState->name == "StateAttack") {
-	//		animation->SendTrigger("AttackIdle");
-	//	}
-	//
-	//	break;
-	//default:
-	//	break;
-	//}
+void MeleeGrunt_AnimationSet_testStateMachin::OnAnimationFinished() {
+	Debug::Log("ANIMATION_FINISHED!!");
+
+	if (currentState != animation->GetCurrentState())
+	{
+		currentState = animation->GetCurrentState();
+	}
+
+	if (currentState->name == "Hurt") {
+		animation->SendTrigger("HurtIdle");
+	}
+	if (currentState->name == "Attack") {
+		animation->SendTrigger("AttackIdle");
+	}
+}
+
+void MeleeGrunt_AnimationSet_testStateMachin::OnAnimationSecondaryFinished() {
+	Debug::Log("ANIMATION_SECONDARY_FINISHED!!");
+
+	if (currentState != animation->GetCurrentStateSecondary())
+	{
+		currentState = animation->GetCurrentStateSecondary();
+	}
+
+	if (currentState->name == "Hurt") {
+		animation->SendTriggerSecondary("HurtRun");
+	}
+	if (currentState->name == "Attack") {
+		animation->SendTriggerSecondary("AttackRun");
+	}
 }
