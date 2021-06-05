@@ -7,18 +7,21 @@
     ],
     "QuadtreeMaxDepth": 4,
     "QuadtreeElementsPerNode": 200,
-    "GameCamera": 13489749054352057348,
+    "GameCamera": 5052706520133489350,
     "AmbientLight": [
         0.0,
         0.0,
         0.0
     ],
+    "NavMesh": 0,
     "Root": {
         "Id": 15386627610009304279,
         "Name": "Scene",
         "Active": true,
+        "Static": false,
         "ActiveHierarchy": true,
         "RootBoneId": 0,
+        "Mask": 0,
         "Components": [
             {
                 "Type": "Transform",
@@ -52,8 +55,10 @@
                 "Id": 2777955615451769807,
                 "Name": "Directional Light",
                 "Active": true,
+                "Static": false,
                 "ActiveHierarchy": true,
                 "RootBoneId": 0,
+                "Mask": 0,
                 "Components": [
                     {
                         "Type": "Transform",
@@ -104,8 +109,10 @@
                 "Id": 2161515125610565667,
                 "Name": "Game Camera",
                 "Active": true,
+                "Static": false,
                 "ActiveHierarchy": true,
                 "RootBoneId": 0,
+                "Mask": 0,
                 "Components": [
                     {
                         "Type": "Transform",
@@ -155,7 +162,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 200.0,
-                            "HorizontalFov": 1.5456465482711793,
+                            "HorizontalFov": 1.634196400642395,
                             "VerticalFov": 1.0
                         }
                     },
@@ -186,8 +193,10 @@
                 "Id": 16518341280117000822,
                 "Name": "Event System",
                 "Active": true,
+                "Static": false,
                 "ActiveHierarchy": true,
                 "RootBoneId": 0,
+                "Mask": 0,
                 "Components": [
                     {
                         "Type": "Transform",
@@ -228,8 +237,10 @@
                 "Id": 10256285796013888262,
                 "Name": "Canvas",
                 "Active": true,
+                "Static": false,
                 "ActiveHierarchy": true,
                 "RootBoneId": 0,
+                "Mask": 0,
                 "Components": [
                     {
                         "Type": "Transform",
@@ -286,11 +297,6 @@
                             0.5,
                             0.5
                         ],
-                        "PivotPosition": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ],
                         "Size": [
                             200.0,
                             200.0
@@ -317,8 +323,10 @@
                         "Id": 4922552144984103269,
                         "Name": "Background",
                         "Active": true,
+                        "Static": false,
                         "ActiveHierarchy": true,
                         "RootBoneId": 0,
+                        "Mask": 0,
                         "Components": [
                             {
                                 "Type": "Transform",
@@ -375,11 +383,6 @@
                                     0.5,
                                     0.5
                                 ],
-                                "PivotPosition": [
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                ],
                                 "Size": [
                                     2200.0,
                                     1238.0
@@ -422,8 +425,10 @@
                         "Id": 8518242787381405817,
                         "Name": "RetryButton",
                         "Active": true,
+                        "Static": false,
                         "ActiveHierarchy": true,
                         "RootBoneId": 0,
+                        "Mask": 0,
                         "Components": [
                             {
                                 "Type": "Transform",
@@ -479,11 +484,6 @@
                                 "Pivot": [
                                     0.5,
                                     0.5
-                                ],
-                                "PivotPosition": [
-                                    0.0,
-                                    0.0,
-                                    0.0
                                 ],
                                 "Size": [
                                     711.0,
@@ -573,7 +573,13 @@
                                 "Id": 8339893195270860184,
                                 "Active": true,
                                 "Script": 15139721463718087939,
-                                "Values": null
+                                "Values": [
+                                    {
+                                        "Name": "sceneUID",
+                                        "Type": "SceneResourceUID",
+                                        "Value": 16893504836010757748
+                                    }
+                                ]
                             }
                         ],
                         "Children": null
@@ -582,8 +588,10 @@
                         "Id": 656647871624026947,
                         "Name": "Exit",
                         "Active": true,
+                        "Static": false,
                         "ActiveHierarchy": true,
                         "RootBoneId": 0,
+                        "Mask": 0,
                         "Components": [
                             {
                                 "Type": "Transform",
@@ -639,11 +647,6 @@
                                 "Pivot": [
                                     0.5,
                                     0.5
-                                ],
-                                "PivotPosition": [
-                                    0.0,
-                                    200.0,
-                                    0.0
                                 ],
                                 "Size": [
                                     711.0,
