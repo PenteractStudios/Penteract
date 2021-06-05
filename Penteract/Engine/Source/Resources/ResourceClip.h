@@ -28,7 +28,6 @@ public:
 	void SetSpeed(float mSpeed) {
 		speed = mSpeed;
 	}
-
 	ResourceAnimation* GetResourceAnimation() const;
 
 public:
@@ -39,5 +38,6 @@ public:
 	unsigned int endIndex = 0;
 	float speed = 1.0f;
 	float duration = 1.0f;
+	float frameRate = 1.0f;
 	unsigned int keyFramesSize = 0;
 };

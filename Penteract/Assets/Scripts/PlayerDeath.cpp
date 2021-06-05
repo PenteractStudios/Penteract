@@ -6,6 +6,7 @@
 #include "PlayerController.h"
 
 EXPOSE_MEMBERS(PlayerDeath) {
+	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
     MEMBER(MemberType::GAME_OBJECT_UID, playerUID)
 };
 
@@ -27,6 +28,6 @@ void PlayerDeath::Update() {
 
 void PlayerDeath::OnAnimationFinished() {
 	if (dead) {
-		SceneManager::ChangeScene("Assets/Scenes/LoseScene.scene");
+		if(sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 	}
 }
