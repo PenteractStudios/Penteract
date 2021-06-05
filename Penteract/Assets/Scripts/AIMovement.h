@@ -1,23 +1,11 @@
 #pragma once
 
-#include "Enemy.h"
 #include "Scripting/Script.h"
 
-class ComponentAnimation;
+#include "AIState.h"
+
 class ComponentTransform;
 class ComponentAgent;
-
-class HUDController;
-class PlayerController;
-
-enum class AIState {
-	START,
-	SPAWN,
-	IDLE,
-	RUN,
-	ATTACK,
-	DEATH
-};
 
 class AIMovement : public Script
 {
@@ -26,36 +14,17 @@ class AIMovement : public Script
 public:
 
 	void Start() override;
-	void Update() override;
-	void OnAnimationFinished() override;
-	void HitDetected(int damage_);
+	void Update() override;	
+
+	void Seek(AIState state, const float3& newPosition, int speed);
+
+	bool CharacterInSight(const GameObject* character, const float searchRadius);
+	bool CharacterInMeleeRange(const GameObject* character, const float meleeRange);
+	
 
 private:
-	bool CharacterInSight(const GameObject* character);
-	bool CharacterInMeleeRange(const GameObject* character);
-	void Seek(const float3& newPosition, float speed);
 
-
-public:
-
-	UID playerUID = 0;
-	UID canvasUID = 0;
-
-	GameObject* player = nullptr;
+	float3 velocity = float3(0, 0, 0);	
+	ComponentTransform* ownerTransform = nullptr;
 	ComponentAgent* agent = nullptr;
-
-	Enemy gruntCharacter = Enemy(5, 8.0f, 1, 30, 40.f, 5.f, 5.f);
-
-private:
-
-	float3 velocity = float3(0, 0, 0);
-	AIState state = AIState::START;
-	bool hitTaken = false;
-	ComponentAnimation* animation = nullptr;
-	ComponentTransform* parentTransform = nullptr;
-	int damageRecieved = 0;
-
-	HUDController* hudControllerScript = nullptr;
-	PlayerController* playerController = nullptr;
-
 };

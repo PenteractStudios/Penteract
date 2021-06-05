@@ -22,6 +22,6 @@ void StartButton::Update() {
 
 void StartButton::OnButtonClick() {
 	checkpoint = checkpointNum;
-	SceneManager::ChangeScene("Assets/Scenes/Level1.scene");
+	SceneManager::ChangeScene("Assets/Scenes/PlayerNavigationTest.scene");
 	if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
 }
