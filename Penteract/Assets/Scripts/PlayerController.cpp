@@ -27,6 +27,7 @@ EXPOSE_MEMBERS(PlayerController) {
 		MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
 		MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
+		MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailNoColUID),
 		MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruTrailUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, fangGunUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
@@ -89,6 +90,7 @@ void PlayerController::Start() {
 		}
 		fangAnimation = fang->GetComponent<ComponentAnimation>();
 		fangTrail = GameplaySystems::GetResource<ResourcePrefab>(fangTrailUID);
+		fangTrailNoCol = GameplaySystems::GetResource<ResourcePrefab>(fangTrailNoColUID);
 		if (fangAnimation) {
 			fangCurrentState = fangAnimation->GetCurrentState();
 		}
@@ -238,12 +240,12 @@ void PlayerController::Shoot() {
 		float3 start;
 		if (fang->IsActive()) {
 			fangAttackCooldownRemaining = 1.f / fangAttackSpeed;
-			if (fangTrail) {
+			if (fangTrail && fangTrailNoCol) {
 				//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
 				//fangGun->GetComponent<ComponentParticleSystem>()->Play();
 				GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
 				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
-				GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
+				GameplaySystems::Instantiate(fangTrailNoCol, fangGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
 			}
 			start = fangGunTransform->GetGlobalPosition();
 		}
