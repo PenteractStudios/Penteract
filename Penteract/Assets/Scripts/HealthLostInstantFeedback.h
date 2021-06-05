@@ -26,6 +26,6 @@ private:
 	bool playing = false;
 	float growthTimer = 0;
 	float fadeOutTimer = 0;
-
+	float4 originalColor = float4(1, 0, 0, 1);
 };
 

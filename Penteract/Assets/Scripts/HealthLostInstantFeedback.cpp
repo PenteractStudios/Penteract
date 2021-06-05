@@ -6,9 +6,9 @@
 
 EXPOSE_MEMBERS(HealthLostInstantFeedback) {
 	MEMBER(MemberType::FLOAT, growthDuration),
-	MEMBER(MemberType::FLOAT, growthMaxScale),
-	MEMBER(MemberType::FLOAT, fadeOutDuration),
-	MEMBER(MemberType::GAME_OBJECT_UID, imageUID)
+		MEMBER(MemberType::FLOAT, growthMaxScale),
+		MEMBER(MemberType::FLOAT, fadeOutDuration),
+		MEMBER(MemberType::GAME_OBJECT_UID, imageUID)
 
 };
 
@@ -45,7 +45,17 @@ void HealthLostInstantFeedback::Start() {
 	}
 
 	originalSize = transform->GetSize();
-	if (image) image->Disable();
+	if (image) {
+		image->Disable();
+	}
+
+	std::vector<GameObject*>ownerChildren = GetOwner().GetChildren();
+	if (ownerChildren.size() > 0) {
+		ComponentImage* fillImage = ownerChildren[1]->GetComponent<ComponentImage>();
+		if (fillImage) {
+			originalColor = fillImage->GetColor();
+		}
+	}
 }
 
 void HealthLostInstantFeedback::Update() {
@@ -60,7 +70,7 @@ void HealthLostInstantFeedback::Update() {
 
 			float scaleValue = Lerp(1, growthMaxScale, delta);
 			transform->SetSize(float2(originalSize.x * scaleValue, originalSize.y * scaleValue));
-			image->SetColor(float4(1, 0, 0, 1));
+			image->SetColor(float4(originalColor.xyz(), 1));
 
 			//Grow
 		} else if (fadeOutTimer < fadeOutDuration) {
@@ -69,7 +79,7 @@ void HealthLostInstantFeedback::Update() {
 			float delta = fadeOutTimer / fadeOutDuration;
 			float fadeValue = Lerp(1, 0, delta);
 
-			image->SetColor(float4(1, 0, 0, fadeValue));
+			image->SetColor(float4(originalColor.xyz(), fadeValue));
 			//FadeOut
 		} else {
 			playing = false;
