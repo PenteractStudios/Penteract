@@ -264,8 +264,10 @@ void PlayerController::Shoot() {
 		GameObject* hitGo = Physics::Raycast(start, start + end, mask);
 		if (hitGo) {
 			AIMeleeGrunt* enemyScript = GET_SCRIPT(hitGo->GetParent(), AIMeleeGrunt);
-			if (fang->IsActive()) enemyScript->HitDetected(3);
-			else enemyScript->HitDetected();
+			if (enemyScript) {
+				if (fang->IsActive()) enemyScript->HitDetected(3);
+				else enemyScript->HitDetected();
+			}
 		}
 	}
 }
