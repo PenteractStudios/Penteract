@@ -16,5 +16,5 @@ void ReloadScene::Update() {
 }
 
 void ReloadScene::OnButtonClick() {
-	SceneManager::ChangeScene("Assets/Scenes/Level1-34.scene");
+	SceneManager::ChangeScene("Assets/Scenes/PlayerNavigationTest.scene");
 }

@@ -58,6 +58,23 @@
                 "MaxSpeed": 5.0,
                 "MaxAcceleration": 8.0,
                 "AvoidingObstacle": true
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 1991507863247597087,
+                "Values": [
+                    {
+                        "Name": "playerUID",
+                        "Type": "GameObjectUID",
+                        "Value": 8960886680822700415
+                    },
+                    {
+                        "Name": "canvasUID",
+                        "Type": "GameObjectUID",
+                        "Value": 17773628572955029428
+                    }
+                ]
             }
         ],
         "Children": [
