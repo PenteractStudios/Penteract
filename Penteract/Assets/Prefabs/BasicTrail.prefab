@@ -1,6 +1,6 @@
 {
     "Root": {
-        "Name": "FangTrail",
+        "Name": "basicTrail",
         "Active": true,
         "RootBoneName": "",
         "Mask": 0,
@@ -9,9 +9,9 @@
                 "Type": "Transform",
                 "Active": true,
                 "Position": [
-                    220.08969116210938,
-                    202.88519287109376,
-                    33.58180618286133
+                    0.0,
+                    0.0,
+                    0.0
                 ],
                 "Rotation": [
                     0.0,
@@ -33,8 +33,9 @@
             {
                 "Type": "Trail",
                 "Active": true,
-                "ShaderId": 16657161648281974966,
-                "TextureId": 6070033773294191873
+                "TextureId": 6070033773294191873,
+                "MaxVertices": 1500,
+                "TrailQuads": 50
             },
             {
                 "Type": "Script",
