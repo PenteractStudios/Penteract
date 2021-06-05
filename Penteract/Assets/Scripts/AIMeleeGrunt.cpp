@@ -63,6 +63,7 @@ void AIMeleeGrunt::Update() {
         }
         else if (state == AIState::IDLE) {
             animation->SendTrigger("IdleDeath");
+            animation->SendTriggerSecondary("IdleDeath");
         }
         else if (state == AIState::RUN) {
             animation->SendTrigger("RunDeath");
