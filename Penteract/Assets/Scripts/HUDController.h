@@ -80,6 +80,7 @@ private:
 	void OnHealthLost(GameObject* targetCanvas, int health);
 	void StopHealthLostInstantEffects(GameObject* targetCanvas);
 	void LoadHealthFeedbackStates(GameObject* targetCanvas, int health);
+	void LoadCooldownFeedbackStates(GameObject* targetCanvas, int startingIndex);
 	void AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canvas);
 	void PlayCoolDownEffect(AbilityRefreshEffect* effect, Cooldowns cooldown);
 
@@ -112,8 +113,7 @@ private:
 	const float4 colorMagenta = float4(236, 60, 137, 255) / 255;
 	const float4 colorWhite = float4(255, 255, 255, 255) / 255;
 
-	const float4 colorMagentaDarkened = float4(236, 60, 137, 128) / 255;
-	const float4 colorWhiteDarkened = float4(255, 255, 255, 128) / 255;
+	const float3 colorBlueForCD = float3(47.0f, 187.0f, 200.0f) / 255.0f;
 
 
 	int prevLivesFang = MAX_HEALTH;
