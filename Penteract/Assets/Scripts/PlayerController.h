@@ -32,6 +32,9 @@ public:
 
 	void HitDetected(int damage);
 	bool IsDead();
+	void SetInvincible(bool status);
+	void SetOverpower(bool status);
+	void SetNoCooldown(bool status);
 
 public:
 
@@ -80,6 +83,10 @@ public:
 	float cameraOffsetX = 0.f;
 	bool firstTime = true;
 
+	/* Fang & onimaru damage */
+	int onimaruDamage = 1;
+	int fangDamage = 3;
+	
 	//Camera
 	bool useSmoothCamera = true;
 	float smoothCameraSpeed = 5.0f;
@@ -123,6 +130,9 @@ private:
 	float fangAttackCooldownRemaining = 0.f;
 	float onimaruAttackCooldownRemaining = 0.f;
 	bool shooting = false;
+	bool invincibleMode = false;
+	int overpowerMode = 1;
+	bool noCooldownMode = false;
 
 	float3 initialPosition = float3(0, 0, 0);
 	float3 dashDestination = float3(0, 0, 0);

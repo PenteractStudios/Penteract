@@ -205,13 +205,11 @@ void PlayerController::SwitchCharacter() {
 		switchInCooldown = true;
 		switchAudioSource->Play();
 		if (fang->IsActive()) {
-			Debug::Log("Swaping to onimaru...");
 			fang->Disable();
 			onimaru->Enable();
 			hudControllerScript->UpdateHP(onimaruCharacter.lifePoints, fangCharacter.lifePoints);
 		}
 		else {
-			Debug::Log("Swaping to fang...");
 			onimaru->Disable();
 			fang->Enable();
 			hudControllerScript->UpdateHP(fangCharacter.lifePoints, onimaruCharacter.lifePoints);
@@ -269,19 +267,28 @@ void PlayerController::Shoot() {
 		GameObject* hitGo = Physics::Raycast(start, start + end, mask);
 		if (hitGo) {
 			AIMovement* enemyScript = GET_SCRIPT(hitGo->GetParent(), AIMovement);
-			if (fang->IsActive()) enemyScript->HitDetected(fangCharacter.damageHit);
-			else enemyScript->HitDetected(onimaruCharacter.damageHit);
+			enemyScript->HitDetected((fang->IsActive() ? fangCharacter.damageHit : onimaruCharacter.damageHit) * overpowerMode);
 		}
 	}
 }
 
 void PlayerController::HitDetected(int damage) {
-	if (fang->IsActive()) {
-		fangCharacter.Hit(damage);
-	} else {
-		onimaruCharacter.Hit(damage);
+	if (!invincibleMode) {
+		fang->IsActive() ? fangCharacter.Hit(damage) : onimaruCharacter.Hit(damage);
 	}
-	hitTaken = true;
+	hitTaken = !invincibleMode;
+}
+
+void PlayerController::SetInvincible(bool status) {
+	invincibleMode = status;
+}
+
+void PlayerController::SetOverpower(bool status) {
+	overpowerMode = status ? 999 : 1;
+}
+
+void PlayerController::SetNoCooldown(bool status) {
+	noCooldownMode = status;
 }
 
 bool PlayerController::IsDead(){
@@ -289,7 +296,7 @@ bool PlayerController::IsDead(){
 }
 
 void PlayerController::CheckCoolDowns() {
-	if (switchCooldownRemaining <= 0.f) {
+	if (noCooldownMode || switchCooldownRemaining <= 0.f) {
 		switchCooldownRemaining = 0.f;
 		switchInCooldown = false;
 	}
@@ -299,7 +306,7 @@ void PlayerController::CheckCoolDowns() {
 
 	if (fang->IsActive()) {
 		//Dash Cooldown
-		if (dashCooldownRemaining <= 0.f) {
+		if (noCooldownMode || dashCooldownRemaining <= 0.f) {
 			dashCooldownRemaining = 0.f;
 			dashInCooldown = false;
 			dashMovementDirection = MovementDirection::NONE;
@@ -308,7 +315,7 @@ void PlayerController::CheckCoolDowns() {
 			dashCooldownRemaining -= Time::GetDeltaTime();
 		}
 		//Dash duration
-		if (dashRemaining <= 0) {
+		if (dashRemaining <= 0.f) {
 			dashRemaining = 0.f;
 			dashing = false;
 			agent->SetMaxSpeed(fangCharacter.movementSpeed);
@@ -317,7 +324,7 @@ void PlayerController::CheckCoolDowns() {
 			dashRemaining -= Time::GetDeltaTime();
 		}
 
-		if (fangAttackCooldownRemaining <= 0) {
+		if (fangAttackCooldownRemaining <= 0.f) {
 			fangAttackCooldownRemaining = 0.f;
 			shooting = false;
 		}
@@ -327,7 +334,7 @@ void PlayerController::CheckCoolDowns() {
 	}
 	if (onimaru->IsActive()) {
 		agent->SetMaxSpeed(onimaruCharacter.movementSpeed);
-		if (onimaruAttackCooldownRemaining <= 0) {
+		if (onimaruAttackCooldownRemaining <= 0.f) {
 			onimaruAttackCooldownRemaining = 0.f;
 			shooting = false;
 		}
@@ -519,7 +526,7 @@ void PlayerController::Update() {
 		if (!dashing) {
 			LookAtMouse();
 			MoveTo(md);
-			if (Input::GetKeyCode(Input::KEYCODE::KEY_R)) SwitchCharacter();
+			if (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R)) SwitchCharacter();
 		}
 		if (fang->IsActive()) {
 			if (Input::GetMouseButtonDown(0)) Shoot();
