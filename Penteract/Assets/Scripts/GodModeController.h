@@ -5,17 +5,18 @@
 
 class GameObject;
 class ComponentToggle;
+class PlayerController;
 
 class GodModeController : public Script {
 	GENERATE_BODY(GodModeController);
 
 public:
-	/* UI toggles*/
+	/* UI toggles */
 	UID uiCanvasUID = 0;
 	UID spawnMeleeUID = 0;
 	UID spawnRangedUID = 0;
 
-	/* Enemy groups*/
+	/* Enemy groups */
 	UID enemiesUID = 0;
 	UID debugEnemiesUID = 0;
 
@@ -23,8 +24,8 @@ public:
 	UID gameCameraUID = 0;
 	UID godCameraUID = 0;
 
-	/* Other scripts*/
-	UID invincibleUID = 0;
+	/* Player controller */
+	UID playerControllerUID = 0;
 
 public:
 	void Start() override;
@@ -35,13 +36,13 @@ private:
 	/* Owner */
 	GameObject* gameObject = nullptr;
 
-	/* UI toggles*/
+	/* UI toggles */
 	GameObject* uiCanvas = nullptr;
 	GameObject* spawnMelee = nullptr;
 	GameObject* spawnRanged = nullptr;
 	std::vector<ComponentToggle*> toggles;
 
-	/* Enemy groups*/
+	/* Enemy groups */
 	GameObject* enemies = nullptr;
 	GameObject* debugEnemies = nullptr;
 
@@ -49,6 +50,7 @@ private:
 	GameObject* gameCamera = nullptr;
 	GameObject* godCamera = nullptr;
 
-	/* Other scripts*/
-	GameObject* invincible = nullptr;
+	/* Player controller */
+	GameObject* playerController = nullptr;
+	PlayerController* playerControllerScript = nullptr;
 };
