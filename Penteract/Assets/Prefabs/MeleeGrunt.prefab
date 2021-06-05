@@ -109,6 +109,22 @@
                             138.970458984375,
                             16.807958602905275
                         ]
+                    },
+                    {
+                        "Type": "CapsuleCollider",
+                        "Active": true,
+                        "colliderType": 2,
+                        "layerType": 2,
+                        "mass": 1.0,
+                        "radius": 1.4322776794433594,
+                        "height": 4.083966255187988,
+                        "capsuleType": 1,
+                        "centerOffset": [
+                            0.000003814697265625,
+                            3.474262237548828,
+                            -0.08667483180761337
+                        ],
+                        "freezeRotation": false
                     }
                 ],
                 "Children": null

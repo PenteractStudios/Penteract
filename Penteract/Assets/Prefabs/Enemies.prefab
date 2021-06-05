@@ -71,7 +71,7 @@
                             {
                                 "Name": "prefabId",
                                 "Type": "PrefabResourceUID",
-                                "Value": 17022539209527519003
+                                "Value": 9998956702901793097
                             },
                             {
                                 "Name": "amountOfEnemies",
@@ -90,13 +90,13 @@
             },
             {
                 "Name": "Spawn_2",
-                "Active": false,
+                "Active": true,
                 "RootBoneName": "",
                 "Mask": 0,
                 "Components": [
                     {
                         "Type": "Transform",
-                        "Active": false,
+                        "Active": true,
                         "Position": [
                             -120.48450469970703,
                             0.0,
@@ -121,7 +121,7 @@
                     },
                     {
                         "Type": "Script",
-                        "Active": false,
+                        "Active": true,
                         "Script": 14237604830987124740,
                         "Values": [
                             {
@@ -132,7 +132,7 @@
                             {
                                 "Name": "prefabId",
                                 "Type": "PrefabResourceUID",
-                                "Value": 17022539209527519003
+                                "Value": 9998956702901793097
                             },
                             {
                                 "Name": "offset",
@@ -146,13 +146,13 @@
             },
             {
                 "Name": "Spawn_3",
-                "Active": false,
+                "Active": true,
                 "RootBoneName": "",
                 "Mask": 0,
                 "Components": [
                     {
                         "Type": "Transform",
-                        "Active": false,
+                        "Active": true,
                         "Position": [
                             -91.07923889160156,
                             0.0,
@@ -177,7 +177,7 @@
                     },
                     {
                         "Type": "Script",
-                        "Active": false,
+                        "Active": true,
                         "Script": 14237604830987124740,
                         "Values": [
                             {
@@ -188,7 +188,7 @@
                             {
                                 "Name": "prefabId",
                                 "Type": "PrefabResourceUID",
-                                "Value": 17022539209527519003
+                                "Value": 9998956702901793097
                             },
                             {
                                 "Name": "offset",
@@ -202,13 +202,13 @@
             },
             {
                 "Name": "Spawn_4",
-                "Active": false,
+                "Active": true,
                 "RootBoneName": "",
                 "Mask": 0,
                 "Components": [
                     {
                         "Type": "Transform",
-                        "Active": false,
+                        "Active": true,
                         "Position": [
                             -48.31201171875,
                             0.0,
@@ -233,7 +233,7 @@
                     },
                     {
                         "Type": "Script",
-                        "Active": false,
+                        "Active": true,
                         "Script": 14237604830987124740,
                         "Values": [
                             {
@@ -244,7 +244,7 @@
                             {
                                 "Name": "prefabId",
                                 "Type": "PrefabResourceUID",
-                                "Value": 17022539209527519003
+                                "Value": 9998956702901793097
                             },
                             {
                                 "Name": "offset",
@@ -258,13 +258,13 @@
             },
             {
                 "Name": "Spawn_5",
-                "Active": false,
+                "Active": true,
                 "RootBoneName": "",
                 "Mask": 0,
                 "Components": [
                     {
                         "Type": "Transform",
-                        "Active": false,
+                        "Active": true,
                         "Position": [
                             69.50504302978516,
                             0.0,
@@ -289,7 +289,7 @@
                     },
                     {
                         "Type": "Script",
-                        "Active": false,
+                        "Active": true,
                         "Script": 14237604830987124740,
                         "Values": [
                             {
@@ -300,7 +300,7 @@
                             {
                                 "Name": "prefabId",
                                 "Type": "PrefabResourceUID",
-                                "Value": 17022539209527519003
+                                "Value": 9998956702901793097
                             },
                             {
                                 "Name": "offset",
@@ -314,13 +314,13 @@
             },
             {
                 "Name": "Spawn_6",
-                "Active": false,
+                "Active": true,
                 "RootBoneName": "",
                 "Mask": 0,
                 "Components": [
                     {
                         "Type": "Transform",
-                        "Active": false,
+                        "Active": true,
                         "Position": [
                             89.9400863647461,
                             0.0,
@@ -345,7 +345,7 @@
                     },
                     {
                         "Type": "Script",
-                        "Active": false,
+                        "Active": true,
                         "Script": 14237604830987124740,
                         "Values": [
                             {
@@ -356,7 +356,7 @@
                             {
                                 "Name": "prefabId",
                                 "Type": "PrefabResourceUID",
-                                "Value": 17022539209527519003
+                                "Value": 9998956702901793097
                             },
                             {
                                 "Name": "offset",
@@ -370,13 +370,13 @@
             },
             {
                 "Name": "Spawn_7",
-                "Active": false,
+                "Active": true,
                 "RootBoneName": "",
                 "Mask": 0,
                 "Components": [
                     {
                         "Type": "Transform",
-                        "Active": false,
+                        "Active": true,
                         "Position": [
                             48.868045806884769,
                             0.0,
@@ -401,7 +401,7 @@
                     },
                     {
                         "Type": "Script",
-                        "Active": false,
+                        "Active": true,
                         "Script": 14237604830987124740,
                         "Values": [
                             {
@@ -412,7 +412,7 @@
                             {
                                 "Name": "prefabId",
                                 "Type": "PrefabResourceUID",
-                                "Value": 17022539209527519003
+                                "Value": 9998956702901793097
                             },
                             {
                                 "Name": "offset",
@@ -426,13 +426,13 @@
             },
             {
                 "Name": "Spawn_8",
-                "Active": false,
+                "Active": true,
                 "RootBoneName": "",
                 "Mask": 0,
                 "Components": [
                     {
                         "Type": "Transform",
-                        "Active": false,
+                        "Active": true,
                         "Position": [
                             161.19366455078126,
                             0.0,
@@ -457,7 +457,7 @@
                     },
                     {
                         "Type": "Script",
-                        "Active": false,
+                        "Active": true,
                         "Script": 14237604830987124740,
                         "Values": [
                             {
@@ -468,7 +468,7 @@
                             {
                                 "Name": "prefabId",
                                 "Type": "PrefabResourceUID",
-                                "Value": 17022539209527519003
+                                "Value": 9998956702901793097
                             },
                             {
                                 "Name": "offset",

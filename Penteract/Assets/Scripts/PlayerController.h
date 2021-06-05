@@ -47,6 +47,7 @@ public:
 
 	UID fangUID = 0;
 	UID fangTrailUID = 0;
+	UID fangTrailNoColUID = 0;
 	UID fangGunUID = 0;
 
 	UID onimaruUID = 0;
@@ -140,6 +141,7 @@ private:
 	State* onimaruCurrentState = nullptr;
 
 	ResourcePrefab* fangTrail = nullptr;
+	ResourcePrefab* fangTrailNoCol = nullptr;
 	ResourcePrefab* onimaruTrail = nullptr;
 
 	//Particles
