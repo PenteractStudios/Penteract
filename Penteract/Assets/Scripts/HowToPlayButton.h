@@ -11,4 +11,6 @@ public:
 	void Start() override;
 	void Update() override;
 	void OnButtonClick() override;
+
+	UID sceneUID = 0;
 };
