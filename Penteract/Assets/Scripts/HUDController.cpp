@@ -146,25 +146,15 @@ void HUDController::ChangePlayerHUD(int fangLives, int oniLives) {
 }
 
 void HUDController::HealthRegeneration(float currentHp, float hpRecovered) {
-	if (fang->IsActive()) {
-		const GameObject* healthSlot = onimaruHealthSecondCanvas->GetChildren()[currentHp];
-		if (healthSlot) {
-			for (GameObject* healthComponents : healthSlot->GetChildren()) {
-				ComponentImage* healthFill = healthComponents->GetComponent<ComponentImage>();
-				if (healthFill->IsFill()) {
-					healthFill->SetFillValue(hpRecovered);
-					if (hpRecovered >= 1.0f) {
-						FullHealthBarFeedback* healthScript = GET_SCRIPT(healthSlot, FullHealthBarFeedback);
-						if (healthScript) healthScript->Play();
-					}
-				}
-			}
-		}
-	} else {
-		const GameObject* healthSlot = fangHealthSecondCanvas->GetChildren()[currentHp];
-		if (healthSlot) {
-			for (GameObject* healthComponents : healthSlot->GetChildren()) {
-				ComponentImage* healthFill = healthComponents->GetComponent<ComponentImage>();
+	if (!onimaruHealthSecondCanvas || !fangHealthSecondCanvas) return;
+
+	GameObject* targetCanvas = fang->IsActive() ? onimaruHealthSecondCanvas : fangHealthSecondCanvas;
+	const GameObject* healthSlot = targetCanvas->GetChildren()[currentHp];
+
+	if (healthSlot) {
+		for (GameObject* healthComponents : healthSlot->GetChildren()) {
+			ComponentImage* healthFill = healthComponents->GetComponent<ComponentImage>();
+			if (healthFill) {
 				if (healthFill->IsFill()) {
 					healthFill->SetFillValue(hpRecovered);
 					if (hpRecovered >= 1.0f) {
@@ -178,23 +168,25 @@ void HUDController::HealthRegeneration(float currentHp, float hpRecovered) {
 }
 
 void HUDController::ResetHealthRegenerationEffects(float currentHp) {
-	if (fang->IsActive()) {
-		for (int pos = currentHp; pos < MAX_HEALTH; ++pos) {
-			const GameObject* healthSlot = onimaruHealthSecondCanvas->GetChildren()[pos];
-			for (GameObject* healthComponents : healthSlot->GetChildren()) {
-				ComponentImage* healthFill = healthComponents->GetComponent<ComponentImage>();
-				if (healthFill->IsFill()) {
-					healthFill->SetFillValue(0.0f);
-					FullHealthBarFeedback* healthScript = GET_SCRIPT(healthSlot, FullHealthBarFeedback);
-					if (healthScript) healthScript->Reset();
-				}
-			}
+	if (!onimaruHealthSecondCanvas || !fangHealthSecondCanvas) return;
+
+	GameObject* targetCanvas = fang->IsActive() ? onimaruHealthSecondCanvas : fangHealthSecondCanvas;
+
+	//We need to stop last recovered health bar effect if the switch was made while it was playing
+	//This if will change when you don't get Game Over if onimaru or fang has no health
+	if (currentHp > 0) {
+		const GameObject* healthSlot = targetCanvas->GetChildren()[currentHp - 1];
+		if (healthSlot) {
+			FullHealthBarFeedback* healthScript = GET_SCRIPT(healthSlot, FullHealthBarFeedback);
+			if (healthScript) healthScript->Stop();
 		}
-	} else if (onimaru->IsActive()) {
-		for (int pos = currentHp; pos < MAX_HEALTH; ++pos) {
-			const GameObject* healthSlot = fangHealthSecondCanvas->GetChildren()[pos];
-			for (GameObject* healthComponents : healthSlot->GetChildren()) {
-				ComponentImage* healthFill = healthComponents->GetComponent<ComponentImage>();
+	}
+
+	for (int pos = currentHp; pos < MAX_HEALTH; ++pos) {
+		const GameObject* healthSlot = targetCanvas->GetChildren()[pos];
+		for (GameObject* healthComponents : healthSlot->GetChildren()) {
+			ComponentImage* healthFill = healthComponents->GetComponent<ComponentImage>();
+			if (healthFill) {
 				if (healthFill->IsFill()) {
 					healthFill->SetFillValue(0.0f);
 					FullHealthBarFeedback* healthScript = GET_SCRIPT(healthSlot, FullHealthBarFeedback);

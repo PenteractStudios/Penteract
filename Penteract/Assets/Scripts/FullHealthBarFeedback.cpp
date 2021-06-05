@@ -53,6 +53,17 @@ void FullHealthBarFeedback::Play() {
 	playing = true;
 }
 
+void FullHealthBarFeedback::Stop() {
+	if (!fill || !stroke || !fillTransform) return;
+
+	fillTransform->SetSize(originalSize);
+
+	shrinkTimer = 0.0f;
+	growTimer = 0.0f;
+
+	playing = false;
+}
+
 void FullHealthBarFeedback::Reset() {
 	if (!fill || !stroke || !fillTransform) return;
 
