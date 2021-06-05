@@ -75,8 +75,7 @@ public:
 private:
 	void UpdateComponents();
 	void UpdateCommonSkill();
-	void UpdateFangCooldowns(GameObject* fangSkillCanvas, bool isMain);
-	void UpdateOnimaruCooldowns(GameObject* onimaruSkillCanvas, bool isMain);
+	void UpdateVisualCooldowns(GameObject* canvas, bool isMain, int startingAbilityIndex);
 	void UpdateCanvasHP(GameObject* targetCanvas, int health, bool darkened);
 	void OnHealthLost(GameObject* targetCanvas, int health);
 	void StopHealthLostInstantEffects(GameObject* targetCanvas);
@@ -85,9 +84,6 @@ private:
 	void PlayCoolDownEffect(AbilityRefreshEffect* effect, Cooldowns cooldown);
 
 private:
-
-
-
 
 	GameObject* fang = nullptr;
 	GameObject* onimaru = nullptr;
