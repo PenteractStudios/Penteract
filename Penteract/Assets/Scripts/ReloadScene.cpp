@@ -2,7 +2,7 @@
 #include "GameplaySystems.h"
 
 EXPOSE_MEMBERS(ReloadScene) {
-	//TODO EXPOSE SCENE NAME?
+	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID)
 };
 
 GENERATE_BODY_IMPL(ReloadScene);
@@ -16,5 +16,5 @@ void ReloadScene::Update() {
 }
 
 void ReloadScene::OnButtonClick() {
-	SceneManager::ChangeScene("Assets/Scenes/PlayerNavigationTest.scene");
+	if(sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 }

@@ -14,8 +14,9 @@ public:
 	void Update() override;
 
 public:
-	UID winUID;
-	UID playerUID;
+	UID sceneUID = 0;
+	UID winUID = 0;
+	UID playerUID = 0;
 
 	float LoseOffsetX = 2.0f;
 	float LoseOffsetZ = 2.0f;

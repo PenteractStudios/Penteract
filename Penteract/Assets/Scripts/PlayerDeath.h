@@ -15,6 +15,7 @@ public:
 public:
 
 	UID playerUID = 0;
+	UID sceneUID = 0;
 
 	GameObject* player = nullptr;
 

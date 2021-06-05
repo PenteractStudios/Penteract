@@ -4,9 +4,8 @@
 #include "GameplaySystems.h"
 
 EXPOSE_MEMBERS(ReturnMenu) {
-	// Add members here to expose them to the engine. Example:
-	// MEMBER(MemberType::BOOL, exampleMember1),
-	MEMBER(MemberType::FLOAT, padding),
+	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
+	MEMBER(MemberType::FLOAT, padding)
 };
 
 GENERATE_BODY_IMPL(ReturnMenu);
@@ -20,6 +19,6 @@ void ReturnMenu::Update() {
 }
 
 void ReturnMenu::OnButtonClick() {
-	SceneManager::ChangeScene("Assets/Scenes/StartScene.scene");
+	if(sceneUID != 0)SceneManager::ChangeScene(sceneUID);
 	if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
 }
