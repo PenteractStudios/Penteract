@@ -213,14 +213,12 @@ void PlayerController::SwitchCharacter() {
 		switchInCooldown = true;
 		if (switchAudioSource) switchAudioSource->Play();
 		if (fang->IsActive()) {
-			Debug::Log("Swaping to onimaru...");
 			fang->Disable();
 			onimaru->Enable();
 			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
 			hudControllerScript->ResetHealthFill(lifePointsFang);
 			fangRecovering = 0.0f;
 		} else {
-			Debug::Log("Swaping to fang...");
 			onimaru->Disable();
 			fang->Enable();
 			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);

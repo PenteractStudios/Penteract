@@ -5,6 +5,7 @@
 #include "HealthLostInstantFeedback.h"
 #include "AbilityRefreshEffect.h"
 #include "LowHPWarning.h"
+#include "FullHealthBarFeedback.h"
 #include "GameplaySystems.h"
 
 
@@ -152,6 +153,10 @@ void HUDController::HealthRegeneration(float currentHp, float hpRecovered) {
 				ComponentImage* healthFill = healthComponents->GetComponent<ComponentImage>();
 				if (healthFill->IsFill()) {
 					healthFill->SetFillValue(hpRecovered);
+					if (hpRecovered >= 1.0f) {
+						FullHealthBarFeedback* healthScript = GET_SCRIPT(healthSlot, FullHealthBarFeedback);
+						if (healthScript) healthScript->Play();
+					}
 				}
 			}
 		}
@@ -162,6 +167,10 @@ void HUDController::HealthRegeneration(float currentHp, float hpRecovered) {
 				ComponentImage* healthFill = healthComponents->GetComponent<ComponentImage>();
 				if (healthFill->IsFill()) {
 					healthFill->SetFillValue(hpRecovered);
+					if (hpRecovered >= 1.0f) {
+						FullHealthBarFeedback* healthScript = GET_SCRIPT(healthSlot, FullHealthBarFeedback);
+						if (healthScript) healthScript->Play();
+					}
 				}
 			}
 		}
