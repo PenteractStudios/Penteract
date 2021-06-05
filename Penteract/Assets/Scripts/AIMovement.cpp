@@ -6,6 +6,7 @@
 
 #include "PlayerController.h"
 #include "HUDController.h"
+#include "WinLose.h"
 
 EXPOSE_MEMBERS(AIMovement) {
     MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
@@ -58,7 +59,7 @@ void AIMovement::Update() {
         else if (state == AIState::RUN) {
             animation->SendTrigger("RunDeath");
         }
-        Debug::Log("Death");
+        //Debug::Log("Death");
         agent->RemoveAgentFromCrowd();
         state = AIState::DEATH;
     }
@@ -105,6 +106,22 @@ void AIMovement::Update() {
         else {
             if (hudControllerScript) {
                 hudControllerScript->UpdateScore(10);
+            }
+            /*GameObject* spawn = GetOwner().GetParent();
+            if (spawn != nullptr) {
+                EnemySpawnPoint* enemyspawnpoint = GET_SCRIPT(spawn, EnemySpawnPoint);
+                if (enemyspawnpoint != nullptr) {
+                    //Debug::Log("ENEMY DEATH TO SPAWN");
+                    enemyspawnpoint->KillEnemy();
+                }
+            }*/
+            GameObject* winlose = GameplaySystems::GetGameObject("WinCon");
+            if (winlose != nullptr) {
+                WinLose* wincondition = GET_SCRIPT(winlose, WinLose);
+                if (wincondition != nullptr) {
+                    //Debug::Log("ENEMY DEATH TO WINCONDITION");
+                    wincondition->KillEnemy();
+                }
             }
             GameplaySystems::DestroyGameObject(&GetOwner());            
         }

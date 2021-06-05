@@ -3,6 +3,7 @@
 #include "Resources/ResourcePrefab.h"
 #include "GameplaySystems.h"
 #include "GameObject.h"
+//#include "WinLose.h"
 
 EXPOSE_MEMBERS(EnemySpawnPoint) {
 	MEMBER(MemberType::INT, amountOfEnemies),
@@ -40,3 +41,16 @@ void EnemySpawnPoint::Update() {
 		}
 	}
 }
+
+/*void EnemySpawnPoint::KillEnemy() {
+	deadEnemies++;
+	//Debug::Log("dead: %d", deadEnemies);
+	GameObject* winlose = GameplaySystems::GetGameObject("WinCon");
+	if (winlose != nullptr) {
+		WinLose* wincondition = GET_SCRIPT(winlose, WinLose);
+		if (wincondition != nullptr) {
+			//Debug::Log("ENEMY DEATH TO WINCONDITION");
+			wincondition->KillEnemy();
+		}
+	}
+}*/

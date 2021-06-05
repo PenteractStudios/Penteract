@@ -11,6 +11,7 @@ class EnemySpawnPoint : public Script {
 public:
 	void Start() override;
 	void Update() override;
+	//void KillEnemy();
 
 public:
 	UID prefabId = 0;
@@ -21,4 +22,5 @@ private:
 	GameObject* gameObject = nullptr;
 	ResourcePrefab* prefab = nullptr;
 	int iterator = 0;
+	int deadEnemies = 0;
 };
