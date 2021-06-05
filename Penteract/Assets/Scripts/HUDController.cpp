@@ -341,6 +341,14 @@ void HUDController::UpdateCommonSkill() {
 			image->SetFillValue(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
 			AbilityCoolDownEffectCheck(static_cast<Cooldowns>(Cooldowns::SWITCH_SKILL), swapingSkillCanvas);
 		}
+
+		if (cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1) {
+			if (children[5]->IsActive()) {
+				children[5]->Disable();
+				children[6]->Enable();
+			}
+		}
+
 	}
 	//for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); ++it) {
 	//	ComponentImage* image = (*it)->GetComponent<ComponentImage>();
@@ -359,9 +367,17 @@ void HUDController::UpdateFangCooldowns(GameObject* fangSkillCanvas, bool isMain
 	int skill = static_cast<int>(Cooldowns::FANG_SKILL_1);
 	for (std::vector<GameObject*>::iterator it = skills.begin(); it != skills.end(); ++it) {
 
-		if ((*it)->GetChildren().size() > 1) {
+		if ((*it)->GetChildren().size() > 5) {
 			ComponentImage* image = nullptr;
 			if (isMain) {
+
+				if (cooldowns[skill] < 1) {
+					if ((*it)->GetChildren()[5]->IsActive()) {
+						(*it)->GetChildren()[5]->Disable();
+						(*it)->GetChildren()[6]->Enable();
+					}
+				}
+
 				AbilityCoolDownEffectCheck(static_cast<Cooldowns>(skill), fangSkillCanvas);
 				image = (*it)->GetChildren()[2]->GetComponent<ComponentImage>();
 				if (image) {
@@ -404,24 +420,40 @@ void HUDController::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* c
 
 				if (cooldown < Cooldowns::ONIMARU_SKILL_1) {
 					if (canvas->GetChildren().size() > 0) {
-						if (canvas->GetChildren()[static_cast<int>(cooldown)]->GetChildren().size() > 4) {
+						if (canvas->GetChildren()[static_cast<int>(cooldown)]->GetChildren().size() > 5) {
 							ef = GET_SCRIPT(canvas->GetChildren()[static_cast<int>(cooldown)]->GetChildren()[0], AbilityRefreshEffect);
+							//Turn on button idle
+							canvas->GetChildren()[static_cast<int>(cooldown)]->GetChildren()[5]->Enable();
+							//Turn off button down
+							canvas->GetChildren()[static_cast<int>(cooldown)]->GetChildren()[6]->Disable();
 						}
 					}
 				} else if (cooldown < Cooldowns::SWITCH_SKILL) {
 					if (canvas->GetChildren().size() > 0) {
-						if (canvas->GetChildren()[static_cast<int>(cooldown) - 3]->GetChildren().size() > 4) {
+						if (canvas->GetChildren()[static_cast<int>(cooldown) - 3]->GetChildren().size() > 5) {
 							ef = GET_SCRIPT(canvas->GetChildren()[static_cast<int>(cooldown) - 3]->GetChildren()[0], AbilityRefreshEffect);
+							//Turn on button idle
+							canvas->GetChildren()[static_cast<int>(cooldown) - 3]->GetChildren()[5]->Enable();
+							//Turn off button down
+							canvas->GetChildren()[static_cast<int>(cooldown) - 3]->GetChildren()[6]->Disable();
 						}
 					}
 				} else {
-					if (canvas->GetChildren().size() > 0) {
+					if (canvas->GetChildren().size() > 6) {
 						ef = GET_SCRIPT(canvas->GetChildren()[2], AbilityRefreshEffect);
+
+						//Turn on button idle
+						canvas->GetChildren()[5]->Enable();
+						//Turn off button down
+						canvas->GetChildren()[6]->Disable();
+
 					}
 				}
 
+				if (ef) {
 
-				PlayCoolDownEffect(ef, cooldown);
+					PlayCoolDownEffect(ef, cooldown);
+				}
 			}
 		}
 	}
@@ -436,6 +468,14 @@ void HUDController::UpdateOnimaruCooldowns(GameObject* onimaruSkillCanvas, bool 
 		if ((*it)->GetChildren().size() > 1) {
 			ComponentImage* image = nullptr;
 			if (isMain) {
+
+				if (cooldowns[skill] < 1) {
+					if ((*it)->GetChildren()[5]->IsActive()) {
+						(*it)->GetChildren()[5]->Disable();
+						(*it)->GetChildren()[6]->Enable();
+					}
+				}
+
 				AbilityCoolDownEffectCheck(static_cast<Cooldowns>(skill), onimaruSkillCanvas);
 			}
 
