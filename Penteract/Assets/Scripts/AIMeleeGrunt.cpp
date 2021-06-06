@@ -90,7 +90,6 @@ void AIMeleeGrunt::Update() {
         if (!playerController->IsDead()) {
             if (movementScript->CharacterInSight(player, searchRadius)) {
                 animation->SendTrigger("IdleRun");
-                animation->SendTriggerSecondary("IdleRun");
                 state = AIState::RUN;
             }
         }
@@ -141,8 +140,7 @@ void AIMeleeGrunt::OnAnimationSecondaryFinished()
     if (state == AIState::ATTACK)
     {
         playerController->HitDetected();
-        animation->SendTrigger("RunIdle");
-        animation->SendTriggerSecondary("AttackIdle");
+        animation->SendTriggerSecondary("Attack" + animation->GetCurrentState()->name);
         state = AIState::IDLE;
     }
 }

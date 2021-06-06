@@ -459,11 +459,10 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 		}
 		else {
 			animation->SendTrigger(currentState->name + PlayerController::states[0]);
-			//animation->SendTriggerSecondary(animation->currentStateSecondary.name + PlayerController::states[0]);
 		}
 	}
 	else {
-		Debug::Log("%s", currentState->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
+		//Debug::Log((currentState->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]).c_str());
 		animation->SendTrigger(currentState->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
 		animation->SendTriggerSecondary(currentState->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
 	}
