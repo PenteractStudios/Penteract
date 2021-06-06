@@ -34,6 +34,10 @@ public:
 	void Update() override;
 
 	void HitDetected();
+	bool IsDead();
+	void SetInvincible(bool status);
+	void SetOverpower(bool status);
+	void SetNoCooldown(bool status);
 
 public:
 	bool debugGetHit = false;
@@ -91,6 +95,14 @@ public:
 
 	bool firstTime = true;
 
+	/* Fang & onimaru damage */
+	int onimaruDamage = 1;
+	int fangDamage = 3;
+	
+	//Camera
+	bool useSmoothCamera = true;
+	float smoothCameraSpeed = 5.0f;
+
 	std::vector<std::string> states{ "Idle" ,
 								"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
 								"DashBackward", "DashForward" , "DashLeft" , "DashRight" ,
@@ -130,6 +142,9 @@ private:
 	float fangAttackCooldownRemaining = 0.f;
 	float onimaruAttackCooldownRemaining = 0.f;
 	bool shooting = false;
+	bool invincibleMode = false;
+	int overpowerMode = 1;
+	bool noCooldownMode = false;
 
 	float fangRecovering = 0.f;
 	float onimaruRecovering = 0.f;

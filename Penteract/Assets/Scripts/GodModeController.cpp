@@ -1,5 +1,6 @@
 #include "GodModeController.h"
 #include "SpawnOnClick.h"
+#include "PlayerController.h"
 
 #include "GameplaySystems.h"
 #include "GameObject.h"
@@ -17,8 +18,8 @@ EXPOSE_MEMBERS(GodModeController) {
 	/* Cameras */
 	MEMBER(MemberType::GAME_OBJECT_UID, godCameraUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, gameCameraUID),
-	/* Other scripts*/
-	MEMBER(MemberType::GAME_OBJECT_UID, invincibleUID)
+	/* Player controller */
+	MEMBER(MemberType::GAME_OBJECT_UID, playerControllerUID)
 };
 
 GENERATE_BODY_IMPL(GodModeController);
@@ -36,8 +37,9 @@ void GodModeController::Start() {
 	/* Cameras */
 	godCamera = GameplaySystems::GetGameObject(godCameraUID);
 	gameCamera = GameplaySystems::GetGameObject(gameCameraUID);
-	/* Other scripts*/
-	invincible = GameplaySystems::GetGameObject(invincibleUID);
+	/* Player controller */
+	playerController = GameplaySystems::GetGameObject(playerControllerUID);
+	if (playerController) playerControllerScript = GET_SCRIPT(playerController, PlayerController);
 
 	for (GameObject* child : uiCanvas->GetChildren()) {
 		if (child->HasComponent<ComponentToggle>()) {
@@ -85,36 +87,53 @@ void GodModeController::OnChildToggle(unsigned int index, bool isChecked) {
 		break;
 	case 3:
 		if (isChecked) {
-			if (invincible) invincible->Enable();
-		}
-		else {
-			if (invincible) invincible->Disable();
-		}
-		break;
-	case 4:
-		if (isChecked) {
 			if (toggles[index + 1]->IsChecked()) {
 				toggles[index + 1]->SetChecked(false);
 			}
 			if (gameCamera) {
 				GameplaySystems::SetRenderCamera(gameCamera->GetComponent<ComponentCamera>());
 			}
-		} else if (!toggles[index + 1]->IsChecked()) {
+		}
+		else if (!toggles[index + 1]->IsChecked()) {
 			toggles[index]->SetChecked(true);
 		}
 		break;
-	case 5:
+	case 4:
 		if (isChecked) {
 			if (toggles[index - 1]->IsChecked()) {
 				toggles[index - 1]->SetChecked(false);
 			}
-			
+
 			if (godCamera) {
 				GameplaySystems::SetRenderCamera(godCamera->GetComponent<ComponentCamera>());
 			}
 		}
 		else if (!toggles[index - 1]->IsChecked()) {
 			toggles[index]->SetChecked(true);
+		}
+		break;
+	case 5:
+		if (isChecked) {
+			if (playerControllerScript) playerControllerScript->SetOverpower(true);
+		}
+		else {
+			if (playerControllerScript) playerControllerScript->SetOverpower(false);
+		}
+		break;
+	case 6:
+		if (isChecked) {
+			if (playerControllerScript) playerControllerScript->SetNoCooldown(true);
+		}
+		else {
+			if (playerControllerScript) playerControllerScript->SetNoCooldown(false);
+		}
+		break;
+	case 7:
+		if (isChecked) {
+			if (playerControllerScript) playerControllerScript->SetInvincible(true);
+		}
+		else {
+			if (playerControllerScript) playerControllerScript->SetInvincible(false);
 		}
 		break;
 

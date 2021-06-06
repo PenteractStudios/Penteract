@@ -15,7 +15,8 @@ public:
 	void OnButtonClick() override;
 
 public:
-	int checkpointNum;
+	UID sceneUID = 0;
+	int checkpointNum = -1;
 
 private:
 	GameObject* player = nullptr;

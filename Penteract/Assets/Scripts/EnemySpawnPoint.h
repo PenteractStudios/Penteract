@@ -3,6 +3,7 @@
 #include "Scripting/Script.h"
 
 class GameObject;
+class ResourcePrefab;
 
 class EnemySpawnPoint : public Script {
 	GENERATE_BODY(EnemySpawnPoint);
@@ -18,5 +19,6 @@ public:
 
 private:
 	GameObject* gameObject = nullptr;
+	ResourcePrefab* prefab = nullptr;
 	int iterator = 0;
 };
