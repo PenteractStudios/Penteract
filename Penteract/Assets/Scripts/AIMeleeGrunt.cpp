@@ -81,7 +81,7 @@ void AIMeleeGrunt::Update() {
     {
     case AIState::START:
         if (Camera::CheckObjectInsideFrustum(GetOwner().GetChildren()[0])) {
-            movementScript->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), gruntCharacter.movementSpeed);
+            movementScript->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), gruntCharacter.fallingSpeed);
             if (ownerTransform->GetGlobalPosition().y < 2.7 + 0e-5f) {
                 animation->SendTrigger("StartSpawn");
                 state = AIState::SPAWN;
