@@ -35,7 +35,7 @@ void TrailScript::Update() {
 	}
 }
 
-void TrailScript::OnCollision()
+void TrailScript::OnCollision(const GameObject& collidedWith)
 {
 	GameplaySystems::DestroyGameObject(&GetOwner());
 }

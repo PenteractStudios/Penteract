@@ -10,7 +10,7 @@ public:
 
 	void Start() override;
 	void Update() override;
-	void OnCollision() override;
+	void OnCollision(const GameObject& collidedWith) override;
 public:
 	int speed = 200;
 	float life = 0.2f;
