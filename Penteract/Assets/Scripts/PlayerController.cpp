@@ -4,7 +4,7 @@
 #include "GameplaySystems.h"
 #include "TesseractEvent.h"
 
-#include "AIMovement.h"
+#include "AIMeleeGrunt.h"
 #include "RangedAI.h"
 #include "HUDController.h"
 
@@ -24,34 +24,34 @@
 EXPOSE_MEMBERS(PlayerController) {
 	// Add members here to expose them to the engine. Example:
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
-		MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
-		MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruTrailUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangGunUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruParticleUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, switchAudioSourceUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, dashAudioSourceUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
-		MEMBER(MemberType::FLOAT, fangAttackSpeed),
-		MEMBER(MemberType::FLOAT, onimaruAttackSpeed),
-		MEMBER(MemberType::FLOAT, distanceRayCast),
-		MEMBER(MemberType::FLOAT, switchCooldown),
-		MEMBER(MemberType::FLOAT, dashCooldown),
-		MEMBER(MemberType::FLOAT, dashSpeed),
-		MEMBER(MemberType::FLOAT, dashDuration),
-		MEMBER(MemberType::FLOAT, cameraOffsetZ),
-		MEMBER(MemberType::FLOAT, cameraOffsetY),
-		MEMBER(MemberType::FLOAT, cameraOffsetX),
-		MEMBER(MemberType::FLOAT, fangMovementSpeed),
-		MEMBER(MemberType::FLOAT, onimaruMovementSpeed),
-		MEMBER(MemberType::FLOAT, shootCooldown),
-		MEMBER(MemberType::INT, lifePointsFang),
-		MEMBER(MemberType::INT, lifePointsOni),
-		MEMBER(MemberType::BOOL, useSmoothCamera),
-		MEMBER(MemberType::FLOAT, smoothCameraSpeed)
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruTrailUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangGunUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruParticleUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, switchAudioSourceUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dashAudioSourceUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
+	MEMBER(MemberType::FLOAT, fangAttackSpeed),
+	MEMBER(MemberType::FLOAT, onimaruAttackSpeed),
+	MEMBER(MemberType::FLOAT, distanceRayCast),
+	MEMBER(MemberType::FLOAT, switchCooldown),
+	MEMBER(MemberType::FLOAT, dashCooldown),
+	MEMBER(MemberType::FLOAT, dashSpeed),
+	MEMBER(MemberType::FLOAT, dashDuration),
+	MEMBER(MemberType::FLOAT, cameraOffsetZ),
+	MEMBER(MemberType::FLOAT, cameraOffsetY),
+	MEMBER(MemberType::FLOAT, cameraOffsetX),
+	MEMBER(MemberType::FLOAT, fangMovementSpeed),
+	MEMBER(MemberType::FLOAT, onimaruMovementSpeed),
+	MEMBER(MemberType::FLOAT, shootCooldown),
+	MEMBER(MemberType::INT, lifePointsFang),
+	MEMBER(MemberType::INT, lifePointsOni),
+	MEMBER(MemberType::BOOL, useSmoothCamera),
+	MEMBER(MemberType::FLOAT, smoothCameraSpeed)
 
 };
 
@@ -199,12 +199,11 @@ void PlayerController::SwitchCharacter() {
 		switchInCooldown = true;
 		switchAudioSource->Play();
 		if (fang->IsActive()) {
-			Debug::Log("Swaping to onimaru...");
 			fang->Disable();
 			onimaru->Enable();
 			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
-		} else {
-			Debug::Log("Swaping to fang...");
+		}
+		else {
 			onimaru->Disable();
 			fang->Enable();
 			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
@@ -259,31 +258,33 @@ void PlayerController::Shoot() {
 		int mask = static_cast<int>(MaskType::ENEMY);
 		GameObject* hitGo = Physics::Raycast(start, start + end, mask);
 		if (hitGo) {
-			//TODO centralize information in a shader class called EnemyStats?
-
-			AIMovement* enemyScript = GET_SCRIPT(hitGo->GetParent(), AIMovement);
-
+			AIMeleeGrunt* enemyScript = GET_SCRIPT(hitGo->GetParent(), AIMeleeGrunt);
 			if (enemyScript) {
-				if (fang->IsActive()) {
-					enemyScript->HitDetected(3);
-				} else {
-					enemyScript->HitDetected();
-				}
-			} else {
+				if (fang->IsActive()) enemyScript->HitDetected(3);
+				else enemyScript->HitDetected();
+			}else{
 				RangedAI* rangedAI = GET_SCRIPT(hitGo->GetParent(), RangedAI);
-
-				if (fang->IsActive()) {
-					rangedAI->HitDetected(3);
-				} else {
-					rangedAI->HitDetected();
-				}
+				if (fang->IsActive()) rangedAI->HitDetected(3);
+				else rangedAI->HitDetected();				
 			}
 		}
 	}
 }
 
 void PlayerController::HitDetected() {
-	hitTaken = true;
+	hitTaken = !invincibleMode;
+}
+
+void PlayerController::SetInvincible(bool status) {
+	invincibleMode = status;
+}
+
+void PlayerController::SetOverpower(bool status) {
+	overpowerMode = status ? 999 : 1;
+}
+
+void PlayerController::SetNoCooldown(bool status) {
+	noCooldownMode = status;
 }
 
 bool PlayerController::IsDead()
@@ -292,7 +293,7 @@ bool PlayerController::IsDead()
 }
 
 void PlayerController::CheckCoolDowns() {
-	if (switchCooldownRemaining <= 0.f) {
+	if (noCooldownMode || switchCooldownRemaining <= 0.f) {
 		switchCooldownRemaining = 0.f;
 		switchInCooldown = false;
 	} else {
@@ -301,7 +302,7 @@ void PlayerController::CheckCoolDowns() {
 
 	if (fang->IsActive()) {
 		//Dash Cooldown
-		if (dashCooldownRemaining <= 0.f) {
+		if (noCooldownMode || dashCooldownRemaining <= 0.f) {
 			dashCooldownRemaining = 0.f;
 			dashInCooldown = false;
 			dashMovementDirection = MovementDirection::NONE;
@@ -309,7 +310,7 @@ void PlayerController::CheckCoolDowns() {
 			dashCooldownRemaining -= Time::GetDeltaTime();
 		}
 		//Dash duration
-		if (dashRemaining <= 0) {
+		if (dashRemaining <= 0.f) {
 			dashRemaining = 0.f;
 			dashing = false;
 			agent->SetMaxSpeed(fangMovementSpeed);
@@ -317,7 +318,7 @@ void PlayerController::CheckCoolDowns() {
 			dashRemaining -= Time::GetDeltaTime();
 		}
 
-		if (fangAttackCooldownRemaining <= 0) {
+		if (fangAttackCooldownRemaining <= 0.f) {
 			fangAttackCooldownRemaining = 0.f;
 			shooting = false;
 		} else {
@@ -325,7 +326,7 @@ void PlayerController::CheckCoolDowns() {
 		}
 	}
 	if (onimaru->IsActive()) {
-		if (onimaruAttackCooldownRemaining <= 0) {
+		if (onimaruAttackCooldownRemaining <= 0.f) {
 			onimaruAttackCooldownRemaining = 0.f;
 			shooting = false;
 		} else {
@@ -513,7 +514,7 @@ void PlayerController::Update() {
 		if (!dashing) {
 			LookAtMouse();
 			MoveTo(md);
-			if (Input::GetKeyCode(Input::KEYCODE::KEY_R)) SwitchCharacter();
+			if (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R)) SwitchCharacter();
 		}
 		if (fang->IsActive()) {
 			if (Input::GetMouseButtonDown(0)) Shoot();

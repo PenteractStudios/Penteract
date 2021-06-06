@@ -4,6 +4,7 @@
 
 # Ignore hotreloading files
 _scene_snapshot.temp
+_scene_autosave.temp
 
 # Ignore the imgui ini file
 imgui.ini

@@ -8,6 +8,7 @@
 #include "Components/ComponentTransform.h"
 #include "Components/ComponentAudioSource.h"
 #include "Components/ComponentAgent.h"
+#include "Components/ComponentAnimation.h"
 #include "Resources/ResourcePrefab.h"
 
 //clang-format off

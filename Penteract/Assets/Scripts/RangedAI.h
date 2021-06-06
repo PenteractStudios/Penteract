@@ -7,6 +7,7 @@
 
 class ComponentAgent;
 class ComponentAudioSource;
+class ComponentAnimation;
 class ResourcePrefab;
 class HUDController;
 class PlayerController;
