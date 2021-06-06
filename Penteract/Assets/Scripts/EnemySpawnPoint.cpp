@@ -3,9 +3,10 @@
 #include "Resources/ResourcePrefab.h"
 #include "GameplaySystems.h"
 #include "GameObject.h"
-//#include "WinLose.h"
+#include "WinLose.h"
 
 EXPOSE_MEMBERS(EnemySpawnPoint) {
+	MEMBER(MemberType::GAME_OBJECT_UID, winUID),
 	MEMBER(MemberType::INT, amountOfEnemies),
 	MEMBER(MemberType::INT, offset),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, prefabId),
@@ -16,6 +17,10 @@ GENERATE_BODY_IMPL(EnemySpawnPoint);
 void EnemySpawnPoint::Start() {
 	gameObject = &GetOwner();
 	prefab = GameplaySystems::GetResource<ResourcePrefab>(prefabId);
+	winCon = GameplaySystems::GetGameObject(winUID);
+	if (winCon != nullptr) {
+		wincondition = GET_SCRIPT(winCon, WinLose);
+	}
 }
 
 void EnemySpawnPoint::Update() {
@@ -42,15 +47,9 @@ void EnemySpawnPoint::Update() {
 	}
 }
 
-/*void EnemySpawnPoint::KillEnemy() {
+void EnemySpawnPoint::KillEnemy() {
 	deadEnemies++;
-	//Debug::Log("dead: %d", deadEnemies);
-	GameObject* winlose = GameplaySystems::GetGameObject("WinCon");
-	if (winlose != nullptr) {
-		WinLose* wincondition = GET_SCRIPT(winlose, WinLose);
-		if (wincondition != nullptr) {
-			//Debug::Log("ENEMY DEATH TO WINCONDITION");
-			wincondition->KillEnemy();
-		}
+	if (wincondition != nullptr) {
+		wincondition->KillEnemy();
 	}
-}*/
+}

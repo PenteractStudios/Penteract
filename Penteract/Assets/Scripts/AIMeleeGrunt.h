@@ -11,7 +11,7 @@ class ComponentAgent;
 class HUDController;
 class PlayerController;
 class AIMovement;
-class WinLose;
+class EnemySpawnPoint;
 
 class AIMeleeGrunt : public Script
 {
@@ -28,12 +28,11 @@ public:
 
 	UID playerUID = 0;
 	UID canvasUID = 0;
-	UID winUID = 0;
 
 	GameObject* player = nullptr;
-	GameObject* winCon = nullptr;
+	GameObject* spawn = nullptr;
 	ComponentAgent* agent = nullptr;
-	WinLose* wincondition = nullptr;
+	EnemySpawnPoint* enemyspawnpoint = nullptr;
 
 	int maxSpeed = 8;
 	int fallingSpeed = 30;

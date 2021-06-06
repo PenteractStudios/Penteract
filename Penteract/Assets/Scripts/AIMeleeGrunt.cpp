@@ -6,12 +6,11 @@
 #include "PlayerController.h"
 #include "HUDController.h"
 #include "AIMovement.h"
-#include "WinLose.h"
+#include "EnemySpawnPoint.h"
 
 EXPOSE_MEMBERS(AIMeleeGrunt) {
     MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
         MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
-        MEMBER(MemberType::GAME_OBJECT_UID, winUID),
         MEMBER(MemberType::INT, maxSpeed),
         MEMBER(MemberType::INT, lifePoints),
         MEMBER(MemberType::FLOAT, searchRadius),
@@ -27,9 +26,9 @@ void AIMeleeGrunt::Start() {
     if (player) {
         playerController = GET_SCRIPT(player, PlayerController);
     }
-    winCon = GameplaySystems::GetGameObject(winUID);
-    if (winCon != nullptr) {
-        wincondition = GET_SCRIPT(winCon, WinLose);
+    GameObject* spawn = GetOwner().GetParent();
+    if (spawn != nullptr) {
+        enemyspawnpoint = GET_SCRIPT(spawn, EnemySpawnPoint);
     }
     agent = GetOwner().GetComponent<ComponentAgent>();
     if (agent) {
@@ -112,8 +111,8 @@ void AIMeleeGrunt::Update() {
     }
 
     if (dead) {
-        if (!killSent && wincondition != nullptr) {
-            wincondition->KillEnemy();
+        if (!killSent && enemyspawnpoint != nullptr) {
+            enemyspawnpoint->KillEnemy();
             killSent = true;
         }
         if (timeToDie > 0) {
