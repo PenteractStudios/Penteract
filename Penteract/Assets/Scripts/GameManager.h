@@ -16,7 +16,7 @@ public:
 	GameObject* gameManager = nullptr;
 	UID gameManagerUID = 0;
 	// Maybe we have to use Getters & Setters
-	float volumeScene = 0.f;
+	float volumeScene = 0.2f;
 
 private:
 	void Awake();

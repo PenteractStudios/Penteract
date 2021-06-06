@@ -7,7 +7,6 @@
 
 #include "GameManager.h"
 
-
 EXPOSE_MEMBERS(VolumeControl) {
     // Add members here to expose them to the engine. Example:
 	MEMBER(MemberType::GAME_OBJECT_UID, sliderUID),
@@ -25,12 +24,17 @@ void VolumeControl::Start() {
 		ComponentSlider* comSlider = sliderGO->GetComponent<ComponentSlider>();
 		ComponentAudioListener* comAudioLis = gameCamera->GetComponent<ComponentAudioListener>();
 		if (comSlider && comAudioLis) {
-			float volume = comSlider->GetNormalizedValue();
+			float volume = 0.f; 
 
 			// To control volume between scenes in GameManager
 			if (gameManager) {
 				gameManagerController = GET_SCRIPT(gameManager, GameManager);
-				gameManagerController->volumeScene = volume;
+				volume = gameManagerController->volumeScene;
+				// Update the slider
+				// comSlider->SetNormalizedValue(volume);
+			}
+			else {
+				volume = comSlider->GetNormalizedValue();
 			}
 
 			comAudioLis->SetAudioVolume(volume);
