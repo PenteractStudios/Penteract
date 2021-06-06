@@ -5,11 +5,11 @@ class Character
 public:
 	Character() {}
 
-	void Hit(int damage);
-	void Recover(int recoveryLife);
+	void Hit(int damage_);
+	void Recover(int recoveryLife_);
 
-	void SetTotalLifePoints(int totalLifePoints);
-	void SetDamageHit(int damageHit);
+	void SetTotalLifePoints(int totalLifePoints_);
+	void SetDamageHit(int damageHit_);
 
 public:
 	bool isAlive = true;

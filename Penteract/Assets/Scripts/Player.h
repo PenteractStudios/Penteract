@@ -17,8 +17,8 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void SetShootCooldown(float shootCooldown);
-	void SetAttackSpeed(float attackSpeed);
+	void SetShootCooldown(float shootCooldown_);
+	void SetAttackSpeed(float attackSpeed_);
 
 public:
 	float shootCooldown = 0.1f;

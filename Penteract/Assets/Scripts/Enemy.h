@@ -19,10 +19,10 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void SetFallingSpeed(int fallingSpeed);
-	void SetSearchRadius(float searchRadius);
-	void SetMeleeRange(float meleeRange);
-	void SetTimeToDie(float timeToDie);
+	void SetFallingSpeed(int fallingSpeed_);
+	void SetSearchRadius(float searchRadius_);
+	void SetMeleeRange(float meleeRange_);
+	void SetTimeToDie(float timeToDie_);
 
 public:
 	int fallingSpeed = 5;
