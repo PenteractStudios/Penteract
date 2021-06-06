@@ -30,8 +30,8 @@ void VolumeControl::Start() {
 			if (gameManager) {
 				gameManagerController = GET_SCRIPT(gameManager, GameManager);
 				volume = gameManagerController->volumeScene;
-				// Update the slider
-				// comSlider->SetNormalizedValue(volume);
+				comSlider->ChangeNormalizedValue(volume);
+				comSlider->OnValueChanged();
 			}
 			else {
 				volume = comSlider->GetNormalizedValue();
