@@ -13,11 +13,7 @@
                     3.0,
                     -35.36500930786133
                 ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
+                    0.0,     1.0
                 ],
                 "Scale": [
                     0.8500000238418579,
@@ -94,6 +90,21 @@
                         "Name": "cameraOffsetX",
                         "Type": "Float",
                         "Value": -6.0
+                    },
+                    {
+                        "Name": "fangGunUID",
+                        "Type": "GameObjectUID",
+                        "Value": 12318670275504616239
+                    },
+                    {
+                        "Name": "fangTrailUID",
+                        "Type": "PrefabResourceUID",
+                        "Value": 17059306767860105124
+                    },
+                    {
+                        "Name": "onimaruTrailUID",
+                        "Type": "PrefabResourceUID",
+                        "Value": 17059306767860105124
                     }
                 ]
             },
@@ -115,13 +126,13 @@
         "Children": [
             {
                 "Name": "Onimaru",
-                "Active": true,
+                "Active": false,
                 "RootBoneName": "Hips",
                 "Mask": 0,
                 "Components": [
                     {
                         "Type": "Transform",
-                        "Active": true,
+                        "Active": false,
                         "Position": [
                             0.0,
                             0.0,
@@ -146,8 +157,26 @@
                     },
                     {
                         "Type": "Animation",
-                        "Active": true,
-                        "StateMachineId": 3386770174613434618
+                        "Active": false,
+                        "StateMachinePrincipalId": 3386770174613434618,
+                        "StateMachineSecondaryId": 3437580542621019456
+                    },
+                    {
+                        "Type": "Script",
+                        "Active": false,
+                        "Script": 10002269642242264877,
+                        "Values": [
+                            {
+                                "Name": "sceneUID",
+                                "Type": "SceneResourceUID",
+                                "Value": 1827699931961010260
+                            },
+                            {
+                                "Name": "playerUID",
+                                "Type": "GameObjectUID",
+                                "Value": 8960886680822700415
+                            }
+                        ]
                     }
                 ],
                 "Children": [
@@ -159,7 +188,7 @@
                         "Components": [
                             {
                                 "Type": "Transform",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     0.0,
@@ -184,18 +213,14 @@
                             },
                             {
                                 "Type": "MeshRenderer",
-                                "Active": true,
+                                "Active": false,
                                 "MeshID": 11321364298817246227,
                                 "MaterialID": 9765489862314489578
                             },
                             {
                                 "Type": "BoundingBox",
-                                "Active": true,
-                                "LocalBoundingBox": [
-                                    -111.81140899658203,
-                                    -137.79212951660157,
-                                    -205.00033569335938,
-                                    110.37391662597656,
+                                "Active": false,
+                                    -111.81140899658203,008                     110.37391662597656,
                                     69.62792205810547,
                                     -0.6350857019424439
                                 ]
@@ -211,15 +236,11 @@
                         "Components": [
                             {
                                 "Type": "Transform",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     88.14014434814453,
-                                    0.0
-                                ],
-                                "Rotation": [
-                                    0.0,
-                                    0.0,
+                                ],                     0.0,
                                     0.0,
                                     1.0
                                 ],
@@ -244,7 +265,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             24.0,
@@ -277,17 +298,13 @@
                                         "Components": [
                                             {
                                                 "Type": "Transform",
-                                                "Active": true,
+                                                "Active": false,
                                                 "Position": [
                                                     0.0,
                                                     23.937654495239259,
                                                     0.0
                                                 ],
-                                                "Rotation": [
-                                                    0.0,
-                                                    0.0,
-                                                    0.0,
-                                                    1.0
+                                                    0.0,                                     1.0
                                                 ],
                                                 "Scale": [
                                                     1.0,
@@ -310,7 +327,7 @@
                                                 "Components": [
                                                     {
                                                         "Type": "Transform",
-                                                        "Active": true,
+                                                        "Active": false,
                                                         "Position": [
                                                             35.57080841064453,
                                                             10.974143981933594,
@@ -343,7 +360,7 @@
                                                         "Components": [
                                                             {
                                                                 "Type": "Transform",
-                                                                "Active": true,
+                                                                "Active": false,
                                                                 "Position": [
                                                                     16.823348999023439,
                                                                     -8.192561149597168,
@@ -376,7 +393,7 @@
                                                                 "Components": [
                                                                     {
                                                                         "Type": "Transform",
-                                                                        "Active": true,
+                                                                        "Active": false,
                                                                         "Position": [
                                                                             58.27535629272461,
                                                                             -0.7740472555160523,
@@ -409,7 +426,7 @@
                                                                         "Components": [
                                                                             {
                                                                                 "Type": "Transform",
-                                                                                "Active": true,
+                                                                                "Active": false,
                                                                                 "Position": [
                                                                                     0.00003563821883290075,
                                                                                     1.4675723314285279,
@@ -442,7 +459,7 @@
                                                                                 "Components": [
                                                                                     {
                                                                                         "Type": "Transform",
-                                                                                        "Active": true,
+                                                                                        "Active": false,
                                                                                         "Position": [
                                                                                             0.000022520182028529235,
                                                                                             0.000026879044526140207,
@@ -475,7 +492,7 @@
                                                                                         "Components": [
                                                                                             {
                                                                                                 "Type": "Transform",
-                                                                                                "Active": true,
+                                                                                                "Active": false,
                                                                                                 "Position": [
                                                                                                     0.0,
                                                                                                     0.0,
@@ -500,30 +517,45 @@
                                                                                             },
                                                                                             {
                                                                                                 "Type": "Particle",
-                                                                                                "Active": true,
-                                                                                                "ShaderId": 14028879591438108246,
+                                                                                                "Active": false,
+                                                                                                "EmitterType": 0,
+                                                                                                "BillboardType": 0,
                                                                                                 "TextureId": 12530008367011440877,
                                                                                                 "IsPlaying": true,
                                                                                                 "IsLooping": false,
-                                                                                                "IsRandomFrame": false,
-                                                                                                "IsRandomDirection": false,
+                                                                                                "IsSizeOverTime": false,
+                                                                                                "ScaleFactor": 0.0,
                                                                                                 "ParticleScale": 10.0,
                                                                                                 "MaxParticle": 1,
                                                                                                 "Velocity": 7.0,
                                                                                                 "LifeParticle": 0.10000000149011612,
+                                                                                                "DistanceReverse": 0.0,
+                                                                                                "ReverseEffect": false,
+                                                                                                "StartDelay": 0.0,
                                                                                                 "Ytiles": 1,
                                                                                                 "Xtiles": 1,
                                                                                                 "AnimationSpeed": 0.0,
+                                                                                                "IsRandomFrame": false,
                                                                                                 "InitColor": [
                                                                                                     1.0,
+                                                                                                    0.0,
                                                                                                     0.0,
                                                                                                     0.0
                                                                                                 ],
                                                                                                 "FinalColor": [
                                                                                                     1.0,
                                                                                                     0.0,
+                                                                                                    0.0,
                                                                                                     0.0
-                                                                                                ]
+                                                                                                ],
+                                                                                                "StartTransition": 0.0,
+                                                                                                "EndTransition": 0.0,
+                                                                                                "FlipTexture": [
+                                                                                                    false,
+                                                                                                    false
+                                                                                                ],
+                                                                                                "ConeRadiusUp": 0.0,
+                                                                                                "ConeRadiusDown": 0.0
                                                                                             }
                                                                                         ],
                                                                                         "Children": null
@@ -538,7 +570,7 @@
                                                                                 "Components": [
                                                                                     {
                                                                                         "Type": "Transform",
-                                                                                        "Active": true,
+                                                                                        "Active": false,
                                                                                         "Position": [
                                                                                             8.487794876098633,
                                                                                             -5.364041328430176,
@@ -571,7 +603,7 @@
                                                                                         "Components": [
                                                                                             {
                                                                                                 "Type": "Transform",
-                                                                                                "Active": true,
+                                                                                                "Active": false,
                                                                                                 "Position": [
                                                                                                     8.444647789001465,
                                                                                                     0.0,
@@ -604,7 +636,7 @@
                                                                                                 "Components": [
                                                                                                     {
                                                                                                         "Type": "Transform",
-                                                                                                        "Active": true,
+                                                                                                        "Active": false,
                                                                                                         "Position": [
                                                                                                             8.538883209228516,
                                                                                                             -1.9895196601282806e-13,
@@ -637,7 +669,7 @@
                                                                                                         "Components": [
                                                                                                             {
                                                                                                                 "Type": "Transform",
-                                                                                                                "Active": true,
+                                                                                                                "Active": false,
                                                                                                                 "Position": [
                                                                                                                     7.914938926696777,
                                                                                                                     1.4210854715202004e-13,
@@ -670,7 +702,7 @@
                                                                                                                 "Components": [
                                                                                                                     {
                                                                                                                         "Type": "Transform",
-                                                                                                                        "Active": true,
+                                                                                                                        "Active": false,
                                                                                                                         "Position": [
                                                                                                                             8.022130966186524,
                                                                                                                             0.0,
@@ -703,7 +735,7 @@
                                                                                                                         "Components": [
                                                                                                                             {
                                                                                                                                 "Type": "Transform",
-                                                                                                                                "Active": true,
+                                                                                                                                "Active": false,
                                                                                                                                 "Position": [
                                                                                                                                     8.8751220703125,
                                                                                                                                     2.1316282072803007e-14,
@@ -747,7 +779,7 @@
                                                                                 "Components": [
                                                                                     {
                                                                                         "Type": "Transform",
-                                                                                        "Active": true,
+                                                                                        "Active": false,
                                                                                         "Position": [
                                                                                             4.495032787322998,
                                                                                             18.386316299438478,
@@ -780,7 +812,7 @@
                                                                                         "Components": [
                                                                                             {
                                                                                                 "Type": "Transform",
-                                                                                                "Active": true,
+                                                                                                "Active": false,
                                                                                                 "Position": [
                                                                                                     8.174785614013672,
                                                                                                     -4.902298450469971,
@@ -816,7 +848,7 @@
                                                                                 "Components": [
                                                                                     {
                                                                                         "Type": "Transform",
-                                                                                        "Active": true,
+                                                                                        "Active": false,
                                                                                         "Position": [
                                                                                             13.368820190429688,
                                                                                             -40.2069206237793,
@@ -849,7 +881,7 @@
                                                                                         "Components": [
                                                                                             {
                                                                                                 "Type": "Transform",
-                                                                                                "Active": true,
+                                                                                                "Active": false,
                                                                                                 "Position": [
                                                                                                     -4.263256414560601e-14,
                                                                                                     0.0007074411842040718,
@@ -885,7 +917,7 @@
                                                                                 "Components": [
                                                                                     {
                                                                                         "Type": "Transform",
-                                                                                        "Active": true,
+                                                                                        "Active": false,
                                                                                         "Position": [
                                                                                             0.058504894375801089,
                                                                                             0.00002955517265945673,
@@ -923,7 +955,7 @@
                                                                 "Components": [
                                                                     {
                                                                         "Type": "Transform",
-                                                                        "Active": true,
+                                                                        "Active": false,
                                                                         "Position": [
                                                                             -5.727914810180664,
                                                                             17.656448364257814,
@@ -961,7 +993,7 @@
                                                 "Components": [
                                                     {
                                                         "Type": "Transform",
-                                                        "Active": true,
+                                                        "Active": false,
                                                         "Position": [
                                                             0.0,
                                                             16.739524841308595,
@@ -995,7 +1027,7 @@
                                                 "Components": [
                                                     {
                                                         "Type": "Transform",
-                                                        "Active": true,
+                                                        "Active": false,
                                                         "Position": [
                                                             0.0,
                                                             16.73880958557129,
@@ -1029,7 +1061,7 @@
                                                 "Components": [
                                                     {
                                                         "Type": "Transform",
-                                                        "Active": true,
+                                                        "Active": false,
                                                         "Position": [
                                                             0.0,
                                                             20.446674346923829,
@@ -1063,7 +1095,7 @@
                                                 "Components": [
                                                     {
                                                         "Type": "Transform",
-                                                        "Active": true,
+                                                        "Active": false,
                                                         "Position": [
                                                             0.0,
                                                             8.259847640991211,
@@ -1096,7 +1128,7 @@
                                                         "Components": [
                                                             {
                                                                 "Type": "Transform",
-                                                                "Active": true,
+                                                                "Active": false,
                                                                 "Position": [
                                                                     27.865121841430665,
                                                                     -6.758786678314209,
@@ -1130,7 +1162,7 @@
                                                         "Components": [
                                                             {
                                                                 "Type": "Transform",
-                                                                "Active": true,
+                                                                "Active": false,
                                                                 "Position": [
                                                                     -27.865100860595704,
                                                                     -6.7585015296936039,
@@ -1166,7 +1198,7 @@
                                                 "Components": [
                                                     {
                                                         "Type": "Transform",
-                                                        "Active": true,
+                                                        "Active": false,
                                                         "Position": [
                                                             0.0,
                                                             -0.24907507002353669,
@@ -1200,7 +1232,7 @@
                                                 "Components": [
                                                     {
                                                         "Type": "Transform",
-                                                        "Active": true,
+                                                        "Active": false,
                                                         "Position": [
                                                             -35.57080078125,
                                                             10.974346160888672,
@@ -1233,7 +1265,7 @@
                                                         "Components": [
                                                             {
                                                                 "Type": "Transform",
-                                                                "Active": true,
+                                                                "Active": false,
                                                                 "Position": [
                                                                     -16.823429107666017,
                                                                     8.192440032958985,
@@ -1266,7 +1298,7 @@
                                                                 "Components": [
                                                                     {
                                                                         "Type": "Transform",
-                                                                        "Active": true,
+                                                                        "Active": false,
                                                                         "Position": [
                                                                             -38.916690826416019,
                                                                             -43.74967575073242,
@@ -1299,7 +1331,7 @@
                                                                         "Components": [
                                                                             {
                                                                                 "Type": "Transform",
-                                                                                "Active": true,
+                                                                                "Active": false,
                                                                                 "Position": [
                                                                                     1.4210854715202005e-14,
                                                                                     -8.526512829121202e-14,
@@ -1332,7 +1364,7 @@
                                                                                 "Components": [
                                                                                     {
                                                                                         "Type": "Transform",
-                                                                                        "Active": true,
+                                                                                        "Active": false,
                                                                                         "Position": [
                                                                                             2.2975721947204875e-7,
                                                                                             -1.6734934149553738e-7,
@@ -1365,7 +1397,7 @@
                                                                                         "Components": [
                                                                                             {
                                                                                                 "Type": "Transform",
-                                                                                                "Active": true,
+                                                                                                "Active": false,
                                                                                                 "Position": [
                                                                                                     -1.4210854715202005e-14,
                                                                                                     2.842170943040401e-14,
@@ -1398,7 +1430,7 @@
                                                                                                 "Components": [
                                                                                                     {
                                                                                                         "Type": "Transform",
-                                                                                                        "Active": true,
+                                                                                                        "Active": false,
                                                                                                         "Position": [
                                                                                                             0.0,
                                                                                                             -4.311438359105857e-15,
@@ -1434,7 +1466,7 @@
                                                                                         "Components": [
                                                                                             {
                                                                                                 "Type": "Transform",
-                                                                                                "Active": true,
+                                                                                                "Active": false,
                                                                                                 "Position": [
                                                                                                     6.249491946164199e-8,
                                                                                                     8.769155502319336,
@@ -1467,7 +1499,7 @@
                                                                                                 "Components": [
                                                                                                     {
                                                                                                         "Type": "Transform",
-                                                                                                        "Active": true,
+                                                                                                        "Active": false,
                                                                                                         "Position": [
                                                                                                             -3.140184069532186e-17,
                                                                                                             4.559698581695557,
@@ -1500,7 +1532,7 @@
                                                                                                         "Components": [
                                                                                                             {
                                                                                                                 "Type": "Transform",
-                                                                                                                "Active": true,
+                                                                                                                "Active": false,
                                                                                                                 "Position": [
                                                                                                                     -2.7461170455092716e-17,
                                                                                                                     16.37386131286621,
@@ -1533,7 +1565,7 @@
                                                                                                                 "Components": [
                                                                                                                     {
                                                                                                                         "Type": "Transform",
-                                                                                                                        "Active": true,
+                                                                                                                        "Active": false,
                                                                                                                         "Position": [
                                                                                                                             1.4210854715202005e-14,
                                                                                                                             9.394641876220704,
@@ -1573,7 +1605,7 @@
                                                                                         "Components": [
                                                                                             {
                                                                                                 "Type": "Transform",
-                                                                                                "Active": true,
+                                                                                                "Active": false,
                                                                                                 "Position": [
                                                                                                     6.249484840736841e-8,
                                                                                                     -9.084935188293457,
@@ -1606,7 +1638,7 @@
                                                                                                 "Components": [
                                                                                                     {
                                                                                                         "Type": "Transform",
-                                                                                                        "Active": true,
+                                                                                                        "Active": false,
                                                                                                         "Position": [
                                                                                                             -7.851718425750732,
                                                                                                             -2.0819015502929689,
@@ -1639,7 +1671,7 @@
                                                                                                         "Components": [
                                                                                                             {
                                                                                                                 "Type": "Transform",
-                                                                                                                "Active": true,
+                                                                                                                "Active": false,
                                                                                                                 "Position": [
                                                                                                                     -9.735684394836426,
                                                                                                                     -12.999351501464844,
@@ -1672,7 +1704,7 @@
                                                                                                                 "Components": [
                                                                                                                     {
                                                                                                                         "Type": "Transform",
-                                                                                                                        "Active": true,
+                                                                                                                        "Active": false,
                                                                                                                         "Position": [
                                                                                                                             -5.2444658279418949,
                                                                                                                             -7.130119323730469,
@@ -1710,7 +1742,7 @@
                                                                                                 "Components": [
                                                                                                     {
                                                                                                         "Type": "Transform",
-                                                                                                        "Active": true,
+                                                                                                        "Active": false,
                                                                                                         "Position": [
                                                                                                             7.8516998291015629,
                                                                                                             -2.081965684890747,
@@ -1743,7 +1775,7 @@
                                                                                                         "Components": [
                                                                                                             {
                                                                                                                 "Type": "Transform",
-                                                                                                                "Active": true,
+                                                                                                                "Active": false,
                                                                                                                 "Position": [
                                                                                                                     9.735699653625489,
                                                                                                                     12.99899959564209,
@@ -1776,7 +1808,7 @@
                                                                                                                 "Components": [
                                                                                                                     {
                                                                                                                         "Type": "Transform",
-                                                                                                                        "Active": true,
+                                                                                                                        "Active": false,
                                                                                                                         "Position": [
                                                                                                                             5.244500160217285,
                                                                                                                             7.130000114440918,
@@ -1822,7 +1854,7 @@
                                                                 "Components": [
                                                                     {
                                                                         "Type": "Transform",
-                                                                        "Active": true,
+                                                                        "Active": false,
                                                                         "Position": [
                                                                             17.107820510864259,
                                                                             -7.200170993804932,
@@ -1864,7 +1896,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             37.6719856262207,
                                             0.14598819613456727,
@@ -1897,14 +1929,10 @@
                                         "Components": [
                                             {
                                                 "Type": "Transform",
-                                                "Active": true,
+                                                "Active": false,
                                                 "Position": [
                                                     0.0,
-                                                    -21.596939086914064,
-                                                    36.914546966552737
-                                                ],
-                                                "Rotation": [
-                                                    -0.002275665057823062,
+                                                    36.914546966552737                                     -0.002275665057823062,
                                                     0.0,
                                                     0.0,
                                                     0.9999974966049194
@@ -1930,7 +1958,7 @@
                                                 "Components": [
                                                     {
                                                         "Type": "Transform",
-                                                        "Active": true,
+                                                        "Active": false,
                                                         "Position": [
                                                             7.105427357601002e-15,
                                                             -9.582137107849121,
@@ -1963,16 +1991,12 @@
                                                         "Components": [
                                                             {
                                                                 "Type": "Transform",
-                                                                "Active": true,
+                                                                "Active": false,
                                                                 "Position": [
                                                                     -1.4210854715202005e-14,
                                                                     -30.636676788330079,
                                                                     24.285993576049806
-                                                                ],
-                                                                "Rotation": [
-                                                                    0.0,
-                                                                    0.0,
-                                                                    0.0,
+                                                                "Rotatio                                                     0.0,
                                                                     1.0
                                                                 ],
                                                                 "Scale": [
@@ -1996,7 +2020,7 @@
                                                                 "Components": [
                                                                     {
                                                                         "Type": "Transform",
-                                                                        "Active": true,
+                                                                        "Active": false,
                                                                         "Position": [
                                                                             0.0013397498987615109,
                                                                             -6.596165657043457,
@@ -2029,18 +2053,14 @@
                                                                         "Components": [
                                                                             {
                                                                                 "Type": "Transform",
-                                                                                "Active": true,
+                                                                                "Active": false,
                                                                                 "Position": [
                                                                                     0.01932365819811821,
                                                                                     -7.698277950286865,
                                                                                     -8.123013496398926
                                                                                 ],
                                                                                 "Rotation": [
-                                                                                    0.0,
-                                                                                    0.0,
-                                                                                    0.0,
-                                                                                    1.0
-                                                                                ],
+                                                                                                                                         ],
                                                                                 "Scale": [
                                                                                     1.0,
                                                                                     1.0,
@@ -2062,7 +2082,7 @@
                                                                                 "Components": [
                                                                                     {
                                                                                         "Type": "Transform",
-                                                                                        "Active": true,
+                                                                                        "Active": false,
                                                                                         "Position": [
                                                                                             -7.970929145812988,
                                                                                             5.3290705182007517e-15,
@@ -2095,7 +2115,7 @@
                                                                                         "Components": [
                                                                                             {
                                                                                                 "Type": "Transform",
-                                                                                                "Active": true,
+                                                                                                "Active": false,
                                                                                                 "Position": [
                                                                                                     0.026496918871998788,
                                                                                                     -4.132340431213379,
@@ -2104,11 +2124,7 @@
                                                                                                 "Rotation": [
                                                                                                     0.0,
                                                                                                     0.0,
-                                                                                                    0.0,
-                                                                                                    1.0
-                                                                                                ],
-                                                                                                "Scale": [
-                                                                                                    1.0,
+                                                                                                                                                             1.0,
                                                                                                     1.0,
                                                                                                     1.0
                                                                                                 ],
@@ -2128,7 +2144,7 @@
                                                                                                 "Components": [
                                                                                                     {
                                                                                                         "Type": "Transform",
-                                                                                                        "Active": true,
+                                                                                                        "Active": false,
                                                                                                         "Position": [
                                                                                                             0.0,
                                                                                                             -1.9006229639053345,
@@ -2166,7 +2182,7 @@
                                                                                 "Components": [
                                                                                     {
                                                                                         "Type": "Transform",
-                                                                                        "Active": true,
+                                                                                        "Active": false,
                                                                                         "Position": [
                                                                                             8.437978744506836,
                                                                                             5.3290705182007517e-15,
@@ -2199,7 +2215,7 @@
                                                                                         "Components": [
                                                                                             {
                                                                                                 "Type": "Transform",
-                                                                                                "Active": true,
+                                                                                                "Active": false,
                                                                                                 "Position": [
                                                                                                     0.0,
                                                                                                     -4.132340431213379,
@@ -2232,7 +2248,7 @@
                                                                                                 "Components": [
                                                                                                     {
                                                                                                         "Type": "Transform",
-                                                                                                        "Active": true,
+                                                                                                        "Active": false,
                                                                                                         "Position": [
                                                                                                             0.0,
                                                                                                             -1.9006229639053345,
@@ -2272,7 +2288,7 @@
                                                                         "Components": [
                                                                             {
                                                                                 "Type": "Transform",
-                                                                                "Active": true,
+                                                                                "Active": false,
                                                                                 "Position": [
                                                                                     0.01931281015276909,
                                                                                     -7.72243595123291,
@@ -2305,7 +2321,7 @@
                                                                                 "Components": [
                                                                                     {
                                                                                         "Type": "Transform",
-                                                                                        "Active": true,
+                                                                                        "Active": false,
                                                                                         "Position": [
                                                                                             7.970900058746338,
                                                                                             7.103223377872246e-15,
@@ -2338,7 +2354,7 @@
                                                                                         "Components": [
                                                                                             {
                                                                                                 "Type": "Transform",
-                                                                                                "Active": true,
+                                                                                                "Active": false,
                                                                                                 "Position": [
                                                                                                     -0.026499999687075616,
                                                                                                     4.110660076141357,
@@ -2371,7 +2387,7 @@
                                                                                                 "Components": [
                                                                                                     {
                                                                                                         "Type": "Transform",
-                                                                                                        "Active": true,
+                                                                                                        "Active": false,
                                                                                                         "Position": [
                                                                                                             -7.105427357601002e-15,
                                                                                                             1.9006199836730958,
@@ -2409,7 +2425,7 @@
                                                                                 "Components": [
                                                                                     {
                                                                                         "Type": "Transform",
-                                                                                        "Active": true,
+                                                                                        "Active": false,
                                                                                         "Position": [
                                                                                             -8.437999725341797,
                                                                                             5.326866538471996e-15,
@@ -2442,7 +2458,7 @@
                                                                                         "Components": [
                                                                                             {
                                                                                                 "Type": "Transform",
-                                                                                                "Active": true,
+                                                                                                "Active": false,
                                                                                                 "Position": [
                                                                                                     0.0,
                                                                                                     4.110660076141357,
@@ -2475,7 +2491,7 @@
                                                                                                 "Components": [
                                                                                                     {
                                                                                                         "Type": "Transform",
-                                                                                                        "Active": true,
+                                                                                                        "Active": false,
                                                                                                         "Position": [
                                                                                                             -7.105427357601002e-15,
                                                                                                             1.9006199836730958,
@@ -2521,7 +2537,7 @@
                                                 "Components": [
                                                     {
                                                         "Type": "Transform",
-                                                        "Active": true,
+                                                        "Active": false,
                                                         "Position": [
                                                             -0.0005733013385906816,
                                                             11.64283561706543,
@@ -2559,7 +2575,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             -0.006720974575728178,
                                             5.575351715087891,
@@ -2592,7 +2608,7 @@
                                         "Components": [
                                             {
                                                 "Type": "Transform",
-                                                "Active": true,
+                                                "Active": false,
                                                 "Position": [
                                                     0.0,
                                                     0.0,
@@ -2625,7 +2641,7 @@
                                                 "Components": [
                                                     {
                                                         "Type": "Transform",
-                                                        "Active": true,
+                                                        "Active": false,
                                                         "Position": [
                                                             11.173019409179688,
                                                             0.0,
@@ -2658,7 +2674,7 @@
                                                         "Components": [
                                                             {
                                                                 "Type": "Transform",
-                                                                "Active": true,
+                                                                "Active": false,
                                                                 "Position": [
                                                                     2.7705626487731935,
                                                                     -11.772403717041016,
@@ -2691,7 +2707,7 @@
                                                                 "Components": [
                                                                     {
                                                                         "Type": "Transform",
-                                                                        "Active": true,
+                                                                        "Active": false,
                                                                         "Position": [
                                                                             1.7595787048339844,
                                                                             -12.920083045959473,
@@ -2729,7 +2745,7 @@
                                                 "Components": [
                                                     {
                                                         "Type": "Transform",
-                                                        "Active": true,
+                                                        "Active": false,
                                                         "Position": [
                                                             -6.860422134399414,
                                                             -3.8392767906188967,
@@ -2762,7 +2778,7 @@
                                                         "Components": [
                                                             {
                                                                 "Type": "Transform",
-                                                                "Active": true,
+                                                                "Active": false,
                                                                 "Position": [
                                                                     -4.013181209564209,
                                                                     -7.933127403259277,
@@ -2795,7 +2811,7 @@
                                                                 "Components": [
                                                                     {
                                                                         "Type": "Transform",
-                                                                        "Active": true,
+                                                                        "Active": false,
                                                                         "Position": [
                                                                             -2.610616445541382,
                                                                             -11.780173301696778,
@@ -2837,7 +2853,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             -37.672000885009769,
                                             0.1459999978542328,
@@ -2870,7 +2886,7 @@
                                         "Components": [
                                             {
                                                 "Type": "Transform",
-                                                "Active": true,
+                                                "Active": false,
                                                 "Position": [
                                                     0.0,
                                                     21.597000122070314,
@@ -2903,7 +2919,7 @@
                                                 "Components": [
                                                     {
                                                         "Type": "Transform",
-                                                        "Active": true,
+                                                        "Active": false,
                                                         "Position": [
                                                             0.0,
                                                             9.582099914550782,
@@ -2936,7 +2952,7 @@
                                                         "Components": [
                                                             {
                                                                 "Type": "Transform",
-                                                                "Active": true,
+                                                                "Active": false,
                                                                 "Position": [
                                                                     0.0,
                                                                     30.636699676513673,
@@ -2969,7 +2985,7 @@
                                                                 "Components": [
                                                                     {
                                                                         "Type": "Transform",
-                                                                        "Active": true,
+                                                                        "Active": false,
                                                                         "Position": [
                                                                             0.0,
                                                                             5.692694664001465,
@@ -3002,7 +3018,7 @@
                                                                         "Components": [
                                                                             {
                                                                                 "Type": "Transform",
-                                                                                "Active": true,
+                                                                                "Active": false,
                                                                                 "Position": [
                                                                                     -0.019300000742077829,
                                                                                     7.698200225830078,
@@ -3035,7 +3051,7 @@
                                                                                 "Components": [
                                                                                     {
                                                                                         "Type": "Transform",
-                                                                                        "Active": true,
+                                                                                        "Active": false,
                                                                                         "Position": [
                                                                                             7.970900058746338,
                                                                                             -1.7763568394002506e-15,
@@ -3068,7 +3084,7 @@
                                                                                         "Components": [
                                                                                             {
                                                                                                 "Type": "Transform",
-                                                                                                "Active": true,
+                                                                                                "Active": false,
                                                                                                 "Position": [
                                                                                                     -0.026499999687075616,
                                                                                                     4.13238000869751,
@@ -3101,7 +3117,7 @@
                                                                                                 "Components": [
                                                                                                     {
                                                                                                         "Type": "Transform",
-                                                                                                        "Active": true,
+                                                                                                        "Active": false,
                                                                                                         "Position": [
                                                                                                             0.0,
                                                                                                             1.900629997253418,
@@ -3139,7 +3155,7 @@
                                                                                 "Components": [
                                                                                     {
                                                                                         "Type": "Transform",
-                                                                                        "Active": true,
+                                                                                        "Active": false,
                                                                                         "Position": [
                                                                                             -8.437999725341797,
                                                                                             -1.7763568394002506e-15,
@@ -3172,7 +3188,7 @@
                                                                                         "Components": [
                                                                                             {
                                                                                                 "Type": "Transform",
-                                                                                                "Active": true,
+                                                                                                "Active": false,
                                                                                                 "Position": [
                                                                                                     0.0,
                                                                                                     4.13238000869751,
@@ -3205,7 +3221,7 @@
                                                                                                 "Components": [
                                                                                                     {
                                                                                                         "Type": "Transform",
-                                                                                                        "Active": true,
+                                                                                                        "Active": false,
                                                                                                         "Position": [
                                                                                                             0.0,
                                                                                                             1.900629997253418,
@@ -3245,7 +3261,7 @@
                                                                         "Components": [
                                                                             {
                                                                                 "Type": "Transform",
-                                                                                "Active": true,
+                                                                                "Active": false,
                                                                                 "Position": [
                                                                                     -0.019300000742077829,
                                                                                     7.722400188446045,
@@ -3278,7 +3294,7 @@
                                                                                 "Components": [
                                                                                     {
                                                                                         "Type": "Transform",
-                                                                                        "Active": true,
+                                                                                        "Active": false,
                                                                                         "Position": [
                                                                                             -7.970900058746338,
                                                                                             0.0,
@@ -3311,7 +3327,7 @@
                                                                                         "Components": [
                                                                                             {
                                                                                                 "Type": "Transform",
-                                                                                                "Active": true,
+                                                                                                "Active": false,
                                                                                                 "Position": [
                                                                                                     0.026499999687075616,
                                                                                                     -4.110660076141357,
@@ -3344,7 +3360,7 @@
                                                                                                 "Components": [
                                                                                                     {
                                                                                                         "Type": "Transform",
-                                                                                                        "Active": true,
+                                                                                                        "Active": false,
                                                                                                         "Position": [
                                                                                                             0.0,
                                                                                                             -1.9006199836730958,
@@ -3382,7 +3398,7 @@
                                                                                 "Components": [
                                                                                     {
                                                                                         "Type": "Transform",
-                                                                                        "Active": true,
+                                                                                        "Active": false,
                                                                                         "Position": [
                                                                                             8.437999725341797,
                                                                                             1.7763568394002506e-15,
@@ -3415,7 +3431,7 @@
                                                                                         "Components": [
                                                                                             {
                                                                                                 "Type": "Transform",
-                                                                                                "Active": true,
+                                                                                                "Active": false,
                                                                                                 "Position": [
                                                                                                     0.0,
                                                                                                     -4.110660076141357,
@@ -3448,7 +3464,7 @@
                                                                                                 "Components": [
                                                                                                     {
                                                                                                         "Type": "Transform",
-                                                                                                        "Active": true,
+                                                                                                        "Active": false,
                                                                                                         "Position": [
                                                                                                             0.0,
                                                                                                             -1.9006199836730958,
@@ -3494,7 +3510,7 @@
                                                 "Components": [
                                                     {
                                                         "Type": "Transform",
-                                                        "Active": true,
+                                                        "Active": false,
                                                         "Position": [
                                                             1.4210854715202005e-14,
                                                             12.27381706237793,
@@ -3562,7 +3578,25 @@
                     {
                         "Type": "Animation",
                         "Active": false,
-                        "StateMachineId": 6152599141429887326
+                        "StateMachinePrincipalId": 6152599141429887326,
+                        "StateMachineSecondaryId": 6461020140583334692
+                    },
+                    {
+                        "Type": "Script",
+                        "Active": true,
+                        "Script": 10002269642242264877,
+                        "Values": [
+                            {
+                                "Name": "playerUID",
+                                "Type": "GameObjectUID",
+                                "Value": 8960886680822700415
+                            },
+                            {
+                                "Name": "sceneUID",
+                                "Type": "SceneResourceUID",
+                                "Value": 1827699931961010260
+                            }
+                        ]
                     }
                 ],
                 "Children": [
@@ -4656,29 +4690,44 @@
                                                                                                                     {
                                                                                                                         "Type": "Particle",
                                                                                                                         "Active": true,
-                                                                                                                        "ShaderId": 14028879591438108246,
+                                                                                                                        "EmitterType": 0,
+                                                                                                                        "BillboardType": 0,
                                                                                                                         "TextureId": 12530008367011440877,
-                                                                                                                        "IsPlaying": true,
+                                                                                                                        "IsPlaying": false,
                                                                                                                         "IsLooping": false,
-                                                                                                                        "IsRandomFrame": false,
-                                                                                                                        "IsRandomDirection": false,
+                                                                                                                        "IsSizeOverTime": false,
+                                                                                                                        "ScaleFactor": 0.0,
                                                                                                                         "ParticleScale": 10.0,
                                                                                                                         "MaxParticle": 1,
                                                                                                                         "Velocity": 7.0,
                                                                                                                         "LifeParticle": 0.10000000149011612,
+                                                                                                                        "DistanceReverse": 0.0,
+                                                                                                                        "ReverseEffect": false,
+                                                                                                                        "StartDelay": 0.0,
                                                                                                                         "Ytiles": 1,
                                                                                                                         "Xtiles": 1,
                                                                                                                         "AnimationSpeed": 0.0,
+                                                                                                                        "IsRandomFrame": false,
                                                                                                                         "InitColor": [
                                                                                                                             0.9509803652763367,
                                                                                                                             0.041954997926950458,
-                                                                                                                            0.041954997926950458
+                                                                                                                            0.041954997926950458,
+                                                                                                                            0.0
                                                                                                                         ],
                                                                                                                         "FinalColor": [
                                                                                                                             1.0,
                                                                                                                             0.0,
+                                                                                                                            0.0,
                                                                                                                             0.0
-                                                                                                                        ]
+                                                                                                                        ],
+                                                                                                                        "StartTransition": 0.0,
+                                                                                                                        "EndTransition": 0.0,
+                                                                                                                        "FlipTexture": [
+                                                                                                                            false,
+                                                                                                                            false
+                                                                                                                        ],
+                                                                                                                        "ConeRadiusUp": 0.0,
+                                                                                                                        "ConeRadiusDown": 0.0
                                                                                                                     }
                                                                                                                 ],
                                                                                                                 "Children": null
@@ -5005,190 +5054,6 @@
                                                                                                                 "Components": [
                                                                                                                     {
                                                                                                                         "Type": "Transform",
-                                                                                                                        "Active": true,
-                                                                                                                        "Position": [
-                                                                                                                            -2.0502984523773195,
-                                                                                                                            0.2570015788078308,
-                                                                                                                            0.6919426321983337
-                                                                                                                        ],
-                                                                                                                        "Rotation": [
-                                                                                                                            -0.036359887570142749,
-                                                                                                                            -0.24663089215755464,
-                                                                                                                            -0.11551268398761749,
-                                                                                                                            0.9615134596824646
-                                                                                                                        ],
-                                                                                                                        "Scale": [
-                                                                                                                            1.0,
-                                                                                                                            1.0,
-                                                                                                                            1.0
-                                                                                                                        ],
-                                                                                                                        "LocalEulerAngles": [
-                                                                                                                            -8.245402336120606,
-                                                                                                                            -27.767045974731447,
-                                                                                                                            -15.742271423339844
-                                                                                                                        ]
-                                                                                                                    }
-                                                                                                                ],
-                                                                                                                "Children": [
-                                                                                                                    {
-                                                                                                                        "Name": "RightIndex3",
-                                                                                                                        "Active": true,
-                                                                                                                        "RootBoneName": "",
-                                                                                                                        "Mask": 0,
-                                                                                                                        "Components": [
-                                                                                                                            {
-                                                                                                                                "Type": "Transform",
-                                                                                                                                "Active": true,
-                                                                                                                                "Position": [
-                                                                                                                                    -2.5443453788757326,
-                                                                                                                                    0.1617756336927414,
-                                                                                                                                    0.5788745284080505
-                                                                                                                                ],
-                                                                                                                                "Rotation": [
-                                                                                                                                    -0.3575599789619446,
-                                                                                                                                    0.6100416779518127,
-                                                                                                                                    0.35756000876426699,
-                                                                                                                                    0.6100416779518127
-                                                                                                                                ],
-                                                                                                                                "Scale": [
-                                                                                                                                    1.0,
-                                                                                                                                    1.0,
-                                                                                                                                    1.0
-                                                                                                                                ],
-                                                                                                                                "LocalEulerAngles": [
-                                                                                                                                    -90.0,
-                                                                                                                                    29.24882698059082,
-                                                                                                                                    90.0
-                                                                                                                                ]
-                                                                                                                            }
-                                                                                                                        ],
-                                                                                                                        "Children": null
-                                                                                                                    }
-                                                                                                                ]
-                                                                                                            }
-                                                                                                        ]
-                                                                                                    },
-                                                                                                    {
-                                                                                                        "Name": "RightThumbBase",
-                                                                                                        "Active": true,
-                                                                                                        "RootBoneName": "",
-                                                                                                        "Mask": 0,
-                                                                                                        "Components": [
-                                                                                                            {
-                                                                                                                "Type": "Transform",
-                                                                                                                "Active": true,
-                                                                                                                "Position": [
-                                                                                                                    2.043112277984619,
-                                                                                                                    -1.9286389350891114,
-                                                                                                                    -0.0409003309905529
-                                                                                                                ],
-                                                                                                                "Rotation": [
-                                                                                                                    0.5079729557037354,
-                                                                                                                    -0.08702397346496582,
-                                                                                                                    0.24226239323616029,
-                                                                                                                    0.822009265422821
-                                                                                                                ],
-                                                                                                                "Scale": [
-                                                                                                                    1.0,
-                                                                                                                    0.9999999403953552,
-                                                                                                                    0.9999999403953552
-                                                                                                                ],
-                                                                                                                "LocalEulerAngles": [
-                                                                                                                    61.88193130493164,
-                                                                                                                    5.915202617645264,
-                                                                                                                    29.29463768005371
-                                                                                                                ]
-                                                                                                            }
-                                                                                                        ],
-                                                                                                        "Children": [
-                                                                                                            {
-                                                                                                                "Name": "RightThumb1",
-                                                                                                                "Active": true,
-                                                                                                                "RootBoneName": "",
-                                                                                                                "Mask": 0,
-                                                                                                                "Components": [
-                                                                                                                    {
-                                                                                                                        "Type": "Transform",
-                                                                                                                        "Active": true,
-                                                                                                                        "Position": [
-                                                                                                                            -0.8805305361747742,
-                                                                                                                            -1.6392934322357178,
-                                                                                                                            -0.3959597945213318
-                                                                                                                        ],
-                                                                                                                        "Rotation": [
-                                                                                                                            0.02442675083875656,
-                                                                                                                            -0.2206750512123108,
-                                                                                                                            -0.10171625018119812,
-                                                                                                                            0.9697214365005493
-                                                                                                                        ],
-                                                                                                                        "Scale": [
-                                                                                                                            0.9999999403953552,
-                                                                                                                            0.9999998807907105,
-                                                                                                                            0.9999998807907105
-                                                                                                                        ],
-                                                                                                                        "LocalEulerAngles": [
-                                                                                                                            0.15774914622306825,
-                                                                                                                            -25.65529441833496,
-                                                                                                                            -11.940052032470704
-                                                                                                                        ]
-                                                                                                                    }
-                                                                                                                ],
-                                                                                                                "Children": [
-                                                                                                                    {
-                                                                                                                        "Name": "RightThumb2",
-                                                                                                                        "Active": true,
-                                                                                                                        "RootBoneName": "",
-                                                                                                                        "Mask": 0,
-                                                                                                                        "Components": [
-                                                                                                                            {
-                                                                                                                                "Type": "Transform",
-                                                                                                                                "Active": true,
-                                                                                                                                "Position": [
-                                                                                                                                    -1.8630341291427613,
-                                                                                                                                    -0.000024196202502935195,
-                                                                                                                                    -7.105427357601002e-15
-                                                                                                                                ],
-                                                                                                                                "Rotation": [
-                                                                                                                                    0.0,
-                                                                                                                                    0.0,
-                                                                                                                                    0.031865138560533527,
-                                                                                                                                    0.9994922280311585
-                                                                                                                                ],
-                                                                                                                                "Scale": [
-                                                                                                                                    0.9999999403953552,
-                                                                                                                                    0.9999999403953552,
-                                                                                                                                    1.0
-                                                                                                                                ],
-                                                                                                                                "LocalEulerAngles": [
-                                                                                                                                    -0.0,
-                                                                                                                                    0.0,
-                                                                                                                                    3.652094602584839
-                                                                                                                                ]
-                                                                                                                            }
-                                                                                                                        ],
-                                                                                                                        "Children": [
-                                                                                                                            {
-                                                                                                                                "Name": "RightThumb3",
-                                                                                                                                "Active": true,
-                                                                                                                                "RootBoneName": "",
-                                                                                                                                "Mask": 0,
-                                                                                                                                "Components": [
-                                                                                                                                    {
-                                                                                                                                        "Type": "Transform",
-                                                                                                                                        "Active": true,
-                                                                                                                                        "Position": [
-                                                                                                                                            -1.7986423969268799,
-                                                                                                                                            -0.000008382135092688259,
-                                                                                                                                            7.105427357601002e-15
-                                                                                                                                        ],
-                                                                                                                                        "Rotation": [
-                                                                                                                                            -0.21374160051345826,
-                                                                                                                                            0.6740285754203796,
-                                                                                                                                            0.21374160051345826,
-                                                                                                                                            0.6740285754203796
-                                                                                                                                        ],
-                                                                                                                                        "Scale": [
-                                                                                                                                            1.0,
                                                                                                                                             1.0,
                                                                                                                                             1.0
                                                                                                                                         ],
@@ -5274,29 +5139,44 @@
                                                                                                                     {
                                                                                                                         "Type": "Particle",
                                                                                                                         "Active": true,
-                                                                                                                        "ShaderId": 14028879591438108246,
+                                                                                                                        "EmitterType": 0,
+                                                                                                                        "BillboardType": 0,
                                                                                                                         "TextureId": 12530008367011440877,
-                                                                                                                        "IsPlaying": true,
+                                                                                                                        "IsPlaying": false,
                                                                                                                         "IsLooping": false,
-                                                                                                                        "IsRandomFrame": false,
-                                                                                                                        "IsRandomDirection": false,
+                                                                                                                        "IsSizeOverTime": false,
+                                                                                                                        "ScaleFactor": 0.0,
                                                                                                                         "ParticleScale": 5.0,
                                                                                                                         "MaxParticle": 100,
                                                                                                                         "Velocity": 0.10000000149011612,
                                                                                                                         "LifeParticle": 5.0,
+                                                                                                                        "DistanceReverse": 0.0,
+                                                                                                                        "ReverseEffect": false,
+                                                                                                                        "StartDelay": 0.0,
                                                                                                                         "Ytiles": 1,
                                                                                                                         "Xtiles": 1,
                                                                                                                         "AnimationSpeed": 0.0,
+                                                                                                                        "IsRandomFrame": false,
                                                                                                                         "InitColor": [
                                                                                                                             1.0,
                                                                                                                             1.0,
-                                                                                                                            1.0
+                                                                                                                            1.0,
+                                                                                                                            0.0
                                                                                                                         ],
                                                                                                                         "FinalColor": [
                                                                                                                             1.0,
                                                                                                                             1.0,
-                                                                                                                            1.0
-                                                                                                                        ]
+                                                                                                                            1.0,
+                                                                                                                            0.0
+                                                                                                                        ],
+                                                                                                                        "StartTransition": 0.0,
+                                                                                                                        "EndTransition": 0.0,
+                                                                                                                        "FlipTexture": [
+                                                                                                                            false,
+                                                                                                                            false
+                                                                                                                        ],
+                                                                                                                        "ConeRadiusUp": 0.0,
+                                                                                                                        "ConeRadiusDown": 0.0
                                                                                                                     }
                                                                                                                 ],
                                                                                                                 "Children": null
@@ -6413,4 +6293,6 @@
             }
         ]
     }
-}
+}                                                                                    -90.0,
+                                                                                    -64.93038177490235,
+                                                                                    -90.0
