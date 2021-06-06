@@ -38,27 +38,27 @@
                     {
                         "Name": "mainNodeUID",
                         "Type": "GameObjectUID",
-                        "Value": 14593214385219030726
+                        "Value": 189561909595027362
                     },
                     {
                         "Name": "onimaruUID",
                         "Type": "GameObjectUID",
-                        "Value": 8607958393105399749
+                        "Value": 14446156233729950543
                     },
                     {
                         "Name": "dashAudioSourceUID",
                         "Type": "GameObjectUID",
-                        "Value": 7306558720136077522
+                        "Value": 6977598380145412742
                     },
                     {
                         "Name": "fangUID",
                         "Type": "GameObjectUID",
-                        "Value": 15625629307854676551
+                        "Value": 4473060853971005896
                     },
                     {
                         "Name": "onimaruParticleUID",
                         "Type": "GameObjectUID",
-                        "Value": 9928320507059019466
+                        "Value": 14001233574270134082
                     },
                     {
                         "Name": "cameraUID",
@@ -78,7 +78,7 @@
                     {
                         "Name": "switchAudioSourceUID",
                         "Type": "GameObjectUID",
-                        "Value": 3474198169175199421
+                        "Value": 3228886087750754637
                     },
                     {
                         "Name": "distanceRayCast",
@@ -98,22 +98,27 @@
                     {
                         "Name": "fangGunUID",
                         "Type": "GameObjectUID",
-                        "Value": 750550602006776115
+                        "Value": 15388917445680109094
                     },
                     {
                         "Name": "fangTrailUID",
                         "Type": "PrefabResourceUID",
-                        "Value": 17059306767860105124
+                        "Value": 6121672325647995653
                     },
                     {
                         "Name": "onimaruTrailUID",
                         "Type": "PrefabResourceUID",
-                        "Value": 17059306767860105124
+                        "Value": 14078621650633903226
                     },
                     {
                         "Name": "onimaruGunUID",
                         "Type": "GameObjectUID",
-                        "Value": 9984000292064065878
+                        "Value": 13403948668663641912
+                    },
+                    {
+                        "Name": "fangTrailNoColUID",
+                        "Type": "PrefabResourceUID",
+                        "Value": 14078621650633903226
                     }
                 ]
             },
@@ -130,6 +135,13 @@
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
                 "OuterGain": 0.0
+            },
+            {
+                "Type": "Agent",
+                "Active": true,
+                "MaxSpeed": 5.0,
+                "MaxAcceleration": 8.0,
+                "AvoidingObstacle": false
             }
         ],
         "Children": [
@@ -141,7 +153,7 @@
                 "Components": [
                     {
                         "Type": "Transform",
-                        "Active": false,
+                        "Active": true,
                         "Position": [
                             0.0,
                             0.0,
@@ -183,7 +195,7 @@
                             {
                                 "Name": "playerUID",
                                 "Type": "GameObjectUID",
-                                "Value": 14593214385219030726
+                                "Value": 189561909595027362
                             }
                         ]
                     }
@@ -3626,7 +3638,7 @@
                             {
                                 "Name": "playerUID",
                                 "Type": "GameObjectUID",
-                                "Value": 14593214385219030726
+                                "Value": 189561909595027362
                             },
                             {
                                 "Name": "sceneUID",

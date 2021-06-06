@@ -27,6 +27,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailNoColUID),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruTrailUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),

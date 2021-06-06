@@ -7,7 +7,7 @@
         "Components": [
             {
                 "Type": "Transform",
-                "Active": false,
+                "Active": true,
                 "Position": [
                     0.0,
                     0.0,
@@ -38,22 +38,17 @@
                     {
                         "Name": "uiCanvasUID",
                         "Type": "GameObjectUID",
-                        "Value": 6211810304155152247
+                        "Value": 17773628572955029428
                     },
                     {
                         "Name": "spawnMeleeUID",
                         "Type": "GameObjectUID",
-                        "Value": 13667136332377204817
-                    },
-                    {
-                        "Name": "enemiesUID",
-                        "Type": "GameObjectUID",
-                        "Value": 9424093591244721738
+                        "Value": 12467949130155930994
                     },
                     {
                         "Name": "spawnRangedUID",
                         "Type": "GameObjectUID",
-                        "Value": 2652597668305677232
+                        "Value": 17732647909550886280
                     },
                     {
                         "Name": "toggleEnemiesUID",
@@ -61,19 +56,24 @@
                         "Value": 9424093591244721738
                     },
                     {
+                        "Name": "enemiesUID",
+                        "Type": "GameObjectUID",
+                        "Value": 9424093591244721738
+                    },
+                    {
+                        "Name": "debugEnemiesUID",
+                        "Type": "GameObjectUID",
+                        "Value": 8956077401393633822
+                    },
+                    {
                         "Name": "playerControllerUID",
                         "Type": "GameObjectUID",
-                        "Value": 8960886680822700415
+                        "Value": 12693373114323491508
                     },
                     {
                         "Name": "gameCameraUID",
                         "Type": "GameObjectUID",
                         "Value": 680618938873982628
-                    },
-                    {
-                        "Name": "debugEnemiesUID",
-                        "Type": "GameObjectUID",
-                        "Value": 16413850187906533606
                     },
                     {
                         "Name": "godCameraUID",
@@ -141,14 +141,14 @@
                                 "Value": 11128356192968719727
                             },
                             {
-                                "Name": "enemiesUID",
-                                "Type": "GameObjectUID",
-                                "Value": 16413850187906533606
-                            },
-                            {
                                 "Name": "prefabUID",
                                 "Type": "PrefabResourceUID",
-                                "Value": 17022539209527519003
+                                "Value": 9998956702901793097
+                            },
+                            {
+                                "Name": "enemiesUID",
+                                "Type": "GameObjectUID",
+                                "Value": 8956077401393633822
                             }
                         ]
                     }
@@ -433,8 +433,8 @@
                             {
                                 "Type": "Toggle",
                                 "Active": true,
-                                "IsOn": false,
-                                "EnabledImageID": 2601313163135946006,
+                                "IsOn": true,
+                                "EnabledImageID": 12878196139162425194,
                                 "ClickedColor": [
                                     0.6399999856948853,
                                     0.6399999856948853,
@@ -464,7 +464,7 @@
                                     {
                                         "Name": "godControllerUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 11021793106105448407
+                                        "Value": 2104300630684251741
                                     }
                                 ]
                             }
@@ -550,7 +550,7 @@
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": false,
+                                        "Active": true,
                                         "TextureId": 0,
                                         "Color": [
                                             0.9254902005195618,
@@ -779,7 +779,7 @@
                                 "Type": "Toggle",
                                 "Active": true,
                                 "IsOn": false,
-                                "EnabledImageID": 17420207374202732563,
+                                "EnabledImageID": 8242570124636206999,
                                 "ClickedColor": [
                                     0.6399999856948853,
                                     0.6399999856948853,
@@ -809,7 +809,7 @@
                                     {
                                         "Name": "godControllerUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 11021793106105448407
+                                        "Value": 2104300630684251741
                                     },
                                     {
                                         "Name": "index",
@@ -1128,8 +1128,8 @@
                             {
                                 "Type": "Toggle",
                                 "Active": true,
-                                "IsOn": true,
-                                "EnabledImageID": 15860725414809878304,
+                                "IsOn": false,
+                                "EnabledImageID": 3306692581266021737,
                                 "ClickedColor": [
                                     0.6399999856948853,
                                     0.6399999856948853,
@@ -1159,7 +1159,7 @@
                                     {
                                         "Name": "godControllerUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 11021793106105448407
+                                        "Value": 2104300630684251741
                                     },
                                     {
                                         "Name": "index",
@@ -1250,7 +1250,7 @@
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 0,
                                         "Color": [
                                             0.9254902005195618,
@@ -1479,7 +1479,7 @@
                                 "Type": "Toggle",
                                 "Active": true,
                                 "IsOn": true,
-                                "EnabledImageID": 11794959277363377362,
+                                "EnabledImageID": 14728015836096530733,
                                 "ClickedColor": [
                                     0.6399999856948853,
                                     0.6399999856948853,
@@ -1509,7 +1509,7 @@
                                     {
                                         "Name": "godControllerUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 11021793106105448407
+                                        "Value": 2104300630684251741
                                     },
                                     {
                                         "Name": "index",
@@ -1829,7 +1829,7 @@
                                 "Type": "Toggle",
                                 "Active": true,
                                 "IsOn": false,
-                                "EnabledImageID": 11950710946585793361,
+                                "EnabledImageID": 10656359969022409623,
                                 "ClickedColor": [
                                     0.6399999856948853,
                                     0.6399999856948853,
@@ -1859,7 +1859,7 @@
                                     {
                                         "Name": "godControllerUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 11021793106105448407
+                                        "Value": 2104300630684251741
                                     },
                                     {
                                         "Name": "index",
@@ -2179,7 +2179,7 @@
                                 "Type": "Toggle",
                                 "Active": true,
                                 "IsOn": false,
-                                "EnabledImageID": 4452112678948530754,
+                                "EnabledImageID": 1911355769506919142,
                                 "ClickedColor": [
                                     0.6399999856948853,
                                     0.6399999856948853,
@@ -2209,7 +2209,7 @@
                                     {
                                         "Name": "godControllerUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 11021793106105448407
+                                        "Value": 2104300630684251741
                                     },
                                     {
                                         "Name": "index",
@@ -2529,7 +2529,7 @@
                                 "Type": "Toggle",
                                 "Active": true,
                                 "IsOn": false,
-                                "EnabledImageID": 13586996844036170486,
+                                "EnabledImageID": 13129980299266511618,
                                 "ClickedColor": [
                                     0.6399999856948853,
                                     0.6399999856948853,
@@ -2559,7 +2559,7 @@
                                     {
                                         "Name": "godControllerUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 11021793106105448407
+                                        "Value": 2104300630684251741
                                     },
                                     {
                                         "Name": "index",
@@ -2879,7 +2879,7 @@
                                 "Type": "Toggle",
                                 "Active": true,
                                 "IsOn": false,
-                                "EnabledImageID": 1056266438208772681,
+                                "EnabledImageID": 819362138375602651,
                                 "ClickedColor": [
                                     0.6399999856948853,
                                     0.6399999856948853,
@@ -2909,7 +2909,7 @@
                                     {
                                         "Name": "godControllerUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 11021793106105448407
+                                        "Value": 2104300630684251741
                                     },
                                     {
                                         "Name": "index",
@@ -3162,14 +3162,14 @@
                                 "Value": 564339191826698320
                             },
                             {
-                                "Name": "enemiesUID",
-                                "Type": "GameObjectUID",
-                                "Value": 16413850187906533606
-                            },
-                            {
                                 "Name": "prefabUID",
                                 "Type": "PrefabResourceUID",
-                                "Value": 17022539209527519003
+                                "Value": 9998956702901793097
+                            },
+                            {
+                                "Name": "enemiesUID",
+                                "Type": "GameObjectUID",
+                                "Value": 8956077401393633822
                             }
                         ]
                     }

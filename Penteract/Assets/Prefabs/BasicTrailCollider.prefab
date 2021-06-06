@@ -1,6 +1,6 @@
 {
     "Root": {
-        "Name": "FangTrailCol",
+        "Name": "BasicTrailCollider",
         "Active": true,
         "RootBoneName": "",
         "Mask": 0,
@@ -9,9 +9,9 @@
                 "Type": "Transform",
                 "Active": true,
                 "Position": [
-                    200.0,
-                    202.0,
-                    -1.920999526977539
+                    0.0,
+                    0.0,
+                    0.0
                 ],
                 "Rotation": [
                     0.0,
@@ -33,8 +33,9 @@
             {
                 "Type": "Trail",
                 "Active": true,
-                "ShaderId": 16657161648281974966,
-                "TextureId": 6070033773294191873
+                "TextureId": 6070033773294191873,
+                "MaxVertices": 1500,
+                "TrailQuads": 50
             },
             {
                 "Type": "Script",
@@ -46,7 +47,7 @@
                 "Type": "SphereCollider",
                 "Active": true,
                 "colliderType": 2,
-                "layerType": 2,
+                "layerType": 4,
                 "mass": 1.0,
                 "radius": 0.10000000149011612,
                 "centerOffset": [
