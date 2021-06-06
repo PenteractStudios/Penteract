@@ -36,18 +36,18 @@ void PlayerDeath::OnAnimationFinished() {
 void PlayerDeath::OnAnimationSecondaryFinished()
 {
 	if (playerController) {
-		ComponentAnimation* animation = nullptr;
-		State* currentState = nullptr;
+		/*State* currentState = nullptr;
 
-		playerController->GetAnimationStatus(animation, currentState);
+		playerController->GetAnimationStatus(animation, currentState);*/
 
-		if (playerController->shooting && playerController->fang->IsActive() && animation && currentState) {
+		if (playerController->shooting && playerController->fang->IsActive() /*&& animation && currentState*/) {
+			ComponentAnimation* animation = playerController->fangAnimation;
 			if (playerController->rightShot) {
-				animation->SendTriggerSecondary(playerController->states[12] + currentState->name);
+				animation->SendTriggerSecondary(playerController->states[12] + animation->GetCurrentState()->name);
 				playerController->rightShot = false;
 			}
 			else {
-				animation->SendTriggerSecondary(playerController->states[11] + currentState->name);
+				animation->SendTriggerSecondary(playerController->states[11] + animation->GetCurrentState()->name);
 				playerController->rightShot = true;
 			}
 		}

@@ -237,10 +237,10 @@ void PlayerController::GetAnimationStatus(ComponentAnimation*& animation, State*
 
 void PlayerController::Shoot() {
 	ComponentTransform* transform = GetOwner().GetComponent<ComponentTransform>();
-	ComponentAnimation* animation = nullptr;
+	/*ComponentAnimation* animation = nullptr;
 	State* currentState = nullptr;
 
-	GetAnimationStatus(animation, currentState);
+	GetAnimationStatus(animation, currentState);*/
 
 	if (CanShoot()) {
 		if (shootAudioSource) {
@@ -262,10 +262,10 @@ void PlayerController::Shoot() {
 				GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
 			}
 			if (rightShot) {
-				animation->SendTriggerSecondary(currentState->name + PlayerController::states[12]);				
+				fangAnimation->SendTriggerSecondary(fangAnimation->GetCurrentState()->name + PlayerController::states[12]);				
 			}
 			else {
-				animation->SendTriggerSecondary(currentState->name + PlayerController::states[11]);
+				fangAnimation->SendTriggerSecondary(fangAnimation->GetCurrentState()->name + PlayerController::states[11]);
 			}
 			start = fangGunTransform->GetGlobalPosition();
 		}
@@ -443,9 +443,15 @@ int PlayerController::GetMouseDirectionState(MovementDirection input) {
 
 void PlayerController::PlayAnimation(MovementDirection md) {
 	ComponentAnimation* animation = nullptr;
-	State* currentState = nullptr;
+	if (fang->IsActive()) {
+		animation = fangAnimation;
+	}
+	else {
+		animation = onimaruAnimation;
+	}
+	/*State* currentState = nullptr;
 
-	GetAnimationStatus(animation, currentState);
+	GetAnimationStatus(animation, currentState);*/
 
 	int dashAnimation = 0;
 	if (dashing) {
@@ -455,16 +461,22 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 
 	if (md == MovementDirection::NONE) {
 		if (IsDead()) {
-			animation->SendTrigger(currentState->name + PlayerController::states[9]);
+			if (animation->GetCurrentState()->name != PlayerController::states[9]) {
+				animation->SendTrigger(animation->GetCurrentState()->name + PlayerController::states[9]);
+			}
 		}
 		else {
-			animation->SendTrigger(currentState->name + PlayerController::states[0]);
+			if (animation->GetCurrentState()->name != PlayerController::states[0]) {
+				animation->SendTrigger(animation->GetCurrentState()->name + PlayerController::states[0]);
+			}
 		}
 	}
 	else {
-		//Debug::Log((currentState->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]).c_str());
-		animation->SendTrigger(currentState->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
-		animation->SendTriggerSecondary(currentState->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
+		
+		if (animation->GetCurrentState()->name != PlayerController::states[GetMouseDirectionState(md) + dashAnimation]) {
+			Debug::Log((animation->GetCurrentState()->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]).c_str());
+			animation->SendTrigger(animation->GetCurrentState()->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
+		}
 	}
 }
 
@@ -546,19 +558,20 @@ void PlayerController::Update() {
 			if (Input::GetMouseButtonDown(0)) Shoot();
 		}
 		else {
-			ComponentAnimation* animation = nullptr;
+			/*ComponentAnimation* animation = nullptr;
 			State* currentState = nullptr;
 
-			GetAnimationStatus(animation, currentState);
+			GetAnimationStatus(animation, currentState);*/
+
 			if (Input::GetMouseButtonDown(0)) {
-				animation->SendTriggerSecondary(currentState->name + PlayerController::states[13]);
+				onimaruAnimation->SendTriggerSecondary(onimaruAnimation->GetCurrentState()->name + PlayerController::states[13]);
 			}
 			else if (Input::GetMouseButtonRepeat(0)) {
 				Shoot();
 			}
 			else if(Input::GetMouseButtonUp(0)){
 				if (onimaruAnimation) {					
-					animation->SendTriggerSecondary(PlayerController::states[13] + currentState->name);
+					onimaruAnimation->SendTriggerSecondary(PlayerController::states[13] + onimaruAnimation->GetCurrentState()->name);
 				}
 			}
 		}

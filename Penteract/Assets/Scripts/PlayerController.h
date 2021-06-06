@@ -49,6 +49,7 @@ public:
 	GameObject* onimaruParticle = nullptr;
 	ComponentAgent* agent = nullptr;
 
+	ComponentAnimation* fangAnimation = nullptr;
 
 	UID fangUID = 0;
 	UID fangTrailUID = 0;
@@ -152,7 +153,6 @@ private:
 	ComponentCamera* compCamera = nullptr;
 	ComponentTransform* cameraTransform = nullptr;
 	//Animation
-	ComponentAnimation* fangAnimation = nullptr;
 	State* fangCurrentState = nullptr;
 	ComponentAnimation* onimaruAnimation = nullptr;
 	State* onimaruCurrentState = nullptr;
