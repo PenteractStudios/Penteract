@@ -34,8 +34,7 @@ public:
 	void SetInvincible(bool status);
 	void SetOverpower(bool status);
 	void SetNoCooldown(bool status);
-	void GetAnimationStatus(ComponentAnimation*& animation, State*& currentState);
-
+	
 public:
 
 	GameObject* player = nullptr;

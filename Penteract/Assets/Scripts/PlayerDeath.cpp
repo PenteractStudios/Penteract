@@ -36,11 +36,7 @@ void PlayerDeath::OnAnimationFinished() {
 void PlayerDeath::OnAnimationSecondaryFinished()
 {
 	if (playerController) {
-		/*State* currentState = nullptr;
-
-		playerController->GetAnimationStatus(animation, currentState);*/
-
-		if (playerController->shooting && playerController->fang->IsActive() /*&& animation && currentState*/) {
+		if (playerController->shooting && playerController->fang->IsActive()) {
 			ComponentAnimation* animation = playerController->fangAnimation;
 			if (playerController->rightShot) {
 				animation->SendTriggerSecondary(playerController->states[12] + animation->GetCurrentState()->name);

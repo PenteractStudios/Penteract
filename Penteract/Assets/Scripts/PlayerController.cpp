@@ -219,29 +219,9 @@ bool PlayerController::CanShoot() {
 	return !shooting && ((fang->IsActive() && fangTrail) || (onimaru->IsActive() && onimaruTrail));
 }
 
-void PlayerController::GetAnimationStatus(ComponentAnimation*& animation, State*& currentState)
-{
-	if (fang->IsActive()) {
-		animation = fangAnimation;
-		currentState = fangCurrentState;
-	}
-	else {
-		animation = onimaruAnimation;
-		currentState = onimaruCurrentState;
-	}
-
-	if (currentState != animation->GetCurrentState()) {
-		currentState = animation->GetCurrentState();
-	}
-}
-
 void PlayerController::Shoot() {
 	ComponentTransform* transform = GetOwner().GetComponent<ComponentTransform>();
-	/*ComponentAnimation* animation = nullptr;
-	State* currentState = nullptr;
-
-	GetAnimationStatus(animation, currentState);*/
-
+	
 	if (CanShoot()) {
 		if (shootAudioSource) {
 			shootAudioSource->Play();
@@ -449,10 +429,7 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 	else {
 		animation = onimaruAnimation;
 	}
-	/*State* currentState = nullptr;
-
-	GetAnimationStatus(animation, currentState);*/
-
+	
 	int dashAnimation = 0;
 	if (dashing) {
 		dashAnimation = 4;
@@ -474,7 +451,6 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 	else {
 		
 		if (animation->GetCurrentState()->name != PlayerController::states[GetMouseDirectionState(md) + dashAnimation]) {
-			Debug::Log((animation->GetCurrentState()->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]).c_str());
 			animation->SendTrigger(animation->GetCurrentState()->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
 		}
 	}
@@ -558,11 +534,6 @@ void PlayerController::Update() {
 			if (Input::GetMouseButtonDown(0)) Shoot();
 		}
 		else {
-			/*ComponentAnimation* animation = nullptr;
-			State* currentState = nullptr;
-
-			GetAnimationStatus(animation, currentState);*/
-
 			if (Input::GetMouseButtonDown(0)) {
 				onimaruAnimation->SendTriggerSecondary(onimaruAnimation->GetCurrentState()->name + PlayerController::states[13]);
 			}
