@@ -1,5 +1,6 @@
 #include "GodModeController.h"
 #include "SpawnOnClick.h"
+#include "PlayerController.h"
 
 #include "GameplaySystems.h"
 #include "GameObject.h"
@@ -9,16 +10,16 @@
 EXPOSE_MEMBERS(GodModeController) {
 	/* UI toggles*/
 	MEMBER(MemberType::GAME_OBJECT_UID, uiCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, spawnMeleeUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, spawnRangedUID),
-		/* Enemy groups*/
-		MEMBER(MemberType::GAME_OBJECT_UID, enemiesUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, debugEnemiesUID),
-		/* Cameras */
-		MEMBER(MemberType::GAME_OBJECT_UID, godCameraUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, gameCameraUID),
-		/* Other scripts*/
-		MEMBER(MemberType::GAME_OBJECT_UID, invincibleUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, spawnMeleeUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, spawnRangedUID),
+	/* Enemy groups*/
+	MEMBER(MemberType::GAME_OBJECT_UID, enemiesUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, debugEnemiesUID),
+	/* Cameras */
+	MEMBER(MemberType::GAME_OBJECT_UID, godCameraUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, gameCameraUID),
+	/* Player controller */
+	MEMBER(MemberType::GAME_OBJECT_UID, playerControllerUID)
 };
 
 GENERATE_BODY_IMPL(GodModeController);
@@ -36,8 +37,9 @@ void GodModeController::Start() {
 	/* Cameras */
 	godCamera = GameplaySystems::GetGameObject(godCameraUID);
 	gameCamera = GameplaySystems::GetGameObject(gameCameraUID);
-	/* Other scripts*/
-	invincible = GameplaySystems::GetGameObject(invincibleUID);
+	/* Player controller */
+	playerController = GameplaySystems::GetGameObject(playerControllerUID);
+	if (playerController) playerControllerScript = GET_SCRIPT(playerController, PlayerController);
 
 	for (GameObject* child : uiCanvas->GetChildren()) {
 		if (child->HasComponent<ComponentToggle>()) {
@@ -112,10 +114,26 @@ void GodModeController::OnChildToggle(unsigned int index, bool isChecked) {
 		break;
 	case 5:
 		if (isChecked) {
-			if (invincible) invincible->Enable();
+			if (playerControllerScript) playerControllerScript->SetOverpower(true);
 		}
 		else {
-			if (invincible) invincible->Disable();
+			if (playerControllerScript) playerControllerScript->SetOverpower(false);
+		}
+		break;
+	case 6:
+		if (isChecked) {
+			if (playerControllerScript) playerControllerScript->SetNoCooldown(true);
+		}
+		else {
+			if (playerControllerScript) playerControllerScript->SetNoCooldown(false);
+		}
+		break;
+	case 7:
+		if (isChecked) {
+			if (playerControllerScript) playerControllerScript->SetInvincible(true);
+		}
+		else {
+			if (playerControllerScript) playerControllerScript->SetInvincible(false);
 		}
 		break;
 

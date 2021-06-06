@@ -8,7 +8,8 @@
 int checkpoint;
 
 EXPOSE_MEMBERS(StartButton) {
-	MEMBER(MemberType::INT, checkpointNum),
+	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
+	MEMBER(MemberType::INT, checkpointNum)
 };
 
 
@@ -22,7 +23,6 @@ void StartButton::Update() {
 
 void StartButton::OnButtonClick() {
 	checkpoint = checkpointNum;
-	//SceneManager::ChangeScene("Assets/Scenes/Level1.scene");
-	SceneManager::ChangeScene("Assets/Scenes/WinConTest.scene");
+	if(sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 	if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
 }

@@ -5,7 +5,7 @@
 #include "EnemySpawnPoint.h"
 
 EXPOSE_MEMBERS(WinLose) {
-	// Add members here to expose them to the engine. Example:
+	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, winUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, enemiesUID),
@@ -19,7 +19,7 @@ void WinLose::Start() {
 	winCon = GameplaySystems::GetGameObject(winUID);
 	player = GameplaySystems::GetGameObject(playerUID);
 	enemies = GameplaySystems::GetGameObject(enemiesUID);
-	if (enemies->HasChildren()) {
+	if (enemies != nullptr && enemies->HasChildren()) {
 		for (GameObject* spawn : enemies->GetChildren()) {
 			if (spawn->IsActive()) {
 				EnemySpawnPoint* enemyspawnpoint = GET_SCRIPT(spawn, EnemySpawnPoint);
@@ -29,7 +29,6 @@ void WinLose::Start() {
 			}
 		}
 	}
-	//Debug::Log("TOTAL ENEMIES: %d", totalEnemies);
 }
 
 void WinLose::Update() {
@@ -47,11 +46,10 @@ void WinLose::Update() {
 		&& position.z <= winConPos.z + LoseOffsetZ
 		&& position.z >= winConPos.z - LoseOffsetZ
 		&& deadEnemies >= totalEnemies) {
-		SceneManager::ChangeScene("Assets/Scenes/WinScene.scene");
+		if(sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 	}
 }
 
 void WinLose::KillEnemy() {
 	deadEnemies++;
-	//Debug::Log("DEAD ENEMIES: %d", deadEnemies);
 }
