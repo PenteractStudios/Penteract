@@ -276,8 +276,7 @@ void PlayerController::Shoot() {
 				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
 				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
 				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
-			}
-			animation->SendTriggerSecondary(currentState->name + PlayerController::states[13]);
+			}			
 
 			start = onimaruGunTransform->GetGlobalPosition();
 		}
@@ -460,10 +459,13 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 		}
 		else {
 			animation->SendTrigger(currentState->name + PlayerController::states[0]);
+			//animation->SendTriggerSecondary(animation->currentStateSecondary.name + PlayerController::states[0]);
 		}
 	}
 	else {
+		Debug::Log("%s", currentState->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
 		animation->SendTrigger(currentState->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
+		animation->SendTriggerSecondary(currentState->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
 	}
 }
 
@@ -545,16 +547,18 @@ void PlayerController::Update() {
 			if (Input::GetMouseButtonDown(0)) Shoot();
 		}
 		else {
-			if (Input::GetMouseButtonDown(0) || Input::GetMouseButtonRepeat(0)) {
+			ComponentAnimation* animation = nullptr;
+			State* currentState = nullptr;
+
+			GetAnimationStatus(animation, currentState);
+			if (Input::GetMouseButtonDown(0)) {
+				animation->SendTriggerSecondary(currentState->name + PlayerController::states[13]);
+			}
+			else if (Input::GetMouseButtonRepeat(0)) {
 				Shoot();
 			}
 			else if(Input::GetMouseButtonUp(0)){
-				if (onimaruAnimation) {
-					ComponentAnimation* animation = nullptr;
-					State* currentState = nullptr;
-
-					GetAnimationStatus(animation, currentState);
-
+				if (onimaruAnimation) {					
 					animation->SendTriggerSecondary(PlayerController::states[13] + currentState->name);
 				}
 			}
