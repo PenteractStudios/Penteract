@@ -1,5 +1,5 @@
 {
-    "InitialState": 18028523954146155941,
+    "InitialState": 0,
     "Clips": [
         8526287924029517253,
         9101728894046816373,
@@ -343,6 +343,18 @@
         }
     ],
     "Bones": [
-        "FEED_ME_WITH_BONES_IAM_STARVING"
+        "LeftShoulder",
+        "LeftElbow",
+        "LeftShoulderPiece",
+        "LeftBicepPiece",
+        "LeftHand",
+        "LeftForearmPiece",
+        "RightShoulder",
+        "RightElbow",
+        "RightShoulderPiece",
+        "RightBicepPiece",
+        "RightHand",
+        "RightForearmPiece",
+        "joint2"
     ]
 }

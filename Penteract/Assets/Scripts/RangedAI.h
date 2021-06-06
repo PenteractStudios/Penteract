@@ -30,6 +30,7 @@ public:
 	void Start() override;
 	void Update() override;
 	void OnAnimationFinished() override;
+	void OnAnimationSecondaryFinished() override;
 	void HitDetected(int damage_ = 1);
 	void ShootPlayerInRange();
 private:
@@ -48,6 +49,7 @@ private:
 	void StopMovement();
 	void OrientateTo(const float3& direction);
 	std::string StateToString(RangeAIState state);
+	void ActualShot();
 public:
 	bool foundRayToPlayer = false;
 	UID playerUID = 0;
@@ -93,16 +95,21 @@ public:
 
 	float attackSpeed = 0.5f; //Shots per second
 	ComponentAgent* agent = nullptr;
+	float actualShotMaxTime = 0.3f;
 
 private:
 	float3 bbCenter = float3(0, 0, 0);
 	float3 velocity = float3(0, 0, 0);
 	RangeAIState state = RangeAIState::START;
 	bool hitTaken = false;
+	bool shot;
 	ComponentAnimation* animation = nullptr;
 	ComponentTransform* parentTransform = nullptr;
 	int damageRecieved = 0;
-	float attackTimePool = 0.0f;
+	float attackTimePool = 2.0f;
+
+	float actualShotTimer = -1.0f;
+
 
 	ComponentAudioSource* shootAudioSource = nullptr;
 };

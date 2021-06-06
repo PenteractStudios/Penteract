@@ -79,6 +79,16 @@ void RangedAI::OnAnimationFinished() {
 	}
 }
 
+void RangedAI::OnAnimationSecondaryFinished() {
+	std::string currentStateString = "";
+	if (!animation) return;
+	if (shot) {
+		animation->SendTriggerSecondary("Shoot" + animation->GetCurrentState()->name);
+		shot = false;
+	}
+
+}
+
 void RangedAI::Update() {
 	if (!GetOwner().IsActive()) return;
 
@@ -93,7 +103,16 @@ void RangedAI::Update() {
 	if (state == RangeAIState::IDLE || state == RangeAIState::APPROACH || state == RangeAIState::FLEE) {
 		attackTimePool = Max(attackTimePool - Time::GetDeltaTime(), 0.0f);
 		if (attackTimePool == 0) {
-			ShootPlayerInRange();
+			if (actualShotTimer == -1) {
+				ShootPlayerInRange();
+			}
+		}
+	}
+
+	if (actualShotTimer > 0) {
+		actualShotTimer = Max(actualShotTimer - Time::GetDeltaTime(), 0.0f);
+		if (actualShotTimer == 0) {
+			ActualShot();
 		}
 	}
 
@@ -114,7 +133,7 @@ void RangedAI::EnterState(RangeAIState newState) {
 				animation->SendTrigger("RunBackwardIdle");
 			} else if (state == RangeAIState::APPROACH) {
 				animation->SendTrigger("RunForwardIdle");
-			} 
+			}
 		}
 
 
@@ -186,6 +205,8 @@ void RangedAI::UpdateState() {
 		break;
 	case RangeAIState::APPROACH:
 		if (CharacterInSight(player)) {
+			OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - parentTransform->GetGlobalPosition());
+
 			if (!CharacterInRange(player, attackRange - approachOffset, true) || !FindsRayToCharacter(player, false)) {
 				if (!CharacterTooClose(player)) {
 					Seek(player->GetComponent<ComponentTransform>()->GetGlobalPosition(), maxMovementSpeed);
@@ -198,6 +219,7 @@ void RangedAI::UpdateState() {
 		}
 		break;
 	case RangeAIState::FLEE:
+		OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - parentTransform->GetGlobalPosition());
 
 		if (CharacterTooClose(player)) {
 			Flee(player->GetComponent<ComponentTransform>()->GetGlobalPosition(), maxMovementSpeed);
@@ -342,11 +364,11 @@ void RangedAI::Seek(const float3& newPosition, int speed) {
 
 		parentTransform->SetGlobalPosition(position);
 
-		OrientateTo(direction);
+		//OrientateTo(direction);
 
 	} else {
 		agent->SetMoveTarget(newPosition, true);
-		OrientateTo(agent->GetVelocity());
+		//OrientateTo(agent->GetVelocity());
 	}
 }
 
@@ -370,13 +392,15 @@ void RangedAI::Flee(const float3& fromPosition, int speed) {
 		float3 direction = (position - fromPosition).Normalized();
 		float3 newPosition = position + direction * fleeingEvaluateDistance;
 		agent->SetMoveTarget(newPosition, true);
-		OrientateTo(agent->GetVelocity());
+		//OrientateTo(agent->GetVelocity());
 	}
 }
 
 void RangedAI::StopMovement() {
 	if (agent) {
-		agent->SetMoveTarget(GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition(), true);
+		agent->RemoveAgentFromCrowd();
+		agent->AddAgentToCrowd();
+		//agent->SetMoveTarget(GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition(), true);
 	}
 }
 
@@ -404,54 +428,44 @@ std::string RangedAI::StateToString(RangeAIState state) {
 	}
 }
 
+void RangedAI::ActualShot() {
+	if (shootTrailPrefab) {
+		//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
+		ComponentBoundingBox* box = meshObj->GetComponent<ComponentBoundingBox>();
+
+		//float offsetY = (box->GetWorldAABB().minPoint.y + box->GetWorldAABB().maxPoint.y) / 4;
+		float offsetY = (box->GetWorldAABB().minPoint.y + box->GetWorldAABB().maxPoint.y) / 4;
+
+		GameplaySystems::Instantiate(shootTrailPrefab, GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + float3(0, offsetY, 0), GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation());
+		float3 frontTrail = GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
+		GameplaySystems::Instantiate(shootTrailPrefab, GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + float3(0, offsetY, 0), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation()));
+	}
+
+	attackTimePool = 1.0f / attackSpeed;
+	actualShotTimer = -1.0f;
+	if (shootAudioSource)
+		shootAudioSource->Play();
+
+
+
+	if (FindsRayToCharacter(player, true)) {
+		Debug::Log("Player was shot");
+	}
+}
+
 void RangedAI::ShootPlayerInRange() {
 	if (!player) return;
 	if (CharacterInRange(player, attackRange, true)) {
 		Debug::Log("Shoot");
+		shot = true;
 
-		if (shootTrailPrefab) {
-			//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
-			ComponentBoundingBox* box = meshObj->GetComponent<ComponentBoundingBox>();
-			float offsetY = (box->GetWorldAABB().minPoint.y + box->GetWorldAABB().maxPoint.y) / 4;
-
-			GameplaySystems::Instantiate(shootTrailPrefab, GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + float3(0, offsetY, 0), GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation());
-			float3 frontTrail = GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
-			GameplaySystems::Instantiate(shootTrailPrefab, GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + float3(0, offsetY, 0), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation()));
+		if (animation) {
+			animation->SendTriggerSecondary(animation->GetCurrentState()->name + "Shoot");
 		}
 
-		attackTimePool = 1.0f / attackSpeed;
+		actualShotTimer = actualShotMaxTime;
 
-		if (shootAudioSource)
-			shootAudioSource->Play();
-
-
-
-		if (FindsRayToCharacter(player, true)) {
-			Debug::Log("Player was shot");
-		}
-
-		//if (fang->IsActive()) {
-		//	fangCompParticle->Play();
-		//} else {
-		//	onimaruCompParticle->Play();
-		//}
-
-		//float3 start = parentTransform->GetGlobalPosition() + bbCenter;
-		//float3 end = parentTransform->GetGlobalRotation() * float3(0, 0, 1);
-		//end.Normalize();
-		//end *= attackRange;
-		//int mask = static_cast<int>(MaskType::PLAYER);
-		//GameObject* hitGo = Physics::Raycast(start, start + end, mask);
-		//if (hitGo) {
-
-		//	//AIMovement* enemyScript = GET_SCRIPT(hitGo, AIMovement);
-		//	//if (fang->IsActive()) enemyScript->HitDetected(3);
-		//	//else enemyScript->HitDetected();
-		//	std::string message = "HitGo " + hitGo->name;
-		//	Debug::Log(message.c_str());
-
-		//}
-
+		//TODO Give a timer a value different from 0, this timer will be in charge of making a call to ActualShot
 
 	}
 }
