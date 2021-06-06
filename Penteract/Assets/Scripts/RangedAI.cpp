@@ -62,12 +62,16 @@ void RangedAI::Start() {
 
 	// TODO: ADD CHECK PLS
 	agent = GameplaySystems::GetGameObject(agentObjectUID)->GetComponent<ComponentAgent>();
-
+	ChangeState(RangeAIState::START);
 }
 
 void RangedAI::OnAnimationFinished() {
 	if (animation == nullptr) return;
-	if (state == RangeAIState::SPAWN) {
+
+
+	if (state == RangeAIState::START) {
+		ChangeState(RangeAIState::SPAWN);
+	} else if (state == RangeAIState::SPAWN) {
 		animation->SendTrigger("SpawnIdle");
 		state = RangeAIState::IDLE;
 	} else if (state == RangeAIState::DEATH) {
@@ -99,22 +103,48 @@ void RangedAI::Update() {
 void RangedAI::EnterState(RangeAIState newState) {
 	switch (newState) {
 	case RangeAIState::START:
-		ChangeState(RangeAIState::IDLE);
+		animation->SendTrigger("StartSpawn");
 		break;
 	case RangeAIState::SPAWN:
-		ChangeState(RangeAIState::IDLE);
+
 		break;
 	case RangeAIState::IDLE:
+		if (animation) {
+			if (state == RangeAIState::FLEE) {
+				animation->SendTrigger("RunBackwardIdle");
+			} else if (state == RangeAIState::APPROACH) {
+				animation->SendTrigger("RunForwardIdle");
+			} 
+		}
+
+
 		StopMovement();
 		break;
+	case RangeAIState::APPROACH:
+		if (animation) {
+			if (state == RangeAIState::IDLE) {
+				animation->SendTrigger("IdleRunForward");
+			} else if (state == RangeAIState::FLEE) {
+				animation->SendTrigger("RunBackwardRunForward");
+			}
+		}
+		break;
 	case RangeAIState::FLEE:
-		animation->SendTrigger("IdleRun");
+		if (animation) {
+			if (state == RangeAIState::APPROACH) {
+				animation->SendTrigger("RunForwardRunBackward");
+			} else if (state == RangeAIState::IDLE) {
+				animation->SendTrigger("IdleRunBackward");
+			}
+		}
 		break;
 	case RangeAIState::DEATH:
 		if (state == RangeAIState::IDLE) {
 			animation->SendTrigger("IdleDeath");
 		} else if (state == RangeAIState::APPROACH) {
-			animation->SendTrigger("RunDeath");
+			animation->SendTrigger("RunForwardDeath");
+		} else if (state == RangeAIState::FLEE) {
+			animation->SendTrigger("RunBackwardDeath");
 		}
 		Debug::Log("Death");
 		agent->RemoveAgentFromCrowd();
@@ -126,10 +156,8 @@ void RangedAI::EnterState(RangeAIState newState) {
 void RangedAI::UpdateState() {
 	switch (state) {
 	case RangeAIState::START:
-		ChangeState(RangeAIState::IDLE);
 		break;
 	case RangeAIState::SPAWN:
-		ChangeState(RangeAIState::IDLE);
 		break;
 	case RangeAIState::SHOOT:
 
@@ -161,6 +189,8 @@ void RangedAI::UpdateState() {
 			if (!CharacterInRange(player, attackRange - approachOffset, true) || !FindsRayToCharacter(player, false)) {
 				if (!CharacterTooClose(player)) {
 					Seek(player->GetComponent<ComponentTransform>()->GetGlobalPosition(), maxMovementSpeed);
+				} else {
+					ChangeState(RangeAIState::FLEE);
 				}
 			} else {
 				ChangeState(RangeAIState::IDLE);

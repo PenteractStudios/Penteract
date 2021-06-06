@@ -430,6 +430,8 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 		md = dashMovementDirection;
 	}
 
+	if (!animation) return;
+
 	if (md == MovementDirection::NONE) {
 		if (IsDead()) {
 			animation->SendTrigger(currentState->name + PlayerController::states[9]);
