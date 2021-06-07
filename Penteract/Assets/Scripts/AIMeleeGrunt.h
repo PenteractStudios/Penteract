@@ -3,6 +3,7 @@
 #include "Scripting/Script.h"
 
 #include "AIState.h"
+#include "Enemy.h"
 
 class ComponentAnimation;
 class ComponentTransform;
@@ -31,13 +32,7 @@ public:
 	GameObject* player = nullptr;
 	ComponentAgent* agent = nullptr;
 
-	int maxSpeed = 8;
-	int fallingSpeed = 30;
-	float searchRadius = 40.f;
-	float meleeRange = 5.f;
-	int lifePoints = 5;
-	float timeToDie = 5.f;
-	bool dead = false;
+	Enemy gruntCharacter = Enemy(5, 8.0f, 1, 30, 40.f, 5.f, 5.f);
 
 private:
 
