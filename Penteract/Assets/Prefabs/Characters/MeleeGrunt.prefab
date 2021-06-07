@@ -81,14 +81,14 @@
                         "Value": 11
                     },
                     {
+                        "Name": "winConditionUID",
+                        "Type": "GameObjectUID",
+                        "Value": 16579210181260590797
+                    },
+                    {
                         "Name": "meleeRange",
                         "Type": "Float",
                         "Value": 3.5
-                    },
-                    {
-                        "Name": "winConditionUID",
-                        "Type": "GameObjectUID",
-                        "Value": 15065377432062839780
                     }
                 ]
             },
