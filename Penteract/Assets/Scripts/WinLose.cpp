@@ -9,8 +9,8 @@ EXPOSE_MEMBERS(WinLose) {
 	MEMBER(MemberType::GAME_OBJECT_UID, winUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, enemiesUID),
-	MEMBER(MemberType::FLOAT, LoseOffsetX),
-	MEMBER(MemberType::FLOAT, LoseOffsetZ)
+	MEMBER(MemberType::FLOAT, loseOffsetX),
+	MEMBER(MemberType::FLOAT, loseOffsetZ)
 };
 
 GENERATE_BODY_IMPL(WinLose);
@@ -41,10 +41,10 @@ void WinLose::Update() {
 
 	float3 position = playerTransform->GetGlobalPosition();
 	float3 winConPos = winConTransform->GetGlobalPosition();
-	if (position.x <= winConPos.x + LoseOffsetX
-		&& position.x >= winConPos.x - LoseOffsetX
-		&& position.z <= winConPos.z + LoseOffsetZ
-		&& position.z >= winConPos.z - LoseOffsetZ
+	if (position.x <= winConPos.x + loseOffsetX
+		&& position.x >= winConPos.x - loseOffsetX
+		&& position.z <= winConPos.z + loseOffsetZ
+		&& position.z >= winConPos.z - loseOffsetZ
 		&& deadEnemies >= totalEnemies) {
 		if(sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 	}

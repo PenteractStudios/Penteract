@@ -20,8 +20,8 @@ public:
 	UID playerUID = 0;
 	UID enemiesUID = 0;
 
-	float LoseOffsetX = 2.0f;
-	float LoseOffsetZ = 2.0f;
+	float loseOffsetX = 2.0f;
+	float loseOffsetZ = 2.0f;
 	int totalEnemies = 0;
 
 private:

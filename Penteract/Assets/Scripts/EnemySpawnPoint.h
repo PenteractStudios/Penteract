@@ -12,7 +12,6 @@ class EnemySpawnPoint : public Script {
 public:
 	void Start() override;
 	void Update() override;
-	void IncrementDeadEnemies();
 
 public:
 	UID prefabId = 0;
@@ -26,5 +25,4 @@ private:
 	WinLose* winConditionScript = nullptr;
 	ResourcePrefab* prefab = nullptr;
 	int iterator = 0;
-	int deadEnemies = 0;
 };

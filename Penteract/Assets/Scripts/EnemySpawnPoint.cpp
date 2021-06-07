@@ -46,10 +46,3 @@ void EnemySpawnPoint::Update() {
 		}
 	}
 }
-
-void EnemySpawnPoint::IncrementDeadEnemies() {
-	deadEnemies++;
-	if (winConditionScript != nullptr) {
-		winConditionScript->IncrementDeadEnemies();
-	}
-}
