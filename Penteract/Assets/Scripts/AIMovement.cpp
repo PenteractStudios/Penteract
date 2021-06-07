@@ -2,7 +2,7 @@
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
-
+#include "Components/ComponentTransform.h"
 
 int AIMovement::maxAcceleration = 9999;
 
@@ -83,11 +83,11 @@ bool AIMovement::CharacterInSight(const GameObject* character, const float searc
 	return false;
 }
 
-bool AIMovement::CharacterInMeleeRange(const GameObject* character, const float meleeRange) {
+bool AIMovement::CharacterInAttackRange(const GameObject* character, const float attackRange) {
 	ComponentTransform* target = character->GetComponent<ComponentTransform>();
 	if (target && ownerTransform) {
 		float3 posTarget = target->GetGlobalPosition();
-		return posTarget.Distance(ownerTransform->GetGlobalPosition()) < meleeRange;
+		return posTarget.Distance(ownerTransform->GetGlobalPosition()) < attackRange;
 	}
 
 	return false;

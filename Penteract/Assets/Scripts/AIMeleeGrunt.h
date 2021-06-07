@@ -5,9 +5,11 @@
 #include "AIState.h"
 #include "Enemy.h"
 
+class GameObject;
 class ComponentAnimation;
 class ComponentTransform;
 class ComponentAgent;
+class ComponentAudioSource;
 
 class HUDController;
 class PlayerController;
@@ -18,6 +20,14 @@ class AIMeleeGrunt : public Script
 	GENERATE_BODY(AIMeleeGrunt);
 
 public:
+	enum class AudioType {
+		SPAWN,
+		ATTACK,
+		HIT,
+		DEATH,
+		TOTAL
+	};
+
 
 	void Start() override;
 	void Update() override;
@@ -46,6 +56,8 @@ private:
 	HUDController* hudControllerScript = nullptr;
 	PlayerController* playerController = nullptr;
 	AIMovement* movementScript = nullptr;
+
+	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)];
 
 };
 

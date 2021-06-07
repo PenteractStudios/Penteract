@@ -20,7 +20,7 @@ public:
 	void Flee(AIState state, const float3& fromPosition, int speed, bool orientateToDir);
 	void Stop();
 	bool CharacterInSight(const GameObject* character, const float searchRadius);
-	bool CharacterInMeleeRange(const GameObject* character, const float meleeRange);
+	bool CharacterInAttackRange(const GameObject* character, const float meleeRange);
 
 public:
 	static int maxAcceleration;
