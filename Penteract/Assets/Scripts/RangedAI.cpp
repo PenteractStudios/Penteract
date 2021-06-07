@@ -47,15 +47,16 @@ void RangedAI::Start() {
 	meshObj1 = GameplaySystems::GetGameObject(meshUID1);
 	meshObj2 = GameplaySystems::GetGameObject(meshUID2);
 	animation = GetOwner().GetComponent<ComponentAnimation>();
-	parentTransform = GetOwner().GetComponent<ComponentTransform>();
+	ownerTransform = GetOwner().GetComponent<ComponentTransform>();
 	fangMeshObj = GameplaySystems::GetGameObject(playerMeshUIDFang);
 	onimaruMeshObj = GameplaySystems::GetGameObject(playerMeshUIDOnimaru);
-	ComponentBoundingBox* bb = meshObj->GetComponent<ComponentBoundingBox>();
-	bbCenter = (bb->GetLocalMinPointAABB() + bb->GetLocalMaxPointAABB()) / 2;
+
 	shootTrailPrefab = GameplaySystems::GetResource<ResourcePrefab>(trailPrefabUID);
 
 
 	if (meshObj) {
+		ComponentBoundingBox* bb = meshObj->GetComponent<ComponentBoundingBox>();
+		bbCenter = (bb->GetLocalMinPointAABB() + bb->GetLocalMaxPointAABB()) / 2;
 		meshRenderer = meshObj->GetComponent<ComponentMeshRenderer>();
 		if (meshRenderer) {
 			noDmgMaterialID = meshRenderer->materialId;
@@ -177,7 +178,9 @@ void RangedAI::Update() {
 void RangedAI::EnterState(AIState newState) {
 	switch (newState) {
 	case AIState::START:
-		animation->SendTrigger("StartSpawn");
+
+
+
 		break;
 	case AIState::SPAWN:
 		PlayAudio(AudioType::SPAWN);
@@ -231,6 +234,15 @@ void RangedAI::EnterState(AIState newState) {
 void RangedAI::UpdateState() {
 	switch (state) {
 	case AIState::START:
+
+		if (Camera::CheckObjectInsideFrustum(GetOwner().GetChildren()[0])) {
+			if (aiMovement) aiMovement->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), rangerGruntCharacter.fallingSpeed, true);
+			if (ownerTransform->GetGlobalPosition().y < 2.7 + 0e-5f) {
+				animation->SendTrigger("StartSpawn");
+				if (audios[static_cast<int>(AudioType::SPAWN)]) audios[static_cast<int>(AudioType::SPAWN)]->Play();
+				state = AIState::SPAWN;
+			}
+		}
 		break;
 	case AIState::SPAWN:
 		break;
@@ -249,7 +261,7 @@ void RangedAI::UpdateState() {
 				}
 
 				if (FindsRayToPlayer(false)) {
-					OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - parentTransform->GetGlobalPosition());
+					OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
 				} else {
 					ChangeState(AIState::RUN);
 				}
@@ -258,7 +270,7 @@ void RangedAI::UpdateState() {
 		break;
 	case AIState::RUN:
 		if (CharacterInSight(player)) {
-			OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - parentTransform->GetGlobalPosition());
+			OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
 
 			if (!CharacterInRange(player, attackRange - approachOffset, true) || !FindsRayToPlayer(false)) {
 				if (!CharacterTooClose(player)) {
@@ -272,7 +284,7 @@ void RangedAI::UpdateState() {
 		}
 		break;
 	case AIState::FLEE:
-		OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - parentTransform->GetGlobalPosition());
+		OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
 
 		if (CharacterTooClose(player)) {
 			if (aiMovement) aiMovement->Flee(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), static_cast<int>(rangerGruntCharacter.movementSpeed), false);
@@ -321,7 +333,7 @@ bool RangedAI::CharacterInSight(const GameObject* character) {
 	ComponentTransform* target = character->GetComponent<ComponentTransform>();
 	if (target) {
 		float3 posTarget = target->GetGlobalPosition();
-		return posTarget.Distance(parentTransform->GetGlobalPosition()) < rangerGruntCharacter.searchRadius;
+		return posTarget.Distance(ownerTransform->GetGlobalPosition()) < rangerGruntCharacter.searchRadius;
 	}
 
 	return false;
@@ -338,7 +350,7 @@ bool RangedAI::CharacterInRange(const GameObject* character, float range, bool u
 	ComponentTransform* target = character->GetComponent<ComponentTransform>();
 	if (target) {
 		float3 posTarget = target->GetGlobalPosition();
-		return posTarget.Distance(parentTransform->GetGlobalPosition()) < range;
+		return posTarget.Distance(ownerTransform->GetGlobalPosition()) < range;
 	}
 	return false;
 }
@@ -382,7 +394,7 @@ bool RangedAI::CharacterTooClose(const GameObject* character) {
 
 void RangedAI::OrientateTo(const float3& direction) {
 	Quat newRotation = Quat::LookAt(float3(0, 0, 1), direction.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
-	parentTransform->SetGlobalRotation(newRotation);
+	ownerTransform->SetGlobalRotation(newRotation);
 }
 
 void RangedAI::ActualShot() {

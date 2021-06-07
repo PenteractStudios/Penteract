@@ -102,7 +102,7 @@ private:
 	bool hitTaken = false;
 	bool shot = false;
 	ComponentAnimation* animation = nullptr;
-	ComponentTransform* parentTransform = nullptr;
+	ComponentTransform* ownerTransform = nullptr;
 	int damageRecieved = 0;
 	float attackTimePool = 2.0f;
 	float actualShotTimer = -1.0f;
