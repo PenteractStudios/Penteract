@@ -8,8 +8,8 @@ void Enemy::SetSearchRadius(float searchRadius_) {
 	searchRadius = searchRadius_;
 }
 
-void Enemy::SetMeleeRange(float meleeRange_) {
-	meleeRange = meleeRange_;
+void Enemy::SetAttackRange(float attackRange_) {
+	attackRange = attackRange_;
 }
 
 void Enemy::SetTimeToDie(float timeToDie_) {

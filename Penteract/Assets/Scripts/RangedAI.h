@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Scripting/Script.h"
-#include "AIMovement.h"
+#include "Enemy.h"
+#include "AIState.h"
+
 
 #include <string>
 
@@ -9,19 +11,11 @@ class ComponentAgent;
 class ComponentAudioSource;
 class ComponentAnimation;
 class ComponentMeshRenderer;
+class ComponentTransform;
 class ResourcePrefab;
 class HUDController;
 class PlayerController;
-
-enum class RangeAIState {
-	START,
-	SPAWN,
-	IDLE,
-	APPROACH,
-	SHOOT,
-	FLEE,
-	DEATH
-};
+class AIMovement;
 
 class RangedAI : public Script {
 	GENERATE_BODY(RangedAI);
@@ -36,22 +30,21 @@ public:
 	void ShootPlayerInRange();
 private:
 	//State handling
-	void EnterState(RangeAIState newState);
+	void EnterState(AIState newState);
 	void UpdateState();
 	void ExitState();
-	void ChangeState(RangeAIState newState);
+	void ChangeState(AIState newState);
 
 	bool CharacterInSight(const GameObject* character);
 	bool CharacterInRange(const GameObject* character, float range, bool useRange);
-	bool FindsRayToCharacter(const GameObject* character, bool useForward);
+	bool FindsRayToPlayer(bool useForward);
 	bool CharacterTooClose(const GameObject* character);
-	void Seek(const float3& newPosition, int speed);
-	void Flee(const float3& fromPosition, int speed);
-	void StopMovement();
 	void OrientateTo(const float3& direction);
-	std::string StateToString(RangeAIState state);
 	void ActualShot();
 public:
+
+	Enemy rangerGruntCharacter = Enemy(5, 8.0f, 1, 30, 40.f, 5.f, 5.f);
+
 	bool foundRayToPlayer = false;
 	UID playerUID = 0;
 	UID playerMeshUIDFang = 0;
@@ -82,14 +75,6 @@ public:
 	UID damagedMaterialID = 0;
 
 
-	int maxMovementSpeed = 8;
-	int fallingSpeed = 30;
-
-	float searchRadius = 40.f;
-
-	int lifePoints = 5;
-	float timeToDie = 5.f;
-
 	bool dead = false;
 
 	float attackRange = 20.0f;
@@ -98,17 +83,17 @@ public:
 	float fleeingRange = 7.f;
 	float fleeingEvaluateDistance = 5.0f;
 
-
 	float attackSpeed = 0.5f; //Shots per second
 	ComponentAgent* agent = nullptr;
 	float actualShotMaxTime = 0.3f;
 	float timeSinceLastHurt = 0.5f;
 private:
+	AIMovement* aiMovement = nullptr;
 	float3 bbCenter = float3(0, 0, 0);
 	float3 velocity = float3(0, 0, 0);
-	RangeAIState state = RangeAIState::START;
+	AIState state = AIState::START;
 	bool hitTaken = false;
-	bool shot;
+	bool shot = false;
 	ComponentAnimation* animation = nullptr;
 	ComponentTransform* parentTransform = nullptr;
 	int damageRecieved = 0;
