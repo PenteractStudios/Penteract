@@ -225,6 +225,7 @@ void PlayerController::SwitchCharacter() {
 		switchCooldownRemaining = switchCooldown;
 		if (hudControllerScript) {
 			hudControllerScript->ChangePlayerHUD(lifePointsFang, lifePointsOni);
+			hudControllerScript->ResetCooldownProgressBar();
 		}
 	}
 }

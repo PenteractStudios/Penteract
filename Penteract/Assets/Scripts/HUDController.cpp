@@ -4,6 +4,7 @@
 #include "Components/UI/ComponentImage.h"
 #include "HealthLostInstantFeedback.h"
 #include "AbilityRefreshEffect.h"
+#include "AbilityRefreshEffectProgressBar.h"
 #include "LowHPWarning.h"
 #include "FullHealthBarFeedback.h"
 #include "GameplaySystems.h"
@@ -237,6 +238,16 @@ void HUDController::ResetHealthRegenerationEffects(float currentHp) {
 	}
 }
 
+void HUDController::ResetCooldownProgressBar()
+{
+	if (!swapingSkillCanvas) {
+		return;
+	}
+
+	AbilityRefreshEffectProgressBar* pef = GET_SCRIPT(swapingSkillCanvas->GetChildren()[2], AbilityRefreshEffectProgressBar);
+	pef->ResetBar();
+}
+
 void HUDController::UpdateScore(int score_) {
 	score += score_;
 	if (scoreText) scoreText->SetText(std::to_string(score));
@@ -396,12 +407,20 @@ void HUDController::PlayCoolDownEffect(AbilityRefreshEffect* ef, Cooldowns coold
 	}
 }
 
+void HUDController::PlayProgressBarEffect(AbilityRefreshEffectProgressBar* ef, Cooldowns cooldown)
+{
+	if (ef != nullptr) {
+		ef->Play();
+	}
+}
+
 //Hierarchy sensitive method
 void HUDController::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canvas) {
 	if (!abilityCoolDownsRetreived[static_cast<int>(cooldown)]) {
 		if (cooldowns[static_cast<int>(cooldown)] == 1.0f) {
 			if (canvas) {
 				AbilityRefreshEffect* ef = nullptr;
+				AbilityRefreshEffectProgressBar* pef = nullptr;
 
 				if (cooldown < Cooldowns::ONIMARU_SKILL_1) {
 					if (canvas->GetChildren().size() > 0) {
@@ -426,7 +445,7 @@ void HUDController::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* c
 				} else {
 					if (canvas->GetChildren().size() > 6) {
 						ef = GET_SCRIPT(canvas->GetChildren()[2], AbilityRefreshEffect);
-
+						pef = GET_SCRIPT(canvas->GetChildren()[2], AbilityRefreshEffectProgressBar);
 						//Turn on button idle
 						canvas->GetChildren()[5]->Enable();
 						//Turn off button down
@@ -437,6 +456,7 @@ void HUDController::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* c
 
 				if (ef) {
 					PlayCoolDownEffect(ef, cooldown);
+					PlayProgressBarEffect(pef, cooldown);
 					abilityCoolDownsRetreived[static_cast<int>(cooldown)] = true;
 				}
 			} else {

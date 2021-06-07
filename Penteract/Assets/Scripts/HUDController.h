@@ -6,6 +6,7 @@
 class GameObject;
 class ComponentText;
 class AbilityRefreshEffect;
+class AbilityRefreshEffectProgressBar;
 
 #define MAX_HEALTH 10
 #define LOW_HEALTH_WARNING 2
@@ -37,6 +38,7 @@ public:
 	void ChangePlayerHUD(int fangLives, int oniLives);
 	void HealthRegeneration(float currentHp, float hpRecovered);
 	void ResetHealthRegenerationEffects(float currentHp);
+	void ResetCooldownProgressBar();
 
 	void UpdateScore(int score_);
 	void SetCooldownRetreival(Cooldowns cooldown);
@@ -83,6 +85,7 @@ private:
 	void LoadCooldownFeedbackStates(GameObject* targetCanvas, int startingIndex);
 	void AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canvas);
 	void PlayCoolDownEffect(AbilityRefreshEffect* effect, Cooldowns cooldown);
+	void PlayProgressBarEffect(AbilityRefreshEffectProgressBar* effect, Cooldowns cooldown);
 
 private:
 
