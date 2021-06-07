@@ -6,17 +6,19 @@
 #include "PlayerController.h"
 #include "HUDController.h"
 #include "AIMovement.h"
+#include "WinLose.h"
 
 EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
-		MEMBER(MemberType::INT, gruntCharacter.lifePoints),
-		MEMBER(MemberType::FLOAT, gruntCharacter.movementSpeed),
-		MEMBER(MemberType::INT, gruntCharacter.damageHit),
-		MEMBER(MemberType::INT, gruntCharacter.fallingSpeed),
-		MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
-		MEMBER(MemberType::FLOAT, gruntCharacter.attackRange),
-		MEMBER(MemberType::FLOAT, gruntCharacter.timeToDie)
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
+	MEMBER(MemberType::INT, gruntCharacter.lifePoints),
+	MEMBER(MemberType::FLOAT, gruntCharacter.movementSpeed),
+	MEMBER(MemberType::INT, gruntCharacter.damageHit),
+	MEMBER(MemberType::INT, gruntCharacter.fallingSpeed),
+	MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
+	MEMBER(MemberType::FLOAT, gruntCharacter.attackRange),
+	MEMBER(MemberType::FLOAT, gruntCharacter.timeToDie)
 };
 
 GENERATE_BODY_IMPL(AIMeleeGrunt);
@@ -26,19 +28,29 @@ void AIMeleeGrunt::Start() {
 	if (player) {
 		playerController = GET_SCRIPT(player, PlayerController);
 	}
+
+	GameObject* winLose = GameplaySystems::GetGameObject(winConditionUID);
+
+	if (winLose) {
+		winLoseScript = GET_SCRIPT(winLose, WinLose);
+	}
+
 	agent = GetOwner().GetComponent<ComponentAgent>();
 	if (agent) {
 		agent->SetMaxSpeed(gruntCharacter.movementSpeed);
-		agent->SetMaxAcceleration(static_cast<float>(AIMovement::maxAcceleration));
+		agent->SetMaxAcceleration(AIMovement::maxAcceleration);
 		agent->SetAgentObstacleAvoidance(true);
 		agent->RemoveAgentFromCrowd();
 	}
+
 	animation = GetOwner().GetComponent<ComponentAnimation>();
 	ownerTransform = GetOwner().GetComponent<ComponentTransform>();
+
 	GameObject* canvas = GameplaySystems::GetGameObject(canvasUID);
 	if (canvas) {
 		hudControllerScript = GET_SCRIPT(canvas, HUDController);
 	}
+
 	movementScript = GET_SCRIPT(&GetOwner(), AIMovement);
 
 	int i = 0;
@@ -103,7 +115,7 @@ void AIMeleeGrunt::Update() {
 		}
 		break;
 	case AIState::RUN:
-		movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), static_cast<int>(gruntCharacter.movementSpeed), true);
+		movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), gruntCharacter.movementSpeed, true);
 		if (movementScript->CharacterInAttackRange(player, gruntCharacter.attackRange)) {
 			agent->RemoveAgentFromCrowd();
 			animation->SendTrigger("RunAttack");
@@ -118,6 +130,10 @@ void AIMeleeGrunt::Update() {
 	}
 
 	if (!gruntCharacter.isAlive) {
+		if (!killSent && winLoseScript != nullptr) {
+			winLoseScript->IncrementDeadEnemies();
+			killSent = true;
+		}
 		if (gruntCharacter.timeToDie > 0) {
 			gruntCharacter.timeToDie -= Time::GetDeltaTime();
 		} else {
