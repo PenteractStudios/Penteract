@@ -14,6 +14,7 @@ class ComponentAudioSource;
 class HUDController;
 class PlayerController;
 class AIMovement;
+class WinLose;
 
 class AIMeleeGrunt : public Script
 {
@@ -38,11 +39,15 @@ public:
 
 	UID playerUID = 0;
 	UID canvasUID = 0;
+	UID winConditionUID = 0;
 
 	GameObject* player = nullptr;
+	GameObject* spawn = nullptr;
 	ComponentAgent* agent = nullptr;
+	WinLose* winLoseScript = nullptr;
 
 	Enemy gruntCharacter = Enemy(5, 8.0f, 1, 30, 40.f, 5.f, 5.f);
+	bool killSent = false;
 
 private:
 
