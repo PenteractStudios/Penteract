@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Player.h"
 #include "Scripting/Script.h"
 #include "Math/float3.h"
 #include <vector>
@@ -29,7 +30,7 @@ public:
 	void Start() override;
 	void Update() override;
 
-	void HitDetected();
+	void HitDetected(int damage);
 	bool IsDead();
 	void SetInvincible(bool status);
 	void SetOverpower(bool status);
@@ -70,16 +71,12 @@ public:
 	bool shooting = false;
 
 	bool hitTaken = false;
-	float lifePointsFang = 7.f;
-	float lifePointsOni = 7.f;
 
-	float fangAttackSpeed = 1.f;
-	float onimaruAttackSpeed = 1.f;
+	Player fangCharacter = Player(7, 10.0f, 3, 0.1f, 1.0f);
+	Player onimaruCharacter = Player(7, 6.0f, 1, 0.1f, 1.0f);
+
 	float distanceRayCast = 2.f;
 	float switchCooldown = 5.f;
-
-	float fangMovementSpeed = 10.f;
-	float onimaruMovementSpeed = 6.f;
 
 	float dashCooldown = 5.f;
 	float dashSpeed = 100.f;
@@ -88,7 +85,6 @@ public:
 	float cameraOffsetZ = 20.f;
 	float cameraOffsetY = 10.f;
 	float cameraOffsetX = 0.f;
-	float shootCooldown = 0.1f;
 	bool firstTime = true;
 
 	/* Fang & onimaru damage */
