@@ -117,6 +117,8 @@ private:
 	MovementDirection GetInputMovementDirection() const;
 	int GetMouseDirectionState(MovementDirection input);
 
+	void GetAudioSources();
+
 private:
 
 	float dashCooldownRemaining = 0.f;
@@ -158,9 +160,15 @@ private:
 	ComponentParticleSystem* onimaruCompParticle = nullptr;
 
 	//Audio
-	ComponentAudioSource* shootAudioSource = nullptr;
 	ComponentAudioSource* dashAudioSource = nullptr;
-	ComponentAudioSource* switchAudioSource = nullptr;
+	ComponentAudioSource* switchFangToOniAudioSource = nullptr;
+	ComponentAudioSource* switchOniToFangAudioSource = nullptr;
+	ComponentAudioSource* fangShootAudioSource = nullptr;
+	ComponentAudioSource* onimaruShootAudioSource = nullptr;
+	ComponentAudioSource* fangHitTakenAudioSource = nullptr;
+	ComponentAudioSource* onimaruHitTakenAudioSource = nullptr;
+	ComponentAudioSource* fangDeathAudioSource = nullptr;
+	ComponentAudioSource* onimaruDeathAudioSource = nullptr;
 
 	HUDController* hudControllerScript = nullptr;
 };

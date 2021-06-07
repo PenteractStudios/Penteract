@@ -76,7 +76,6 @@ void PlayerController::Start() {
 		if (transform) {
 			initialPosition = transform->GetGlobalPosition();
 		}
-		shootAudioSource = player->GetComponent<ComponentAudioSource>();
 	}
 	if (camera) {
 		compCamera = camera->GetComponent<ComponentCamera>();
@@ -112,14 +111,7 @@ void PlayerController::Start() {
 	if (onimaruParticle) {
 		onimaruCompParticle = onimaruParticle->GetComponent<ComponentParticleSystem>();
 	}
-	GameObject* aux = GameplaySystems::GetGameObject(switchAudioSourceUID);
-	if (aux) {
-		switchAudioSource = aux->GetComponent<ComponentAudioSource>();
-	}
-	aux = GameplaySystems::GetGameObject(dashAudioSourceUID);
-	if (aux) {
-		dashAudioSource = aux->GetComponent<ComponentAudioSource>();
-	}
+	
 	firstTime = true;
 
 	agent = GetOwner().GetComponent<ComponentAgent>();
@@ -127,6 +119,8 @@ void PlayerController::Start() {
 		agent->SetMaxSpeed(fangCharacter.movementSpeed);
 		agent->SetMaxAcceleration(MAX_ACCELERATION);
 	}
+
+	GetAudioSources();
 }
 
 void PlayerController::MoveTo(MovementDirection md) {
@@ -171,7 +165,7 @@ void PlayerController::InitDash(MovementDirection md) {
 		dashInCooldown = true;
 		dashing = true;
 		agent->SetMaxSpeed(dashSpeed);
-		if (shootAudioSource) {
+		if (dashAudioSource) {
 			dashAudioSource->Play();
 		}
 		else {
@@ -203,7 +197,7 @@ void PlayerController::SwitchCharacter() {
 
 	if (CanSwitch()) {
 		switchInCooldown = true;
-		switchAudioSource->Play();
+		switchFangToOniAudioSource->Play();
 		if (fang->IsActive()) {
 			fang->Disable();
 			onimaru->Enable();
@@ -229,16 +223,15 @@ void PlayerController::Shoot() {
 	ComponentTransform* transform = GetOwner().GetComponent<ComponentTransform>();
 
 	if (CanShoot()) {
-		if (shootAudioSource) {
-			shootAudioSource->Play();
-		}
-		else {
-			Debug::Log(AUDIOSOURCE_NULL_MSG);
-		}
-
 		shooting = true;
 		float3 start;
 		if (fang->IsActive()) {
+			if (fangShootAudioSource) {
+				fangShootAudioSource->Play();
+			}
+			else {
+				Debug::Log(AUDIOSOURCE_NULL_MSG);
+			}
 			fangAttackCooldownRemaining = 1.f / fangCharacter.attackSpeed;
 			if (fangTrail) {
 				//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
@@ -250,7 +243,12 @@ void PlayerController::Shoot() {
 			start = fangGunTransform->GetGlobalPosition();
 		}
 		else {
-			//TODO: SUB WITH ONIMARU SHOOT
+			if (onimaruShootAudioSource) {
+				onimaruShootAudioSource->Play();
+			}
+			else {
+				Debug::Log(AUDIOSOURCE_NULL_MSG);
+			}
 			onimaruAttackCooldownRemaining = 1.f / onimaruCharacter.attackSpeed;
 			if (onimaruTrail) {
 				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
@@ -274,7 +272,20 @@ void PlayerController::Shoot() {
 
 void PlayerController::HitDetected(int damage) {
 	if (!invincibleMode) {
-		fang->IsActive() ? fangCharacter.Hit(damage) : onimaruCharacter.Hit(damage);
+		if (fang->IsActive()) {
+			fangCharacter.Hit(damage);
+			if (fangHitTakenAudioSource) fangHitTakenAudioSource->Play();
+		}
+		else {
+			onimaruCharacter.Hit(damage);
+			if (onimaruHitTakenAudioSource) onimaruHitTakenAudioSource->Play();
+		}
+	}
+	if (!fangCharacter.isAlive && fang->IsActive()) {
+		if (fangDeathAudioSource) fangDeathAudioSource->Play();
+	}
+	else if (!onimaruCharacter.isAlive && onimaru->IsActive()) {
+		if (onimaruDeathAudioSource) onimaruDeathAudioSource->Play();
 	}
 	hitTaken = !invincibleMode;
 }
@@ -417,6 +428,38 @@ int PlayerController::GetMouseDirectionState(MovementDirection input) {
 	}
 	else {
 		return 3; //RunLeft
+	}
+}
+
+void PlayerController::GetAudioSources()
+{
+	//TODO: Refactor this for next VS
+	int i = 0;
+	
+	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
+		if (i == 0) {
+			dashAudioSource = &src;
+		}
+		else if (i == 1) {
+			switchFangToOniAudioSource = &src;
+			switchOniToFangAudioSource = &src;
+		}
+		else if (i == 2) {
+			fangShootAudioSource = &src;
+			onimaruShootAudioSource = &src;
+		}
+		else if (i == 3) {
+			fangHitTakenAudioSource = &src;
+		}
+		else if (i == 4) {
+			onimaruHitTakenAudioSource = &src;
+		}
+		else if (i == 5) {
+			fangDeathAudioSource = &src;
+		}
+		else if (i == 6) {
+			onimaruDeathAudioSource = &src;
+		}
 	}
 }
 
