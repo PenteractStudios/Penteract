@@ -141,7 +141,7 @@ void PlayerController::LookAtMouse() {
 		LineSegment ray = compCamera->frustum.UnProjectLineSegment(mousePos.x, mousePos.y);
 		float3 planeTransform = transform->GetGlobalPosition();
 		if (fang->IsActive() && fangGunTransform) planeTransform = fangGunTransform->GetGlobalPosition();
-		else if (onimaruGunTransform) planeTransform = onimaruGunTransform->GetGlobalPosition();
+		else if (!fang->IsActive() && onimaruGunTransform) planeTransform = onimaruGunTransform->GetGlobalPosition();
 		Plane p = Plane(planeTransform, float3(0, 1, 0));
 		facePointDir = float3(0, 0, 0);
 		facePointDir = p.ClosestPoint(ray) - (transform->GetGlobalPosition());
