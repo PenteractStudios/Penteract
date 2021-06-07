@@ -5,9 +5,11 @@
 #include "AIState.h"
 #include "Enemy.h"
 
+class GameObject;
 class ComponentAnimation;
 class ComponentTransform;
 class ComponentAgent;
+class ComponentAudioSource;
 
 class HUDController;
 class PlayerController;
@@ -46,6 +48,11 @@ private:
 	HUDController* hudControllerScript = nullptr;
 	PlayerController* playerController = nullptr;
 	AIMovement* movementScript = nullptr;
+
+	ComponentAudioSource* spawnAudio = nullptr;
+	ComponentAudioSource* attackAudio = nullptr;
+	ComponentAudioSource* hitAudio = nullptr;
+	ComponentAudioSource* deathAudio = nullptr;
 
 };
 

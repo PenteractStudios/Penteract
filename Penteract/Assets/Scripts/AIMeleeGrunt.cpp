@@ -42,6 +42,15 @@ void AIMeleeGrunt::Start() {
         hudControllerScript = GET_SCRIPT(canvas, HUDController);
     }
     movementScript = GET_SCRIPT(&GetOwner(), AIMovement);
+
+    int i = 0;
+    for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
+        if (i == 0) spawnAudio = &src;
+        else if (i == 1) attackAudio = &src;
+        else if (i == 2) hitAudio = &src;
+        else if (i == 3) deathAudio = &src;
+        ++i;
+    }
 }
 
 void AIMeleeGrunt::Update() {
@@ -60,6 +69,7 @@ void AIMeleeGrunt::Update() {
 
     if (hitTaken && gruntCharacter.isAlive) {
         gruntCharacter.Hit(damageRecieved);
+        if (hitAudio) hitAudio->Play();
         hitTaken = false;
     }
 
@@ -73,6 +83,7 @@ void AIMeleeGrunt::Update() {
         else if (state == AIState::RUN) {
             animation->SendTrigger("RunDeath");
         }
+        if (deathAudio) deathAudio->Play();
         agent->RemoveAgentFromCrowd();
         state = AIState::DEATH;
     }
@@ -84,6 +95,7 @@ void AIMeleeGrunt::Update() {
             movementScript->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), gruntCharacter.fallingSpeed);
             if (ownerTransform->GetGlobalPosition().y < 2.7 + 0e-5f) {
                 animation->SendTrigger("StartSpawn");
+                if (spawnAudio) spawnAudio->Play();
                 state = AIState::SPAWN;
             }
         }
@@ -103,6 +115,7 @@ void AIMeleeGrunt::Update() {
         if (movementScript->CharacterInMeleeRange(player, gruntCharacter.meleeRange)) {
             agent->RemoveAgentFromCrowd();
             animation->SendTrigger("RunAttack");
+            if (attackAudio) attackAudio->Play();
             state = AIState::ATTACK;
         }
         break;
