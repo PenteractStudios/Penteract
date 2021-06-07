@@ -13,7 +13,8 @@ public:
 	void OnButtonClick() override;
 
 public:
-	UID buttonUID;
+	UID buttonUID = 0;
+	UID sceneUID = 0;
 	float padding = 20.f;
 };
 

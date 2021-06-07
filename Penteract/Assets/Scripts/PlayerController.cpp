@@ -4,7 +4,7 @@
 #include "GameplaySystems.h"
 #include "TesseractEvent.h"
 
-#include "AIMovement.h"
+#include "AIMeleeGrunt.h"
 #include "HUDController.h"
 #include "OnimaruBullet.h"
 
@@ -29,7 +29,6 @@ EXPOSE_MEMBERS(PlayerController) {
 		MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
 		MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
 		MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruBulletUID),
-
 		MEMBER(MemberType::GAME_OBJECT_UID, fangGunUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, onimaruParticleUID),
@@ -50,8 +49,9 @@ EXPOSE_MEMBERS(PlayerController) {
 		MEMBER(MemberType::FLOAT, onimaruMovementSpeed),
 		MEMBER(MemberType::FLOAT, shootCooldown),
 		MEMBER(MemberType::INT, lifePointsFang),
-		MEMBER(MemberType::INT, lifePointsOni)
-
+		MEMBER(MemberType::INT, lifePointsOni),
+		MEMBER(MemberType::BOOL, useSmoothCamera),
+		MEMBER(MemberType::FLOAT, smoothCameraSpeed)
 };
 
 GENERATE_BODY_IMPL(PlayerController);
@@ -138,7 +138,6 @@ void PlayerController::MoveTo(MovementDirection md) {
 	//with navigation
 	newPosition += GetDirection(md) * movementSpeed * modifier;
 	agent->SetMoveTarget(newPosition, false);
-
 }
 
 void PlayerController::LookAtMouse() {
@@ -183,7 +182,6 @@ void PlayerController::Dash() {
 		float3 newPosition = transform->GetGlobalPosition();
 		newPosition += dashSpeed * dashDirection;
 		agent->SetMoveTarget(newPosition, false);
-
 	}
 }
 
@@ -202,13 +200,11 @@ void PlayerController::SwitchCharacter() {
 		switchInCooldown = true;
 		switchAudioSource->Play();
 		if (fang->IsActive()) {
-			Debug::Log("Swaping to onimaru...");
 			fang->Disable();
 			onimaru->Enable();
 			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
 		}
 		else {
-			Debug::Log("Swaping to fang...");
 			onimaru->Disable();
 			fang->Enable();
 			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
@@ -221,7 +217,6 @@ void PlayerController::SwitchCharacter() {
 }
 
 bool PlayerController::CanShoot() {
-
 	return !shooting && ((fang->IsActive() && fangTrail) || (onimaru->IsActive() && onimaruBullet));
 }
 
@@ -253,7 +248,7 @@ void PlayerController::Shoot() {
 			//TODO: SUB WITH ONIMARU SHOOT
 			onimaruAttackCooldownRemaining = 1.f / onimaruAttackSpeed;
 			if (onimaruBullet) {
-				GameObject* bullet = GameplaySystems::Instantiate(onimaruBullet, onimaruGunTransform->GetGlobalPosition(), Quat(0.0f,0.0f,0.0f,0.0f));
+				GameObject* bullet = GameplaySystems::Instantiate(onimaruBullet, onimaruGunTransform->GetGlobalPosition(), Quat(0.0f, 0.0f, 0.0f, 0.0f));
 				if (bullet) {
 					onimaruBulletcript = GET_SCRIPT(bullet, OnimaruBullet);
 					onimaruBulletcript->SetOnimaruDirection(onimaruGunTransform->GetGlobalRotation());
@@ -268,20 +263,38 @@ void PlayerController::Shoot() {
 		int mask = static_cast<int>(MaskType::ENEMY);
 		GameObject* hitGo = Physics::Raycast(start, start + end, mask);
 		if (hitGo) {
-			AIMovement* enemyScript = GET_SCRIPT(hitGo->GetParent(), AIMovement);
-			if (fang->IsActive()) enemyScript->HitDetected(3);
-			else enemyScript->HitDetected();
+			AIMeleeGrunt* enemyScript = GET_SCRIPT(hitGo->GetParent(), AIMeleeGrunt);
+			if (enemyScript) {
+				if (fang->IsActive()) enemyScript->HitDetected(3);
+				else enemyScript->HitDetected();
+			}
 		}
 	}
 }
 
 void PlayerController::HitDetected() {
-	hitTaken = true;
+	hitTaken = !invincibleMode;
+}
+
+void PlayerController::SetInvincible(bool status) {
+	invincibleMode = status;
+}
+
+void PlayerController::SetOverpower(bool status) {
+	overpowerMode = status ? 999 : 1;
+}
+
+void PlayerController::SetNoCooldown(bool status) {
+	noCooldownMode = status;
+}
+
+bool PlayerController::IsDead()
+{
+	return (lifePointsFang <= 0 || lifePointsOni <= 0);
 }
 
 void PlayerController::CheckCoolDowns() {
-
-	if (switchCooldownRemaining <= 0.f) {
+	if (noCooldownMode || switchCooldownRemaining <= 0.f) {
 		switchCooldownRemaining = 0.f;
 		switchInCooldown = false;
 	}
@@ -291,7 +304,7 @@ void PlayerController::CheckCoolDowns() {
 
 	if (fang->IsActive()) {
 		//Dash Cooldown
-		if (dashCooldownRemaining <= 0.f) {
+		if (noCooldownMode || dashCooldownRemaining <= 0.f) {
 			dashCooldownRemaining = 0.f;
 			dashInCooldown = false;
 			dashMovementDirection = MovementDirection::NONE;
@@ -300,7 +313,7 @@ void PlayerController::CheckCoolDowns() {
 			dashCooldownRemaining -= Time::GetDeltaTime();
 		}
 		//Dash duration
-		if (dashRemaining <= 0) {
+		if (dashRemaining <= 0.f) {
 			dashRemaining = 0.f;
 			dashing = false;
 			agent->SetMaxSpeed(fangMovementSpeed);
@@ -309,7 +322,7 @@ void PlayerController::CheckCoolDowns() {
 			dashRemaining -= Time::GetDeltaTime();
 		}
 
-		if (fangAttackCooldownRemaining <= 0) {
+		if (fangAttackCooldownRemaining <= 0.f) {
 			fangAttackCooldownRemaining = 0.f;
 			shooting = false;
 		}
@@ -318,7 +331,7 @@ void PlayerController::CheckCoolDowns() {
 		}
 	}
 	if (onimaru->IsActive()) {
-		if (onimaruAttackCooldownRemaining <= 0) {
+		if (onimaruAttackCooldownRemaining <= 0.f) {
 			onimaruAttackCooldownRemaining = 0.f;
 			shooting = false;
 		}
@@ -354,8 +367,7 @@ MovementDirection PlayerController::GetInputMovementDirection() const {
 
 float3 PlayerController::GetDirection(MovementDirection md) const {
 	float3 direction;
-	switch (md)
-	{
+	switch (md) {
 	case MovementDirection::UP:
 		direction = float3(0, 0, -1);
 		break;
@@ -429,13 +441,16 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 	}
 
 	if (md == MovementDirection::NONE) {
-		animation->SendTrigger(currentState->name + PlayerController::states[0]);
+		if (IsDead()) {
+			animation->SendTrigger(currentState->name + PlayerController::states[9]);
+		}
+		else {
+			animation->SendTrigger(currentState->name + PlayerController::states[0]);
+		}
 	}
 	else {
 		animation->SendTrigger(currentState->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
 	}
-
-
 }
 
 void PlayerController::UpdatePlayerStats() {
@@ -460,54 +475,67 @@ void PlayerController::UpdatePlayerStats() {
 		float realSwitchCooldown = 1.0f - (switchCooldownRemaining / switchCooldown);
 		hudControllerScript->UpdateCooldowns(0.0f, 0.0f, 0.0f, realDashCooldown, 0.0f, 0.0f, realSwitchCooldown);
 
-		if (lifePointsFang <= 0 || lifePointsOni <= 0) {
-			SceneManager::ChangeScene("Assets/Scenes/LoseScene.scene");
+		if (IsDead()) {
+			PlayAnimation(MovementDirection::NONE);
 		}
 	}
 }
 
 void PlayerController::UpdateCameraPosition() {
 	float3 playerGlobalPos = transform->GetGlobalPosition();
-	cameraTransform->SetGlobalPosition(float3(
-		playerGlobalPos.x + cameraOffsetX,
-		playerGlobalPos.y + cameraOffsetY,
-		playerGlobalPos.z + cameraOffsetZ));
+
+	float3 desiredPosition = playerGlobalPos + float3(cameraOffsetX, cameraOffsetY, cameraOffsetZ);
+	float3 smoothedPosition = desiredPosition;
+
+	if (useSmoothCamera) {
+		smoothedPosition = float3::Lerp(cameraTransform->GetGlobalPosition(), desiredPosition, smoothCameraSpeed * Time::GetDeltaTime());
+	}
+
+	cameraTransform->SetGlobalPosition(smoothedPosition);
 }
 
 void PlayerController::Update() {
 	if (!player) return;
 	if (!camera) return;
 	if (!transform) return;
+	if (!agent) return;
 
 	CheckCoolDowns();
-	Dash();
 	UpdatePlayerStats();
-	UpdateCameraPosition();
-	if (firstTime) {
+
+	if (!IsDead()) {
+		Dash();
+		UpdateCameraPosition();
+
+		if (firstTime) {
+			if (fang->IsActive()) {
+				hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
+			}
+			else {
+				hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
+			}
+			firstTime = false;
+		}
+
+		MovementDirection md;
+		md = GetInputMovementDirection();
+		if (Input::GetMouseButtonDown(2)) {
+			InitDash(md);
+		}
+		if (!dashing) {
+			LookAtMouse();
+			MoveTo(md);
+			if (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R)) SwitchCharacter();
+		}
 		if (fang->IsActive()) {
-			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
+			if (Input::GetMouseButtonDown(0)) Shoot();
 		}
 		else {
-			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
+			if (Input::GetMouseButtonRepeat(0)) Shoot();
 		}
-		firstTime = false;
-	}
-
-	MovementDirection md;
-	md = GetInputMovementDirection();
-	if (Input::GetMouseButtonDown(2)) {
-		InitDash(md);
-	}
-	if (!dashing) {
-		LookAtMouse();
-		MoveTo(md);
-		if (Input::GetKeyCode(Input::KEYCODE::KEY_R)) SwitchCharacter();
-	}
-	if (fang->IsActive()) {
-		if (Input::GetMouseButtonDown(0)) Shoot();
+		PlayAnimation(md);
 	}
 	else {
-		if (Input::GetMouseButtonRepeat(0)) Shoot();
+		agent->RemoveAgentFromCrowd();
 	}
-	PlayAnimation(md);
 }

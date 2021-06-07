@@ -4,7 +4,7 @@
 #include "GameplaySystems.h"
 
 EXPOSE_MEMBERS(WinLose) {
-	// Add members here to expose them to the engine. Example:
+	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, winUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::FLOAT, LoseOffsetX),
@@ -32,6 +32,6 @@ void WinLose::Update() {
 		&& position.x >= winConPos.x - LoseOffsetX
 		&& position.z <= winConPos.z + LoseOffsetZ
 		&& position.z >= winConPos.z - LoseOffsetZ) {
-		SceneManager::ChangeScene("Assets/Scenes/WinScene.scene");
+		if(sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 	}
 }
