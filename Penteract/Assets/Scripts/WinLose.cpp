@@ -29,6 +29,9 @@ void WinLose::Start() {
 			}
 		}
 	}
+	std::string a = "Enemies: " + std::to_string(totalEnemies);
+	Debug::Log();
+
 }
 
 void WinLose::Update() {

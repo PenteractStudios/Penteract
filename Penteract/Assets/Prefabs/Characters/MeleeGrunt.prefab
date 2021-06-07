@@ -76,11 +76,6 @@
                         "Value": 17773628572955029428
                     },
                     {
-                        "Name": "winConditionUID",
-                        "Type": "GameObjectUID",
-                        "Value": 3640826057516209614
-                    },
-                    {
                         "Name": "maxSpeed",
                         "Type": "Int",
                         "Value": 11
@@ -89,6 +84,11 @@
                         "Name": "meleeRange",
                         "Type": "Float",
                         "Value": 3.5
+                    },
+                    {
+                        "Name": "winConditionUID",
+                        "Type": "GameObjectUID",
+                        "Value": 15065377432062839780
                     }
                 ]
             },
