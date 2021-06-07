@@ -42,6 +42,12 @@ void AIMeleeGrunt::Start() {
         hudControllerScript = GET_SCRIPT(canvas, HUDController);
     }
     movementScript = GET_SCRIPT(&GetOwner(), AIMovement);
+
+    int i = 0;
+    for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
+        if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
+        ++i;
+    }
 }
 
 void AIMeleeGrunt::Update() {
@@ -60,6 +66,7 @@ void AIMeleeGrunt::Update() {
 
     if (hitTaken && gruntCharacter.isAlive) {
         gruntCharacter.Hit(damageRecieved);
+        if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
         hitTaken = false;
     }
 
@@ -76,6 +83,7 @@ void AIMeleeGrunt::Update() {
             animation->SendTrigger("RunDeath");
             animation->SendTriggerSecondary("RunDeath");
         }
+        if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
         agent->RemoveAgentFromCrowd();
         state = AIState::DEATH;
     }
@@ -87,6 +95,7 @@ void AIMeleeGrunt::Update() {
             movementScript->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), gruntCharacter.fallingSpeed);
             if (ownerTransform->GetGlobalPosition().y < 2.7 + 0e-5f) {
                 animation->SendTrigger("StartSpawn");
+                if (audios[static_cast<int>(AudioType::SPAWN)]) audios[static_cast<int>(AudioType::SPAWN)]->Play();
                 state = AIState::SPAWN;
             }
         }
@@ -105,6 +114,7 @@ void AIMeleeGrunt::Update() {
         movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), gruntCharacter.movementSpeed);
         if (movementScript->CharacterInMeleeRange(player, gruntCharacter.meleeRange)) {
             animation->SendTriggerSecondary("RunAttack");
+            if (audios[static_cast<int>(AudioType::ATTACK)]) audios[static_cast<int>(AudioType::ATTACK)]->Play();
             state = AIState::ATTACK;
         }
         break;
