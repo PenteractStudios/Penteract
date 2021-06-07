@@ -31,8 +31,6 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fangGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruParticleUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, switchAudioSourceUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, dashAudioSourceUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
 	MEMBER(MemberType::FLOAT, distanceRayCast),
 	MEMBER(MemberType::FLOAT, switchCooldown),
@@ -460,6 +458,7 @@ void PlayerController::GetAudioSources()
 		else if (i == 6) {
 			onimaruDeathAudioSource = &src;
 		}
+		i++;
 	}
 }
 

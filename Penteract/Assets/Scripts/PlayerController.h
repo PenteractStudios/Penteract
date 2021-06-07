@@ -26,6 +26,16 @@ class PlayerController : public Script
 	GENERATE_BODY(PlayerController);
 
 public:
+	enum class AudioType {
+		DASH,
+		SWITCH,
+		SHOOT,
+		FANGHIT,
+		ONIHIT,
+		FANGDEATH,
+		ONIDEATH,
+		TOTAL
+	};
 
 	void Start() override;
 	void Update() override;
@@ -62,9 +72,6 @@ public:
 	UID mainNodeUID = 0;
 	UID cameraUID = 0;
 	UID canvasUID = 0;
-
-	UID switchAudioSourceUID = 0;
-	UID dashAudioSourceUID = 0;
 
 	bool hitTaken = false;
 
@@ -160,15 +167,7 @@ private:
 	ComponentParticleSystem* onimaruCompParticle = nullptr;
 
 	//Audio
-	ComponentAudioSource* dashAudioSource = nullptr;
-	ComponentAudioSource* switchFangToOniAudioSource = nullptr;
-	ComponentAudioSource* switchOniToFangAudioSource = nullptr;
-	ComponentAudioSource* fangShootAudioSource = nullptr;
-	ComponentAudioSource* onimaruShootAudioSource = nullptr;
-	ComponentAudioSource* fangHitTakenAudioSource = nullptr;
-	ComponentAudioSource* onimaruHitTakenAudioSource = nullptr;
-	ComponentAudioSource* fangDeathAudioSource = nullptr;
-	ComponentAudioSource* onimaruDeathAudioSource = nullptr;
+	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)];
 
 	HUDController* hudControllerScript = nullptr;
 };
