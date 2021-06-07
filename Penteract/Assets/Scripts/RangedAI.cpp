@@ -28,7 +28,6 @@ EXPOSE_MEMBERS(RangedAI) {
 		MEMBER(MemberType::FLOAT, rangerGruntCharacter.timeToDie),
 		MEMBER(MemberType::FLOAT, attackSpeed),
 		MEMBER(MemberType::FLOAT, fleeingRange),
-		MEMBER(MemberType::GAME_OBJECT_UID, agentObjectUID),
 		MEMBER(MemberType::BOOL, foundRayToPlayer),
 		MEMBER(MemberType::FLOAT, fleeingEvaluateDistance),
 		MEMBER(MemberType::PREFAB_RESOURCE_UID, trailPrefabUID),
@@ -79,9 +78,6 @@ void RangedAI::Start() {
 		agent->RemoveAgentFromCrowd();
 	}
 
-	//noDmgMaterial = meshObj->GetComponent<ComponentMeshRenderer>();
-
-
 	GameObject* hudControllerObj = GameplaySystems::GetGameObject(hudControllerObjUID);
 	if (hudControllerObj) {
 		hudControllerScript = GET_SCRIPT(hudControllerObj, HUDController);
@@ -94,8 +90,14 @@ void RangedAI::Start() {
 	aiMovement = GET_SCRIPT(&GetOwner(), AIMovement);
 
 	// TODO: ADD CHECK PLS
-	agent = GameplaySystems::GetGameObject(agentObjectUID)->GetComponent<ComponentAgent>();
 	ChangeState(AIState::START);
+
+	int i = 0;
+	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
+		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
+		++i;
+	}
+
 }
 
 void RangedAI::OnAnimationFinished() {
@@ -146,11 +148,9 @@ void RangedAI::Update() {
 		rangerGruntCharacter.lifePoints -= damageRecieved;
 		hitTaken = false;
 
-		//TODO change material
-
 		timeSinceLastHurt = 0.0f;
 
-		if (rangerGruntCharacter.lifePoints <= 0) {
+		if (rangerGruntCharacter.lifePoints <= 0 && state != AIState::DEATH) {
 			ChangeState(AIState::DEATH);
 		}
 	}
@@ -180,7 +180,7 @@ void RangedAI::EnterState(AIState newState) {
 		animation->SendTrigger("StartSpawn");
 		break;
 	case AIState::SPAWN:
-
+		PlayAudio(AudioType::SPAWN);
 		break;
 	case AIState::IDLE:
 		if (animation) {
@@ -220,7 +220,8 @@ void RangedAI::EnterState(AIState newState) {
 		} else if (state == AIState::FLEE) {
 			animation->SendTrigger("RunBackwardDeath");
 		}
-		Debug::Log("Death");
+
+		PlayAudio(AudioType::DEATH);
 		agent->RemoveAgentFromCrowd();
 		state = AIState::DEATH;
 		break;
@@ -307,6 +308,7 @@ void RangedAI::ExitState() {
 void RangedAI::HitDetected(int damage_) {
 	damageRecieved = damage_;
 	hitTaken = true;
+	PlayAudio(AudioType::HIT);
 }
 
 void RangedAI::ChangeState(AIState newState) {
@@ -388,7 +390,6 @@ void RangedAI::ActualShot() {
 		//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
 		ComponentBoundingBox* box = meshObj->GetComponent<ComponentBoundingBox>();
 
-		//float offsetY = (box->GetWorldAABB().minPoint.y + box->GetWorldAABB().maxPoint.y) / 4;
 		float offsetY = (box->GetWorldAABB().minPoint.y + box->GetWorldAABB().maxPoint.y) / 4;
 
 		GameplaySystems::Instantiate(shootTrailPrefab, GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + float3(0, offsetY, 0), GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation());
@@ -398,14 +399,17 @@ void RangedAI::ActualShot() {
 
 	attackTimePool = 1.0f / attackSpeed;
 	actualShotTimer = -1.0f;
-	if (shootAudioSource)
-		shootAudioSource->Play();
 
+	PlayAudio(AudioType::SHOOT);
 
 
 	if (FindsRayToPlayer(true)) {
 		Debug::Log("Player was shot");
 	}
+}
+
+void RangedAI::PlayAudio(AudioType audioType) {
+	if (audios[static_cast<int>(audioType)]) audios[static_cast<int>(audioType)]->Play();
 }
 
 void RangedAI::ShootPlayerInRange() {

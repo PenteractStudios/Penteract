@@ -59,7 +59,7 @@
                     {
                         "Name": "meshUID2",
                         "Type": "GameObjectUID",
-                        "Value": 10228484683280182625
+                        "Value": 6045631432598879468
                     },
                     {
                         "Name": "playerMeshUIDOnimaru",
@@ -69,7 +69,7 @@
                     {
                         "Name": "meshUID",
                         "Type": "GameObjectUID",
-                        "Value": 10228484683280182625
+                        "Value": 6045631432598879468
                     },
                     {
                         "Name": "agentObjectUID",
@@ -79,7 +79,7 @@
                     {
                         "Name": "meshUID1",
                         "Type": "GameObjectUID",
-                        "Value": 10228484683280182625
+                        "Value": 6045631432598879468
                     },
                     {
                         "Name": "trailPrefabUID",
@@ -99,6 +99,62 @@
                 "MaxSpeed": 5.0,
                 "MaxAcceleration": 8.0,
                 "AvoidingObstacle": true
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 1.0,
+                "Gain": 1.0,
+                "Mute": false,
+                "Looping": false,
+                "AudioClipId": 17218961838489523187,
+                "SpatialBlend": 1,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 1.0,
+                "Gain": 1.0,
+                "Mute": false,
+                "Looping": false,
+                "AudioClipId": 4379174790856300983,
+                "SpatialBlend": 1,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 1.0,
+                "Gain": 1.0,
+                "Mute": false,
+                "Looping": false,
+                "AudioClipId": 8126213543823355106,
+                "SpatialBlend": 1,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 1.0,
+                "Gain": 1.0,
+                "Mute": false,
+                "Looping": false,
+                "AudioClipId": 6444016666284500200,
+                "SpatialBlend": 1,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0
             },
             {
                 "Type": "Script",

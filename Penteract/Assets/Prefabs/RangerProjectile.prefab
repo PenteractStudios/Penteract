@@ -40,19 +40,22 @@
             {
                 "Type": "Script",
                 "Active": true,
-                "Script": 709869534139279052,
-                "Values": [
-                    {
-                        "Name": "speed",
-                        "Type": "Int",
-                        "Value": 30
-                    },
-                    {
-                        "Name": "life",
-                        "Type": "Float",
-                        "Value": 2.0
-                    }
-                ]
+                "Script": 8962533977559074741,
+                "Values": null
+            },
+            {
+                "Type": "SphereCollider",
+                "Active": true,
+                "colliderType": 2,
+                "layerType": 4,
+                "mass": 1.0,
+                "radius": 1.0,
+                "centerOffset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "freezeRotation": false
             }
         ],
         "Children": null

@@ -21,6 +21,13 @@ class RangedAI : public Script {
 	GENERATE_BODY(RangedAI);
 
 public:
+	enum class AudioType {
+		SPAWN,
+		SHOOT,
+		HIT,
+		DEATH,
+		TOTAL
+	};
 
 	void Start() override;
 	void Update() override;
@@ -41,6 +48,7 @@ private:
 	bool CharacterTooClose(const GameObject* character);
 	void OrientateTo(const float3& direction);
 	void ActualShot();
+	void PlayAudio(AudioType audioType);
 public:
 
 	Enemy rangerGruntCharacter = Enemy(5, 8.0f, 1, 30, 40.f, 5.f, 5.f);
@@ -52,7 +60,6 @@ public:
 	UID meshUID = 0;
 	UID meshUID1 = 0;
 	UID meshUID2 = 0;
-	UID agentObjectUID = 0;
 	UID trailPrefabUID = 0;
 	UID hudControllerObjUID = 0;
 
@@ -103,6 +110,7 @@ private:
 	float hurtFeedbackTimeDuration = 0.5f;
 
 	ComponentMeshRenderer* meshRenderer = nullptr;
-	ComponentAudioSource* shootAudioSource = nullptr;
+	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)];
+
 };
 
