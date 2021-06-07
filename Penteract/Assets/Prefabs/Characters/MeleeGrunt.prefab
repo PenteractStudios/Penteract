@@ -9,8 +9,8 @@
                 "Type": "Transform",
                 "Active": true,
                 "Position": [
-                    -16.348360061645509,
-                    9.14370059967041,
+                    0.0,
+                    4.178567886352539,
                     0.0
                 ],
                 "Rotation": [
@@ -20,9 +20,9 @@
                     1.0
                 ],
                 "Scale": [
-                    0.05000000074505806,
-                    0.05000000074505806,
-                    0.05000000074505806
+                    0.029999999329447748,
+                    0.029999999329447748,
+                    0.029999999329447748
                 ],
                 "LocalEulerAngles": [
                     -0.0,
@@ -74,6 +74,16 @@
                         "Name": "canvasUID",
                         "Type": "GameObjectUID",
                         "Value": 17773628572955029428
+                    },
+                    {
+                        "Name": "maxSpeed",
+                        "Type": "Int",
+                        "Value": 11
+                    },
+                    {
+                        "Name": "meleeRange",
+                        "Type": "Float",
+                        "Value": 3.5
                     }
                 ]
             }
@@ -114,7 +124,7 @@
                         "Type": "MeshRenderer",
                         "Active": true,
                         "MeshID": 4844205703244386992,
-                        "MaterialID": 14657585799099154106
+                        "MaterialID": 4886769671297062398
                     },
                     {
                         "Type": "BoundingBox",
@@ -134,12 +144,12 @@
                         "colliderType": 2,
                         "layerType": 2,
                         "mass": 1.0,
-                        "radius": 1.4322776794433594,
-                        "height": 4.083966255187988,
+                        "radius": 1.0,
+                        "height": 3.0,
                         "capsuleType": 1,
                         "centerOffset": [
                             0.000003814697265625,
-                            3.474262237548828,
+                            2.0,
                             -0.08667483180761337
                         ],
                         "freezeRotation": false
