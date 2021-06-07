@@ -126,16 +126,16 @@ void AIMeleeGrunt::OnAnimationFinished()
 
 void AIMeleeGrunt::OnCollision(const GameObject& collidedWith)
 {
-    if (lifePoints > 0 && playerController) {
+    if (gruntCharacter.lifePoints > 0 && playerController) {
         if (collidedWith.name == "FangBullet") {
-            lifePoints -= playerController->fangDamage;
+            gruntCharacter.lifePoints -= playerController->fangDamage;
         }
         else if (collidedWith.name == "OnimaruBullet") {
-            lifePoints -= playerController->onimaruDamage;
+            gruntCharacter.lifePoints -= playerController->onimaruDamage;
         }
     }
 
-    if (lifePoints <= 0) {
+    if (gruntCharacter.lifePoints <= 0) {
         if (state == AIState::ATTACK) {
             animation->SendTrigger("AttackDeath");
         }
