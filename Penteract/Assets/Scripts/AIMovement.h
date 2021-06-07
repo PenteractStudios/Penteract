@@ -28,4 +28,3 @@ private:
 	ComponentTransform* ownerTransform = nullptr;
 	ComponentAgent* agent = nullptr;
 };
-

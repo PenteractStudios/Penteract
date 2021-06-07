@@ -10,7 +10,7 @@ EXPOSE_MEMBERS(FangMovement) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, hitGOUID),
-	MEMBER(MemberType::INT, speed),
+	MEMBER(MemberType::INT, character.movementSpeed),
 	MEMBER(MemberType::INT, distanceRayCast),
 	MEMBER(MemberType::FLOAT, cameraXPosition)
 };
@@ -18,9 +18,6 @@ EXPOSE_MEMBERS(FangMovement) {
 GENERATE_BODY_IMPL(FangMovement);
 
 void FangMovement::Start() {
-	character = Character();
-	character.lifeSlots = 10;
-
 	fang = GameplaySystems::GetGameObject(fangUID);
 	camera = GameplaySystems::GetGameObject(cameraUID);
 	Debug::Log("Fang movement Start Log");
@@ -49,7 +46,7 @@ void FangMovement::Update() {
 				}
 				AIMeleeGrunt* enemyScript = static_cast<AIMeleeGrunt*>(hitGo->GetComponent<ComponentScript>()->GetScriptInstance());
 				if (enemyScript) {
-					enemyScript->HitDetected();
+					enemyScript->HitDetected(character.damageHit);
 				}
 
 			} else {
@@ -68,28 +65,28 @@ void FangMovement::Update() {
 			if (Input::GetKeyCode(Input::KEYCODE::KEY_W)) {
 				if (transform) {
 					float3 newPosition = transform->GetPosition();
-					newPosition.z -= speed * Time::GetDeltaTime() * modifier;
+					newPosition.z -= character.movementSpeed * Time::GetDeltaTime() * modifier;
 					transform->SetPosition(newPosition);
 				}
 			}
 			if (Input::GetKeyCode(Input::KEYCODE::KEY_A)) {
 				if (transform) {
 					float3 newPosition = transform->GetPosition();
-					newPosition.x -= speed * Time::GetDeltaTime() * modifier;
+					newPosition.x -= character.movementSpeed * Time::GetDeltaTime() * modifier;
 					transform->SetPosition(newPosition);
 				}
 			}
 			if (Input::GetKeyCode(Input::KEYCODE::KEY_S)) {
 				if (transform) {
 					float3 newPosition = transform->GetPosition();
-					newPosition.z += speed * Time::GetDeltaTime() * modifier;
+					newPosition.z += character.movementSpeed * Time::GetDeltaTime() * modifier;
 					transform->SetPosition(newPosition);
 				}
 			}
 			if (Input::GetKeyCode(Input::KEYCODE::KEY_D)) {
 				if (transform) {
 					float3 newPosition = transform->GetPosition();
-					newPosition.x += speed * Time::GetDeltaTime() * modifier;
+					newPosition.x += character.movementSpeed * Time::GetDeltaTime() * modifier;
 					transform->SetPosition(newPosition);
 				}
 			}

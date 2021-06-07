@@ -3,10 +3,13 @@
 #include "Scripting/Script.h"
 
 #include "AIState.h"
+#include "Enemy.h"
 
+class GameObject;
 class ComponentAnimation;
 class ComponentTransform;
 class ComponentAgent;
+class ComponentAudioSource;
 
 class HUDController;
 class PlayerController;
@@ -18,6 +21,14 @@ class AIMeleeGrunt : public Script
 	GENERATE_BODY(AIMeleeGrunt);
 
 public:
+	enum class AudioType {
+		SPAWN,
+		ATTACK,
+		HIT,
+		DEATH,
+		TOTAL
+	};
+
 
 	void Start() override;
 	void Update() override;
@@ -34,13 +45,7 @@ public:
 	ComponentAgent* agent = nullptr;
 	EnemySpawnPoint* enemyspawnpoint = nullptr;
 
-	int maxSpeed = 8;
-	int fallingSpeed = 30;
-	float searchRadius = 40.f;
-	float meleeRange = 5.f;
-	int lifePoints = 5;
-	float timeToDie = 5.f;
-	bool dead = false;
+	Enemy gruntCharacter = Enemy(5, 8.0f, 1, 30, 40.f, 5.f, 5.f);
 	bool killSent = false;
 
 private:
@@ -55,6 +60,8 @@ private:
 	HUDController* hudControllerScript = nullptr;
 	PlayerController* playerController = nullptr;
 	AIMovement* movementScript = nullptr;
+
+	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)];
 
 };
 
