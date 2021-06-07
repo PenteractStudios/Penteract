@@ -22,9 +22,9 @@ void WinLose::Start() {
 	if (enemies != nullptr && enemies->HasChildren()) {
 		for (GameObject* spawn : enemies->GetChildren()) {
 			if (spawn->IsActive()) {
-				EnemySpawnPoint* enemyspawnpoint = GET_SCRIPT(spawn, EnemySpawnPoint);
-				if (enemyspawnpoint != nullptr) {
-					totalEnemies += enemyspawnpoint->amountOfEnemies;
+				EnemySpawnPoint* enemySpawnPointScript = GET_SCRIPT(spawn, EnemySpawnPoint);
+				if (enemySpawnPointScript != nullptr) {
+					totalEnemies += enemySpawnPointScript->amountOfEnemies;
 				}
 			}
 		}
@@ -50,6 +50,6 @@ void WinLose::Update() {
 	}
 }
 
-void WinLose::KillEnemy() {
+void WinLose::IncrementDeadEnemies() {
 	deadEnemies++;
 }

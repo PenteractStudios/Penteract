@@ -12,7 +12,7 @@ public:
 
 	void Start() override;
 	void Update() override;
-	void KillEnemy();
+	void IncrementDeadEnemies();
 
 public:
 	UID sceneUID = 0;

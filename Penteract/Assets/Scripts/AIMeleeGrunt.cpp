@@ -112,7 +112,7 @@ void AIMeleeGrunt::Update() {
 
     if (dead) {
         if (!killSent && enemyspawnpoint != nullptr) {
-            enemyspawnpoint->KillEnemy();
+            enemyspawnpoint->IncrementDeadEnemies();
             killSent = true;
         }
         if (timeToDie > 0) {

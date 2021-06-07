@@ -19,7 +19,7 @@ void EnemySpawnPoint::Start() {
 	prefab = GameplaySystems::GetResource<ResourcePrefab>(prefabId);
 	winCon = GameplaySystems::GetGameObject(winUID);
 	if (winCon != nullptr) {
-		wincondition = GET_SCRIPT(winCon, WinLose);
+		winConditionScript = GET_SCRIPT(winCon, WinLose);
 	}
 }
 
@@ -47,9 +47,9 @@ void EnemySpawnPoint::Update() {
 	}
 }
 
-void EnemySpawnPoint::KillEnemy() {
+void EnemySpawnPoint::IncrementDeadEnemies() {
 	deadEnemies++;
-	if (wincondition != nullptr) {
-		wincondition->KillEnemy();
+	if (winConditionScript != nullptr) {
+		winConditionScript->IncrementDeadEnemies();
 	}
 }
