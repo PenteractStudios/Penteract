@@ -14,8 +14,9 @@ public:
 	void Update() override;
 
 public:
-	UID prefabId = 0;
 	UID winUID = 0;
+	UID prefabUID = 0;
+	UID nextWaveUID = 0;
 	int amountOfEnemies = 0;
 	int offset = 1;
 
@@ -23,6 +24,7 @@ private:
 	GameObject* gameObject = nullptr;
 	GameObject* winCon = nullptr;
 	WinLose* winConditionScript = nullptr;
+	GameObject* nextWave = nullptr;
 	ResourcePrefab* prefab = nullptr;
 	int iterator = 0;
 };

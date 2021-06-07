@@ -7,9 +7,10 @@
 
 EXPOSE_MEMBERS(EnemySpawnPoint) {
 	MEMBER(MemberType::GAME_OBJECT_UID, winUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, nextWaveUID),
 	MEMBER(MemberType::INT, amountOfEnemies),
 	MEMBER(MemberType::INT, offset),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, prefabId),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, prefabUID),
 };
 
 GENERATE_BODY_IMPL(EnemySpawnPoint);
@@ -18,16 +19,15 @@ void EnemySpawnPoint::Start() {
 	gameObject = &GetOwner();
 	prefab = GameplaySystems::GetResource<ResourcePrefab>(prefabId);
 	winCon = GameplaySystems::GetGameObject(winUID);
-	if (winCon != nullptr) {
-		winConditionScript = GET_SCRIPT(winCon, WinLose);
-	}
+	if (winCon) winConditionScript = GET_SCRIPT(winCon, WinLose);
+	if (nextWaveUID) nextWave = GameplaySystems::GetGameObject(nextWaveUID);
 }
 
 void EnemySpawnPoint::Update() {
 	for (; iterator < amountOfEnemies; ++iterator) {
 		if (prefab != nullptr) {
-			UID prefabId = prefab->BuildPrefab(gameObject);
-			GameObject* go = GameplaySystems::GetGameObject(prefabId);
+			UID prefabUID = prefab->BuildPrefab(gameObject);
+			GameObject* go = GameplaySystems::GetGameObject(prefabUID);
 			ComponentTransform* goTransform = go->GetComponent<ComponentTransform>();
 			ComponentBoundingBox* goBounds = nullptr;
 			for (auto& child : go->GetChildren()) {
@@ -44,5 +44,8 @@ void EnemySpawnPoint::Update() {
 				goTransform->SetPosition(newPosition);
 			}
 		}
+	}
+	if (nextWave && !gameObject->HasChildren()) {
+		nextWave->Enable();
 	}
 }
