@@ -250,8 +250,8 @@ void PlayerController::Shoot() {
 			if (onimaruBullet) {
 				GameObject* bullet = GameplaySystems::Instantiate(onimaruBullet, onimaruGunTransform->GetGlobalPosition(), Quat(0.0f, 0.0f, 0.0f, 0.0f));
 				if (bullet) {
-					onimaruBulletcript = GET_SCRIPT(bullet, OnimaruBullet);
-					onimaruBulletcript->SetOnimaruDirection(onimaruGunTransform->GetGlobalRotation());
+							onimaruBulletcript = GET_SCRIPT(bullet, OnimaruBullet);
+							onimaruBulletcript->SetOnimaruDirection(onimaruGunTransform->GetGlobalRotation());
 				}
 			}
 			start = onimaruGunTransform->GetGlobalPosition();

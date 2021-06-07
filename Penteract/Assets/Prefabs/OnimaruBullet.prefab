@@ -33,11 +33,11 @@
             {
                 "Type": "Billboard",
                 "Active": true,
-                "ShaderId": 11379545950448947673,
-                "TextureId": 14183213195150175674,
-                "Ytiles": 2,
-                "Xtiles": 5,
-                "AnimationSpeed": 10.0,
+                "BillboardType": 1,
+                "TextureId": 10056146012764442117,
+                "Ytiles": 1,
+                "Xtiles": 1,
+                "AnimationSpeed": 0.0,
                 "InitColor": [
                     0.0,
                     1.0,
@@ -47,6 +47,12 @@
                     0.0,
                     1.0,
                     0.9404764175415039
+                ],
+                "StartTransition": 0.0,
+                "EndTransition": 0.0,
+                "FlipTexture": [
+                    true,
+                    false
                 ]
             },
             {
