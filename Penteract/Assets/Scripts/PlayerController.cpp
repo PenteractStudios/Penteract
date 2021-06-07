@@ -118,7 +118,13 @@ void PlayerController::Start() {
 		agent->SetMaxAcceleration(MAX_ACCELERATION);
 	}
 
-	GetAudioSources();
+	//Get audio sources
+	int i = 0;
+
+	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
+		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
+		i++;
+	}
 }
 
 void PlayerController::MoveTo(MovementDirection md) {
@@ -163,8 +169,8 @@ void PlayerController::InitDash(MovementDirection md) {
 		dashInCooldown = true;
 		dashing = true;
 		agent->SetMaxSpeed(dashSpeed);
-		if (dashAudioSource) {
-			dashAudioSource->Play();
+		if (audios[static_cast<int>(AudioType::DASH)]) {
+			audios[static_cast<int>(AudioType::DASH)]->Play();
 		}
 		else {
 			Debug::Log(AUDIOSOURCE_NULL_MSG);
@@ -195,7 +201,9 @@ void PlayerController::SwitchCharacter() {
 
 	if (CanSwitch()) {
 		switchInCooldown = true;
-		switchFangToOniAudioSource->Play();
+		if (audios[static_cast<int>(AudioType::SWITCH)]) {
+			audios[static_cast<int>(AudioType::SWITCH)]->Play();
+		}
 		if (fang->IsActive()) {
 			fang->Disable();
 			onimaru->Enable();
@@ -224,8 +232,8 @@ void PlayerController::Shoot() {
 		shooting = true;
 		float3 start;
 		if (fang->IsActive()) {
-			if (fangShootAudioSource) {
-				fangShootAudioSource->Play();
+			if (audios[static_cast<int>(AudioType::SHOOT)]) {
+				audios[static_cast<int>(AudioType::SHOOT)]->Play();
 			}
 			else {
 				Debug::Log(AUDIOSOURCE_NULL_MSG);
@@ -241,8 +249,8 @@ void PlayerController::Shoot() {
 			start = fangGunTransform->GetGlobalPosition();
 		}
 		else {
-			if (onimaruShootAudioSource) {
-				onimaruShootAudioSource->Play();
+			if (audios[static_cast<int>(AudioType::SHOOT)]) {
+				audios[static_cast<int>(AudioType::SHOOT)]->Play();
 			}
 			else {
 				Debug::Log(AUDIOSOURCE_NULL_MSG);
@@ -272,18 +280,18 @@ void PlayerController::HitDetected(int damage) {
 	if (!invincibleMode) {
 		if (fang->IsActive()) {
 			fangCharacter.Hit(damage);
-			if (fangHitTakenAudioSource) fangHitTakenAudioSource->Play();
+			if (audios[static_cast<int>(AudioType::FANGHIT)]) audios[static_cast<int>(AudioType::FANGHIT)]->Play();
 		}
 		else {
 			onimaruCharacter.Hit(damage);
-			if (onimaruHitTakenAudioSource) onimaruHitTakenAudioSource->Play();
+			if (audios[static_cast<int>(AudioType::ONIHIT)]) audios[static_cast<int>(AudioType::ONIHIT)]->Play();
 		}
 	}
 	if (!fangCharacter.isAlive && fang->IsActive()) {
-		if (fangDeathAudioSource) fangDeathAudioSource->Play();
+		if (audios[static_cast<int>(AudioType::FANGDEATH)]) audios[static_cast<int>(AudioType::FANGDEATH)]->Play();
 	}
 	else if (!onimaruCharacter.isAlive && onimaru->IsActive()) {
-		if (onimaruDeathAudioSource) onimaruDeathAudioSource->Play();
+		if (audios[static_cast<int>(AudioType::ONIDEATH)]) audios[static_cast<int>(AudioType::ONIDEATH)]->Play();
 	}
 	hitTaken = !invincibleMode;
 }
@@ -426,39 +434,6 @@ int PlayerController::GetMouseDirectionState(MovementDirection input) {
 	}
 	else {
 		return 3; //RunLeft
-	}
-}
-
-void PlayerController::GetAudioSources()
-{
-	//TODO: Refactor this for next VS
-	int i = 0;
-	
-	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
-		if (i == 0) {
-			dashAudioSource = &src;
-		}
-		else if (i == 1) {
-			switchFangToOniAudioSource = &src;
-			switchOniToFangAudioSource = &src;
-		}
-		else if (i == 2) {
-			fangShootAudioSource = &src;
-			onimaruShootAudioSource = &src;
-		}
-		else if (i == 3) {
-			fangHitTakenAudioSource = &src;
-		}
-		else if (i == 4) {
-			onimaruHitTakenAudioSource = &src;
-		}
-		else if (i == 5) {
-			fangDeathAudioSource = &src;
-		}
-		else if (i == 6) {
-			onimaruDeathAudioSource = &src;
-		}
-		i++;
 	}
 }
 

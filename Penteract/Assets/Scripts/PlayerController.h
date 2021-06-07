@@ -124,8 +124,6 @@ private:
 	MovementDirection GetInputMovementDirection() const;
 	int GetMouseDirectionState(MovementDirection input);
 
-	void GetAudioSources();
-
 private:
 
 	float dashCooldownRemaining = 0.f;
