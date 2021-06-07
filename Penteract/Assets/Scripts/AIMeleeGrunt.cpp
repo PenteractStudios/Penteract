@@ -45,10 +45,7 @@ void AIMeleeGrunt::Start() {
 
     int i = 0;
     for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
-        if (i == 0) spawnAudio = &src;
-        else if (i == 1) attackAudio = &src;
-        else if (i == 2) hitAudio = &src;
-        else if (i == 3) deathAudio = &src;
+        if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
         ++i;
     }
 }
@@ -69,7 +66,7 @@ void AIMeleeGrunt::Update() {
 
     if (hitTaken && gruntCharacter.isAlive) {
         gruntCharacter.Hit(damageRecieved);
-        if (hitAudio) hitAudio->Play();
+        if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
         hitTaken = false;
     }
 
@@ -83,7 +80,7 @@ void AIMeleeGrunt::Update() {
         else if (state == AIState::RUN) {
             animation->SendTrigger("RunDeath");
         }
-        if (deathAudio) deathAudio->Play();
+        if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
         agent->RemoveAgentFromCrowd();
         state = AIState::DEATH;
     }
@@ -95,7 +92,7 @@ void AIMeleeGrunt::Update() {
             movementScript->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), gruntCharacter.fallingSpeed);
             if (ownerTransform->GetGlobalPosition().y < 2.7 + 0e-5f) {
                 animation->SendTrigger("StartSpawn");
-                if (spawnAudio) spawnAudio->Play();
+                if (audios[static_cast<int>(AudioType::SPAWN)]) audios[static_cast<int>(AudioType::SPAWN)]->Play();
                 state = AIState::SPAWN;
             }
         }
@@ -115,7 +112,7 @@ void AIMeleeGrunt::Update() {
         if (movementScript->CharacterInMeleeRange(player, gruntCharacter.meleeRange)) {
             agent->RemoveAgentFromCrowd();
             animation->SendTrigger("RunAttack");
-            if (attackAudio) attackAudio->Play();
+            if (audios[static_cast<int>(AudioType::ATTACK)]) audios[static_cast<int>(AudioType::ATTACK)]->Play();
             state = AIState::ATTACK;
         }
         break;

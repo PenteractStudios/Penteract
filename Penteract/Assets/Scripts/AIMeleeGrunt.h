@@ -20,6 +20,14 @@ class AIMeleeGrunt : public Script
 	GENERATE_BODY(AIMeleeGrunt);
 
 public:
+	enum class AudioType {
+		SPAWN,
+		ATTACK,
+		HIT,
+		DEATH,
+		TOTAL
+	};
+
 
 	void Start() override;
 	void Update() override;
@@ -49,10 +57,7 @@ private:
 	PlayerController* playerController = nullptr;
 	AIMovement* movementScript = nullptr;
 
-	ComponentAudioSource* spawnAudio = nullptr;
-	ComponentAudioSource* attackAudio = nullptr;
-	ComponentAudioSource* hitAudio = nullptr;
-	ComponentAudioSource* deathAudio = nullptr;
+	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)];
 
 };
 
