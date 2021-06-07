@@ -9,6 +9,7 @@
 #include "Components/ComponentAudioSource.h"
 #include "Components/ComponentAgent.h"
 #include "Components/ComponentAnimation.h"
+#include "Components/ComponentMeshRenderer.h"
 #include "Resources/ResourcePrefab.h"
 
 //clang-format off
@@ -30,7 +31,9 @@ EXPOSE_MEMBERS(RangedAI) {
 		MEMBER(MemberType::BOOL, foundRayToPlayer),
 		MEMBER(MemberType::FLOAT, fleeingEvaluateDistance),
 		MEMBER(MemberType::PREFAB_RESOURCE_UID, trailPrefabUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
 		MEMBER(MemberType::GAME_OBJECT_UID, hudControllerObjUID),
+		MEMBER(MemberType::FLOAT, timeSinceLastHurt),
 		MEMBER(MemberType::FLOAT, approachOffset) //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
 
 };//clang-format on
@@ -50,6 +53,24 @@ void RangedAI::Start() {
 	ComponentBoundingBox* bb = meshObj->GetComponent<ComponentBoundingBox>();
 	bbCenter = (bb->GetLocalMinPointAABB() + bb->GetLocalMaxPointAABB()) / 2;
 	shootTrailPrefab = GameplaySystems::GetResource<ResourcePrefab>(trailPrefabUID);
+
+
+	if (meshObj) {
+		meshRenderer = meshObj->GetComponent<ComponentMeshRenderer>();
+		if (meshRenderer) {
+			noDmgMaterialID = meshRenderer->materialId;
+		}
+	}
+	GameObject* damagedObj = GameplaySystems::GetGameObject(dmgMaterialObj);
+	if (damagedObj) {
+		ComponentMeshRenderer* dmgMeshRenderer = damagedObj->GetComponent<ComponentMeshRenderer>();
+		if (dmgMeshRenderer) {
+			damagedMaterialID = dmgMeshRenderer->materialId;
+		}
+	}
+
+	//noDmgMaterial = meshObj->GetComponent<ComponentMeshRenderer>();
+
 
 	GameObject* hudControllerObj = GameplaySystems::GetGameObject(hudControllerObjUID);
 	if (hudControllerObj) {
@@ -90,11 +111,33 @@ void RangedAI::OnAnimationSecondaryFinished() {
 }
 
 void RangedAI::Update() {
+
+	if (meshRenderer) {
+		if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
+			timeSinceLastHurt += Time::GetDeltaTime();
+			if (timeSinceLastHurt > hurtFeedbackTimeDuration) {
+				meshRenderer->materialId = noDmgMaterialID;
+			}
+		}
+	}
+
 	if (!GetOwner().IsActive()) return;
 
 	if (hitTaken && lifePoints > 0) {
+
+		if (meshRenderer) {
+			if (damagedMaterialID != 0) {
+				meshRenderer->materialId = damagedMaterialID;
+			}
+		}
+
 		lifePoints -= damageRecieved;
 		hitTaken = false;
+
+		//TODO change material
+
+		timeSinceLastHurt = 0.0f;
+
 		if (lifePoints <= 0) {
 			ChangeState(RangeAIState::DEATH);
 		}
@@ -456,7 +499,6 @@ void RangedAI::ActualShot() {
 void RangedAI::ShootPlayerInRange() {
 	if (!player) return;
 	if (CharacterInRange(player, attackRange, true)) {
-		Debug::Log("Shoot");
 		shot = true;
 
 		if (animation) {

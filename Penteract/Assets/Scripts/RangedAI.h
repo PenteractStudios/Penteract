@@ -8,6 +8,7 @@
 class ComponentAgent;
 class ComponentAudioSource;
 class ComponentAnimation;
+class ComponentMeshRenderer;
 class ResourcePrefab;
 class HUDController;
 class PlayerController;
@@ -76,6 +77,11 @@ public:
 	GameObject* meshObj1 = nullptr;
 	GameObject* meshObj2 = nullptr;
 
+	UID dmgMaterialObj = 0;
+	UID noDmgMaterialID = 0;
+	UID damagedMaterialID = 0;
+
+
 	int maxMovementSpeed = 8;
 	int fallingSpeed = 30;
 
@@ -96,7 +102,7 @@ public:
 	float attackSpeed = 0.5f; //Shots per second
 	ComponentAgent* agent = nullptr;
 	float actualShotMaxTime = 0.3f;
-
+	float timeSinceLastHurt = 0.5f;
 private:
 	float3 bbCenter = float3(0, 0, 0);
 	float3 velocity = float3(0, 0, 0);
@@ -107,10 +113,11 @@ private:
 	ComponentTransform* parentTransform = nullptr;
 	int damageRecieved = 0;
 	float attackTimePool = 2.0f;
-
 	float actualShotTimer = -1.0f;
 
+	float hurtFeedbackTimeDuration = 0.5f;
 
+	ComponentMeshRenderer* meshRenderer = nullptr;
 	ComponentAudioSource* shootAudioSource = nullptr;
 };
 

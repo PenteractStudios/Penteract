@@ -9,9 +9,9 @@
                 "Type": "Transform",
                 "Active": true,
                 "Position": [
-                    -163.32723999023438,
+                    -164.19573974609376,
                     2.9699602127075197,
-                    -28.171733856201173
+                    -28.92371368408203
                 ],
                 "Rotation": [
                     0.0,
@@ -47,19 +47,14 @@
                         "Value": 8960886680822700415
                     },
                     {
-                        "Name": "hudControllerObjUID",
-                        "Type": "GameObjectUID",
-                        "Value": 17773628572955029428
-                    },
-                    {
                         "Name": "playerMeshUIDFang",
                         "Type": "GameObjectUID",
                         "Value": 1669674903473247010
                     },
                     {
-                        "Name": "meshUID2",
+                        "Name": "hudControllerObjUID",
                         "Type": "GameObjectUID",
-                        "Value": 10228484683280182625
+                        "Value": 17773628572955029428
                     },
                     {
                         "Name": "playerMeshUIDOnimaru",
@@ -67,7 +62,17 @@
                         "Value": 15799740891930840347
                     },
                     {
+                        "Name": "meshUID2",
+                        "Type": "GameObjectUID",
+                        "Value": 10228484683280182625
+                    },
+                    {
                         "Name": "meshUID",
+                        "Type": "GameObjectUID",
+                        "Value": 10228484683280182625
+                    },
+                    {
+                        "Name": "meshUID1",
                         "Type": "GameObjectUID",
                         "Value": 10228484683280182625
                     },
@@ -77,14 +82,14 @@
                         "Value": 9482897899358818679
                     },
                     {
-                        "Name": "meshUID1",
-                        "Type": "GameObjectUID",
-                        "Value": 10228484683280182625
-                    },
-                    {
                         "Name": "trailPrefabUID",
                         "Type": "PrefabResourceUID",
-                        "Value": 17059306767860105124
+                        "Value": 6317257883525019675
+                    },
+                    {
+                        "Name": "dmgMaterialObj",
+                        "Type": "GameObjectUID",
+                        "Value": 9323570404339518073
                     }
                 ]
             },
@@ -132,7 +137,7 @@
                         "Type": "MeshRenderer",
                         "Active": true,
                         "MeshID": 7264242349481571144,
-                        "MaterialID": 554332166570747947
+                        "MaterialID": 7232502728571451559
                     },
                     {
                         "Type": "BoundingBox",
@@ -1722,7 +1727,7 @@
                         "Type": "MeshRenderer",
                         "Active": true,
                         "MeshID": 759833612316706187,
-                        "MaterialID": 13800212903858800323
+                        "MaterialID": 7232502728571451559
                     },
                     {
                         "Type": "BoundingBox",
