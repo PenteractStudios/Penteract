@@ -104,7 +104,7 @@ void AIMeleeGrunt::Update() {
     case AIState::RUN:
         movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), gruntCharacter.movementSpeed);
         if (movementScript->CharacterInMeleeRange(player, gruntCharacter.meleeRange)) {
-            animation->SendTrigger("RunAttack");
+            animation->SendTriggerSecondary("RunAttack");
             state = AIState::ATTACK;
         }
         break;

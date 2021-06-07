@@ -30,7 +30,7 @@ public:
 	void Start() override;
 	void Update() override;
 
-	void HitDetected(int damage);
+	void HitDetected(int damage = 1);
 	bool IsDead();
 	void SetInvincible(bool status);
 	void SetOverpower(bool status);
