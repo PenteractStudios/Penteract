@@ -48,7 +48,7 @@
                     {
                         "Name": "dashAudioSourceUID",
                         "Type": "GameObjectUID",
-                        "Value": 10251782958241248981
+                        "Value": 6977598380145412742
                     },
                     {
                         "Name": "fangUID",
@@ -103,7 +103,7 @@
                     {
                         "Name": "fangTrailUID",
                         "Type": "PrefabResourceUID",
-                        "Value": 6121672325647995653
+                        "Value": 14078621650633903226
                     },
                     {
                         "Name": "onimaruTrailUID",
@@ -119,6 +119,16 @@
                         "Name": "fangTrailNoColUID",
                         "Type": "PrefabResourceUID",
                         "Value": 14078621650633903226
+                    },
+                    {
+                        "Name": "fangAttackSpeed",
+                        "Type": "Float",
+                        "Value": 5.0
+                    },
+                    {
+                        "Name": "onimaruAttackSpeed",
+                        "Type": "Float",
+                        "Value": 10.0
                     }
                 ]
             },
@@ -221,7 +231,7 @@
                 "Mute": false,
                 "Looping": false,
                 "AudioClipId": 7212022815163123197,
-                "SpatialBlend": 0,
+                "SpatialBlend": 1,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,

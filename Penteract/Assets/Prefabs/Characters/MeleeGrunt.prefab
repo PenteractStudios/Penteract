@@ -755,6 +755,93 @@
                                                                                             }
                                                                                         ],
                                                                                         "Children": null
+                                                                                    },
+                                                                                    {
+                                                                                        "Name": "RootNode",
+                                                                                        "Active": true,
+                                                                                        "RootBoneName": "",
+                                                                                        "Mask": 0,
+                                                                                        "Components": [
+                                                                                            {
+                                                                                                "Type": "Transform",
+                                                                                                "Active": true,
+                                                                                                "Position": [
+                                                                                                    0.0,
+                                                                                                    0.0,
+                                                                                                    0.0
+                                                                                                ],
+                                                                                                "Rotation": [
+                                                                                                    0.0,
+                                                                                                    0.0,
+                                                                                                    0.0,
+                                                                                                    1.0
+                                                                                                ],
+                                                                                                "Scale": [
+                                                                                                    1.0,
+                                                                                                    1.0,
+                                                                                                    1.0
+                                                                                                ],
+                                                                                                "LocalEulerAngles": [
+                                                                                                    -0.0,
+                                                                                                    0.0,
+                                                                                                    -0.0
+                                                                                                ]
+                                                                                            }
+                                                                                        ],
+                                                                                        "Children": [
+                                                                                            {
+                                                                                                "Name": "Weapon",
+                                                                                                "Active": true,
+                                                                                                "RootBoneName": "",
+                                                                                                "Mask": 0,
+                                                                                                "Components": [
+                                                                                                    {
+                                                                                                        "Type": "Transform",
+                                                                                                        "Active": true,
+                                                                                                        "Position": [
+                                                                                                            -0.786224365234375,
+                                                                                                            4.160216808319092,
+                                                                                                            -1.0000009536743165
+                                                                                                        ],
+                                                                                                        "Rotation": [
+                                                                                                            0.6070457100868225,
+                                                                                                            -0.045672107487916949,
+                                                                                                            -0.05952104926109314,
+                                                                                                            0.7911174297332764
+                                                                                                        ],
+                                                                                                        "Scale": [
+                                                                                                            0.9999999403953552,
+                                                                                                            1.0,
+                                                                                                            1.0
+                                                                                                        ],
+                                                                                                        "LocalEulerAngles": [
+                                                                                                            74.8370361328125,
+                                                                                                            -8.309947967529297,
+                                                                                                            -2.242962121963501
+                                                                                                        ]
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "Type": "MeshRenderer",
+                                                                                                        "Active": true,
+                                                                                                        "MeshID": 2283870484786881124,
+                                                                                                        "MaterialID": 6856375623772118262
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "Type": "BoundingBox",
+                                                                                                        "Active": true,
+                                                                                                        "LocalBoundingBox": [
+                                                                                                            -2.1321396827697756,
+                                                                                                            -7.1646809577941898,
+                                                                                                            -3.8842005729675295,
+                                                                                                            5.456841468811035,
+                                                                                                            4.456374168395996,
+                                                                                                            46.1678352355957
+                                                                                                        ]
+                                                                                                    }
+                                                                                                ],
+                                                                                                "Children": null
+                                                                                            }
+                                                                                        ]
                                                                                     }
                                                                                 ]
                                                                             }
@@ -1272,6 +1359,93 @@
                                                                                             }
                                                                                         ],
                                                                                         "Children": null
+                                                                                    },
+                                                                                    {
+                                                                                        "Name": "RootNode",
+                                                                                        "Active": true,
+                                                                                        "RootBoneName": "",
+                                                                                        "Mask": 0,
+                                                                                        "Components": [
+                                                                                            {
+                                                                                                "Type": "Transform",
+                                                                                                "Active": true,
+                                                                                                "Position": [
+                                                                                                    0.0,
+                                                                                                    0.0,
+                                                                                                    0.0
+                                                                                                ],
+                                                                                                "Rotation": [
+                                                                                                    0.0,
+                                                                                                    0.0,
+                                                                                                    0.0,
+                                                                                                    1.0
+                                                                                                ],
+                                                                                                "Scale": [
+                                                                                                    1.0,
+                                                                                                    1.0,
+                                                                                                    1.0
+                                                                                                ],
+                                                                                                "LocalEulerAngles": [
+                                                                                                    -0.0,
+                                                                                                    0.0,
+                                                                                                    -0.0
+                                                                                                ]
+                                                                                            }
+                                                                                        ],
+                                                                                        "Children": [
+                                                                                            {
+                                                                                                "Name": "Weapon_Left",
+                                                                                                "Active": true,
+                                                                                                "RootBoneName": "",
+                                                                                                "Mask": 0,
+                                                                                                "Components": [
+                                                                                                    {
+                                                                                                        "Type": "Transform",
+                                                                                                        "Active": true,
+                                                                                                        "Position": [
+                                                                                                            -19.006406784057618,
+                                                                                                            1.8322372436523438,
+                                                                                                            -1.0
+                                                                                                        ],
+                                                                                                        "Rotation": [
+                                                                                                            0.607813835144043,
+                                                                                                            0.03395400941371918,
+                                                                                                            0.04424970969557762,
+                                                                                                            0.7921183705329895
+                                                                                                        ],
+                                                                                                        "Scale": [
+                                                                                                            0.9999999403953552,
+                                                                                                            1.0,
+                                                                                                            0.9999999403953552
+                                                                                                        ],
+                                                                                                        "LocalEulerAngles": [
+                                                                                                            74.91036987304688,
+                                                                                                            6.175968170166016,
+                                                                                                            1.6615159511566163
+                                                                                                        ]
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "Type": "MeshRenderer",
+                                                                                                        "Active": true,
+                                                                                                        "MeshID": 12700775015712935437,
+                                                                                                        "MaterialID": 7837249864627690547
+                                                                                                    },
+                                                                                                    {
+                                                                                                        "Type": "BoundingBox",
+                                                                                                        "Active": true,
+                                                                                                        "LocalBoundingBox": [
+                                                                                                            14.983378410339356,
+                                                                                                            -7.1646809577941898,
+                                                                                                            -3.8842005729675295,
+                                                                                                            22.572359085083009,
+                                                                                                            4.456374168395996,
+                                                                                                            46.1678352355957
+                                                                                                        ]
+                                                                                                    }
+                                                                                                ],
+                                                                                                "Children": null
+                                                                                            }
+                                                                                        ]
                                                                                     }
                                                                                 ]
                                                                             }
