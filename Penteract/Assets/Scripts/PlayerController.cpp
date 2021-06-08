@@ -43,12 +43,10 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::INT, fangCharacter.lifePoints),
 	MEMBER(MemberType::FLOAT, fangCharacter.movementSpeed),
 	MEMBER(MemberType::INT, fangCharacter.damageHit),
-	MEMBER(MemberType::FLOAT, fangCharacter.shootCooldown),
 	MEMBER(MemberType::FLOAT, fangCharacter.attackSpeed),
 	MEMBER(MemberType::INT, onimaruCharacter.lifePoints),
 	MEMBER(MemberType::FLOAT, onimaruCharacter.movementSpeed),
 	MEMBER(MemberType::INT, onimaruCharacter.damageHit),
-	MEMBER(MemberType::FLOAT, onimaruCharacter.shootCooldown),
 	MEMBER(MemberType::FLOAT, onimaruCharacter.attackSpeed),
 	MEMBER(MemberType::BOOL, useSmoothCamera),
 	MEMBER(MemberType::FLOAT, smoothCameraSpeed)
