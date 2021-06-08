@@ -4,6 +4,7 @@
 #include "GameplaySystems.h"
 
 #include "AIMeleeGrunt.h"
+#include "RangedAI.h"
 #include "HUDController.h"
 
 #include "Math/Quat.h"
@@ -154,8 +155,7 @@ void PlayerController::InitDash(MovementDirection md) {
 		if (md != MovementDirection::NONE) {
 			dashDirection = GetDirection(md);
 			dashMovementDirection = md;
-		}
-		else {
+		} else {
 			dashDirection = facePointDir;
 		}
 		dashCooldownRemaining = dashCooldown;
@@ -202,8 +202,7 @@ void PlayerController::SwitchCharacter() {
 			fang->Disable();
 			onimaru->Enable();
 			hudControllerScript->UpdateHP(onimaruCharacter.lifePoints, fangCharacter.lifePoints);
-		}
-		else {
+		} else {
 			onimaru->Disable();
 			fang->Enable();
 			hudControllerScript->UpdateHP(fangCharacter.lifePoints, onimaruCharacter.lifePoints);
@@ -272,7 +271,14 @@ void PlayerController::Shoot() {
 		GameObject* hitGo = Physics::Raycast(start, start + end, mask);
 		if (hitGo) {
 			AIMeleeGrunt* enemyScript = GET_SCRIPT(hitGo->GetParent(), AIMeleeGrunt);
-			enemyScript->HitDetected((fang->IsActive() ? fangCharacter.damageHit : onimaruCharacter.damageHit) * overpowerMode);
+			if (enemyScript) {
+				enemyScript->HitDetected((fang->IsActive() ? fangCharacter.damageHit : onimaruCharacter.damageHit) * overpowerMode);
+			} else {
+				RangedAI* rangedAI = GET_SCRIPT(hitGo->GetParent(), RangedAI);
+				if (rangedAI) {
+					rangedAI->HitDetected((fang->IsActive() ? fangCharacter.damageHit : onimaruCharacter.damageHit) * overpowerMode);
+				}
+			}
 		}
 	}
 }
@@ -317,8 +323,7 @@ void PlayerController::CheckCoolDowns() {
 	if (noCooldownMode || switchCooldownRemaining <= 0.f) {
 		switchCooldownRemaining = 0.f;
 		switchInCooldown = false;
-	}
-	else {
+	} else {
 		switchCooldownRemaining -= Time::GetDeltaTime();
 	}
 	//Dash Cooldown
@@ -326,8 +331,7 @@ void PlayerController::CheckCoolDowns() {
 		dashCooldownRemaining = 0.f;
 		dashInCooldown = false;
 		dashMovementDirection = MovementDirection::NONE;
-	}
-	else {
+	} else {
 		dashCooldownRemaining -= Time::GetDeltaTime();
 	}
 	//Dash duration
@@ -335,24 +339,21 @@ void PlayerController::CheckCoolDowns() {
 		dashRemaining = 0.f;
 		dashing = false;
 		agent->SetMaxSpeed(fangCharacter.movementSpeed);
-	}
-	else {
+	} else {
 		dashRemaining -= Time::GetDeltaTime();
 	}
 
 	if (fangAttackCooldownRemaining <= 0.f) {
 		fangAttackCooldownRemaining = 0.f;
 		shooting = false;
-	}
-	else {
+	} else {
 		fangAttackCooldownRemaining -= Time::GetDeltaTime();
 	}
 
 	if (onimaruAttackCooldownRemaining <= 0.f) {
 		onimaruAttackCooldownRemaining = 0.f;
 		shooting = false;
-	}
-	else {
+	} else {
 		onimaruAttackCooldownRemaining -= Time::GetDeltaTime();
 	}
 }
@@ -421,14 +422,11 @@ int PlayerController::GetMouseDirectionState(MovementDirection input) {
 
 	if (dot > 0.707) {
 		return 2; //RunForward
-	}
-	else if (dot < -0.707) {
+	} else if (dot < -0.707) {
 		return 1; //RunBackward
-	}
-	else if (cross.y > 0) {
+	} else if (cross.y > 0) {
 		return 4; //RunRight
-	}
-	else {
+	} else {
 		return 3; //RunLeft
 	}
 }
@@ -447,6 +445,8 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 		dashAnimation = 4;
 		md = dashMovementDirection;
 	}
+
+	if (!animation) return;
 
 	if (md == MovementDirection::NONE) {
 		if (IsDead()) {
@@ -478,8 +478,7 @@ void PlayerController::UpdatePlayerStats() {
 		if (hitTaken && fang->IsActive() && fangCharacter.lifePoints >= 0) {
 			hudControllerScript->UpdateHP(fangCharacter.lifePoints, onimaruCharacter.lifePoints);
 			hitTaken = false;
-		}
-		else if (hitTaken && onimaru->IsActive() && onimaruCharacter.lifePoints >= 0) {
+		} else if (hitTaken && onimaru->IsActive() && onimaruCharacter.lifePoints >= 0) {
 			hudControllerScript->UpdateHP(onimaruCharacter.lifePoints, fangCharacter.lifePoints);
 			hitTaken = false;
 		}
@@ -523,8 +522,7 @@ void PlayerController::Update() {
 		if (firstTime) {
 			if (fang->IsActive()) {
 				hudControllerScript->UpdateHP(fangCharacter.lifePoints, onimaruCharacter.lifePoints);
-			}
-			else {
+			} else {
 				hudControllerScript->UpdateHP(onimaruCharacter.lifePoints, fangCharacter.lifePoints);
 			}
 			firstTime = false;
@@ -557,8 +555,7 @@ void PlayerController::Update() {
 			}
 		}
 		PlayAnimation(md);
-	}
-	else {
+	} else {
 		agent->RemoveAgentFromCrowd();
 	}
 }
