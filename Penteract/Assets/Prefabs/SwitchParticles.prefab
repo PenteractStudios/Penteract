@@ -29,6 +29,43 @@
                     0.0,
                     -0.0
                 ]
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 4446135300975932463,
+                "Values": [
+                    {
+                        "Name": "playerUID",
+                        "Type": "GameObjectUID",
+                        "Value": 8960886680822700415
+                    },
+                    {
+                        "Name": "absorptionUID",
+                        "Type": "GameObjectUID",
+                        "Value": 5517077796133037243
+                    },
+                    {
+                        "Name": "explosionUID",
+                        "Type": "GameObjectUID",
+                        "Value": 12903989346164490586
+                    },
+                    {
+                        "Name": "shockWaveUID",
+                        "Type": "GameObjectUID",
+                        "Value": 17811650054616059048
+                    },
+                    {
+                        "Name": "lightUID",
+                        "Type": "GameObjectUID",
+                        "Value": 6959181485156273632
+                    },
+                    {
+                        "Name": "groundLightUID",
+                        "Type": "GameObjectUID",
+                        "Value": 14722428641357045353
+                    }
+                ]
             }
         ],
         "Children": [
@@ -162,7 +199,7 @@
                         "IsRandomFrame": false,
                         "InitColor": [
                             0.0,
-                            0.8512167930603027,
+                            0.5588235855102539,
                             1.0,
                             1.0
                         ],
@@ -238,7 +275,7 @@
                         "IsRandomFrame": false,
                         "InitColor": [
                             0.0,
-                            0.6176471710205078,
+                            0.47058820724487307,
                             1.0,
                             1.0
                         ],
@@ -270,9 +307,9 @@
                         "Type": "Transform",
                         "Active": true,
                         "Position": [
-                            0.6399999856948853,
-                            -2.1700000762939455,
-                            -2.3299999237060549
+                            0.0,
+                            0.30000001192092898,
+                            0.0
                         ],
                         "Rotation": [
                             0.0,
@@ -300,7 +337,7 @@
                         "IsPlaying": false,
                         "IsLooping": false,
                         "IsSizeOverTime": true,
-                        "ScaleFactor": 60.0,
+                        "ScaleFactor": 70.0,
                         "ParticleScale": 5.0,
                         "MaxParticle": 1,
                         "Velocity": 0.10000000149011612,
@@ -313,9 +350,9 @@
                         "AnimationSpeed": 0.0,
                         "IsRandomFrame": false,
                         "InitColor": [
-                            0.33602458238601687,
-                            0.7522155046463013,
-                            0.9019607901573181,
+                            0.2234717309474945,
+                            0.4212875962257385,
+                            0.45588237047195437,
                             1.0
                         ],
                         "FinalColor": [
