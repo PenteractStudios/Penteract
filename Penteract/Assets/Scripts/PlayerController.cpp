@@ -199,7 +199,7 @@ void PlayerController::SwitchCharacter() {
 	if (!agent) return;
 	if (CanSwitch()) {
 		bool doVisualSwitch = currentSwitchDelay < switchDelay ? false : true;
-		if (doVisualSwitch) {
+		if (doVisualSwitch || noCooldownMode) {
 			if (audios[static_cast<int>(AudioType::SWITCH)]) {
 				audios[static_cast<int>(AudioType::SWITCH)]->Play();
 			}
@@ -562,12 +562,12 @@ void PlayerController::Update() {
 			LookAtMouse();
 			MoveTo(md);
 			//Not working in god mode
-			if (switchInProgress || (noCooldownMode && Input::GetKeyCode(Input::KEYCODE::KEY_R))) {
+			if (switchInProgress || (noCooldownMode && Input::GetKeyCodeUp(Input::KEYCODE::KEY_R))) {
 				switchInProgress = true;
 				SwitchCharacter();
 			}
 
-			if (!switchInProgress && Input::GetKeyCode(Input::KEYCODE::KEY_R)) {
+			if (!switchInProgress && Input::GetKeyCodeUp(Input::KEYCODE::KEY_R)) {
 				switchInProgress = true;
 				switchCooldownRemaining = switchCooldown;
 			}

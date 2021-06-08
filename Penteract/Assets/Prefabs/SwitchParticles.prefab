@@ -36,34 +36,34 @@
                 "Script": 4446135300975932463,
                 "Values": [
                     {
-                        "Name": "shockWaveUID",
-                        "Type": "GameObjectUID",
-                        "Value": 15203610162910173408
-                    },
-                    {
-                        "Name": "explosionUID",
-                        "Type": "GameObjectUID",
-                        "Value": 17086084031861883728
-                    },
-                    {
-                        "Name": "absorptionUID",
-                        "Type": "GameObjectUID",
-                        "Value": 7557561441286501391
-                    },
-                    {
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
                         "Value": 8960886680822700415
                     },
                     {
+                        "Name": "absorptionUID",
+                        "Type": "GameObjectUID",
+                        "Value": 763007206508917646
+                    },
+                    {
+                        "Name": "explosionUID",
+                        "Type": "GameObjectUID",
+                        "Value": 3299547936084660895
+                    },
+                    {
+                        "Name": "shockWaveUID",
+                        "Type": "GameObjectUID",
+                        "Value": 17949166800051354293
+                    },
+                    {
                         "Name": "lightUID",
                         "Type": "GameObjectUID",
-                        "Value": 689484115310273494
+                        "Value": 5918349869959326560
                     },
                     {
                         "Name": "groundLightUID",
                         "Type": "GameObjectUID",
-                        "Value": 8076976575966141980
+                        "Value": 15309818427319738123
                     }
                 ]
             }
