@@ -65,19 +65,21 @@ void EnemySpawnPoint::Update() {
 				UID prefabUID = prefab->BuildPrefab(gameObject);
 				GameObject* go = GameplaySystems::GetGameObject(prefabUID);
 				ComponentTransform* goTransform = go->GetComponent<ComponentTransform>();
-				ComponentBoundingBox* goBounds = nullptr;
-				for (auto& child : go->GetChildren()) {
-					if (child->HasComponent<ComponentMeshRenderer>()) {
-						goBounds = child->GetComponent<ComponentBoundingBox>();
-						break;
+				if (go) {
+					ComponentBoundingBox* goBounds = nullptr;
+					for (auto& child : go->GetChildren()) {
+						if (child->HasComponent<ComponentMeshRenderer>()) {
+							goBounds = child->GetComponent<ComponentBoundingBox>();
+							break;
+						}
 					}
-				}
-				if (goTransform && goBounds) {
-					float3 newPosition = float3(0, 0, 0);
-					float newXval = goBounds->GetLocalMaxPointAABB().x - abs(goBounds->GetLocalMinPointAABB().x);
-					newXval = newXval < 1.f ? 1.f : newXval;
-					newPosition.x += iterator * offset * newXval;
-					goTransform->SetPosition(newPosition);
+					if (goTransform && goBounds) {
+						float3 newPosition = float3(0, 0, 0);
+						float newXval = goBounds->GetLocalMaxPointAABB().x - abs(goBounds->GetLocalMinPointAABB().x);
+						newXval = newXval < 1.f ? 1.f : newXval;
+						newPosition.x += iterator * offset * newXval;
+						goTransform->SetPosition(newPosition);
+					}
 				}
 			}
 		}
