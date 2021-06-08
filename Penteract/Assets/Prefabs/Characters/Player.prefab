@@ -48,7 +48,7 @@
                     {
                         "Name": "dashAudioSourceUID",
                         "Type": "GameObjectUID",
-                        "Value": 6977598380145412742
+                        "Value": 10251782958241248981
                     },
                     {
                         "Name": "fangUID",
@@ -123,25 +123,109 @@
                 ]
             },
             {
+                "Type": "Agent",
+                "Active": true,
+                "MaxSpeed": 5.0,
+                "MaxAcceleration": 8.0,
+                "AvoidingObstacle": false
+            },
+            {
                 "Type": "AudioSource",
                 "Active": true,
                 "Pitch": 1.0,
                 "Gain": 1.0,
                 "Mute": false,
                 "Looping": false,
-                "AudioClipId": 11858635723138616711,
-                "SpatialBlend": 0,
+                "AudioClipId": 17097542983354294123,
+                "SpatialBlend": 1,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
                 "OuterGain": 0.0
             },
             {
-                "Type": "Agent",
+                "Type": "AudioSource",
                 "Active": true,
-                "MaxSpeed": 5.0,
-                "MaxAcceleration": 8.0,
-                "AvoidingObstacle": false
+                "Pitch": 1.0,
+                "Gain": 1.0,
+                "Mute": false,
+                "Looping": false,
+                "AudioClipId": 10133328817958406947,
+                "SpatialBlend": 1,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 1.0,
+                "Gain": 1.0,
+                "Mute": false,
+                "Looping": false,
+                "AudioClipId": 10685611266222420786,
+                "SpatialBlend": 1,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 1.0,
+                "Gain": 1.0,
+                "Mute": false,
+                "Looping": false,
+                "AudioClipId": 9595108440048790366,
+                "SpatialBlend": 1,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 1.0,
+                "Gain": 1.0,
+                "Mute": false,
+                "Looping": false,
+                "AudioClipId": 4996867956598617374,
+                "SpatialBlend": 1,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 1.0,
+                "Gain": 1.0,
+                "Mute": false,
+                "Looping": false,
+                "AudioClipId": 13399953858247124655,
+                "SpatialBlend": 1,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 1.0,
+                "Gain": 1.0,
+                "Mute": false,
+                "Looping": false,
+                "AudioClipId": 7212022815163123197,
+                "SpatialBlend": 0,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0
             }
         ],
         "Children": [
@@ -6427,102 +6511,6 @@
                         "Children": null
                     }
                 ]
-            },
-            {
-                "Name": "SwapAudioSource",
-                "Active": true,
-                "RootBoneName": "",
-                "Mask": 0,
-                "Components": [
-                    {
-                        "Type": "Transform",
-                        "Active": true,
-                        "Position": [
-                            -11.877874374389649,
-                            -2.700000047683716,
-                            0.0
-                        ],
-                        "Rotation": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            1.0
-                        ],
-                        "Scale": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ],
-                        "LocalEulerAngles": [
-                            -0.0,
-                            0.0,
-                            -0.0
-                        ]
-                    },
-                    {
-                        "Type": "AudioSource",
-                        "Active": true,
-                        "Pitch": 1.0,
-                        "Gain": 1.0,
-                        "Mute": false,
-                        "Looping": false,
-                        "AudioClipId": 13144749602852918920,
-                        "SpatialBlend": 0,
-                        "SourceType": 0,
-                        "InnerAngle": 90.0,
-                        "OuterAngle": 180.0,
-                        "OuterGain": 0.0
-                    }
-                ],
-                "Children": null
-            },
-            {
-                "Name": "DashAudioSource",
-                "Active": true,
-                "RootBoneName": "",
-                "Mask": 0,
-                "Components": [
-                    {
-                        "Type": "Transform",
-                        "Active": true,
-                        "Position": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ],
-                        "Rotation": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            1.0
-                        ],
-                        "Scale": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ],
-                        "LocalEulerAngles": [
-                            -0.0,
-                            0.0,
-                            -0.0
-                        ]
-                    },
-                    {
-                        "Type": "AudioSource",
-                        "Active": true,
-                        "Pitch": 1.0,
-                        "Gain": 1.0,
-                        "Mute": false,
-                        "Looping": false,
-                        "AudioClipId": 15283535176501550045,
-                        "SpatialBlend": 0,
-                        "SourceType": 0,
-                        "InnerAngle": 90.0,
-                        "OuterAngle": 180.0,
-                        "OuterGain": 0.0
-                    }
-                ],
-                "Children": null
             }
         ]
     }
