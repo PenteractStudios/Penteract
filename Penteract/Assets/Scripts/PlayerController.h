@@ -165,7 +165,7 @@ private:
 	ComponentParticleSystem* onimaruCompParticle = nullptr;
 
 	//Audio
-	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)];
+	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
 
 	HUDController* hudControllerScript = nullptr;
 };
