@@ -84,13 +84,16 @@ void AIMeleeGrunt::Update() {
 
     if (!gruntCharacter.isAlive) {
         if (state == AIState::ATTACK) {
-            animation->SendTrigger("AttackDeath");
+            animation->SendTrigger("RunDeath");
+            animation->SendTriggerSecondary("AttackDeath");
         }
         else if (state == AIState::IDLE) {
             animation->SendTrigger("IdleDeath");
+            animation->SendTriggerSecondary("IdleDeath");
         }
         else if (state == AIState::RUN) {
             animation->SendTrigger("RunDeath");
+            animation->SendTriggerSecondary("RunDeath");
         }
         if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
         agent->RemoveAgentFromCrowd();
@@ -124,8 +127,7 @@ void AIMeleeGrunt::Update() {
     case AIState::RUN:
         movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), gruntCharacter.movementSpeed);
         if (movementScript->CharacterInMeleeRange(player, gruntCharacter.meleeRange)) {
-            agent->RemoveAgentFromCrowd();
-            animation->SendTrigger("RunAttack");
+            animation->SendTriggerSecondary("RunAttack");
             if (audios[static_cast<int>(AudioType::ATTACK)]) audios[static_cast<int>(AudioType::ATTACK)]->Play();
             state = AIState::ATTACK;
         }
@@ -160,20 +162,22 @@ void AIMeleeGrunt::OnAnimationFinished()
         animation->SendTrigger("SpawnIdle");
         state = AIState::IDLE;
         agent->AddAgentToCrowd();
-    }
-
-    else if (state == AIState::ATTACK)
-    {
-        playerController->HitDetected(gruntCharacter.damageHit);
-        animation->SendTrigger("AttackIdle");
-        agent->AddAgentToCrowd();
-        state = AIState::IDLE;
-    }
+    }    
 
     else if (state == AIState::DEATH) {
         gruntCharacter.isAlive = false;
     }
 
+}
+
+void AIMeleeGrunt::OnAnimationSecondaryFinished()
+{
+    if (state == AIState::ATTACK)
+    {
+        playerController->HitDetected();
+        animation->SendTriggerSecondary("Attack" + animation->GetCurrentState()->name);
+        state = AIState::IDLE;
+    }
 }
 
 void AIMeleeGrunt::HitDetected(int damage_) {
