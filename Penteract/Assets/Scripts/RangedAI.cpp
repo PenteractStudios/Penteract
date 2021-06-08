@@ -102,9 +102,7 @@ void RangedAI::Start() {
 void RangedAI::OnAnimationFinished() {
 	if (animation == nullptr) return;
 
-	if (state == AIState::START) {
-		ChangeState(AIState::SPAWN);
-	} else if (state == AIState::SPAWN) {
+	if (state == AIState::SPAWN) {
 		animation->SendTrigger("SpawnIdle");
 		state = AIState::IDLE;
 	} else if (state == AIState::DEATH) {
