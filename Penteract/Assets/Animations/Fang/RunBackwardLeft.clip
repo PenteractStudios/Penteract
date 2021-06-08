@@ -1,8 +1,8 @@
 {
-    "Name": "Idle",
+    "Name": "RunBackwardLeft",
     "AnimationUID": 1406535842475188602,
-    "BeginIndex": 1,
-    "EndIndex": 60,
+    "BeginIndex": 567,
+    "EndIndex": 587,
     "Loop": true,
     "Speed": 1.0,
     "FrameRate": 0.0334541090
