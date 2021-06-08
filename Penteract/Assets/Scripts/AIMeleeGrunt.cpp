@@ -163,7 +163,8 @@ void AIMeleeGrunt::OnCollision(const GameObject& collidedWith)
 
         if (gruntCharacter.lifePoints <= 0) {
             if (state == AIState::ATTACK) {
-                animation->SendTrigger("AttackDeath");
+                animation->SendTrigger("RunDeath");
+                animation->SendTriggerSecondary("AttackDeath");
             }
             else if (state == AIState::IDLE) {
                 animation->SendTrigger("IdleDeath");
