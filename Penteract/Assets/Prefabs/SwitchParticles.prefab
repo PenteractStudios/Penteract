@@ -36,34 +36,34 @@
                 "Script": 4446135300975932463,
                 "Values": [
                     {
+                        "Name": "shockWaveUID",
+                        "Type": "GameObjectUID",
+                        "Value": 15203610162910173408
+                    },
+                    {
+                        "Name": "explosionUID",
+                        "Type": "GameObjectUID",
+                        "Value": 17086084031861883728
+                    },
+                    {
+                        "Name": "absorptionUID",
+                        "Type": "GameObjectUID",
+                        "Value": 7557561441286501391
+                    },
+                    {
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
                         "Value": 8960886680822700415
                     },
                     {
-                        "Name": "absorptionUID",
-                        "Type": "GameObjectUID",
-                        "Value": 5517077796133037243
-                    },
-                    {
-                        "Name": "explosionUID",
-                        "Type": "GameObjectUID",
-                        "Value": 12903989346164490586
-                    },
-                    {
-                        "Name": "shockWaveUID",
-                        "Type": "GameObjectUID",
-                        "Value": 17811650054616059048
-                    },
-                    {
                         "Name": "lightUID",
                         "Type": "GameObjectUID",
-                        "Value": 6959181485156273632
+                        "Value": 689484115310273494
                     },
                     {
                         "Name": "groundLightUID",
                         "Type": "GameObjectUID",
-                        "Value": 14722428641357045353
+                        "Value": 8076976575966141980
                     }
                 ]
             }
@@ -80,7 +80,7 @@
                         "Active": true,
                         "Position": [
                             0.0,
-                            4.5,
+                            3.0,
                             0.0
                         ],
                         "Rotation": [
@@ -110,11 +110,11 @@
                         "IsLooping": false,
                         "IsSizeOverTime": false,
                         "ScaleFactor": 2.4000000953674318,
-                        "ParticleScale": 3.0,
+                        "ParticleScale": 7.0,
                         "MaxParticle": 60,
-                        "Velocity": 11.199999809265137,
-                        "LifeParticle": 0.30000001192092898,
-                        "DistanceReverse": 5.949999809265137,
+                        "Velocity": 8.0,
+                        "LifeParticle": 0.20000000298023225,
+                        "DistanceReverse": 14.0,
                         "ReverseEffect": true,
                         "StartDelay": 0.0,
                         "Ytiles": 1,
@@ -122,19 +122,19 @@
                         "AnimationSpeed": 0.0,
                         "IsRandomFrame": true,
                         "InitColor": [
-                            1.0,
-                            1.0,
-                            1.0,
+                            0.2392156422138214,
+                            0.9803921580314636,
+                            0.893194854259491,
                             1.0
                         ],
                         "FinalColor": [
-                            1.0,
-                            0.9999899864196777,
-                            0.9999899864196777,
+                            0.14215683937072755,
+                            0.14215540885925294,
+                            0.14215540885925294,
                             1.0
                         ],
                         "StartTransition": 0.0,
-                        "EndTransition": 0.0,
+                        "EndTransition": 0.23000000417232514,
                         "FlipTexture": [
                             false,
                             false
@@ -156,7 +156,7 @@
                         "Active": true,
                         "Position": [
                             0.0,
-                            4.5,
+                            3.0,
                             0.0
                         ],
                         "Rotation": [
@@ -192,7 +192,7 @@
                         "LifeParticle": 0.30000001192092898,
                         "DistanceReverse": 0.0,
                         "ReverseEffect": true,
-                        "StartDelay": 0.3499999940395355,
+                        "StartDelay": 0.3700000047683716,
                         "Ytiles": 1,
                         "Xtiles": 1,
                         "AnimationSpeed": 0.0,
@@ -232,7 +232,7 @@
                         "Active": true,
                         "Position": [
                             0.0,
-                            4.5,
+                            3.0,
                             0.0
                         ],
                         "Rotation": [
@@ -268,7 +268,7 @@
                         "LifeParticle": 0.5,
                         "DistanceReverse": 0.0,
                         "ReverseEffect": true,
-                        "StartDelay": 0.3499999940395355,
+                        "StartDelay": 0.3700000047683716,
                         "Ytiles": 1,
                         "Xtiles": 1,
                         "AnimationSpeed": 0.0,
@@ -344,7 +344,7 @@
                         "LifeParticle": 0.5,
                         "DistanceReverse": 0.0,
                         "ReverseEffect": true,
-                        "StartDelay": 0.3499999940395355,
+                        "StartDelay": 0.3700000047683716,
                         "Ytiles": 1,
                         "Xtiles": 1,
                         "AnimationSpeed": 0.0,
@@ -384,7 +384,7 @@
                         "Active": true,
                         "Position": [
                             0.0,
-                            4.5,
+                            3.0,
                             0.0
                         ],
                         "Rotation": [
@@ -420,7 +420,7 @@
                         "LifeParticle": 0.20000000298023225,
                         "DistanceReverse": 0.0,
                         "ReverseEffect": true,
-                        "StartDelay": 0.4000000059604645,
+                        "StartDelay": 0.41999998688697817,
                         "Ytiles": 1,
                         "Xtiles": 1,
                         "AnimationSpeed": 0.0,
