@@ -4,21 +4,22 @@
 #include "GameplaySystems.h"
 
 #include "PlayerController.h"
+#include "EnemySpawnPoint.h"
 #include "HUDController.h"
 #include "AIMovement.h"
 #include "WinLose.h"
 
 EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
-		MEMBER(MemberType::INT, gruntCharacter.lifePoints),
-		MEMBER(MemberType::FLOAT, gruntCharacter.movementSpeed),
-		MEMBER(MemberType::INT, gruntCharacter.damageHit),
-		MEMBER(MemberType::INT, gruntCharacter.fallingSpeed),
-		MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
-		MEMBER(MemberType::FLOAT, gruntCharacter.attackRange),
-		MEMBER(MemberType::FLOAT, gruntCharacter.timeToDie)
+    MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
+    MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
+    MEMBER(MemberType::INT, gruntCharacter.lifePoints),
+    MEMBER(MemberType::FLOAT, gruntCharacter.movementSpeed),
+    MEMBER(MemberType::INT, gruntCharacter.damageHit),
+    MEMBER(MemberType::INT, gruntCharacter.fallingSpeed),
+    MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
+    MEMBER(MemberType::FLOAT, gruntCharacter.attackRange),
+    MEMBER(MemberType::FLOAT, gruntCharacter.timeToDie)
 };
 
 GENERATE_BODY_IMPL(AIMeleeGrunt);
@@ -58,6 +59,7 @@ void AIMeleeGrunt::Start() {
 		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
 		++i;
 	}
+	enemySpawnPointScript = GET_SCRIPT(GetOwner().GetParent(), EnemySpawnPoint);
 }
 
 void AIMeleeGrunt::Update() {
@@ -134,6 +136,7 @@ void AIMeleeGrunt::Update() {
 	if (!gruntCharacter.isAlive) {
 		if (!killSent && winLoseScript != nullptr) {
 			winLoseScript->IncrementDeadEnemies();
+			if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
 			killSent = true;
 		}
 		if (gruntCharacter.timeToDie > 0) {
@@ -145,7 +148,6 @@ void AIMeleeGrunt::Update() {
 			GameplaySystems::DestroyGameObject(&GetOwner());
 		}
 	}
-
 }
 
 void AIMeleeGrunt::OnAnimationFinished() {
