@@ -65,15 +65,15 @@
                         "Id": 2205993732190173474,
                         "Active": true,
                         "Position": [
-                            0.0,
-                            300.0,
+                            -59.808128356933597,
+                            53.72863006591797,
                             0.0
                         ],
                         "Rotation": [
-                            0.7071068286895752,
-                            0.0,
-                            0.0,
-                            0.7071068286895752
+                            0.34690040349960329,
+                            0.34170711040496828,
+                            -0.13742591440677644,
+                            0.8625604510307312
                         ],
                         "Scale": [
                             1.0,
@@ -81,9 +81,9 @@
                             1.0
                         ],
                         "LocalEulerAngles": [
-                            90.00000762939453,
-                            0.0,
-                            -0.0
+                            52.78635787963867,
+                            29.613046646118165,
+                            -33.05135726928711
                         ]
                     },
                     {
@@ -93,8 +93,8 @@
                         "LightType": 0,
                         "Color": [
                             1.0,
-                            1.0,
-                            1.0
+                            0.999994695186615,
+                            0.9999899864196777
                         ],
                         "Intensity": 1.0,
                         "Kl": 0.04500000178813934,
@@ -233,11 +233,6 @@
                                 "Value": 3685415630762953669
                             },
                             {
-                                "Name": "playerUID",
-                                "Type": "GameObjectUID",
-                                "Value": 10888363440551519469
-                            },
-                            {
                                 "Name": "gameCameraUID",
                                 "Type": "GameObjectUID",
                                 "Value": 14133391482310232563
@@ -246,6 +241,11 @@
                                 "Name": "staticCamera4UID",
                                 "Type": "GameObjectUID",
                                 "Value": 2655070040425404295
+                            },
+                            {
+                                "Name": "playerUID",
+                                "Type": "GameObjectUID",
+                                "Value": 10888363440551519469
                             },
                             {
                                 "Name": "godCameraUID",
@@ -286,9 +286,9 @@
                         "Id": 15886281164179804383,
                         "Active": true,
                         "Position": [
-                            -15.488744735717774,
-                            0.12911128997802735,
-                            -6.196152687072754
+                            -33.1645622253418,
+                            2.25374698638916,
+                            -5.638059616088867
                         ],
                         "Rotation": [
                             0.0,
@@ -314,9 +314,9 @@
                         "Script": 4413934008247911625,
                         "Values": [
                             {
-                                "Name": "mainNodeUID",
+                                "Name": "dashAudioSourceUID",
                                 "Type": "GameObjectUID",
-                                "Value": 10888363440551519469
+                                "Value": 9616300129864711248
                             },
                             {
                                 "Name": "onimaruUID",
@@ -324,9 +324,9 @@
                                 "Value": 18120676127561207572
                             },
                             {
-                                "Name": "dashAudioSourceUID",
+                                "Name": "mainNodeUID",
                                 "Type": "GameObjectUID",
-                                "Value": 9616300129864711248
+                                "Value": 10888363440551519469
                             },
                             {
                                 "Name": "fangUID",
@@ -334,14 +334,14 @@
                                 "Value": 8839321742647541169
                             },
                             {
-                                "Name": "onimaruParticleUID",
-                                "Type": "GameObjectUID",
-                                "Value": 9846584794654480463
-                            },
-                            {
                                 "Name": "cameraUID",
                                 "Type": "GameObjectUID",
                                 "Value": 14133391482310232563
+                            },
+                            {
+                                "Name": "onimaruParticleUID",
+                                "Type": "GameObjectUID",
+                                "Value": 9846584794654480463
                             },
                             {
                                 "Name": "canvasUID",
@@ -7546,10 +7546,10 @@
                             24.428985595703126
                         ],
                         "Rotation": [
-                            9.925813948541418e-9,
-                            0.9738770127296448,
-                            -0.22707633674144746,
-                            -4.2569499925093626e-8
+                            0.05598088353872299,
+                            0.8944904208183289,
+                            -0.42623716592788699,
+                            0.12278017401695252
                         ],
                         "Scale": [
                             1.0000004768371583,
@@ -7557,9 +7557,9 @@
                             1.0000003576278687
                         ],
                         "LocalEulerAngles": [
-                            153.74998474121095,
-                            -0.000005008954758523032,
-                            180.0
+                            128.0,
+                            9.899999618530274,
+                            -168.0
                         ]
                     },
                     {
@@ -7573,18 +7573,18 @@
                                 24.428985595703126
                             ],
                             "Up": [
-                                -1.4210854715202005e-14,
-                                0.8968726396560669,
-                                -0.442288875579834
+                                0.20481565594673158,
+                                0.6303759813308716,
+                                -0.7487834692001343
                             ],
                             "Front": [
-                                -8.742273394091171e-8,
-                                -0.442288875579834,
-                                -0.896872878074646
+                                0.17192907631397248,
+                                -0.7762768268585205,
+                                -0.6064939498901367
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 2000.0,
-                            "HorizontalFov": 1.838626742362976,
+                            "HorizontalFov": 2.0023510456085207,
                             "VerticalFov": 1.3113912343978882
                         }
                     },
@@ -7661,7 +7661,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 2000.0,
-                            "HorizontalFov": 1.838626742362976,
+                            "HorizontalFov": 2.0023510456085207,
                             "VerticalFov": 1.3113912343978882
                         }
                     }
@@ -7759,14 +7759,14 @@
                         "Script": 11734875514518295508,
                         "Values": [
                             {
-                                "Name": "onimaruHealthSecondCanvasUID",
-                                "Type": "GameObjectUID",
-                                "Value": 4046686048947904277
-                            },
-                            {
                                 "Name": "fangMainCanvasUID",
                                 "Type": "GameObjectUID",
                                 "Value": 2181516165667178510
+                            },
+                            {
+                                "Name": "onimaruHealthSecondCanvasUID",
+                                "Type": "GameObjectUID",
+                                "Value": 4046686048947904277
                             },
                             {
                                 "Name": "onimaruMainCanvasUID",
@@ -7799,14 +7799,14 @@
                                 "Value": 8088756500257214655
                             },
                             {
-                                "Name": "swapingSkillCanvasUID",
-                                "Type": "GameObjectUID",
-                                "Value": 1194835426853035896
-                            },
-                            {
                                 "Name": "onimaruHealthMainCanvasUID",
                                 "Type": "GameObjectUID",
                                 "Value": 11042553263767258562
+                            },
+                            {
+                                "Name": "swapingSkillCanvasUID",
+                                "Type": "GameObjectUID",
+                                "Value": 1194835426853035896
                             },
                             {
                                 "Name": "fangHealthSecondCanvasUID",
@@ -41036,6 +41036,11 @@
                                 "Value": 15489445993892258268
                             },
                             {
+                                "Name": "enemiesUID",
+                                "Type": "GameObjectUID",
+                                "Value": 9424093591244721738
+                            },
+                            {
                                 "Name": "spawnRangedUID",
                                 "Type": "GameObjectUID",
                                 "Value": 15607007881439550059
@@ -41046,16 +41051,6 @@
                                 "Value": 9424093591244721738
                             },
                             {
-                                "Name": "enemiesUID",
-                                "Type": "GameObjectUID",
-                                "Value": 9424093591244721738
-                            },
-                            {
-                                "Name": "debugEnemiesUID",
-                                "Type": "GameObjectUID",
-                                "Value": 3989047451220057351
-                            },
-                            {
                                 "Name": "playerControllerUID",
                                 "Type": "GameObjectUID",
                                 "Value": 10888363440551519469
@@ -41064,6 +41059,11 @@
                                 "Name": "gameCameraUID",
                                 "Type": "GameObjectUID",
                                 "Value": 14133391482310232563
+                            },
+                            {
+                                "Name": "debugEnemiesUID",
+                                "Type": "GameObjectUID",
+                                "Value": 3989047451220057351
                             },
                             {
                                 "Name": "godCameraUID",
@@ -41136,14 +41136,14 @@
                                         "Value": 11128356192968719727
                                     },
                                     {
-                                        "Name": "prefabUID",
-                                        "Type": "PrefabResourceUID",
-                                        "Value": 9998956702901793097
-                                    },
-                                    {
                                         "Name": "enemiesUID",
                                         "Type": "GameObjectUID",
                                         "Value": 8956077401393633822
+                                    },
+                                    {
+                                        "Name": "prefabUID",
+                                        "Type": "PrefabResourceUID",
+                                        "Value": 9998956702901793097
                                     }
                                 ]
                             }
@@ -44378,14 +44378,14 @@
                                         "Value": 564339191826698320
                                     },
                                     {
-                                        "Name": "prefabUID",
-                                        "Type": "PrefabResourceUID",
-                                        "Value": 9998956702901793097
-                                    },
-                                    {
                                         "Name": "enemiesUID",
                                         "Type": "GameObjectUID",
                                         "Value": 8956077401393633822
+                                    },
+                                    {
+                                        "Name": "prefabUID",
+                                        "Type": "PrefabResourceUID",
+                                        "Value": 9998956702901793097
                                     }
                                 ]
                             }
@@ -44553,7 +44553,7 @@
                                 "Id": 6080070860033217298,
                                 "Active": true,
                                 "MeshID": 2601922174344893236,
-                                "MaterialID": 7944242535469317402
+                                "MaterialID": 4904314771129823394
                             },
                             {
                                 "Type": "BoundingBox",
@@ -44611,7 +44611,7 @@
                                 "Id": 17568575507868233144,
                                 "Active": true,
                                 "MeshID": 11309995548679509135,
-                                "MaterialID": 8512468287314760710
+                                "MaterialID": 966675059251604007
                             },
                             {
                                 "Type": "BoundingBox",
@@ -44669,7 +44669,7 @@
                                 "Id": 15133183178486069222,
                                 "Active": true,
                                 "MeshID": 12255592820499559523,
-                                "MaterialID": 12173342309317110634
+                                "MaterialID": 12810583400641156648
                             },
                             {
                                 "Type": "BoundingBox",
@@ -44727,7 +44727,7 @@
                                 "Id": 1943220999031518183,
                                 "Active": true,
                                 "MeshID": 11094226763807290106,
-                                "MaterialID": 12808302433320638439
+                                "MaterialID": 8638999395892665852
                             },
                             {
                                 "Type": "BoundingBox",
@@ -44785,7 +44785,7 @@
                                 "Id": 17628267119435057408,
                                 "Active": true,
                                 "MeshID": 15418948655236002578,
-                                "MaterialID": 4006893068427835574
+                                "MaterialID": 14932453601235756836
                             },
                             {
                                 "Type": "BoundingBox",
@@ -44843,7 +44843,7 @@
                                 "Id": 5140096224678436047,
                                 "Active": true,
                                 "MeshID": 13055996751716199061,
-                                "MaterialID": 4006893068427835574
+                                "MaterialID": 14932453601235756836
                             },
                             {
                                 "Type": "BoundingBox",
@@ -44901,7 +44901,7 @@
                                 "Id": 9405826021782475663,
                                 "Active": true,
                                 "MeshID": 14009994639396847844,
-                                "MaterialID": 12173342309317110634
+                                "MaterialID": 12810583400641156648
                             },
                             {
                                 "Type": "BoundingBox",
@@ -44959,7 +44959,7 @@
                                 "Id": 4597960133546951711,
                                 "Active": true,
                                 "MeshID": 16528196765993589885,
-                                "MaterialID": 12173342309317110634
+                                "MaterialID": 12810583400641156648
                             },
                             {
                                 "Type": "BoundingBox",
@@ -45075,7 +45075,7 @@
                                 "Id": 9673730665418620083,
                                 "Active": true,
                                 "MeshID": 15887532099260046077,
-                                "MaterialID": 4006893068427835574
+                                "MaterialID": 14932453601235756836
                             },
                             {
                                 "Type": "MeshRenderer",
@@ -45140,7 +45140,7 @@
                                 "Id": 1510919182197950064,
                                 "Active": true,
                                 "MeshID": 16683564428576171298,
-                                "MaterialID": 4006893068427835574
+                                "MaterialID": 14932453601235756836
                             },
                             {
                                 "Type": "BoundingBox",
@@ -45198,7 +45198,7 @@
                                 "Id": 15659950580110011559,
                                 "Active": true,
                                 "MeshID": 10015870601256346243,
-                                "MaterialID": 2216288288560910339
+                                "MaterialID": 13107483621189033470
                             },
                             {
                                 "Type": "BoundingBox",
@@ -45256,7 +45256,7 @@
                                 "Id": 9481134407682105130,
                                 "Active": true,
                                 "MeshID": 14251790376281651192,
-                                "MaterialID": 4006893068427835574
+                                "MaterialID": 14932453601235756836
                             },
                             {
                                 "Type": "BoundingBox",
@@ -45277,9 +45277,9 @@
                     {
                         "Id": 16258150866266605818,
                         "Name": "NavMesh",
-                        "Active": true,
+                        "Active": false,
                         "Static": false,
-                        "ActiveHierarchy": true,
+                        "ActiveHierarchy": false,
                         "RootBoneId": 0,
                         "Mask": 0,
                         "Components": [
@@ -45289,7 +45289,7 @@
                                 "Active": true,
                                 "Position": [
                                     0.0,
-                                    0.0,
+                                    -0.3499999940395355,
                                     0.0
                                 ],
                                 "Rotation": [
@@ -45314,7 +45314,7 @@
                             {
                                 "Id": 6001385665555696278,
                                 "Name": "NavMesh",
-                                "Active": false,
+                                "Active": true,
                                 "Static": true,
                                 "ActiveHierarchy": false,
                                 "RootBoneId": 0,
@@ -45351,7 +45351,7 @@
                                         "Id": 12610133918430294689,
                                         "Active": true,
                                         "MeshID": 13275353774945020468,
-                                        "MaterialID": 6121735321645299694
+                                        "MaterialID": 14064230364848803005
                                     },
                                     {
                                         "Type": "BoundingBox",
@@ -45370,6 +45370,693 @@
                                 "Children": null
                             }
                         ]
+                    }
+                ]
+            },
+            {
+                "Id": 15655246832876179070,
+                "Name": "Lights",
+                "Active": true,
+                "Static": false,
+                "ActiveHierarchy": true,
+                "RootBoneId": 0,
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Id": 4626373277573901273,
+                        "Active": true,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    }
+                ],
+                "Children": [
+                    {
+                        "Id": 17873580813714836700,
+                        "Name": "Lava",
+                        "Active": true,
+                        "Static": false,
+                        "ActiveHierarchy": true,
+                        "RootBoneId": 0,
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Id": 5263870892242557785,
+                                "Active": true,
+                                "Position": [
+                                    -37.650054931640628,
+                                    -64.75,
+                                    -39.54269027709961
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "Light",
+                                "Id": 17135067333692735191,
+                                "Active": true,
+                                "LightType": 1,
+                                "Color": [
+                                    1.0,
+                                    0.5297616124153137,
+                                    0.0
+                                ],
+                                "Intensity": 200.0,
+                                "Kl": 0.04500000178813934,
+                                "Kq": 0.007499999832361937,
+                                "InnerAngle": 0.2617993950843811,
+                                "OuterAngle": 0.5235987901687622
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Id": 13514209175508060709,
+                        "Name": "Lamp",
+                        "Active": true,
+                        "Static": false,
+                        "ActiveHierarchy": true,
+                        "RootBoneId": 0,
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Id": 6858437221879207696,
+                                "Active": true,
+                                "Position": [
+                                    -11.1456880569458,
+                                    29.259057998657228,
+                                    -22.501739501953126
+                                ],
+                                "Rotation": [
+                                    0.3970519006252289,
+                                    0.0,
+                                    0.0,
+                                    0.9177961349487305
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    46.78801727294922,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "Light",
+                                "Id": 14900816675524797216,
+                                "Active": true,
+                                "LightType": 2,
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "Intensity": 50.0,
+                                "Kl": 0.04500000178813934,
+                                "Kq": 0.007499999832361937,
+                                "InnerAngle": 0.0872664600610733,
+                                "OuterAngle": 0.2617993950843811
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Id": 17407400996249265068,
+                        "Name": "Lamp",
+                        "Active": true,
+                        "Static": false,
+                        "ActiveHierarchy": true,
+                        "RootBoneId": 0,
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Id": 17155068158015531159,
+                                "Active": true,
+                                "Position": [
+                                    -34.859619140625,
+                                    29.259057998657228,
+                                    -22.501739501953126
+                                ],
+                                "Rotation": [
+                                    0.39705193042755129,
+                                    0.0,
+                                    0.0,
+                                    0.9177961349487305
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    0.9999999403953552,
+                                    0.9999999403953552
+                                ],
+                                "LocalEulerAngles": [
+                                    46.78801727294922,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "Light",
+                                "Id": 3059367309131388252,
+                                "Active": true,
+                                "LightType": 2,
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "Intensity": 50.0,
+                                "Kl": 0.04500000178813934,
+                                "Kq": 0.007499999832361937,
+                                "InnerAngle": 0.0872664600610733,
+                                "OuterAngle": 0.2617993950843811
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Id": 15732360021462877815,
+                        "Name": "Lamp",
+                        "Active": true,
+                        "Static": false,
+                        "ActiveHierarchy": true,
+                        "RootBoneId": 0,
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Id": 12802326954502824349,
+                                "Active": true,
+                                "Position": [
+                                    -9.492033004760743,
+                                    26.063087463378908,
+                                    82.5539321899414
+                                ],
+                                "Rotation": [
+                                    1.981281805285562e-8,
+                                    0.8913736939430237,
+                                    -0.4532691240310669,
+                                    -3.896310118989277e-8
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0000001192092896
+                                ],
+                                "LocalEulerAngles": [
+                                    126.0927505493164,
+                                    -0.0000050089370233763479,
+                                    180.0
+                                ]
+                            },
+                            {
+                                "Type": "Light",
+                                "Id": 17906190208996832961,
+                                "Active": true,
+                                "LightType": 2,
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "Intensity": 50.0,
+                                "Kl": 0.04500000178813934,
+                                "Kq": 0.007499999832361937,
+                                "InnerAngle": 0.0872664600610733,
+                                "OuterAngle": 0.2617993950843811
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Id": 2429570406304135725,
+                        "Name": "Lamp",
+                        "Active": true,
+                        "Static": false,
+                        "ActiveHierarchy": true,
+                        "RootBoneId": 0,
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Id": 15111898284704140599,
+                                "Active": true,
+                                "Position": [
+                                    -24.58968734741211,
+                                    22.544240951538087,
+                                    82.28413391113281
+                                ],
+                                "Rotation": [
+                                    -0.0766487568616867,
+                                    0.9005315899848938,
+                                    -0.3895856738090515,
+                                    -0.17717455327510835
+                                ],
+                                "Scale": [
+                                    0.9999998807907105,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    131.00460815429688,
+                                    -15.033279418945313,
+                                    163.38836669921876
+                                ]
+                            },
+                            {
+                                "Type": "Light",
+                                "Id": 15305886452566042175,
+                                "Active": true,
+                                "LightType": 2,
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "Intensity": 50.0,
+                                "Kl": 0.04500000178813934,
+                                "Kq": 0.007499999832361937,
+                                "InnerAngle": 0.0872664600610733,
+                                "OuterAngle": 0.2617993950843811
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Id": 13267442175091474625,
+                        "Name": "Lamp",
+                        "Active": true,
+                        "Static": false,
+                        "ActiveHierarchy": true,
+                        "RootBoneId": 0,
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Id": 126004518706993488,
+                                "Active": true,
+                                "Position": [
+                                    -8.824029922485352,
+                                    29.259057998657228,
+                                    50.25701141357422
+                                ],
+                                "Rotation": [
+                                    -0.023247510194778444,
+                                    0.9162210822105408,
+                                    -0.39637213945388796,
+                                    -0.053736742585897449
+                                ],
+                                "Scale": [
+                                    1.0000001192092896,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    133.01515197753907,
+                                    -4.5908732414245609,
+                                    175.0967559814453
+                                ]
+                            },
+                            {
+                                "Type": "Light",
+                                "Id": 13820818786682202416,
+                                "Active": true,
+                                "LightType": 2,
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "Intensity": 50.0,
+                                "Kl": 0.04500000178813934,
+                                "Kq": 0.007499999832361937,
+                                "InnerAngle": 0.0872664600610733,
+                                "OuterAngle": 0.2617993950843811
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Id": 11471821910925567239,
+                        "Name": "Lamp",
+                        "Active": true,
+                        "Static": false,
+                        "ActiveHierarchy": true,
+                        "RootBoneId": 0,
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Id": 815820542105752264,
+                                "Active": true,
+                                "Position": [
+                                    -31.25229835510254,
+                                    29.259050369262697,
+                                    49.69295120239258
+                                ],
+                                "Rotation": [
+                                    -0.018485452979803087,
+                                    0.9168000817298889,
+                                    -0.396623432636261,
+                                    -0.042729396373033527
+                                ],
+                                "Scale": [
+                                    1.0000001192092896,
+                                    1.0,
+                                    1.0000001192092896
+                                ],
+                                "LocalEulerAngles": [
+                                    133.08753967285157,
+                                    -3.6513590812683107,
+                                    176.1050262451172
+                                ]
+                            },
+                            {
+                                "Type": "Light",
+                                "Id": 6483738350640392956,
+                                "Active": true,
+                                "LightType": 2,
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "Intensity": 50.0,
+                                "Kl": 0.04500000178813934,
+                                "Kq": 0.007499999832361937,
+                                "InnerAngle": 0.0872664600610733,
+                                "OuterAngle": 0.2617993950843811
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Id": 3810713400556274269,
+                        "Name": "Lamp",
+                        "Active": true,
+                        "Static": false,
+                        "ActiveHierarchy": true,
+                        "RootBoneId": 0,
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Id": 8858278169764195395,
+                                "Active": true,
+                                "Position": [
+                                    10.46083927154541,
+                                    29.259166717529298,
+                                    84.3465805053711
+                                ],
+                                "Rotation": [
+                                    0.11214747279882431,
+                                    0.8804242014884949,
+                                    -0.3808896839618683,
+                                    0.2592281997203827
+                                ],
+                                "Scale": [
+                                    1.0000001192092896,
+                                    1.0,
+                                    1.0000001192092896
+                                ],
+                                "LocalEulerAngles": [
+                                    128.29275512695313,
+                                    21.779150009155275,
+                                    -154.8298797607422
+                                ]
+                            },
+                            {
+                                "Type": "Light",
+                                "Id": 12005963636310192127,
+                                "Active": true,
+                                "LightType": 2,
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "Intensity": 50.0,
+                                "Kl": 0.04500000178813934,
+                                "Kq": 0.007499999832361937,
+                                "InnerAngle": 0.0872664600610733,
+                                "OuterAngle": 0.2617993950843811
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Id": 6227854797708356575,
+                        "Name": "Lamp",
+                        "Active": true,
+                        "Static": false,
+                        "ActiveHierarchy": true,
+                        "RootBoneId": 0,
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Id": 17968823958530901327,
+                                "Active": true,
+                                "Position": [
+                                    60.29007339477539,
+                                    29.258909225463868,
+                                    91.81808471679688
+                                ],
+                                "Rotation": [
+                                    -0.0393785685300827,
+                                    0.9132705330848694,
+                                    -0.3950960636138916,
+                                    -0.09102408587932587
+                                ],
+                                "Scale": [
+                                    0.9999999403953552,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    132.6440887451172,
+                                    -7.766866207122803,
+                                    171.65200805664063
+                                ]
+                            },
+                            {
+                                "Type": "Light",
+                                "Id": 4254708634751874533,
+                                "Active": true,
+                                "LightType": 2,
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "Intensity": 50.0,
+                                "Kl": 0.04500000178813934,
+                                "Kq": 0.007499999832361937,
+                                "InnerAngle": 0.0872664600610733,
+                                "OuterAngle": 0.2617993950843811
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Id": 13838059944233629775,
+                        "Name": "Lamp",
+                        "Active": true,
+                        "Static": false,
+                        "ActiveHierarchy": true,
+                        "RootBoneId": 0,
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Id": 11832172337511569546,
+                                "Active": true,
+                                "Position": [
+                                    46.364967346191409,
+                                    29.25905990600586,
+                                    -24.661985397338868
+                                ],
+                                "Rotation": [
+                                    0.39705193042755129,
+                                    0.0,
+                                    0.0,
+                                    0.9177961349487305
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    0.9999999403953552,
+                                    0.9999999403953552
+                                ],
+                                "LocalEulerAngles": [
+                                    46.78801727294922,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "Light",
+                                "Id": 5935686373378692459,
+                                "Active": true,
+                                "LightType": 2,
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "Intensity": 50.0,
+                                "Kl": 0.04500000178813934,
+                                "Kq": 0.007499999832361937,
+                                "InnerAngle": 0.0872664600610733,
+                                "OuterAngle": 0.2617993950843811
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Id": 11067834489566194461,
+                        "Name": "Lamp",
+                        "Active": true,
+                        "Static": false,
+                        "ActiveHierarchy": true,
+                        "RootBoneId": 0,
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Id": 15220036584612611003,
+                                "Active": true,
+                                "Position": [
+                                    68.99488067626953,
+                                    29.259061813354493,
+                                    -25.995655059814454
+                                ],
+                                "Rotation": [
+                                    0.39705193042755129,
+                                    0.0,
+                                    0.0,
+                                    0.9177961349487305
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    0.9999999403953552,
+                                    0.9999999403953552
+                                ],
+                                "LocalEulerAngles": [
+                                    46.78801727294922,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "Light",
+                                "Id": 13835528750778772195,
+                                "Active": true,
+                                "LightType": 2,
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "Intensity": 50.0,
+                                "Kl": 0.04500000178813934,
+                                "Kq": 0.007499999832361937,
+                                "InnerAngle": 0.0872664600610733,
+                                "OuterAngle": 0.2617993950843811
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Id": 1792780267978611306,
+                        "Name": "Lamp",
+                        "Active": true,
+                        "Static": false,
+                        "ActiveHierarchy": true,
+                        "RootBoneId": 0,
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Id": 15513866693421397444,
+                                "Active": true,
+                                "Position": [
+                                    -23.675424575805665,
+                                    38.02412033081055,
+                                    -3.091264247894287
+                                ],
+                                "Rotation": [
+                                    0.8657181859016419,
+                                    0.0,
+                                    0.0,
+                                    0.5005318522453308
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0000001192092896,
+                                    1.0000001192092896
+                                ],
+                                "LocalEulerAngles": [
+                                    119.92962646484375,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "Light",
+                                "Id": 2703450135310849363,
+                                "Active": true,
+                                "LightType": 2,
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "Intensity": 75.0,
+                                "Kl": 0.04500000178813934,
+                                "Kq": 0.007499999832361937,
+                                "InnerAngle": 0.0872664600610733,
+                                "OuterAngle": 0.2617993950843811
+                            }
+                        ],
+                        "Children": null
                     }
                 ]
             }
