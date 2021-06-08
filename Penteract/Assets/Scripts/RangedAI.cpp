@@ -16,23 +16,23 @@
 //clang-format off
 EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
-		MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
-		MEMBER(MemberType::GAME_OBJECT_UID, meshUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
-		MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),
-		MEMBER(MemberType::INT, rangerGruntCharacter.lifePoints),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.timeToDie),
-		MEMBER(MemberType::FLOAT, attackSpeed),
-		MEMBER(MemberType::FLOAT, fleeingRange),
-		MEMBER(MemberType::PREFAB_RESOURCE_UID, trailPrefabUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
-		MEMBER(MemberType::GAME_OBJECT_UID, hudControllerObjUID),
-		MEMBER(MemberType::FLOAT, timeSinceLastHurt),
-		MEMBER(MemberType::FLOAT, approachOffset) //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
+	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
+	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
+	MEMBER(MemberType::GAME_OBJECT_UID, meshUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
+	MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),
+	MEMBER(MemberType::INT, rangerGruntCharacter.lifePoints),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.timeToDie),
+	MEMBER(MemberType::FLOAT, attackSpeed),
+	MEMBER(MemberType::FLOAT, fleeingRange),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, trailPrefabUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
+	MEMBER(MemberType::GAME_OBJECT_UID, hudControllerObjUID),
+	MEMBER(MemberType::FLOAT, timeSinceLastHurt),
+	MEMBER(MemberType::FLOAT, approachOffset) //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
 
 };//clang-format on
 
@@ -42,8 +42,8 @@ GENERATE_BODY_IMPL(RangedAI);
 void RangedAI::Start() {
 	player = GameplaySystems::GetGameObject(playerUID);
 	meshObj = GameplaySystems::GetGameObject(meshUID);
-	meshObj1 = GameplaySystems::GetGameObject(meshUID1);
-	meshObj2 = GameplaySystems::GetGameObject(meshUID2);
+	meshObjForFrustumPresenceCheck1 = GameplaySystems::GetGameObject(meshUID1);
+	meshObjForFrustumPresenceCheck2 = GameplaySystems::GetGameObject(meshUID2);
 	animation = GetOwner().GetComponent<ComponentAnimation>();
 	ownerTransform = GetOwner().GetComponent<ComponentTransform>();
 	fangMeshObj = GameplaySystems::GetGameObject(playerMeshUIDFang);
@@ -333,16 +333,18 @@ bool RangedAI::CharacterInSight(const GameObject* character) {
 
 bool RangedAI::CharacterInRange(const GameObject* character, float range, bool useRange) {
 
-	if (meshObj) {
-		if (!useRange) {
-			return Camera::CheckObjectInsideFrustum(meshObj) && Camera::CheckObjectInsideFrustum(meshObj1) && Camera::CheckObjectInsideFrustum(meshObj2);
-		}
+	bool inFrustum0 = meshObj != nullptr ? Camera::CheckObjectInsideFrustum(meshObj) : true;
+	bool inFrustum1 = meshObjForFrustumPresenceCheck1 != nullptr ? Camera::CheckObjectInsideFrustum(meshObjForFrustumPresenceCheck1) : true;
+	bool inFrustum2 = meshObjForFrustumPresenceCheck2 != nullptr ? Camera::CheckObjectInsideFrustum(meshObjForFrustumPresenceCheck2) : true;
+	bool inFrustum = inFrustum0 && inFrustum1 && inFrustum2;
+	if (!useRange) {
+		return inFrustum;
 	}
 
 	ComponentTransform* target = character->GetComponent<ComponentTransform>();
 	if (target) {
 		float3 posTarget = target->GetGlobalPosition();
-		return posTarget.Distance(ownerTransform->GetGlobalPosition()) < range;
+		return posTarget.Distance(ownerTransform->GetGlobalPosition()) < range && inFrustum;
 	}
 	return false;
 }
