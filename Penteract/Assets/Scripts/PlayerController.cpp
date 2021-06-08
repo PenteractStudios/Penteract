@@ -228,25 +228,18 @@ bool PlayerController::CanShoot() {
 }
 
 void PlayerController::Shoot() {
-	ComponentTransform* transform = GetOwner().GetComponent<ComponentTransform>();
-	
 	if (CanShoot()) {
 		shooting = true;
-		float3 start;
 		if (fang->IsActive()) {
+			fangAttackCooldownRemaining = 1.f / fangCharacter.attackSpeed;
 			if (audios[static_cast<int>(AudioType::SHOOT)]) {
 				audios[static_cast<int>(AudioType::SHOOT)]->Play();
 			}
 			else {
 				Debug::Log(AUDIOSOURCE_NULL_MSG);
 			}
-			fangAttackCooldownRemaining = 1.f / fangCharacter.attackSpeed;
 			if (fangTrail) {
-				//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
-				//fangGun->GetComponent<ComponentParticleSystem>()->Play();
 				GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
-				//float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
-				//GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
 			}
 			if (rightShot) {
 				fangAnimation->SendTriggerSecondary(fangAnimation->GetCurrentState()->name + PlayerController::states[12]);				
@@ -254,42 +247,19 @@ void PlayerController::Shoot() {
 			else {
 				fangAnimation->SendTriggerSecondary(fangAnimation->GetCurrentState()->name + PlayerController::states[11]);
 			}
-			start = fangGunTransform->GetGlobalPosition();
 		}
 		else {
+			onimaruAttackCooldownRemaining = 1.f / onimaruCharacter.attackSpeed;
 			if (audios[static_cast<int>(AudioType::SHOOT)]) {
 				audios[static_cast<int>(AudioType::SHOOT)]->Play();
 			}
 			else {
 				Debug::Log(AUDIOSOURCE_NULL_MSG);
 			}
-			onimaruAttackCooldownRemaining = 1.f / onimaruCharacter.attackSpeed;
 			if (onimaruTrail) {
 				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
-				//float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
-				//GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
 			}			
-
-			start = onimaruGunTransform->GetGlobalPosition();
 		}
-
-		//float3 end = transform->GetGlobalRotation() * float3(0, 0, 1);
-		//end.Normalize();
-		//end *= distanceRayCast;
-		int mask = static_cast<int>(MaskType::ENEMY);
-		//GameObject* hitGo = Physics::Raycast(start, start + end, mask);
-		//if (hitGo) {
-		//	AIMeleeGrunt* enemyScript = GET_SCRIPT(hitGo->GetParent(), AIMeleeGrunt);
-		//	if (enemyScript) {
-		//		enemyScript->HitDetected((fang->IsActive() ? fangCharacter.damageHit : onimaruCharacter.damageHit) * overpowerMode);
-		//	}
-		//	else {
-		//		RangedAI* rangedAI = GET_SCRIPT(hitGo->GetParent(), RangedAI);
-		//		if (rangedAI) {
-		//			rangedAI->HitDetected((fang->IsActive() ? fangCharacter.damageHit : onimaruCharacter.damageHit) * overpowerMode);
-		//		}
-		//	}
-		//}
 	}
 }
 
@@ -355,20 +325,23 @@ void PlayerController::CheckCoolDowns() {
 		dashRemaining -= Time::GetDeltaTime();
 	}
 
-	if (fangAttackCooldownRemaining <= 0.f) {
-		fangAttackCooldownRemaining = 0.f;
-		shooting = false;
+	if(fang->IsActive()){
+		if (fangAttackCooldownRemaining <= 0.f) {
+			fangAttackCooldownRemaining = 0.f;
+			shooting = false;
+		}
+		else {
+			fangAttackCooldownRemaining -= Time::GetDeltaTime();
+		}
 	}
 	else {
-		fangAttackCooldownRemaining -= Time::GetDeltaTime();
-	}
-
-	if (onimaruAttackCooldownRemaining <= 0.f) {
-		onimaruAttackCooldownRemaining = 0.f;
-		shooting = false;
-	}
-	else {
-		onimaruAttackCooldownRemaining -= Time::GetDeltaTime();
+		if (onimaruAttackCooldownRemaining <= 0.f) {
+			onimaruAttackCooldownRemaining = 0.f;
+			shooting = false;
+		}
+		else {
+			onimaruAttackCooldownRemaining -= Time::GetDeltaTime();
+		}
 	}
 }
 

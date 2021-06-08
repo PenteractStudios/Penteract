@@ -145,7 +145,6 @@ void AIMeleeGrunt::OnAnimationSecondaryFinished()
 {
     if (state == AIState::ATTACK)
     {
-        //playerController->HitDetected();
         animation->SendTriggerSecondary("Attack" + animation->GetCurrentState()->name);
         state = AIState::IDLE;
     }
