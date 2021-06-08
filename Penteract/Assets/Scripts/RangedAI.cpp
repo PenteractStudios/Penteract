@@ -105,9 +105,10 @@ void RangedAI::OnAnimationFinished() {
 
 	if (state == AIState::SPAWN) {
 		animation->SendTrigger("SpawnIdle");
+		agent->AddAgentToCrowd();
 		state = AIState::IDLE;
 	} else if (state == AIState::DEATH) {
-		dead = true;
+		rangerGruntCharacter.destroying = true;
 	}
 }
 
@@ -121,23 +122,35 @@ void RangedAI::OnAnimationSecondaryFinished() {
 
 }
 
-//This is commented until merge with collisions
-//
-//void RangedAI::OnCollision(const GameObject& collidedWith) {
-//	if (state == AIState::START || state != AIState::SPAWN)return;
-//	if (rangerGruntCharacter.lifePoints > 0 && playerController) {
-//		if (collidedWith.name == "FangBullet") {
-//			rangerGruntCharacter.lifePoints -= playerController->fangDamage;
-//		} else if (collidedWith.name == "OnimaruBullet") {
-//			rangerGruntCharacter.lifePoints -= playerController->onimaruDamage;
-//		}
-//	}
-//
-//	if (rangerGruntCharacter.lifePoints <= 0) {
-//		ChangeState(AIState::DEATH);
-//	}
-//
-//}
+void RangedAI::OnCollision(const GameObject& collidedWith) {
+	if (state != AIState::START && state != AIState::SPAWN) {
+		if (rangerGruntCharacter.isAlive && playerController) {
+			bool hitTaken = false;
+			if (collidedWith.name == "FangBullet") {
+				rangerGruntCharacter.Hit(playerController->fangDamage);
+				hitTaken = true;
+			}
+			else if (collidedWith.name == "OnimaruBullet") {
+				rangerGruntCharacter.Hit(playerController->onimaruDamage);
+				hitTaken = true;
+			}
+			if (hitTaken) {
+				PlayAudio(AudioType::HIT);
+				if (meshRenderer) {
+					if (damagedMaterialID != 0) {
+						meshRenderer->materialId = damagedMaterialID;
+					}
+				}
+				timeSinceLastHurt = 0.0f;
+			}
+		}
+
+		if (!rangerGruntCharacter.isAlive) {
+			ChangeState(AIState::DEATH);
+		}
+	}
+
+}
 
 void RangedAI::Update() {
 
@@ -151,24 +164,6 @@ void RangedAI::Update() {
 	}
 
 	if (!GetOwner().IsActive()) return;
-
-	if (hitTaken && rangerGruntCharacter.lifePoints > 0) {
-
-		if (meshRenderer) {
-			if (damagedMaterialID != 0) {
-				meshRenderer->materialId = damagedMaterialID;
-			}
-		}
-
-		rangerGruntCharacter.lifePoints -= rangerGruntCharacter.damageHit;
-		hitTaken = false;
-
-		timeSinceLastHurt = 0.0f;
-
-		if (rangerGruntCharacter.lifePoints <= 0 && state != AIState::DEATH) {
-			ChangeState(AIState::DEATH);
-		}
-	}
 
 	if (state == AIState::IDLE || state == AIState::RUN || state == AIState::FLEE) {
 		attackTimePool = Max(attackTimePool - Time::GetDeltaTime(), 0.0f);
@@ -205,7 +200,6 @@ void RangedAI::EnterState(AIState newState) {
 			}
 		}
 
-
 		if (aiMovement) aiMovement->Stop();
 		break;
 	case AIState::RUN:
@@ -234,6 +228,9 @@ void RangedAI::EnterState(AIState newState) {
 		} else if (state == AIState::FLEE) {
 			animation->SendTrigger("RunBackwardDeath");
 		}
+		if (shot) {
+			animation->SendTriggerSecondary("ShootDeath");
+		}
 
 		PlayAudio(AudioType::DEATH);
 		agent->RemoveAgentFromCrowd();
@@ -248,7 +245,7 @@ void RangedAI::UpdateState() {
 
 		if (Camera::CheckObjectInsideFrustum(GetOwner().GetChildren()[0])) {
 			if (aiMovement) aiMovement->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), rangerGruntCharacter.fallingSpeed, true);
-			if (ownerTransform->GetGlobalPosition().y < 2.7f + 0e-5f) {
+			if (ownerTransform->GetGlobalPosition().y < 3.f + 0e-5f) {
 				animation->SendTrigger("StartSpawn");
 				ChangeState(AIState::SPAWN);
 			}
@@ -306,29 +303,23 @@ void RangedAI::UpdateState() {
 		}
 		break;
 	case AIState::DEATH:
-		if (dead) {
-			if (dead) {
-				if (rangerGruntCharacter.timeToDie > 0) {
-					rangerGruntCharacter.timeToDie -= Time::GetDeltaTime();
-				} else {
-					if (hudControllerScript) {
-						hudControllerScript->UpdateScore(10);
-					}
-					GameplaySystems::DestroyGameObject(&GetOwner());
+		if (rangerGruntCharacter.destroying) {
+			
+			if (rangerGruntCharacter.timeToDie > 0) {
+				rangerGruntCharacter.timeToDie -= Time::GetDeltaTime();
+			} else {
+				if (hudControllerScript) {
+					hudControllerScript->UpdateScore(10);
 				}
+				GameplaySystems::DestroyGameObject(&GetOwner());
 			}
+			
 		}
 
 		break;
 	default:
 		break;
 	}
-}
-
-void RangedAI::HitDetected(int damage_) {
-	rangerGruntCharacter.damageHit = damage_;
-	hitTaken = true;
-	PlayAudio(AudioType::HIT);
 }
 
 void RangedAI::ChangeState(AIState newState) {
@@ -394,6 +385,8 @@ void RangedAI::OrientateTo(const float3& direction) {
 void RangedAI::ActualShot() {
 	if (shootTrailPrefab) {
 		//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
+		if (!meshObj) return;
+		
 		ComponentBoundingBox* box = meshObj->GetComponent<ComponentBoundingBox>();
 
 		float offsetY = (box->GetWorldAABB().minPoint.y + box->GetWorldAABB().maxPoint.y) / 4;
@@ -413,10 +406,6 @@ void RangedAI::ActualShot() {
 
 	PlayAudio(AudioType::SHOOT);
 
-
-	if (FindsRayToPlayer(true)) {
-		Debug::Log("Player was shot");
-	}
 }
 
 void RangedAI::PlayAudio(AudioType audioType) {

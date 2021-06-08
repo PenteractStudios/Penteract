@@ -98,9 +98,9 @@ void AIMeleeGrunt::Update() {
         if (movementScript->CharacterInAttackRange(player, gruntCharacter.attackRange)) {
             animation->SendTriggerSecondary("RunAttack");
             float3 aux = ownerTransform->GetGlobalPosition() + ownerTransform->GetGlobalRotation().Transform(float3(0, 0, 1)) * 2 + float3(0, 2, 0);
-            if(meleePunch) GameplaySystems::Instantiate(meleePunch, aux, ownerTransform->GetGlobalRotation());
+            if (meleePunch) GameplaySystems::Instantiate(meleePunch, aux, ownerTransform->GetGlobalRotation());
             if (audios[static_cast<int>(AudioType::ATTACK)]) audios[static_cast<int>(AudioType::ATTACK)]->Play();
-            state = AIState::ATTACK;
+            state = AIState::ATTACK;        
         }
         break;
     case AIState::ATTACK:
@@ -109,7 +109,7 @@ void AIMeleeGrunt::Update() {
         break;
     }
 
-    if (!gruntCharacter.isAlive) {
+    if (gruntCharacter.destroying) {
         if (!killSent && winLoseScript != nullptr) {
             winLoseScript->IncrementDeadEnemies();
             killSent = true;
@@ -136,7 +136,7 @@ void AIMeleeGrunt::OnAnimationFinished()
     }    
 
     else if (state == AIState::DEATH) {
-        gruntCharacter.isAlive = false;
+        gruntCharacter.destroying = true;
     }
 
 }
@@ -152,16 +152,16 @@ void AIMeleeGrunt::OnAnimationSecondaryFinished()
 void AIMeleeGrunt::OnCollision(const GameObject& collidedWith)
 {
     if (state != AIState::START && state != AIState::SPAWN) {
-        if (gruntCharacter.lifePoints > 0 && playerController) {
+        if (gruntCharacter.isAlive && playerController) {
             if (collidedWith.name == "FangBullet") {
-                gruntCharacter.lifePoints -= playerController->fangDamage;
+                gruntCharacter.Hit(playerController->fangDamage);
             }
             else if (collidedWith.name == "OnimaruBullet") {
-                gruntCharacter.lifePoints -= playerController->onimaruDamage;
+                gruntCharacter.Hit(playerController->onimaruDamage);
             }
         }
 
-        if (gruntCharacter.lifePoints <= 0) {
+        if (!gruntCharacter.isAlive) {
             if (state == AIState::ATTACK) {
                 animation->SendTrigger("RunDeath");
                 animation->SendTriggerSecondary("AttackDeath");
