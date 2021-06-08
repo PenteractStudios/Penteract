@@ -310,11 +310,6 @@ void RangedAI::UpdateState() {
 	}
 }
 
-void RangedAI::ExitState() {
-
-}
-
-
 void RangedAI::HitDetected(int damage_) {
 	rangerGruntCharacter.damageHit = damage_;
 	hitTaken = true;
@@ -322,7 +317,6 @@ void RangedAI::HitDetected(int damage_) {
 }
 
 void RangedAI::ChangeState(AIState newState) {
-	ExitState();
 	EnterState(newState);
 	state = newState;
 }

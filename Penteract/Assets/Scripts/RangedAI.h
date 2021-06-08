@@ -39,7 +39,6 @@ private:
 	//State machine handling
 	void EnterState(AIState newState);
 	void UpdateState();
-	void ExitState();
 	void ChangeState(AIState newState);
 
 	bool CharacterInSight(const GameObject* character); //Returns true if distance to player is < than searchRadius
@@ -104,7 +103,7 @@ private:
 	float hurtFeedbackTimeDuration = 0.5f; //Time that damaged material will be shown whenever AI is hit
 
 	ComponentMeshRenderer* meshRenderer = nullptr; //Reference to a meshRendererComponent, used for material setting on hurt
-	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)]; //Array of ints used to play audios
+	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr }; //Array of ints used to play audios
 
 };
 
