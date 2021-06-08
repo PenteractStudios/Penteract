@@ -128,16 +128,10 @@ void PlayerController::Start() {
 }
 
 void PlayerController::MoveTo(MovementDirection md) {
-	float modifier = 1.0f;
-	float3 newPosition = transform->GetGlobalPosition();
-	if (Input::GetKeyCode(Input::KEYCODE::KEY_LSHIFT)) {
-		modifier = 2.0f;
-	}
-
 	float movementSpeed = ((fang->IsActive()) ? fangCharacter.movementSpeed : onimaruCharacter.movementSpeed);
-
+	float3 newPosition = transform->GetGlobalPosition() + GetDirection(md);
 	//with navigation
-	newPosition += GetDirection(md) * movementSpeed * modifier;
+	agent->SetMaxSpeed(movementSpeed);
 	agent->SetMoveTarget(newPosition, false);
 }
 
@@ -145,13 +139,16 @@ void PlayerController::LookAtMouse() {
 	if (camera && compCamera) {
 		float2 mousePos = Input::GetMousePositionNormalized();
 		LineSegment ray = compCamera->frustum.UnProjectLineSegment(mousePos.x, mousePos.y);
-		Plane p = Plane(transform->GetGlobalPosition(), float3(0, 1, 0));
+		float3 planeTransform = transform->GetGlobalPosition();
+		if (fang->IsActive() && fangGunTransform) planeTransform = fangGunTransform->GetGlobalPosition();
+		else if (!fang->IsActive() && onimaruGunTransform) planeTransform = onimaruGunTransform->GetGlobalPosition();
+		Plane p = Plane(planeTransform, float3(0, 1, 0));
 		facePointDir = float3(0, 0, 0);
 		facePointDir = p.ClosestPoint(ray) - (transform->GetGlobalPosition());
-		Quat quat = transform->GetRotation();
+		Quat quat = transform->GetGlobalRotation();
 		float angle = Atan2(facePointDir.x, facePointDir.z);
 		Quat rotation = quat.RotateAxisAngle(float3(0, 1, 0), angle);
-		transform->SetRotation(rotation);
+		transform->SetGlobalRotation(rotation);
 	}
 }
 
@@ -308,7 +305,7 @@ void PlayerController::SetNoCooldown(bool status) {
 	noCooldownMode = status;
 }
 
-bool PlayerController::IsDead(){
+bool PlayerController::IsDead() {
 	return (!fangCharacter.isAlive || !onimaruCharacter.isAlive);
 }
 
@@ -320,44 +317,39 @@ void PlayerController::CheckCoolDowns() {
 	else {
 		switchCooldownRemaining -= Time::GetDeltaTime();
 	}
-
-	if (fang->IsActive()) {
-		//Dash Cooldown
-		if (noCooldownMode || dashCooldownRemaining <= 0.f) {
-			dashCooldownRemaining = 0.f;
-			dashInCooldown = false;
-			dashMovementDirection = MovementDirection::NONE;
-		}
-		else {
-			dashCooldownRemaining -= Time::GetDeltaTime();
-		}
-		//Dash duration
-		if (dashRemaining <= 0.f) {
-			dashRemaining = 0.f;
-			dashing = false;
-			agent->SetMaxSpeed(fangCharacter.movementSpeed);
-		}
-		else {
-			dashRemaining -= Time::GetDeltaTime();
-		}
-
-		if (fangAttackCooldownRemaining <= 0.f) {
-			fangAttackCooldownRemaining = 0.f;
-			shooting = false;
-		}
-		else {
-			fangAttackCooldownRemaining -= Time::GetDeltaTime();
-		}
+	//Dash Cooldown
+	if (noCooldownMode || dashCooldownRemaining <= 0.f) {
+		dashCooldownRemaining = 0.f;
+		dashInCooldown = false;
+		dashMovementDirection = MovementDirection::NONE;
 	}
-	if (onimaru->IsActive()) {
-		agent->SetMaxSpeed(onimaruCharacter.movementSpeed);
-		if (onimaruAttackCooldownRemaining <= 0.f) {
-			onimaruAttackCooldownRemaining = 0.f;
-			shooting = false;
-		}
-		else {
-			onimaruAttackCooldownRemaining -= Time::GetDeltaTime();
-		}
+	else {
+		dashCooldownRemaining -= Time::GetDeltaTime();
+	}
+	//Dash duration
+	if (dashRemaining <= 0.f) {
+		dashRemaining = 0.f;
+		dashing = false;
+		agent->SetMaxSpeed(fangCharacter.movementSpeed);
+	}
+	else {
+		dashRemaining -= Time::GetDeltaTime();
+	}
+
+	if (fangAttackCooldownRemaining <= 0.f) {
+		fangAttackCooldownRemaining = 0.f;
+		shooting = false;
+	}
+	else {
+		fangAttackCooldownRemaining -= Time::GetDeltaTime();
+	}
+
+	if (onimaruAttackCooldownRemaining <= 0.f) {
+		onimaruAttackCooldownRemaining = 0.f;
+		shooting = false;
+	}
+	else {
+		onimaruAttackCooldownRemaining -= Time::GetDeltaTime();
 	}
 }
 
@@ -508,7 +500,7 @@ void PlayerController::UpdateCameraPosition() {
 	if (useSmoothCamera) {
 		smoothedPosition = float3::Lerp(cameraTransform->GetGlobalPosition(), desiredPosition, smoothCameraSpeed * Time::GetDeltaTime());
 	}
-	
+
 	cameraTransform->SetGlobalPosition(smoothedPosition);
 }
 
@@ -552,7 +544,8 @@ void PlayerController::Update() {
 			if (Input::GetMouseButtonRepeat(0)) Shoot();
 		}
 		PlayAnimation(md);
-	} else {
+	}
+	else {
 		agent->RemoveAgentFromCrowd();
 	}
 }

@@ -3,8 +3,10 @@
 #include "Resources/ResourcePrefab.h"
 #include "GameplaySystems.h"
 #include "GameObject.h"
+#include "WinLose.h"
 
 EXPOSE_MEMBERS(EnemySpawnPoint) {
+	MEMBER(MemberType::GAME_OBJECT_UID, winUID),
 	MEMBER(MemberType::INT, amountOfEnemies),
 	MEMBER(MemberType::INT, offset),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, prefabId),
@@ -15,6 +17,10 @@ GENERATE_BODY_IMPL(EnemySpawnPoint);
 void EnemySpawnPoint::Start() {
 	gameObject = &GetOwner();
 	prefab = GameplaySystems::GetResource<ResourcePrefab>(prefabId);
+	winCon = GameplaySystems::GetGameObject(winUID);
+	if (winCon != nullptr) {
+		winConditionScript = GET_SCRIPT(winCon, WinLose);
+	}
 }
 
 void EnemySpawnPoint::Update() {
