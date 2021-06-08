@@ -14,7 +14,7 @@ GENERATE_BODY_IMPL(PlayerDeath);
 
 void PlayerDeath::Start() {
 	player = GameplaySystems::GetGameObject(playerUID);
-	playerController = GET_SCRIPT(player, PlayerController);
+	if(player) playerController = GET_SCRIPT(player, PlayerController);
 }
 
 void PlayerDeath::Update() {
