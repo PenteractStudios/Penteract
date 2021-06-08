@@ -20,9 +20,9 @@
                     1.0
                 ],
                 "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
+                    2.0,
+                    2.0,
+                    2.0
                 ],
                 "LocalEulerAngles": [
                     -0.0,
@@ -31,17 +31,21 @@
                 ]
             },
             {
-                "Type": "Trail",
-                "Active": true,
-                "TextureId": 6070033773294191873,
-                "MaxVertices": 1500,
-                "TrailQuads": 50
-            },
-            {
                 "Type": "Script",
                 "Active": true,
                 "Script": 8962533977559074741,
-                "Values": null
+                "Values": [
+                    {
+                        "Name": "speed",
+                        "Type": "Int",
+                        "Value": 50
+                    },
+                    {
+                        "Name": "life",
+                        "Type": "Float",
+                        "Value": 2.0
+                    }
+                ]
             },
             {
                 "Type": "SphereCollider",
@@ -56,6 +60,31 @@
                     0.0
                 ],
                 "freezeRotation": false
+            },
+            {
+                "Type": "Billboard",
+                "Active": true,
+                "BillboardType": 0,
+                "TextureId": 10401544034748941721,
+                "Ytiles": 2,
+                "Xtiles": 5,
+                "AnimationSpeed": 10.0,
+                "InitColor": [
+                    1.0,
+                    0.0,
+                    0.0
+                ],
+                "FinalColor": [
+                    1.0,
+                    0.0,
+                    0.0
+                ],
+                "StartTransition": 0.0,
+                "EndTransition": 0.0,
+                "FlipTexture": [
+                    false,
+                    false
+                ]
             }
         ],
         "Children": null

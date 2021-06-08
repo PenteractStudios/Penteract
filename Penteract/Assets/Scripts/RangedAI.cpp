@@ -11,28 +11,29 @@
 #include "Components/ComponentAnimation.h"
 #include "Components/ComponentMeshRenderer.h"
 #include "AIMovement.h"
+#include "RangerProjectileScript.h"
 #include "Resources/ResourcePrefab.h"
 
 //clang-format off
 EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
-	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
-	MEMBER(MemberType::GAME_OBJECT_UID, meshUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
-	MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
-	MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),
-	MEMBER(MemberType::INT, rangerGruntCharacter.lifePoints),
-	MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
-	MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
-	MEMBER(MemberType::FLOAT, rangerGruntCharacter.timeToDie),
-	MEMBER(MemberType::FLOAT, attackSpeed),
-	MEMBER(MemberType::FLOAT, fleeingRange),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, trailPrefabUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
-	MEMBER(MemberType::GAME_OBJECT_UID, hudControllerObjUID),
-	MEMBER(MemberType::FLOAT, timeSinceLastHurt),
-	MEMBER(MemberType::FLOAT, approachOffset) //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
+		MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
+		MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
+		MEMBER(MemberType::GAME_OBJECT_UID, meshUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
+		MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
+		MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),
+		MEMBER(MemberType::INT, rangerGruntCharacter.lifePoints),
+		MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
+		MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
+		MEMBER(MemberType::FLOAT, rangerGruntCharacter.timeToDie),
+		MEMBER(MemberType::FLOAT, attackSpeed),
+		MEMBER(MemberType::FLOAT, fleeingRange),
+		MEMBER(MemberType::PREFAB_RESOURCE_UID, trailPrefabUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
+		MEMBER(MemberType::GAME_OBJECT_UID, hudControllerObjUID),
+		MEMBER(MemberType::FLOAT, timeSinceLastHurt),
+		MEMBER(MemberType::FLOAT, approachOffset) //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
 
 };//clang-format on
 
@@ -398,9 +399,18 @@ void RangedAI::ActualShot() {
 
 		float offsetY = (box->GetWorldAABB().minPoint.y + box->GetWorldAABB().maxPoint.y) / 4;
 
-		GameplaySystems::Instantiate(shootTrailPrefab, GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + float3(0, offsetY, 0), GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation());
-		float3 frontTrail = GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
-		GameplaySystems::Instantiate(shootTrailPrefab, GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + float3(0, offsetY, 0), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation()));
+		GameObject* projectileInstance(GameplaySystems::Instantiate(shootTrailPrefab, GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + float3(0, offsetY, 0), Quat(0, 0, 0, 0)));
+
+		if (projectileInstance) {
+			RangerProjectileScript* rps = GET_SCRIPT(projectileInstance, RangerProjectileScript);
+			if (rps && ownerTransform) {
+				rps->SetRangerDirection(ownerTransform->GetGlobalRotation());
+			}
+		}
+
+		//GameplaySystems::Instantiate(shootTrailPrefab, GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + float3(0, offsetY, 0), GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation());
+		//float3 frontTrail = GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
+		//GameplaySystems::Instantiate(shootTrailPrefab, GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + float3(0, offsetY, 0), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation()));
 	}
 
 	attackTimePool = 1.0f / attackSpeed;
