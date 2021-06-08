@@ -126,26 +126,28 @@ void AIMeleeGrunt::OnAnimationFinished()
 
 void AIMeleeGrunt::OnCollision(const GameObject& collidedWith)
 {
-    if (gruntCharacter.lifePoints > 0 && playerController) {
-        if (collidedWith.name == "FangBullet") {
-            gruntCharacter.lifePoints -= playerController->fangDamage;
+    if (state != AIState::START && state != AIState::SPAWN) {
+        if (gruntCharacter.lifePoints > 0 && playerController) {
+            if (collidedWith.name == "FangBullet") {
+                gruntCharacter.lifePoints -= playerController->fangDamage;
+            }
+            else if (collidedWith.name == "OnimaruBullet") {
+                gruntCharacter.lifePoints -= playerController->onimaruDamage;
+            }
         }
-        else if (collidedWith.name == "OnimaruBullet") {
-            gruntCharacter.lifePoints -= playerController->onimaruDamage;
-        }
-    }
 
-    if (gruntCharacter.lifePoints <= 0) {
-        if (state == AIState::ATTACK) {
-            animation->SendTrigger("AttackDeath");
+        if (gruntCharacter.lifePoints <= 0) {
+            if (state == AIState::ATTACK) {
+                animation->SendTrigger("AttackDeath");
+            }
+            else if (state == AIState::IDLE) {
+                animation->SendTrigger("IdleDeath");
+            }
+            else if (state == AIState::RUN) {
+                animation->SendTrigger("RunDeath");
+            }
+            agent->RemoveAgentFromCrowd();
+            state = AIState::DEATH;
         }
-        else if (state == AIState::IDLE) {
-            animation->SendTrigger("IdleDeath");
-        }
-        else if (state == AIState::RUN) {
-            animation->SendTrigger("RunDeath");
-        }
-        agent->RemoveAgentFromCrowd();
-        state = AIState::DEATH;
     }
 }
