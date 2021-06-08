@@ -33,6 +33,7 @@ public:
 	void Update() override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
+	//void OnCollision(const GameObject& collidedWith) override; //This is commented until merge with collisions
 	void HitDetected(int damage_ = 1);
 	void ShootPlayerInRange(); //Sets in motion the shooting at the player, if found and close enough
 
@@ -42,10 +43,8 @@ private:
 	void UpdateState();
 	void ChangeState(AIState newState);
 
-	bool CharacterInSight(const GameObject* character);								//Returns true if distance to player is < than searchRadius
 	bool CharacterInRange(const GameObject* character, float range, bool useRange); //Returns true if distance to player is < than radius
 	bool FindsRayToPlayer(bool useForward);											//Returns true if raycasting towards player finds a hit target, later on this will also check if the hit is actually player and not a wall
-	bool CharacterTooClose(const GameObject* character);							//Returns true if distance to player is < than fleeingRadius
 	void OrientateTo(const float3& direction);										//Makes character look in a particular direcion
 	void ActualShot();																//Generates projectile prefab instance 
 	void PlayAudio(AudioType audioType);											//Plays audio (if not null)
@@ -95,7 +94,7 @@ private:
 
 	bool hitTaken = false;				//Bool used to make sure hurt event happen only once, this should probably be inside Enemy script
 	bool shot = false;					//Bool used to make sure shooting event happens only once whenever attackTimePool is low enough
-	
+
 	ComponentAnimation* animation = nullptr;		//Refernece to  animatino component
 	ComponentTransform* ownerTransform = nullptr;	//Reference to owner transform componenet
 
@@ -104,7 +103,7 @@ private:
 	float hurtFeedbackTimeDuration = 0.5f;	//Time that damaged material will be shown whenever AI is hit
 
 	ComponentMeshRenderer* meshRenderer = nullptr;	//Reference to a meshRendererComponent, used for material setting on hurt
-	
+
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr }; //Array of ints used to play audios
 
 };

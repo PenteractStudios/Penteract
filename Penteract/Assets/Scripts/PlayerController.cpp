@@ -263,8 +263,7 @@ void PlayerController::Shoot() {
 			} else {
 				RangedAI* rangedAI = GET_SCRIPT(hitGo->GetParent(), RangedAI);
 				if (rangedAI) {
-					if (fang->IsActive()) rangedAI->HitDetected(3);
-					else rangedAI->HitDetected();
+					rangedAI->HitDetected((fang->IsActive() ? fangCharacter.damageHit : onimaruCharacter.damageHit) * overpowerMode);
 				}
 			}
 		}

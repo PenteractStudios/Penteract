@@ -102,7 +102,6 @@ void RangedAI::Start() {
 void RangedAI::OnAnimationFinished() {
 	if (animation == nullptr) return;
 
-
 	if (state == AIState::START) {
 		ChangeState(AIState::SPAWN);
 	} else if (state == AIState::SPAWN) {
@@ -122,6 +121,24 @@ void RangedAI::OnAnimationSecondaryFinished() {
 	}
 
 }
+
+//This is commented until merge with collisions
+//
+//void RangedAI::OnCollision(const GameObject& collidedWith) {
+//	if (state == AIState::START || state != AIState::SPAWN)return;
+//	if (rangerGruntCharacter.lifePoints > 0 && playerController) {
+//		if (collidedWith.name == "FangBullet") {
+//			rangerGruntCharacter.lifePoints -= playerController->fangDamage;
+//		} else if (collidedWith.name == "OnimaruBullet") {
+//			rangerGruntCharacter.lifePoints -= playerController->onimaruDamage;
+//		}
+//	}
+//
+//	if (rangerGruntCharacter.lifePoints <= 0) {
+//		ChangeState(AIState::DEATH);
+//	}
+//
+//}
 
 void RangedAI::Update() {
 
@@ -176,9 +193,6 @@ void RangedAI::Update() {
 void RangedAI::EnterState(AIState newState) {
 	switch (newState) {
 	case AIState::START:
-
-
-
 		break;
 	case AIState::SPAWN:
 		PlayAudio(AudioType::SPAWN);
@@ -237,54 +251,56 @@ void RangedAI::UpdateState() {
 			if (aiMovement) aiMovement->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), rangerGruntCharacter.fallingSpeed, true);
 			if (ownerTransform->GetGlobalPosition().y < 2.7f + 0e-5f) {
 				animation->SendTrigger("StartSpawn");
-				if (audios[static_cast<int>(AudioType::SPAWN)]) audios[static_cast<int>(AudioType::SPAWN)]->Play();
-				state = AIState::SPAWN;
+				ChangeState(AIState::SPAWN);
 			}
 		}
 		break;
 	case AIState::SPAWN:
 		break;
 	case AIState::IDLE:
-		//Shooting will probably happen here
 		if (player) {
-			if (CharacterInSight(player)) {
-				if (CharacterTooClose(player)) {
-					ChangeState(AIState::FLEE);
-					break;
-				}
+			if (aiMovement) {
+				if (aiMovement->CharacterInSight(player, rangerGruntCharacter.searchRadius)) {
+					if (aiMovement->CharacterInSight(player, fleeingRange)) {
+						ChangeState(AIState::FLEE);
+						break;
+					}
 
-				if (!CharacterInRange(player, rangerGruntCharacter.attackRange, true)) {
-					ChangeState(AIState::RUN);
-					break;
-				}
+					if (!CharacterInRange(player, rangerGruntCharacter.attackRange, true)) {
+						ChangeState(AIState::RUN);
+						break;
+					}
 
-				if (FindsRayToPlayer(false)) {
-					OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
-				} else {
-					ChangeState(AIState::RUN);
+					if (FindsRayToPlayer(false)) {
+						OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
+					} else {
+						ChangeState(AIState::RUN);
+					}
 				}
 			}
 		}
 		break;
 	case AIState::RUN:
-		if (CharacterInSight(player)) {
-			OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
+		if (aiMovement) {
+			if (aiMovement->CharacterInSight(player, rangerGruntCharacter.searchRadius)) {
+				OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
 
-			if (!CharacterInRange(player, rangerGruntCharacter.attackRange - approachOffset, true) || !FindsRayToPlayer(false)) {
-				if (!CharacterTooClose(player)) {
-					if (aiMovement) aiMovement->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), static_cast<int>(rangerGruntCharacter.movementSpeed), false);
+				if (!CharacterInRange(player, rangerGruntCharacter.attackRange - approachOffset, true) || !FindsRayToPlayer(false)) {
+					if (!aiMovement->CharacterInSight(player, fleeingRange)) {
+						if (aiMovement) aiMovement->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), static_cast<int>(rangerGruntCharacter.movementSpeed), false);
+					} else {
+						ChangeState(AIState::FLEE);
+					}
 				} else {
-					ChangeState(AIState::FLEE);
+					ChangeState(AIState::IDLE);
 				}
-			} else {
-				ChangeState(AIState::IDLE);
 			}
 		}
 		break;
 	case AIState::FLEE:
 		OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
 
-		if (CharacterTooClose(player)) {
+		if (aiMovement->CharacterInSight(player, fleeingRange)) {
 			if (aiMovement) aiMovement->Flee(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), static_cast<int>(rangerGruntCharacter.movementSpeed), false);
 		} else {
 			ChangeState(AIState::IDLE);
@@ -321,15 +337,6 @@ void RangedAI::ChangeState(AIState newState) {
 	state = newState;
 }
 
-bool RangedAI::CharacterInSight(const GameObject* character) {
-	ComponentTransform* target = character->GetComponent<ComponentTransform>();
-	if (target) {
-		float3 posTarget = target->GetGlobalPosition();
-		return posTarget.Distance(ownerTransform->GetGlobalPosition()) < rangerGruntCharacter.searchRadius;
-	}
-
-	return false;
-}
 
 bool RangedAI::CharacterInRange(const GameObject* character, float range, bool useRange) {
 
@@ -379,11 +386,6 @@ bool RangedAI::FindsRayToPlayer(bool useForward) {
 	GameObject* hitGo = Physics::Raycast(start, start + dir * rangerGruntCharacter.attackRange, mask);
 
 	return hitGo != nullptr;
-}
-
-bool RangedAI::CharacterTooClose(const GameObject* character) {
-
-	return CharacterInRange(character, fleeingRange, true);
 }
 
 void RangedAI::OrientateTo(const float3& direction) {
