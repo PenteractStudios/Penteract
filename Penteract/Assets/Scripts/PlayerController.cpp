@@ -23,35 +23,35 @@
 EXPOSE_MEMBERS(PlayerController) {
 	// Add members here to expose them to the engine. Example:
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
-		MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
-		MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruBulletUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangGunUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruParticleUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, switchAudioSourceUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, dashAudioSourceUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
-		MEMBER(MemberType::FLOAT, distanceRayCast),
-		MEMBER(MemberType::FLOAT, switchCooldown),
-		MEMBER(MemberType::FLOAT, dashCooldown),
-		MEMBER(MemberType::FLOAT, dashSpeed),
-		MEMBER(MemberType::FLOAT, dashDuration),
-		MEMBER(MemberType::FLOAT, cameraOffsetZ),
-		MEMBER(MemberType::FLOAT, cameraOffsetY),
-		MEMBER(MemberType::FLOAT, cameraOffsetX),
-		MEMBER(MemberType::INT, fangCharacter.lifePoints),
-		MEMBER(MemberType::FLOAT, fangCharacter.movementSpeed),
-		MEMBER(MemberType::INT, fangCharacter.damageHit),
-		MEMBER(MemberType::FLOAT, fangCharacter.attackSpeed),
-		MEMBER(MemberType::INT, onimaruCharacter.lifePoints),
-		MEMBER(MemberType::FLOAT, onimaruCharacter.movementSpeed),
-		MEMBER(MemberType::INT, onimaruCharacter.damageHit),
-		MEMBER(MemberType::FLOAT, onimaruCharacter.attackSpeed),
-		MEMBER(MemberType::BOOL, useSmoothCamera),
-		MEMBER(MemberType::FLOAT, smoothCameraSpeed)
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruBulletUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangGunUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruParticleUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
+	MEMBER(MemberType::FLOAT, distanceRayCast),
+	MEMBER(MemberType::FLOAT, switchCooldown),
+	MEMBER(MemberType::FLOAT, dashCooldown),
+	MEMBER(MemberType::FLOAT, dashSpeed),
+	MEMBER(MemberType::FLOAT, dashDuration),
+	MEMBER(MemberType::FLOAT, cameraOffsetZ),
+	MEMBER(MemberType::FLOAT, cameraOffsetY),
+	MEMBER(MemberType::FLOAT, cameraOffsetX),
+	MEMBER(MemberType::INT, fangCharacter.lifePoints),
+	MEMBER(MemberType::FLOAT, fangCharacter.movementSpeed),
+	MEMBER(MemberType::INT, fangCharacter.damageHit),
+	MEMBER(MemberType::FLOAT, fangCharacter.shootCooldown),
+	MEMBER(MemberType::FLOAT, fangCharacter.attackSpeed),
+	MEMBER(MemberType::INT, onimaruCharacter.lifePoints),
+	MEMBER(MemberType::FLOAT, onimaruCharacter.movementSpeed),
+	MEMBER(MemberType::INT, onimaruCharacter.damageHit),
+	MEMBER(MemberType::FLOAT, onimaruCharacter.shootCooldown),
+	MEMBER(MemberType::FLOAT, onimaruCharacter.attackSpeed),
+	MEMBER(MemberType::BOOL, useSmoothCamera),
+	MEMBER(MemberType::FLOAT, smoothCameraSpeed)
 };
 
 GENERATE_BODY_IMPL(PlayerController);
@@ -74,7 +74,6 @@ void PlayerController::Start() {
 		if (transform) {
 			initialPosition = transform->GetGlobalPosition();
 		}
-		shootAudioSource = player->GetComponent<ComponentAudioSource>();
 	}
 	if (camera) {
 		compCamera = camera->GetComponent<ComponentCamera>();
@@ -110,20 +109,21 @@ void PlayerController::Start() {
 	if (onimaruParticle) {
 		onimaruCompParticle = onimaruParticle->GetComponent<ComponentParticleSystem>();
 	}
-	GameObject* aux = GameplaySystems::GetGameObject(switchAudioSourceUID);
-	if (aux) {
-		switchAudioSource = aux->GetComponent<ComponentAudioSource>();
-	}
-	aux = GameplaySystems::GetGameObject(dashAudioSourceUID);
-	if (aux) {
-		dashAudioSource = aux->GetComponent<ComponentAudioSource>();
-	}
+	
 	firstTime = true;
 
 	agent = GetOwner().GetComponent<ComponentAgent>();
 	if (agent) {
 		agent->SetMaxSpeed(fangCharacter.movementSpeed);
 		agent->SetMaxAcceleration(MAX_ACCELERATION);
+	}
+
+	//Get audio sources
+	int i = 0;
+
+	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
+		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
+		i++;
 	}
 }
 
@@ -166,8 +166,8 @@ void PlayerController::InitDash(MovementDirection md) {
 		dashInCooldown = true;
 		dashing = true;
 		agent->SetMaxSpeed(dashSpeed);
-		if (shootAudioSource) {
-			dashAudioSource->Play();
+		if (audios[static_cast<int>(AudioType::DASH)]) {
+			audios[static_cast<int>(AudioType::DASH)]->Play();
 		}
 		else {
 			Debug::Log(AUDIOSOURCE_NULL_MSG);
@@ -198,7 +198,9 @@ void PlayerController::SwitchCharacter() {
 
 	if (CanSwitch()) {
 		switchInCooldown = true;
-		switchAudioSource->Play();
+		if (audios[static_cast<int>(AudioType::SWITCH)]) {
+			audios[static_cast<int>(AudioType::SWITCH)]->Play();
+		}
 		if (fang->IsActive()) {
 			fang->Disable();
 			onimaru->Enable();
@@ -224,16 +226,15 @@ void PlayerController::Shoot() {
 	ComponentTransform* transform = GetOwner().GetComponent<ComponentTransform>();
 
 	if (CanShoot()) {
-		if (shootAudioSource) {
-			shootAudioSource->Play();
-		}
-		else {
-			Debug::Log(AUDIOSOURCE_NULL_MSG);
-		}
-
 		shooting = true;
 		float3 start;
 		if (fang->IsActive()) {
+			if (audios[static_cast<int>(AudioType::SHOOT)]) {
+				audios[static_cast<int>(AudioType::SHOOT)]->Play();
+			}
+			else {
+				Debug::Log(AUDIOSOURCE_NULL_MSG);
+			}
 			fangAttackCooldownRemaining = 1.f / fangCharacter.attackSpeed;
 			if (fangTrail) {
 				//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
@@ -251,7 +252,12 @@ void PlayerController::Shoot() {
 			start = fangGunTransform->GetGlobalPosition();
 		}
 		else {
-			//TODO: SUB WITH ONIMARU SHOOT
+			if (audios[static_cast<int>(AudioType::SHOOT)]) {
+				audios[static_cast<int>(AudioType::SHOOT)]->Play();
+			}
+			else {
+				Debug::Log(AUDIOSOURCE_NULL_MSG);
+			}
 			onimaruAttackCooldownRemaining = 1.f / onimaruCharacter.attackSpeed;
 			if (onimaruTrail) {
 				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
@@ -276,7 +282,20 @@ void PlayerController::Shoot() {
 
 void PlayerController::HitDetected(int damage) {
 	if (!invincibleMode) {
-		fang->IsActive() ? fangCharacter.Hit(damage) : onimaruCharacter.Hit(damage);
+		if (fang->IsActive()) {
+			fangCharacter.Hit(damage);
+			if (audios[static_cast<int>(AudioType::FANGHIT)]) audios[static_cast<int>(AudioType::FANGHIT)]->Play();
+		}
+		else {
+			onimaruCharacter.Hit(damage);
+			if (audios[static_cast<int>(AudioType::ONIHIT)]) audios[static_cast<int>(AudioType::ONIHIT)]->Play();
+		}
+	}
+	if (!fangCharacter.isAlive && fang->IsActive()) {
+		if (audios[static_cast<int>(AudioType::FANGDEATH)]) audios[static_cast<int>(AudioType::FANGDEATH)]->Play();
+	}
+	else if (!onimaruCharacter.isAlive && onimaru->IsActive()) {
+		if (audios[static_cast<int>(AudioType::ONIDEATH)]) audios[static_cast<int>(AudioType::ONIDEATH)]->Play();
 	}
 	hitTaken = !invincibleMode;
 }
