@@ -3,16 +3,21 @@
 class Character
 {
 public:
-
 	Character() {}
 
-	void Hit(int damage);
+	void Hit(int damage_);
+	void Recover(int recoveryLife_);
+
+	void SetTotalLifePoints(int totalLifePoints_);
+	void SetDamageHit(int damageHit_);
 
 public:
-
 	bool isAlive = true;
 
-	int lifeSlots = 5;
+	int lifePoints = 1;
+	float movementSpeed = 1.0f;
+	int damageHit = 1;
 
+private:
+	int totalLifePoints = 1;
 };
-

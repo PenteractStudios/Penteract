@@ -2,6 +2,8 @@
 
 #include "Scripting/Script.h"
 
+class PlayerController;
+
 class PlayerDeath : public Script
 {
 	GENERATE_BODY(PlayerDeath);
@@ -11,6 +13,7 @@ public:
 	void Start() override;
 	void Update() override;
 	void OnAnimationFinished() override;
+	void OnAnimationSecondaryFinished() override;
 
 public:
 
@@ -18,6 +21,7 @@ public:
 	UID sceneUID = 0;
 
 	GameObject* player = nullptr;
+	PlayerController* playerController = nullptr;
 
 	bool dead = false;
 
