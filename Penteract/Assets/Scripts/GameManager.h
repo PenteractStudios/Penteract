@@ -1,9 +1,10 @@
 #pragma once
 
+#include "GameSingleton.h"
+
 #include "Scripting/Script.h"
 
-// Class to control all the principal variables of the game
-class GameManager : public Script
+class GameManager : public Script, public GameSingleton
 {
 	GENERATE_BODY(GameManager);
 
@@ -13,12 +14,8 @@ public:
 	void Update() override;
 
 public:
-	GameObject* gameManager = nullptr;
 	UID gameManagerUID = 0;
-	// Maybe we have to use Getters & Setters
-	float volumeScene = 0.2f;
 
-private:
-	void Awake();
+	// Put the same values that in GameSingleton.h
+	float volumeScene = 0.f;
 };
-

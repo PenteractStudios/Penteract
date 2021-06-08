@@ -29,7 +29,7 @@ void VolumeControl::Start() {
 			// To control volume between scenes in GameManager
 			if (gameManager) {
 				gameManagerController = GET_SCRIPT(gameManager, GameManager);
-				volume = gameManagerController->volumeScene;
+				volume = GameManager::GetInstance()->GetVolumeScene();
 				comSlider->ChangeNormalizedValue(volume);
 				comSlider->OnValueChanged();
 			}
@@ -57,7 +57,7 @@ void VolumeControl::OnValueChanged() {
 	// To control volume between scenes in GameManager
 	if (gameManager) {
 		gameManagerController = GET_SCRIPT(gameManager, GameManager);
-		gameManagerController->volumeScene = volume;
+		GameManager::GetInstance()->SetVolumeScene(volume);
 	}
 
 	comAudioLis->SetAudioVolume(volume);
