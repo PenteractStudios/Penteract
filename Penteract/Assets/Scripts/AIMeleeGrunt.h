@@ -10,7 +10,7 @@ class ComponentAnimation;
 class ComponentTransform;
 class ComponentAgent;
 class ComponentAudioSource;
-
+class ResourcePrefab;
 class HUDController;
 class PlayerController;
 class AIMovement;
@@ -34,18 +34,20 @@ public:
 	void Update() override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
-	void HitDetected(int damage_ = 1);
-	void On
+	//void HitDetected(int damage_ = 1);
+	void OnCollision(const GameObject& collidedWith) override;
 
 public:
 
 	UID playerUID = 0;
 	UID canvasUID = 0;
 	UID winConditionUID = 0;
+	UID meleePunchUID = 0;
 
 	GameObject* player = nullptr;
 	GameObject* spawn = nullptr;
 	ComponentAgent* agent = nullptr;
+	ResourcePrefab* meleePunch = nullptr;
 	WinLose* winLoseScript = nullptr;
 
 	Enemy gruntCharacter = Enemy(5, 8.0f, 1, 30, 40.f, 5.f, 5.f);

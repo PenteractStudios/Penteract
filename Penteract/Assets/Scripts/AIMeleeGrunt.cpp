@@ -18,7 +18,8 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::INT, gruntCharacter.fallingSpeed),
 	MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, gruntCharacter.attackRange),
-	MEMBER(MemberType::FLOAT, gruntCharacter.timeToDie)
+	MEMBER(MemberType::FLOAT, gruntCharacter.timeToDie), 
+    MEMBER(MemberType::PREFAB_RESOURCE_UID, meleePunchUID)
 };
 
 GENERATE_BODY_IMPL(AIMeleeGrunt);
@@ -28,7 +29,7 @@ void AIMeleeGrunt::Start() {
 	if (player) {
 		playerController = GET_SCRIPT(player, PlayerController);
 	}
-
+    meleePunch = GameplaySystems::GetResource<ResourcePrefab>(meleePunchUID);
 	GameObject* winLose = GameplaySystems::GetGameObject(winConditionUID);
 
 	if (winLose) {
@@ -96,6 +97,8 @@ void AIMeleeGrunt::Update() {
         movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), gruntCharacter.movementSpeed, true);
         if (movementScript->CharacterInAttackRange(player, gruntCharacter.attackRange)) {
             animation->SendTriggerSecondary("RunAttack");
+            float3 aux = ownerTransform->GetGlobalPosition() + ownerTransform->GetGlobalRotation().Transform(float3(0, 0, 1)) * 2 + float3(0, 2, 0);
+            if(meleePunch) GameplaySystems::Instantiate(meleePunch, aux, ownerTransform->GetGlobalRotation());
             if (audios[static_cast<int>(AudioType::ATTACK)]) audios[static_cast<int>(AudioType::ATTACK)]->Play();
             state = AIState::ATTACK;
         }

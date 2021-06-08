@@ -31,8 +31,6 @@ EXPOSE_MEMBERS(PlayerController) {
 		MEMBER(MemberType::GAME_OBJECT_UID, fangGunUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, onimaruParticleUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, switchAudioSourceUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, dashAudioSourceUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
 		MEMBER(MemberType::FLOAT, distanceRayCast),
 		MEMBER(MemberType::FLOAT, switchCooldown),
@@ -98,6 +96,7 @@ void PlayerController::Start() {
 	}
 	if (onimaru) {
 		onimaru->Disable();
+		onimaru->GetComponent<ComponentCapsuleCollider>()->Disable();
 		onimaruGun = GameplaySystems::GetGameObject(fangGunUID);
 		if (onimaruGun) {
 			onimaruGunTransform = onimaruGun->GetComponent<ComponentTransform>();
@@ -207,11 +206,15 @@ void PlayerController::SwitchCharacter() {
 			fang->Disable();
 			onimaru->Enable();
 			hudControllerScript->UpdateHP(onimaruCharacter.lifePoints, fangCharacter.lifePoints);
+			onimaru->GetComponent<ComponentCapsuleCollider>()->Enable();
+			fang->GetComponent<ComponentCapsuleCollider>()->Disable();
 		}
 		else {
 			onimaru->Disable();
 			fang->Enable();
 			hudControllerScript->UpdateHP(fangCharacter.lifePoints, onimaruCharacter.lifePoints);
+			onimaru->GetComponent<ComponentCapsuleCollider>()->Disable();
+			fang->GetComponent<ComponentCapsuleCollider>()->Enable();
 		}
 		switchCooldownRemaining = switchCooldown;
 		if (hudControllerScript) {
@@ -242,8 +245,8 @@ void PlayerController::Shoot() {
 				//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
 				//fangGun->GetComponent<ComponentParticleSystem>()->Play();
 				GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
-				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
-				GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
+				//float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
+				//GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
 			}
 			if (rightShot) {
 				fangAnimation->SendTriggerSecondary(fangAnimation->GetCurrentState()->name + PlayerController::states[12]);				
@@ -263,8 +266,8 @@ void PlayerController::Shoot() {
 			onimaruAttackCooldownRemaining = 1.f / onimaruCharacter.attackSpeed;
 			if (onimaruTrail) {
 				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
-				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
-				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
+				//float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
+				//GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
 			}			
 
 			start = onimaruGunTransform->GetGlobalPosition();
@@ -525,6 +528,7 @@ void PlayerController::TakeDamage(bool ranged) {
 	if (!fang || !onimaru || invincibleMode) return;
 	if (fang->IsActive()) {
 		fangCharacter.Hit((ranged) ? rangedDamageTaken : meleeDamageTaken);
+		Debug::Log("Man pegaoh");
 	}
 	else {
 		onimaruCharacter.Hit((ranged) ? rangedDamageTaken : meleeDamageTaken);
