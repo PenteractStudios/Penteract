@@ -34,83 +34,77 @@ public:
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
 	void HitDetected(int damage_ = 1);
-	void ShootPlayerInRange();
+	void ShootPlayerInRange(); //Sets in motion the shooting at the player, if found and close enough
 private:
-	//State handling
+	//State machine handling
 	void EnterState(AIState newState);
 	void UpdateState();
 	void ExitState();
 	void ChangeState(AIState newState);
 
-	bool CharacterInSight(const GameObject* character);
-	bool CharacterInRange(const GameObject* character, float range, bool useRange);
-	bool FindsRayToPlayer(bool useForward);
-	bool CharacterTooClose(const GameObject* character);
-	void OrientateTo(const float3& direction);
-	void ActualShot();
-	void PlayAudio(AudioType audioType);
+	bool CharacterInSight(const GameObject* character); //Returns true if distance to player is < than searchRadius
+	bool CharacterInRange(const GameObject* character, float range, bool useRange);  //Returns true if distance to player is < than radius
+	bool FindsRayToPlayer(bool useForward); //Returns true if raycasting towards player finds a hit target, later on this will also check if the hit is actually player and not a wall
+	bool CharacterTooClose(const GameObject* character); //Returns true if distance to player is < than fleeingRadius
+	void OrientateTo(const float3& direction); //Makes character look in a particular direcion
+	void ActualShot(); //Generates projectile prefab instance 
+	void PlayAudio(AudioType audioType); //Plays audio (if not null)
 public:
 
 	Enemy rangerGruntCharacter = Enemy(5, 8.0f, 1, 30, 40.f, 5.f, 5.f);
 
-	bool foundRayToPlayer = false;
-	UID playerUID = 0;
-	UID playerMeshUIDFang = 0;
-	UID playerMeshUIDOnimaru = 0;
-	UID meshUID = 0;
-	UID meshUID1 = 0;
-	UID meshUID2 = 0;
-	UID trailPrefabUID = 0;
-	UID hudControllerObjUID = 0;
+	UID playerUID = 0; //Reference to player main Gameobject UID, used to check distances
+	UID playerMeshUIDFang = 0; //Reference to player Fang mesh holding Gameobject UID, used for raycasting if fang is active
+	UID playerMeshUIDOnimaru = 0; //Reference to player Fang mesh holding Gameobject UID, used for raycasting if onimaru is active
+	UID meshUID = 0;	//First mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
+	UID meshUID1 = 0;	//Second mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
+	UID meshUID2 = 0;	//Third mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
+	UID trailPrefabUID = 0; //Reference to projectile prefab UID , for shooting
+	UID hudControllerObjUID = 0; //Reference to Hud UID , for incrementing score
 
 
-	ResourcePrefab* shootTrailPrefab = nullptr;
-	GameObject* player = nullptr;
+	ResourcePrefab* shootTrailPrefab = nullptr; //Reference to projectile prefab , for shooting
+	GameObject* player = nullptr; //Reference to player main Gameobject, used to check distances
 
-	HUDController* hudControllerScript = nullptr;
-	PlayerController* playerController = nullptr;
+	HUDController* hudControllerScript = nullptr; //Reference to Hud , for incrementing score
+	PlayerController* playerController = nullptr; // Reference to player script, used to check distances
 
-	GameObject* fangMeshObj = nullptr;
-	GameObject* onimaruMeshObj = nullptr;
+	GameObject* fangMeshObj = nullptr;  //Reference to player Fang mesh holding Gameobject, used for raycasting if fang is active
+	GameObject* onimaruMeshObj = nullptr; //Reference to player Fang mesh holding Gameobject, used for raycasting if onimaru is active
 
-	GameObject* meshObj = nullptr;
-	GameObject* meshObj1 = nullptr;
-	GameObject* meshObj2 = nullptr;
+	GameObject* meshObj = nullptr;	//First mesh for checking frustum presence (if not inside frustum shooting won't happen)
+	GameObject* meshObj1 = nullptr;	//Second mesh for checking frustum presence (if not inside frustum shooting won't happen)
+	GameObject* meshObj2 = nullptr; //Third mesh for checking frustum presence (if not inside frustum shooting won't happen)
 
-	UID dmgMaterialObj = 0;
-	UID noDmgMaterialID = 0;
-	UID damagedMaterialID = 0;
+	UID dmgMaterialObj = 0; //Reference to damaged material holding gameobject UID, used to be set whenever Ai has been recently hurt
+	UID noDmgMaterialID = 0; //Reference to not damaged material UID, used to be set whenever Ai has been recently hurt but it is hurt no more
+	UID damagedMaterialID = 0; //Reference to damaged material, used to be set whenever Ai has been recently hurt
 
 
-	bool dead = false;
+	bool dead = false; //Boolean used to make sure Dead event happens only once OnAnimationFinished
 
-	float attackRange = 20.0f;
-	float approachOffset = 4.0f;
+	float approachOffset = 4.0f; //Offset to prevent AI from chasing after player immediately after getting close enough whenever player moves slightly
 
-	float fleeingRange = 7.f;
-	float fleeingEvaluateDistance = 5.0f;
-
+	float fleeingRange = 7.f; //Distance at which entity will start a flee motion
 	float attackSpeed = 0.5f; //Shots per second
-	ComponentAgent* agent = nullptr;
-	float actualShotMaxTime = 0.3f;
-	float timeSinceLastHurt = 0.5f;
+	ComponentAgent* agent = nullptr; //Reference to Agent component, for navigation
+	float actualShotMaxTime = 0.3f; //Internal variable used to match the shooting animation and the projectile creation
+	float timeSinceLastHurt = 0.5f; //Timer to keep track of how long it's been since AI was hurt, if higher than hurtFeedbackTimeDuration, this tries to make AI turn red with DamagedMaterial
 private:
-	AIMovement* aiMovement = nullptr;
-	float3 bbCenter = float3(0, 0, 0);
-	float3 velocity = float3(0, 0, 0);
-	AIState state = AIState::START;
-	bool hitTaken = false;
-	bool shot = false;
-	ComponentAnimation* animation = nullptr;
-	ComponentTransform* ownerTransform = nullptr;
-	int damageRecieved = 0;
-	float attackTimePool = 2.0f;
-	float actualShotTimer = -1.0f;
+	AIMovement* aiMovement = nullptr; //Reference to movement holding script
+	float3 bbCenter = float3(0, 0, 0); //Bounding box center, to generate an offset for raycasting
+	AIState state = AIState::START; //AI State
+	bool hitTaken = false; //Bool used to make sure hurt event happen only once, this should probably be inside Enemy script
+	bool shot = false; //Bool used to make sure shooting event happens only once whenever attackTimePool is low enough
+	ComponentAnimation* animation = nullptr; //Refernece to  animatino component
+	ComponentTransform* ownerTransform = nullptr; //Reference to owner transform componenet
+	float attackTimePool = 2.0f; //Pool that counts down to 0 to make AI shoot a projectile 
+	float actualShotTimer = -1.0f; //Timer that counts down the seconds to match shooting animation with projectile creation
 
-	float hurtFeedbackTimeDuration = 0.5f;
+	float hurtFeedbackTimeDuration = 0.5f; //Time that damaged material will be shown whenever AI is hit
 
-	ComponentMeshRenderer* meshRenderer = nullptr;
-	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)];
+	ComponentMeshRenderer* meshRenderer = nullptr; //Reference to a meshRendererComponent, used for material setting on hurt
+	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)]; //Array of ints used to play audios
 
 };
 

@@ -21,15 +21,13 @@ EXPOSE_MEMBERS(RangedAI) {
 		MEMBER(MemberType::GAME_OBJECT_UID, meshUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
 		MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
-		MEMBER(MemberType::INT, rangerGruntCharacter.movementSpeed),
+		MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),
 		MEMBER(MemberType::INT, rangerGruntCharacter.lifePoints),
 		MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
-		MEMBER(MemberType::FLOAT, attackRange),
+		MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
 		MEMBER(MemberType::FLOAT, rangerGruntCharacter.timeToDie),
 		MEMBER(MemberType::FLOAT, attackSpeed),
 		MEMBER(MemberType::FLOAT, fleeingRange),
-		MEMBER(MemberType::BOOL, foundRayToPlayer),
-		MEMBER(MemberType::FLOAT, fleeingEvaluateDistance),
 		MEMBER(MemberType::PREFAB_RESOURCE_UID, trailPrefabUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
 		MEMBER(MemberType::GAME_OBJECT_UID, hudControllerObjUID),
@@ -146,7 +144,7 @@ void RangedAI::Update() {
 			}
 		}
 
-		rangerGruntCharacter.lifePoints -= damageRecieved;
+		rangerGruntCharacter.lifePoints -= rangerGruntCharacter.damageHit;
 		hitTaken = false;
 
 		timeSinceLastHurt = 0.0f;
@@ -237,7 +235,7 @@ void RangedAI::UpdateState() {
 
 		if (Camera::CheckObjectInsideFrustum(GetOwner().GetChildren()[0])) {
 			if (aiMovement) aiMovement->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), rangerGruntCharacter.fallingSpeed, true);
-			if (ownerTransform->GetGlobalPosition().y < 2.7 + 0e-5f) {
+			if (ownerTransform->GetGlobalPosition().y < 2.7f + 0e-5f) {
 				animation->SendTrigger("StartSpawn");
 				if (audios[static_cast<int>(AudioType::SPAWN)]) audios[static_cast<int>(AudioType::SPAWN)]->Play();
 				state = AIState::SPAWN;
@@ -255,7 +253,7 @@ void RangedAI::UpdateState() {
 					break;
 				}
 
-				if (!CharacterInRange(player, attackRange, true)) {
+				if (!CharacterInRange(player, rangerGruntCharacter.attackRange, true)) {
 					ChangeState(AIState::RUN);
 					break;
 				}
@@ -272,7 +270,7 @@ void RangedAI::UpdateState() {
 		if (CharacterInSight(player)) {
 			OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
 
-			if (!CharacterInRange(player, attackRange - approachOffset, true) || !FindsRayToPlayer(false)) {
+			if (!CharacterInRange(player, rangerGruntCharacter.attackRange - approachOffset, true) || !FindsRayToPlayer(false)) {
 				if (!CharacterTooClose(player)) {
 					if (aiMovement) aiMovement->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), static_cast<int>(rangerGruntCharacter.movementSpeed), false);
 				} else {
@@ -318,7 +316,7 @@ void RangedAI::ExitState() {
 
 
 void RangedAI::HitDetected(int damage_) {
-	damageRecieved = damage_;
+	rangerGruntCharacter.damageHit = damage_;
 	hitTaken = true;
 	PlayAudio(AudioType::HIT);
 }
@@ -382,7 +380,7 @@ bool RangedAI::FindsRayToPlayer(bool useForward) {
 	}
 
 	int mask = static_cast<int>(MaskType::PLAYER);
-	GameObject* hitGo = Physics::Raycast(start, start + dir * attackRange, mask);
+	GameObject* hitGo = Physics::Raycast(start, start + dir * rangerGruntCharacter.attackRange, mask);
 
 	return hitGo != nullptr;
 }
@@ -426,7 +424,7 @@ void RangedAI::PlayAudio(AudioType audioType) {
 
 void RangedAI::ShootPlayerInRange() {
 	if (!player) return;
-	if (CharacterInRange(player, attackRange, true)) {
+	if (CharacterInRange(player, rangerGruntCharacter.attackRange, true)) {
 		shot = true;
 
 		if (animation) {
