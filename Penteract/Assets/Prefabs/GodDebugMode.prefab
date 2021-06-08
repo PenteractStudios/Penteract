@@ -433,7 +433,7 @@
                             {
                                 "Type": "Toggle",
                                 "Active": false,
-                                "IsOn": true,
+                                "IsOn": false,
                                 "EnabledImageID": 12878196139162425194,
                                 "ClickedColor": [
                                     0.6399999856948853,
@@ -1128,7 +1128,7 @@
                             {
                                 "Type": "Toggle",
                                 "Active": false,
-                                "IsOn": false,
+                                "IsOn": true,
                                 "EnabledImageID": 3306692581266021737,
                                 "ClickedColor": [
                                     0.6399999856948853,
