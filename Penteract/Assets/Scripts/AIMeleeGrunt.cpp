@@ -136,7 +136,7 @@ void AIMeleeGrunt::Update() {
 	if (!gruntCharacter.isAlive) {
 		if (!killSent && winLoseScript != nullptr) {
 			winLoseScript->IncrementDeadEnemies();
-			enemySpawnPointScript->UpdateRemainingEnemies();
+			if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
 			killSent = true;
 		}
 		if (gruntCharacter.timeToDie > 0) {
