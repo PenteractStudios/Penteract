@@ -26,16 +26,26 @@ class PlayerController : public Script
 	GENERATE_BODY(PlayerController);
 
 public:
+	enum class AudioType {
+		DASH,
+		SWITCH,
+		SHOOT,
+		FANGHIT,
+		ONIHIT,
+		FANGDEATH,
+		ONIDEATH,
+		TOTAL
+	};
 
 	void Start() override;
 	void Update() override;
 
-	void HitDetected(int damage);
+	void HitDetected(int damage = 1);
 	bool IsDead();
 	void SetInvincible(bool status);
 	void SetOverpower(bool status);
 	void SetNoCooldown(bool status);
-
+	
 public:
 
 	GameObject* player = nullptr;
@@ -49,6 +59,7 @@ public:
 	GameObject* onimaruParticle = nullptr;
 	ComponentAgent* agent = nullptr;
 
+	ComponentAnimation* fangAnimation = nullptr;
 
 	UID fangUID = 0;
 	UID fangTrailUID = 0;
@@ -63,8 +74,8 @@ public:
 	UID cameraUID = 0;
 	UID canvasUID = 0;
 
-	UID switchAudioSourceUID = 0;
-	UID dashAudioSourceUID = 0;
+	bool rightShot = true;
+	bool shooting = false;
 
 	bool hitTaken = false;
 
@@ -94,7 +105,7 @@ public:
 	std::vector<std::string> states{ "Idle" ,
 								"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
 								"DashBackward", "DashForward" , "DashLeft" , "DashRight" ,
-								"Death" , "Hurt" , "LeftShot" , "RightShot"
+								"Death" , "Hurt" , "LeftShot" , "RightShot", "Shooting"
 	};
 
 private:
@@ -129,7 +140,6 @@ private:
 
 	float fangAttackCooldownRemaining = 0.f;
 	float onimaruAttackCooldownRemaining = 0.f;
-	bool shooting = false;
 	bool invincibleMode = false;
 	int overpowerMode = 1;
 	bool noCooldownMode = false;
@@ -145,7 +155,6 @@ private:
 	ComponentCamera* compCamera = nullptr;
 	ComponentTransform* cameraTransform = nullptr;
 	//Animation
-	ComponentAnimation* fangAnimation = nullptr;
 	State* fangCurrentState = nullptr;
 	ComponentAnimation* onimaruAnimation = nullptr;
 	State* onimaruCurrentState = nullptr;
@@ -158,9 +167,7 @@ private:
 	ComponentParticleSystem* onimaruCompParticle = nullptr;
 
 	//Audio
-	ComponentAudioSource* shootAudioSource = nullptr;
-	ComponentAudioSource* dashAudioSource = nullptr;
-	ComponentAudioSource* switchAudioSource = nullptr;
+	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
 
 	HUDController* hudControllerScript = nullptr;
 };
