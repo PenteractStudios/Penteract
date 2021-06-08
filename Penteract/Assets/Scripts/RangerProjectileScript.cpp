@@ -19,15 +19,7 @@ void RangerProjectileScript::Update() {
 	if (life >= 0) {
 		life -= Time::GetDeltaTime();
 		ComponentTransform* transform = GetOwner().GetComponent<ComponentTransform>();
-		float3 aux = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
-
-		if (itsVertical) {
-			if (!firstTime) {
-				transform->SetGlobalRotation(Quat::RotateAxisAngle(aux, (pi / 2)).Mul(transform->GetGlobalRotation()));
-				firstTime = true;
-			}
-		}
-
+		float3 aux = rangerDirection * float3(0.0f, 0.0f, 1.0f);
 		aux *= speed * Time::GetDeltaTime();
 		float3 newPosition = transform->GetGlobalPosition();
 		newPosition += aux;
@@ -42,4 +34,8 @@ void RangerProjectileScript::OnCollision(const GameObject& collidedWith) {
 	if (collidedWith.name == "Onimaru" || collidedWith.name == "Fang") {
 			GameplaySystems::DestroyGameObject(&GetOwner());
 	}
+}
+
+void RangerProjectileScript::SetRangerDirection(Quat rangerDirection_) {
+	rangerDirection = rangerDirection_;
 }

@@ -11,6 +11,7 @@
 #include "Components/ComponentAnimation.h"
 #include "Components/ComponentMeshRenderer.h"
 #include "AIMovement.h"
+#include "RangerProjectileScript.h"
 #include "Resources/ResourcePrefab.h"
 
 //clang-format off
@@ -102,9 +103,7 @@ void RangedAI::Start() {
 void RangedAI::OnAnimationFinished() {
 	if (animation == nullptr) return;
 
-	if (state == AIState::START) {
-		ChangeState(AIState::SPAWN);
-	} else if (state == AIState::SPAWN) {
+	if (state == AIState::SPAWN) {
 		animation->SendTrigger("SpawnIdle");
 		state = AIState::IDLE;
 	} else if (state == AIState::DEATH) {
@@ -399,9 +398,14 @@ void RangedAI::ActualShot() {
 
 		float offsetY = (box->GetWorldAABB().minPoint.y + box->GetWorldAABB().maxPoint.y) / 4;
 
-		GameplaySystems::Instantiate(shootTrailPrefab, GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + float3(0, offsetY, 0), GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation());
-		float3 frontTrail = GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
-		//GameplaySystems::Instantiate(shootTrailPrefab, GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + float3(0, offsetY, 0), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation()));
+		GameObject* projectileInstance(GameplaySystems::Instantiate(shootTrailPrefab, GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + float3(0, offsetY, 0), Quat(0, 0, 0, 0)));
+
+		if (projectileInstance) {
+			RangerProjectileScript* rps = GET_SCRIPT(projectileInstance, RangerProjectileScript);
+			if (rps && ownerTransform) {
+				rps->SetRangerDirection(ownerTransform->GetGlobalRotation());
+			}
+		}
 	}
 
 	attackTimePool = 1.0f / attackSpeed;
