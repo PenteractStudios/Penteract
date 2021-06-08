@@ -39,11 +39,7 @@ void RangerProjectileScript::Update() {
 
 void RangerProjectileScript::OnCollision(const GameObject& collidedWith) {
 	//There appears to be an issue, projectiles colliding with each other, for now it should only collide with player (walls later)
-	GameObject* parent = collidedWith.GetParent();
-	if (parent != nullptr) {
-		PlayerController* ctrl = GET_SCRIPT(parent, PlayerController);
-		if (ctrl) {
+	if (collidedWith.name == "Onimaru" || collidedWith.name == "Fang") {
 			GameplaySystems::DestroyGameObject(&GetOwner());
-		}
 	}
 }

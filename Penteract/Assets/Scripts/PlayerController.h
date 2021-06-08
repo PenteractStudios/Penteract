@@ -30,11 +30,11 @@ public:
 	void Start() override;
 	void Update() override;
 
-	void HitDetected(int damage);
 	bool IsDead();
 	void SetInvincible(bool status);
 	void SetOverpower(bool status);
 	void SetNoCooldown(bool status);
+	void TakeDamage(bool ranged = true);
 
 public:
 
@@ -86,6 +86,9 @@ public:
 	/* Fang & onimaru damage */
 	int onimaruDamage = 1;
 	int fangDamage = 3;
+	
+	int rangedDamageTaken = 1;
+	int meleeDamageTaken = 1;
 	
 	//Camera
 	bool useSmoothCamera = true;
