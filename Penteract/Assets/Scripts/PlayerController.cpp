@@ -34,7 +34,6 @@ EXPOSE_MEMBERS(PlayerController) {
 		MEMBER(MemberType::GAME_OBJECT_UID, switchAudioSourceUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, dashAudioSourceUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
-		MEMBER(MemberType::FLOAT, fangAttackSpeed),
 		MEMBER(MemberType::FLOAT, onimaruAttackSpeed),
 		MEMBER(MemberType::FLOAT, distanceRayCast),
 		MEMBER(MemberType::FLOAT, switchCooldown),
@@ -224,7 +223,7 @@ bool PlayerController::CanShoot() {
 
 void PlayerController::Shoot() {
 	ComponentTransform* transform = GetOwner().GetComponent<ComponentTransform>();
-	
+
 	if (CanShoot()) {
 		if (shootAudioSource) {
 			shootAudioSource->Play();
@@ -245,7 +244,7 @@ void PlayerController::Shoot() {
 				GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
 			}
 			if (rightShot) {
-				fangAnimation->SendTriggerSecondary(fangAnimation->GetCurrentState()->name + PlayerController::states[12]);				
+				fangAnimation->SendTriggerSecondary(fangAnimation->GetCurrentState()->name + PlayerController::states[12]);
 			}
 			else {
 				fangAnimation->SendTriggerSecondary(fangAnimation->GetCurrentState()->name + PlayerController::states[11]);
@@ -259,7 +258,7 @@ void PlayerController::Shoot() {
 				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
 				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
 				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
-			}			
+			}
 
 			start = onimaruGunTransform->GetGlobalPosition();
 		}
@@ -427,7 +426,7 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 	else {
 		animation = onimaruAnimation;
 	}
-	
+
 	int dashAnimation = 0;
 	if (dashing) {
 		dashAnimation = 4;
@@ -447,7 +446,6 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 		}
 	}
 	else {
-		
 		if (animation->GetCurrentState()->name != PlayerController::states[GetMouseDirectionState(md) + dashAnimation]) {
 			animation->SendTrigger(animation->GetCurrentState()->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
 		}
@@ -536,8 +534,8 @@ void PlayerController::Update() {
 			else if (Input::GetMouseButtonRepeat(0)) {
 				Shoot();
 			}
-			else if(Input::GetMouseButtonUp(0)){
-				if (onimaruAnimation) {					
+			else if (Input::GetMouseButtonUp(0)) {
+				if (onimaruAnimation) {
 					onimaruAnimation->SendTriggerSecondary(PlayerController::states[13] + onimaruAnimation->GetCurrentState()->name);
 				}
 			}
