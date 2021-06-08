@@ -52,10 +52,6 @@ void SwitchParticles::Start() {
 void SwitchParticles::Update() {
 	if (!player || !absorption || !explosion || !light || !groundLight || !shockWave) return;
 
-	if (Input::GetKeyCode(Input::KEYCODE::KEY_R)) {
-		playing = true;
-	}
-
 	if (playing) {
 		absorption->Play();
 		explosion->Play();
@@ -68,4 +64,5 @@ void SwitchParticles::Update() {
 }
 
 void SwitchParticles::Play() {
+	playing = true;
 }

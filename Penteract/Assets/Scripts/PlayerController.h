@@ -70,6 +70,8 @@ public:
 	UID onimaruTrailUID = 0;
 	UID onimaruGunUID = 0;
 
+	UID switchParticlesUID = 0;
+
 	UID mainNodeUID = 0;
 	UID cameraUID = 0;
 	UID canvasUID = 0;
@@ -93,6 +95,8 @@ public:
 	float cameraOffsetY = 10.f;
 	float cameraOffsetX = 0.f;
 	bool firstTime = true;
+
+	bool switchInProgress = false;
 
 	/* Fang & onimaru damage */
 	int onimaruDamage = 1;
@@ -144,6 +148,10 @@ private:
 	int overpowerMode = 1;
 	bool noCooldownMode = false;
 
+	float switchDelay = 0.37f;
+	float currentSwitchDelay = 0.f;
+	bool playSwitchParticles = true;
+
 	float3 initialPosition = float3(0, 0, 0);
 	float3 dashDestination = float3(0, 0, 0);
 	float3 dashDirection = float3(0, 0, 0);
@@ -161,6 +169,8 @@ private:
 
 	ResourcePrefab* fangTrail = nullptr;
 	ResourcePrefab* onimaruTrail = nullptr;
+
+	GameObject* switchEffects = nullptr;
 
 	//Particles
 	ComponentParticleSystem* fangCompParticle = nullptr;
