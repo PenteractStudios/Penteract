@@ -23,35 +23,35 @@
 EXPOSE_MEMBERS(PlayerController) {
 	// Add members here to expose them to the engine. Example:
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruTrailUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangGunUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruParticleUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
-	MEMBER(MemberType::FLOAT, distanceRayCast),
-	MEMBER(MemberType::FLOAT, switchCooldown),
-	MEMBER(MemberType::FLOAT, dashCooldown),
-	MEMBER(MemberType::FLOAT, dashSpeed),
-	MEMBER(MemberType::FLOAT, dashDuration),
-	MEMBER(MemberType::FLOAT, cameraOffsetZ),
-	MEMBER(MemberType::FLOAT, cameraOffsetY),
-	MEMBER(MemberType::FLOAT, cameraOffsetX),
-	MEMBER(MemberType::INT, fangCharacter.lifePoints),
-	MEMBER(MemberType::FLOAT, fangCharacter.movementSpeed),
-	MEMBER(MemberType::INT, fangCharacter.damageHit),
-	MEMBER(MemberType::FLOAT, fangCharacter.attackSpeed),
-	MEMBER(MemberType::INT, onimaruCharacter.lifePoints),
-	MEMBER(MemberType::FLOAT, onimaruCharacter.movementSpeed),
-	MEMBER(MemberType::INT, onimaruCharacter.damageHit),
-	MEMBER(MemberType::FLOAT, onimaruCharacter.attackSpeed),
-	MEMBER(MemberType::INT, rangedDamageTaken),
-	MEMBER(MemberType::INT, meleeDamageTaken),
-	MEMBER(MemberType::BOOL, useSmoothCamera),
-	MEMBER(MemberType::FLOAT, smoothCameraSpeed)
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
+		MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
+		MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruTrailUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, fangGunUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruParticleUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
+		MEMBER(MemberType::FLOAT, distanceRayCast),
+		MEMBER(MemberType::FLOAT, switchCooldown),
+		MEMBER(MemberType::FLOAT, dashCooldown),
+		MEMBER(MemberType::FLOAT, dashSpeed),
+		MEMBER(MemberType::FLOAT, dashDuration),
+		MEMBER(MemberType::FLOAT, cameraOffsetZ),
+		MEMBER(MemberType::FLOAT, cameraOffsetY),
+		MEMBER(MemberType::FLOAT, cameraOffsetX),
+		MEMBER(MemberType::INT, fangCharacter.lifePoints),
+		MEMBER(MemberType::FLOAT, fangCharacter.movementSpeed),
+		MEMBER(MemberType::INT, fangCharacter.damageHit),
+		MEMBER(MemberType::FLOAT, fangCharacter.attackSpeed),
+		MEMBER(MemberType::INT, onimaruCharacter.lifePoints),
+		MEMBER(MemberType::FLOAT, onimaruCharacter.movementSpeed),
+		MEMBER(MemberType::INT, onimaruCharacter.damageHit),
+		MEMBER(MemberType::FLOAT, onimaruCharacter.attackSpeed),
+		MEMBER(MemberType::INT, rangedDamageTaken),
+		MEMBER(MemberType::INT, meleeDamageTaken),
+		MEMBER(MemberType::BOOL, useSmoothCamera),
+		MEMBER(MemberType::FLOAT, smoothCameraSpeed)
 };
 
 GENERATE_BODY_IMPL(PlayerController);
@@ -110,7 +110,7 @@ void PlayerController::Start() {
 	if (onimaruParticle) {
 		onimaruCompParticle = onimaruParticle->GetComponent<ComponentParticleSystem>();
 	}
-	
+
 	firstTime = true;
 
 	agent = GetOwner().GetComponent<ComponentAgent>();
@@ -242,7 +242,7 @@ void PlayerController::Shoot() {
 				GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
 			}
 			if (rightShot) {
-				fangAnimation->SendTriggerSecondary(fangAnimation->GetCurrentState()->name + PlayerController::states[12]);				
+				fangAnimation->SendTriggerSecondary(fangAnimation->GetCurrentState()->name + PlayerController::states[12]);
 			}
 			else {
 				fangAnimation->SendTriggerSecondary(fangAnimation->GetCurrentState()->name + PlayerController::states[11]);
@@ -258,7 +258,7 @@ void PlayerController::Shoot() {
 			}
 			if (onimaruTrail) {
 				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
-			}			
+			}
 		}
 	}
 }
@@ -325,7 +325,7 @@ void PlayerController::CheckCoolDowns() {
 		dashRemaining -= Time::GetDeltaTime();
 	}
 
-	if(fang->IsActive()){
+	if (fang->IsActive()) {
 		if (fangAttackCooldownRemaining <= 0.f) {
 			fangAttackCooldownRemaining = 0.f;
 			shooting = false;
@@ -429,7 +429,7 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 	else {
 		animation = onimaruAnimation;
 	}
-	
+
 	int dashAnimation = 0;
 	if (dashing) {
 		dashAnimation = 4;
@@ -451,7 +451,7 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 		}
 	}
 	else {
-		
+
 		if (animation->GetCurrentState()->name != PlayerController::states[GetMouseDirectionState(md) + dashAnimation]) {
 			animation->SendTrigger(animation->GetCurrentState()->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
 		}
@@ -501,10 +501,17 @@ void PlayerController::TakeDamage(bool ranged) {
 	if (!fang || !onimaru || invincibleMode) return;
 	if (fang->IsActive()) {
 		fangCharacter.Hit((ranged) ? rangedDamageTaken : meleeDamageTaken);
-		Debug::Log("Man pegaoh");
+		if (audios[static_cast<int>(AudioType::FANGHIT)]) audios[static_cast<int>(AudioType::FANGHIT)]->Play();
+		if (!fangCharacter.isAlive) {
+			if (audios[static_cast<int>(AudioType::FANGDEATH)]) audios[static_cast<int>(AudioType::FANGDEATH)]->Play();
+		}
 	}
 	else {
 		onimaruCharacter.Hit((ranged) ? rangedDamageTaken : meleeDamageTaken);
+		if (audios[static_cast<int>(AudioType::ONIHIT)]) audios[static_cast<int>(AudioType::ONIHIT)]->Play();
+		if (!onimaruCharacter.isAlive) {
+			if (audios[static_cast<int>(AudioType::ONIDEATH)]) audios[static_cast<int>(AudioType::ONIDEATH)]->Play();
+		}
 	}
 	hitTaken = true;
 }
@@ -552,8 +559,8 @@ void PlayerController::Update() {
 			else if (Input::GetMouseButtonRepeat(0)) {
 				Shoot();
 			}
-			else if(Input::GetMouseButtonUp(0)){
-				if (onimaruAnimation) {					
+			else if (Input::GetMouseButtonUp(0)) {
+				if (onimaruAnimation) {
 					onimaruAnimation->SendTriggerSecondary(PlayerController::states[13] + onimaruAnimation->GetCurrentState()->name);
 				}
 			}

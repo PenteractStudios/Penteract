@@ -12,14 +12,14 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
+    MEMBER(MemberType::PREFAB_RESOURCE_UID, meleePunchUID),
 	MEMBER(MemberType::INT, gruntCharacter.lifePoints),
 	MEMBER(MemberType::FLOAT, gruntCharacter.movementSpeed),
 	MEMBER(MemberType::INT, gruntCharacter.damageHit),
 	MEMBER(MemberType::INT, gruntCharacter.fallingSpeed),
 	MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, gruntCharacter.attackRange),
-	MEMBER(MemberType::FLOAT, gruntCharacter.timeToDie), 
-    MEMBER(MemberType::PREFAB_RESOURCE_UID, meleePunchUID)
+	MEMBER(MemberType::FLOAT, gruntCharacter.timeToDie)
 };
 
 GENERATE_BODY_IMPL(AIMeleeGrunt);
