@@ -33,7 +33,9 @@ public:
 	void Start() override;
 	void Update() override;
 	void OnAnimationFinished() override;
+	void OnAnimationSecondaryFinished() override;
 	void HitDetected(int damage_ = 1);
+	void On
 
 public:
 
@@ -62,7 +64,7 @@ private:
 	PlayerController* playerController = nullptr;
 	AIMovement* movementScript = nullptr;
 
-	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)];
+	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
 
 };
 

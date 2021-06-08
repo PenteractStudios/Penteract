@@ -61,112 +61,116 @@ void AIMeleeGrunt::Start() {
 }
 
 void AIMeleeGrunt::Update() {
-	if (!GetOwner().IsActive()) return;
-	if (!player) return;
-	if (!agent) return;
-	if (!movementScript) return;
-	if (!hudControllerScript) return;
-	if (!playerController) return;
-	if (!ownerTransform) return;
-	if (!animation) return;
+    if (!GetOwner().IsActive()) return;
+    if (!player) return;
+    if (!agent) return;
+    if (!movementScript) return;
+    if (!hudControllerScript) return;
+    if (!playerController) return;
+    if (!ownerTransform) return;
+    if (!animation) return;
 
-	if (agent) {
-		agent->SetMaxSpeed(gruntCharacter.movementSpeed);
-	}
+    switch (state)
+    {
+    case AIState::START:
+        if (Camera::CheckObjectInsideFrustum(GetOwner().GetChildren()[0])) {
+            movementScript->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), gruntCharacter.fallingSpeed, true);
+            if (ownerTransform->GetGlobalPosition().y < 2.7 + 0e-5f) {
+                animation->SendTrigger("StartSpawn");
+                if (audios[static_cast<int>(AudioType::SPAWN)]) audios[static_cast<int>(AudioType::SPAWN)]->Play();
+                state = AIState::SPAWN;
+            }
+        }
+        break;
+    case AIState::SPAWN:
+        break;
+    case AIState::IDLE:
+        if (!playerController->IsDead()) {
+            if (movementScript->CharacterInSight(player, gruntCharacter.searchRadius)) {
+                animation->SendTrigger("IdleRun");
+                state = AIState::RUN;
+            }
+        }
+        break;
+    case AIState::RUN:
+        movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), gruntCharacter.movementSpeed, true);
+        if (movementScript->CharacterInAttackRange(player, gruntCharacter.attackRange)) {
+            animation->SendTriggerSecondary("RunAttack");
+            if (audios[static_cast<int>(AudioType::ATTACK)]) audios[static_cast<int>(AudioType::ATTACK)]->Play();
+            state = AIState::ATTACK;
+        }
+        break;
+    case AIState::ATTACK:
+        break;
+    case AIState::DEATH:
+        break;
+    }
 
-	if (hitTaken && gruntCharacter.isAlive) {
-		gruntCharacter.Hit(damageRecieved);
-		if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
-		hitTaken = false;
-	}
-
-	if (!gruntCharacter.isAlive) {
-		if (state == AIState::ATTACK) {
-			animation->SendTrigger("AttackDeath");
-		} else if (state == AIState::IDLE) {
-			animation->SendTrigger("IdleDeath");
-		} else if (state == AIState::RUN) {
-			animation->SendTrigger("RunDeath");
-		}
-		if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
-		agent->RemoveAgentFromCrowd();
-		state = AIState::DEATH;
-	}
-
-	switch (state) {
-	case AIState::START:
-		if (Camera::CheckObjectInsideFrustum(GetOwner().GetChildren()[0])) {
-			movementScript->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), gruntCharacter.fallingSpeed, true);
-			if (ownerTransform->GetGlobalPosition().y < 2.7 + 0e-5f) {
-				animation->SendTrigger("StartSpawn");
-				if (audios[static_cast<int>(AudioType::SPAWN)]) audios[static_cast<int>(AudioType::SPAWN)]->Play();
-				state = AIState::SPAWN;
-			}
-		}
-		break;
-	case AIState::SPAWN:
-		break;
-	case AIState::IDLE:
-		if (!playerController->IsDead()) {
-			if (movementScript->CharacterInSight(player, gruntCharacter.searchRadius)) {
-				animation->SendTrigger("IdleRun");
-				state = AIState::RUN;
-			}
-		}
-		break;
-	case AIState::RUN:
-		movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), gruntCharacter.movementSpeed, true);
-		if (movementScript->CharacterInAttackRange(player, gruntCharacter.attackRange)) {
-			agent->RemoveAgentFromCrowd();
-			animation->SendTrigger("RunAttack");
-			if (audios[static_cast<int>(AudioType::ATTACK)]) audios[static_cast<int>(AudioType::ATTACK)]->Play();
-			state = AIState::ATTACK;
-		}
-		break;
-	case AIState::ATTACK:
-		break;
-	case AIState::DEATH:
-		break;
-	}
-
-	if (!gruntCharacter.isAlive) {
-		if (!killSent && winLoseScript != nullptr) {
-			winLoseScript->IncrementDeadEnemies();
-			killSent = true;
-		}
-		if (gruntCharacter.timeToDie > 0) {
-			gruntCharacter.timeToDie -= Time::GetDeltaTime();
-		} else {
-			if (hudControllerScript) {
-				hudControllerScript->UpdateScore(10);
-			}
-			GameplaySystems::DestroyGameObject(&GetOwner());
-		}
-	}
+    if (!gruntCharacter.isAlive) {
+        if (!killSent && winLoseScript != nullptr) {
+            winLoseScript->IncrementDeadEnemies();
+            killSent = true;
+        }
+        if (gruntCharacter.timeToDie > 0) {
+            gruntCharacter.timeToDie -= Time::GetDeltaTime();
+        }
+        else {
+            if (hudControllerScript) {
+                hudControllerScript->UpdateScore(10);
+            }
+            GameplaySystems::DestroyGameObject(&GetOwner());
+        }
+    }
 
 }
 
-void AIMeleeGrunt::OnAnimationFinished() {
-	if (state == AIState::SPAWN) {
-		animation->SendTrigger("SpawnIdle");
-		state = AIState::IDLE;
-		agent->AddAgentToCrowd();
-	}
+void AIMeleeGrunt::OnAnimationFinished()
+{
+    if (state == AIState::SPAWN) {
+        animation->SendTrigger("SpawnIdle");
+        state = AIState::IDLE;
+        agent->AddAgentToCrowd();
+    }    
 
-	else if (state == AIState::ATTACK) {
-		playerController->HitDetected(gruntCharacter.damageHit);
-		animation->SendTrigger("AttackIdle");
-		agent->AddAgentToCrowd();
-		state = AIState::IDLE;
-	}
-
-	else if (state == AIState::DEATH) {
-		gruntCharacter.isAlive = false;
-	}
+    else if (state == AIState::DEATH) {
+        gruntCharacter.isAlive = false;
+    }
 
 }
 
-void AIMeleeGrunt::HitDetected(int damage_) {
-	damageRecieved = damage_;
-	hitTaken = true;
+void AIMeleeGrunt::OnAnimationSecondaryFinished()
+{
+    if (state == AIState::ATTACK)
+    {
+        //playerController->HitDetected();
+        animation->SendTriggerSecondary("Attack" + animation->GetCurrentState()->name);
+        state = AIState::IDLE;
+    }
+}
+void AIMeleeGrunt::OnCollision(const GameObject& collidedWith)
+{
+    if (state != AIState::START && state != AIState::SPAWN) {
+        if (gruntCharacter.lifePoints > 0 && playerController) {
+            if (collidedWith.name == "FangBullet") {
+                gruntCharacter.lifePoints -= playerController->fangDamage;
+            }
+            else if (collidedWith.name == "OnimaruBullet") {
+                gruntCharacter.lifePoints -= playerController->onimaruDamage;
+            }
+        }
+
+        if (gruntCharacter.lifePoints <= 0) {
+            if (state == AIState::ATTACK) {
+                animation->SendTrigger("AttackDeath");
+            }
+            else if (state == AIState::IDLE) {
+                animation->SendTrigger("IdleDeath");
+            }
+            else if (state == AIState::RUN) {
+                animation->SendTrigger("RunDeath");
+            }
+            agent->RemoveAgentFromCrowd();
+            state = AIState::DEATH;
+        }
+    }
 }

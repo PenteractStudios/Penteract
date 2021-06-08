@@ -14,11 +14,11 @@ GENERATE_BODY_IMPL(PlayerDeath);
 
 void PlayerDeath::Start() {
 	player = GameplaySystems::GetGameObject(playerUID);
+	if(player) playerController = GET_SCRIPT(player, PlayerController);
 }
 
 void PlayerDeath::Update() {
 	if (player) {
-		PlayerController* playerController = GET_SCRIPT(player, PlayerController);
 		if (playerController) {
 			dead = playerController->IsDead();
 		}
@@ -29,5 +29,26 @@ void PlayerDeath::Update() {
 void PlayerDeath::OnAnimationFinished() {
 	if (dead) {
 		if(sceneUID != 0) SceneManager::ChangeScene(sceneUID);
+	}	
+}
+
+void PlayerDeath::OnAnimationSecondaryFinished()
+{
+	if (playerController) {
+		if (playerController->shooting && playerController->fang->IsActive()) {
+			ComponentAnimation* animation = playerController->fangAnimation;
+			if (playerController->rightShot) {
+				animation->SendTriggerSecondary(playerController->states[12] + animation->GetCurrentState()->name);
+				playerController->rightShot = false;
+			}
+			else {
+				animation->SendTriggerSecondary(playerController->states[11] + animation->GetCurrentState()->name);
+				playerController->rightShot = true;
+			}
+		}
 	}
+}
+
+void PlayerDeath::OnCollision(const GameObject& collidedWith) {
+	
 }

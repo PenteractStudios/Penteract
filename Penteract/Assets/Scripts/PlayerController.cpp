@@ -2,7 +2,6 @@
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
-#include "TesseractEvent.h"
 
 #include "AIMeleeGrunt.h"
 #include "RangedAI.h"
@@ -77,7 +76,6 @@ void PlayerController::Start() {
 		if (transform) {
 			initialPosition = transform->GetGlobalPosition();
 		}
-		shootAudioSource = player->GetComponent<ComponentAudioSource>();
 	}
 	if (camera) {
 		compCamera = camera->GetComponent<ComponentCamera>();
@@ -113,20 +111,21 @@ void PlayerController::Start() {
 	if (onimaruParticle) {
 		onimaruCompParticle = onimaruParticle->GetComponent<ComponentParticleSystem>();
 	}
-	GameObject* aux = GameplaySystems::GetGameObject(switchAudioSourceUID);
-	if (aux) {
-		switchAudioSource = aux->GetComponent<ComponentAudioSource>();
-	}
-	aux = GameplaySystems::GetGameObject(dashAudioSourceUID);
-	if (aux) {
-		dashAudioSource = aux->GetComponent<ComponentAudioSource>();
-	}
+	
 	firstTime = true;
 
 	agent = GetOwner().GetComponent<ComponentAgent>();
 	if (agent) {
 		agent->SetMaxSpeed(fangCharacter.movementSpeed);
 		agent->SetMaxAcceleration(MAX_ACCELERATION);
+	}
+
+	//Get audio sources
+	int i = 0;
+
+	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
+		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
+		i++;
 	}
 }
 
@@ -169,8 +168,8 @@ void PlayerController::InitDash(MovementDirection md) {
 		dashInCooldown = true;
 		dashing = true;
 		agent->SetMaxSpeed(dashSpeed);
-		if (shootAudioSource) {
-			dashAudioSource->Play();
+		if (audios[static_cast<int>(AudioType::DASH)]) {
+			audios[static_cast<int>(AudioType::DASH)]->Play();
 		}
 		else {
 			Debug::Log(AUDIOSOURCE_NULL_MSG);
@@ -201,7 +200,9 @@ void PlayerController::SwitchCharacter() {
 
 	if (CanSwitch()) {
 		switchInCooldown = true;
-		switchAudioSource->Play();
+		if (audios[static_cast<int>(AudioType::SWITCH)]) {
+			audios[static_cast<int>(AudioType::SWITCH)]->Play();
+		}
 		if (fang->IsActive()) {
 			fang->Disable();
 			onimaru->Enable();
@@ -225,18 +226,17 @@ bool PlayerController::CanShoot() {
 
 void PlayerController::Shoot() {
 	ComponentTransform* transform = GetOwner().GetComponent<ComponentTransform>();
-
+	
 	if (CanShoot()) {
-		if (shootAudioSource) {
-			shootAudioSource->Play();
-		}
-		else {
-			Debug::Log(AUDIOSOURCE_NULL_MSG);
-		}
-
 		shooting = true;
 		float3 start;
 		if (fang->IsActive()) {
+			if (audios[static_cast<int>(AudioType::SHOOT)]) {
+				audios[static_cast<int>(AudioType::SHOOT)]->Play();
+			}
+			else {
+				Debug::Log(AUDIOSOURCE_NULL_MSG);
+			}
 			fangAttackCooldownRemaining = 1.f / fangCharacter.attackSpeed;
 			if (fangTrail) {
 				//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
@@ -245,16 +245,28 @@ void PlayerController::Shoot() {
 				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
 				GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
 			}
+			if (rightShot) {
+				fangAnimation->SendTriggerSecondary(fangAnimation->GetCurrentState()->name + PlayerController::states[12]);				
+			}
+			else {
+				fangAnimation->SendTriggerSecondary(fangAnimation->GetCurrentState()->name + PlayerController::states[11]);
+			}
 			start = fangGunTransform->GetGlobalPosition();
 		}
 		else {
-			//TODO: SUB WITH ONIMARU SHOOT
+			if (audios[static_cast<int>(AudioType::SHOOT)]) {
+				audios[static_cast<int>(AudioType::SHOOT)]->Play();
+			}
+			else {
+				Debug::Log(AUDIOSOURCE_NULL_MSG);
+			}
 			onimaruAttackCooldownRemaining = 1.f / onimaruCharacter.attackSpeed;
 			if (onimaruTrail) {
 				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
 				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
 				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
-			}
+			}			
+
 			start = onimaruGunTransform->GetGlobalPosition();
 		}
 
@@ -277,6 +289,25 @@ void PlayerController::Shoot() {
 		//}
 	}
 }
+
+//void PlayerController::HitDetected(int damage) {
+//	if (!invincibleMode) {
+//		if (fang->IsActive()) {
+//			fangCharacter.Hit(damage);
+//			if (audios[static_cast<int>(AudioType::FANGHIT)]) audios[static_cast<int>(AudioType::FANGHIT)]->Play();
+//		}
+//		else {
+//			onimaruCharacter.Hit(damage);
+//			if (audios[static_cast<int>(AudioType::ONIHIT)]) audios[static_cast<int>(AudioType::ONIHIT)]->Play();
+//		}
+//	}
+//	if (!fangCharacter.isAlive && fang->IsActive()) {
+//		if (audios[static_cast<int>(AudioType::FANGDEATH)]) audios[static_cast<int>(AudioType::FANGDEATH)]->Play();
+//	}
+//	else if (!onimaruCharacter.isAlive && onimaru->IsActive()) {
+//		if (audios[static_cast<int>(AudioType::ONIDEATH)]) audios[static_cast<int>(AudioType::ONIDEATH)]->Play();
+//	}
+//}
 
 void PlayerController::SetInvincible(bool status) {
 	invincibleMode = status;
@@ -416,21 +447,13 @@ int PlayerController::GetMouseDirectionState(MovementDirection input) {
 
 void PlayerController::PlayAnimation(MovementDirection md) {
 	ComponentAnimation* animation = nullptr;
-	State* currentState = nullptr;
-
 	if (fang->IsActive()) {
 		animation = fangAnimation;
-		currentState = fangCurrentState;
 	}
 	else {
 		animation = onimaruAnimation;
-		currentState = onimaruCurrentState;
 	}
-
-	if (currentState != animation->GetCurrentState()) {
-		currentState = animation->GetCurrentState();
-	}
-
+	
 	int dashAnimation = 0;
 	if (dashing) {
 		dashAnimation = 4;
@@ -441,14 +464,21 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 
 	if (md == MovementDirection::NONE) {
 		if (IsDead()) {
-			animation->SendTrigger(currentState->name + PlayerController::states[9]);
+			if (animation->GetCurrentState()->name != PlayerController::states[9]) {
+				animation->SendTrigger(animation->GetCurrentState()->name + PlayerController::states[9]);
+			}
 		}
 		else {
-			animation->SendTrigger(currentState->name + PlayerController::states[0]);
+			if (animation->GetCurrentState()->name != PlayerController::states[0]) {
+				animation->SendTrigger(animation->GetCurrentState()->name + PlayerController::states[0]);
+			}
 		}
 	}
 	else {
-		animation->SendTrigger(currentState->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
+		
+		if (animation->GetCurrentState()->name != PlayerController::states[GetMouseDirectionState(md) + dashAnimation]) {
+			animation->SendTrigger(animation->GetCurrentState()->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
+		}
 	}
 }
 
@@ -539,7 +569,17 @@ void PlayerController::Update() {
 			if (Input::GetMouseButtonDown(0)) Shoot();
 		}
 		else {
-			if (Input::GetMouseButtonRepeat(0)) Shoot();
+			if (Input::GetMouseButtonDown(0)) {
+				onimaruAnimation->SendTriggerSecondary(onimaruAnimation->GetCurrentState()->name + PlayerController::states[13]);
+			}
+			else if (Input::GetMouseButtonRepeat(0)) {
+				Shoot();
+			}
+			else if(Input::GetMouseButtonUp(0)){
+				if (onimaruAnimation) {					
+					onimaruAnimation->SendTriggerSecondary(PlayerController::states[13] + onimaruAnimation->GetCurrentState()->name);
+				}
+			}
 		}
 		PlayAnimation(md);
 	}
