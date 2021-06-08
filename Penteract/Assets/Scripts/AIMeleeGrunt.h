@@ -63,7 +63,7 @@ private:
 	PlayerController* playerController = nullptr;
 	AIMovement* movementScript = nullptr;
 
-	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)];
+	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
 
 };
 
