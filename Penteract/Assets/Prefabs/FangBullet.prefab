@@ -51,15 +51,9 @@
                 "StartTransition": 0.0,
                 "EndTransition": 0.0,
                 "FlipTexture": [
-                    true,
+                    false,
                     false
                 ]
-            },
-            {
-                "Type": "Script",
-                "Active": true,
-                "Script": 709869534139279052,
-                "Values": null
             }
         ],
         "Children": null
