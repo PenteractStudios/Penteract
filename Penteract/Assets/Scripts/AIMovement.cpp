@@ -7,7 +7,7 @@
 int AIMovement::maxAcceleration = 9999;
 
 EXPOSE_MEMBERS(AIMovement) {
-	MEMBER(MemberType::FLOAT, rotationSlerpRatio)
+	MEMBER(MemberType::FLOAT, rotationSmoothness)
 };
 
 GENERATE_BODY_IMPL(AIMovement);
@@ -68,7 +68,7 @@ void AIMovement::Seek(AIState state, const float3& newPosition, int speed, bool 
 
 	if (state != AIState::START && orientateToDir) {
 		targetRotation = Quat::LookAt(float3(0, 0, 1), velocity.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
-		Quat rotation = Quat::Slerp(ownerTransform->GetGlobalRotation(), targetRotation, rotationSlerpRatio * Time::GetDeltaTime());
+		Quat rotation = Quat::Slerp(ownerTransform->GetGlobalRotation(), targetRotation, rotationSmoothness * Time::GetDeltaTime());
 		ownerTransform->SetGlobalRotation(rotation);
 	}
 }
