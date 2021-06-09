@@ -79,8 +79,6 @@ public:
 
 	ComponentAgent* agent = nullptr;	//Reference to Agent component, for navigation
 
-	//bool dead = false; //Boolean used to make sure Dead event happens only once OnAnimationFinished
-
 	float approachOffset = 4.0f;		//Offset to prevent AI from chasing after player immediately after getting close enough whenever player moves slightly
 	float fleeingRange = 7.f;			//Distance at which entity will start a flee motion
 	float attackSpeed = 0.5f;			//Shots per second
@@ -91,7 +89,6 @@ private:
 	AIState state = AIState::START;		//AI State
 	float3 bbCenter = float3(0, 0, 0);	//Bounding box center, to generate an offset for raycasting
 
-	//bool hitTaken = false;				//Bool used to make sure hurt event happen only once, this should probably be inside Enemy script
 	bool shot = false;					//Bool used to make sure shooting event happens only once whenever attackTimePool is low enough
 
 	ComponentAnimation* animation = nullptr;		//Refernece to  animatino component

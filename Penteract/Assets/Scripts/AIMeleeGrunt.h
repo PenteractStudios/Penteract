@@ -33,7 +33,6 @@ public:
 	void Update() override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
-	//void HitDetected(int damage_ = 1);
 	void OnCollision(GameObject& collidedWith) override;
 
 public:
