@@ -6,7 +6,6 @@
 #include "AIMeleeGrunt.h"
 #include "RangedAI.h"
 #include "HUDController.h"
-#include "LightShoot.h"
 #include "OnimaruBullet.h"
 #include "SwitchParticles.h"
 #include "Math/Quat.h"
@@ -94,7 +93,7 @@ void PlayerController::Start() {
 		fangAnimation = fang->GetComponent<ComponentAnimation>();
 		fangTrail = GameplaySystems::GetResource<ResourcePrefab>(fangTrailUID);
 		fangBullet = GameplaySystems::GetResource<ResourcePrefab>(fangBulletUID);
-		shootLight = GameplaySystems::GetResource<ResourcePrefab>(shootLightUID);
+
 		if (fangAnimation) {
 			fangCurrentState = fangAnimation->GetCurrentState();
 		}
