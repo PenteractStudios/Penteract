@@ -4,6 +4,8 @@
 
 #include "AIState.h"
 
+#include "Math/Quat.h"
+
 class ComponentTransform;
 class ComponentAgent;
 
@@ -24,9 +26,12 @@ public:
 
 public:
 	static int maxAcceleration;
+	float rotationSlerpRatio = 9.0f;
+
 private:
 
 	float3 velocity = float3(0, 0, 0);
+	Quat targetRotation = Quat(0, 0, 0, 1);
 	ComponentTransform* ownerTransform = nullptr;
 	ComponentAgent* agent = nullptr;
 };
