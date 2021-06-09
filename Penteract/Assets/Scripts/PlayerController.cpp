@@ -52,7 +52,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, onimaruCharacter.attackSpeed),
 	MEMBER(MemberType::BOOL, useSmoothCamera),
 	MEMBER(MemberType::FLOAT, smoothCameraSpeed),
-	MEMBER(MemberType::BOOL, switchInProgress),
+	MEMBER(MemberType::BOOL, switchDelay),
 };
 
 GENERATE_BODY_IMPL(PlayerController);
@@ -199,7 +199,7 @@ void PlayerController::SwitchCharacter() {
 	if (!agent) return;
 	if (CanSwitch()) {
 		bool doVisualSwitch = currentSwitchDelay < switchDelay ? false : true;
-		if (doVisualSwitch || noCooldownMode) {
+		if (doVisualSwitch) {
 			if (audios[static_cast<int>(AudioType::SWITCH)]) {
 				audios[static_cast<int>(AudioType::SWITCH)]->Play();
 			}
@@ -219,6 +219,7 @@ void PlayerController::SwitchCharacter() {
 			currentSwitchDelay = 0.f;
 			playSwitchParticles = true;
 			switchInCooldown = true;
+			if (noCooldownMode) switchInProgress = false;
 		}
 		else {
 			if (playSwitchParticles) {
@@ -239,6 +240,12 @@ void PlayerController::SwitchCharacter() {
 
 bool PlayerController::CanShoot() {
 	return !shooting && ((fang->IsActive() && fangTrail) || (onimaru->IsActive() && onimaruTrail));
+}
+
+void PlayerController::ResetSwitchStatus() {
+	switchInProgress = false;
+	playSwitchParticles = true;
+	currentSwitchDelay = 0.f;
 }
 
 void PlayerController::Shoot() {
@@ -336,6 +343,7 @@ void PlayerController::SetOverpower(bool status) {
 
 void PlayerController::SetNoCooldown(bool status) {
 	noCooldownMode = status;
+	ResetSwitchStatus();
 }
 
 bool PlayerController::IsDead() {
@@ -346,7 +354,7 @@ void PlayerController::CheckCoolDowns() {
 	if (noCooldownMode || switchCooldownRemaining <= 0.f) {
 		switchCooldownRemaining = 0.f;
 		switchInCooldown = false;
-		switchInProgress = false;
+		if (!noCooldownMode) switchInProgress = false;
 	}
 	else {
 		switchCooldownRemaining -= Time::GetDeltaTime();
@@ -561,7 +569,7 @@ void PlayerController::Update() {
 		if (!dashing) {
 			LookAtMouse();
 			MoveTo(md);
-			//Not working in god mode
+
 			if (switchInProgress || (noCooldownMode && Input::GetKeyCodeUp(Input::KEYCODE::KEY_R))) {
 				switchInProgress = true;
 				SwitchCharacter();

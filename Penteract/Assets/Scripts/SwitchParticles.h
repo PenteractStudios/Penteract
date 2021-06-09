@@ -30,6 +30,5 @@ private:
 	ComponentParticleSystem* groundLight = nullptr;
 	ComponentParticleSystem* shockWave = nullptr;
 	bool playing = false;
-	float timer = 2.0f;
 };
 

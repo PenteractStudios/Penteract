@@ -97,6 +97,7 @@ public:
 	bool firstTime = true;
 
 	bool switchInProgress = false;
+	float switchDelay = 0.37f;
 
 	/* Fang & onimaru damage */
 	int onimaruDamage = 1;
@@ -127,6 +128,7 @@ private:
 	bool CanDash();
 	bool CanSwitch();
 	bool CanShoot();
+	void ResetSwitchStatus();
 
 	float3 GetDirection(MovementDirection md) const;
 	MovementDirection GetInputMovementDirection() const;
@@ -148,7 +150,6 @@ private:
 	int overpowerMode = 1;
 	bool noCooldownMode = false;
 
-	float switchDelay = 0.37f;
 	float currentSwitchDelay = 0.f;
 	bool playSwitchParticles = true;
 
