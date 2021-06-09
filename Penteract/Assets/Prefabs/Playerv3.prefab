@@ -36,9 +36,9 @@
                 "Script": 4413934008247911625,
                 "Values": [
                     {
-                        "Name": "mainNodeUID",
+                        "Name": "dashAudioSourceUID",
                         "Type": "GameObjectUID",
-                        "Value": 983215537647111703
+                        "Value": 10251782958241248981
                     },
                     {
                         "Name": "onimaruUID",
@@ -46,9 +46,14 @@
                         "Value": 14508850719219251872
                     },
                     {
-                        "Name": "dashAudioSourceUID",
+                        "Name": "fangLeftGunUID",
                         "Type": "GameObjectUID",
-                        "Value": 10251782958241248981
+                        "Value": 13785729330131095098
+                    },
+                    {
+                        "Name": "mainNodeUID",
+                        "Type": "GameObjectUID",
+                        "Value": 983215537647111703
                     },
                     {
                         "Name": "fangUID",
@@ -56,14 +61,14 @@
                         "Value": 17625845214105133067
                     },
                     {
-                        "Name": "onimaruParticleUID",
-                        "Type": "GameObjectUID",
-                        "Value": 2893299881823841385
-                    },
-                    {
                         "Name": "cameraUID",
                         "Type": "GameObjectUID",
                         "Value": 680618938873982628
+                    },
+                    {
+                        "Name": "onimaruParticleUID",
+                        "Type": "GameObjectUID",
+                        "Value": 2893299881823841385
                     },
                     {
                         "Name": "canvasUID",
@@ -79,6 +84,11 @@
                         "Name": "switchAudioSourceUID",
                         "Type": "GameObjectUID",
                         "Value": 10435533286064107327
+                    },
+                    {
+                        "Name": "onimaruCharacter.attackSpeed",
+                        "Type": "Float",
+                        "Value": 2.0
                     },
                     {
                         "Name": "distanceRayCast",
@@ -129,6 +139,11 @@
                         "Name": "onimaruBulletUID",
                         "Type": "PrefabResourceUID",
                         "Value": 3960243435103242799
+                    },
+                    {
+                        "Name": "fangRightGunUID",
+                        "Type": "GameObjectUID",
+                        "Value": 13510630710844655343
                     }
                 ]
             },
@@ -6594,14 +6609,9 @@
                         "Script": 4446135300975932463,
                         "Values": [
                             {
-                                "Name": "playerUID",
+                                "Name": "shockWaveUID",
                                 "Type": "GameObjectUID",
-                                "Value": 983215537647111703
-                            },
-                            {
-                                "Name": "absorptionUID",
-                                "Type": "GameObjectUID",
-                                "Value": 3171623395041722364
+                                "Value": 3106008629744852400
                             },
                             {
                                 "Name": "explosionUID",
@@ -6609,9 +6619,14 @@
                                 "Value": 8355243259087495449
                             },
                             {
-                                "Name": "shockWaveUID",
+                                "Name": "absorptionUID",
                                 "Type": "GameObjectUID",
-                                "Value": 3106008629744852400
+                                "Value": 3171623395041722364
+                            },
+                            {
+                                "Name": "playerUID",
+                                "Type": "GameObjectUID",
+                                "Value": 983215537647111703
                             },
                             {
                                 "Name": "lightUID",

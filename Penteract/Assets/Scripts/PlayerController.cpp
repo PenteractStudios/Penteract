@@ -30,9 +30,9 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangBulletUID),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruBulletUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangGunUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangLeftGunUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangRightGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruParticleUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
 	MEMBER(MemberType::FLOAT, distanceRayCast),
@@ -71,8 +71,6 @@ void PlayerController::Start() {
 	}
 
 	//animation
-	onimaruParticle = GameplaySystems::GetGameObject(onimaruParticleUID);
-
 	if (player) {
 		transform = player->GetComponent<ComponentTransform>();
 		if (transform) {
@@ -88,9 +86,13 @@ void PlayerController::Start() {
 	}
 	if (fang) {
 		fang->Enable();
-		fangGun = GameplaySystems::GetGameObject(fangGunUID);
-		if (fangGun) {
-			fangGunTransform = fangGun->GetComponent<ComponentTransform>();
+		fangLeftGun = GameplaySystems::GetGameObject(fangLeftGunUID);
+		if (fangLeftGun) {
+			fangLeftGunTransform = fangLeftGun->GetComponent<ComponentTransform>();
+		}
+		fangRightGun = GameplaySystems::GetGameObject(fangRightGunUID);
+		if (fangRightGun) {
+			fangRightGunTransform = fangRightGun->GetComponent<ComponentTransform>();
 		}
 		fangAnimation = fang->GetComponent<ComponentAnimation>();
 		fangTrail = GameplaySystems::GetResource<ResourcePrefab>(fangTrailUID);
@@ -114,10 +116,7 @@ void PlayerController::Start() {
 			onimaruCurrentState = onimaruAnimation->GetCurrentState();
 		}
 	}
-	if (onimaruParticle) {
-		onimaruCompParticle = onimaruParticle->GetComponent<ComponentParticleSystem>();
-	}
-
+	
 	switchEffects = GameplaySystems::GetGameObject(switchParticlesUID);
 
 	firstTime = true;
@@ -150,7 +149,7 @@ void PlayerController::LookAtMouse() {
 		float2 mousePos = Input::GetMousePositionNormalized();
 		LineSegment ray = compCamera->frustum.UnProjectLineSegment(mousePos.x, mousePos.y);
 		float3 planeTransform = transform->GetGlobalPosition();
-		if (fang->IsActive() && fangGunTransform) planeTransform = fangGunTransform->GetGlobalPosition();
+		if (fang->IsActive() && fangLeftGunTransform) planeTransform = fangLeftGunTransform->GetGlobalPosition();
 		else if (!fang->IsActive() && onimaruGunTransform) planeTransform = onimaruGunTransform->GetGlobalPosition();
 		Plane p = Plane(planeTransform, float3(0, 1, 0));
 		facePointDir = float3(0, 0, 0);
@@ -267,15 +266,18 @@ void PlayerController::Shoot() {
 				Debug::Log(AUDIOSOURCE_NULL_MSG);
 			}
 			fangAttackCooldownRemaining = 1.f / fangCharacter.attackSpeed;
-			if (fangTrail && fangBullet) {
-				GameplaySystems::Instantiate(fangBullet, fangGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
-				GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
-			}
+			ComponentTransform* shootingGunTransform = nullptr;
 			if (rightShot) {
 				fangAnimation->SendTriggerSecondary(fangAnimation->GetCurrentState()->name + PlayerController::states[12]);
+				shootingGunTransform = fangRightGunTransform;
 			}
 			else {
 				fangAnimation->SendTriggerSecondary(fangAnimation->GetCurrentState()->name + PlayerController::states[11]);
+				shootingGunTransform = fangLeftGunTransform;
+			}
+			if (fangTrail && fangBullet && shootingGunTransform) {
+				GameplaySystems::Instantiate(fangBullet, shootingGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
+				GameplaySystems::Instantiate(fangTrail, shootingGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
 			}
 		}
 		else {
