@@ -57,9 +57,19 @@
                         "Value": 7691413884628165645
                     },
                     {
+                        "Name": "fleeingRange",
+                        "Type": "Float",
+                        "Value": 7.0
+                    },
+                    {
                         "Name": "playerMeshUIDOnimaru",
                         "Type": "GameObjectUID",
                         "Value": 15799740891930840347
+                    },
+                    {
+                        "Name": "approachOffset",
+                        "Type": "Float",
+                        "Value": 5.0
                     },
                     {
                         "Name": "meshUID",
@@ -85,6 +95,11 @@
                         "Name": "hudControllerObjUID",
                         "Type": "GameObjectUID",
                         "Value": 17773628572955029428
+                    },
+                    {
+                        "Name": "rangerGruntCharacter.attackRange",
+                        "Type": "Float",
+                        "Value": 15.0
                     }
                 ]
             },
@@ -1643,7 +1658,7 @@
                         "Type": "MeshRenderer",
                         "Active": true,
                         "MeshID": 6456532700534858393,
-                        "MaterialID": 2652104925393099928
+                        "MaterialID": 8768033741261421917
                     },
                     {
                         "Type": "BoundingBox",
@@ -1695,7 +1710,7 @@
                         "Type": "MeshRenderer",
                         "Active": true,
                         "MeshID": 981257995038390762,
-                        "MaterialID": 2652104925393099928
+                        "MaterialID": 8768033741261421917
                     },
                     {
                         "Type": "BoundingBox",
