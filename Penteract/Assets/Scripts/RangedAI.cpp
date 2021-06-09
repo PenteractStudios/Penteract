@@ -123,7 +123,7 @@ void RangedAI::OnAnimationSecondaryFinished() {
 
 //This is commented until merge with collisions
 //
-//void RangedAI::OnCollision(const GameObject& collidedWith) {
+//void RangedAI::OnCollision(GameObject& collidedWith) {
 //	if (state == AIState::START || state != AIState::SPAWN)return;
 //	if (rangerGruntCharacter.lifePoints > 0 && playerController) {
 //		if (collidedWith.name == "FangBullet") {
