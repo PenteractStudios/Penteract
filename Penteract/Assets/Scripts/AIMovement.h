@@ -26,7 +26,7 @@ public:
 
 public:
 	static int maxAcceleration;
-	float rotationSmoothness = 9.0f;
+	float rotationSmoothness = 0.2f;
 
 private:
 
