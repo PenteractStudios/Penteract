@@ -10,14 +10,14 @@ class ComponentAnimation;
 class ComponentTransform;
 class ComponentAgent;
 class ComponentAudioSource;
-
+class ResourcePrefab;
 class HUDController;
 class PlayerController;
 class AIMovement;
 class WinLose;
+class EnemySpawnPoint;
 
-class AIMeleeGrunt : public Script
-{
+class AIMeleeGrunt : public Script {
 	GENERATE_BODY(AIMeleeGrunt);
 
 public:
@@ -29,22 +29,23 @@ public:
 		TOTAL
 	};
 
-
 	void Start() override;
 	void Update() override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
-	void HitDetected(int damage_ = 1);
+	void OnCollision(GameObject& collidedWith) override;
 
 public:
 
 	UID playerUID = 0;
 	UID canvasUID = 0;
 	UID winConditionUID = 0;
+	UID meleePunchUID = 0;
 
 	GameObject* player = nullptr;
 	GameObject* spawn = nullptr;
 	ComponentAgent* agent = nullptr;
+	ResourcePrefab* meleePunch = nullptr;
 	WinLose* winLoseScript = nullptr;
 
 	Enemy gruntCharacter = Enemy(5, 8.0f, 1, 30, 40.f, 5.f, 5.f);
@@ -62,8 +63,8 @@ private:
 	HUDController* hudControllerScript = nullptr;
 	PlayerController* playerController = nullptr;
 	AIMovement* movementScript = nullptr;
+	EnemySpawnPoint* enemySpawnPointScript = nullptr;
 
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
 
 };
-

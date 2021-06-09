@@ -11,6 +11,7 @@ class ComponentCamera;
 class ComponentAudioSource;
 class ComponentParticleSystem;
 class HUDController;
+class OnimaruBullet;
 class ComponentAgent;
 class ComponentAnimation;
 class State;
@@ -40,12 +41,12 @@ public:
 	void Start() override;
 	void Update() override;
 
-	void HitDetected(int damage = 1);
 	bool IsDead();
 	void SetInvincible(bool status);
 	void SetOverpower(bool status);
 	void SetNoCooldown(bool status);
-	
+	void TakeDamage(bool ranged = true);
+	int GetOverPowerMode();
 public:
 
 	GameObject* player = nullptr;
@@ -64,11 +65,14 @@ public:
 	UID fangUID = 0;
 	UID fangTrailUID = 0;
 	UID fangGunUID = 0;
+	UID fangBulletUID = 0;
 
 	UID onimaruUID = 0;
 	UID onimaruParticleUID = 0;
-	UID onimaruTrailUID = 0;
+	UID onimaruBulletUID = 0;
 	UID onimaruGunUID = 0;
+
+	UID switchParticlesUID = 0;
 
 	UID mainNodeUID = 0;
 	UID cameraUID = 0;
@@ -94,9 +98,13 @@ public:
 	float cameraOffsetX = 0.f;
 	bool firstTime = true;
 
+	bool switchInProgress = false;
+	float switchDelay = 0.37f;
+
 	/* Fang & onimaru damage */
-	int onimaruDamage = 1;
-	int fangDamage = 3;
+	
+	int rangedDamageTaken = 1;
+	int meleeDamageTaken = 1;
 	
 	//Camera
 	bool useSmoothCamera = true;
@@ -105,7 +113,8 @@ public:
 	std::vector<std::string> states{ "Idle" ,
 								"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
 								"DashBackward", "DashForward" , "DashLeft" , "DashRight" ,
-								"Death" , "Hurt" , "LeftShot" , "RightShot", "Shooting"
+								"Death" , "Hurt" , "LeftShot" , "RightShot", "Shooting", "RunForwardLeft",
+								"RunForwardRight", "RunBackwardLeft", "RunBarckwardRight"
 	};
 
 private:
@@ -123,11 +132,11 @@ private:
 	bool CanDash();
 	bool CanSwitch();
 	bool CanShoot();
+	void ResetSwitchStatus();
 
 	float3 GetDirection(MovementDirection md) const;
 	MovementDirection GetInputMovementDirection() const;
 	int GetMouseDirectionState(MovementDirection input);
-
 private:
 
 	float dashCooldownRemaining = 0.f;
@@ -144,6 +153,9 @@ private:
 	int overpowerMode = 1;
 	bool noCooldownMode = false;
 
+	float currentSwitchDelay = 0.f;
+	bool playSwitchParticles = true;
+
 	float3 initialPosition = float3(0, 0, 0);
 	float3 dashDestination = float3(0, 0, 0);
 	float3 dashDirection = float3(0, 0, 0);
@@ -159,8 +171,12 @@ private:
 	ComponentAnimation* onimaruAnimation = nullptr;
 	State* onimaruCurrentState = nullptr;
 
-	ResourcePrefab* fangTrail = nullptr;
 	ResourcePrefab* onimaruTrail = nullptr;
+	ResourcePrefab* fangTrail = nullptr;
+	ResourcePrefab* fangBullet = nullptr;
+	ResourcePrefab* onimaruBullet = nullptr;
+
+	GameObject* switchEffects = nullptr;
 
 	//Particles
 	ComponentParticleSystem* fangCompParticle = nullptr;
@@ -170,4 +186,5 @@ private:
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
 
 	HUDController* hudControllerScript = nullptr;
+	OnimaruBullet* onimaruBulletcript = nullptr;
 };

@@ -29,8 +29,7 @@ void PlayerDeath::Update() {
 void PlayerDeath::OnAnimationFinished() {
 	if (dead) {
 		if(sceneUID != 0) SceneManager::ChangeScene(sceneUID);
-	}
-		
+	}	
 }
 
 void PlayerDeath::OnAnimationSecondaryFinished()
@@ -47,5 +46,15 @@ void PlayerDeath::OnAnimationSecondaryFinished()
 				playerController->rightShot = true;
 			}
 		}
+	}
+}
+
+void PlayerDeath::OnCollision(GameObject& collidedWith) {
+	
+	if (collidedWith.name == "RangerProjectile") {
+		playerController->TakeDamage(true);
+	}
+	else if (collidedWith.name == "MeleePunch") {
+		playerController->TakeDamage(false);
 	}
 }
