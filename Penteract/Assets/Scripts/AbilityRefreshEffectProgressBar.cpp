@@ -48,6 +48,7 @@ void AbilityRefreshEffectProgressBar::Update() {
 		Play();
 	}
 
+	// Progress bar loadup
 	if (!animationLoadUpFinished) {
 		if (currentTime <= duration) {
 			progressBar->SetValue(currentTime / duration);
@@ -57,12 +58,17 @@ void AbilityRefreshEffectProgressBar::Update() {
 			progressBar->SetValue(1);
 		}
 	}
+
 	Debug::Log(std::to_string(currentTime).c_str());
+	// Popup flash
 	if (!animationPopUpFinished) {
 		float durationAndBreakTimes = duration + breakTime;
 		if (currentTime > durationAndBreakTimes && currentTime <= (durationAndBreakTimes + durationFirstEmission)) {		// First popup
 			firstBarEffect->Enable();
 			IncreaseOverTime(firstBarEffect, currentTime, duration + breakTime + durationFirstEmission);
+		}
+		else if (currentTime > (durationAndBreakTimes + durationFirstEmission)) {
+			firstBarEffect->Disable();
 		}
 
 		durationAndBreakTimes += breakTimeBetweenFirstAndSecond + durationFirstEmission;
@@ -70,7 +76,22 @@ void AbilityRefreshEffectProgressBar::Update() {
 			secondBarEffect->Enable();
 			IncreaseOverTime(secondBarEffect, currentTime, durationAndBreakTimes + durationSecondEmission);
 		}
+		else if (currentTime > (durationAndBreakTimes + durationSecondEmission)){
+			secondBarEffect->Disable();
+		}
+
+		durationAndBreakTimes += breakTimeBetweenSecondAndThird;
+		if (currentTime > durationAndBreakTimes && currentTime <= (durationAndBreakTimes + durationThirdEmission)) {		// Third popup
+			thirdBarEffect->Enable();
+			IncreaseOverTime(thirdBarEffect, currentTime, durationAndBreakTimes + durationThirdEmission);
+		}
+		else if(currentTime > (durationAndBreakTimes + durationThirdEmission)) {
+			animationPopUpFinished = true;
+			thirdBarEffect->Disable();
+		}
 	}
+
+	// Swap panels
 	
 	currentTime += Time::GetDeltaTime();
 }
@@ -85,6 +106,9 @@ void AbilityRefreshEffectProgressBar::Play() {
 	debugPlay = false;
 	animationLoadUpFinished = false;
 	animationPopUpFinished = false;
+	firstBarEffect->Disable();
+	secondBarEffect->Disable();
+	thirdBarEffect->Disable();
 }
 
 void AbilityRefreshEffectProgressBar::ResetBar()
