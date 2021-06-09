@@ -36,9 +36,9 @@
                 "Script": 4413934008247911625,
                 "Values": [
                     {
-                        "Name": "dashAudioSourceUID",
+                        "Name": "mainNodeUID",
                         "Type": "GameObjectUID",
-                        "Value": 10251782958241248981
+                        "Value": 983215537647111703
                     },
                     {
                         "Name": "onimaruUID",
@@ -46,9 +46,9 @@
                         "Value": 14508850719219251872
                     },
                     {
-                        "Name": "mainNodeUID",
+                        "Name": "dashAudioSourceUID",
                         "Type": "GameObjectUID",
-                        "Value": 983215537647111703
+                        "Value": 10251782958241248981
                     },
                     {
                         "Name": "fangUID",
@@ -56,14 +56,14 @@
                         "Value": 17625845214105133067
                     },
                     {
-                        "Name": "cameraUID",
-                        "Type": "GameObjectUID",
-                        "Value": 680618938873982628
-                    },
-                    {
                         "Name": "onimaruParticleUID",
                         "Type": "GameObjectUID",
                         "Value": 2893299881823841385
+                    },
+                    {
+                        "Name": "cameraUID",
+                        "Type": "GameObjectUID",
+                        "Value": 680618938873982628
                     },
                     {
                         "Name": "canvasUID",
@@ -103,7 +103,7 @@
                     {
                         "Name": "fangTrailUID",
                         "Type": "PrefabResourceUID",
-                        "Value": 17183605139879956004
+                        "Value": 17059306767860105124
                     },
                     {
                         "Name": "onimaruTrailUID",
@@ -119,6 +119,11 @@
                         "Name": "switchParticlesUID",
                         "Type": "GameObjectUID",
                         "Value": 5178619973287917906
+                    },
+                    {
+                        "Name": "fangBulletUID",
+                        "Type": "PrefabResourceUID",
+                        "Value": 12611034100292589666
                     },
                     {
                         "Name": "onimaruBulletUID",
@@ -6589,14 +6594,9 @@
                         "Script": 4446135300975932463,
                         "Values": [
                             {
-                                "Name": "shockWaveUID",
+                                "Name": "playerUID",
                                 "Type": "GameObjectUID",
-                                "Value": 3106008629744852400
-                            },
-                            {
-                                "Name": "explosionUID",
-                                "Type": "GameObjectUID",
-                                "Value": 8355243259087495449
+                                "Value": 983215537647111703
                             },
                             {
                                 "Name": "absorptionUID",
@@ -6604,9 +6604,14 @@
                                 "Value": 3171623395041722364
                             },
                             {
-                                "Name": "playerUID",
+                                "Name": "explosionUID",
                                 "Type": "GameObjectUID",
-                                "Value": 983215537647111703
+                                "Value": 8355243259087495449
+                            },
+                            {
+                                "Name": "shockWaveUID",
+                                "Type": "GameObjectUID",
+                                "Value": 3106008629744852400
                             },
                             {
                                 "Name": "lightUID",
