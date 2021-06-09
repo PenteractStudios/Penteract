@@ -7,27 +7,29 @@
 #include "AbilityRefreshEffectProgressBar.h"
 #include "LowHPWarning.h"
 #include "FullHealthBarFeedback.h"
+#include "SwapCharacterDisplayerAnimation.h"
 #include "GameplaySystems.h"
 
 
 EXPOSE_MEMBERS(HUDController) {
 	// Add members here to expose them to the engine. Example:
 	MEMBER(MemberType::GAME_OBJECT_UID, fangMainCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruMainCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangSkillsMainCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillsMainCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangSkillsSecondCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillsSecondCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangHealthMainCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthMainCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangHealthSecondCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthSecondCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, swapingSkillCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, scoreTextUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, lowHealthWarningEffectUID),
-		MEMBER(MemberType::FLOAT, timeToFadeDurableHealthFeedbackInternal)
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruMainCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangSkillsMainCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillsMainCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangSkillsSecondCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillsSecondCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangHealthMainCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthMainCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangHealthSecondCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthSecondCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, swapingSkillCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, scoreTextUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasHUDUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, lowHealthWarningEffectUID),
+	MEMBER(MemberType::FLOAT, timeToFadeDurableHealthFeedbackInternal)
 };
 
 GENERATE_BODY_IMPL(HUDController);
@@ -63,6 +65,8 @@ void HUDController::Start() {
 	onimaru = GameplaySystems::GetGameObject(onimaruUID);
 
 	lowHealthWarningEffect = GameplaySystems::GetGameObject(lowHealthWarningEffectUID);
+
+	canvasHUD = GameplaySystems::GetGameObject(canvasHUDUID);
 
 	GameObject* text = GameplaySystems::GetGameObject(scoreTextUID);
 	if (text) scoreText = text->GetComponent<ComponentText>();
@@ -183,7 +187,10 @@ void HUDController::ChangePlayerHUD(int fangLives, int oniLives) {
 
 	prevLivesFang = fangLives;
 	prevLivesOni = oniLives;
-
+	SwapCharacterDisplayerAnimation* animationScript = GET_SCRIPT(canvasHUD, SwapCharacterDisplayerAnimation);
+	if (animationScript) {
+		animationScript->Play();
+	}
 }
 
 void HUDController::HealthRegeneration(float currentHp, float hpRecovered) {
@@ -245,7 +252,9 @@ void HUDController::ResetCooldownProgressBar()
 	}
 
 	AbilityRefreshEffectProgressBar* pef = GET_SCRIPT(swapingSkillCanvas->GetChildren()[2], AbilityRefreshEffectProgressBar);
-	pef->ResetBar();
+	if (pef != nullptr) {
+		pef->ResetBar();
+	}
 }
 
 void HUDController::UpdateScore(int score_) {

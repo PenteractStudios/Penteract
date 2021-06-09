@@ -72,6 +72,8 @@ public:
 
 	UID scoreTextUID = 0;
 
+	UID canvasHUDUID = 0;
+
 	float timeToFadeDurableHealthFeedbackInternal = 2.0f;
 
 private:
@@ -108,6 +110,8 @@ private:
 	GameObject* lowHealthWarningEffect = nullptr;
 
 	GameObject* swapingSkillCanvas = nullptr;
+
+	GameObject* canvasHUD = nullptr;
 
 	float cooldowns[static_cast<int>(Cooldowns::TOTAL)];
 
