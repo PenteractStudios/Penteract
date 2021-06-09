@@ -20,9 +20,9 @@
                     1.0
                 ],
                 "Scale": [
-                    2.0,
-                    2.0,
-                    2.0
+                    1.5,
+                    1.5,
+                    1.5
                 ],
                 "LocalEulerAngles": [
                     -0.0,
@@ -38,7 +38,7 @@
                     {
                         "Name": "speed",
                         "Type": "Int",
-                        "Value": 50
+                        "Value": 40
                     },
                     {
                         "Name": "life",
@@ -53,7 +53,7 @@
                 "colliderType": 2,
                 "layerType": 4,
                 "mass": 1.0,
-                "radius": 1.0,
+                "radius": 0.6499999761581421,
                 "centerOffset": [
                     0.0,
                     0.0,
@@ -65,19 +65,19 @@
                 "Type": "Billboard",
                 "Active": true,
                 "BillboardType": 0,
-                "TextureId": 10401544034748941721,
+                "TextureId": 14731612415524228216,
                 "Ytiles": 2,
                 "Xtiles": 5,
                 "AnimationSpeed": 10.0,
                 "InitColor": [
                     1.0,
-                    0.0,
-                    0.0
+                    0.9999899864196777,
+                    0.9999899864196777
                 ],
                 "FinalColor": [
                     1.0,
-                    0.0,
-                    0.0
+                    0.9999899864196777,
+                    0.9999899864196777
                 ],
                 "StartTransition": 0.0,
                 "EndTransition": 0.0,

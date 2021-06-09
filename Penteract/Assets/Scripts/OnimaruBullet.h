@@ -12,6 +12,8 @@ public:
 	void Start() override;
 	void Update() override;
 	void SetOnimaruDirection(Quat direction);
+	void OnCollision(GameObject& collidedWith) override;
+
 public:
 	int speed = 200;
 	float life = 0.2f;

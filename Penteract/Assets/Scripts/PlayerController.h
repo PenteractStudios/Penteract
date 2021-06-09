@@ -41,12 +41,12 @@ public:
 	void Start() override;
 	void Update() override;
 
-	void HitDetected(int damage = 1);
 	bool IsDead();
 	void SetInvincible(bool status);
 	void SetOverpower(bool status);
 	void SetNoCooldown(bool status);
-	
+	void TakeDamage(bool ranged = true);
+	int GetOverPowerMode();
 public:
 
 	GameObject* player = nullptr;
@@ -65,6 +65,7 @@ public:
 	UID fangUID = 0;
 	UID fangTrailUID = 0;
 	UID fangGunUID = 0;
+	UID fangBulletUID = 0;
 
 	UID onimaruUID = 0;
 	UID onimaruParticleUID = 0;
@@ -101,8 +102,9 @@ public:
 	float switchDelay = 0.37f;
 
 	/* Fang & onimaru damage */
-	int onimaruDamage = 1;
-	int fangDamage = 3;
+	
+	int rangedDamageTaken = 1;
+	int meleeDamageTaken = 1;
 	
 	//Camera
 	bool useSmoothCamera = true;
@@ -135,7 +137,6 @@ private:
 	float3 GetDirection(MovementDirection md) const;
 	MovementDirection GetInputMovementDirection() const;
 	int GetMouseDirectionState(MovementDirection input);
-
 private:
 
 	float dashCooldownRemaining = 0.f;
@@ -170,7 +171,9 @@ private:
 	ComponentAnimation* onimaruAnimation = nullptr;
 	State* onimaruCurrentState = nullptr;
 
+	ResourcePrefab* onimaruTrail = nullptr;
 	ResourcePrefab* fangTrail = nullptr;
+	ResourcePrefab* fangBullet = nullptr;
 	ResourcePrefab* onimaruBullet = nullptr;
 
 	GameObject* switchEffects = nullptr;
