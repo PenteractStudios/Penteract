@@ -1,0 +1,78 @@
+{
+    "Root": {
+        "Name": "ShootLight",
+        "Active": true,
+        "RootBoneName": "",
+        "Mask": 0,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Active": true,
+                "Position": [
+                    0.0,
+                    16.51825714111328,
+                    7.348742961883545
+                ],
+                "Rotation": [
+                    0.7071067690849304,
+                    0.0,
+                    0.7071067690849304,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "LocalEulerAngles": [
+                    90.0,
+                    90.0,
+                    90.0
+                ]
+            },
+            {
+                "Type": "Billboard",
+                "Active": true,
+                "BillboardType": 1,
+                "TextureId": 67011227094343280,
+                "Ytiles": 2,
+                "Xtiles": 5,
+                "AnimationSpeed": 10.0,
+                "InitColor": [
+                    1.0,
+                    0.9705882668495178,
+                    0.0
+                ],
+                "FinalColor": [
+                    1.0,
+                    0.9411764740943909,
+                    0.0
+                ],
+                "StartTransition": 0.0,
+                "EndTransition": 0.0,
+                "FlipTexture": [
+                    true,
+                    false
+                ]
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 709869534139279052,
+                "Values": [
+                    {
+                        "Name": "speed",
+                        "Type": "Int",
+                        "Value": 0
+                    },
+                    {
+                        "Name": "life",
+                        "Type": "Float",
+                        "Value": 1.0
+                    }
+                ]
+            }
+        ],
+        "Children": null
+    }
+}

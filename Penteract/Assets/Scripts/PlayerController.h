@@ -15,6 +15,7 @@ class ComponentAgent;
 class ComponentAnimation;
 class State;
 class ResourcePrefab;
+class LightShoot;
 struct TesseractEvent;
 
 enum class MovementDirection {
@@ -64,6 +65,8 @@ public:
 	UID fangUID = 0;
 	UID fangTrailUID = 0;
 	UID fangGunUID = 0;
+	UID shootLightUID = 0;
+	UID fangBulletUID = 0;
 
 	UID onimaruUID = 0;
 	UID onimaruParticleUID = 0;
@@ -159,8 +162,10 @@ private:
 	ComponentAnimation* onimaruAnimation = nullptr;
 	State* onimaruCurrentState = nullptr;
 
-	ResourcePrefab* fangTrail = nullptr;
+	ResourcePrefab* shootLight = nullptr;
 	ResourcePrefab* onimaruTrail = nullptr;
+	ResourcePrefab* fangTrail = nullptr;
+	ResourcePrefab* fangBullet = nullptr;
 
 	//Particles
 	ComponentParticleSystem* fangCompParticle = nullptr;
@@ -169,5 +174,6 @@ private:
 	//Audio
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
 
+	LightShoot* lightShootScript = nullptr;
 	HUDController* hudControllerScript = nullptr;
 };

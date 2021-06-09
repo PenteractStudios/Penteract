@@ -25,7 +25,9 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, shootLightUID),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangBulletUID),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruTrailUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
@@ -87,6 +89,8 @@ void PlayerController::Start() {
 		}
 		fangAnimation = fang->GetComponent<ComponentAnimation>();
 		fangTrail = GameplaySystems::GetResource<ResourcePrefab>(fangTrailUID);
+		fangBullet = GameplaySystems::GetResource<ResourcePrefab>(fangBulletUID);
+		shootLight = GameplaySystems::GetResource<ResourcePrefab>(shootLightUID);
 		if (fangAnimation) {
 			fangCurrentState = fangAnimation->GetCurrentState();
 		}
@@ -236,6 +240,11 @@ void PlayerController::Shoot() {
 			if (fangTrail) {
 				//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
 				//fangGun->GetComponent<ComponentParticleSystem>()->Play();
+				GameObject* bullet = GameplaySystems::Instantiate(shootLight, fangGunTransform->GetGlobalPosition(), Quat(0.0f, 0.0f, 0.0f, 0.0f));
+				lightShootScript = GET_SCRIPT(bullet, shootLight);
+				lightShootScript->SetOnimaruDirection(onimaruGunTransform->GetGlobalRotation());
+
+				GameplaySystems::Instantiate(fangBullet, fangGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
 				GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
 				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
 				GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
@@ -256,6 +265,7 @@ void PlayerController::Shoot() {
 				Debug::Log(AUDIOSOURCE_NULL_MSG);
 			}
 			onimaruAttackCooldownRemaining = 1.f / onimaruCharacter.attackSpeed;
+			GameplaySystems::Instantiate(shootLight, onimaruGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
 			if (onimaruTrail) {
 				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
 				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);

@@ -33,15 +33,21 @@
             {
                 "Type": "Trail",
                 "Active": true,
-                "TextureId": 6070033773294191873,
-                "MaxVertices": 1500,
-                "TrailQuads": 50
+                "TextureId": 1122716866004356440,
+                "MaxVertices": 240,
+                "TrailQuads": 8
             },
             {
                 "Type": "Script",
                 "Active": true,
                 "Script": 709869534139279052,
-                "Values": null
+                "Values": [
+                    {
+                        "Name": "life",
+                        "Type": "Float",
+                        "Value": 0.5
+                    }
+                ]
             }
         ],
         "Children": null
