@@ -33,29 +33,21 @@
             {
                 "Type": "Trail",
                 "Active": true,
-                "TextureId": 6070033773294191873,
-                "MaxVertices": 1500,
-                "TrailQuads": 50
+                "TextureId": 15201057047576640579,
+                "MaxVertices": 240,
+                "TrailQuads": 8
             },
             {
                 "Type": "Script",
                 "Active": true,
                 "Script": 709869534139279052,
-                "Values": null
-            },
-            {
-                "Type": "SphereCollider",
-                "Active": true,
-                "colliderType": 2,
-                "layerType": 4,
-                "mass": 1.0,
-                "radius": 1.0,
-                "centerOffset": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "freezeRotation": false
+                "Values": [
+                    {
+                        "Name": "life",
+                        "Type": "Float",
+                        "Value": 0.5
+                    }
+                ]
             }
         ],
         "Children": null
