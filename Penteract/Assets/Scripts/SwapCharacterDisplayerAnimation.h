@@ -23,7 +23,7 @@ public:
 	float3 maxScale = float3(1, 1, 1);		// Scales for the pop up effect
 	float minTransparency = 0;
 	float maxTransparency = 1;
-	float breakTimeForSwap = .3f;
+	float breakTimeForSwap = .2f;
 	float swappingDuration = .2f;
 	float positionToLerpSwapMain = 232;				// This is the final position to set on the lerp of swapAnimation
 	float positionToLerpSwapAlternative = 300;

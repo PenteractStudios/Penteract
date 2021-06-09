@@ -71,7 +71,6 @@ void SwapCharacterDisplayerAnimation::Update() {
 
 	// Popup flash
 	if (!animationPopUpFinished) {
-		//float durationAndBreakTimes = durationLoadUp + breakTimeForPopups;
 		float durationAndBreakTimes = 0;
 		if (currentTime > durationAndBreakTimes && currentTime <= (durationAndBreakTimes + durationFirstEmission)) {		// First popup
 			firstBarEffect->Enable();

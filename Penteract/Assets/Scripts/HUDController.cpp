@@ -187,14 +187,10 @@ void HUDController::ChangePlayerHUD(int fangLives, int oniLives) {
 		animationScript->Play();
 	}
 	if (!fang->IsActive()) {
-		//fangCanvas->Disable();
-		//onimaruCanvas->Enable();
 		StopHealthLostInstantEffects(onimaruHealthMainCanvas);
 		LoadHealthFeedbackStates(onimaruHealthMainCanvas, oniLives);
 		LoadCooldownFeedbackStates(onimaruSkillsMainCanvas, static_cast<int>(Cooldowns::ONIMARU_SKILL_1));
 	} else {
-		//onimaruCanvas->Disable();
-		//fangCanvas->Enable();
 		StopHealthLostInstantEffects(fangHealthMainCanvas);
 		LoadHealthFeedbackStates(fangHealthMainCanvas, fangLives);
 		LoadCooldownFeedbackStates(fangSkillsMainCanvas, static_cast<int>(Cooldowns::FANG_SKILL_1));
