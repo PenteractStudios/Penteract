@@ -45,7 +45,7 @@ public:
 	void SetOverpower(bool status);
 	void SetNoCooldown(bool status);
 	void TakeDamage(bool ranged = true);
-
+	int GetOverPowerMode();
 public:
 
 	GameObject* player = nullptr;
@@ -95,8 +95,6 @@ public:
 	bool firstTime = true;
 
 	/* Fang & onimaru damage */
-	int onimaruDamage = 1;
-	int fangDamage = 3;
 	
 	int rangedDamageTaken = 1;
 	int meleeDamageTaken = 1;
@@ -130,7 +128,6 @@ private:
 	float3 GetDirection(MovementDirection md) const;
 	MovementDirection GetInputMovementDirection() const;
 	int GetMouseDirectionState(MovementDirection input);
-
 private:
 
 	float dashCooldownRemaining = 0.f;

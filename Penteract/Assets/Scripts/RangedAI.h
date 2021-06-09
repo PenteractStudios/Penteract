@@ -33,8 +33,7 @@ public:
 	void Update() override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
-	//void OnCollision(const GameObject& collidedWith) override; //This is commented until merge with collisions
-	void HitDetected(int damage_ = 1);
+	void OnCollision(const GameObject& collidedWith) override; //This is commented until merge with collisions
 	void ShootPlayerInRange(); //Sets in motion the shooting at the player, if found and close enough
 
 private:
@@ -80,7 +79,7 @@ public:
 
 	ComponentAgent* agent = nullptr;	//Reference to Agent component, for navigation
 
-	bool dead = false; //Boolean used to make sure Dead event happens only once OnAnimationFinished
+	//bool dead = false; //Boolean used to make sure Dead event happens only once OnAnimationFinished
 
 	float approachOffset = 4.0f;		//Offset to prevent AI from chasing after player immediately after getting close enough whenever player moves slightly
 	float fleeingRange = 7.f;			//Distance at which entity will start a flee motion
@@ -92,7 +91,7 @@ private:
 	AIState state = AIState::START;		//AI State
 	float3 bbCenter = float3(0, 0, 0);	//Bounding box center, to generate an offset for raycasting
 
-	bool hitTaken = false;				//Bool used to make sure hurt event happen only once, this should probably be inside Enemy script
+	//bool hitTaken = false;				//Bool used to make sure hurt event happen only once, this should probably be inside Enemy script
 	bool shot = false;					//Bool used to make sure shooting event happens only once whenever attackTimePool is low enough
 
 	ComponentAnimation* animation = nullptr;		//Refernece to  animatino component

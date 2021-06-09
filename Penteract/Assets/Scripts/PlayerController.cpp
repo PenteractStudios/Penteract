@@ -96,7 +96,6 @@ void PlayerController::Start() {
 	}
 	if (onimaru) {
 		onimaru->Disable();
-		onimaru->GetComponent<ComponentCapsuleCollider>()->Disable();
 		onimaruGun = GameplaySystems::GetGameObject(fangGunUID);
 		if (onimaruGun) {
 			onimaruGunTransform = onimaruGun->GetComponent<ComponentTransform>();
@@ -206,15 +205,11 @@ void PlayerController::SwitchCharacter() {
 			fang->Disable();
 			onimaru->Enable();
 			hudControllerScript->UpdateHP(onimaruCharacter.lifePoints, fangCharacter.lifePoints);
-			onimaru->GetComponent<ComponentCapsuleCollider>()->Enable();
-			fang->GetComponent<ComponentCapsuleCollider>()->Disable();
 		}
 		else {
 			onimaru->Disable();
 			fang->Enable();
 			hudControllerScript->UpdateHP(fangCharacter.lifePoints, onimaruCharacter.lifePoints);
-			onimaru->GetComponent<ComponentCapsuleCollider>()->Disable();
-			fang->GetComponent<ComponentCapsuleCollider>()->Enable();
 		}
 		switchCooldownRemaining = switchCooldown;
 		if (hudControllerScript) {
@@ -263,31 +258,15 @@ void PlayerController::Shoot() {
 	}
 }
 
-//void PlayerController::HitDetected(int damage) {
-//	if (!invincibleMode) {
-//		if (fang->IsActive()) {
-//			fangCharacter.Hit(damage);
-//			if (audios[static_cast<int>(AudioType::FANGHIT)]) audios[static_cast<int>(AudioType::FANGHIT)]->Play();
-//		}
-//		else {
-//			onimaruCharacter.Hit(damage);
-//			if (audios[static_cast<int>(AudioType::ONIHIT)]) audios[static_cast<int>(AudioType::ONIHIT)]->Play();
-//		}
-//	}
-//	if (!fangCharacter.isAlive && fang->IsActive()) {
-//		if (audios[static_cast<int>(AudioType::FANGDEATH)]) audios[static_cast<int>(AudioType::FANGDEATH)]->Play();
-//	}
-//	else if (!onimaruCharacter.isAlive && onimaru->IsActive()) {
-//		if (audios[static_cast<int>(AudioType::ONIDEATH)]) audios[static_cast<int>(AudioType::ONIDEATH)]->Play();
-//	}
-//}
-
 void PlayerController::SetInvincible(bool status) {
 	invincibleMode = status;
 }
 
 void PlayerController::SetOverpower(bool status) {
 	overpowerMode = status ? 999 : 1;
+}
+int PlayerController::GetOverPowerMode() {
+	return overpowerMode;
 }
 
 void PlayerController::SetNoCooldown(bool status) {
