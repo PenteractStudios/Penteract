@@ -16,7 +16,6 @@ class ComponentAgent;
 class ComponentAnimation;
 class State;
 class ResourcePrefab;
-class LightShoot;
 struct TesseractEvent;
 
 enum class MovementDirection {

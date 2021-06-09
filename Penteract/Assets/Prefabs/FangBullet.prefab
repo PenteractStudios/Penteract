@@ -9,8 +9,8 @@
                 "Type": "Transform",
                 "Active": true,
                 "Position": [
-                    0.0,
-                    3.496955156326294,
+                    -1.905583381652832,
+                    5.563652992248535,
                     -1.5418626070022584
                 ],
                 "Rotation": [
@@ -51,7 +51,7 @@
                 "StartTransition": 0.10000000149011612,
                 "EndTransition": 0.10000000149011612,
                 "FlipTexture": [
-                    false,
+                    true,
                     false
                 ]
             },
