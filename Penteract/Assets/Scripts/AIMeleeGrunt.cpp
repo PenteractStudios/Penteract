@@ -4,6 +4,7 @@
 #include "GameplaySystems.h"
 
 #include "PlayerController.h"
+#include "EnemySpawnPoint.h"
 #include "HUDController.h"
 #include "AIMovement.h"
 #include "WinLose.h"
@@ -60,6 +61,7 @@ void AIMeleeGrunt::Start() {
 		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
 		++i;
 	}
+	enemySpawnPointScript = GET_SCRIPT(GetOwner().GetParent(), EnemySpawnPoint);
 }
 
 void AIMeleeGrunt::Update() {

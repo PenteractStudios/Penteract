@@ -43,4 +43,5 @@ float3 SpawnOnClick::DetectMouseLocation() {
 
 		return p.ClosestPoint(ray);
 	}
+	return float3(0, 0, 0);
 }

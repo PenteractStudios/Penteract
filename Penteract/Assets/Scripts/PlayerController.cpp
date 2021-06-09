@@ -263,8 +263,9 @@ void PlayerController::SetInvincible(bool status) {
 }
 
 void PlayerController::SetOverpower(bool status) {
-	overpowerMode = status ? 999 : 1;
+	overpowerMode = status ? 999 : 0;
 }
+
 int PlayerController::GetOverPowerMode() {
 	return overpowerMode;
 }
