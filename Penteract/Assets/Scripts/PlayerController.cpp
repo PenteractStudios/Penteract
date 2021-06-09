@@ -6,8 +6,8 @@
 #include "AIMeleeGrunt.h"
 #include "RangedAI.h"
 #include "HUDController.h"
+#include "OnimaruBullet.h"
 #include "SwitchParticles.h"
-
 #include "Math/Quat.h"
 #include "Geometry/Plane.h"
 #include "Geometry/Frustum.h"
@@ -24,35 +24,35 @@
 EXPOSE_MEMBERS(PlayerController) {
 	// Add members here to expose them to the engine. Example:
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruTrailUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangGunUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruParticleUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
-	MEMBER(MemberType::FLOAT, distanceRayCast),
-	MEMBER(MemberType::FLOAT, switchCooldown),
-	MEMBER(MemberType::FLOAT, dashCooldown),
-	MEMBER(MemberType::FLOAT, dashSpeed),
-	MEMBER(MemberType::FLOAT, dashDuration),
-	MEMBER(MemberType::FLOAT, cameraOffsetZ),
-	MEMBER(MemberType::FLOAT, cameraOffsetY),
-	MEMBER(MemberType::FLOAT, cameraOffsetX),
-	MEMBER(MemberType::INT, fangCharacter.lifePoints),
-	MEMBER(MemberType::FLOAT, fangCharacter.movementSpeed),
-	MEMBER(MemberType::INT, fangCharacter.damageHit),
-	MEMBER(MemberType::FLOAT, fangCharacter.attackSpeed),
-	MEMBER(MemberType::INT, onimaruCharacter.lifePoints),
-	MEMBER(MemberType::FLOAT, onimaruCharacter.movementSpeed),
-	MEMBER(MemberType::INT, onimaruCharacter.damageHit),
-	MEMBER(MemberType::FLOAT, onimaruCharacter.attackSpeed),
-	MEMBER(MemberType::BOOL, useSmoothCamera),
-	MEMBER(MemberType::FLOAT, smoothCameraSpeed),
-	MEMBER(MemberType::BOOL, switchDelay),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
+		MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
+		MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruBulletUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, fangGunUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruParticleUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
+		MEMBER(MemberType::FLOAT, distanceRayCast),
+		MEMBER(MemberType::FLOAT, switchCooldown),
+		MEMBER(MemberType::FLOAT, dashCooldown),
+		MEMBER(MemberType::FLOAT, dashSpeed),
+		MEMBER(MemberType::FLOAT, dashDuration),
+		MEMBER(MemberType::FLOAT, cameraOffsetZ),
+		MEMBER(MemberType::FLOAT, cameraOffsetY),
+		MEMBER(MemberType::FLOAT, cameraOffsetX),
+		MEMBER(MemberType::INT, fangCharacter.lifePoints),
+		MEMBER(MemberType::FLOAT, fangCharacter.movementSpeed),
+		MEMBER(MemberType::INT, fangCharacter.damageHit),
+		MEMBER(MemberType::FLOAT, fangCharacter.attackSpeed),
+		MEMBER(MemberType::INT, onimaruCharacter.lifePoints),
+		MEMBER(MemberType::FLOAT, onimaruCharacter.movementSpeed),
+		MEMBER(MemberType::INT, onimaruCharacter.damageHit),
+		MEMBER(MemberType::FLOAT, onimaruCharacter.attackSpeed),
+		MEMBER(MemberType::BOOL, useSmoothCamera),
+		MEMBER(MemberType::FLOAT, smoothCameraSpeed),
+		MEMBER(MemberType::BOOL, switchDelay),
 };
 
 GENERATE_BODY_IMPL(PlayerController);
@@ -102,7 +102,7 @@ void PlayerController::Start() {
 			onimaruGunTransform = onimaruGun->GetComponent<ComponentTransform>();
 		}
 		onimaruAnimation = onimaru->GetComponent<ComponentAnimation>();
-		onimaruTrail = GameplaySystems::GetResource<ResourcePrefab>(onimaruTrailUID);
+		onimaruBullet = GameplaySystems::GetResource<ResourcePrefab>(onimaruBulletUID);
 		if (onimaruAnimation) {
 			onimaruCurrentState = onimaruAnimation->GetCurrentState();
 		}
@@ -112,7 +112,7 @@ void PlayerController::Start() {
 	}
 
 	switchEffects = GameplaySystems::GetGameObject(switchParticlesUID);
-	
+
 	firstTime = true;
 
 	agent = GetOwner().GetComponent<ComponentAgent>();
@@ -160,7 +160,8 @@ void PlayerController::InitDash(MovementDirection md) {
 		if (md != MovementDirection::NONE) {
 			dashDirection = GetDirection(md);
 			dashMovementDirection = md;
-		} else {
+		}
+		else {
 			dashDirection = facePointDir;
 		}
 		dashCooldownRemaining = dashCooldown;
@@ -231,7 +232,7 @@ void PlayerController::SwitchCharacter() {
 				}
 				switchInProgress = true;
 				playSwitchParticles = false;
-				
+
 			}
 			currentSwitchDelay += Time::GetDeltaTime();
 		}
@@ -239,7 +240,7 @@ void PlayerController::SwitchCharacter() {
 }
 
 bool PlayerController::CanShoot() {
-	return !shooting && ((fang->IsActive() && fangTrail) || (onimaru->IsActive() && onimaruTrail));
+	return !shooting && ((fang->IsActive() && fangTrail) || (onimaru->IsActive() && onimaruBullet));
 }
 
 void PlayerController::ResetSwitchStatus() {
@@ -250,7 +251,7 @@ void PlayerController::ResetSwitchStatus() {
 
 void PlayerController::Shoot() {
 	ComponentTransform* transform = GetOwner().GetComponent<ComponentTransform>();
-	
+
 	if (CanShoot()) {
 		shooting = true;
 		float3 start;
@@ -270,7 +271,7 @@ void PlayerController::Shoot() {
 				GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
 			}
 			if (rightShot) {
-				fangAnimation->SendTriggerSecondary(fangAnimation->GetCurrentState()->name + PlayerController::states[12]);				
+				fangAnimation->SendTriggerSecondary(fangAnimation->GetCurrentState()->name + PlayerController::states[12]);
 			}
 			else {
 				fangAnimation->SendTriggerSecondary(fangAnimation->GetCurrentState()->name + PlayerController::states[11]);
@@ -285,12 +286,13 @@ void PlayerController::Shoot() {
 				Debug::Log(AUDIOSOURCE_NULL_MSG);
 			}
 			onimaruAttackCooldownRemaining = 1.f / onimaruCharacter.attackSpeed;
-			if (onimaruTrail) {
-				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
-				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
-				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
-			}			
-
+			if (onimaruBullet) {
+				GameObject* bullet = GameplaySystems::Instantiate(onimaruBullet, onimaruGunTransform->GetGlobalPosition(), Quat(0.0f,0.0f,0.0f,0.0f));
+				if (bullet) {
+					onimaruBulletcript = GET_SCRIPT(bullet, OnimaruBullet);
+					onimaruBulletcript->SetOnimaruDirection(onimaruGunTransform->GetGlobalRotation());
+				}
+			}
 			start = onimaruGunTransform->GetGlobalPosition();
 		}
 
@@ -303,7 +305,8 @@ void PlayerController::Shoot() {
 			AIMeleeGrunt* enemyScript = GET_SCRIPT(hitGo->GetParent(), AIMeleeGrunt);
 			if (enemyScript) {
 				enemyScript->HitDetected((fang->IsActive() ? fangCharacter.damageHit : onimaruCharacter.damageHit) * overpowerMode);
-			} else {
+			}
+			else {
 				RangedAI* rangedAI = GET_SCRIPT(hitGo->GetParent(), RangedAI);
 				if (rangedAI) {
 					rangedAI->HitDetected((fang->IsActive() ? fangCharacter.damageHit : onimaruCharacter.damageHit) * overpowerMode);
@@ -364,7 +367,8 @@ void PlayerController::CheckCoolDowns() {
 		dashCooldownRemaining = 0.f;
 		dashInCooldown = false;
 		dashMovementDirection = MovementDirection::NONE;
-	} else {
+	}
+	else {
 		dashCooldownRemaining -= Time::GetDeltaTime();
 	}
 	//Dash duration
@@ -372,7 +376,8 @@ void PlayerController::CheckCoolDowns() {
 		dashRemaining = 0.f;
 		dashing = false;
 		agent->SetMaxSpeed(fangCharacter.movementSpeed);
-	} else {
+	}
+	else {
 		dashRemaining -= Time::GetDeltaTime();
 	}
 
@@ -395,7 +400,7 @@ void PlayerController::CheckCoolDowns() {
 		}
 	}
 
-	
+
 }
 
 MovementDirection PlayerController::GetInputMovementDirection() const {
@@ -462,11 +467,14 @@ int PlayerController::GetMouseDirectionState(MovementDirection input) {
 
 	if (dot > 0.707) {
 		return 2; //RunForward
-	} else if (dot < -0.707) {
+	}
+	else if (dot < -0.707) {
 		return 1; //RunBackward
-	} else if (cross.y > 0) {
+	}
+	else if (cross.y > 0) {
 		return 4; //RunRight
-	} else {
+	}
+	else {
 		return 3; //RunLeft
 	}
 }
@@ -479,7 +487,7 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 	else {
 		animation = onimaruAnimation;
 	}
-	
+
 	int dashAnimation = 0;
 	if (dashing) {
 		dashAnimation = 4;
@@ -501,7 +509,6 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 		}
 	}
 	else {
-		
 		if (animation->GetCurrentState()->name != PlayerController::states[GetMouseDirectionState(md) + dashAnimation]) {
 			animation->SendTrigger(animation->GetCurrentState()->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
 		}
@@ -518,7 +525,8 @@ void PlayerController::UpdatePlayerStats() {
 		if (hitTaken && fang->IsActive() && fangCharacter.lifePoints >= 0) {
 			hudControllerScript->UpdateHP(fangCharacter.lifePoints, onimaruCharacter.lifePoints);
 			hitTaken = false;
-		} else if (hitTaken && onimaru->IsActive() && onimaruCharacter.lifePoints >= 0) {
+		}
+		else if (hitTaken && onimaru->IsActive() && onimaruCharacter.lifePoints >= 0) {
 			hudControllerScript->UpdateHP(onimaruCharacter.lifePoints, fangCharacter.lifePoints);
 			hitTaken = false;
 		}
@@ -562,7 +570,8 @@ void PlayerController::Update() {
 		if (firstTime) {
 			if (fang->IsActive()) {
 				hudControllerScript->UpdateHP(fangCharacter.lifePoints, onimaruCharacter.lifePoints);
-			} else {
+			}
+			else {
 				hudControllerScript->UpdateHP(onimaruCharacter.lifePoints, fangCharacter.lifePoints);
 			}
 			firstTime = false;
@@ -597,14 +606,15 @@ void PlayerController::Update() {
 			else if (Input::GetMouseButtonRepeat(0)) {
 				Shoot();
 			}
-			else if(Input::GetMouseButtonUp(0)){
-				if (onimaruAnimation) {					
+			else if (Input::GetMouseButtonUp(0)) {
+				if (onimaruAnimation) {
 					onimaruAnimation->SendTriggerSecondary(PlayerController::states[13] + onimaruAnimation->GetCurrentState()->name);
 				}
 			}
 		}
 		PlayAnimation(md);
-	} else {
+	}
+	else {
 		agent->RemoveAgentFromCrowd();
 	}
 }

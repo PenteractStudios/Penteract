@@ -4,7 +4,6 @@
 #include "Enemy.h"
 #include "AIState.h"
 
-
 #include <string>
 
 class ComponentAgent;
@@ -46,7 +45,7 @@ private:
 	bool CharacterInRange(const GameObject* character, float range, bool useRange); //Returns true if distance to player is < than radius
 	bool FindsRayToPlayer(bool useForward);											//Returns true if raycasting towards player finds a hit target, later on this will also check if the hit is actually player and not a wall
 	void OrientateTo(const float3& direction);										//Makes character look in a particular direcion
-	void ActualShot();																//Generates projectile prefab instance 
+	void ActualShot();																//Generates projectile prefab instance
 	void PlayAudio(AudioType audioType);											//Plays audio (if not null)
 
 public:
@@ -60,7 +59,6 @@ public:
 	UID trailPrefabUID = 0;			//Reference to projectile prefab UID , for shooting
 	UID hudControllerObjUID = 0;	//Reference to Hud UID , for incrementing score
 
-
 	ResourcePrefab* shootTrailPrefab = nullptr; //Reference to projectile prefab , for shooting
 	GameObject* player = nullptr;				//Reference to player main Gameobject, used to check distances
 
@@ -70,7 +68,7 @@ public:
 	GameObject* fangMeshObj = nullptr;		//Reference to player Fang mesh holding Gameobject, used for raycasting if fang is active
 	GameObject* onimaruMeshObj = nullptr;	//Reference to player Fang mesh holding Gameobject, used for raycasting if onimaru is active
 
-	GameObject* meshObj = nullptr;							//Main mesh for Getting MeshRenderer reference and checking frustum presence (if not inside frustum shooting won't happen) 
+	GameObject* meshObj = nullptr;							//Main mesh for Getting MeshRenderer reference and checking frustum presence (if not inside frustum shooting won't happen)
 	GameObject* meshObjForFrustumPresenceCheck1 = nullptr;	//Second mesh for checking frustum presence (if not inside frustum shooting won't happen), this being null will make it always return true
 	GameObject* meshObjForFrustumPresenceCheck2 = nullptr;	//Third mesh for checking frustum presence (if not inside frustum shooting won't happen), this being null will make it always return true
 
@@ -98,13 +96,11 @@ private:
 	ComponentAnimation* animation = nullptr;		//Refernece to  animatino component
 	ComponentTransform* ownerTransform = nullptr;	//Reference to owner transform componenet
 
-	float attackTimePool = 2.0f;			//Pool that counts down to 0 to make AI shoot a projectile 
+	float attackTimePool = 2.0f;			//Pool that counts down to 0 to make AI shoot a projectile
 	float actualShotTimer = -1.0f;			//Timer that counts down the seconds to match shooting animation with projectile creation
 	float hurtFeedbackTimeDuration = 0.5f;	//Time that damaged material will be shown whenever AI is hit
 
 	ComponentMeshRenderer* meshRenderer = nullptr;	//Reference to a meshRendererComponent, used for material setting on hurt
 
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr }; //Array of ints used to play audios
-
 };
-
