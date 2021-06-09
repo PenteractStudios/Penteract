@@ -1,5 +1,6 @@
 {
     "ShaderType": 2,
+    "RenderingMode": 0,
     "DiffuseColor": [
         1.0,
         1.0,
@@ -17,6 +18,9 @@
     "Metalness": 0.0,
     "MetallicMap": 14186759908621175665,
     "NormalMap": 4162622369359841228,
+    "NormalStrength": 1.0,
+    "EmissiveMap": 5827239435197041329,
+    "AmbientOcclusionMap": 0,
     "Smoothness": 1.0,
     "HasSmoothnessInAlphaChannel": true,
     "Tiling": [

@@ -18,7 +18,7 @@
     "Metalness": 0.0,
     "MetallicMap": 13331294940935753644,
     "NormalMap": 12744291823908650702,
-    "NormalStrength": 0.0,
+    "NormalStrength": 1.0,
     "EmissiveMap": 756279300963340889,
     "AmbientOcclusionMap": 4740023685030622004,
     "Smoothness": 1.0,
