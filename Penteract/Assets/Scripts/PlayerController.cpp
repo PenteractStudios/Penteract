@@ -232,6 +232,7 @@ void PlayerController::SwitchCharacter() {
 				}
 				switchInProgress = true;
 				playSwitchParticles = false;
+
 			}
 			currentSwitchDelay += Time::GetDeltaTime();
 		}
@@ -286,7 +287,7 @@ void PlayerController::Shoot() {
 			}
 			onimaruAttackCooldownRemaining = 1.f / onimaruCharacter.attackSpeed;
 			if (onimaruBullet) {
-				GameObject* bullet = GameplaySystems::Instantiate(onimaruBullet, onimaruGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
+				GameObject* bullet = GameplaySystems::Instantiate(onimaruBullet, onimaruGunTransform->GetGlobalPosition(), Quat(0.0f,0.0f,0.0f,0.0f));
 				if (bullet) {
 					onimaruBulletcript = GET_SCRIPT(bullet, OnimaruBullet);
 					onimaruBulletcript->SetOnimaruDirection(onimaruGunTransform->GetGlobalRotation());
@@ -398,6 +399,8 @@ void PlayerController::CheckCoolDowns() {
 			onimaruAttackCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
+
+
 }
 
 MovementDirection PlayerController::GetInputMovementDirection() const {

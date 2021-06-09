@@ -9,9 +9,9 @@
                 "Type": "Transform",
                 "Active": true,
                 "Position": [
-                    -136.73731994628907,
-                    6.442291259765625,
-                    0.05256497859954834
+                    0.0,
+                    0.0,
+                    0.0
                 ],
                 "Rotation": [
                     0.0,
@@ -25,28 +25,28 @@
                     2.0
                 ],
                 "LocalEulerAngles": [
-                    -0.0,
                     0.0,
-                    -0.0
+                    0.0,
+                    0.0
                 ]
             },
             {
                 "Type": "Billboard",
                 "Active": true,
                 "BillboardType": 1,
-                "TextureId": 10056146012764442117,
+                "TextureId": 13261329255967787874,
                 "Ytiles": 1,
                 "Xtiles": 1,
                 "AnimationSpeed": 0.0,
                 "InitColor": [
-                    9.999899930335233e-7,
                     9.999999974752428e-7,
-                    9.999996564147296e-7
+                    9.999899930335233e-7,
+                    9.999899930335233e-7
                 ],
                 "FinalColor": [
                     0.0,
                     1.0,
-                    0.9404764175415039
+                    1.0
                 ],
                 "StartTransition": 0.10000000149011612,
                 "EndTransition": 0.10000000149011612,
@@ -68,7 +68,7 @@
                     {
                         "Name": "speed",
                         "Type": "Int",
-                        "Value": 50
+                        "Value": 10
                     }
                 ]
             }
