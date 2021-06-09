@@ -64,6 +64,11 @@
                         "Name": "life",
                         "Type": "Float",
                         "Value": 5.0
+                    },
+                    {
+                        "Name": "speed",
+                        "Type": "Int",
+                        "Value": 100
                     }
                 ]
             },
@@ -73,7 +78,7 @@
                 "colliderType": 2,
                 "layerType": 5,
                 "mass": 1.0,
-                "radius": 1.0,
+                "radius": 0.25,
                 "centerOffset": [
                     0.0,
                     0.0,

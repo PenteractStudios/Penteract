@@ -32,6 +32,6 @@ void OnimaruBullet::SetOnimaruDirection(Quat direction) {
 }
 
 void OnimaruBullet::OnCollision(GameObject& collidedWith) {
-	if (collidedWith.name == "Fang" || collidedWith.name == "Onimaru") return;
+	if (collidedWith.name == "Fang" || collidedWith.name == "Onimaru" || collidedWith.name == "OnimaruBullet") return;
 	GameplaySystems::DestroyGameObject(&GetOwner());
 }

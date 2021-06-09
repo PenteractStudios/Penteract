@@ -88,7 +88,7 @@
                     {
                         "Name": "onimaruCharacter.attackSpeed",
                         "Type": "Float",
-                        "Value": 2.0
+                        "Value": 15.0
                     },
                     {
                         "Name": "distanceRayCast",
@@ -123,7 +123,7 @@
                     {
                         "Name": "onimaruGunUID",
                         "Type": "GameObjectUID",
-                        "Value": 13328344970084139253
+                        "Value": 14604137167591297080
                     },
                     {
                         "Name": "switchParticlesUID",
@@ -3716,6 +3716,40 @@
                                 ]
                             }
                         ]
+                    },
+                    {
+                        "Name": "OnimaruBulletSpawnPoint",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Active": false,
+                                "Position": [
+                                    82.658203125,
+                                    101.34431457519531,
+                                    43.990234375
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            }
+                        ],
+                        "Children": null
                     }
                 ]
             },
