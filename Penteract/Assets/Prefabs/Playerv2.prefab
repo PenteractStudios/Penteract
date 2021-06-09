@@ -36,34 +36,34 @@
                 "Script": 4413934008247911625,
                 "Values": [
                     {
-                        "Name": "mainNodeUID",
-                        "Type": "GameObjectUID",
-                        "Value": 8960886680822700415
-                    },
-                    {
-                        "Name": "onimaruUID",
-                        "Type": "GameObjectUID",
-                        "Value": 12976891070772388993
-                    },
-                    {
                         "Name": "dashAudioSourceUID",
                         "Type": "GameObjectUID",
                         "Value": 10251782958241248981
                     },
                     {
-                        "Name": "fangUID",
+                        "Name": "onimaruUID",
                         "Type": "GameObjectUID",
-                        "Value": 17630836846266351934
+                        "Value": 11357257529929771030
                     },
                     {
-                        "Name": "onimaruParticleUID",
+                        "Name": "mainNodeUID",
                         "Type": "GameObjectUID",
-                        "Value": 5146792884566556316
+                        "Value": 12441191788729683031
+                    },
+                    {
+                        "Name": "fangUID",
+                        "Type": "GameObjectUID",
+                        "Value": 13478072709143387373
                     },
                     {
                         "Name": "cameraUID",
                         "Type": "GameObjectUID",
                         "Value": 680618938873982628
+                    },
+                    {
+                        "Name": "onimaruParticleUID",
+                        "Type": "GameObjectUID",
+                        "Value": 2893299881823841385
                     },
                     {
                         "Name": "canvasUID",
@@ -98,7 +98,7 @@
                     {
                         "Name": "fangGunUID",
                         "Type": "GameObjectUID",
-                        "Value": 12318670275504616239
+                        "Value": 303977282219906168
                     },
                     {
                         "Name": "fangTrailUID",
@@ -109,6 +109,16 @@
                         "Name": "onimaruTrailUID",
                         "Type": "PrefabResourceUID",
                         "Value": 17059306767860105124
+                    },
+                    {
+                        "Name": "onimaruGunUID",
+                        "Type": "GameObjectUID",
+                        "Value": 6982414162367642293
+                    },
+                    {
+                        "Name": "switchParticlesUID",
+                        "Type": "GameObjectUID",
+                        "Value": 3043498923923551250
                     }
                 ]
             },
@@ -185,7 +195,7 @@
                             {
                                 "Name": "playerUID",
                                 "Type": "GameObjectUID",
-                                "Value": 8960886680822700415
+                                "Value": 12441191788729683031
                             }
                         ]
                     }
@@ -226,7 +236,7 @@
                                 "Type": "MeshRenderer",
                                 "Active": false,
                                 "MeshID": 13528811221990825327,
-                                "MaterialID": 6166880807026700258
+                                "MaterialID": 9765489862314489578
                             },
                             {
                                 "Type": "BoundingBox",
@@ -544,7 +554,7 @@
                                                                                                 "EmitterType": 0,
                                                                                                 "BillboardType": 0,
                                                                                                 "TextureId": 12530008367011440877,
-                                                                                                "IsPlaying": true,
+                                                                                                "IsPlaying": false,
                                                                                                 "IsLooping": false,
                                                                                                 "IsSizeOverTime": false,
                                                                                                 "ScaleFactor": 0.0,
@@ -3592,7 +3602,7 @@
                 "Components": [
                     {
                         "Type": "Transform",
-                        "Active": false,
+                        "Active": true,
                         "Position": [
                             0.0,
                             0.0,
@@ -3617,7 +3627,7 @@
                     },
                     {
                         "Type": "Animation",
-                        "Active": false,
+                        "Active": true,
                         "StateMachinePrincipalId": 244436462561078256,
                         "StateMachineSecondaryId": 3864718281598596542
                     },
@@ -3629,7 +3639,7 @@
                             {
                                 "Name": "playerUID",
                                 "Type": "GameObjectUID",
-                                "Value": 8960886680822700415
+                                "Value": 12441191788729683031
                             },
                             {
                                 "Name": "sceneUID",
@@ -6516,6 +6526,463 @@
                     }
                 ],
                 "Children": null
+            },
+            {
+                "Name": "SwitchParticles",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Script",
+                        "Active": true,
+                        "Script": 4446135300975932463,
+                        "Values": [
+                            {
+                                "Name": "shockWaveUID",
+                                "Type": "GameObjectUID",
+                                "Value": 3998551501608278900
+                            },
+                            {
+                                "Name": "explosionUID",
+                                "Type": "GameObjectUID",
+                                "Value": 15881795348480980036
+                            },
+                            {
+                                "Name": "absorptionUID",
+                                "Type": "GameObjectUID",
+                                "Value": 5728081963537466716
+                            },
+                            {
+                                "Name": "playerUID",
+                                "Type": "GameObjectUID",
+                                "Value": 12441191788729683031
+                            },
+                            {
+                                "Name": "lightUID",
+                                "Type": "GameObjectUID",
+                                "Value": 13617222741053405101
+                            },
+                            {
+                                "Name": "groundLightUID",
+                                "Type": "GameObjectUID",
+                                "Value": 9254103974792795403
+                            }
+                        ]
+                    }
+                ],
+                "Children": [
+                    {
+                        "Name": "Absorption",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Active": true,
+                                "Position": [
+                                    0.0,
+                                    3.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "Particle",
+                                "Active": true,
+                                "EmitterType": 1,
+                                "BillboardType": 1,
+                                "TextureId": 18076704291587492614,
+                                "IsPlaying": false,
+                                "IsLooping": false,
+                                "IsSizeOverTime": false,
+                                "ScaleFactor": 2.4000000953674318,
+                                "ParticleScale": 7.0,
+                                "MaxParticle": 60,
+                                "Velocity": 8.0,
+                                "LifeParticle": 0.20000000298023225,
+                                "DistanceReverse": 14.0,
+                                "ReverseEffect": true,
+                                "AttachEmitter": true,
+                                "StartDelay": 0.0,
+                                "Ytiles": 1,
+                                "Xtiles": 1,
+                                "AnimationSpeed": 0.0,
+                                "IsRandomFrame": true,
+                                "InitColor": [
+                                    0.2392156422138214,
+                                    0.9803921580314636,
+                                    0.893194854259491,
+                                    1.0
+                                ],
+                                "FinalColor": [
+                                    0.14215683937072755,
+                                    0.14215540885925294,
+                                    0.14215540885925294,
+                                    1.0
+                                ],
+                                "StartTransition": 0.0,
+                                "EndTransition": 0.23000000417232514,
+                                "FlipTexture": [
+                                    false,
+                                    false
+                                ],
+                                "ConeRadiusUp": 1.0,
+                                "ConeRadiusDown": 0.5
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Name": "MainBlast",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Active": true,
+                                "Position": [
+                                    0.0,
+                                    3.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "Particle",
+                                "Active": true,
+                                "EmitterType": 1,
+                                "BillboardType": 0,
+                                "TextureId": 8245452397566252486,
+                                "IsPlaying": false,
+                                "IsLooping": false,
+                                "IsSizeOverTime": true,
+                                "ScaleFactor": 35.0,
+                                "ParticleScale": 1.0,
+                                "MaxParticle": 4,
+                                "Velocity": 1.0,
+                                "LifeParticle": 0.30000001192092898,
+                                "DistanceReverse": 0.0,
+                                "ReverseEffect": true,
+                                "AttachEmitter": true,
+                                "StartDelay": 0.3700000047683716,
+                                "Ytiles": 1,
+                                "Xtiles": 1,
+                                "AnimationSpeed": 0.0,
+                                "IsRandomFrame": false,
+                                "InitColor": [
+                                    0.0,
+                                    0.5588235855102539,
+                                    1.0,
+                                    1.0
+                                ],
+                                "FinalColor": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "StartTransition": 0.20000000298023225,
+                                "EndTransition": 0.3499999940395355,
+                                "FlipTexture": [
+                                    false,
+                                    false
+                                ],
+                                "ConeRadiusUp": 1.0,
+                                "ConeRadiusDown": 0.5
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Name": "Light",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Active": true,
+                                "Position": [
+                                    0.0,
+                                    3.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "Particle",
+                                "Active": true,
+                                "EmitterType": 1,
+                                "BillboardType": 0,
+                                "TextureId": 18076704291587492614,
+                                "IsPlaying": false,
+                                "IsLooping": false,
+                                "IsSizeOverTime": true,
+                                "ScaleFactor": 50.0,
+                                "ParticleScale": 2.0,
+                                "MaxParticle": 2,
+                                "Velocity": 0.10000000149011612,
+                                "LifeParticle": 0.5,
+                                "DistanceReverse": 0.0,
+                                "ReverseEffect": true,
+                                "AttachEmitter": true,
+                                "StartDelay": 0.3700000047683716,
+                                "Ytiles": 1,
+                                "Xtiles": 1,
+                                "AnimationSpeed": 0.0,
+                                "IsRandomFrame": false,
+                                "InitColor": [
+                                    0.0,
+                                    0.47058820724487307,
+                                    1.0,
+                                    1.0
+                                ],
+                                "FinalColor": [
+                                    9.999999974752428e-7,
+                                    9.999899930335233e-7,
+                                    9.999899930335233e-7,
+                                    1.0
+                                ],
+                                "StartTransition": 0.28999999165534975,
+                                "EndTransition": 0.46000000834465029,
+                                "FlipTexture": [
+                                    false,
+                                    false
+                                ],
+                                "ConeRadiusUp": 1.0,
+                                "ConeRadiusDown": 0.5
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Name": "LightGround",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Active": true,
+                                "Position": [
+                                    0.0,
+                                    0.30000001192092898,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "Particle",
+                                "Active": true,
+                                "EmitterType": 1,
+                                "BillboardType": 2,
+                                "TextureId": 18076704291587492614,
+                                "IsPlaying": false,
+                                "IsLooping": false,
+                                "IsSizeOverTime": true,
+                                "ScaleFactor": 70.0,
+                                "ParticleScale": 5.0,
+                                "MaxParticle": 1,
+                                "Velocity": 0.10000000149011612,
+                                "LifeParticle": 0.5,
+                                "DistanceReverse": 0.0,
+                                "ReverseEffect": true,
+                                "AttachEmitter": true,
+                                "StartDelay": 0.3700000047683716,
+                                "Ytiles": 1,
+                                "Xtiles": 1,
+                                "AnimationSpeed": 0.0,
+                                "IsRandomFrame": false,
+                                "InitColor": [
+                                    0.2234717309474945,
+                                    0.4212875962257385,
+                                    0.45588237047195437,
+                                    1.0
+                                ],
+                                "FinalColor": [
+                                    9.999999974752428e-7,
+                                    9.999899930335233e-7,
+                                    9.999899930335233e-7,
+                                    1.0
+                                ],
+                                "StartTransition": 0.27000001072883608,
+                                "EndTransition": 0.4399999976158142,
+                                "FlipTexture": [
+                                    false,
+                                    false
+                                ],
+                                "ConeRadiusUp": 1.0,
+                                "ConeRadiusDown": 0.5
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Name": "ShockWave",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Active": true,
+                                "Position": [
+                                    0.0,
+                                    3.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "Particle",
+                                "Active": true,
+                                "EmitterType": 1,
+                                "BillboardType": 0,
+                                "TextureId": 12441453756307210230,
+                                "IsPlaying": false,
+                                "IsLooping": false,
+                                "IsSizeOverTime": true,
+                                "ScaleFactor": 80.0,
+                                "ParticleScale": 5.0,
+                                "MaxParticle": 1,
+                                "Velocity": 0.10000000149011612,
+                                "LifeParticle": 0.20000000298023225,
+                                "DistanceReverse": 0.0,
+                                "ReverseEffect": true,
+                                "AttachEmitter": true,
+                                "StartDelay": 0.41999998688697817,
+                                "Ytiles": 1,
+                                "Xtiles": 1,
+                                "AnimationSpeed": 0.0,
+                                "IsRandomFrame": false,
+                                "InitColor": [
+                                    0.7843137383460999,
+                                    0.7843058705329895,
+                                    0.7843058705329895,
+                                    1.0
+                                ],
+                                "FinalColor": [
+                                    9.999999974752428e-7,
+                                    9.999899930335233e-7,
+                                    9.999899930335233e-7,
+                                    1.0
+                                ],
+                                "StartTransition": 0.10000000149011612,
+                                "EndTransition": 0.15000000596046449,
+                                "FlipTexture": [
+                                    false,
+                                    false
+                                ],
+                                "ConeRadiusUp": 1.0,
+                                "ConeRadiusDown": 0.5
+                            }
+                        ],
+                        "Children": null
+                    }
+                ]
             }
         ]
     }
