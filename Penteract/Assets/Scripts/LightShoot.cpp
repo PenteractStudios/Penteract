@@ -1,6 +1,4 @@
 #include "LightShoot.h"
-
-
 #include "GameObject.h"
 #include "GameplaySystems.h"
 EXPOSE_MEMBERS(LightShoot) {
