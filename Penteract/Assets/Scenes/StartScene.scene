@@ -7,7 +7,7 @@
     ],
     "QuadtreeMaxDepth": 4,
     "QuadtreeElementsPerNode": 200,
-    "GameCamera": 5052706520133489350,
+    "GameCamera": 3202817792305297463,
     "AmbientLight": [
         0.0,
         0.0,
@@ -162,7 +162,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 200.0,
-                            "HorizontalFov": 1.634196400642395,
+                            "HorizontalFov": 1.3887733221054078,
                             "VerticalFov": 1.0
                         }
                     },
@@ -507,8 +507,8 @@
                                                     0.5
                                                 ],
                                                 "Size": [
-                                                    1920.0,
-                                                    1080.0
+                                                    3840.0,
+                                                    2160.0
                                                 ],
                                                 "AnchorMin": [
                                                     0.5,
@@ -530,7 +530,7 @@
                                                 "Type": "Image",
                                                 "Id": 4666030001373830128,
                                                 "Active": true,
-                                                "TextureId": 8828451403569804850,
+                                                "TextureId": 18174893293799281147,
                                                 "Color": [
                                                     1.0,
                                                     1.0,
