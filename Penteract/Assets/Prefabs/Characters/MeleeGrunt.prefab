@@ -68,7 +68,7 @@
                     {
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
-                        "Value": 189561909595027362
+                        "Value": 8838610656912784116
                     },
                     {
                         "Name": "canvasUID",
@@ -81,14 +81,14 @@
                         "Value": 11
                     },
                     {
-                        "Name": "winConditionUID",
-                        "Type": "GameObjectUID",
-                        "Value": 16579210181260590797
-                    },
-                    {
                         "Name": "meleeRange",
                         "Type": "Float",
                         "Value": 3.5
+                    },
+                    {
+                        "Name": "winConditionUID",
+                        "Type": "GameObjectUID",
+                        "Value": 16579210181260590797
                     }
                 ]
             },
