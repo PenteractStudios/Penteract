@@ -20,9 +20,9 @@
                     1.0
                 ],
                 "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
+                    2.0,
+                    2.0,
+                    2.0
                 ],
                 "LocalEulerAngles": [
                     -0.0,
@@ -34,22 +34,22 @@
                 "Type": "Billboard",
                 "Active": true,
                 "BillboardType": 1,
-                "TextureId": 7334219409642418700,
+                "TextureId": 6056706067021854351,
                 "Ytiles": 1,
                 "Xtiles": 1,
                 "AnimationSpeed": 0.0,
                 "InitColor": [
-                    1.0,
-                    1.0,
-                    1.0
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7
                 ],
                 "FinalColor": [
                     1.0,
                     1.0,
                     1.0
                 ],
-                "StartTransition": 0.0,
-                "EndTransition": 0.0,
+                "StartTransition": 0.10000000149011612,
+                "EndTransition": 0.10000000149011612,
                 "FlipTexture": [
                     false,
                     false
@@ -59,7 +59,13 @@
                 "Type": "Script",
                 "Active": true,
                 "Script": 709869534139279052,
-                "Values": null
+                "Values": [
+                    {
+                        "Name": "life",
+                        "Type": "Float",
+                        "Value": 5.0
+                    }
+                ]
             }
         ],
         "Children": null

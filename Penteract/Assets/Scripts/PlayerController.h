@@ -11,6 +11,7 @@ class ComponentCamera;
 class ComponentAudioSource;
 class ComponentParticleSystem;
 class HUDController;
+class OnimaruBullet;
 class ComponentAgent;
 class ComponentAnimation;
 class State;
@@ -70,8 +71,10 @@ public:
 
 	UID onimaruUID = 0;
 	UID onimaruParticleUID = 0;
-	UID onimaruTrailUID = 0;
+	UID onimaruBulletUID = 0;
 	UID onimaruGunUID = 0;
+
+	UID switchParticlesUID = 0;
 
 	UID mainNodeUID = 0;
 	UID cameraUID = 0;
@@ -96,6 +99,9 @@ public:
 	float cameraOffsetY = 10.f;
 	float cameraOffsetX = 0.f;
 	bool firstTime = true;
+
+	bool switchInProgress = false;
+	float switchDelay = 0.37f;
 
 	/* Fang & onimaru damage */
 	int onimaruDamage = 1;
@@ -127,6 +133,7 @@ private:
 	bool CanDash();
 	bool CanSwitch();
 	bool CanShoot();
+	void ResetSwitchStatus();
 
 	float3 GetDirection(MovementDirection md) const;
 	MovementDirection GetInputMovementDirection() const;
@@ -148,6 +155,9 @@ private:
 	int overpowerMode = 1;
 	bool noCooldownMode = false;
 
+	float currentSwitchDelay = 0.f;
+	bool playSwitchParticles = true;
+
 	float3 initialPosition = float3(0, 0, 0);
 	float3 dashDestination = float3(0, 0, 0);
 	float3 dashDirection = float3(0, 0, 0);
@@ -167,6 +177,9 @@ private:
 	ResourcePrefab* onimaruTrail = nullptr;
 	ResourcePrefab* fangTrail = nullptr;
 	ResourcePrefab* fangBullet = nullptr;
+	ResourcePrefab* onimaruBullet = nullptr;
+
+	GameObject* switchEffects = nullptr;
 
 	//Particles
 	ComponentParticleSystem* fangCompParticle = nullptr;
@@ -177,4 +190,5 @@ private:
 
 	LightShoot* lightShootScript = nullptr;
 	HUDController* hudControllerScript = nullptr;
+	OnimaruBullet* onimaruBulletcript = nullptr;
 };
