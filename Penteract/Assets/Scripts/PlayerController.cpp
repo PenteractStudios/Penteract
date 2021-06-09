@@ -6,6 +6,7 @@
 #include "AIMeleeGrunt.h"
 #include "RangedAI.h"
 #include "HUDController.h"
+#include "SwitchParticles.h"
 
 #include "Math/Quat.h"
 #include "Geometry/Plane.h"
@@ -31,6 +32,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fangGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruParticleUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
 	MEMBER(MemberType::FLOAT, distanceRayCast),
 	MEMBER(MemberType::FLOAT, switchCooldown),
@@ -49,7 +51,8 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::INT, onimaruCharacter.damageHit),
 	MEMBER(MemberType::FLOAT, onimaruCharacter.attackSpeed),
 	MEMBER(MemberType::BOOL, useSmoothCamera),
-	MEMBER(MemberType::FLOAT, smoothCameraSpeed)
+	MEMBER(MemberType::FLOAT, smoothCameraSpeed),
+	MEMBER(MemberType::BOOL, switchDelay),
 };
 
 GENERATE_BODY_IMPL(PlayerController);
@@ -107,6 +110,8 @@ void PlayerController::Start() {
 	if (onimaruParticle) {
 		onimaruCompParticle = onimaruParticle->GetComponent<ComponentParticleSystem>();
 	}
+
+	switchEffects = GameplaySystems::GetGameObject(switchParticlesUID);
 	
 	firstTime = true;
 
@@ -192,30 +197,55 @@ void PlayerController::SwitchCharacter() {
 	if (!fang) return;
 	if (!onimaru) return;
 	if (!agent) return;
-
 	if (CanSwitch()) {
-		switchInCooldown = true;
-		if (audios[static_cast<int>(AudioType::SWITCH)]) {
-			audios[static_cast<int>(AudioType::SWITCH)]->Play();
+		bool doVisualSwitch = currentSwitchDelay < switchDelay ? false : true;
+		if (doVisualSwitch) {
+			if (audios[static_cast<int>(AudioType::SWITCH)]) {
+				audios[static_cast<int>(AudioType::SWITCH)]->Play();
+			}
+			if (fang->IsActive()) {
+				fang->Disable();
+				onimaru->Enable();
+				hudControllerScript->UpdateHP(onimaruCharacter.lifePoints, fangCharacter.lifePoints);
+			}
+			else {
+				onimaru->Disable();
+				fang->Enable();
+				hudControllerScript->UpdateHP(fangCharacter.lifePoints, onimaruCharacter.lifePoints);
+			}
+			if (hudControllerScript) {
+				hudControllerScript->ChangePlayerHUD();
+			}
+			currentSwitchDelay = 0.f;
+			playSwitchParticles = true;
+			switchInCooldown = true;
+			if (noCooldownMode) switchInProgress = false;
 		}
-		if (fang->IsActive()) {
-			fang->Disable();
-			onimaru->Enable();
-			hudControllerScript->UpdateHP(onimaruCharacter.lifePoints, fangCharacter.lifePoints);
-		} else {
-			onimaru->Disable();
-			fang->Enable();
-			hudControllerScript->UpdateHP(fangCharacter.lifePoints, onimaruCharacter.lifePoints);
-		}
-		switchCooldownRemaining = switchCooldown;
-		if (hudControllerScript) {
-			hudControllerScript->ChangePlayerHUD();
+		else {
+			if (playSwitchParticles) {
+				if (switchEffects) {
+					SwitchParticles* script = GET_SCRIPT(switchEffects, SwitchParticles);
+					if (script) {
+						script->Play();
+					}
+				}
+				switchInProgress = true;
+				playSwitchParticles = false;
+				
+			}
+			currentSwitchDelay += Time::GetDeltaTime();
 		}
 	}
 }
 
 bool PlayerController::CanShoot() {
 	return !shooting && ((fang->IsActive() && fangTrail) || (onimaru->IsActive() && onimaruTrail));
+}
+
+void PlayerController::ResetSwitchStatus() {
+	switchInProgress = false;
+	playSwitchParticles = true;
+	currentSwitchDelay = 0.f;
 }
 
 void PlayerController::Shoot() {
@@ -313,6 +343,7 @@ void PlayerController::SetOverpower(bool status) {
 
 void PlayerController::SetNoCooldown(bool status) {
 	noCooldownMode = status;
+	ResetSwitchStatus();
 }
 
 bool PlayerController::IsDead() {
@@ -323,7 +354,9 @@ void PlayerController::CheckCoolDowns() {
 	if (noCooldownMode || switchCooldownRemaining <= 0.f) {
 		switchCooldownRemaining = 0.f;
 		switchInCooldown = false;
-	} else {
+		if (!noCooldownMode) switchInProgress = false;
+	}
+	else {
 		switchCooldownRemaining -= Time::GetDeltaTime();
 	}
 	//Dash Cooldown
@@ -543,7 +576,16 @@ void PlayerController::Update() {
 		if (!dashing) {
 			LookAtMouse();
 			MoveTo(md);
-			if (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R)) SwitchCharacter();
+
+			if (switchInProgress || (noCooldownMode && Input::GetKeyCodeUp(Input::KEYCODE::KEY_R))) {
+				switchInProgress = true;
+				SwitchCharacter();
+			}
+
+			if (!switchInProgress && Input::GetKeyCodeUp(Input::KEYCODE::KEY_R)) {
+				switchInProgress = true;
+				switchCooldownRemaining = switchCooldown;
+			}
 		}
 		if (fang->IsActive()) {
 			if (Input::GetMouseButtonDown(0)) Shoot();
