@@ -343,19 +343,26 @@ void PlayerController::CheckCoolDowns() {
 		dashRemaining -= Time::GetDeltaTime();
 	}
 
-	if (fangAttackCooldownRemaining <= 0.f) {
-		fangAttackCooldownRemaining = 0.f;
-		shooting = false;
-	} else {
-		fangAttackCooldownRemaining -= Time::GetDeltaTime();
+	if (fang->IsActive()) {
+		if (fangAttackCooldownRemaining <= 0.f) {
+			fangAttackCooldownRemaining = 0.f;
+			shooting = false;
+		}
+		else {
+			fangAttackCooldownRemaining -= Time::GetDeltaTime();
+		}
+	}
+	else {
+		if (onimaruAttackCooldownRemaining <= 0.f) {
+			onimaruAttackCooldownRemaining = 0.f;
+			shooting = false;
+		}
+		else {
+			onimaruAttackCooldownRemaining -= Time::GetDeltaTime();
+		}
 	}
 
-	if (onimaruAttackCooldownRemaining <= 0.f) {
-		onimaruAttackCooldownRemaining = 0.f;
-		shooting = false;
-	} else {
-		onimaruAttackCooldownRemaining -= Time::GetDeltaTime();
-	}
+	
 }
 
 MovementDirection PlayerController::GetInputMovementDirection() const {
