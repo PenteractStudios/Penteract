@@ -12,7 +12,6 @@ EXPOSE_MEMBERS(RangerProjectileScript) {
 GENERATE_BODY_IMPL(RangerProjectileScript);
 
 void RangerProjectileScript::Start() {
-
 }
 
 void RangerProjectileScript::Update() {
@@ -24,12 +23,13 @@ void RangerProjectileScript::Update() {
 		float3 newPosition = transform->GetGlobalPosition();
 		newPosition += aux;
 		transform->SetGlobalPosition(newPosition);
-	} else {
+	}
+	else {
 		GameplaySystems::DestroyGameObject(&GetOwner());
 	}
 }
 
-void RangerProjectileScript::OnCollision(const GameObject& collidedWith) {
+void RangerProjectileScript::OnCollision(GameObject& collidedWith) {
 	//There appears to be an issue, projectiles colliding with each other, for now it should only collide with player (walls later)
 	GameObject* parent = collidedWith.GetParent();
 	if (parent != nullptr) {

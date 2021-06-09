@@ -17,6 +17,5 @@ public:
 	float life = 0.2f;
 
 private:
-	float restLife = 0.0f;
 	Quat onimaruDirection;
 };

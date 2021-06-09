@@ -34,9 +34,7 @@ EXPOSE_MEMBERS(RangedAI) {
 		MEMBER(MemberType::GAME_OBJECT_UID, hudControllerObjUID),
 		MEMBER(MemberType::FLOAT, timeSinceLastHurt),
 		MEMBER(MemberType::FLOAT, approachOffset) //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
-
 };//clang-format on
-
 
 GENERATE_BODY_IMPL(RangedAI);
 
@@ -51,7 +49,6 @@ void RangedAI::Start() {
 	onimaruMeshObj = GameplaySystems::GetGameObject(playerMeshUIDOnimaru);
 
 	shootTrailPrefab = GameplaySystems::GetResource<ResourcePrefab>(trailPrefabUID);
-
 
 	if (meshObj) {
 		ComponentBoundingBox* bb = meshObj->GetComponent<ComponentBoundingBox>();
@@ -68,7 +65,6 @@ void RangedAI::Start() {
 			damagedMaterialID = dmgMeshRenderer->materialId;
 		}
 	}
-
 
 	agent = GetOwner().GetComponent<ComponentAgent>();
 	if (agent) {
@@ -97,7 +93,6 @@ void RangedAI::Start() {
 		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
 		++i;
 	}
-
 }
 
 void RangedAI::OnAnimationFinished() {
@@ -106,7 +101,8 @@ void RangedAI::OnAnimationFinished() {
 	if (state == AIState::SPAWN) {
 		animation->SendTrigger("SpawnIdle");
 		state = AIState::IDLE;
-	} else if (state == AIState::DEATH) {
+	}
+	else if (state == AIState::DEATH) {
 		dead = true;
 	}
 }
@@ -118,12 +114,11 @@ void RangedAI::OnAnimationSecondaryFinished() {
 		animation->SendTriggerSecondary("Shoot" + animation->GetCurrentState()->name);
 		shot = false;
 	}
-
 }
 
 //This is commented until merge with collisions
 //
-//void RangedAI::OnCollision(const GameObject& collidedWith) {
+//void RangedAI::OnCollision(GameObject& collidedWith) {
 //	if (state == AIState::START || state != AIState::SPAWN)return;
 //	if (rangerGruntCharacter.lifePoints > 0 && playerController) {
 //		if (collidedWith.name == "FangBullet") {
@@ -140,7 +135,6 @@ void RangedAI::OnAnimationSecondaryFinished() {
 //}
 
 void RangedAI::Update() {
-
 	if (meshRenderer) {
 		if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
 			timeSinceLastHurt += Time::GetDeltaTime();
@@ -153,7 +147,6 @@ void RangedAI::Update() {
 	if (!GetOwner().IsActive()) return;
 
 	if (hitTaken && rangerGruntCharacter.lifePoints > 0) {
-
 		if (meshRenderer) {
 			if (damagedMaterialID != 0) {
 				meshRenderer->materialId = damagedMaterialID;
@@ -200,11 +193,11 @@ void RangedAI::EnterState(AIState newState) {
 		if (animation) {
 			if (state == AIState::FLEE) {
 				animation->SendTrigger("RunBackwardIdle");
-			} else if (state == AIState::RUN) {
+			}
+			else if (state == AIState::RUN) {
 				animation->SendTrigger("RunForwardIdle");
 			}
 		}
-
 
 		if (aiMovement) aiMovement->Stop();
 		break;
@@ -212,7 +205,8 @@ void RangedAI::EnterState(AIState newState) {
 		if (animation) {
 			if (state == AIState::IDLE) {
 				animation->SendTrigger("IdleRunForward");
-			} else if (state == AIState::FLEE) {
+			}
+			else if (state == AIState::FLEE) {
 				animation->SendTrigger("RunBackwardRunForward");
 			}
 		}
@@ -221,7 +215,8 @@ void RangedAI::EnterState(AIState newState) {
 		if (animation) {
 			if (state == AIState::RUN) {
 				animation->SendTrigger("RunForwardRunBackward");
-			} else if (state == AIState::IDLE) {
+			}
+			else if (state == AIState::IDLE) {
 				animation->SendTrigger("IdleRunBackward");
 			}
 		}
@@ -229,9 +224,11 @@ void RangedAI::EnterState(AIState newState) {
 	case AIState::DEATH:
 		if (state == AIState::IDLE) {
 			animation->SendTrigger("IdleDeath");
-		} else if (state == AIState::RUN) {
+		}
+		else if (state == AIState::RUN) {
 			animation->SendTrigger("RunForwardDeath");
-		} else if (state == AIState::FLEE) {
+		}
+		else if (state == AIState::FLEE) {
 			animation->SendTrigger("RunBackwardDeath");
 		}
 
@@ -272,7 +269,8 @@ void RangedAI::UpdateState() {
 
 					if (FindsRayToPlayer(false)) {
 						OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
-					} else {
+					}
+					else {
 						ChangeState(AIState::RUN);
 					}
 				}
@@ -287,10 +285,12 @@ void RangedAI::UpdateState() {
 				if (!CharacterInRange(player, rangerGruntCharacter.attackRange - approachOffset, true) || !FindsRayToPlayer(false)) {
 					if (!aiMovement->CharacterInSight(player, fleeingRange)) {
 						if (aiMovement) aiMovement->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), static_cast<int>(rangerGruntCharacter.movementSpeed), false);
-					} else {
+					}
+					else {
 						ChangeState(AIState::FLEE);
 					}
-				} else {
+				}
+				else {
 					ChangeState(AIState::IDLE);
 				}
 			}
@@ -301,7 +301,8 @@ void RangedAI::UpdateState() {
 
 		if (aiMovement->CharacterInSight(player, fleeingRange)) {
 			if (aiMovement) aiMovement->Flee(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), static_cast<int>(rangerGruntCharacter.movementSpeed), false);
-		} else {
+		}
+		else {
 			ChangeState(AIState::IDLE);
 		}
 		break;
@@ -310,7 +311,8 @@ void RangedAI::UpdateState() {
 			if (dead) {
 				if (rangerGruntCharacter.timeToDie > 0) {
 					rangerGruntCharacter.timeToDie -= Time::GetDeltaTime();
-				} else {
+				}
+				else {
 					if (hudControllerScript) {
 						hudControllerScript->UpdateScore(10);
 					}
@@ -336,9 +338,7 @@ void RangedAI::ChangeState(AIState newState) {
 	state = newState;
 }
 
-
 bool RangedAI::CharacterInRange(const GameObject* character, float range, bool useRange) {
-
 	bool inFrustum0 = meshObj != nullptr ? Camera::CheckObjectInsideFrustum(meshObj) : true;
 	bool inFrustum1 = meshObjForFrustumPresenceCheck1 != nullptr ? Camera::CheckObjectInsideFrustum(meshObjForFrustumPresenceCheck1) : true;
 	bool inFrustum2 = meshObjForFrustumPresenceCheck2 != nullptr ? Camera::CheckObjectInsideFrustum(meshObjForFrustumPresenceCheck2) : true;
@@ -363,7 +363,6 @@ bool RangedAI::FindsRayToPlayer(bool useForward) {
 		float y = (box->GetWorldAABB().maxPoint + box->GetWorldAABB().minPoint).y / 4;
 		offset.y = y;
 	}
-
 
 	float3 start = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + offset;
 
@@ -417,7 +416,6 @@ void RangedAI::ActualShot() {
 	actualShotTimer = -1.0f;
 
 	PlayAudio(AudioType::SHOOT);
-
 
 	if (FindsRayToPlayer(true)) {
 		Debug::Log("Player was shot");

@@ -257,7 +257,7 @@ void PlayerController::Shoot() {
 			}
 			onimaruAttackCooldownRemaining = 1.f / onimaruCharacter.attackSpeed;
 			if (onimaruBullet) {
-				GameObject* bullet = GameplaySystems::Instantiate(onimaruBullet, onimaruGunTransform->GetGlobalPosition(), Quat(0.0f, 0.0f, 0.0f, 0.0f));
+				GameObject* bullet = GameplaySystems::Instantiate(onimaruBullet, onimaruGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
 				if (bullet) {
 					onimaruBulletcript = GET_SCRIPT(bullet, OnimaruBullet);
 					onimaruBulletcript->SetOnimaruDirection(onimaruGunTransform->GetGlobalRotation());

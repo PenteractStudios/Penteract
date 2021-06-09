@@ -13,6 +13,7 @@ void OnimaruBullet::Start() {
 }
 
 void OnimaruBullet::Update() {
+
 	if (life >= 0) {
 		life -= Time::GetDeltaTime();
 		ComponentTransform* transform = GetOwner().GetComponent<ComponentTransform>();
