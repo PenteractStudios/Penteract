@@ -119,6 +119,10 @@ void SwapCharacterDisplayerAnimation::Update() {
 		}
 		else if(currentTime > (durationAndBreakTimes + swappingDuration)) {
 			animationSwapFinished = true;
+			// Set to final state
+			GameObject* target = isFang ? fangPrimary : onimaruPrimary;
+			SwapAnimation(target, true, true, durationAndBreakTimes + swappingDuration, durationAndBreakTimes + swappingDuration);
+			SwapAnimation(target == fangPrimary ? onimaruAlternative : fangAlternative, false, true, durationAndBreakTimes + swappingDuration, durationAndBreakTimes + swappingDuration);
 		}
 	}
 
