@@ -266,7 +266,8 @@ void PlayerController::Shoot() {
 				Debug::Log(AUDIOSOURCE_NULL_MSG);
 			}
 			onimaruAttackCooldownRemaining = 1.f / onimaruCharacter.attackSpeed;
-			GameplaySystems::Instantiate(shootLight, onimaruGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
+			//TODO IMPLEMENT shootLight
+			/*GameplaySystems::Instantiate(shootLight, onimaruGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());*/
 			if (onimaruTrail) {
 				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
 				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
@@ -377,8 +378,6 @@ void PlayerController::CheckCoolDowns() {
 			onimaruAttackCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
-
-	
 }
 
 MovementDirection PlayerController::GetInputMovementDirection() const {
