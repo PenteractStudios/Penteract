@@ -175,6 +175,10 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith)
             else if (state == AIState::RUN) {
                 animation->SendTrigger("RunDeath");
             }
+
+            ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
+            if (collider) collider->Disable();
+
             agent->RemoveAgentFromCrowd();
             state = AIState::DEATH;
         }

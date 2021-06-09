@@ -37,7 +37,6 @@ EXPOSE_MEMBERS(RangedAI) {
 
 };//clang-format on
 
-
 GENERATE_BODY_IMPL(RangedAI);
 
 void RangedAI::Start() {
@@ -51,7 +50,6 @@ void RangedAI::Start() {
 	onimaruMeshObj = GameplaySystems::GetGameObject(playerMeshUIDOnimaru);
 
 	shootTrailPrefab = GameplaySystems::GetResource<ResourcePrefab>(trailPrefabUID);
-
 
 	if (meshObj) {
 		ComponentBoundingBox* bb = meshObj->GetComponent<ComponentBoundingBox>();
@@ -68,7 +66,6 @@ void RangedAI::Start() {
 			damagedMaterialID = dmgMeshRenderer->materialId;
 		}
 	}
-
 
 	agent = GetOwner().GetComponent<ComponentAgent>();
 	if (agent) {
@@ -97,7 +94,6 @@ void RangedAI::Start() {
 		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
 		++i;
 	}
-
 }
 
 void RangedAI::OnAnimationFinished() {
@@ -119,7 +115,6 @@ void RangedAI::OnAnimationSecondaryFinished() {
 		animation->SendTriggerSecondary("Shoot" + animation->GetCurrentState()->name);
 		shot = false;
 	}
-
 }
 
 void RangedAI::OnCollision(GameObject& collidedWith) {
@@ -146,6 +141,8 @@ void RangedAI::OnCollision(GameObject& collidedWith) {
 		}
 
 		if (!rangerGruntCharacter.isAlive) {
+			ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
+			if (collider) collider->Disable();
 			ChangeState(AIState::DEATH);
 		}
 	}
@@ -153,7 +150,6 @@ void RangedAI::OnCollision(GameObject& collidedWith) {
 }
 
 void RangedAI::Update() {
-
 	if (meshRenderer) {
 		if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
 			timeSinceLastHurt += Time::GetDeltaTime();
@@ -195,7 +191,8 @@ void RangedAI::EnterState(AIState newState) {
 		if (animation) {
 			if (state == AIState::FLEE) {
 				animation->SendTrigger("RunBackwardIdle");
-			} else if (state == AIState::RUN) {
+			}
+			else if (state == AIState::RUN) {
 				animation->SendTrigger("RunForwardIdle");
 			}
 		}
@@ -206,7 +203,8 @@ void RangedAI::EnterState(AIState newState) {
 		if (animation) {
 			if (state == AIState::IDLE) {
 				animation->SendTrigger("IdleRunForward");
-			} else if (state == AIState::FLEE) {
+			}
+			else if (state == AIState::FLEE) {
 				animation->SendTrigger("RunBackwardRunForward");
 			}
 		}
@@ -215,7 +213,8 @@ void RangedAI::EnterState(AIState newState) {
 		if (animation) {
 			if (state == AIState::RUN) {
 				animation->SendTrigger("RunForwardRunBackward");
-			} else if (state == AIState::IDLE) {
+			}
+			else if (state == AIState::IDLE) {
 				animation->SendTrigger("IdleRunBackward");
 			}
 		}
@@ -223,9 +222,11 @@ void RangedAI::EnterState(AIState newState) {
 	case AIState::DEATH:
 		if (state == AIState::IDLE) {
 			animation->SendTrigger("IdleDeath");
-		} else if (state == AIState::RUN) {
+		}
+		else if (state == AIState::RUN) {
 			animation->SendTrigger("RunForwardDeath");
-		} else if (state == AIState::FLEE) {
+		}
+		else if (state == AIState::FLEE) {
 			animation->SendTrigger("RunBackwardDeath");
 		}
 		if (shot) {
@@ -269,7 +270,8 @@ void RangedAI::UpdateState() {
 
 					if (FindsRayToPlayer(false)) {
 						OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
-					} else {
+					}
+					else {
 						ChangeState(AIState::RUN);
 					}
 				}
@@ -284,10 +286,12 @@ void RangedAI::UpdateState() {
 				if (!CharacterInRange(player, rangerGruntCharacter.attackRange - approachOffset, true) || !FindsRayToPlayer(false)) {
 					if (!aiMovement->CharacterInSight(player, fleeingRange)) {
 						if (aiMovement) aiMovement->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), static_cast<int>(rangerGruntCharacter.movementSpeed), false);
-					} else {
+					}
+					else {
 						ChangeState(AIState::FLEE);
 					}
-				} else {
+				}
+				else {
 					ChangeState(AIState::IDLE);
 				}
 			}
@@ -298,7 +302,8 @@ void RangedAI::UpdateState() {
 
 		if (aiMovement->CharacterInSight(player, fleeingRange)) {
 			if (aiMovement) aiMovement->Flee(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), static_cast<int>(rangerGruntCharacter.movementSpeed), false);
-		} else {
+		}
+		else {
 			ChangeState(AIState::IDLE);
 		}
 		break;
@@ -328,7 +333,6 @@ void RangedAI::ChangeState(AIState newState) {
 }
 
 bool RangedAI::CharacterInRange(const GameObject* character, float range, bool useRange) {
-
 	bool inFrustum0 = meshObj != nullptr ? Camera::CheckObjectInsideFrustum(meshObj) : true;
 	bool inFrustum1 = meshObjForFrustumPresenceCheck1 != nullptr ? Camera::CheckObjectInsideFrustum(meshObjForFrustumPresenceCheck1) : true;
 	bool inFrustum2 = meshObjForFrustumPresenceCheck2 != nullptr ? Camera::CheckObjectInsideFrustum(meshObjForFrustumPresenceCheck2) : true;
@@ -353,7 +357,6 @@ bool RangedAI::FindsRayToPlayer(bool useForward) {
 		float y = (box->GetWorldAABB().maxPoint + box->GetWorldAABB().minPoint).y / 4;
 		offset.y = y;
 	}
-
 
 	float3 start = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + offset;
 

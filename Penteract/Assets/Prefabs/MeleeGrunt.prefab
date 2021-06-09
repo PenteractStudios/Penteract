@@ -68,17 +68,17 @@
                     {
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
-                        "Value": 8960886680822700415
-                    },
-                    {
-                        "Name": "winUID",
-                        "Type": "GameObjectUID",
-                        "Value": 3640826057516209614
+                        "Value": 983215537647111703
                     },
                     {
                         "Name": "canvasUID",
                         "Type": "GameObjectUID",
                         "Value": 17773628572955029428
+                    },
+                    {
+                        "Name": "winUID",
+                        "Type": "GameObjectUID",
+                        "Value": 3640826057516209614
                     },
                     {
                         "Name": "winConditionUID",

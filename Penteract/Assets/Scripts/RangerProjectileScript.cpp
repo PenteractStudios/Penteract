@@ -12,7 +12,6 @@ EXPOSE_MEMBERS(RangerProjectileScript) {
 GENERATE_BODY_IMPL(RangerProjectileScript);
 
 void RangerProjectileScript::Start() {
-
 }
 
 void RangerProjectileScript::Update() {
@@ -24,7 +23,8 @@ void RangerProjectileScript::Update() {
 		float3 newPosition = transform->GetGlobalPosition();
 		newPosition += aux;
 		transform->SetGlobalPosition(newPosition);
-	} else {
+	}
+	else {
 		GameplaySystems::DestroyGameObject(&GetOwner());
 	}
 }

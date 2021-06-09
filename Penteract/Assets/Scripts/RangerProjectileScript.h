@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Scripting/Script.h"
-#include "GameObject.h" 
+#include "GameObject.h"
 
 class RangerProjectileScript : public Script {
 	GENERATE_BODY(RangerProjectileScript);
@@ -21,4 +21,3 @@ private:
 	bool firstTime = false;
 	Quat rangerDirection = Quat(0, 0, 0, 0);
 };
-
