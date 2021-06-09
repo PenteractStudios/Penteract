@@ -100,7 +100,8 @@ void PlayerController::Start() {
 	if (onimaru) {
 		onimaru->Disable();
 		onimaruGun = GameplaySystems::GetGameObject(fangGunUID);
-		if(onimaru->GetComponent<ComponentCapsuleCollider>()) onimaru->GetComponent<ComponentCapsuleCollider>()->Enable(); // workaround collider doesn't activate if onimaru starts disabled
+		ComponentCapsuleCollider* ccc = onimaru->GetComponent<ComponentCapsuleCollider>(); // workaround collider doesn't activate if onimaru starts disabled
+		if (ccc) ccc->Enable();
 		if (onimaruGun) {
 			onimaruGunTransform = onimaruGun->GetComponent<ComponentTransform>();
 		}
