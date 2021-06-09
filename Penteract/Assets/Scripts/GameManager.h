@@ -17,5 +17,5 @@ public:
 	UID gameManagerUID = 0;
 
 	// Put the same values that in GameSingleton.h
-	float volumeScene = 0.f;
+	float volumeScene = 0.5f;
 };

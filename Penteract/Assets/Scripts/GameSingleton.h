@@ -24,7 +24,7 @@ public:
 
 public:
 	// Here we put all the global variables of the game as audio, points, etc...
-	float volumeScene = 0.f;
+	float volumeScene = 0.5f;
 
 private:
 	inline static GameSingleton* instance = nullptr;
