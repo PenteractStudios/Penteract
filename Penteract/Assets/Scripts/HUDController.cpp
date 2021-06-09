@@ -4,29 +4,33 @@
 #include "Components/UI/ComponentImage.h"
 #include "HealthLostInstantFeedback.h"
 #include "AbilityRefreshEffect.h"
+#include "AbilityRefreshEffectProgressBar.h"
 #include "LowHPWarning.h"
 #include "FullHealthBarFeedback.h"
+#include "SwapCharacterDisplayerAnimation.h"
 #include "GameplaySystems.h"
 
 
 EXPOSE_MEMBERS(HUDController) {
 	// Add members here to expose them to the engine. Example:
 	MEMBER(MemberType::GAME_OBJECT_UID, fangMainCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruMainCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangSkillsMainCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillsMainCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangSkillsSecondCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillsSecondCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangHealthMainCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthMainCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangHealthSecondCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthSecondCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, swapingSkillCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, scoreTextUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, lowHealthWarningEffectUID),
-		MEMBER(MemberType::FLOAT, timeToFadeDurableHealthFeedbackInternal)
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruMainCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangSkillsMainCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillsMainCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangSkillsSecondCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillsSecondCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangHealthMainCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthMainCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangHealthSecondCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthSecondCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, swapingSkillCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, scoreTextUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasHUDUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, lowHealthWarningEffectUID),
+	MEMBER(MemberType::FLOAT, timeToFadeDurableHealthFeedbackInternal),
+	MEMBER(MemberType::FLOAT, delaySwitchTime)
 };
 
 GENERATE_BODY_IMPL(HUDController);
@@ -63,6 +67,8 @@ void HUDController::Start() {
 
 	lowHealthWarningEffect = GameplaySystems::GetGameObject(lowHealthWarningEffectUID);
 
+	canvasHUD = GameplaySystems::GetGameObject(canvasHUDUID);
+
 	GameObject* text = GameplaySystems::GetGameObject(scoreTextUID);
 	if (text) scoreText = text->GetComponent<ComponentText>();
 
@@ -85,6 +91,24 @@ void HUDController::Start() {
 
 void HUDController::Update() {
 	if (!fangCanvas || !onimaruCanvas) return;
+
+	// In order to NOT control the canvas switch from SwapCharacterDisplayerAnimation
+	if (isSwitching) {
+		if (currentTime > delaySwitchTime) {
+			isSwitching = false; 
+			if (!fang->IsActive()) {
+				SetFangCanvas(false);
+				SetOnimaruCanvas(true);
+			}
+			else {
+				SetFangCanvas(true);
+				SetOnimaruCanvas(false);
+			}
+		}
+		else {
+			currentTime += Time::GetDeltaTime();
+		}
+	}
 }
 
 void HUDController::StopHealthLostInstantEffects(GameObject* targetCanvas) {
@@ -157,16 +181,16 @@ void HUDController::LoadCooldownFeedbackStates(GameObject* canvas, int startingI
 
 void HUDController::ChangePlayerHUD(int fangLives, int oniLives) {
 	if (!fang || !onimaru) return;
-
+	currentTime = 0;
+	SwapCharacterDisplayerAnimation* animationScript = GET_SCRIPT(canvasHUD, SwapCharacterDisplayerAnimation);
+	if (animationScript) {
+		animationScript->Play();
+	}
 	if (!fang->IsActive()) {
-		fangCanvas->Disable();
-		onimaruCanvas->Enable();
 		StopHealthLostInstantEffects(onimaruHealthMainCanvas);
 		LoadHealthFeedbackStates(onimaruHealthMainCanvas, oniLives);
 		LoadCooldownFeedbackStates(onimaruSkillsMainCanvas, static_cast<int>(Cooldowns::ONIMARU_SKILL_1));
 	} else {
-		onimaruCanvas->Disable();
-		fangCanvas->Enable();
 		StopHealthLostInstantEffects(fangHealthMainCanvas);
 		LoadHealthFeedbackStates(fangHealthMainCanvas, fangLives);
 		LoadCooldownFeedbackStates(fangSkillsMainCanvas, static_cast<int>(Cooldowns::FANG_SKILL_1));
@@ -182,7 +206,7 @@ void HUDController::ChangePlayerHUD(int fangLives, int oniLives) {
 
 	prevLivesFang = fangLives;
 	prevLivesOni = oniLives;
-
+	isSwitching = true;
 }
 
 void HUDController::HealthRegeneration(float currentHp, float hpRecovered) {
@@ -237,6 +261,18 @@ void HUDController::ResetHealthRegenerationEffects(float currentHp) {
 	}
 }
 
+void HUDController::ResetCooldownProgressBar()
+{
+	if (!swapingSkillCanvas) {
+		return;
+	}
+
+	AbilityRefreshEffectProgressBar* pef = GET_SCRIPT(swapingSkillCanvas->GetChildren()[2], AbilityRefreshEffectProgressBar);
+	if (pef != nullptr) {
+		pef->ResetBar();
+	}
+}
+
 void HUDController::UpdateScore(int score_) {
 	score += score_;
 	if (scoreText) scoreText->SetText(std::to_string(score));
@@ -250,7 +286,25 @@ float  HUDController::MapValue01(float value, float min, float max) {
 	return (value - min) / (max - min);
 }
 
+void HUDController::SetFangCanvas(bool value)
+{
+	if (value) {
+		fangCanvas->Enable();
+	}
+	else {
+		fangCanvas->Disable();
+	}
+}
 
+void HUDController::SetOnimaruCanvas(bool value)
+{
+	if (value) {
+		onimaruCanvas->Enable();
+	}
+	else {
+		onimaruCanvas->Disable();
+	}
+}
 
 void HUDController::UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown) {
 	//The received cooldowns here range from 0 to 1
@@ -396,12 +450,20 @@ void HUDController::PlayCoolDownEffect(AbilityRefreshEffect* ef, Cooldowns coold
 	}
 }
 
+void HUDController::PlayProgressBarEffect(AbilityRefreshEffectProgressBar* ef, Cooldowns cooldown)
+{
+	if (ef != nullptr) {
+		ef->Play();
+	}
+}
+
 //Hierarchy sensitive method
 void HUDController::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canvas) {
 	if (!abilityCoolDownsRetreived[static_cast<int>(cooldown)]) {
 		if (cooldowns[static_cast<int>(cooldown)] == 1.0f) {
 			if (canvas) {
 				AbilityRefreshEffect* ef = nullptr;
+				AbilityRefreshEffectProgressBar* pef = nullptr;
 
 				if (cooldown < Cooldowns::ONIMARU_SKILL_1) {
 					if (canvas->GetChildren().size() > 0) {
@@ -426,7 +488,7 @@ void HUDController::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* c
 				} else {
 					if (canvas->GetChildren().size() > 6) {
 						ef = GET_SCRIPT(canvas->GetChildren()[2], AbilityRefreshEffect);
-
+						pef = GET_SCRIPT(canvas->GetChildren()[2], AbilityRefreshEffectProgressBar);
 						//Turn on button idle
 						canvas->GetChildren()[5]->Enable();
 						//Turn off button down
@@ -437,6 +499,7 @@ void HUDController::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* c
 
 				if (ef) {
 					PlayCoolDownEffect(ef, cooldown);
+					PlayProgressBarEffect(pef, cooldown);
 					abilityCoolDownsRetreived[static_cast<int>(cooldown)] = true;
 				}
 			} else {

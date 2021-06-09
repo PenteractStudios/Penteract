@@ -6,6 +6,7 @@
 class GameObject;
 class ComponentText;
 class AbilityRefreshEffect;
+class AbilityRefreshEffectProgressBar;
 
 #define MAX_HEALTH 10
 #define LOW_HEALTH_WARNING 2
@@ -37,10 +38,13 @@ public:
 	void ChangePlayerHUD(int fangLives, int oniLives);
 	void HealthRegeneration(float currentHp, float hpRecovered);
 	void ResetHealthRegenerationEffects(float currentHp);
+	void ResetCooldownProgressBar();
 
 	void UpdateScore(int score_);
 	void SetCooldownRetreival(Cooldowns cooldown);
 	static float MapValue01(float value, float min, float max);
+	void SetFangCanvas(bool value);
+	void SetOnimaruCanvas(bool value);
 
 public:
 
@@ -70,7 +74,10 @@ public:
 
 	UID scoreTextUID = 0;
 
+	UID canvasHUDUID = 0;
+
 	float timeToFadeDurableHealthFeedbackInternal = 2.0f;
+	float delaySwitchTime = .2f;// The time that takes to switch the canvas
 
 private:
 	void UpdateComponents();
@@ -83,6 +90,7 @@ private:
 	void LoadCooldownFeedbackStates(GameObject* targetCanvas, int startingIndex);
 	void AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canvas);
 	void PlayCoolDownEffect(AbilityRefreshEffect* effect, Cooldowns cooldown);
+	void PlayProgressBarEffect(AbilityRefreshEffectProgressBar* effect, Cooldowns cooldown);
 
 private:
 
@@ -105,6 +113,8 @@ private:
 	GameObject* lowHealthWarningEffect = nullptr;
 
 	GameObject* swapingSkillCanvas = nullptr;
+
+	GameObject* canvasHUD = nullptr;
 
 	float cooldowns[static_cast<int>(Cooldowns::TOTAL)];
 
@@ -132,5 +142,9 @@ private:
 
 	ComponentText* scoreText = nullptr;
 	int score = 0;
+
+	// For characte switching
+	float currentTime = 0;
+	bool isSwitching = false;
 };
 
