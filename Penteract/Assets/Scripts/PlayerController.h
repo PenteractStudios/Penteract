@@ -106,7 +106,8 @@ public:
 	std::vector<std::string> states{ "Idle" ,
 								"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
 								"DashBackward", "DashForward" , "DashLeft" , "DashRight" ,
-								"Death" , "Hurt" , "LeftShot" , "RightShot", "Shooting"
+								"Death" , "Hurt" , "LeftShot" , "RightShot", "Shooting", "RunForwardLeft",
+								"RunForwardRight", "RunBackwardLeft", "RunBarckwardRight"
 	};
 
 private:

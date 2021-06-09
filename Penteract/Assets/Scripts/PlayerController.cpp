@@ -325,6 +325,8 @@ void PlayerController::CheckCoolDowns() {
 			onimaruAttackCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
+
+	
 }
 
 MovementDirection PlayerController::GetInputMovementDirection() const {
