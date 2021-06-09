@@ -9,7 +9,7 @@ class RangerProjectileScript : public Script {
 public:
 	void Start() override;
 	void Update() override;
-	void OnCollision(const GameObject& collidedWith) override;
+	void OnCollision(GameObject& collidedWith) override;
 	void SetRangerDirection(Quat rangerDirection_);
 public:
 	int speed = 200;

@@ -14,7 +14,7 @@ public:
 	void Update() override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
-	void OnCollision(const GameObject& collidedWith) override;
+	void OnCollision(GameObject& collidedWith) override;
 public:
 
 	UID playerUID = 0;

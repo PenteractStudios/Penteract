@@ -34,7 +34,7 @@ public:
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
 	//void HitDetected(int damage_ = 1);
-	void OnCollision(const GameObject& collidedWith) override;
+	void OnCollision(GameObject& collidedWith) override;
 
 public:
 

@@ -122,7 +122,7 @@ void RangedAI::OnAnimationSecondaryFinished() {
 
 }
 
-void RangedAI::OnCollision(const GameObject& collidedWith) {
+void RangedAI::OnCollision(GameObject& collidedWith) {
 	if (state != AIState::START && state != AIState::SPAWN) {
 		if (rangerGruntCharacter.isAlive && playerController) {
 			bool hitTaken = false;
@@ -414,6 +414,8 @@ void RangedAI::PlayAudio(AudioType audioType) {
 
 void RangedAI::ShootPlayerInRange() {
 	if (!player) return;
+	if (!playerController) return;
+	if (playerController->IsDead()) return;
 	if (CharacterInRange(player, rangerGruntCharacter.attackRange, true)) {
 		shot = true;
 

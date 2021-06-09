@@ -49,7 +49,7 @@ void PlayerDeath::OnAnimationSecondaryFinished()
 	}
 }
 
-void PlayerDeath::OnCollision(const GameObject& collidedWith) {
+void PlayerDeath::OnCollision(GameObject& collidedWith) {
 	
 	if (collidedWith.name == "RangerProjectile") {
 		playerController->TakeDamage(true);

@@ -18,7 +18,7 @@ void Bullet::Update() {
 
 }
 
-void Bullet::OnCollision(const GameObject& collidedWith) {
+void Bullet::OnCollision(GameObject& collidedWith) {
     if (collidedWith.name == "Fang" || collidedWith.name == "Onimaru") return;
     GameplaySystems::DestroyGameObject(&GetOwner());
 }

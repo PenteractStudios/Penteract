@@ -97,6 +97,7 @@ void PlayerController::Start() {
 	if (onimaru) {
 		onimaru->Disable();
 		onimaruGun = GameplaySystems::GetGameObject(fangGunUID);
+		onimaru->GetComponent<ComponentCapsuleCollider>()->Enable(); // workaround collider doesn't activate if onimaru starts disabled
 		if (onimaruGun) {
 			onimaruGunTransform = onimaruGun->GetComponent<ComponentTransform>();
 		}
@@ -125,6 +126,7 @@ void PlayerController::Start() {
 		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
 		i++;
 	}
+
 }
 
 void PlayerController::MoveTo(MovementDirection md) {

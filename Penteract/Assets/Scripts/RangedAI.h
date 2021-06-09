@@ -33,7 +33,7 @@ public:
 	void Update() override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
-	void OnCollision(const GameObject& collidedWith) override; //This is commented until merge with collisions
+	void OnCollision(GameObject& collidedWith) override; //This is commented until merge with collisions
 	void ShootPlayerInRange(); //Sets in motion the shooting at the player, if found and close enough
 
 private:
