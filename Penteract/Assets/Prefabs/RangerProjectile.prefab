@@ -1,0 +1,92 @@
+{
+    "Root": {
+        "Name": "RangerProjectile",
+        "Active": true,
+        "RootBoneName": "",
+        "Mask": 0,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Active": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    2.0,
+                    2.0,
+                    2.0
+                ],
+                "LocalEulerAngles": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ]
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 8962533977559074741,
+                "Values": [
+                    {
+                        "Name": "speed",
+                        "Type": "Int",
+                        "Value": 50
+                    },
+                    {
+                        "Name": "life",
+                        "Type": "Float",
+                        "Value": 2.0
+                    }
+                ]
+            },
+            {
+                "Type": "SphereCollider",
+                "Active": true,
+                "colliderType": 2,
+                "layerType": 4,
+                "mass": 1.0,
+                "radius": 1.0,
+                "centerOffset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "freezeRotation": false
+            },
+            {
+                "Type": "Billboard",
+                "Active": true,
+                "BillboardType": 0,
+                "TextureId": 10401544034748941721,
+                "Ytiles": 2,
+                "Xtiles": 5,
+                "AnimationSpeed": 10.0,
+                "InitColor": [
+                    1.0,
+                    0.0,
+                    0.0
+                ],
+                "FinalColor": [
+                    1.0,
+                    0.0,
+                    0.0
+                ],
+                "StartTransition": 0.0,
+                "EndTransition": 0.0,
+                "FlipTexture": [
+                    false,
+                    false
+                ]
+            }
+        ],
+        "Children": null
+    }
+}
