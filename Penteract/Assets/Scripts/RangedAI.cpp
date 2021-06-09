@@ -123,7 +123,7 @@ void RangedAI::OnAnimationSecondaryFinished() {
 }
 
 void RangedAI::OnCollision(GameObject& collidedWith) {
-	if (state != AIState::START && state != AIState::SPAWN) {
+	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		if (rangerGruntCharacter.isAlive && playerController) {
 			bool hitTaken = false;
 			if (collidedWith.name == "FangBullet") {

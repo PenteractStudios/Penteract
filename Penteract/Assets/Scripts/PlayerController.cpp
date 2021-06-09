@@ -100,7 +100,7 @@ void PlayerController::Start() {
 	if (onimaru) {
 		onimaru->Disable();
 		onimaruGun = GameplaySystems::GetGameObject(fangGunUID);
-		onimaru->GetComponent<ComponentCapsuleCollider>()->Enable(); // workaround collider doesn't activate if onimaru starts disabled
+		if(onimaru->GetComponent<ComponentCapsuleCollider>()) onimaru->GetComponent<ComponentCapsuleCollider>()->Enable(); // workaround collider doesn't activate if onimaru starts disabled
 		if (onimaruGun) {
 			onimaruGunTransform = onimaruGun->GetComponent<ComponentTransform>();
 		}
@@ -292,7 +292,7 @@ void PlayerController::SetInvincible(bool status) {
 }
 
 void PlayerController::SetOverpower(bool status) {
-	overpowerMode = status ? 999 : 0;
+	overpowerMode = status ? 999 : 1;
 }
 
 int PlayerController::GetOverPowerMode() {
