@@ -41,12 +41,12 @@ public:
 	void Start() override;
 	void Update() override;
 
-	void HitDetected(int damage = 1);
 	bool IsDead();
 	void SetInvincible(bool status);
 	void SetOverpower(bool status);
 	void SetNoCooldown(bool status);
-
+	void TakeDamage(bool ranged = true);
+	int GetOverPowerMode();
 public:
 
 	GameObject* player = nullptr;
@@ -102,9 +102,10 @@ public:
 	float switchDelay = 0.37f;
 
 	/* Fang & onimaru damage */
-	int onimaruDamage = 1;
-	int fangDamage = 3;
-
+	
+	int rangedDamageTaken = 1;
+	int meleeDamageTaken = 1;
+	
 	//Camera
 	bool useSmoothCamera = true;
 	float smoothCameraSpeed = 5.0f;
@@ -136,7 +137,6 @@ private:
 	float3 GetDirection(MovementDirection md) const;
 	MovementDirection GetInputMovementDirection() const;
 	int GetMouseDirectionState(MovementDirection input);
-
 private:
 
 	float dashCooldownRemaining = 0.f;

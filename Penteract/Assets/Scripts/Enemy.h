@@ -29,4 +29,5 @@ public:
 	float searchRadius = 10.f;
 	float attackRange = 2.0f;
 	float timeToDie = 5.f;
+	bool destroying = false;
 };
