@@ -64,7 +64,6 @@ public:
 
 	UID fangUID = 0;
 	UID fangTrailUID = 0;
-	UID fangTrailNoColUID = 0;
 	UID fangGunUID = 0;
 
 	UID onimaruUID = 0;
