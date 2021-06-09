@@ -24,11 +24,11 @@
     "Smoothness": 0.0,
     "HasSmoothnessInAlphaChannel": false,
     "Tiling": [
-        1.0,
-        1.0
+        5.0,
+        5.0
     ],
     "Offset": [
-        0.0,
-        0.0
+        0.5649999976158142,
+        -0.4650000035762787
     ]
 }
