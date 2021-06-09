@@ -1,0 +1,73 @@
+{
+    "Root": {
+        "Name": "FangBullet",
+        "Active": true,
+        "RootBoneName": "",
+        "Mask": 0,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Active": true,
+                "Position": [
+                    -1.905583381652832,
+                    5.563652992248535,
+                    -1.5418626070022584
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    2.0,
+                    2.0,
+                    2.0
+                ],
+                "LocalEulerAngles": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ]
+            },
+            {
+                "Type": "Billboard",
+                "Active": true,
+                "BillboardType": 1,
+                "TextureId": 465905571273810051,
+                "Ytiles": 1,
+                "Xtiles": 1,
+                "AnimationSpeed": 0.0,
+                "InitColor": [
+                    9.999999974752428e-7,
+                    9.999899930335233e-7,
+                    9.999899930335233e-7
+                ],
+                "FinalColor": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "StartTransition": 0.10000000149011612,
+                "EndTransition": 0.10000000149011612,
+                "FlipTexture": [
+                    true,
+                    false
+                ]
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 709869534139279052,
+                "Values": [
+                    {
+                        "Name": "life",
+                        "Type": "Float",
+                        "Value": 5.0
+                    }
+                ]
+            }
+        ],
+        "Children": null
+    }
+}

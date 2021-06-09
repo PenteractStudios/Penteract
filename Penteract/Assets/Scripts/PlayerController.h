@@ -46,7 +46,7 @@ public:
 	void SetInvincible(bool status);
 	void SetOverpower(bool status);
 	void SetNoCooldown(bool status);
-	
+
 public:
 
 	GameObject* player = nullptr;
@@ -65,6 +65,7 @@ public:
 	UID fangUID = 0;
 	UID fangTrailUID = 0;
 	UID fangGunUID = 0;
+	UID fangBulletUID = 0;
 
 	UID onimaruUID = 0;
 	UID onimaruParticleUID = 0;
@@ -103,7 +104,7 @@ public:
 	/* Fang & onimaru damage */
 	int onimaruDamage = 1;
 	int fangDamage = 3;
-	
+
 	//Camera
 	bool useSmoothCamera = true;
 	float smoothCameraSpeed = 5.0f;
@@ -170,7 +171,9 @@ private:
 	ComponentAnimation* onimaruAnimation = nullptr;
 	State* onimaruCurrentState = nullptr;
 
+	ResourcePrefab* onimaruTrail = nullptr;
 	ResourcePrefab* fangTrail = nullptr;
+	ResourcePrefab* fangBullet = nullptr;
 	ResourcePrefab* onimaruBullet = nullptr;
 
 	GameObject* switchEffects = nullptr;

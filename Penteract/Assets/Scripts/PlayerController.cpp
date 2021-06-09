@@ -27,6 +27,7 @@ EXPOSE_MEMBERS(PlayerController) {
 		MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
+		MEMBER(MemberType::PREFAB_RESOURCE_UID, fangBulletUID),
 		MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
 		MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruBulletUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, fangGunUID),
@@ -91,6 +92,8 @@ void PlayerController::Start() {
 		}
 		fangAnimation = fang->GetComponent<ComponentAnimation>();
 		fangTrail = GameplaySystems::GetResource<ResourcePrefab>(fangTrailUID);
+		fangBullet = GameplaySystems::GetResource<ResourcePrefab>(fangBulletUID);
+
 		if (fangAnimation) {
 			fangCurrentState = fangAnimation->GetCurrentState();
 		}
@@ -232,7 +235,6 @@ void PlayerController::SwitchCharacter() {
 				}
 				switchInProgress = true;
 				playSwitchParticles = false;
-
 			}
 			currentSwitchDelay += Time::GetDeltaTime();
 		}
@@ -263,9 +265,8 @@ void PlayerController::Shoot() {
 				Debug::Log(AUDIOSOURCE_NULL_MSG);
 			}
 			fangAttackCooldownRemaining = 1.f / fangCharacter.attackSpeed;
-			if (fangTrail) {
-				//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
-				//fangGun->GetComponent<ComponentParticleSystem>()->Play();
+			if (fangTrail && fangBullet) {
+				GameplaySystems::Instantiate(fangBullet, fangGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
 				GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
 				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
 				GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
@@ -287,7 +288,7 @@ void PlayerController::Shoot() {
 			}
 			onimaruAttackCooldownRemaining = 1.f / onimaruCharacter.attackSpeed;
 			if (onimaruBullet) {
-				GameObject* bullet = GameplaySystems::Instantiate(onimaruBullet, onimaruGunTransform->GetGlobalPosition(), Quat(0.0f,0.0f,0.0f,0.0f));
+				GameObject* bullet = GameplaySystems::Instantiate(onimaruBullet, onimaruGunTransform->GetGlobalPosition(), Quat(0.0f, 0.0f, 0.0f, 0.0f));
 				if (bullet) {
 					onimaruBulletcript = GET_SCRIPT(bullet, OnimaruBullet);
 					onimaruBulletcript->SetOnimaruDirection(onimaruGunTransform->GetGlobalRotation());
@@ -399,8 +400,6 @@ void PlayerController::CheckCoolDowns() {
 			onimaruAttackCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
-
-
 }
 
 MovementDirection PlayerController::GetInputMovementDirection() const {
