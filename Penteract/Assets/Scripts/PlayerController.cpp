@@ -28,7 +28,6 @@ EXPOSE_MEMBERS(PlayerController) {
 		MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
-		MEMBER(MemberType::PREFAB_RESOURCE_UID, shootLightUID),
 		MEMBER(MemberType::PREFAB_RESOURCE_UID, fangBulletUID),
 		MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
 		MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruBulletUID),
@@ -237,7 +236,6 @@ void PlayerController::SwitchCharacter() {
 				}
 				switchInProgress = true;
 				playSwitchParticles = false;
-
 			}
 			currentSwitchDelay += Time::GetDeltaTime();
 		}
@@ -269,12 +267,6 @@ void PlayerController::Shoot() {
 			}
 			fangAttackCooldownRemaining = 1.f / fangCharacter.attackSpeed;
 			if (fangTrail) {
-				//TODO implement light shot
-				//fangGun->GetComponent<ComponentParticleSystem>()->Play();
-				//GameObject* bullet = GameplaySystems::Instantiate(shootLight, fangGunTransform->GetGlobalPosition(), Quat(0.0f, 0.0f, 0.0f, 0.0f));
-				//lightShootScript = GET_SCRIPT(bullet, LightShoot);
-				//lightShootScript->SetOnimaruDirection(fangGunTransform->GetGlobalRotation());
-
 				GameplaySystems::Instantiate(fangBullet, fangGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
 				GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
 				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
@@ -297,7 +289,7 @@ void PlayerController::Shoot() {
 			}
 			onimaruAttackCooldownRemaining = 1.f / onimaruCharacter.attackSpeed;
 			if (onimaruBullet) {
-				GameObject* bullet = GameplaySystems::Instantiate(onimaruBullet, onimaruGunTransform->GetGlobalPosition(), Quat(0.0f,0.0f,0.0f,0.0f));
+				GameObject* bullet = GameplaySystems::Instantiate(onimaruBullet, onimaruGunTransform->GetGlobalPosition(), Quat(0.0f, 0.0f, 0.0f, 0.0f));
 				if (bullet) {
 					onimaruBulletcript = GET_SCRIPT(bullet, OnimaruBullet);
 					onimaruBulletcript->SetOnimaruDirection(onimaruGunTransform->GetGlobalRotation());
@@ -409,8 +401,6 @@ void PlayerController::CheckCoolDowns() {
 			onimaruAttackCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
-
-
 }
 
 MovementDirection PlayerController::GetInputMovementDirection() const {
