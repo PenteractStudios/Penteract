@@ -66,6 +66,11 @@
                 "Script": 1991507863247597087,
                 "Values": [
                     {
+                        "Name": "defaultMaterialPlaceHolderUID",
+                        "Type": "GameObjectUID",
+                        "Value": 9837534394034980895
+                    },
+                    {
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
                         "Value": 8838610656912784116
@@ -91,9 +96,24 @@
                         "Value": 16579210181260590797
                     },
                     {
+                        "Name": "damagePlaceHolderUID",
+                        "Type": "GameObjectUID",
+                        "Value": 6162056736887938687
+                    },
+                    {
                         "Name": "meleePunchUID",
                         "Type": "PrefabResourceUID",
                         "Value": 11264029273027514993
+                    },
+                    {
+                        "Name": "meshUID",
+                        "Type": "GameObjectUID",
+                        "Value": 12679345390194518930
+                    },
+                    {
+                        "Name": "damageMaterialPlaceHolderUID",
+                        "Type": "GameObjectUID",
+                        "Value": 6162056736887938687
                     }
                 ]
             },
@@ -159,13 +179,13 @@
                 "colliderType": 2,
                 "layerType": 3,
                 "mass": 1.0,
-                "radius": 1.2999999523162842,
-                "height": 4.309999942779541,
+                "radius": 1.0,
+                "height": 3.0,
                 "capsuleType": 1,
                 "centerOffset": [
                     0.0,
-                    3.549999952316284,
-                    0.0
+                    2.0,
+                    -0.08699999749660492
                 ],
                 "freezeRotation": false
             }
@@ -219,22 +239,6 @@
                             138.970458984375,
                             16.807958602905275
                         ]
-                    },
-                    {
-                        "Type": "CapsuleCollider",
-                        "Active": true,
-                        "colliderType": 2,
-                        "layerType": 2,
-                        "mass": 1.0,
-                        "radius": 1.0,
-                        "height": 3.0,
-                        "capsuleType": 1,
-                        "centerOffset": [
-                            0.000003814697265625,
-                            2.0,
-                            -0.08667483180761337
-                        ],
-                        "freezeRotation": false
                     }
                 ],
                 "Children": null

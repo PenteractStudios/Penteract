@@ -15,24 +15,31 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
     MEMBER(MemberType::PREFAB_RESOURCE_UID, meleePunchUID),
+    MEMBER(MemberType::GAME_OBJECT_UID, damageMaterialPlaceHolderUID),
+    MEMBER(MemberType::GAME_OBJECT_UID, defaultMaterialPlaceHolderUID),
 	MEMBER(MemberType::INT, gruntCharacter.lifePoints),
 	MEMBER(MemberType::FLOAT, gruntCharacter.movementSpeed),
 	MEMBER(MemberType::INT, gruntCharacter.damageHit),
 	MEMBER(MemberType::INT, gruntCharacter.fallingSpeed),
 	MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, gruntCharacter.attackRange),
-	MEMBER(MemberType::FLOAT, gruntCharacter.timeToDie)
+	MEMBER(MemberType::FLOAT, gruntCharacter.timeToDie),
+    MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration)
 };
 
 GENERATE_BODY_IMPL(AIMeleeGrunt);
 
 void AIMeleeGrunt::Start() {
+
 	player = GameplaySystems::GetGameObject(playerUID);
-	if (player) {
+	
+    if (player) {
 		playerController = GET_SCRIPT(player, PlayerController);
 	}
+    
     meleePunch = GameplaySystems::GetResource<ResourcePrefab>(meleePunchUID);
-	GameObject* winLose = GameplaySystems::GetGameObject(winConditionUID);
+	
+    GameObject* winLose = GameplaySystems::GetGameObject(winConditionUID);
 
 	if (winLose) {
 		winLoseScript = GET_SCRIPT(winLose, WinLose);
@@ -61,7 +68,36 @@ void AIMeleeGrunt::Start() {
 		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
 		++i;
 	}
+
 	enemySpawnPointScript = GET_SCRIPT(GetOwner().GetParent(), EnemySpawnPoint);
+
+    // Hit feedback material retrieval
+    GameObject* gameObject = nullptr;
+    gameObject  = GameplaySystems::GetGameObject(damageMaterialPlaceHolderUID);
+    if (gameObject) {
+        ComponentMeshRenderer* meshRenderer = gameObject->GetComponent<ComponentMeshRenderer>();
+        if (meshRenderer) {
+            damageMaterialID = meshRenderer->materialId;
+        }
+    }
+
+    gameObject = GameplaySystems::GetGameObject(defaultMaterialPlaceHolderUID);
+    if (gameObject) {
+        ComponentMeshRenderer* meshRenderer = gameObject->GetComponent<ComponentMeshRenderer>();
+        if (meshRenderer) {
+            defaultMaterialID = meshRenderer->materialId;
+        }
+    }
+
+    gameObject = &GetOwner();
+    if (gameObject) {
+        // Workaround get the first children - Create a Prefab overrides childs IDs
+        gameObject = gameObject->GetChildren()[0];
+        if (gameObject) {
+            componentMeshRenderer = gameObject->GetComponent<ComponentMeshRenderer>();
+        }
+    }
+
 }
 
 void AIMeleeGrunt::Update() {
@@ -73,6 +109,14 @@ void AIMeleeGrunt::Update() {
     if (!playerController) return;
     if (!ownerTransform) return;
     if (!animation) return;
+    if (!componentMeshRenderer) return;
+    
+    if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
+        timeSinceLastHurt += Time::GetDeltaTime();
+        if (timeSinceLastHurt > hurtFeedbackTimeDuration) {
+            componentMeshRenderer->materialId = defaultMaterialID;
+        }
+    }
 
     switch (state)
     {
@@ -152,16 +196,31 @@ void AIMeleeGrunt::OnAnimationSecondaryFinished()
         state = AIState::IDLE;
     }
 }
+
 void AIMeleeGrunt::OnCollision(GameObject& collidedWith)
 {
     if (state != AIState::START && state != AIState::SPAWN) {
         if (gruntCharacter.isAlive && playerController) {
+            bool hitTaken = false;
             if (collidedWith.name == "FangBullet") {
+                hitTaken = true;
                 gruntCharacter.Hit(playerController->fangCharacter.damageHit + playerController->GetOverPowerMode());
             }
             else if (collidedWith.name == "OnimaruBullet") {
+                hitTaken = true;
                 gruntCharacter.Hit(playerController->onimaruCharacter.damageHit + playerController->GetOverPowerMode());
             }
+
+            if (hitTaken) {
+                if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
+                if (componentMeshRenderer) {
+                    if(damageMaterialID != 0) componentMeshRenderer->materialId = damageMaterialID;
+                }
+
+                timeSinceLastHurt = 0.0f;
+
+            }
+
         }
 
         if (!gruntCharacter.isAlive) {
@@ -176,6 +235,7 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith)
                 animation->SendTrigger("RunDeath");
             }
 
+            if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
             ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
             if (collider) collider->Disable();
 
