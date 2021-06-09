@@ -29,7 +29,7 @@ void RangerProjectileScript::Update() {
 	}
 }
 
-void RangerProjectileScript::OnCollision(const GameObject& collidedWith) {
+void RangerProjectileScript::OnCollision(GameObject& collidedWith) {
 	//There appears to be an issue, projectiles colliding with each other, for now it should only collide with player (walls later)
 	GameObject* parent = collidedWith.GetParent();
 	if (parent != nullptr) {
