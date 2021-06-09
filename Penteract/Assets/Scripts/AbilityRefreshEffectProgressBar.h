@@ -3,6 +3,7 @@
 #include "Scripting/Script.h"
 
 class ComponentProgressBar;
+class ComponentImage;
 
 class AbilityRefreshEffectProgressBar : public Script
 {
@@ -17,26 +18,36 @@ public:
 
 public:
 	float duration = .2f;
+	float breakTime = .2f;					// Time between the progress bar loading up and the "pop" effect. This is the time that needs to pass AFTER the progress bar loads up
+	float durationFirstEmission = .1f;
+	float breakTimeBetweenFirstAndSecond = .1f;
+	float durationSecondEmission = .1f;
+	float breakTimeBetweenSecondAndThird = .1f;
+	float durationThirdEmission = .1f;
+	float3 minScale = float3(1, 0, 1);		// Scales for the pop up effect
+	float3 maxScale = float3(1, 1, 1);		// Scales for the pop up effect
+	float minTransparency = 0;
+	float maxTransparency = 1;
 	bool debugPlay = false;
+
 	UID progressBarUID = 0;
+	UID firstBarEffectUID;
+	UID secondBarEffectUID;
+	UID thirdBarEffectUID;
+
+
+private:
+	void IncreaseOverTime(GameObject* image, float currentTime, float maxTime);
 
 private:
 	GameObject* progressBarGO;
+	GameObject* firstBarEffect;
+	GameObject* secondBarEffect;
+	GameObject* thirdBarEffect;
 	ComponentProgressBar* progressBar;
+
 	float currentTime = 0.0f;
-	bool animationFinished = true;
-	//float3 effectScaleVector = float3(0, 0, 0);
-	//float3 originalEffectScaleVector = float3(0, 0, 0);
-	//float3 originalScaleVector = float3(0, 0, 0);
-	//float effectTimer = 0;
-
-	//float originalAlpha = 0;
-	//float3 originalColor = float3(0, 0, 0);
-
-	//bool isPlaying = false;
-
-	//ComponentImage* effectMember1 = nullptr;
-	//ComponentTransform2D* skillObjTransform2D = nullptr;
-	//ComponentTransform2D* effectTransform2D = nullptr;
+	bool animationLoadUpFinished = true;
+	bool animationPopUpFinished = true;
 };
 
