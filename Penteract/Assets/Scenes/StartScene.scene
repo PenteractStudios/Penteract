@@ -162,7 +162,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 200.0,
-                            "HorizontalFov": 1.3887733221054078,
+                            "HorizontalFov": 1.5451143980026246,
                             "VerticalFov": 1.0
                         }
                     },
@@ -493,8 +493,8 @@
                                                     1.0
                                                 ],
                                                 "Scale": [
-                                                    1.0,
-                                                    1.0,
+                                                    0.5,
+                                                    0.5,
                                                     1.0
                                                 ],
                                                 "LocalEulerAngles": [
