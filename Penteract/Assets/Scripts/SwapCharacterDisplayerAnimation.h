@@ -24,6 +24,12 @@ public:
 	float minTransparency = 0;
 	float maxTransparency = 1;
 	float breakTimeForSwap = .3f;
+	float swappingDuration = .2f;
+	float positionToLerpSwapMain = 232;				// This is the final position to set on the lerp of swapAnimation
+	float positionToLerpSwapAlternative = 300;
+	bool isFang = true;								// Default value to who's set atm
+	float3 initialPositionMainCanvas = float3(0, 0, 0);
+	float3 initialPositionAlternativeCanvas = float3(64, 400, 0);
 
 	bool debugPlay = false;
 
@@ -40,11 +46,13 @@ public:
 
 private:
 	void IncreaseOverTime(GameObject* image, float currentTime, float maxTime);
+	void SwapAnimation(GameObject* targetCanvas, bool isMain, bool playReverse, float currentTime, float maxTime);
 
 private:
 	GameObject* firstBarEffect = nullptr;
 	GameObject* secondBarEffect = nullptr;
 	GameObject* thirdBarEffect = nullptr;
+
 	GameObject* fangMainDisplayer = nullptr;
 	GameObject* fangPrimary = nullptr;
 	GameObject* fangAlternative = nullptr;
@@ -56,5 +64,7 @@ private:
 	bool animationLoadUpFinished = true;
 	bool animationPopUpFinished = true;
 	bool animationSwapFinished = true;
+
+	float3 initialScaleCanvas = float3(1, 1, 1);		// Scale of the canvas to shrink
 };
 

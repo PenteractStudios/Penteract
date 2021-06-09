@@ -29,7 +29,8 @@ EXPOSE_MEMBERS(HUDController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, scoreTextUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, canvasHUDUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, lowHealthWarningEffectUID),
-	MEMBER(MemberType::FLOAT, timeToFadeDurableHealthFeedbackInternal)
+	MEMBER(MemberType::FLOAT, timeToFadeDurableHealthFeedbackInternal),
+	MEMBER(MemberType::FLOAT, delaySwitchTime)
 };
 
 GENERATE_BODY_IMPL(HUDController);
@@ -90,6 +91,24 @@ void HUDController::Start() {
 
 void HUDController::Update() {
 	if (!fangCanvas || !onimaruCanvas) return;
+
+	// In order to NOT control the canvas switch from SwapCharacterDisplayerAnimation
+	if (isSwitching) {
+		if (currentTime > delaySwitchTime) {
+			isSwitching = false; 
+			if (!fang->IsActive()) {
+				SetFangCanvas(false);
+				SetOnimaruCanvas(true);
+			}
+			else {
+				SetFangCanvas(true);
+				SetOnimaruCanvas(false);
+			}
+		}
+		else {
+			currentTime += Time::GetDeltaTime();
+		}
+	}
 }
 
 void HUDController::StopHealthLostInstantEffects(GameObject* targetCanvas) {
@@ -162,16 +181,20 @@ void HUDController::LoadCooldownFeedbackStates(GameObject* canvas, int startingI
 
 void HUDController::ChangePlayerHUD(int fangLives, int oniLives) {
 	if (!fang || !onimaru) return;
-
+	currentTime = 0;
+	SwapCharacterDisplayerAnimation* animationScript = GET_SCRIPT(canvasHUD, SwapCharacterDisplayerAnimation);
+	if (animationScript) {
+		animationScript->Play();
+	}
 	if (!fang->IsActive()) {
-		fangCanvas->Disable();
-		onimaruCanvas->Enable();
+		//fangCanvas->Disable();
+		//onimaruCanvas->Enable();
 		StopHealthLostInstantEffects(onimaruHealthMainCanvas);
 		LoadHealthFeedbackStates(onimaruHealthMainCanvas, oniLives);
 		LoadCooldownFeedbackStates(onimaruSkillsMainCanvas, static_cast<int>(Cooldowns::ONIMARU_SKILL_1));
 	} else {
-		onimaruCanvas->Disable();
-		fangCanvas->Enable();
+		//onimaruCanvas->Disable();
+		//fangCanvas->Enable();
 		StopHealthLostInstantEffects(fangHealthMainCanvas);
 		LoadHealthFeedbackStates(fangHealthMainCanvas, fangLives);
 		LoadCooldownFeedbackStates(fangSkillsMainCanvas, static_cast<int>(Cooldowns::FANG_SKILL_1));
@@ -187,10 +210,7 @@ void HUDController::ChangePlayerHUD(int fangLives, int oniLives) {
 
 	prevLivesFang = fangLives;
 	prevLivesOni = oniLives;
-	SwapCharacterDisplayerAnimation* animationScript = GET_SCRIPT(canvasHUD, SwapCharacterDisplayerAnimation);
-	if (animationScript) {
-		animationScript->Play();
-	}
+	isSwitching = true;
 }
 
 void HUDController::HealthRegeneration(float currentHp, float hpRecovered) {
@@ -270,7 +290,25 @@ float  HUDController::MapValue01(float value, float min, float max) {
 	return (value - min) / (max - min);
 }
 
+void HUDController::SetFangCanvas(bool value)
+{
+	if (value) {
+		fangCanvas->Enable();
+	}
+	else {
+		fangCanvas->Disable();
+	}
+}
 
+void HUDController::SetOnimaruCanvas(bool value)
+{
+	if (value) {
+		onimaruCanvas->Enable();
+	}
+	else {
+		onimaruCanvas->Disable();
+	}
+}
 
 void HUDController::UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown) {
 	//The received cooldowns here range from 0 to 1

@@ -43,6 +43,8 @@ public:
 	void UpdateScore(int score_);
 	void SetCooldownRetreival(Cooldowns cooldown);
 	static float MapValue01(float value, float min, float max);
+	void SetFangCanvas(bool value);
+	void SetOnimaruCanvas(bool value);
 
 public:
 
@@ -75,6 +77,7 @@ public:
 	UID canvasHUDUID = 0;
 
 	float timeToFadeDurableHealthFeedbackInternal = 2.0f;
+	float delaySwitchTime = .2f;// The time that takes to switch the canvas
 
 private:
 	void UpdateComponents();
@@ -139,5 +142,9 @@ private:
 
 	ComponentText* scoreText = nullptr;
 	int score = 0;
+
+	// For characte switching
+	float currentTime = 0;
+	bool isSwitching = false;
 };
 
