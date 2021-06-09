@@ -15,9 +15,9 @@ class HUDController;
 class PlayerController;
 class AIMovement;
 class WinLose;
+class EnemySpawnPoint;
 
-class AIMeleeGrunt : public Script
-{
+class AIMeleeGrunt : public Script {
 	GENERATE_BODY(AIMeleeGrunt);
 
 public:
@@ -28,7 +28,6 @@ public:
 		DEATH,
 		TOTAL
 	};
-
 
 	void Start() override;
 	void Update() override;
@@ -62,8 +61,8 @@ private:
 	HUDController* hudControllerScript = nullptr;
 	PlayerController* playerController = nullptr;
 	AIMovement* movementScript = nullptr;
+	EnemySpawnPoint* enemySpawnPointScript = nullptr;
 
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
 
 };
-
