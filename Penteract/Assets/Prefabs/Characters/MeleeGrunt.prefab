@@ -3,7 +3,7 @@
         "Name": "MeleeGrunt",
         "Active": true,
         "RootBoneName": "CenterHip",
-        "Mask": 2,
+        "Mask": 10,
         "Components": [
             {
                 "Type": "Transform",
@@ -195,7 +195,7 @@
                 "Name": "Melee_Grunt_lowpoly:Basic_Enemy_Robot",
                 "Active": true,
                 "RootBoneName": "",
-                "Mask": 2,
+                "Mask": 10,
                 "Components": [
                     {
                         "Type": "Transform",

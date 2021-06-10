@@ -42,9 +42,9 @@ void HealthLostInstantFeedback::Start() {
 	if (obj) {
 		image = obj->GetComponent<ComponentImage>();
 		transform = obj->GetComponent <ComponentTransform2D>();
+		originalSize = transform->GetSize();
 	}
 
-	originalSize = transform->GetSize();
 	if (image) {
 		image->Disable();
 	}
