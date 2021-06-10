@@ -233,11 +233,6 @@
                                 "Value": 3685415630762953669
                             },
                             {
-                                "Name": "playerUID",
-                                "Type": "GameObjectUID",
-                                "Value": 4093097755722686995
-                            },
-                            {
                                 "Name": "gameCameraUID",
                                 "Type": "GameObjectUID",
                                 "Value": 14133391482310232563
@@ -246,6 +241,11 @@
                                 "Name": "staticCamera4UID",
                                 "Type": "GameObjectUID",
                                 "Value": 2655070040425404295
+                            },
+                            {
+                                "Name": "playerUID",
+                                "Type": "GameObjectUID",
+                                "Value": 4093097755722686995
                             },
                             {
                                 "Name": "godCameraUID",
@@ -329,7 +329,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 2000.0,
-                            "HorizontalFov": 1.9118481874465943,
+                            "HorizontalFov": 1.9821665287017823,
                             "VerticalFov": 1.3113912343978882
                         }
                     },
@@ -406,7 +406,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 2000.0,
-                            "HorizontalFov": 1.9118481874465943,
+                            "HorizontalFov": 1.9821665287017823,
                             "VerticalFov": 1.3113912343978882
                         }
                     }
@@ -504,14 +504,14 @@
                         "Script": 11734875514518295508,
                         "Values": [
                             {
-                                "Name": "onimaruHealthSecondCanvasUID",
-                                "Type": "GameObjectUID",
-                                "Value": 4046686048947904277
-                            },
-                            {
                                 "Name": "fangMainCanvasUID",
                                 "Type": "GameObjectUID",
                                 "Value": 2181516165667178510
+                            },
+                            {
+                                "Name": "onimaruHealthSecondCanvasUID",
+                                "Type": "GameObjectUID",
+                                "Value": 4046686048947904277
                             },
                             {
                                 "Name": "onimaruMainCanvasUID",
@@ -544,14 +544,14 @@
                                 "Value": 8088756500257214655
                             },
                             {
-                                "Name": "swapingSkillCanvasUID",
-                                "Type": "GameObjectUID",
-                                "Value": 1194835426853035896
-                            },
-                            {
                                 "Name": "onimaruHealthMainCanvasUID",
                                 "Type": "GameObjectUID",
                                 "Value": 11042553263767258562
+                            },
+                            {
+                                "Name": "swapingSkillCanvasUID",
+                                "Type": "GameObjectUID",
+                                "Value": 1194835426853035896
                             },
                             {
                                 "Name": "fangHealthSecondCanvasUID",
@@ -33781,6 +33781,11 @@
                                 "Value": 15489445993892258268
                             },
                             {
+                                "Name": "enemiesUID",
+                                "Type": "GameObjectUID",
+                                "Value": 9424093591244721738
+                            },
+                            {
                                 "Name": "spawnRangedUID",
                                 "Type": "GameObjectUID",
                                 "Value": 15607007881439550059
@@ -33791,16 +33796,6 @@
                                 "Value": 9424093591244721738
                             },
                             {
-                                "Name": "enemiesUID",
-                                "Type": "GameObjectUID",
-                                "Value": 9424093591244721738
-                            },
-                            {
-                                "Name": "debugEnemiesUID",
-                                "Type": "GameObjectUID",
-                                "Value": 3989047451220057351
-                            },
-                            {
                                 "Name": "playerControllerUID",
                                 "Type": "GameObjectUID",
                                 "Value": 10888363440551519469
@@ -33809,6 +33804,11 @@
                                 "Name": "gameCameraUID",
                                 "Type": "GameObjectUID",
                                 "Value": 14133391482310232563
+                            },
+                            {
+                                "Name": "debugEnemiesUID",
+                                "Type": "GameObjectUID",
+                                "Value": 3989047451220057351
                             },
                             {
                                 "Name": "godCameraUID",
@@ -33881,14 +33881,14 @@
                                         "Value": 11128356192968719727
                                     },
                                     {
-                                        "Name": "prefabUID",
-                                        "Type": "PrefabResourceUID",
-                                        "Value": 9998956702901793097
-                                    },
-                                    {
                                         "Name": "enemiesUID",
                                         "Type": "GameObjectUID",
                                         "Value": 8956077401393633822
+                                    },
+                                    {
+                                        "Name": "prefabUID",
+                                        "Type": "PrefabResourceUID",
+                                        "Value": 9998956702901793097
                                     }
                                 ]
                             }
@@ -37123,14 +37123,14 @@
                                         "Value": 564339191826698320
                                     },
                                     {
-                                        "Name": "prefabUID",
-                                        "Type": "PrefabResourceUID",
-                                        "Value": 9998956702901793097
-                                    },
-                                    {
                                         "Name": "enemiesUID",
                                         "Type": "GameObjectUID",
                                         "Value": 8956077401393633822
+                                    },
+                                    {
+                                        "Name": "prefabUID",
+                                        "Type": "PrefabResourceUID",
+                                        "Value": 9998956702901793097
                                     }
                                 ]
                             }
@@ -39791,9 +39791,9 @@
                         "Id": 16751450571089499941,
                         "Active": true,
                         "Position": [
-                            -163.86517333984376,
-                            3.0,
-                            -35.36500930786133
+                            -38.068153381347659,
+                            0.15933848917484284,
+                            65.07039642333985
                         ],
                         "Rotation": [
                             0.0,
@@ -39819,9 +39819,9 @@
                         "Script": 4413934008247911625,
                         "Values": [
                             {
-                                "Name": "mainNodeUID",
+                                "Name": "dashAudioSourceUID",
                                 "Type": "GameObjectUID",
-                                "Value": 4093097755722686995
+                                "Value": 10251782958241248981
                             },
                             {
                                 "Name": "onimaruUID",
@@ -39829,9 +39829,9 @@
                                 "Value": 8089167247611916581
                             },
                             {
-                                "Name": "dashAudioSourceUID",
+                                "Name": "mainNodeUID",
                                 "Type": "GameObjectUID",
-                                "Value": 10251782958241248981
+                                "Value": 4093097755722686995
                             },
                             {
                                 "Name": "fangUID",
@@ -39839,14 +39839,14 @@
                                 "Value": 9311617343701675456
                             },
                             {
-                                "Name": "onimaruParticleUID",
-                                "Type": "GameObjectUID",
-                                "Value": 5635023556766488935
-                            },
-                            {
                                 "Name": "cameraUID",
                                 "Type": "GameObjectUID",
                                 "Value": 14133391482310232563
+                            },
+                            {
+                                "Name": "onimaruParticleUID",
+                                "Type": "GameObjectUID",
+                                "Value": 5635023556766488935
                             },
                             {
                                 "Name": "canvasUID",
@@ -43207,7 +43207,7 @@
                         "Name": "Onimaru",
                         "Active": false,
                         "Static": false,
-                        "ActiveHierarchy": true,
+                        "ActiveHierarchy": false,
                         "RootBoneId": 7842210939164542887,
                         "Mask": 0,
                         "Components": [
@@ -43240,14 +43240,14 @@
                             {
                                 "Type": "Animation",
                                 "Id": 5692074298265847334,
-                                "Active": false,
+                                "Active": true,
                                 "StateMachinePrincipalId": 7605679054659276574,
                                 "StateMachineSecondaryId": 3183088353880333244
                             },
                             {
                                 "Type": "Script",
                                 "Id": 9098084705937438784,
-                                "Active": false,
+                                "Active": true,
                                 "Script": 10002269642242264877,
                                 "Values": [
                                     {
@@ -43286,7 +43286,7 @@
                                 "Name": "Onimaru",
                                 "Active": true,
                                 "Static": false,
-                                "ActiveHierarchy": true,
+                                "ActiveHierarchy": false,
                                 "RootBoneId": 0,
                                 "Mask": 0,
                                 "Components": [
@@ -43344,7 +43344,7 @@
                                 "Name": "Hips",
                                 "Active": true,
                                 "Static": false,
-                                "ActiveHierarchy": true,
+                                "ActiveHierarchy": false,
                                 "RootBoneId": 0,
                                 "Mask": 0,
                                 "Components": [
@@ -43381,7 +43381,7 @@
                                         "Name": "Spine1",
                                         "Active": true,
                                         "Static": false,
-                                        "ActiveHierarchy": true,
+                                        "ActiveHierarchy": false,
                                         "RootBoneId": 0,
                                         "Mask": 0,
                                         "Components": [
@@ -43418,7 +43418,7 @@
                                                 "Name": "Spine2",
                                                 "Active": true,
                                                 "Static": false,
-                                                "ActiveHierarchy": true,
+                                                "ActiveHierarchy": false,
                                                 "RootBoneId": 0,
                                                 "Mask": 0,
                                                 "Components": [
@@ -43455,7 +43455,7 @@
                                                         "Name": "LeftCollar",
                                                         "Active": true,
                                                         "Static": false,
-                                                        "ActiveHierarchy": true,
+                                                        "ActiveHierarchy": false,
                                                         "RootBoneId": 0,
                                                         "Mask": 0,
                                                         "Components": [
@@ -43492,7 +43492,7 @@
                                                                 "Name": "LeftShoulder",
                                                                 "Active": true,
                                                                 "Static": false,
-                                                                "ActiveHierarchy": true,
+                                                                "ActiveHierarchy": false,
                                                                 "RootBoneId": 0,
                                                                 "Mask": 0,
                                                                 "Components": [
@@ -43529,7 +43529,7 @@
                                                                         "Name": "LeftElbow",
                                                                         "Active": true,
                                                                         "Static": false,
-                                                                        "ActiveHierarchy": true,
+                                                                        "ActiveHierarchy": false,
                                                                         "RootBoneId": 0,
                                                                         "Mask": 0,
                                                                         "Components": [
@@ -43566,7 +43566,7 @@
                                                                                 "Name": "LeftArm",
                                                                                 "Active": true,
                                                                                 "Static": false,
-                                                                                "ActiveHierarchy": true,
+                                                                                "ActiveHierarchy": false,
                                                                                 "RootBoneId": 0,
                                                                                 "Mask": 0,
                                                                                 "Components": [
@@ -43603,7 +43603,7 @@
                                                                                         "Name": "Minigun",
                                                                                         "Active": true,
                                                                                         "Static": false,
-                                                                                        "ActiveHierarchy": true,
+                                                                                        "ActiveHierarchy": false,
                                                                                         "RootBoneId": 0,
                                                                                         "Mask": 0,
                                                                                         "Components": [
@@ -43640,7 +43640,7 @@
                                                                                                 "Name": "ParticleSystem",
                                                                                                 "Active": true,
                                                                                                 "Static": false,
-                                                                                                "ActiveHierarchy": true,
+                                                                                                "ActiveHierarchy": false,
                                                                                                 "RootBoneId": 0,
                                                                                                 "Mask": 0,
                                                                                                 "Components": [
@@ -43724,7 +43724,7 @@
                                                                                         "Name": "Bullet1",
                                                                                         "Active": true,
                                                                                         "Static": false,
-                                                                                        "ActiveHierarchy": true,
+                                                                                        "ActiveHierarchy": false,
                                                                                         "RootBoneId": 0,
                                                                                         "Mask": 0,
                                                                                         "Components": [
@@ -43761,7 +43761,7 @@
                                                                                                 "Name": "Bullet2",
                                                                                                 "Active": true,
                                                                                                 "Static": false,
-                                                                                                "ActiveHierarchy": true,
+                                                                                                "ActiveHierarchy": false,
                                                                                                 "RootBoneId": 0,
                                                                                                 "Mask": 0,
                                                                                                 "Components": [
@@ -43798,7 +43798,7 @@
                                                                                                         "Name": "Bullet3",
                                                                                                         "Active": true,
                                                                                                         "Static": false,
-                                                                                                        "ActiveHierarchy": true,
+                                                                                                        "ActiveHierarchy": false,
                                                                                                         "RootBoneId": 0,
                                                                                                         "Mask": 0,
                                                                                                         "Components": [
@@ -43835,7 +43835,7 @@
                                                                                                                 "Name": "Bullet4",
                                                                                                                 "Active": true,
                                                                                                                 "Static": false,
-                                                                                                                "ActiveHierarchy": true,
+                                                                                                                "ActiveHierarchy": false,
                                                                                                                 "RootBoneId": 0,
                                                                                                                 "Mask": 0,
                                                                                                                 "Components": [
@@ -43872,7 +43872,7 @@
                                                                                                                         "Name": "Bullet5",
                                                                                                                         "Active": true,
                                                                                                                         "Static": false,
-                                                                                                                        "ActiveHierarchy": true,
+                                                                                                                        "ActiveHierarchy": false,
                                                                                                                         "RootBoneId": 0,
                                                                                                                         "Mask": 0,
                                                                                                                         "Components": [
@@ -43909,7 +43909,7 @@
                                                                                                                                 "Name": "Bullet6",
                                                                                                                                 "Active": true,
                                                                                                                                 "Static": false,
-                                                                                                                                "ActiveHierarchy": true,
+                                                                                                                                "ActiveHierarchy": false,
                                                                                                                                 "RootBoneId": 0,
                                                                                                                                 "Mask": 0,
                                                                                                                                 "Components": [
@@ -43957,7 +43957,7 @@
                                                                                         "Name": "ShellFlap",
                                                                                         "Active": true,
                                                                                         "Static": false,
-                                                                                        "ActiveHierarchy": true,
+                                                                                        "ActiveHierarchy": false,
                                                                                         "RootBoneId": 0,
                                                                                         "Mask": 0,
                                                                                         "Components": [
@@ -43994,7 +43994,7 @@
                                                                                                 "Name": "ShellFlap2",
                                                                                                 "Active": true,
                                                                                                 "Static": false,
-                                                                                                "ActiveHierarchy": true,
+                                                                                                "ActiveHierarchy": false,
                                                                                                 "RootBoneId": 0,
                                                                                                 "Mask": 0,
                                                                                                 "Components": [
@@ -44034,7 +44034,7 @@
                                                                                         "Name": "MagazineOuter",
                                                                                         "Active": true,
                                                                                         "Static": false,
-                                                                                        "ActiveHierarchy": true,
+                                                                                        "ActiveHierarchy": false,
                                                                                         "RootBoneId": 0,
                                                                                         "Mask": 0,
                                                                                         "Components": [
@@ -44071,7 +44071,7 @@
                                                                                                 "Name": "MagazineInner",
                                                                                                 "Active": true,
                                                                                                 "Static": false,
-                                                                                                "ActiveHierarchy": true,
+                                                                                                "ActiveHierarchy": false,
                                                                                                 "RootBoneId": 0,
                                                                                                 "Mask": 0,
                                                                                                 "Components": [
@@ -44111,7 +44111,7 @@
                                                                                         "Name": "MinigunPlates",
                                                                                         "Active": true,
                                                                                         "Static": false,
-                                                                                        "ActiveHierarchy": true,
+                                                                                        "ActiveHierarchy": false,
                                                                                         "RootBoneId": 0,
                                                                                         "Mask": 0,
                                                                                         "Components": [
@@ -44153,7 +44153,7 @@
                                                                         "Name": "LeftShoulderPad",
                                                                         "Active": true,
                                                                         "Static": false,
-                                                                        "ActiveHierarchy": true,
+                                                                        "ActiveHierarchy": false,
                                                                         "RootBoneId": 0,
                                                                         "Mask": 0,
                                                                         "Components": [
@@ -44195,7 +44195,7 @@
                                                         "Name": "OuterCore",
                                                         "Active": true,
                                                         "Static": false,
-                                                        "ActiveHierarchy": true,
+                                                        "ActiveHierarchy": false,
                                                         "RootBoneId": 0,
                                                         "Mask": 0,
                                                         "Components": [
@@ -44233,7 +44233,7 @@
                                                         "Name": "InnerCore",
                                                         "Active": true,
                                                         "Static": false,
-                                                        "ActiveHierarchy": true,
+                                                        "ActiveHierarchy": false,
                                                         "RootBoneId": 0,
                                                         "Mask": 0,
                                                         "Components": [
@@ -44271,7 +44271,7 @@
                                                         "Name": "CenterPiece",
                                                         "Active": true,
                                                         "Static": false,
-                                                        "ActiveHierarchy": true,
+                                                        "ActiveHierarchy": false,
                                                         "RootBoneId": 0,
                                                         "Mask": 0,
                                                         "Components": [
@@ -44309,7 +44309,7 @@
                                                         "Name": "BackPiece",
                                                         "Active": true,
                                                         "Static": false,
-                                                        "ActiveHierarchy": true,
+                                                        "ActiveHierarchy": false,
                                                         "RootBoneId": 0,
                                                         "Mask": 0,
                                                         "Components": [
@@ -44346,7 +44346,7 @@
                                                                 "Name": "LeftThruster",
                                                                 "Active": true,
                                                                 "Static": false,
-                                                                "ActiveHierarchy": true,
+                                                                "ActiveHierarchy": false,
                                                                 "RootBoneId": 0,
                                                                 "Mask": 0,
                                                                 "Components": [
@@ -44384,7 +44384,7 @@
                                                                 "Name": "RightThruster",
                                                                 "Active": true,
                                                                 "Static": false,
-                                                                "ActiveHierarchy": true,
+                                                                "ActiveHierarchy": false,
                                                                 "RootBoneId": 0,
                                                                 "Mask": 0,
                                                                 "Components": [
@@ -44424,7 +44424,7 @@
                                                         "Name": "FrontPiece",
                                                         "Active": true,
                                                         "Static": false,
-                                                        "ActiveHierarchy": true,
+                                                        "ActiveHierarchy": false,
                                                         "RootBoneId": 0,
                                                         "Mask": 0,
                                                         "Components": [
@@ -44462,7 +44462,7 @@
                                                         "Name": "RightCollar",
                                                         "Active": true,
                                                         "Static": false,
-                                                        "ActiveHierarchy": true,
+                                                        "ActiveHierarchy": false,
                                                         "RootBoneId": 0,
                                                         "Mask": 0,
                                                         "Components": [
@@ -44499,7 +44499,7 @@
                                                                 "Name": "RightShoulder",
                                                                 "Active": true,
                                                                 "Static": false,
-                                                                "ActiveHierarchy": true,
+                                                                "ActiveHierarchy": false,
                                                                 "RootBoneId": 0,
                                                                 "Mask": 0,
                                                                 "Components": [
@@ -44536,7 +44536,7 @@
                                                                         "Name": "RightElbow",
                                                                         "Active": true,
                                                                         "Static": false,
-                                                                        "ActiveHierarchy": true,
+                                                                        "ActiveHierarchy": false,
                                                                         "RootBoneId": 0,
                                                                         "Mask": 0,
                                                                         "Components": [
@@ -44573,7 +44573,7 @@
                                                                                 "Name": "RightArm",
                                                                                 "Active": true,
                                                                                 "Static": false,
-                                                                                "ActiveHierarchy": true,
+                                                                                "ActiveHierarchy": false,
                                                                                 "RootBoneId": 0,
                                                                                 "Mask": 0,
                                                                                 "Components": [
@@ -44610,7 +44610,7 @@
                                                                                         "Name": "RightWrist",
                                                                                         "Active": true,
                                                                                         "Static": false,
-                                                                                        "ActiveHierarchy": true,
+                                                                                        "ActiveHierarchy": false,
                                                                                         "RootBoneId": 0,
                                                                                         "Mask": 0,
                                                                                         "Components": [
@@ -44647,7 +44647,7 @@
                                                                                                 "Name": "RightHandBase",
                                                                                                 "Active": true,
                                                                                                 "Static": false,
-                                                                                                "ActiveHierarchy": true,
+                                                                                                "ActiveHierarchy": false,
                                                                                                 "RootBoneId": 0,
                                                                                                 "Mask": 0,
                                                                                                 "Components": [
@@ -44684,7 +44684,7 @@
                                                                                                         "Name": "RightHandSphere",
                                                                                                         "Active": true,
                                                                                                         "Static": false,
-                                                                                                        "ActiveHierarchy": true,
+                                                                                                        "ActiveHierarchy": false,
                                                                                                         "RootBoneId": 0,
                                                                                                         "Mask": 0,
                                                                                                         "Components": [
@@ -44724,7 +44724,7 @@
                                                                                                 "Name": "RightHandBottom",
                                                                                                 "Active": true,
                                                                                                 "Static": false,
-                                                                                                "ActiveHierarchy": true,
+                                                                                                "ActiveHierarchy": false,
                                                                                                 "RootBoneId": 0,
                                                                                                 "Mask": 0,
                                                                                                 "Components": [
@@ -44761,7 +44761,7 @@
                                                                                                         "Name": "RightHandBottomFinger1",
                                                                                                         "Active": true,
                                                                                                         "Static": false,
-                                                                                                        "ActiveHierarchy": true,
+                                                                                                        "ActiveHierarchy": false,
                                                                                                         "RootBoneId": 0,
                                                                                                         "Mask": 0,
                                                                                                         "Components": [
@@ -44798,7 +44798,7 @@
                                                                                                                 "Name": "RightHandBottomFinger2",
                                                                                                                 "Active": true,
                                                                                                                 "Static": false,
-                                                                                                                "ActiveHierarchy": true,
+                                                                                                                "ActiveHierarchy": false,
                                                                                                                 "RootBoneId": 0,
                                                                                                                 "Mask": 0,
                                                                                                                 "Components": [
@@ -44835,7 +44835,7 @@
                                                                                                                         "Name": "RightHandBottomFinger3",
                                                                                                                         "Active": true,
                                                                                                                         "Static": false,
-                                                                                                                        "ActiveHierarchy": true,
+                                                                                                                        "ActiveHierarchy": false,
                                                                                                                         "RootBoneId": 0,
                                                                                                                         "Mask": 0,
                                                                                                                         "Components": [
@@ -44879,7 +44879,7 @@
                                                                                                 "Name": "RightHandTop",
                                                                                                 "Active": true,
                                                                                                 "Static": false,
-                                                                                                "ActiveHierarchy": true,
+                                                                                                "ActiveHierarchy": false,
                                                                                                 "RootBoneId": 0,
                                                                                                 "Mask": 0,
                                                                                                 "Components": [
@@ -44916,7 +44916,7 @@
                                                                                                         "Name": "RightHandRightFinger1",
                                                                                                         "Active": true,
                                                                                                         "Static": false,
-                                                                                                        "ActiveHierarchy": true,
+                                                                                                        "ActiveHierarchy": false,
                                                                                                         "RootBoneId": 0,
                                                                                                         "Mask": 0,
                                                                                                         "Components": [
@@ -44953,7 +44953,7 @@
                                                                                                                 "Name": "RightHandRightFinger2",
                                                                                                                 "Active": true,
                                                                                                                 "Static": false,
-                                                                                                                "ActiveHierarchy": true,
+                                                                                                                "ActiveHierarchy": false,
                                                                                                                 "RootBoneId": 0,
                                                                                                                 "Mask": 0,
                                                                                                                 "Components": [
@@ -44990,7 +44990,7 @@
                                                                                                                         "Name": "RightHandRightFinger3",
                                                                                                                         "Active": true,
                                                                                                                         "Static": false,
-                                                                                                                        "ActiveHierarchy": true,
+                                                                                                                        "ActiveHierarchy": false,
                                                                                                                         "RootBoneId": 0,
                                                                                                                         "Mask": 0,
                                                                                                                         "Components": [
@@ -45032,7 +45032,7 @@
                                                                                                         "Name": "RightHandLeftFinger1",
                                                                                                         "Active": true,
                                                                                                         "Static": false,
-                                                                                                        "ActiveHierarchy": true,
+                                                                                                        "ActiveHierarchy": false,
                                                                                                         "RootBoneId": 0,
                                                                                                         "Mask": 0,
                                                                                                         "Components": [
@@ -45069,7 +45069,7 @@
                                                                                                                 "Name": "RightHandLeftFinger2",
                                                                                                                 "Active": true,
                                                                                                                 "Static": false,
-                                                                                                                "ActiveHierarchy": true,
+                                                                                                                "ActiveHierarchy": false,
                                                                                                                 "RootBoneId": 0,
                                                                                                                 "Mask": 0,
                                                                                                                 "Components": [
@@ -45106,7 +45106,7 @@
                                                                                                                         "Name": "RightHandLeftFinger3",
                                                                                                                         "Active": true,
                                                                                                                         "Static": false,
-                                                                                                                        "ActiveHierarchy": true,
+                                                                                                                        "ActiveHierarchy": false,
                                                                                                                         "RootBoneId": 0,
                                                                                                                         "Mask": 0,
                                                                                                                         "Components": [
@@ -45156,7 +45156,7 @@
                                                                         "Name": "RightShoulderpad",
                                                                         "Active": true,
                                                                         "Static": false,
-                                                                        "ActiveHierarchy": true,
+                                                                        "ActiveHierarchy": false,
                                                                         "RootBoneId": 0,
                                                                         "Mask": 0,
                                                                         "Components": [
@@ -45202,7 +45202,7 @@
                                         "Name": "LeftLeg1",
                                         "Active": true,
                                         "Static": false,
-                                        "ActiveHierarchy": true,
+                                        "ActiveHierarchy": false,
                                         "RootBoneId": 0,
                                         "Mask": 0,
                                         "Components": [
@@ -45239,7 +45239,7 @@
                                                 "Name": "LeftLeg2",
                                                 "Active": true,
                                                 "Static": false,
-                                                "ActiveHierarchy": true,
+                                                "ActiveHierarchy": false,
                                                 "RootBoneId": 0,
                                                 "Mask": 0,
                                                 "Components": [
@@ -45276,7 +45276,7 @@
                                                         "Name": "LeftLeg3",
                                                         "Active": true,
                                                         "Static": false,
-                                                        "ActiveHierarchy": true,
+                                                        "ActiveHierarchy": false,
                                                         "RootBoneId": 0,
                                                         "Mask": 0,
                                                         "Components": [
@@ -45313,7 +45313,7 @@
                                                                 "Name": "LeftLeg4",
                                                                 "Active": true,
                                                                 "Static": false,
-                                                                "ActiveHierarchy": true,
+                                                                "ActiveHierarchy": false,
                                                                 "RootBoneId": 0,
                                                                 "Mask": 0,
                                                                 "Components": [
@@ -45350,7 +45350,7 @@
                                                                         "Name": "LeftFootBase",
                                                                         "Active": true,
                                                                         "Static": false,
-                                                                        "ActiveHierarchy": true,
+                                                                        "ActiveHierarchy": false,
                                                                         "RootBoneId": 0,
                                                                         "Mask": 0,
                                                                         "Components": [
@@ -45387,7 +45387,7 @@
                                                                                 "Name": "LeftFootBackToes",
                                                                                 "Active": true,
                                                                                 "Static": false,
-                                                                                "ActiveHierarchy": true,
+                                                                                "ActiveHierarchy": false,
                                                                                 "RootBoneId": 0,
                                                                                 "Mask": 0,
                                                                                 "Components": [
@@ -45424,7 +45424,7 @@
                                                                                         "Name": "LeftFootRightBackToe1",
                                                                                         "Active": true,
                                                                                         "Static": false,
-                                                                                        "ActiveHierarchy": true,
+                                                                                        "ActiveHierarchy": false,
                                                                                         "RootBoneId": 0,
                                                                                         "Mask": 0,
                                                                                         "Components": [
@@ -45461,7 +45461,7 @@
                                                                                                 "Name": "LeftFootRightBackToe2",
                                                                                                 "Active": true,
                                                                                                 "Static": false,
-                                                                                                "ActiveHierarchy": true,
+                                                                                                "ActiveHierarchy": false,
                                                                                                 "RootBoneId": 0,
                                                                                                 "Mask": 0,
                                                                                                 "Components": [
@@ -45498,7 +45498,7 @@
                                                                                                         "Name": "LeftFootRightBackToe3",
                                                                                                         "Active": true,
                                                                                                         "Static": false,
-                                                                                                        "ActiveHierarchy": true,
+                                                                                                        "ActiveHierarchy": false,
                                                                                                         "RootBoneId": 0,
                                                                                                         "Mask": 0,
                                                                                                         "Components": [
@@ -45540,7 +45540,7 @@
                                                                                         "Name": "LeftFootLeftBackToe1",
                                                                                         "Active": true,
                                                                                         "Static": false,
-                                                                                        "ActiveHierarchy": true,
+                                                                                        "ActiveHierarchy": false,
                                                                                         "RootBoneId": 0,
                                                                                         "Mask": 0,
                                                                                         "Components": [
@@ -45577,7 +45577,7 @@
                                                                                                 "Name": "LeftFootLeftBackToe2",
                                                                                                 "Active": true,
                                                                                                 "Static": false,
-                                                                                                "ActiveHierarchy": true,
+                                                                                                "ActiveHierarchy": false,
                                                                                                 "RootBoneId": 0,
                                                                                                 "Mask": 0,
                                                                                                 "Components": [
@@ -45614,7 +45614,7 @@
                                                                                                         "Name": "LeftFootLeftBackToe3",
                                                                                                         "Active": true,
                                                                                                         "Static": false,
-                                                                                                        "ActiveHierarchy": true,
+                                                                                                        "ActiveHierarchy": false,
                                                                                                         "RootBoneId": 0,
                                                                                                         "Mask": 0,
                                                                                                         "Components": [
@@ -45658,7 +45658,7 @@
                                                                                 "Name": "LeftFootFrontToes",
                                                                                 "Active": true,
                                                                                 "Static": false,
-                                                                                "ActiveHierarchy": true,
+                                                                                "ActiveHierarchy": false,
                                                                                 "RootBoneId": 0,
                                                                                 "Mask": 0,
                                                                                 "Components": [
@@ -45695,7 +45695,7 @@
                                                                                         "Name": "LeftFootRightFrontToe1",
                                                                                         "Active": true,
                                                                                         "Static": false,
-                                                                                        "ActiveHierarchy": true,
+                                                                                        "ActiveHierarchy": false,
                                                                                         "RootBoneId": 0,
                                                                                         "Mask": 0,
                                                                                         "Components": [
@@ -45732,7 +45732,7 @@
                                                                                                 "Name": "LeftFootRightFrontToe2",
                                                                                                 "Active": true,
                                                                                                 "Static": false,
-                                                                                                "ActiveHierarchy": true,
+                                                                                                "ActiveHierarchy": false,
                                                                                                 "RootBoneId": 0,
                                                                                                 "Mask": 0,
                                                                                                 "Components": [
@@ -45769,7 +45769,7 @@
                                                                                                         "Name": "LeftFootRightFrontToe3",
                                                                                                         "Active": true,
                                                                                                         "Static": false,
-                                                                                                        "ActiveHierarchy": true,
+                                                                                                        "ActiveHierarchy": false,
                                                                                                         "RootBoneId": 0,
                                                                                                         "Mask": 0,
                                                                                                         "Components": [
@@ -45811,7 +45811,7 @@
                                                                                         "Name": "LeftFootLeftFrontToe1",
                                                                                         "Active": true,
                                                                                         "Static": false,
-                                                                                        "ActiveHierarchy": true,
+                                                                                        "ActiveHierarchy": false,
                                                                                         "RootBoneId": 0,
                                                                                         "Mask": 0,
                                                                                         "Components": [
@@ -45848,7 +45848,7 @@
                                                                                                 "Name": "LeftFootLeftFrontToe2",
                                                                                                 "Active": true,
                                                                                                 "Static": false,
-                                                                                                "ActiveHierarchy": true,
+                                                                                                "ActiveHierarchy": false,
                                                                                                 "RootBoneId": 0,
                                                                                                 "Mask": 0,
                                                                                                 "Components": [
@@ -45885,7 +45885,7 @@
                                                                                                         "Name": "LeftFootLeftFrontToe3",
                                                                                                         "Active": true,
                                                                                                         "Static": false,
-                                                                                                        "ActiveHierarchy": true,
+                                                                                                        "ActiveHierarchy": false,
                                                                                                         "RootBoneId": 0,
                                                                                                         "Mask": 0,
                                                                                                         "Components": [
@@ -45935,7 +45935,7 @@
                                                         "Name": "LeftLegArmor1",
                                                         "Active": true,
                                                         "Static": false,
-                                                        "ActiveHierarchy": true,
+                                                        "ActiveHierarchy": false,
                                                         "RootBoneId": 0,
                                                         "Mask": 0,
                                                         "Components": [
@@ -45977,7 +45977,7 @@
                                         "Name": "HipPiece",
                                         "Active": true,
                                         "Static": false,
-                                        "ActiveHierarchy": true,
+                                        "ActiveHierarchy": false,
                                         "RootBoneId": 0,
                                         "Mask": 0,
                                         "Components": [
@@ -46014,7 +46014,7 @@
                                                 "Name": "BeltBase",
                                                 "Active": true,
                                                 "Static": false,
-                                                "ActiveHierarchy": true,
+                                                "ActiveHierarchy": false,
                                                 "RootBoneId": 0,
                                                 "Mask": 0,
                                                 "Components": [
@@ -46051,7 +46051,7 @@
                                                         "Name": "LeftBelt1",
                                                         "Active": true,
                                                         "Static": false,
-                                                        "ActiveHierarchy": true,
+                                                        "ActiveHierarchy": false,
                                                         "RootBoneId": 0,
                                                         "Mask": 0,
                                                         "Components": [
@@ -46088,7 +46088,7 @@
                                                                 "Name": "LeftBelt2",
                                                                 "Active": true,
                                                                 "Static": false,
-                                                                "ActiveHierarchy": true,
+                                                                "ActiveHierarchy": false,
                                                                 "RootBoneId": 0,
                                                                 "Mask": 0,
                                                                 "Components": [
@@ -46125,7 +46125,7 @@
                                                                         "Name": "LeftBelt3",
                                                                         "Active": true,
                                                                         "Static": false,
-                                                                        "ActiveHierarchy": true,
+                                                                        "ActiveHierarchy": false,
                                                                         "RootBoneId": 0,
                                                                         "Mask": 0,
                                                                         "Components": [
@@ -46167,7 +46167,7 @@
                                                         "Name": "RightBelt1",
                                                         "Active": true,
                                                         "Static": false,
-                                                        "ActiveHierarchy": true,
+                                                        "ActiveHierarchy": false,
                                                         "RootBoneId": 0,
                                                         "Mask": 0,
                                                         "Components": [
@@ -46204,7 +46204,7 @@
                                                                 "Name": "RightBelt2",
                                                                 "Active": true,
                                                                 "Static": false,
-                                                                "ActiveHierarchy": true,
+                                                                "ActiveHierarchy": false,
                                                                 "RootBoneId": 0,
                                                                 "Mask": 0,
                                                                 "Components": [
@@ -46241,7 +46241,7 @@
                                                                         "Name": "RightBelt3",
                                                                         "Active": true,
                                                                         "Static": false,
-                                                                        "ActiveHierarchy": true,
+                                                                        "ActiveHierarchy": false,
                                                                         "RootBoneId": 0,
                                                                         "Mask": 0,
                                                                         "Components": [
@@ -46287,7 +46287,7 @@
                                         "Name": "RightLeg1",
                                         "Active": true,
                                         "Static": false,
-                                        "ActiveHierarchy": true,
+                                        "ActiveHierarchy": false,
                                         "RootBoneId": 0,
                                         "Mask": 0,
                                         "Components": [
@@ -46324,7 +46324,7 @@
                                                 "Name": "RightLeg2",
                                                 "Active": true,
                                                 "Static": false,
-                                                "ActiveHierarchy": true,
+                                                "ActiveHierarchy": false,
                                                 "RootBoneId": 0,
                                                 "Mask": 0,
                                                 "Components": [
@@ -46361,7 +46361,7 @@
                                                         "Name": "RightLeg3",
                                                         "Active": true,
                                                         "Static": false,
-                                                        "ActiveHierarchy": true,
+                                                        "ActiveHierarchy": false,
                                                         "RootBoneId": 0,
                                                         "Mask": 0,
                                                         "Components": [
@@ -46398,7 +46398,7 @@
                                                                 "Name": "RightLeg4",
                                                                 "Active": true,
                                                                 "Static": false,
-                                                                "ActiveHierarchy": true,
+                                                                "ActiveHierarchy": false,
                                                                 "RootBoneId": 0,
                                                                 "Mask": 0,
                                                                 "Components": [
@@ -46435,7 +46435,7 @@
                                                                         "Name": "RightFootBase",
                                                                         "Active": true,
                                                                         "Static": false,
-                                                                        "ActiveHierarchy": true,
+                                                                        "ActiveHierarchy": false,
                                                                         "RootBoneId": 0,
                                                                         "Mask": 0,
                                                                         "Components": [
@@ -46472,7 +46472,7 @@
                                                                                 "Name": "RightFootBackToes",
                                                                                 "Active": true,
                                                                                 "Static": false,
-                                                                                "ActiveHierarchy": true,
+                                                                                "ActiveHierarchy": false,
                                                                                 "RootBoneId": 0,
                                                                                 "Mask": 0,
                                                                                 "Components": [
@@ -46509,7 +46509,7 @@
                                                                                         "Name": "RightFootLeftBackToe1",
                                                                                         "Active": true,
                                                                                         "Static": false,
-                                                                                        "ActiveHierarchy": true,
+                                                                                        "ActiveHierarchy": false,
                                                                                         "RootBoneId": 0,
                                                                                         "Mask": 0,
                                                                                         "Components": [
@@ -46546,7 +46546,7 @@
                                                                                                 "Name": "RightFootLeftBackToe2",
                                                                                                 "Active": true,
                                                                                                 "Static": false,
-                                                                                                "ActiveHierarchy": true,
+                                                                                                "ActiveHierarchy": false,
                                                                                                 "RootBoneId": 0,
                                                                                                 "Mask": 0,
                                                                                                 "Components": [
@@ -46583,7 +46583,7 @@
                                                                                                         "Name": "RightFootLeftBackToe3",
                                                                                                         "Active": true,
                                                                                                         "Static": false,
-                                                                                                        "ActiveHierarchy": true,
+                                                                                                        "ActiveHierarchy": false,
                                                                                                         "RootBoneId": 0,
                                                                                                         "Mask": 0,
                                                                                                         "Components": [
@@ -46625,7 +46625,7 @@
                                                                                         "Name": "RightFootRightBackToe1",
                                                                                         "Active": true,
                                                                                         "Static": false,
-                                                                                        "ActiveHierarchy": true,
+                                                                                        "ActiveHierarchy": false,
                                                                                         "RootBoneId": 0,
                                                                                         "Mask": 0,
                                                                                         "Components": [
@@ -46662,7 +46662,7 @@
                                                                                                 "Name": "RightFootRightBackToe2",
                                                                                                 "Active": true,
                                                                                                 "Static": false,
-                                                                                                "ActiveHierarchy": true,
+                                                                                                "ActiveHierarchy": false,
                                                                                                 "RootBoneId": 0,
                                                                                                 "Mask": 0,
                                                                                                 "Components": [
@@ -46699,7 +46699,7 @@
                                                                                                         "Name": "RightFootRightBackToe3",
                                                                                                         "Active": true,
                                                                                                         "Static": false,
-                                                                                                        "ActiveHierarchy": true,
+                                                                                                        "ActiveHierarchy": false,
                                                                                                         "RootBoneId": 0,
                                                                                                         "Mask": 0,
                                                                                                         "Components": [
@@ -46743,7 +46743,7 @@
                                                                                 "Name": "RightFootFrontToes",
                                                                                 "Active": true,
                                                                                 "Static": false,
-                                                                                "ActiveHierarchy": true,
+                                                                                "ActiveHierarchy": false,
                                                                                 "RootBoneId": 0,
                                                                                 "Mask": 0,
                                                                                 "Components": [
@@ -46780,7 +46780,7 @@
                                                                                         "Name": "RightFootLeftFrontToe1",
                                                                                         "Active": true,
                                                                                         "Static": false,
-                                                                                        "ActiveHierarchy": true,
+                                                                                        "ActiveHierarchy": false,
                                                                                         "RootBoneId": 0,
                                                                                         "Mask": 0,
                                                                                         "Components": [
@@ -46817,7 +46817,7 @@
                                                                                                 "Name": "RightFootLeftFrontToe2",
                                                                                                 "Active": true,
                                                                                                 "Static": false,
-                                                                                                "ActiveHierarchy": true,
+                                                                                                "ActiveHierarchy": false,
                                                                                                 "RootBoneId": 0,
                                                                                                 "Mask": 0,
                                                                                                 "Components": [
@@ -46854,7 +46854,7 @@
                                                                                                         "Name": "RightFootLeftFrontToe3",
                                                                                                         "Active": true,
                                                                                                         "Static": false,
-                                                                                                        "ActiveHierarchy": true,
+                                                                                                        "ActiveHierarchy": false,
                                                                                                         "RootBoneId": 0,
                                                                                                         "Mask": 0,
                                                                                                         "Components": [
@@ -46896,7 +46896,7 @@
                                                                                         "Name": "RightFootRightFrontToe1",
                                                                                         "Active": true,
                                                                                         "Static": false,
-                                                                                        "ActiveHierarchy": true,
+                                                                                        "ActiveHierarchy": false,
                                                                                         "RootBoneId": 0,
                                                                                         "Mask": 0,
                                                                                         "Components": [
@@ -46933,7 +46933,7 @@
                                                                                                 "Name": "RightFootRightFrontToe2",
                                                                                                 "Active": true,
                                                                                                 "Static": false,
-                                                                                                "ActiveHierarchy": true,
+                                                                                                "ActiveHierarchy": false,
                                                                                                 "RootBoneId": 0,
                                                                                                 "Mask": 0,
                                                                                                 "Components": [
@@ -46970,7 +46970,7 @@
                                                                                                         "Name": "RightFootRightFrontToe3",
                                                                                                         "Active": true,
                                                                                                         "Static": false,
-                                                                                                        "ActiveHierarchy": true,
+                                                                                                        "ActiveHierarchy": false,
                                                                                                         "RootBoneId": 0,
                                                                                                         "Mask": 0,
                                                                                                         "Components": [
@@ -47020,7 +47020,7 @@
                                                         "Name": "RightLegArmor1",
                                                         "Active": true,
                                                         "Static": false,
-                                                        "ActiveHierarchy": true,
+                                                        "ActiveHierarchy": false,
                                                         "RootBoneId": 0,
                                                         "Mask": 0,
                                                         "Components": [
@@ -47103,14 +47103,9 @@
                                 "Script": 4446135300975932463,
                                 "Values": [
                                     {
-                                        "Name": "playerUID",
+                                        "Name": "shockWaveUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 8838610656912784116
-                                    },
-                                    {
-                                        "Name": "absorptionUID",
-                                        "Type": "GameObjectUID",
-                                        "Value": 16248459229603731574
+                                        "Value": 10986070857341807388
                                     },
                                     {
                                         "Name": "explosionUID",
@@ -47118,9 +47113,14 @@
                                         "Value": 15713053489969791899
                                     },
                                     {
-                                        "Name": "shockWaveUID",
+                                        "Name": "absorptionUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 10986070857341807388
+                                        "Value": 16248459229603731574
+                                    },
+                                    {
+                                        "Name": "playerUID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 8838610656912784116
                                     },
                                     {
                                         "Name": "lightUID",
@@ -47547,6 +47547,323 @@
                                 "Children": null
                             }
                         ]
+                    }
+                ]
+            },
+            {
+                "Id": 5515770555020674411,
+                "Name": "WinCondition",
+                "Active": true,
+                "Static": false,
+                "ActiveHierarchy": true,
+                "RootBoneId": 0,
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Id": 5227662835465533654,
+                        "Active": true,
+                        "Position": [
+                            72.17340850830078,
+                            0.6875929832458496,
+                            10.089852333068848
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Script",
+                        "Id": 7862647786388631619,
+                        "Active": true,
+                        "Script": 4240581393573860681,
+                        "Values": [
+                            {
+                                "Name": "enemiesUID",
+                                "Type": "GameObjectUID",
+                                "Value": 1429434097349821105
+                            },
+                            {
+                                "Name": "sceneUID",
+                                "Type": "SceneResourceUID",
+                                "Value": 7141310542589317769
+                            },
+                            {
+                                "Name": "winUID",
+                                "Type": "GameObjectUID",
+                                "Value": 5515770555020674411
+                            },
+                            {
+                                "Name": "playerUID",
+                                "Type": "GameObjectUID",
+                                "Value": 4093097755722686995
+                            }
+                        ]
+                    }
+                ],
+                "Children": [
+                    {
+                        "Id": 4544107725530703560,
+                        "Name": "BakerHouse",
+                        "Active": true,
+                        "Static": false,
+                        "ActiveHierarchy": true,
+                        "RootBoneId": 0,
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Id": 1970689532350323196,
+                                "Active": true,
+                                "Position": [
+                                    5.37921142578125,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.7071068286895752,
+                                    0.0,
+                                    0.7071068286895752
+                                ],
+                                "Scale": [
+                                    3.0,
+                                    3.0,
+                                    3.0
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    90.0,
+                                    -0.0
+                                ]
+                            }
+                        ],
+                        "Children": [
+                            {
+                                "Id": 13332718752312772939,
+                                "Name": "Baker_house",
+                                "Active": true,
+                                "Static": false,
+                                "ActiveHierarchy": true,
+                                "RootBoneId": 0,
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform",
+                                        "Id": 1048630011511927182,
+                                        "Active": true,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ]
+                                    },
+                                    {
+                                        "Type": "MeshRenderer",
+                                        "Id": 1465420993214991611,
+                                        "Active": true,
+                                        "MeshID": 4052882895307772126,
+                                        "MaterialID": 12227759421935825203
+                                    },
+                                    {
+                                        "Type": "BoundingBox",
+                                        "Id": 13286745911146303539,
+                                        "Active": true,
+                                        "LocalBoundingBox": [
+                                            -1.5340535640716553,
+                                            0.012897372245788575,
+                                            -2.060347080230713,
+                                            1.6797043085098267,
+                                            3.555873394012451,
+                                            1.906912922859192
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Id": 16197455173452830937,
+                                "Name": "Chimney",
+                                "Active": true,
+                                "Static": false,
+                                "ActiveHierarchy": true,
+                                "RootBoneId": 0,
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform",
+                                        "Id": 1171196818225662843,
+                                        "Active": true,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ]
+                                    },
+                                    {
+                                        "Type": "MeshRenderer",
+                                        "Id": 2371864500916696733,
+                                        "Active": true,
+                                        "MeshID": 11482972755866571753,
+                                        "MaterialID": 12227759421935825203
+                                    },
+                                    {
+                                        "Type": "BoundingBox",
+                                        "Id": 5614680823619348337,
+                                        "Active": true,
+                                        "LocalBoundingBox": [
+                                            1.5711853504180909,
+                                            0.012897491455078125,
+                                            -0.03543161228299141,
+                                            2.2668659687042238,
+                                            2.394075632095337,
+                                            0.964568555355072
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "Id": 1429434097349821105,
+                "Name": "Enemies",
+                "Active": true,
+                "Static": false,
+                "ActiveHierarchy": true,
+                "RootBoneId": 0,
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Id": 8740612713020304143,
+                        "Active": true,
+                        "Position": [
+                            0.0,
+                            12.189395904541016,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    }
+                ],
+                "Children": [
+                    {
+                        "Id": 7583799621362877598,
+                        "Name": "Spawn 1",
+                        "Active": true,
+                        "Static": false,
+                        "ActiveHierarchy": true,
+                        "RootBoneId": 0,
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Id": 11976905347011478475,
+                                "Active": true,
+                                "Position": [
+                                    -26.289718627929689,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "Script",
+                                "Id": 8822224542478919639,
+                                "Active": true,
+                                "Script": 14237604830987124740,
+                                "Values": [
+                                    {
+                                        "Name": "winUID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 5515770555020674411
+                                    },
+                                    {
+                                        "Name": "prefabUID",
+                                        "Type": "PrefabResourceUID",
+                                        "Value": 9998956702901793097
+                                    }
+                                ]
+                            }
+                        ],
+                        "Children": null
                     }
                 ]
             }
