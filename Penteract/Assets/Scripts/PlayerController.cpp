@@ -466,6 +466,16 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 		if (IsDead()) {
 			if (animation->GetCurrentState()->name != PlayerController::states[9]) {
 				animation->SendTrigger(animation->GetCurrentState()->name + PlayerController::states[9]);
+				if (fang->IsActive()) {
+					if (animation->GetCurrentStateSecondary()->name == "RightShot") {
+						animation->SendTriggerSecondary("RightShotDeath");
+					} else if (animation->GetCurrentStateSecondary()->name == "LeftShot") {
+						animation->SendTriggerSecondary("LeftShotDeath");
+					}
+				}
+				else {
+					animation->SendTriggerSecondary("ShootingDeath");
+				}
 			}
 		}
 		else {
