@@ -9,8 +9,8 @@
                 "Type": "Transform",
                 "Active": true,
                 "Position": [
-                    -130.9169464111328,
-                    0.0,
+                    -129.45314025878907,
+                    10.093485832214356,
                     11.274106979370118
                 ],
                 "Rotation": [
@@ -49,6 +49,11 @@
                         "Name": "offset",
                         "Type": "Int",
                         "Value": 0
+                    },
+                    {
+                        "Name": "winUID",
+                        "Type": "GameObjectUID",
+                        "Value": 16579210181260590797
                     }
                 ]
             }
