@@ -3,41 +3,53 @@
 #include "Scripting/Script.h"
 
 #include "AIState.h"
+#include "Enemy.h"
 
+class GameObject;
 class ComponentAnimation;
 class ComponentTransform;
 class ComponentAgent;
-
+class ComponentAudioSource;
+class ResourcePrefab;
 class HUDController;
 class PlayerController;
 class AIMovement;
+class WinLose;
+class EnemySpawnPoint;
 
-class AIMeleeGrunt : public Script
-{
+class AIMeleeGrunt : public Script {
 	GENERATE_BODY(AIMeleeGrunt);
 
 public:
+	enum class AudioType {
+		SPAWN,
+		ATTACK,
+		HIT,
+		DEATH,
+		TOTAL
+	};
 
 	void Start() override;
 	void Update() override;
 	void OnAnimationFinished() override;
-	void HitDetected(int damage_ = 1);
+	void OnAnimationSecondaryFinished() override;
+	void OnCollision(GameObject& collidedWith) override;
 
 public:
 
 	UID playerUID = 0;
 	UID canvasUID = 0;
+	UID winConditionUID = 0;
+	UID meleePunchUID = 0;
 
 	GameObject* player = nullptr;
+	GameObject* spawn = nullptr;
 	ComponentAgent* agent = nullptr;
+	ResourcePrefab* meleePunch = nullptr;
+	WinLose* winLoseScript = nullptr;
 
-	int maxSpeed = 8;
-	int fallingSpeed = 30;
-	float searchRadius = 40.f;
-	float meleeRange = 5.f;
-	int lifePoints = 5;
-	float timeToDie = 5.f;
-	bool dead = false;
+	Enemy gruntCharacter = Enemy(5, 8.0f, 1, 30, 40.f, 5.f, 5.f);
+	bool killSent = false;
 
 private:
 
@@ -51,6 +63,8 @@ private:
 	HUDController* hudControllerScript = nullptr;
 	PlayerController* playerController = nullptr;
 	AIMovement* movementScript = nullptr;
+	EnemySpawnPoint* enemySpawnPointScript = nullptr;
+
+	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
 
 };
-

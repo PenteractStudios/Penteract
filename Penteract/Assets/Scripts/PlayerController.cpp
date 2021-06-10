@@ -2,11 +2,12 @@
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
-#include "TesseractEvent.h"
 
 #include "AIMeleeGrunt.h"
+#include "RangedAI.h"
 #include "HUDController.h"
-
+#include "OnimaruBullet.h"
+#include "SwitchParticles.h"
 #include "Math/Quat.h"
 #include "Geometry/Plane.h"
 #include "Geometry/Frustum.h"
@@ -26,16 +27,14 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangBulletUID),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruTrailUID),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruBulletUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruParticleUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, switchAudioSourceUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, dashAudioSourceUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
-	MEMBER(MemberType::FLOAT, fangAttackSpeed),
-	MEMBER(MemberType::FLOAT, onimaruAttackSpeed),
 	MEMBER(MemberType::FLOAT, distanceRayCast),
 	MEMBER(MemberType::FLOAT, switchCooldown),
 	MEMBER(MemberType::FLOAT, dashCooldown),
@@ -44,17 +43,22 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, cameraOffsetZ),
 	MEMBER(MemberType::FLOAT, cameraOffsetY),
 	MEMBER(MemberType::FLOAT, cameraOffsetX),
-	MEMBER(MemberType::FLOAT, fangMovementSpeed),
-	MEMBER(MemberType::FLOAT, onimaruMovementSpeed),
-	MEMBER(MemberType::FLOAT, shootCooldown),
-	MEMBER(MemberType::INT, lifePointsFang),
-	MEMBER(MemberType::INT, lifePointsOni),
+	MEMBER(MemberType::INT, fangCharacter.lifePoints),
+	MEMBER(MemberType::FLOAT, fangCharacter.movementSpeed),
+	MEMBER(MemberType::INT, fangCharacter.damageHit),
+	MEMBER(MemberType::FLOAT, fangCharacter.attackSpeed),
+	MEMBER(MemberType::INT, onimaruCharacter.lifePoints),
+	MEMBER(MemberType::FLOAT, onimaruCharacter.movementSpeed),
+	MEMBER(MemberType::INT, onimaruCharacter.damageHit),
+	MEMBER(MemberType::FLOAT, onimaruCharacter.attackSpeed),
+	MEMBER(MemberType::INT, rangedDamageTaken),
+	MEMBER(MemberType::INT, meleeDamageTaken),
 	MEMBER(MemberType::BOOL, useSmoothCamera),
 	MEMBER(MemberType::FLOAT, smoothCameraSpeed),
 	MEMBER(MemberType::INT, onimaruRecoveryRate),
 	MEMBER(MemberType::INT, fangRecoveryRate),
-	MEMBER(MemberType::BOOL, debugGetHit)
-
+	MEMBER(MemberType::BOOL, debugGetHit),
+	MEMBER(MemberType::FLOAT, switchDelay),
 };
 
 GENERATE_BODY_IMPL(PlayerController);
@@ -77,7 +81,6 @@ void PlayerController::Start() {
 		if (transform) {
 			initialPosition = transform->GetGlobalPosition();
 		}
-		shootAudioSource = player->GetComponent<ComponentAudioSource>();
 	}
 	if (camera) {
 		compCamera = camera->GetComponent<ComponentCamera>();
@@ -94,18 +97,22 @@ void PlayerController::Start() {
 		}
 		fangAnimation = fang->GetComponent<ComponentAnimation>();
 		fangTrail = GameplaySystems::GetResource<ResourcePrefab>(fangTrailUID);
+		fangBullet = GameplaySystems::GetResource<ResourcePrefab>(fangBulletUID);
+
 		if (fangAnimation) {
 			fangCurrentState = fangAnimation->GetCurrentState();
 		}
 	}
 	if (onimaru) {
 		onimaru->Disable();
-		onimaruGun = GameplaySystems::GetGameObject(fangGunUID);
+		onimaruGun = GameplaySystems::GetGameObject(onimaruGunUID);
+		ComponentCapsuleCollider* ccc = onimaru->GetComponent<ComponentCapsuleCollider>(); // workaround collider doesn't activate if onimaru starts disabled
+		if (ccc) ccc->Enable();
 		if (onimaruGun) {
 			onimaruGunTransform = onimaruGun->GetComponent<ComponentTransform>();
 		}
 		onimaruAnimation = onimaru->GetComponent<ComponentAnimation>();
-		onimaruTrail = GameplaySystems::GetResource<ResourcePrefab>(onimaruTrailUID);
+		onimaruBullet = GameplaySystems::GetResource<ResourcePrefab>(onimaruBulletUID);
 		if (onimaruAnimation) {
 			onimaruCurrentState = onimaruAnimation->GetCurrentState();
 		}
@@ -114,33 +121,30 @@ void PlayerController::Start() {
 		onimaruCompParticle = onimaruParticle->GetComponent<ComponentParticleSystem>();
 	}
 
-	GameObject* aux = GameplaySystems::GetGameObject(switchAudioSourceUID);
-	if (aux) {
-		switchAudioSource = aux->GetComponent<ComponentAudioSource>();
-	}
-	aux = GameplaySystems::GetGameObject(dashAudioSourceUID);
-	if (aux) {
-		dashAudioSource = aux->GetComponent<ComponentAudioSource>();
-	}
+	switchEffects = GameplaySystems::GetGameObject(switchParticlesUID);
+
 	firstTime = true;
 
 	agent = GetOwner().GetComponent<ComponentAgent>();
 	if (agent) {
-		agent->SetMaxSpeed(fangMovementSpeed);
+		agent->SetMaxSpeed(fangCharacter.movementSpeed);
 		agent->SetMaxAcceleration(MAX_ACCELERATION);
+	}
+
+	//Get audio sources
+	int i = 0;
+
+	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
+		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
+		i++;
 	}
 }
 
 void PlayerController::MoveTo(MovementDirection md) {
-	float modifier = 1.0f;
-	float3 newPosition = transform->GetGlobalPosition();
-	if (Input::GetKeyCode(Input::KEYCODE::KEY_LSHIFT)) {
-		modifier = 2.0f;
-	}
-	float movementSpeed = ((fang->IsActive()) ? fangMovementSpeed : onimaruMovementSpeed);
-
+	float movementSpeed = ((fang->IsActive()) ? fangCharacter.movementSpeed : onimaruCharacter.movementSpeed);
+	float3 newPosition = transform->GetGlobalPosition() + GetDirection(md);
 	//with navigation
-	newPosition += GetDirection(md) * movementSpeed * modifier;
+	agent->SetMaxSpeed(movementSpeed);
 	agent->SetMoveTarget(newPosition, false);
 }
 
@@ -148,13 +152,16 @@ void PlayerController::LookAtMouse() {
 	if (camera && compCamera) {
 		float2 mousePos = Input::GetMousePositionNormalized();
 		LineSegment ray = compCamera->frustum.UnProjectLineSegment(mousePos.x, mousePos.y);
-		Plane p = Plane(transform->GetGlobalPosition(), float3(0, 1, 0));
+		float3 planeTransform = transform->GetGlobalPosition();
+		if (fang->IsActive() && fangGunTransform) planeTransform = fangGunTransform->GetGlobalPosition();
+		else if (!fang->IsActive() && onimaruGunTransform) planeTransform = onimaruGunTransform->GetGlobalPosition();
+		Plane p = Plane(planeTransform, float3(0, 1, 0));
 		facePointDir = float3(0, 0, 0);
 		facePointDir = p.ClosestPoint(ray) - (transform->GetGlobalPosition());
-		Quat quat = transform->GetRotation();
+		Quat quat = transform->GetGlobalRotation();
 		float angle = Atan2(facePointDir.x, facePointDir.z);
 		Quat rotation = quat.RotateAxisAngle(float3(0, 1, 0), angle);
-		transform->SetRotation(rotation);
+		transform->SetGlobalRotation(rotation);
 	}
 }
 
@@ -179,8 +186,8 @@ void PlayerController::InitDash(MovementDirection md) {
 		if (agent) {
 			agent->SetMaxSpeed(dashSpeed);
 		}
-		if (dashAudioSource) {
-			dashAudioSource->Play();
+		if (audios[static_cast<int>(AudioType::DASH)]) {
+			audios[static_cast<int>(AudioType::DASH)]->Play();
 		} else {
 			Debug::Log(AUDIOSOURCE_NULL_MSG);
 		}
@@ -206,84 +213,109 @@ bool PlayerController::CanSwitch() {
 void PlayerController::SwitchCharacter() {
 	if (!fang) return;
 	if (!onimaru) return;
+	if (!agent) return;
 	if (CanSwitch()) {
-		switchInCooldown = true;
-		if (switchAudioSource) switchAudioSource->Play();
-		if (fang->IsActive()) {
-			fang->Disable();
-			onimaru->Enable();
-			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
-			hudControllerScript->ResetHealthRegenerationEffects(lifePointsFang);
-			fangRecovering = 0.0f;
-		} else {
-			onimaru->Disable();
-			fang->Enable();
-			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
-			hudControllerScript->ResetHealthRegenerationEffects(lifePointsOni);
-			onimaruRecovering = 0.0f;
+		bool doVisualSwitch = currentSwitchDelay < switchDelay ? false : true;
+		if (doVisualSwitch) {
+			if (audios[static_cast<int>(AudioType::SWITCH)]) {
+				audios[static_cast<int>(AudioType::SWITCH)]->Play();
+			}
+			if (fang->IsActive()) {
+				fang->Disable();
+				onimaru->Enable();
+				if (hudControllerScript){
+					hudControllerScript->UpdateHP(static_cast<float>(onimaruCharacter.lifePoints), static_cast<float>(fangCharacter.lifePoints));
+					hudControllerScript->ResetHealthRegenerationEffects(static_cast<float>(fangCharacter.lifePoints));
+				}
+				
+				fangRecovering = 0.0f;
+			}
+			else {
+				onimaru->Disable();
+				fang->Enable();
+				if(hudControllerScript){
+					hudControllerScript->UpdateHP(static_cast<float>(fangCharacter.lifePoints), static_cast<float>(onimaruCharacter.lifePoints));
+					hudControllerScript->ResetHealthRegenerationEffects(static_cast<float>(onimaruCharacter.lifePoints));
+				}
+			
+				onimaruRecovering = 0.0f;
+			}
+			if (hudControllerScript) {
+				hudControllerScript->ChangePlayerHUD(static_cast<float>(fangCharacter.lifePoints), static_cast<float>(onimaruCharacter.lifePoints));
+				hudControllerScript->ResetCooldownProgressBar();
+			}
+			currentSwitchDelay = 0.f;
+			playSwitchParticles = true;
+			switchInCooldown = true;
+			if (noCooldownMode) switchInProgress = false;
 		}
-		switchCooldownRemaining = switchCooldown;
-		if (hudControllerScript) {
-			hudControllerScript->ChangePlayerHUD(lifePointsFang, lifePointsOni);
-			hudControllerScript->ResetCooldownProgressBar();
+		else {
+			if (playSwitchParticles) {
+				if (switchEffects) {
+					SwitchParticles* script = GET_SCRIPT(switchEffects, SwitchParticles);
+					if (script) {
+						script->Play();
+					}
+				}
+				switchInProgress = true;
+				playSwitchParticles = false;
+			}
+			currentSwitchDelay += Time::GetDeltaTime();
 		}
 	}
 }
 
 bool PlayerController::CanShoot() {
-	return !shooting && ((fang->IsActive() && fangTrail) || (onimaru->IsActive() && onimaruTrail));
+	return !shooting && ((fang->IsActive() && fangTrail) || (onimaru->IsActive() && onimaruBullet));
+}
+
+void PlayerController::ResetSwitchStatus() {
+	switchInProgress = false;
+	playSwitchParticles = true;
+	currentSwitchDelay = 0.f;
 }
 
 void PlayerController::Shoot() {
-	ComponentTransform* transform = GetOwner().GetComponent<ComponentTransform>();
-
 	if (CanShoot()) {
-		if (shootAudioSource) {
-			shootAudioSource->Play();
-		} else {
-			Debug::Log(AUDIOSOURCE_NULL_MSG);
-		}
-
 		shooting = true;
-		float3 start;
 		if (fang->IsActive()) {
-			fangAttackCooldownRemaining = 1.f / fangAttackSpeed;
-			if (fangTrail) {
-				//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
-				//fangGun->GetComponent<ComponentParticleSystem>()->Play();
+			fangAttackCooldownRemaining = 1.f / fangCharacter.attackSpeed;
+			if (audios[static_cast<int>(AudioType::SHOOT)]) {
+				audios[static_cast<int>(AudioType::SHOOT)]->Play();
+			}
+			else {
+				Debug::Log(AUDIOSOURCE_NULL_MSG);
+			}
+			fangAttackCooldownRemaining = 1.f / fangCharacter.attackSpeed;
+			if (fangTrail && fangBullet) {
+				GameplaySystems::Instantiate(fangBullet, fangGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
 				GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
-				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
-				GameplaySystems::Instantiate(fangTrail, fangGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
 			}
-			start = fangGunTransform->GetGlobalPosition();
-		} else {
-			//TODO: SUB WITH ONIMARU SHOOT
-			onimaruAttackCooldownRemaining = 1.f / onimaruAttackSpeed;
-			if (onimaruTrail) {
-				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
-				float3 frontTrail = transform->GetGlobalRotation() * float3(0.0f, 0.0f, 1.0f);
-				GameplaySystems::Instantiate(onimaruTrail, onimaruGunTransform->GetGlobalPosition(), Quat::RotateAxisAngle(frontTrail, (pi / 2)).Mul(transform->GetGlobalRotation()));
+			if (rightShot) {
+				fangAnimation->SendTriggerSecondary(fangAnimation->GetCurrentState()->name + PlayerController::states[12]);
 			}
-			start = onimaruGunTransform->GetGlobalPosition();
+			else {
+				fangAnimation->SendTriggerSecondary(fangAnimation->GetCurrentState()->name + PlayerController::states[11]);
+			}
 		}
-
-		float3 end = transform->GetGlobalRotation() * float3(0, 0, 1);
-		end.Normalize();
-		end *= distanceRayCast;
-		int mask = static_cast<int>(MaskType::ENEMY);
-		GameObject* hitGo = Physics::Raycast(start, start + end, mask);
-		if (hitGo) {
-			AIMeleeGrunt* enemyScript = GET_SCRIPT(hitGo->GetParent(), AIMeleeGrunt);
-			if (enemyScript) {
-				if (fang->IsActive()) enemyScript->HitDetected(3);
-				else enemyScript->HitDetected();
+		else {
+			onimaruAttackCooldownRemaining = 1.f / onimaruCharacter.attackSpeed;
+			if (audios[static_cast<int>(AudioType::SHOOT)]) {
+				audios[static_cast<int>(AudioType::SHOOT)]->Play();
+			}
+			else {
+				Debug::Log(AUDIOSOURCE_NULL_MSG);
+			}
+			onimaruAttackCooldownRemaining = 1.f / onimaruCharacter.attackSpeed;
+			if (onimaruBullet) {
+				GameObject* bullet = GameplaySystems::Instantiate(onimaruBullet, onimaruGunTransform->GetGlobalPosition(), Quat(0.0f, 0.0f, 0.0f, 0.0f));
+				if (bullet) {
+					onimaruBulletcript = GET_SCRIPT(bullet, OnimaruBullet);
+					if(onimaruBulletcript) onimaruBulletcript->SetOnimaruDirection(onimaruGunTransform->GetGlobalRotation());
+				}
 			}
 		}
 	}
-}
-
-void PlayerController::HitDetected() {
-	hitTaken = !invincibleMode;
 }
 
 void PlayerController::SetInvincible(bool status) {
@@ -294,52 +326,56 @@ void PlayerController::SetOverpower(bool status) {
 	overpowerMode = status ? 999 : 1;
 }
 
-void PlayerController::SetNoCooldown(bool status) {
-	noCooldownMode = status;
+int PlayerController::GetOverPowerMode() {
+	return overpowerMode;
 }
 
-bool PlayerController::IsDead()
-{
-	return (lifePointsFang <= 0 || lifePointsOni <= 0);
+void PlayerController::SetNoCooldown(bool status) {
+	noCooldownMode = status;
+	ResetSwitchStatus();
+}
+
+bool PlayerController::IsDead() {
+	return (!fangCharacter.isAlive || !onimaruCharacter.isAlive);
 }
 
 void PlayerController::CheckCoolDowns() {
 	if (noCooldownMode || switchCooldownRemaining <= 0.f) {
 		switchCooldownRemaining = 0.f;
 		switchInCooldown = false;
-	} else {
+		if (!noCooldownMode) switchInProgress = false;
+	}
+	else {
 		switchCooldownRemaining -= Time::GetDeltaTime();
+	}
+	//Dash Cooldown
+	if (noCooldownMode || dashCooldownRemaining <= 0.f) {
+		dashCooldownRemaining = 0.f;
+		dashInCooldown = false;
+		dashMovementDirection = MovementDirection::NONE;
+	}
+	else {
+		dashCooldownRemaining -= Time::GetDeltaTime();
+	}
+	//Dash duration
+	if (dashRemaining <= 0.f) {
+		dashRemaining = 0.f;
+		dashing = false;
+		if (agent) agent->SetMaxSpeed(fangCharacter.movementSpeed);
+	}
+	else {
+		dashRemaining -= Time::GetDeltaTime();
 	}
 
 	if (fang->IsActive()) {
-		//Dash Cooldown
-		if (noCooldownMode || dashCooldownRemaining <= 0.f) {
-			dashCooldownRemaining = 0.f;
-			dashInCooldown = false;
-			dashMovementDirection = MovementDirection::NONE;
-		}
-		else {
-			dashCooldownRemaining -= Time::GetDeltaTime();
-		}
-		//Dash duration
-		if (dashRemaining <= 0.f) {
-			dashRemaining = 0.f;
-			dashing = false;
-			agent->SetMaxSpeed(fangMovementSpeed);
-		}
-		else {
-			dashRemaining -= Time::GetDeltaTime();
-		}
-	} 
 		if (fangAttackCooldownRemaining <= 0.f) {
 			fangAttackCooldownRemaining = 0.f;
 			shooting = false;
 		} else {
 			fangAttackCooldownRemaining -= Time::GetDeltaTime();
 		}
-	
-
-	if (onimaru->IsActive()) {
+	}
+	else {
 		if (onimaruAttackCooldownRemaining <= 0.f) {
 			onimaruAttackCooldownRemaining = 0.f;
 			shooting = false;
@@ -348,18 +384,18 @@ void PlayerController::CheckCoolDowns() {
 		}
 	}
 
-	if (onimaru->IsActive() && lifePointsFang != FANG_MAX_HEALTH) {
+	if (onimaru->IsActive() && fangCharacter.lifePoints != FANG_MAX_HEALTH) {
 		if (fangRecovering >= fangRecoveryRate) {
-			lifePointsFang += 1.0f;
+			fangCharacter.Recover(1);
 			fangRecovering = 0.0f;
 		} else {
 			fangRecovering += Time::GetDeltaTime();
 		}
 	}
 
-	if (fang->IsActive() && lifePointsOni != ONIMARU_MAX_HEALTH) {
+	if (fang->IsActive() && onimaruCharacter.lifePoints != ONIMARU_MAX_HEALTH) {
 		if (onimaruRecovering >= onimaruRecoveryRate) {
-			lifePointsOni += 1.0f;
+			onimaruCharacter.Recover(1);
 			onimaruRecovering = 0.0f;
 		} else {
 			onimaruRecovering += Time::GetDeltaTime();
@@ -442,18 +478,11 @@ int PlayerController::GetMouseDirectionState(MovementDirection input) {
 
 void PlayerController::PlayAnimation(MovementDirection md) {
 	ComponentAnimation* animation = nullptr;
-	State* currentState = nullptr;
-
 	if (fang->IsActive()) {
 		animation = fangAnimation;
-		currentState = fangCurrentState;
-	} else {
-		animation = onimaruAnimation;
-		currentState = onimaruCurrentState;
 	}
-
-	if (currentState != animation->GetCurrentState()) {
-		currentState = animation->GetCurrentState();
+	else {
+		animation = onimaruAnimation;
 	}
 
 	int dashAnimation = 0;
@@ -462,52 +491,53 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 		md = dashMovementDirection;
 	}
 
+	if (!animation) return;
+
 	if (md == MovementDirection::NONE) {
 		if (IsDead()) {
-			animation->SendTrigger(currentState->name + PlayerController::states[9]);
+			if (animation->GetCurrentState()->name != PlayerController::states[9]) {
+				animation->SendTrigger(animation->GetCurrentState()->name + PlayerController::states[9]);
+			}
 		}
 		else {
-			animation->SendTrigger(currentState->name + PlayerController::states[0]);
+			if (animation->GetCurrentState()->name != PlayerController::states[0]) {
+				animation->SendTrigger(animation->GetCurrentState()->name + PlayerController::states[0]);
+			}
 		}
 	}
 	else {
-		animation->SendTrigger(currentState->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
+		if (animation->GetCurrentState()->name != PlayerController::states[GetMouseDirectionState(md) + dashAnimation]) {
+			animation->SendTrigger(animation->GetCurrentState()->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
+		}
 	}
 }
 
 void PlayerController::UpdatePlayerStats() {
 	if (hudControllerScript) {
 		if (firstTime) {
-			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
+			hudControllerScript->UpdateHP(static_cast<float>(fangCharacter.lifePoints), static_cast<float>(onimaruCharacter.lifePoints));
 			firstTime = false;
 		}
 
-		if (hitTaken && fang->IsActive() && lifePointsFang > 0) {
-			--lifePointsFang;
-			hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
+		if (hitTaken && fang->IsActive() && fangCharacter.lifePoints >= 0) {
+			hudControllerScript->UpdateHP(static_cast<float>(fangCharacter.lifePoints), static_cast<float>(onimaruCharacter.lifePoints));
 			hitTaken = false;
-		} else if (hitTaken && onimaru->IsActive() && lifePointsOni > 0) {
-			--lifePointsOni;
-			hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
+		}
+		else if (hitTaken && onimaru->IsActive() && onimaruCharacter.lifePoints >= 0) {
+			hudControllerScript->UpdateHP(static_cast<float>(onimaruCharacter.lifePoints), static_cast<float>(fangCharacter.lifePoints));
 			hitTaken = false;
-		} else if (debugGetHit) {
-
-			if (fang->IsActive()) {
-				--lifePointsFang;
-				hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
-			} else {
-				--lifePointsOni;
-				hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
-			}
-			debugGetHit = false;
 		}
 
-		if (fang->IsActive() && lifePointsOni != ONIMARU_MAX_HEALTH) {
+		if (fang->IsActive() && onimaruCharacter.lifePoints != ONIMARU_MAX_HEALTH) {
 			float healthRecovered = (onimaruRecovering / onimaruRecoveryRate);
-			hudControllerScript->HealthRegeneration(lifePointsOni, healthRecovered);
-		} else if (onimaru->IsActive() && lifePointsFang != FANG_MAX_HEALTH) {
+			if (hudControllerScript){
+				hudControllerScript->HealthRegeneration(onimaruCharacter.lifePoints, healthRecovered);
+			}
+		} else if (onimaru->IsActive() && fangCharacter.lifePoints != FANG_MAX_HEALTH) {
 			float healthRecovered = (fangRecovering / fangRecoveryRate);
-			hudControllerScript->HealthRegeneration(lifePointsFang, healthRecovered);
+			if (hudControllerScript){
+				hudControllerScript->HealthRegeneration(fangCharacter.lifePoints, healthRecovered);
+			}
 		}
 
 		float realDashCooldown = 1.0f - (dashCooldownRemaining / dashCooldown);
@@ -529,8 +559,27 @@ void PlayerController::UpdateCameraPosition() {
 	if (useSmoothCamera) {
 		smoothedPosition = float3::Lerp(cameraTransform->GetGlobalPosition(), desiredPosition, smoothCameraSpeed * Time::GetDeltaTime());
 	}
-	
+
 	cameraTransform->SetGlobalPosition(smoothedPosition);
+}
+
+void PlayerController::TakeDamage(bool ranged) {
+	if (!fang || !onimaru || invincibleMode) return;
+	if (fang->IsActive()) {
+		fangCharacter.Hit((ranged) ? rangedDamageTaken : meleeDamageTaken);
+		if (audios[static_cast<int>(AudioType::FANGHIT)]) audios[static_cast<int>(AudioType::FANGHIT)]->Play();
+		if (!fangCharacter.isAlive) {
+			if (audios[static_cast<int>(AudioType::FANGDEATH)]) audios[static_cast<int>(AudioType::FANGDEATH)]->Play();
+		}
+	}
+	else {
+		onimaruCharacter.Hit((ranged) ? rangedDamageTaken : meleeDamageTaken);
+		if (audios[static_cast<int>(AudioType::ONIHIT)]) audios[static_cast<int>(AudioType::ONIHIT)]->Play();
+		if (!onimaruCharacter.isAlive) {
+			if (audios[static_cast<int>(AudioType::ONIDEATH)]) audios[static_cast<int>(AudioType::ONIDEATH)]->Play();
+		}
+	}
+	hitTaken = true;
 }
 
 void PlayerController::Update() {
@@ -545,13 +594,13 @@ void PlayerController::Update() {
 	if (!IsDead()) {
 		Dash();
 		UpdateCameraPosition();
-		
+
 		if (firstTime) {
 			if (fang->IsActive()) {
-				hudControllerScript->UpdateHP(lifePointsFang, lifePointsOni);
+				hudControllerScript->UpdateHP(static_cast<float>(fangCharacter.lifePoints), static_cast<float>(onimaruCharacter.lifePoints));
 			}
 			else {
-				hudControllerScript->UpdateHP(lifePointsOni, lifePointsFang);
+				hudControllerScript->UpdateHP(static_cast<float>(onimaruCharacter.lifePoints), static_cast<float>(fangCharacter.lifePoints));
 			}
 			firstTime = false;
 		}
@@ -564,18 +613,36 @@ void PlayerController::Update() {
 		if (!dashing) {
 			LookAtMouse();
 			MoveTo(md);
-			if (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R)) SwitchCharacter();
+
+			if (switchInProgress || (noCooldownMode && Input::GetKeyCodeUp(Input::KEYCODE::KEY_R))) {
+				switchInProgress = true;
+				SwitchCharacter();
+			}
+
+			if (!switchInProgress && Input::GetKeyCodeUp(Input::KEYCODE::KEY_R)) {
+				switchInProgress = true;
+				switchCooldownRemaining = switchCooldown;
+			}
 		}
 		if (fang->IsActive()) {
 			if (Input::GetMouseButtonDown(0)) Shoot();
 		}
 		else {
-			if (Input::GetMouseButtonRepeat(0)) Shoot();
+			if (Input::GetMouseButtonDown(0)) {
+				onimaruAnimation->SendTriggerSecondary(onimaruAnimation->GetCurrentState()->name + PlayerController::states[13]);
+			}
+			else if (Input::GetMouseButtonRepeat(0)) {
+				Shoot();
+			}
+			else if (Input::GetMouseButtonUp(0)) {
+				if (onimaruAnimation) {
+					onimaruAnimation->SendTriggerSecondary(PlayerController::states[13] + onimaruAnimation->GetCurrentState()->name);
+				}
+			}
 		}
 		PlayAnimation(md);
 	}
 	else {
-		agent->RemoveAgentFromCrowd();
+		if(agent) agent->RemoveAgentFromCrowd();
 	}
 }
-
