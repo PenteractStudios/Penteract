@@ -54,7 +54,6 @@ public:
 	UID playerUID = 0;				//Reference to player main Gameobject UID, used to check distances
 	UID playerMeshUIDFang = 0;		//Reference to player Fang mesh holding Gameobject UID, used for raycasting if fang is active
 	UID playerMeshUIDOnimaru = 0;	//Reference to player Fang mesh holding Gameobject UID, used for raycasting if onimaru is active
-	UID meshUID = 0;				//First mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID meshUID1 = 0;				//Second mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID meshUID2 = 0;				//Third mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID trailPrefabUID = 0;			//Reference to projectile prefab UID , for shooting

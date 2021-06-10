@@ -114,6 +114,11 @@
                         "Name": "damageMaterialPlaceHolderUID",
                         "Type": "GameObjectUID",
                         "Value": 6162056736887938687
+                    },
+                    {
+                        "Name": "gruntCharacter.attackRange",
+                        "Type": "Float",
+                        "Value": 3.5
                     }
                 ]
             },

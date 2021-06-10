@@ -46,7 +46,9 @@ void WinLose::Update() {
 		&& position.x >= winConPos.x - loseOffsetX
 		&& position.z <= winConPos.z + loseOffsetZ
 		&& position.z >= winConPos.z - loseOffsetZ
-		&& deadEnemies >= totalEnemies) {
+		// TODO: Commented for Pablo
+		//&& deadEnemies >= totalEnemies
+		) {
 		if(sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 	}
 }

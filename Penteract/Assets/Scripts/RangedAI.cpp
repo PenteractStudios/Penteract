@@ -23,7 +23,6 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
 	MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, meshUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),

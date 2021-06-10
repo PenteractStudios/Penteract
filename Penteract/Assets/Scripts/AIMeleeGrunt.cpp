@@ -144,6 +144,8 @@ void AIMeleeGrunt::Update() {
         movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), gruntCharacter.movementSpeed, true);
         if (movementScript->CharacterInAttackRange(player, gruntCharacter.attackRange)) {
             animation->SendTriggerSecondary("RunAttack");
+            agent->SetMaxSpeed(0);
+            if (agent) agent->SetMaxSpeed(gruntCharacter.movementSpeed);
             float3 aux = ownerTransform->GetGlobalPosition() + ownerTransform->GetGlobalRotation().Transform(float3(0, 0, 1)) * 2 + float3(0, 2, 0);
             if (meleePunch) GameplaySystems::Instantiate(meleePunch, aux, ownerTransform->GetGlobalRotation());
             if (audios[static_cast<int>(AudioType::ATTACK)]) audios[static_cast<int>(AudioType::ATTACK)]->Play();
@@ -193,7 +195,7 @@ void AIMeleeGrunt::OnAnimationSecondaryFinished()
 {
     if (state == AIState::ATTACK)
     {
-        animation->SendTriggerSecondary("Attack" + animation->GetCurrentState()->name);
+        if (animation) animation->SendTriggerSecondary("Attack" + animation->GetCurrentState()->name);
         state = AIState::IDLE;
     }
 }
