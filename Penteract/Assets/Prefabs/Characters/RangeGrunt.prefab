@@ -84,7 +84,7 @@
                     {
                         "Name": "trailPrefabUID",
                         "Type": "PrefabResourceUID",
-                        "Value": 6317257883525019675
+                        "Value": 4959781306678769485
                     },
                     {
                         "Name": "dmgMaterialObj",
@@ -95,6 +95,11 @@
                         "Name": "rangerGruntCharacter.attackRange",
                         "Type": "Float",
                         "Value": 20.0
+                    },
+                    {
+                        "Name": "winConditionUID",
+                        "Type": "GameObjectUID",
+                        "Value": 16579210181260590797
                     }
                 ]
             },
@@ -166,6 +171,22 @@
                 "Active": true,
                 "Script": 6803541990823883369,
                 "Values": null
+            },
+            {
+                "Type": "CapsuleCollider",
+                "Active": true,
+                "colliderType": 2,
+                "layerType": 5,
+                "mass": 1.0,
+                "radius": 1.0,
+                "height": 1.8300000429153443,
+                "capsuleType": 1,
+                "centerOffset": [
+                    0.0,
+                    1.600000023841858,
+                    0.0
+                ],
+                "freezeRotation": false
             }
         ],
         "Children": [

@@ -1,24 +1,28 @@
 #include "RangedAI.h"
 
-#include "GameObject.h"
-#include "GameplaySystems.h"
 #include "PlayerController.h"
 #include "HUDController.h"
+#include "AIMovement.h"
+#include "RangerProjectileScript.h"
+#include "EnemySpawnPoint.h"
+#include "WinLose.h"
 
+#include "GameObject.h"
+#include "GameplaySystems.h"
 #include "Components/ComponentTransform.h"
 #include "Components/ComponentAudioSource.h"
 #include "Components/ComponentAgent.h"
 #include "Components/ComponentAnimation.h"
 #include "Components/ComponentMeshRenderer.h"
-#include "AIMovement.h"
-#include "RangerProjectileScript.h"
 #include "Resources/ResourcePrefab.h"
+
 
 //clang-format off
 EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
+	MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
@@ -41,7 +45,7 @@ GENERATE_BODY_IMPL(RangedAI);
 
 void RangedAI::Start() {
 	player = GameplaySystems::GetGameObject(playerUID);
-	meshObj = GameplaySystems::GetGameObject(meshUID);
+	meshObj = GetOwner().GetChildren()[0];
 	meshObjForFrustumPresenceCheck1 = GameplaySystems::GetGameObject(meshUID1);
 	meshObjForFrustumPresenceCheck2 = GameplaySystems::GetGameObject(meshUID2);
 	animation = GetOwner().GetComponent<ComponentAnimation>();
@@ -94,6 +98,14 @@ void RangedAI::Start() {
 		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
 		++i;
 	}
+	
+	GameObject* winConditionGo = GameplaySystems::GetGameObject(winConditionUID);
+	if (winConditionGo) {
+		winLoseScript = GET_SCRIPT(winConditionGo, WinLose);
+	}
+
+	enemySpawnPointScript = GET_SCRIPT(GetOwner().GetParent(), EnemySpawnPoint);
+
 }
 
 void RangedAI::OnAnimationFinished() {
@@ -144,6 +156,8 @@ void RangedAI::OnCollision(GameObject& collidedWith) {
 			ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
 			if (collider) collider->Disable();
 			ChangeState(AIState::DEATH);
+			if(winLoseScript) winLoseScript->IncrementDeadEnemies();
+			if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
 		}
 	}
 
@@ -350,6 +364,9 @@ bool RangedAI::CharacterInRange(const GameObject* character, float range, bool u
 }
 
 bool RangedAI::FindsRayToPlayer(bool useForward) {
+
+	if (!meshObj) return false;
+
 	ComponentBoundingBox* box = meshObj->GetComponent<ComponentBoundingBox>();
 	float3 offset(0, 0, 0);
 
