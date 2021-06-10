@@ -86,24 +86,24 @@
                         "Value": 11
                     },
                     {
-                        "Name": "winConditionUID",
-                        "Type": "GameObjectUID",
-                        "Value": 5515770555020674411
-                    },
-                    {
                         "Name": "meleeRange",
                         "Type": "Float",
                         "Value": 3.5
                     },
                     {
-                        "Name": "meleePunchUID",
-                        "Type": "PrefabResourceUID",
-                        "Value": 11264029273027514993
+                        "Name": "winConditionUID",
+                        "Type": "GameObjectUID",
+                        "Value": 5515770555020674411
                     },
                     {
                         "Name": "damagePlaceHolderUID",
                         "Type": "GameObjectUID",
                         "Value": 6162056736887938687
+                    },
+                    {
+                        "Name": "meleePunchUID",
+                        "Type": "PrefabResourceUID",
+                        "Value": 11264029273027514993
                     },
                     {
                         "Name": "meshUID",
@@ -195,7 +195,7 @@
                 "Name": "Melee_Grunt_lowpoly:Basic_Enemy_Robot",
                 "Active": true,
                 "RootBoneName": "",
-                "Mask": 2,
+                "Mask": 10,
                 "Components": [
                     {
                         "Type": "Transform",

@@ -47,19 +47,14 @@
                         "Value": 8838610656912784116
                     },
                     {
-                        "Name": "hudControllerObjUID",
-                        "Type": "GameObjectUID",
-                        "Value": 17773628572955029428
-                    },
-                    {
                         "Name": "playerMeshUIDFang",
                         "Type": "GameObjectUID",
                         "Value": 1003037154712228647
                     },
                     {
-                        "Name": "meshUID2",
+                        "Name": "hudControllerObjUID",
                         "Type": "GameObjectUID",
-                        "Value": 8267988200259182711
+                        "Value": 17773628572955029428
                     },
                     {
                         "Name": "playerMeshUIDOnimaru",
@@ -67,7 +62,17 @@
                         "Value": 384850265920228939
                     },
                     {
+                        "Name": "meshUID2",
+                        "Type": "GameObjectUID",
+                        "Value": 8267988200259182711
+                    },
+                    {
                         "Name": "meshUID",
+                        "Type": "GameObjectUID",
+                        "Value": 8267988200259182711
+                    },
+                    {
+                        "Name": "meshUID1",
                         "Type": "GameObjectUID",
                         "Value": 8267988200259182711
                     },
@@ -75,11 +80,6 @@
                         "Name": "agentObjectUID",
                         "Type": "GameObjectUID",
                         "Value": 9482897899358818679
-                    },
-                    {
-                        "Name": "meshUID1",
-                        "Type": "GameObjectUID",
-                        "Value": 8267988200259182711
                     },
                     {
                         "Name": "trailPrefabUID",
@@ -194,7 +194,7 @@
                 "Name": "Ranged_Grunt",
                 "Active": true,
                 "RootBoneName": "",
-                "Mask": 2,
+                "Mask": 10,
                 "Components": [
                     {
                         "Type": "Transform",
