@@ -20,7 +20,6 @@ public:
 	UID transitionUID = 0;
 
 	int checkpointNum = -1;
-	bool isClickedButton = false;
 
 private:
 	GameObject* player = nullptr;

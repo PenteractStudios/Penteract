@@ -20,16 +20,13 @@ public:
 public:
 
 	UID transitionUID = 0;
-	UID triggerObjChangeSceneUID = 0;
+
 	int speedTransition = 10;
 	bool initTransition = false;
 
 private:
 	GameObject* transitionGO = nullptr;
-	GameObject* triggerObjChangeSceneGO = nullptr;
 
 	ComponentTransform2D* transform2D = nullptr;
-
-	Script* triggerObjChangeScene = nullptr;
 };
 

@@ -3,11 +3,9 @@
 #include "Components/UI/ComponentTransform2D.h"
 #include "GameObject.h"
 #include "GameplaySystems.h"
-#include "Script.h"
 
 EXPOSE_MEMBERS(SceneTransition) {
 	MEMBER(MemberType::GAME_OBJECT_UID, transitionUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, triggerObjChangeSceneUID),
 	MEMBER(MemberType::INT, speedTransition),
 	MEMBER(MemberType::BOOL, initTransition),
 };
@@ -15,11 +13,9 @@ EXPOSE_MEMBERS(SceneTransition) {
 GENERATE_BODY_IMPL(SceneTransition);
 
 void SceneTransition::Start() {
-	if (transitionUID) {
-		transitionGO = GameplaySystems::GetGameObject(transitionUID);
-		triggerObjChangeSceneGO = GameplaySystems::GetGameObject(triggerObjChangeSceneUID);
-		if (transitionGO) transform2D = transitionGO->GetComponent<ComponentTransform2D>();
-		if (triggerObjChangeSceneGO) triggerObjChangeScene = GET_SCRIPT(triggerObjChangeSceneGO, Script);
+	transitionGO = GameplaySystems::GetGameObject(transitionUID);
+	if (transitionGO) {
+		transform2D = transitionGO->GetComponent<ComponentTransform2D>();
 	}
 }
 
@@ -29,7 +25,7 @@ void SceneTransition::Update() {
 			/*ComponentTransform2D* transform = transitionGO->GetComponent<ComponentTransform2D>();
 			while (transform->GetPosition().x < transform->GetSize().x) {
 				float actualPosition = transform->GetPosition().x;
-				transform->SetPosition(float3(actualPosition * 1 * Time::GetDeltaTime(), 0.f, 0.f));
+				transform->SetPosition(float3(actualPosition * speedTransition * Time::GetDeltaTime(), 0.f, 0.f));
 			}*/
 			StopTransition();
 		}
@@ -46,6 +42,5 @@ void SceneTransition::InitTransition() {
 void SceneTransition::StopTransition()
 {
 	transitionGO->Disable();
-	triggerObjChangeScene->isFinishedTransition = true;
 	initTransition = false;
 }

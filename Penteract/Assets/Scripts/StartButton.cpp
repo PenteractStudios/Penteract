@@ -31,12 +31,9 @@ void StartButton::OnButtonClick() {
 	checkpoint = checkpointNum;
 	if (sceneTransition) {
 		sceneTransition->InitTransition();
-		while (sceneTransition->initTransition) {
-			// Cutre-concurrencia
-			Debug::Log("Se esta ejecutando la transicion");
-		}
+		// Hacer que se mantenga parado hasta que ejecute la transicion
 	}
-	//if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
-	//if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
+	if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
+	if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
 	
 }
