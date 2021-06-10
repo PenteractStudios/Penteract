@@ -91,6 +91,10 @@ void PlayerController::Start() {
 	}
 	if (fang) {
 		fang->Enable();
+
+		ComponentCapsuleCollider* capsuleCollider = fang->GetComponent<ComponentCapsuleCollider>(); // workaround collider doesn't activate if onimaru starts disabled
+		if (capsuleCollider) capsuleCollider->Enable();
+
 		fangGun = GameplaySystems::GetGameObject(fangGunUID);
 		if (fangGun) {
 			fangGunTransform = fangGun->GetComponent<ComponentTransform>();

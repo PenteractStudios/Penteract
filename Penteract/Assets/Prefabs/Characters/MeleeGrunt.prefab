@@ -78,7 +78,7 @@
                     {
                         "Name": "canvasUID",
                         "Type": "GameObjectUID",
-                        "Value": 17773628572955029428
+                        "Value": 826311568033082909
                     },
                     {
                         "Name": "maxSpeed",
@@ -86,24 +86,24 @@
                         "Value": 11
                     },
                     {
-                        "Name": "meleeRange",
-                        "Type": "Float",
-                        "Value": 3.5
-                    },
-                    {
                         "Name": "winConditionUID",
                         "Type": "GameObjectUID",
                         "Value": 16579210181260590797
                     },
                     {
-                        "Name": "damagePlaceHolderUID",
-                        "Type": "GameObjectUID",
-                        "Value": 6162056736887938687
+                        "Name": "meleeRange",
+                        "Type": "Float",
+                        "Value": 3.5
                     },
                     {
                         "Name": "meleePunchUID",
                         "Type": "PrefabResourceUID",
                         "Value": 11264029273027514993
+                    },
+                    {
+                        "Name": "damagePlaceHolderUID",
+                        "Type": "GameObjectUID",
+                        "Value": 6162056736887938687
                     },
                     {
                         "Name": "meshUID",
