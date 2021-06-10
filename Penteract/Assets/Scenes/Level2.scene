@@ -233,6 +233,11 @@
                                 "Value": 3685415630762953669
                             },
                             {
+                                "Name": "playerUID",
+                                "Type": "GameObjectUID",
+                                "Value": 4093097755722686995
+                            },
+                            {
                                 "Name": "gameCameraUID",
                                 "Type": "GameObjectUID",
                                 "Value": 14133391482310232563
@@ -241,11 +246,6 @@
                                 "Name": "staticCamera4UID",
                                 "Type": "GameObjectUID",
                                 "Value": 2655070040425404295
-                            },
-                            {
-                                "Name": "playerUID",
-                                "Type": "GameObjectUID",
-                                "Value": 4093097755722686995
                             },
                             {
                                 "Name": "godCameraUID",
@@ -504,14 +504,14 @@
                         "Script": 11734875514518295508,
                         "Values": [
                             {
-                                "Name": "fangMainCanvasUID",
-                                "Type": "GameObjectUID",
-                                "Value": 2181516165667178510
-                            },
-                            {
                                 "Name": "onimaruHealthSecondCanvasUID",
                                 "Type": "GameObjectUID",
                                 "Value": 4046686048947904277
+                            },
+                            {
+                                "Name": "fangMainCanvasUID",
+                                "Type": "GameObjectUID",
+                                "Value": 2181516165667178510
                             },
                             {
                                 "Name": "onimaruMainCanvasUID",
@@ -544,14 +544,14 @@
                                 "Value": 8088756500257214655
                             },
                             {
-                                "Name": "onimaruHealthMainCanvasUID",
-                                "Type": "GameObjectUID",
-                                "Value": 11042553263767258562
-                            },
-                            {
                                 "Name": "swapingSkillCanvasUID",
                                 "Type": "GameObjectUID",
                                 "Value": 1194835426853035896
+                            },
+                            {
+                                "Name": "onimaruHealthMainCanvasUID",
+                                "Type": "GameObjectUID",
+                                "Value": 11042553263767258562
                             },
                             {
                                 "Name": "fangHealthSecondCanvasUID",
@@ -33781,11 +33781,6 @@
                                 "Value": 15489445993892258268
                             },
                             {
-                                "Name": "enemiesUID",
-                                "Type": "GameObjectUID",
-                                "Value": 9424093591244721738
-                            },
-                            {
                                 "Name": "spawnRangedUID",
                                 "Type": "GameObjectUID",
                                 "Value": 15607007881439550059
@@ -33796,19 +33791,24 @@
                                 "Value": 9424093591244721738
                             },
                             {
-                                "Name": "playerControllerUID",
+                                "Name": "enemiesUID",
                                 "Type": "GameObjectUID",
-                                "Value": 10888363440551519469
-                            },
-                            {
-                                "Name": "gameCameraUID",
-                                "Type": "GameObjectUID",
-                                "Value": 14133391482310232563
+                                "Value": 1429434097349821105
                             },
                             {
                                 "Name": "debugEnemiesUID",
                                 "Type": "GameObjectUID",
                                 "Value": 3989047451220057351
+                            },
+                            {
+                                "Name": "playerControllerUID",
+                                "Type": "GameObjectUID",
+                                "Value": 4093097755722686995
+                            },
+                            {
+                                "Name": "gameCameraUID",
+                                "Type": "GameObjectUID",
+                                "Value": 14133391482310232563
                             },
                             {
                                 "Name": "godCameraUID",
@@ -33881,14 +33881,14 @@
                                         "Value": 11128356192968719727
                                     },
                                     {
-                                        "Name": "enemiesUID",
-                                        "Type": "GameObjectUID",
-                                        "Value": 8956077401393633822
-                                    },
-                                    {
                                         "Name": "prefabUID",
                                         "Type": "PrefabResourceUID",
                                         "Value": 9998956702901793097
+                                    },
+                                    {
+                                        "Name": "enemiesUID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 8956077401393633822
                                     }
                                 ]
                             }
@@ -37123,14 +37123,14 @@
                                         "Value": 564339191826698320
                                     },
                                     {
-                                        "Name": "enemiesUID",
-                                        "Type": "GameObjectUID",
-                                        "Value": 8956077401393633822
-                                    },
-                                    {
                                         "Name": "prefabUID",
                                         "Type": "PrefabResourceUID",
                                         "Value": 9998956702901793097
+                                    },
+                                    {
+                                        "Name": "enemiesUID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 8956077401393633822
                                     }
                                 ]
                             }
@@ -39819,9 +39819,9 @@
                         "Script": 4413934008247911625,
                         "Values": [
                             {
-                                "Name": "dashAudioSourceUID",
+                                "Name": "mainNodeUID",
                                 "Type": "GameObjectUID",
-                                "Value": 10251782958241248981
+                                "Value": 4093097755722686995
                             },
                             {
                                 "Name": "onimaruUID",
@@ -39829,9 +39829,9 @@
                                 "Value": 8089167247611916581
                             },
                             {
-                                "Name": "mainNodeUID",
+                                "Name": "dashAudioSourceUID",
                                 "Type": "GameObjectUID",
-                                "Value": 4093097755722686995
+                                "Value": 10251782958241248981
                             },
                             {
                                 "Name": "fangUID",
@@ -39839,14 +39839,14 @@
                                 "Value": 9311617343701675456
                             },
                             {
-                                "Name": "cameraUID",
-                                "Type": "GameObjectUID",
-                                "Value": 14133391482310232563
-                            },
-                            {
                                 "Name": "onimaruParticleUID",
                                 "Type": "GameObjectUID",
                                 "Value": 5635023556766488935
+                            },
+                            {
+                                "Name": "cameraUID",
+                                "Type": "GameObjectUID",
+                                "Value": 14133391482310232563
                             },
                             {
                                 "Name": "canvasUID",
@@ -47103,14 +47103,9 @@
                                 "Script": 4446135300975932463,
                                 "Values": [
                                     {
-                                        "Name": "shockWaveUID",
+                                        "Name": "playerUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 10986070857341807388
-                                    },
-                                    {
-                                        "Name": "explosionUID",
-                                        "Type": "GameObjectUID",
-                                        "Value": 15713053489969791899
+                                        "Value": 8838610656912784116
                                     },
                                     {
                                         "Name": "absorptionUID",
@@ -47118,9 +47113,14 @@
                                         "Value": 16248459229603731574
                                     },
                                     {
-                                        "Name": "playerUID",
+                                        "Name": "explosionUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 8838610656912784116
+                                        "Value": 15713053489969791899
+                                    },
+                                    {
+                                        "Name": "shockWaveUID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 10986070857341807388
                                     },
                                     {
                                         "Name": "lightUID",
@@ -47592,14 +47592,14 @@
                         "Script": 4240581393573860681,
                         "Values": [
                             {
-                                "Name": "enemiesUID",
-                                "Type": "GameObjectUID",
-                                "Value": 1429434097349821105
-                            },
-                            {
                                 "Name": "sceneUID",
                                 "Type": "SceneResourceUID",
                                 "Value": 7141310542589317769
+                            },
+                            {
+                                "Name": "enemiesUID",
+                                "Type": "GameObjectUID",
+                                "Value": 1429434097349821105
                             },
                             {
                                 "Name": "winUID",
