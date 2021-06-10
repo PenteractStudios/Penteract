@@ -55,6 +55,9 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::INT, meleeDamageTaken),
 	MEMBER(MemberType::BOOL, useSmoothCamera),
 	MEMBER(MemberType::FLOAT, smoothCameraSpeed),
+	MEMBER(MemberType::INT, onimaruRecoveryRate),
+	MEMBER(MemberType::INT, fangRecoveryRate),
+	MEMBER(MemberType::BOOL, debugGetHit),
 	MEMBER(MemberType::FLOAT, switchDelay),
 };
 
@@ -164,22 +167,28 @@ void PlayerController::LookAtMouse() {
 
 void PlayerController::InitDash(MovementDirection md) {
 	if (CanDash()) {
+
+		if (hudControllerScript) {
+			hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_1);
+		}
+
 		if (md != MovementDirection::NONE) {
 			dashDirection = GetDirection(md);
 			dashMovementDirection = md;
-		}
-		else {
+		} else {
 			dashDirection = facePointDir;
 		}
+
 		dashCooldownRemaining = dashCooldown;
 		dashRemaining = dashDuration;
 		dashInCooldown = true;
 		dashing = true;
-		agent->SetMaxSpeed(dashSpeed);
+		if (agent) {
+			agent->SetMaxSpeed(dashSpeed);
+		}
 		if (audios[static_cast<int>(AudioType::DASH)]) {
 			audios[static_cast<int>(AudioType::DASH)]->Play();
-		}
-		else {
+		} else {
 			Debug::Log(AUDIOSOURCE_NULL_MSG);
 		}
 	}
@@ -214,15 +223,26 @@ void PlayerController::SwitchCharacter() {
 			if (fang->IsActive()) {
 				fang->Disable();
 				onimaru->Enable();
-				hudControllerScript->UpdateHP(static_cast<float>(onimaruCharacter.lifePoints), static_cast<float>(fangCharacter.lifePoints));
+				if (hudControllerScript){
+					hudControllerScript->UpdateHP(static_cast<float>(onimaruCharacter.lifePoints), static_cast<float>(fangCharacter.lifePoints));
+					hudControllerScript->ResetHealthRegenerationEffects(static_cast<float>(fangCharacter.lifePoints));
+				}
+				
+				fangRecovering = 0.0f;
 			}
 			else {
 				onimaru->Disable();
 				fang->Enable();
-				hudControllerScript->UpdateHP(static_cast<float>(fangCharacter.lifePoints), static_cast<float>(onimaruCharacter.lifePoints));
+				if(hudControllerScript){
+					hudControllerScript->UpdateHP(static_cast<float>(fangCharacter.lifePoints), static_cast<float>(onimaruCharacter.lifePoints));
+					hudControllerScript->ResetHealthRegenerationEffects(static_cast<float>(onimaruCharacter.lifePoints));
+				}
+			
+				onimaruRecovering = 0.0f;
 			}
 			if (hudControllerScript) {
-				hudControllerScript->ChangePlayerHUD();
+				hudControllerScript->ChangePlayerHUD(static_cast<float>(fangCharacter.lifePoints), static_cast<float>(onimaruCharacter.lifePoints));
+				hudControllerScript->ResetCooldownProgressBar();
 			}
 			currentSwitchDelay = 0.f;
 			playSwitchParticles = true;
@@ -341,7 +361,7 @@ void PlayerController::CheckCoolDowns() {
 	if (dashRemaining <= 0.f) {
 		dashRemaining = 0.f;
 		dashing = false;
-		agent->SetMaxSpeed(fangCharacter.movementSpeed);
+		if (agent) agent->SetMaxSpeed(fangCharacter.movementSpeed);
 	}
 	else {
 		dashRemaining -= Time::GetDeltaTime();
@@ -351,8 +371,7 @@ void PlayerController::CheckCoolDowns() {
 		if (fangAttackCooldownRemaining <= 0.f) {
 			fangAttackCooldownRemaining = 0.f;
 			shooting = false;
-		}
-		else {
+		} else {
 			fangAttackCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
@@ -360,9 +379,26 @@ void PlayerController::CheckCoolDowns() {
 		if (onimaruAttackCooldownRemaining <= 0.f) {
 			onimaruAttackCooldownRemaining = 0.f;
 			shooting = false;
-		}
-		else {
+		} else {
 			onimaruAttackCooldownRemaining -= Time::GetDeltaTime();
+		}
+	}
+
+	if (onimaru->IsActive() && fangCharacter.lifePoints != FANG_MAX_HEALTH) {
+		if (fangRecovering >= fangRecoveryRate) {
+			fangCharacter.Recover(1);
+			fangRecovering = 0.0f;
+		} else {
+			fangRecovering += Time::GetDeltaTime();
+		}
+	}
+
+	if (fang->IsActive() && onimaruCharacter.lifePoints != ONIMARU_MAX_HEALTH) {
+		if (onimaruRecovering >= onimaruRecoveryRate) {
+			onimaruCharacter.Recover(1);
+			onimaruRecovering = 0.0f;
+		} else {
+			onimaruRecovering += Time::GetDeltaTime();
 		}
 	}
 }
@@ -431,14 +467,11 @@ int PlayerController::GetMouseDirectionState(MovementDirection input) {
 
 	if (dot > 0.707) {
 		return 2; //RunForward
-	}
-	else if (dot < -0.707) {
+	} else if (dot < -0.707) {
 		return 1; //RunBackward
-	}
-	else if (cross.y > 0) {
+	} else if (cross.y > 0) {
 		return 4; //RunRight
-	}
-	else {
+	} else {
 		return 3; //RunLeft
 	}
 }
@@ -493,6 +526,18 @@ void PlayerController::UpdatePlayerStats() {
 		else if (hitTaken && onimaru->IsActive() && onimaruCharacter.lifePoints >= 0) {
 			hudControllerScript->UpdateHP(static_cast<float>(onimaruCharacter.lifePoints), static_cast<float>(fangCharacter.lifePoints));
 			hitTaken = false;
+		}
+
+		if (fang->IsActive() && onimaruCharacter.lifePoints != ONIMARU_MAX_HEALTH) {
+			float healthRecovered = (onimaruRecovering / onimaruRecoveryRate);
+			if (hudControllerScript){
+				hudControllerScript->HealthRegeneration(onimaruCharacter.lifePoints, healthRecovered);
+			}
+		} else if (onimaru->IsActive() && fangCharacter.lifePoints != FANG_MAX_HEALTH) {
+			float healthRecovered = (fangRecovering / fangRecoveryRate);
+			if (hudControllerScript){
+				hudControllerScript->HealthRegeneration(fangCharacter.lifePoints, healthRecovered);
+			}
 		}
 
 		float realDashCooldown = 1.0f - (dashCooldownRemaining / dashCooldown);
@@ -598,6 +643,6 @@ void PlayerController::Update() {
 		PlayAnimation(md);
 	}
 	else {
-		agent->RemoveAgentFromCrowd();
+		if(agent) agent->RemoveAgentFromCrowd();
 	}
 }
