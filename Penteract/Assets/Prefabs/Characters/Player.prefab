@@ -36,9 +36,9 @@
                 "Script": 4413934008247911625,
                 "Values": [
                     {
-                        "Name": "mainNodeUID",
+                        "Name": "dashAudioSourceUID",
                         "Type": "GameObjectUID",
-                        "Value": 8838610656912784116
+                        "Value": 10251782958241248981
                     },
                     {
                         "Name": "onimaruUID",
@@ -46,9 +46,9 @@
                         "Value": 384850265920228939
                     },
                     {
-                        "Name": "dashAudioSourceUID",
+                        "Name": "mainNodeUID",
                         "Type": "GameObjectUID",
-                        "Value": 10251782958241248981
+                        "Value": 8838610656912784116
                     },
                     {
                         "Name": "fangUID",
@@ -56,14 +56,14 @@
                         "Value": 1003037154712228647
                     },
                     {
-                        "Name": "onimaruParticleUID",
-                        "Type": "GameObjectUID",
-                        "Value": 9725973773542720095
-                    },
-                    {
                         "Name": "cameraUID",
                         "Type": "GameObjectUID",
                         "Value": 680618938873982628
+                    },
+                    {
+                        "Name": "onimaruParticleUID",
+                        "Type": "GameObjectUID",
+                        "Value": 9725973773542720095
                     },
                     {
                         "Name": "canvasUID",
@@ -76,14 +76,14 @@
                         "Value": 1392963737244952815
                     },
                     {
-                        "Name": "onimaruCharacter.attackSpeed",
-                        "Type": "Float",
-                        "Value": 10.0
-                    },
-                    {
                         "Name": "switchAudioSourceUID",
                         "Type": "GameObjectUID",
                         "Value": 10435533286064107327
+                    },
+                    {
+                        "Name": "onimaruCharacter.attackSpeed",
+                        "Type": "Float",
+                        "Value": 10.0
                     },
                     {
                         "Name": "distanceRayCast",
@@ -330,7 +330,7 @@
                         "Name": "Onimaru",
                         "Active": true,
                         "RootBoneName": "",
-                        "Mask": 4,
+                        "Mask": 12,
                         "Components": [
                             {
                                 "Type": "Transform",
@@ -6418,7 +6418,7 @@
                         "Name": "Fang_LowPoly",
                         "Active": true,
                         "RootBoneName": "",
-                        "Mask": 4,
+                        "Mask": 12,
                         "Components": [
                             {
                                 "Type": "Transform",
@@ -6609,14 +6609,9 @@
                         "Script": 4446135300975932463,
                         "Values": [
                             {
-                                "Name": "playerUID",
+                                "Name": "shockWaveUID",
                                 "Type": "GameObjectUID",
-                                "Value": 8838610656912784116
-                            },
-                            {
-                                "Name": "absorptionUID",
-                                "Type": "GameObjectUID",
-                                "Value": 16248459229603731574
+                                "Value": 10986070857341807388
                             },
                             {
                                 "Name": "explosionUID",
@@ -6624,9 +6619,14 @@
                                 "Value": 15713053489969791899
                             },
                             {
-                                "Name": "shockWaveUID",
+                                "Name": "absorptionUID",
                                 "Type": "GameObjectUID",
-                                "Value": 10986070857341807388
+                                "Value": 16248459229603731574
+                            },
+                            {
+                                "Name": "playerUID",
+                                "Type": "GameObjectUID",
+                                "Value": 8838610656912784116
                             },
                             {
                                 "Name": "lightUID",

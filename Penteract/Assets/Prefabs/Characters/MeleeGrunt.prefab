@@ -3,7 +3,7 @@
         "Name": "MeleeGrunt",
         "Active": true,
         "RootBoneName": "CenterHip",
-        "Mask": 2,
+        "Mask": 10,
         "Components": [
             {
                 "Type": "Transform",
@@ -86,24 +86,24 @@
                         "Value": 11
                     },
                     {
-                        "Name": "winConditionUID",
-                        "Type": "GameObjectUID",
-                        "Value": 16579210181260590797
-                    },
-                    {
                         "Name": "meleeRange",
                         "Type": "Float",
                         "Value": 3.5
                     },
                     {
-                        "Name": "meleePunchUID",
-                        "Type": "PrefabResourceUID",
-                        "Value": 11264029273027514993
+                        "Name": "winConditionUID",
+                        "Type": "GameObjectUID",
+                        "Value": 16579210181260590797
                     },
                     {
                         "Name": "damagePlaceHolderUID",
                         "Type": "GameObjectUID",
                         "Value": 6162056736887938687
+                    },
+                    {
+                        "Name": "meleePunchUID",
+                        "Type": "PrefabResourceUID",
+                        "Value": 11264029273027514993
                     },
                     {
                         "Name": "meshUID",
