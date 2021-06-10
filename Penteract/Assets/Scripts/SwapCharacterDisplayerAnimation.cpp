@@ -19,7 +19,6 @@ EXPOSE_MEMBERS(SwapCharacterDisplayerAnimation) {
 	MEMBER(MemberType::FLOAT, maxTransparency),
 	MEMBER(MemberType::FLOAT, breakTimeForSwap),
 	MEMBER(MemberType::FLOAT, swappingDuration),
-
 	MEMBER(MemberType::GAME_OBJECT_UID, fangMainDisplayerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangPrimaryUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangAlternativeUID),
@@ -99,8 +98,6 @@ void SwapCharacterDisplayerAnimation::Update() {
 			thirdBarEffect->Disable();
 		}
 	}
-
-	Debug::Log(std::to_string(currentTime).c_str());
 
 	// Swap panels
 	if (!animationSwapFinished) {
