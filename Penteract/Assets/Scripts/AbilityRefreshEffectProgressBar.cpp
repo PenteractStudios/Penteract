@@ -18,7 +18,9 @@ void AbilityRefreshEffectProgressBar::Start() {
 	progressBarGO = GameplaySystems::GetGameObject(progressBarUID);
 	if (progressBarGO != nullptr) {
 		progressBar = progressBarGO->GetComponent<ComponentProgressBar>();
-		progressBar->SetValue(1);
+		if (progressBar) {
+			progressBar->SetValue(1);
+		}
 	}
 }
 

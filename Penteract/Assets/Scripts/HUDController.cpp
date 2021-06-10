@@ -96,7 +96,7 @@ void HUDController::Update() {
 	if (isSwitching) {
 		if (currentTime > delaySwitchTime) {
 			isSwitching = false; 
-			if (!fang->IsActive()) {
+			if (fang && !fang->IsActive()) {
 				SetFangCanvas(false);
 				SetOnimaruCanvas(true);
 			}
@@ -142,6 +142,9 @@ void HUDController::LoadHealthFeedbackStates(GameObject* targetCanvas, int healt
 }
 
 void HUDController::LoadCooldownFeedbackStates(GameObject* canvas, int startingIndex) {
+	if (canvas == nullptr) {
+		return;
+	}
 	std::vector<GameObject*> skills = canvas->GetChildren();
 	int skill = startingIndex;
 	for (std::vector<GameObject*>::iterator it = skills.begin(); it != skills.end(); ++it) {
@@ -212,7 +215,7 @@ void HUDController::ChangePlayerHUD(int fangLives, int oniLives) {
 void HUDController::HealthRegeneration(float currentHp, float hpRecovered) {
 	if (!onimaruHealthSecondCanvas || !fangHealthSecondCanvas) return;
 
-	GameObject* targetCanvas = fang->IsActive() ? onimaruHealthSecondCanvas : fangHealthSecondCanvas;
+	GameObject* targetCanvas = fang && fang->IsActive() ? onimaruHealthSecondCanvas : fangHealthSecondCanvas;
 	const GameObject* healthSlot = targetCanvas->GetChildren()[currentHp];
 
 	if (healthSlot) {
@@ -234,7 +237,7 @@ void HUDController::HealthRegeneration(float currentHp, float hpRecovered) {
 void HUDController::ResetHealthRegenerationEffects(float currentHp) {
 	if (!onimaruHealthSecondCanvas || !fangHealthSecondCanvas) return;
 
-	GameObject* targetCanvas = fang->IsActive() ? onimaruHealthSecondCanvas : fangHealthSecondCanvas;
+	GameObject* targetCanvas = fang && fang->IsActive() ? onimaruHealthSecondCanvas : fangHealthSecondCanvas;
 
 	//We need to stop last recovered health bar effect if the switch was made while it was playing
 	//This if will change when you don't get Game Over if onimaru or fang has no health
@@ -247,14 +250,16 @@ void HUDController::ResetHealthRegenerationEffects(float currentHp) {
 	}
 
 	for (int pos = currentHp; pos < MAX_HEALTH; ++pos) {
-		const GameObject* healthSlot = targetCanvas->GetChildren()[pos];
-		for (GameObject* healthComponents : healthSlot->GetChildren()) {
-			ComponentImage* healthFill = healthComponents->GetComponent<ComponentImage>();
-			if (healthFill) {
-				if (healthFill->IsFill()) {
-					healthFill->SetFillValue(0.0f);
-					FullHealthBarFeedback* healthScript = GET_SCRIPT(healthSlot, FullHealthBarFeedback);
-					if (healthScript) healthScript->Reset();
+		if (pos < targetCanvas->GetChildren().size()) {
+			const GameObject* healthSlot = targetCanvas->GetChildren()[pos];
+			for (GameObject* healthComponents : healthSlot->GetChildren()) {
+				ComponentImage* healthFill = healthComponents->GetComponent<ComponentImage>();
+				if (healthFill) {
+					if (healthFill->IsFill()) {
+						healthFill->SetFillValue(0.0f);
+						FullHealthBarFeedback* healthScript = GET_SCRIPT(healthSlot, FullHealthBarFeedback);
+						if (healthScript) healthScript->Reset();
+					}
 				}
 			}
 		}
@@ -288,6 +293,10 @@ float  HUDController::MapValue01(float value, float min, float max) {
 
 void HUDController::SetFangCanvas(bool value)
 {
+	if (!fangCanvas) {
+		return;
+	}
+
 	if (value) {
 		fangCanvas->Enable();
 	}
@@ -298,6 +307,10 @@ void HUDController::SetFangCanvas(bool value)
 
 void HUDController::SetOnimaruCanvas(bool value)
 {
+	if (!onimaruCanvas) {
+		return;
+	}
+
 	if (value) {
 		onimaruCanvas->Enable();
 	}
@@ -323,10 +336,8 @@ void HUDController::UpdateHP(float currentHp, float altHp) {
 	if (!fang || !onimaru) return;
 	if (fang->IsActive()) {
 		UpdateCanvasHP(fangHealthMainCanvas, currentHp, false);
-		//UpdateCanvasHP(onimaruHealthSecondCanvas, altHp, true);
 	} else {
 		UpdateCanvasHP(onimaruHealthMainCanvas, currentHp, false);
-		//UpdateCanvasHP(fangHealthSecondCanvas, altHp, true);
 	}
 
 	bool activateEffect = currentHp <= LOW_HEALTH_WARNING ? true : false;
@@ -425,6 +436,10 @@ void HUDController::UpdateComponents() {
 }
 
 void HUDController::UpdateCommonSkill() {
+	if (!swapingSkillCanvas) {
+		return;
+	}
+
 	std::vector<GameObject*> children = swapingSkillCanvas->GetChildren();
 	if (children.size() > 2) {
 		//Hardcoded value in hierarchy, changing the hierarchy without changing the index or the other way around will result in this not working properly
