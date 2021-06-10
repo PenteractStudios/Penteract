@@ -110,11 +110,12 @@ public:
 	bool useSmoothCamera = true;
 	float smoothCameraSpeed = 5.0f;
 
-	std::vector<std::string> states{ "Idle" ,
-								"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
-								"DashBackward", "DashForward" , "DashLeft" , "DashRight" ,
-								"Death" , "Hurt" , "LeftShot" , "RightShot", "Shooting", "RunForwardLeft",
-								"RunForwardRight", "RunBackwardLeft", "RunBarckwardRight"
+	std::vector<std::string> states{ "Idle" , // 0
+								"RunBackward" , "RunForward" , "RunLeft" , "RunRight" , // 1,2,3,4
+								"DashBackward", "DashForward" , "DashLeft" , "DashRight" , // 5,6,7,8
+								"Death" , "Hurt" , "LeftShot" , "RightShot", "Shooting", // 9,10,11,12,13
+								"RunForwardLeft","RunForwardRight", "RunBackwardLeft", "RunBackwardRight" // 14,15,16,17
+								"DashForward" ,	"DashForward" , "RunBackward" , "RunBackward"
 	};
 
 private:
