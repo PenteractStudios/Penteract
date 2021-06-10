@@ -184,7 +184,7 @@
                         "Type": "AudioListener",
                         "Id": 13146572848985661355,
                         "Active": true,
-                        "Gain": 0.5083299875259399
+                        "Gain": 0.3019999861717224
                     }
                 ],
                 "Children": null
@@ -4158,7 +4158,7 @@
                                                         "Active": true,
                                                         "MinValue": 0.0,
                                                         "MaxValue": 100.0,
-                                                        "CurrentValue": 50.83300018310547,
+                                                        "CurrentValue": 30.281999588012697,
                                                         "Direction": 0,
                                                         "StopOnEdges": true,
                                                         "ColorClick": [
@@ -25542,10 +25542,10 @@
                         "Id": 15762849361944929010,
                         "Active": true,
                         "Pitch": 1.0,
-                        "Gain": 1.0,
+                        "Gain": 0.30000001192092898,
                         "Mute": false,
-                        "Looping": false,
-                        "AudioClipId": 12622888090304038422,
+                        "Looping": true,
+                        "AudioClipId": 10905396094961812324,
                         "SpatialBlend": 0,
                         "SourceType": 0,
                         "InnerAngle": 90.0,
