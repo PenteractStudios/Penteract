@@ -26,6 +26,7 @@ void TrailScript::Update() {
 		GameplaySystems::DestroyGameObject(&GetOwner());
 	}
 }
+
 void TrailScript::OnCollision(GameObject& collidedWith) {
 	if (collidedWith.name == "Fang" || collidedWith.name == "Onimaru") return;
 	GameplaySystems::DestroyGameObject(&GetOwner());
