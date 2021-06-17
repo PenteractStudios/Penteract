@@ -4,6 +4,7 @@
 #include "Application.h"
 #include "GameObject.h"
 #include "FileSystem/SceneImporter.h"
+#include "FileSystem/PrefabImporter.h"
 #include "Utils/FileDialog.h"
 #include "Modules/ModuleWindow.h"
 #include "Modules/ModuleRender.h"
@@ -12,8 +13,11 @@
 #include "Modules/ModuleFiles.h"
 #include "Modules/ModuleProject.h"
 #include "Modules/ModuleEvents.h"
+#include "Modules/ModuleNavigation.h"
 #include "TesseractEvent.h"
 #include "FileSystem/MaterialImporter.h"
+#include "FileSystem/NavMeshImporter.h"
+#include "Navigation/NavMesh.h"
 
 #include "ImGuizmo.h"
 #include "imgui.h"
@@ -148,7 +152,11 @@ bool ModuleEditor::Start() {
 	panels.push_back(&panelInspector);
 	panels.push_back(&panelAbout);
 	panels.push_back(&panelControlEditor);
+	panels.push_back(&panelNavigation);
 	panels.push_back(&panelResource);
+	panels.push_back(&panelGameControllerDebug);
+	panels.push_back(&panelImportOptions);
+	panels.push_back(&panelAudioMixer);
 
 	return true;
 }
@@ -217,7 +225,11 @@ UpdateStatus ModuleEditor::Update() {
 		ImGui::MenuItem(panelHierarchy.name, "", &panelHierarchy.enabled);
 		ImGui::MenuItem(panelConfiguration.name, "", &panelConfiguration.enabled);
 		ImGui::MenuItem(panelControlEditor.name, "", &panelControlEditor.enabled);
+		ImGui::MenuItem(panelNavigation.name, "", &panelNavigation.enabled);
 		ImGui::MenuItem(panelResource.name, "", &panelResource.enabled);
+		ImGui::MenuItem(panelGameControllerDebug.name, "", &panelGameControllerDebug.enabled);
+		ImGui::MenuItem(panelImportOptions.name, "", &panelImportOptions.enabled);
+		ImGui::MenuItem(panelAudioMixer.name, "", &panelAudioMixer.enabled);
 		ImGui::EndMenu();
 	}
 	if (ImGui::BeginMenu("Help")) {
@@ -244,17 +256,14 @@ UpdateStatus ModuleEditor::Update() {
 	case Modal::NEW_SCENE:
 		ImGui::OpenPopup("New scene");
 		break;
-	case Modal::LOAD_PROJECT:
-		FileDialog::Init("Load project", false, (AllowedExtensionsFlag::PROJECT));
-		break;
 	case Modal::LOAD_SCENE:
 		FileDialog::Init("Load scene", false, (AllowedExtensionsFlag::SCENE), SCENES_PATH);
 		break;
-	case Modal::SAVE_PROJECT:
-		FileDialog::Init("Save project", true, (AllowedExtensionsFlag::PROJECT));
-		break;
 	case Modal::SAVE_SCENE:
 		FileDialog::Init("Save scene", true, (AllowedExtensionsFlag::SCENE), SCENES_PATH);
+		break;
+	case Modal::SAVE_PREFAB:
+		FileDialog::Init("Save prefab", true, (AllowedExtensionsFlag::PREFAB), PREFABS_PATH);
 		break;
 	case Modal::QUIT:
 		ImGui::OpenPopup("Quit");
@@ -270,6 +279,9 @@ UpdateStatus ModuleEditor::Update() {
 		break;
 	case Modal::CREATE_SCRIPT:
 		ImGui::OpenPopup("Name the script");
+		break;
+	case Modal::CREATE_NAVMESH:
+		ImGui::OpenPopup("Name the NavMesh");
 		break;
 	}
 	modalToOpen = Modal::NONE;
@@ -291,17 +303,23 @@ UpdateStatus ModuleEditor::Update() {
 		ImGui::EndPopup();
 	}
 
-	std::string selectedFile;
+	std::string selectedPath;
 
-	if (FileDialog::OpenDialog("Load scene", selectedFile)) {
-		std::string filePath = std::string(SCENES_PATH "/") + FileDialog::GetFileName(selectedFile.c_str()) + SCENE_EXTENSION;
+	if (FileDialog::OpenDialog("Load scene", selectedPath)) {
+		std::string filePath = FileDialog::GetRelativePath(selectedPath.c_str());
 		SceneImporter::LoadScene(filePath.c_str());
 		ImGui::CloseCurrentPopup();
 	}
 
-	if (FileDialog::OpenDialog("Save scene", selectedFile)) {
-		std::string filePath = std::string(SCENES_PATH "/") + FileDialog::GetFileName(selectedFile.c_str()) + SCENE_EXTENSION;
+	if (FileDialog::OpenDialog("Save scene", selectedPath)) {
+		std::string filePath = FileDialog::GetRelativePath(selectedPath.c_str());
 		SceneImporter::SaveScene(filePath.c_str());
+		ImGui::CloseCurrentPopup();
+	}
+
+	if (FileDialog::OpenDialog("Save prefab", selectedPath)) {
+		std::string filePath = FileDialog::GetRelativePath(selectedPath.c_str());
+		PrefabImporter::SavePrefab(filePath.c_str(), selectedGameObject);
 		ImGui::CloseCurrentPopup();
 	}
 
@@ -331,6 +349,25 @@ UpdateStatus ModuleEditor::Update() {
 		ImGui::SameLine(ImGui::GetWindowWidth() - 120);
 		if (ImGui::Button("Save", ImVec2(50, 20))) {
 			App->project->CreateScript(std::string(name));
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::SameLine(ImGui::GetWindowWidth() - 60);
+		if (ImGui::Button("Cancel")) {
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
+	}
+
+	ImGui::SetNextWindowSize(ImVec2(260, 100), ImGuiCond_FirstUseEver);
+	if (ImGui::BeginPopupModal("Name the NavMesh", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoScrollbar)) {
+		static char name[FILENAME_MAX] = "New NavMesh";
+		ImGui::InputText("Name##navMeshName", name, IM_ARRAYSIZE(name));
+		ImGui::NewLine();
+		ImGui::SameLine(ImGui::GetWindowWidth() - 120);
+		if (ImGui::Button("Save", ImVec2(50, 20))) {
+			NavMesh& navMesh = App->navigation->GetNavMesh();
+			std::string path = std::string(NAVMESH_PATH) + "/" + name + NAVMESH_EXTENSION;
+			NavMeshImporter::ExportNavMesh(navMesh, path.c_str());
 			ImGui::CloseCurrentPopup();
 		}
 		ImGui::SameLine(ImGui::GetWindowWidth() - 60);

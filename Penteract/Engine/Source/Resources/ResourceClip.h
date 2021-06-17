@@ -14,7 +14,10 @@ public:
 	REGISTER_RESOURCE(ResourceClip, ResourceType::CLIP);
 
 	void Load() override;
+	void GetInfoJson();
 	void Unload() override;
+	void OnEditorUpdate() override;
+
 	bool SaveToFile(const char* filePath);
 
 	void Init(std::string& mName, UID mAnimationUID = 0, unsigned int mBeginIndex = 0, unsigned int mEndIndex = 0, bool mLoop = false, float mSpeed = 1.0f, UID mid = 0);
@@ -25,7 +28,6 @@ public:
 	void SetSpeed(float mSpeed) {
 		speed = mSpeed;
 	}
-
 	ResourceAnimation* GetResourceAnimation() const;
 
 public:
@@ -35,6 +37,7 @@ public:
 	unsigned int beginIndex = 0;
 	unsigned int endIndex = 0;
 	float speed = 1.0f;
-	float duration = 0;
+	float duration = 1.0f;
+	float frameRate = 1.0f;
 	unsigned int keyFramesSize = 0;
 };

@@ -13,12 +13,9 @@ EXPOSE_MEMBERS(SwapPanels) {
 GENERATE_BODY_IMPL(SwapPanels);
 
 void SwapPanels::Start() {
-    if (targetUID != 0) {
-        target = GameplaySystems::GetGameObject(targetUID);
-    }
-    if (currentUID != 0) {
-        current = GameplaySystems::GetGameObject(currentUID);
-    }
+    
+    target = GameplaySystems::GetGameObject(targetUID);
+    current = GameplaySystems::GetGameObject(currentUID);
 }
 
 void SwapPanels::Update() {

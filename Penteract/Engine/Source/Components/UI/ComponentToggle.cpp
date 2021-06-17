@@ -22,10 +22,16 @@
 #define JSON_TAG_CLICKED_COLOR "ClickedColor"
 
 void ComponentToggle::OnClicked() {
+	ComponentEventSystem* currEvSys = App->userInterface->GetCurrentEventSystem();
+	if (!currEvSys) return;
+
 	SetChecked(!IsChecked());
-	App->userInterface->GetCurrentEventSystem()->SetSelected(GetOwner().GetComponent<ComponentSelectable>()->GetID());
+	currEvSys->SetSelected(GetOwner().GetComponent<ComponentSelectable>()->GetID());
 }
 
+void ComponentToggle::OnClickedInternal() {
+	SetClicked(true);
+}
 
 //TODO, Set a new functionality allowing toggle to actually work as a toggle, currently working only as checkbox, which enables/disables checkbox
 //A toggle would modify the shown image depending on its value.
@@ -143,8 +149,10 @@ void ComponentToggle::OnEditorUpdate() {
 }
 
 void ComponentToggle::Update() {
+	bool gameControllerConnected = App->input->GetPlayerController(0);
+
 	if (clicked) {
-		if (!App->input->GetMouseButton(1)) {
+		if (!App->input->GetMouseButton(1) && !App->input->GetKey(SDL_SCANCODE_RETURN) && (!gameControllerConnected || gameControllerConnected && !App->input->GetPlayerController(0)->GetButtonState(SDL_CONTROLLER_BUTTON_A))) {
 			clicked = false;
 		}
 	}

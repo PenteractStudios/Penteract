@@ -7,6 +7,7 @@
 
 #include <list>
 #include <unordered_map>
+#include <set>
 
 class ResourceAnimation;
 class ResourceStateMachine : public Resource {
@@ -16,6 +17,7 @@ public:
 	void Load() override;
 	void Unload() override;
 	void SaveToFile(const char* filePath);
+	void OnEditorUpdate() override;
 
 	State AddState(const std::string& name, UID clipUid); //Add state to list of states and add clip to list of clips if dosen't contains him
 	void AddClip(UID clipUid);
@@ -23,8 +25,9 @@ public:
 	Transition* FindTransitionGivenName(const std::string& name);
 
 public:
-	std::unordered_map<std::string, ResourceAnimation*> resourceAnimations;
-	std::list<State> states;
+	std::unordered_map<UID, State> states;
+	State initialState;
+	std::set<std::string> bones;
 
 private:
 	std::list<UID> clipsUids;

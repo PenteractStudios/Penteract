@@ -42,6 +42,9 @@ public:
 	virtual void OnButtonClick() {}
 	virtual void OnToggled(bool val) {}
 	virtual void OnValueChanged() {}
+	virtual void OnAnimationFinished() {}
+	virtual void OnAnimationSecondaryFinished() {}
+	virtual void OnCollision(GameObject& collidedWith) {}
 
 private:
 	GameObject* owner = nullptr;

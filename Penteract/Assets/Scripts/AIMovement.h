@@ -2,65 +2,36 @@
 
 #include "Scripting/Script.h"
 
-struct TesseractEvent;
-class ComponentAnimation;
+#include "AIState.h"
+
+#include "Math/Quat.h"
+
 class ComponentTransform;
+class ComponentAgent;
 
-class HUDController;
 
-enum class AIState {
-	START,
-	SPAWN,
-	IDLE,
-	RUN,
-	HURT,
-	ATTACK,
-	DEATH
-};
-
-class AIMovement : public Script
-{
+class AIMovement : public Script {
 	GENERATE_BODY(AIMovement);
 
 public:
 
 	void Start() override;
 	void Update() override;
-	void ReceiveEvent(TesseractEvent& e) override;
-	void HitDetected(int damage_ = 1);
 
-private:
-	bool CharacterInSight(const GameObject* character);
-	bool CharacterInMeleeRange(const GameObject* character);
-	void Seek(const float3& newPosition, int speed);
-	
+	void Seek(AIState state, const float3& newPosition, int speed, bool orientateToDir);
+	void Flee(AIState state, const float3& fromPosition, int speed, bool orientateToDir);
+	void Stop();
+	bool CharacterInSight(const GameObject* character, const float searchRadius);
+	bool CharacterInAttackRange(const GameObject* character, const float meleeRange);
 
 public:
-
-	UID playerUID = 0;
-	UID canvasUID = 0;
-
-	GameObject* player = nullptr;
-	
-	int maxSpeed = 8;
-	int fallingSpeed = 30;
-	float searchRadius = 40.f;
-	float meleeRange = 5.f;
-	int lifePoints = 5;
-	float timeToDie = 5.f;
-	bool dead = false;
-
+	static int maxAcceleration;
+	float rotationSmoothness = 0.2f;
 
 private:
 
-	float3 velocity = float3(0, 0, 0);	
-	AIState state = AIState::START;
-	bool hitTaken = false;
-	ComponentAnimation* animation = nullptr;
-	ComponentTransform* parentTransform = nullptr;
-	int damageRecieved = 0;
-
-	HUDController* hudControllerScript = nullptr;
-
+	float3 velocity = float3(0, 0, 0);
+	Quat targetRotation = Quat(0, 0, 0, 1);
+	ComponentTransform* ownerTransform = nullptr;
+	ComponentAgent* agent = nullptr;
 };
-

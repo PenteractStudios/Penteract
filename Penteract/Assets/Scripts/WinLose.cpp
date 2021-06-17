@@ -2,13 +2,15 @@
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
+#include "EnemySpawnPoint.h"
 
 EXPOSE_MEMBERS(WinLose) {
-	// Add members here to expose them to the engine. Example:
+	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, winUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-	MEMBER(MemberType::FLOAT, LoseOffsetX),
-	MEMBER(MemberType::FLOAT, LoseOffsetZ)
+	MEMBER(MemberType::GAME_OBJECT_UID, enemiesUID),
+	MEMBER(MemberType::FLOAT, loseOffsetX),
+	MEMBER(MemberType::FLOAT, loseOffsetZ)
 };
 
 GENERATE_BODY_IMPL(WinLose);
@@ -16,6 +18,18 @@ GENERATE_BODY_IMPL(WinLose);
 void WinLose::Start() {
 	winCon = GameplaySystems::GetGameObject(winUID);
 	player = GameplaySystems::GetGameObject(playerUID);
+	enemies = GameplaySystems::GetGameObject(enemiesUID);
+	if (enemies != nullptr && enemies->HasChildren()) {
+		for (GameObject* spawn : enemies->GetChildren()) {
+			if (spawn->IsActive()) {
+				EnemySpawnPoint* enemySpawnPointScript = GET_SCRIPT(spawn, EnemySpawnPoint);
+				if (enemySpawnPointScript != nullptr) {
+					totalEnemies += enemySpawnPointScript->amountOfEnemies;
+				}
+			}
+		}
+	}
+
 }
 
 void WinLose::Update() {
@@ -28,10 +42,17 @@ void WinLose::Update() {
 
 	float3 position = playerTransform->GetGlobalPosition();
 	float3 winConPos = winConTransform->GetGlobalPosition();
-	if (position.x <= winConPos.x + LoseOffsetX
-		&& position.x >= winConPos.x - LoseOffsetX
-		&& position.z <= winConPos.z + LoseOffsetZ
-		&& position.z >= winConPos.z - LoseOffsetZ) {
-		SceneManager::ChangeScene("Assets/Scenes/WinScene.scene");
+	if (position.x <= winConPos.x + loseOffsetX
+		&& position.x >= winConPos.x - loseOffsetX
+		&& position.z <= winConPos.z + loseOffsetZ
+		&& position.z >= winConPos.z - loseOffsetZ
+		// TODO: Commented for Pablo
+		//&& deadEnemies >= totalEnemies
+		) {
+		if(sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 	}
+}
+
+void WinLose::IncrementDeadEnemies() {
+	deadEnemies++;
 }

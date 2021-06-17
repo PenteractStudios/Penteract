@@ -9,6 +9,7 @@
 #include "Modules/ModuleTime.h"
 #include "Modules/ModuleScene.h"
 #include "Modules/ModuleProject.h"
+#include "Modules/ModulePrograms.h"
 
 #include "imgui_internal.h"
 #include "IconsFontAwesome5.h"
@@ -42,8 +43,6 @@ void PanelControlEditor::Update() {
 		std::string scale = std::string(ICON_FA_EXTERNAL_LINK_ALT);
 		std::string local = std::string(ICON_FA_BOX);
 		std::string global = std::string(ICON_FA_GLOBE);
-		std::string pivot = std::string(ICON_FA_SIGN);
-		std::string center = std::string(ICON_FA_PLUS_SQUARE);
 		if (ImGui::BeginMenuBar()) {
 			if (ImGui::RadioButton(translate.c_str(), currentGuizmoOperation == ImGuizmo::TRANSLATE)) currentGuizmoOperation = ImGuizmo::TRANSLATE;
 			ImGui::SameLine();
@@ -61,7 +60,7 @@ void PanelControlEditor::Update() {
 				if (ImGui::RadioButton(global.c_str(), currentGuizmoMode == ImGuizmo::WORLD)) currentGuizmoMode = ImGuizmo::WORLD;
 			} else {
 				currentGuizmoMode = ImGuizmo::LOCAL;
-				ImGui::Dummy(ImVec2(78,0));
+				ImGui::Dummy(ImVec2(78, 0));
 			}
 
 			ImGui::SameLine();
@@ -85,14 +84,6 @@ void PanelControlEditor::Update() {
 				ImGui::InputFloat("##Snap Scale", &snap[0]);
 				break;
 			}
-			ImGui::SameLine();
-			ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
-			ImGui::SameLine();
-			ImGui::TextColored(App->editor->titleColor, "UI Anchor");
-			ImGui::SameLine();
-			if (ImGui::RadioButton(pivot.c_str(), pivotMode)) pivotMode = true;
-			ImGui::SameLine();
-			if (ImGui::RadioButton(center.c_str(), !pivotMode)) pivotMode = false;
 
 			ImGui::SameLine();
 			ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
@@ -155,6 +146,12 @@ void PanelControlEditor::Update() {
 #endif
 			}
 
+			ImGui::SameLine();
+			if (ImGui::Button("Compile Shaders")) {
+				App->programs->UnloadShaders();
+				App->programs->LoadShaders();
+			}
+
 			ImGui::PopItemWidth();
 			ImGui::EndMenuBar();
 		}
@@ -179,8 +176,4 @@ void PanelControlEditor::GetImguizmoSnap(float* newSnap) const {
 	newSnap[0] = snap[0];
 	newSnap[1] = snap[1];
 	newSnap[2] = snap[2];
-}
-
-bool PanelControlEditor::GetRectTool() const {
-	return pivotMode;
 }

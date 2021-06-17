@@ -2,182 +2,93 @@
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
-#include "TesseractEvent.h"
+#include "Components/ComponentTransform.h"
 
-#include "PlayerController.h"
-#include "HUDController.h"
+int AIMovement::maxAcceleration = 9999;
 
 EXPOSE_MEMBERS(AIMovement) {
-    MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-    MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
-    MEMBER(MemberType::INT, maxSpeed),
-    MEMBER(MemberType::INT, lifePoints),
-    MEMBER(MemberType::FLOAT, searchRadius),
-    MEMBER(MemberType::FLOAT, meleeRange),
-    MEMBER(MemberType::FLOAT, timeToDie)
-
+	MEMBER(MemberType::FLOAT, rotationSmoothness)
 };
 
 GENERATE_BODY_IMPL(AIMovement);
 
 void AIMovement::Start() {
-    player = GameplaySystems::GetGameObject(playerUID);
-    animation = GetOwner().GetParent()->GetComponent<ComponentAnimation>();   
-    parentTransform = GetOwner().GetParent()->GetComponent<ComponentTransform>();
-    GameObject* canvas = GameplaySystems::GetGameObject(canvasUID);
-    if (canvas) {
-        hudControllerScript = GET_SCRIPT(canvas, HUDController);
-    }
+	ownerTransform = GetOwner().GetComponent<ComponentTransform>();
+	agent = GetOwner().GetComponent<ComponentAgent>();
 }
 
 void AIMovement::Update() {
-    if (!GetOwner().IsActive()) return;
 
-    if (hitTaken && lifePoints > 0) {
-        if (state == AIState::IDLE || state == AIState::HURT) {
-            animation->SendTrigger("IdleHurt");
-        }
-        else if (state == AIState::RUN) {
-            animation->SendTrigger("RunHurt");
-        }
-        else if (state == AIState::ATTACK) {
-            animation->SendTrigger("AttackHurt");
-        }
-        lifePoints -= damageRecieved;
-        state = AIState::HURT;
-        hitTaken = false;
-    }
-
-    switch (state)
-    {
-    case AIState::START:
-        if (Camera::CheckObjectInsideFrustum(&GetOwner())) {
-            Seek(float3(parentTransform->GetGlobalPosition().x, 0, parentTransform->GetGlobalPosition().z), fallingSpeed);
-            if (parentTransform->GetGlobalPosition().y < 2.7 + 0e-5f) {
-                animation->SendTrigger("StartSpawn");
-                state = AIState::SPAWN;
-            }
-        }
-        break;
-    case AIState::SPAWN:                
-        break;
-    case AIState::IDLE:
-        if (player) {
-            if (CharacterInSight(player)) {
-                animation->SendTrigger("IdleRun");
-                state = AIState::RUN;
-            }
-        }
-        break;
-    case AIState::RUN:
-        Seek(player->GetComponent<ComponentTransform>()->GetGlobalPosition(), maxSpeed);
-        if (CharacterInMeleeRange(player)) {
-            animation->SendTrigger("RunAttack");
-            state = AIState::ATTACK;
-        }
-        break;
-    case AIState::HURT:                
-        break;
-    case AIState::ATTACK:
-        break;
-    case AIState::DEATH:
-        break;
-    }
-
-    if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_K)) {
-        hitTaken = true;
-    }
-
-    if(dead){
-        if (timeToDie > 0) {
-            timeToDie -= Time::GetDeltaTime();
-        }
-        else {
-            GameplaySystems::DestroyGameObject(GetOwner().GetParent());
-            if (hudControllerScript) {
-                hudControllerScript->UpdateScore(10);
-            }
-        }
-    }
-    	
 }
 
-void AIMovement::ReceiveEvent(TesseractEvent& e)
-{
-    switch (e.type)
-    {
-    case TesseractEventType::ANIMATION_FINISHED:
+void AIMovement::Flee(AIState state, const float3& fromPosition, int speed, bool orientateToDir) {
 
-        if (state == AIState::SPAWN) {
-            animation->SendTrigger("SpawnIdle");
-            state = AIState::IDLE;
-        }
+	if (!ownerTransform || !agent) return;
 
-        else if(state == AIState::ATTACK)
-        {
-            PlayerController* playerController = GET_SCRIPT(player, PlayerController);
-            playerController->HitDetected();
-            animation->SendTrigger("AttackIdle");
-            state = AIState::IDLE;
-        }
-        else if (state == AIState::HURT && lifePoints > 0) {
-            animation->SendTrigger("HurtIdle");
-            state = AIState::IDLE;
-        }
 
-        else if (state == AIState::HURT && lifePoints <= 0) {
-            animation->SendTrigger("HurtDeath");
-            Debug::Log("Death");
-            state = AIState::DEATH;
-        }
-        else if (state == AIState::DEATH) {
-            dead = true;
-        }
-        break;
-    }
+	float3 position = ownerTransform->GetGlobalPosition();
+	float3 direction = (position - fromPosition).Normalized();
+	float3 newPosition = position + direction;
+	agent->SetMoveTarget(newPosition, true);
+
+	if (state != AIState::START && orientateToDir) {
+		Quat newRotation = Quat::LookAt(float3(0, 0, 1), direction.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
+		ownerTransform->SetGlobalRotation(newRotation);
+	}
+
+
 }
 
-void AIMovement::HitDetected(int damage_) {
-    damageRecieved = damage_;
-    hitTaken = true;
+void AIMovement::Stop() {
+	if (!agent)return;
+
+	if (agent->CanBeRemoved()) {
+		agent->RemoveAgentFromCrowd();
+		agent->AddAgentToCrowd();
+	}
+
 }
 
-bool AIMovement::CharacterInSight(const GameObject* character)
-{
-    ComponentTransform* target = character->GetComponent<ComponentTransform>();
-    if (target) {
-        float3 posTarget = target->GetGlobalPosition();
-        return posTarget.Distance(parentTransform->GetGlobalPosition()) < searchRadius;
-    }
+void AIMovement::Seek(AIState state, const float3& newPosition, int speed, bool orientateToDir) {
+	if (!ownerTransform) return;
 
-    return false;
+	float3 position = ownerTransform->GetGlobalPosition();
+	float3 direction = newPosition - position;
+
+	if (state == AIState::START) {
+		velocity = direction.Normalized() * speed;
+		position += velocity * Time::GetDeltaTime();
+		ownerTransform->SetGlobalPosition(position);
+	} else {
+		if (agent) {
+			agent->SetMoveTarget(newPosition, true);
+			velocity = agent->GetVelocity();
+		}
+	}
+
+	if (state != AIState::START && orientateToDir) {
+		targetRotation = Quat::LookAt(float3(0, 0, 1), velocity.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
+		Quat rotation = Quat::Slerp(ownerTransform->GetGlobalRotation(), targetRotation, Min(Time::GetDeltaTime() / Max(rotationSmoothness, 0.000001f), 1.0f));
+		ownerTransform->SetGlobalRotation(rotation);
+	}
 }
 
-bool AIMovement::CharacterInMeleeRange(const GameObject* character)
-{
-    ComponentTransform* target = character->GetComponent<ComponentTransform>();
-    if (target) {
-        float3 posTarget = target->GetGlobalPosition();
-        return posTarget.Distance(parentTransform->GetGlobalPosition()) < meleeRange;
-    }
+bool AIMovement::CharacterInSight(const GameObject* character, const float searchRadius) {
+	ComponentTransform* target = character->GetComponent<ComponentTransform>();
+	if (target && ownerTransform) {
+		float3 posTarget = target->GetGlobalPosition();
+		return posTarget.Distance(ownerTransform->GetGlobalPosition()) < searchRadius;
+	}
 
-    return false;
+	return false;
 }
 
-void AIMovement::Seek(const float3& newPosition, int speed)
-{
+bool AIMovement::CharacterInAttackRange(const GameObject* character, const float attackRange) {
+	ComponentTransform* target = character->GetComponent<ComponentTransform>();
+	if (target && ownerTransform) {
+		float3 posTarget = target->GetGlobalPosition();
+		return posTarget.Distance(ownerTransform->GetGlobalPosition()) < attackRange;
+	}
 
-    float3 position = parentTransform->GetGlobalPosition();
-    float3 direction = newPosition - position;
-
-    velocity = direction.Normalized() * speed;
-
-    position += velocity * Time::GetDeltaTime();
-
-    parentTransform->SetGlobalPosition(position);
-
-    if (state != AIState::START) {
-        Quat newRotation = Quat::LookAt(float3(0, 0, 1), direction.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
-        parentTransform->SetGlobalRotation(newRotation);
-    }
+	return false;
 }

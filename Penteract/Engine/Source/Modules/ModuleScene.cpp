@@ -32,6 +32,7 @@
 #include "Modules/ModuleUserInterface.h"
 #include "Modules/ModuleEvents.h"
 #include "Modules/ModuleTime.h"
+#include "Resources/ResourceScene.h"
 #include "Panels/PanelHierarchy.h"
 #include "Scripting/Script.h"
 
@@ -90,11 +91,12 @@ bool ModuleScene::Start() {
 	App->files->CreateFolder(SCENES_PATH);
 	App->files->CreateFolder(MATERIALS_PATH);
 	App->files->CreateFolder(PREFABS_PATH);
+	App->files->CreateFolder(NAVMESH_PATH);
 #endif
 
 #if GAME
 	App->events->AddEvent(TesseractEventType::PRESSED_PLAY);
-	SceneImporter::LoadScene("Assets/Scenes/StartScene.scene");
+	SceneImporter::LoadScene("Library/29/2968379164312150788"); // TODO: This should be saved in a project file
 	if (App->scene->scene->root == nullptr) {
 		App->scene->CreateEmptyScene();
 	}
@@ -132,9 +134,13 @@ void ModuleScene::ReceiveEvent(TesseractEvent& e) {
 	case TesseractEventType::GAMEOBJECT_DESTROYED:
 		scene->DestroyGameObject(e.Get<DestroyGameObjectStruct>().gameObject);
 		break;
-	case TesseractEventType::CHANGE_SCENE:
-		SceneImporter::LoadScene(e.Get<ChangeSceneStruct>().scenePath);
+	case TesseractEventType::CHANGE_SCENE: {
+		ResourceScene* newScene = App->resources->GetResource<ResourceScene>(e.Get<ChangeSceneStruct>().sceneId);
+		if (newScene != nullptr) {
+			SceneImporter::LoadScene(newScene->GetResourceFilePath().c_str());
+		}
 		break;
+	}
 	case TesseractEventType::RESOURCES_LOADED:
 		if (App->time->HasGameStarted() && !scene->sceneLoaded) {
 			scene->sceneLoaded = true;
@@ -167,6 +173,7 @@ void ModuleScene::CreateEmptyScene() {
 
 	// Create Directional Light
 	GameObject* dirLight = scene->CreateGameObject(root, GenerateUID(), "Directional Light");
+	scene->directionalLight = dirLight;
 	ComponentTransform* dirLightTransform = dirLight->CreateComponent<ComponentTransform>();
 	dirLightTransform->SetPosition(float3(0, 300, 0));
 	dirLightTransform->SetRotation(Quat::FromEulerXYZ(pi / 2, 0.0f, 0.0));

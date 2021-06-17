@@ -40,9 +40,15 @@ enum class ComponentType {
 	TEXT,
 	SCRIPT,
 	PARTICLE,
+	TRAIL,
+	BILLBOARD,
 	AUDIO_SOURCE,
 	AUDIO_LISTENER,
-	PROGRESS_BAR
+	PROGRESS_BAR,
+	SPHERE_COLLIDER,
+	BOX_COLLIDER,
+	CAPSULE_COLLIDER,
+	AGENT
 };
 
 const char* GetComponentTypeName(ComponentType type);

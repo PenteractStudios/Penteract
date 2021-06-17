@@ -8,6 +8,7 @@ class GameObject;
 class ComponentCamera;
 class ComponentTransform;
 
+struct TesseractEvent;
 
 class GameController : public Script {
 	GENERATE_BODY(GameController);
@@ -16,20 +17,21 @@ public:
 
 	void Start() override;
 	void Update() override;
+	void ReceiveEvent(TesseractEvent& e) override;
 
 	void Rotate(float2 mouseMotion, Frustum* frustum, ComponentTransform* transform);
 
 public:
-	UID gameCameraUID;
-	UID godCameraUID;
-	UID staticCamera1UID;
-	UID staticCamera2UID;
-	UID staticCamera3UID;
-	UID staticCamera4UID;
-	UID playerUID;
-	UID pauseUID;
-	UID hudUID;
-	UID enemySpawnPointsUID;
+	UID gameCameraUID = 0;
+	UID godCameraUID = 0;
+	UID staticCamera1UID = 0;
+	UID staticCamera2UID = 0;
+	UID staticCamera3UID = 0;
+	UID staticCamera4UID = 0;
+	UID playerUID = 0;
+	UID pauseUID = 0;
+	UID hudUID = 0;
+	UID godModeControllerUID = 0;
 
 	float speed = 50.f;
 	float rotationSpeedX = 10.f;
@@ -52,6 +54,7 @@ private:
 	GameObject* player = nullptr;
 	GameObject* pauseCanvas = nullptr;
 	GameObject* hudCanvas = nullptr;
+	GameObject* godModeController = nullptr;
 
 	float yaw = 0.f;
 	float pitch = 0.f;

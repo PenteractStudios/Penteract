@@ -26,6 +26,7 @@ enum class UpdateStatus {
 #define SCENES_PATH "Assets/Scenes"
 #define AUDIO_PATH "Assets/Audio"
 #define MATERIALS_PATH "Assets/Materials"
+#define NAVMESH_PATH "Assets/NavMesh"
 
 #define JPG_TEXTURE_EXTENSION ".jpg"
 #define PNG_TEXTURE_EXTENSION ".png"
@@ -48,6 +49,8 @@ enum class UpdateStatus {
 
 #define SKYBOX_EXTENSION ".sky"
 
+#define NAVMESH_EXTENSION ".navmesh"
+
 #define FONT_EXTENSION ".ttf"
 #define SCRIPT_EXTENSION ".h"
 
@@ -57,13 +60,16 @@ enum class UpdateStatus {
 #define STATE_MACHINE_EXTENSION ".stma"
 #define ANIMATION_CLIP_EXTENSION ".clip"
 
-#define TEMP_SCENE_FILE_NAME "_scene_snapshot.temp"
+#define TEMP_SCENE_FILE_NAME "_scene_autosave.temp"
 
 // Configuration -----------
 #define GLSL_VERSION "#version 460"
+#define POINT_LIGHTS 32
+#define SPOT_LIGHTS 8
 
 // Threads
 #define TIME_BETWEEN_RESOURCE_UPDATES_MS 300
+#define TIME_BETWEEN_AUTOSAVES_MS 300000 // 5 minutes
 
 // Delete helpers -----------
 #define RELEASE(x)          \

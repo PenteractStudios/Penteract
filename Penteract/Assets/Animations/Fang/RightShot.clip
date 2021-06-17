@@ -1,8 +1,9 @@
 {
     "Name": "RightShot",
-    "AnimationUID": 17356053992460414927,
+    "AnimationUID": 1406535842475188602,
     "BeginIndex": 167,
-    "EndIndex": 782,
+    "EndIndex": 182,
     "Loop": false,
-    "Speed": 1.0
+    "Speed": 1.0,
+    "FrameRate": 0.0332796536386013
 }
