@@ -7,16 +7,13 @@ public:
 	// ------- Contructors ------- //
 	Onimaru() {};
 
-	Onimaru(int lifePoints_, float movementSpeed_, int damageHit_, float attackSpeed_)
-	{
-		attackSpeed = attackSpeed_;
-		lifePoints = lifePoints_;
-		movementSpeed = movementSpeed_;
-		damageHit = damageHit_;
-		SetTotalLifePoints(lifePoints);
-	}
+	Onimaru(int lifePoints_, float movementSpeed_, int damageHit_, float attackSpeed_, UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID onimaruTrailUID);
 
-public:
-	
+private:
+	GameObject* onimaru = nullptr;
+	ResourcePrefab* onimaruTrail = nullptr;
+	ResourcePrefab* onimaruBullet = nullptr;
+	ComponentTransform* onimaruGunTransform = nullptr;
+	ComponentParticleSystem* onimaruCompParticle = nullptr;
 
 };
