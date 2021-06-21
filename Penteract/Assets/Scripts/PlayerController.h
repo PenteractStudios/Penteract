@@ -44,11 +44,9 @@ public:
 	void Update() override;
 
 	bool IsDead();
-	void SetInvincible(bool status);
-	void SetOverpower(bool status);
-	void SetNoCooldown(bool status);
+
 	void TakeDamage(bool ranged = true);
-	int GetOverPowerMode();
+
 
 public:
 
@@ -144,18 +142,12 @@ private:
 	float3 GetDirection(MovementDirection md) const;
 	MovementDirection GetInputMovementDirection() const;
 	int GetMouseDirectionState(MovementDirection input);
-private:
-	//fang
-	float dashCooldownRemaining = 0.f;
-	bool dashInCooldown = false;
 
-	float dashRemaining = 0.f;
+private:
 	//player
 	float switchCooldownRemaining = 0.f;
 	bool switchInCooldown = false;
-	//split
-	float fangAttackCooldownRemaining = 0.f;
-	float onimaruAttackCooldownRemaining = 0.f;
+
 	//player
 	bool invincibleMode = false;
 	int overpowerMode = 1;
@@ -177,29 +169,14 @@ private:
 	//player
 	ComponentTransform* transform = nullptr;
 	//split
-	ComponentTransform* onimaruGunTransform = nullptr;
 	ComponentCamera* compCamera = nullptr;
 	ComponentTransform* cameraTransform = nullptr;
-	GameObject* fangLeftGun = nullptr;
-	GameObject* fangRightGun = nullptr;
-	GameObject* onimaruGun = nullptr;
-	ComponentTransform* fangRightGunTransform = nullptr;
-	ComponentTransform* fangLeftGunTransform = nullptr;
 	
 	//Animation (split)
-	ComponentAnimation* onimaruAnimation = nullptr;
 	State* fangCurrentState = nullptr;
 	State* onimaruCurrentState = nullptr;
-	ResourcePrefab* onimaruTrail = nullptr;
-	ResourcePrefab* fangTrail = nullptr;
-	ResourcePrefab* fangBullet = nullptr;
-	ResourcePrefab* onimaruBullet = nullptr;
 	//player
 	GameObject* switchEffects = nullptr;
-
-	//Particles (split)
-	ComponentParticleSystem* fangCompParticle = nullptr;
-	ComponentParticleSystem* onimaruCompParticle = nullptr;
 
 	//Audio (split)
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };

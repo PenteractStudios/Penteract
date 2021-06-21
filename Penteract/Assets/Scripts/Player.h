@@ -44,6 +44,12 @@ public:
 	void SetAttackSpeed(float attackSpeed_);
 	void Hit(int damage_) override;
 
+	//debug
+	void SetInvincible(bool status);
+	void SetOverpower(bool status);
+	void SetNoCooldown(bool status);
+	int GetOverPowerMode();
+
 	MovementDirection GetInputMovementDirection() const;
 	float3 GetDirection(MovementDirection md) const;
 	virtual void Shoot() {}

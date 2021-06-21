@@ -28,7 +28,7 @@ public:
 	ComponentAgent* agent = nullptr;
 	ComponentAnimation* compAnimation = nullptr;
 	ComponentTransform* characterTransform = nullptr;
-
+	State* currentState = nullptr;
 private:
 	int totalLifePoints = 1;
 	

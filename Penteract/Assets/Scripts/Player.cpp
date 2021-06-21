@@ -14,6 +14,23 @@ void Player::Hit(int damage_)
 		isAlive = false;
 	}
 }
+// Player
+void Player::SetInvincible(bool status) {
+	invincibleMode = status;
+}
+// Player
+void Player::SetOverpower(bool status) {
+	overpowerMode = status ? 999 : 1;
+}
+// Player
+int Player::GetOverPowerMode() {
+	return overpowerMode;
+}
+// Player
+void Player::SetNoCooldown(bool status) {
+	noCooldownMode = status;
+	ResetSwitchStatus();
+}
 
 MovementDirection Player::GetInputMovementDirection() const {
 	MovementDirection md = MovementDirection::NONE;

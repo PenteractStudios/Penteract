@@ -28,6 +28,10 @@ Fang::Fang(int lifePoints_, float movementSpeed_, int damageHit_, float attackSp
 		trail = GameplaySystems::GetResource<ResourcePrefab>(trailUID);
 		bullet = GameplaySystems::GetResource<ResourcePrefab>(bulletUID);
 
+		if (compAnimation) {
+			currentState = compAnimation->GetCurrentState();
+		}
+
 		if (agent) {
 			agent->SetMaxSpeed(movementSpeed);
 			agent->SetMaxAcceleration(MAX_ACCELERATION);
@@ -59,7 +63,7 @@ void Fang::InitDash(MovementDirection md) {
 			audiosPlayer[static_cast<int>(AudioPlayer::FIRST_ABILITY)]->Play();
 		}
 	}
-	//TODO:  if (hudControllerScript)
+	//para animacion de volver a tener la habilidad
 	//if (hudControllerScript) {
 	//	hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_1);
 	//}

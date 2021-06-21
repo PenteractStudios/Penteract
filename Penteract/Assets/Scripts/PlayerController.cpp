@@ -34,7 +34,6 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
-	MEMBER(MemberType::FLOAT, distanceRayCast),
 	MEMBER(MemberType::FLOAT, switchCooldown),
 	MEMBER(MemberType::FLOAT, dashCooldown),
 	MEMBER(MemberType::FLOAT, dashSpeed),
@@ -88,46 +87,7 @@ void PlayerController::Start() {
 		}
 		cameraTransform = camera->GetComponent<ComponentTransform>();
 	}
-	if (fang) {
-		fang->Enable();
 
-		ComponentCapsuleCollider* capsuleCollider = fang->GetComponent<ComponentCapsuleCollider>(); // workaround collider doesn't activate if onimaru starts disabled
-		if (capsuleCollider) capsuleCollider->Enable();
-
-		fangLeftGun = GameplaySystems::GetGameObject(fangLeftGunUID);
-		if (fangLeftGun) {
-			fangLeftGunTransform = fangLeftGun->GetComponent<ComponentTransform>();
-		}
-
-		fangRightGun = GameplaySystems::GetGameObject(fangRightGunUID);
-		if (fangRightGun) {
-			fangRightGunTransform = fangRightGun->GetComponent<ComponentTransform>();
-		}
-		
-		fangAnimation = fang->GetComponent<ComponentAnimation>();
-		fangTrail = GameplaySystems::GetResource<ResourcePrefab>(fangTrailUID);
-		fangBullet = GameplaySystems::GetResource<ResourcePrefab>(fangBulletUID);
-
-		if (fangAnimation) {
-			fangCurrentState = fangAnimation->GetCurrentState();
-		}
-	}
-	if (onimaru) {
-		onimaru->Disable();
-		onimaruGun = GameplaySystems::GetGameObject(onimaruGunUID);
-		
-		ComponentCapsuleCollider* capsuleCollider = onimaru->GetComponent<ComponentCapsuleCollider>(); // workaround collider doesn't activate if onimaru starts disabled
-		if (capsuleCollider) capsuleCollider->Enable();
-		
-		if (onimaruGun) {
-			onimaruGunTransform = onimaruGun->GetComponent<ComponentTransform>();
-		}
-		onimaruAnimation = onimaru->GetComponent<ComponentAnimation>();
-		onimaruBullet = GameplaySystems::GetResource<ResourcePrefab>(onimaruBulletUID);
-		if (onimaruAnimation) {
-			onimaruCurrentState = onimaruAnimation->GetCurrentState();
-		}
-	}
 	
 	switchEffects = GameplaySystems::GetGameObject(switchParticlesUID);
 
@@ -240,10 +200,6 @@ void PlayerController::SwitchCharacter() {
 	}
 }
 // Player
-bool PlayerController::CanShoot() {
-	return !shooting && ((fang->IsActive() && fangTrail) || (onimaru->IsActive() && onimaruBullet));
-}
-// Player
 void PlayerController::ResetSwitchStatus() {
 	switchInProgress = false;
 	playSwitchParticles = true;
@@ -295,23 +251,6 @@ void PlayerController::Shoot() {
 		}
 	}
 }
-// Player
-void PlayerController::SetInvincible(bool status) {
-	invincibleMode = status;
-}
-// Player
-void PlayerController::SetOverpower(bool status) {
-	overpowerMode = status ? 999 : 1;
-}
-// Player
-int PlayerController::GetOverPowerMode() {
-	return overpowerMode;
-}
-// Player
-void PlayerController::SetNoCooldown(bool status) {
-	noCooldownMode = status;
-	ResetSwitchStatus();
-}
 // Remove
 bool PlayerController::IsDead() {
 	return (!fangCharacter.isAlive || !onimaruCharacter.isAlive);
@@ -325,41 +264,6 @@ void PlayerController::CheckCoolDowns() {
 	}
 	else {
 		switchCooldownRemaining -= Time::GetDeltaTime();
-	}
-	//Dash Cooldown
-	if (noCooldownMode || dashCooldownRemaining <= 0.f) {
-		dashCooldownRemaining = 0.f;
-		dashInCooldown = false;
-		dashMovementDirection = MovementDirection::NONE;
-	}
-	else {
-		dashCooldownRemaining -= Time::GetDeltaTime();
-	}
-	//Dash duration
-	if (dashRemaining <= 0.f) {
-		dashRemaining = 0.f;
-		dashing = false;
-		if (agent) agent->SetMaxSpeed(fangCharacter.movementSpeed);
-	}
-	else {
-		dashRemaining -= Time::GetDeltaTime();
-	}
-
-	if (fang->IsActive()) {
-		if (fangAttackCooldownRemaining <= 0.f) {
-			fangAttackCooldownRemaining = 0.f;
-			shooting = false;
-		} else {
-			fangAttackCooldownRemaining -= Time::GetDeltaTime();
-		}
-	}
-	else {
-		if (onimaruAttackCooldownRemaining <= 0.f) {
-			onimaruAttackCooldownRemaining = 0.f;
-			shooting = false;
-		} else {
-			onimaruAttackCooldownRemaining -= Time::GetDeltaTime();
-		}
 	}
 
 	if (onimaru->IsActive() && fangCharacter.lifePoints != FANG_MAX_HEALTH) {
