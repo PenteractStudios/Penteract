@@ -382,8 +382,6 @@ void PlayerController::CheckCoolDowns() {
 	}
 }
 // player
-
-// player
 int PlayerController::GetMouseDirectionState(MovementDirection input) {
 	float3 inputDirection = GetDirection(input);
 	float dot = Dot(inputDirection.Normalized(), facePointDir.Normalized());

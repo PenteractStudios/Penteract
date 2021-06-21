@@ -39,7 +39,7 @@ MovementDirection Player::GetInputMovementDirection() const {
 	}
 	return md;
 }
-// player 
+
 float3 Player::GetDirection(MovementDirection md) const {
 	float3 direction;
 	switch (md) {

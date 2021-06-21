@@ -1,13 +1,45 @@
 #include "Fang.h"
 #include "GameplaySystems.h"
+#include "HUDController.h"
+
+Fang::Fang(int lifePoints_, float movementSpeed_, int damageHit_, float attackSpeed_, UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID,
+	UID bulletUID)
+{
+	attackSpeed = attackSpeed_;
+	lifePoints = lifePoints_;
+	movementSpeed = movementSpeed_;
+	damageHit = damageHit_;
+	SetTotalLifePoints(lifePoints);
+
+	fang = GameplaySystems::GetGameObject(fangUID);
+
+	if (fang && fang->GetParent()) {
+		characterTransform = fang->GetParent()->GetComponent<ComponentTransform>();
+		agent = fang->GetParent()->GetComponent<ComponentAgent>();
+		compAnimation = fang->GetComponent<ComponentAnimation>();
+
+		//right gun
+		GameObject* gunAux = GameplaySystems::GetGameObject(rightGunUID);
+		if (gunAux) rightGunTransform = gunAux->GetComponent<ComponentTransform>();
+		//left gun
+		gunAux = GameplaySystems::GetGameObject(leftGunUID);
+		if (gunAux) leftGunTransform = gunAux->GetComponent<ComponentTransform>();
+		
+		trail = GameplaySystems::GetResource<ResourcePrefab>(trailUID);
+		bullet = GameplaySystems::GetResource<ResourcePrefab>(bulletUID);
+
+		if (agent) {
+			agent->SetMaxSpeed(movementSpeed);
+			agent->SetMaxAcceleration(MAX_ACCELERATION);
+		}
+	}
+
+
+}
 
 void Fang::InitDash(MovementDirection md) {
+
 	if (CanDash()) {
-
-		if (hudControllerScript) {
-			hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_1);
-		}
-
 		if (md != MovementDirection::NONE) {
 			dashDirection = GetDirection(md);
 			dashMovementDirection = md;
@@ -23,10 +55,14 @@ void Fang::InitDash(MovementDirection md) {
 		if (agent) {
 			agent->SetMaxSpeed(dashSpeed);
 		}
-		if (audios[static_cast<int>(AudioType::DASH)]) {
-			audios[static_cast<int>(AudioType::DASH)]->Play();
+		if (audiosPlayer[static_cast<int>(AudioPlayer::FIRST_ABILITY)]) {
+			audiosPlayer[static_cast<int>(AudioPlayer::FIRST_ABILITY)]->Play();
 		}
 	}
+	//TODO:  if (hudControllerScript)
+	//if (hudControllerScript) {
+	//	hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_1);
+	//}
 }
 
 void Fang::Dash() {
@@ -84,24 +120,24 @@ void Fang::Update(MovementDirection md) {
 void Fang::Shoot() {
 	if (CanShoot()) {
 		shooting = true;
-			attackCooldownRemaining = 1.f / attackSpeed;
-			if (audios[static_cast<int>(AudioType::SHOOT)]) {
-				audios[static_cast<int>(AudioType::SHOOT)]->Play();
-			}
-
-			ComponentTransform* shootingGunTransform = nullptr;
-			if (rightShot) {
-				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[12]);
-				shootingGunTransform = rightGunTransform;
-			}
-			else {
-				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[11]);
-				shootingGunTransform = leftGunTransform;
-			}
-			if (trail && bullet && shootingGunTransform) {
-				GameplaySystems::Instantiate(bullet, shootingGunTransform->GetGlobalPosition(), characterTransform->GetGlobalRotation());
-				GameplaySystems::Instantiate(trail, shootingGunTransform->GetGlobalPosition(), characterTransform->GetGlobalRotation());
-			}
+		attackCooldownRemaining = 1.f / attackSpeed;
+		if (audiosPlayer[static_cast<int>(AudioPlayer::SHOOT)]) {
+			audiosPlayer[static_cast<int>(AudioPlayer::SHOOT)]->Play();
 		}
+
+		ComponentTransform* shootingGunTransform = nullptr;
+		if (rightShot) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[12]);
+			shootingGunTransform = rightGunTransform;
+		}
+		else {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[11]);
+			shootingGunTransform = leftGunTransform;
+		}
+		if (trail && bullet && shootingGunTransform) {
+			GameplaySystems::Instantiate(bullet, shootingGunTransform->GetGlobalPosition(), characterTransform->GetGlobalRotation());
+			GameplaySystems::Instantiate(trail, shootingGunTransform->GetGlobalPosition(), characterTransform->GetGlobalRotation());
+		}
+	}
 }
 
