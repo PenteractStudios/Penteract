@@ -19,7 +19,6 @@
 
 #define PI 3.14159
 #define AUDIOSOURCE_NULL_MSG "shootAudioSource is NULL"
-#define MAX_ACCELERATION 9999
 
 EXPOSE_MEMBERS(PlayerController) {
 	// Add members here to expose them to the engine. Example:

@@ -1,5 +1,9 @@
 #pragma once
 
+#include "GameplaySystems.h"
+
+#define MAX_ACCELERATION 9999
+
 class ComponentAudioSource;
 class ComponentAgent;
 class ComponentAnimation;
