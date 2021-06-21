@@ -118,17 +118,14 @@ void AIMeleeGrunt::Update() {
         }
     }
 
-    switch (state)
-    {
+    switch (state) {
     case AIState::START:
-        if (Camera::CheckObjectInsideFrustum(GetOwner().GetChildren()[0])) {
             movementScript->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), gruntCharacter.fallingSpeed, true);
             if (ownerTransform->GetGlobalPosition().y < 2.7 + 0e-5f) {
                 animation->SendTrigger("StartSpawn");
                 if (audios[static_cast<int>(AudioType::SPAWN)]) audios[static_cast<int>(AudioType::SPAWN)]->Play();
                 state = AIState::SPAWN;
             }
-        }
         break;
     case AIState::SPAWN:
         break;
