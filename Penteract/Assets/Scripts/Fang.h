@@ -2,7 +2,16 @@
 
 #include "Player.h"
 
-
+enum class AudioFang {
+	DASH,
+	EMP,
+	ULTIMATE,
+	SWITCH,
+	SHOOT,
+	HIT,
+	DEATH,
+	TOTAL
+};
 
 class Fang : public Player {
 public:
@@ -27,7 +36,7 @@ public:
 	std::vector<std::string> states{ "Idle" ,
 						"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
 						"DashBackward", "DashForward" , "DashLeft" , "DashRight" ,
-						"Death" , "Hurt" , "LeftShot" , "RightShot", "Shooting", "RunForwardLeft",
+						"Death" , "LeftShot" , "RightShot", "RunForwardLeft",
 						"RunForwardRight", "RunBackwardLeft", "RunBarckwardRight"
 	};
 	//pasar a privado y hacer setters
@@ -35,7 +44,7 @@ public:
 	float dashSpeed = 100.f;
 	float dashDuration = 0.1f;
 
-
+	ComponentAudioSource* audiosFang[static_cast<int>(AudioFang::TOTAL)] = { nullptr };
 
 private:
 	//Dash

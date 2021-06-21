@@ -2,6 +2,17 @@
 
 #include "Player.h"
 
+enum class AudioOnimaru {
+	SHIELD,
+	BLAST,
+	ULTIMATE,
+	SWITCH,
+	SHOOT,
+	HIT,
+	DEATH,
+	TOTAL
+};
+
 class Onimaru : public Player {
 public:
 	// ------- Contructors ------- //
@@ -17,5 +28,7 @@ public:
 	}
 
 public:
-	float attackSpeed = 1.0f;
+	
+	ComponentAudioSource* audios[static_cast<int>(AudioOnimaru::TOTAL)] = { nullptr };
+
 };
