@@ -10,7 +10,7 @@ class Character
 public:
 	Character() {}
 
-	void Hit(int damage_);
+	virtual void Hit(int damage_);
 	void Recover(int recoveryLife_);
 
 	void SetTotalLifePoints(int totalLifePoints_);

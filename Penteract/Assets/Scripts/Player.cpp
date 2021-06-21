@@ -6,12 +6,14 @@ void Player::SetAttackSpeed(float attackSpeed_)
 	attackSpeed = attackSpeed_;
 }
 
-void Player::TakeDamage(bool ranged) {
-		Hit((ranged) ? rangedDamageTaken : meleeDamageTaken);
-		if (audios[static_cast<int>(AudioType::FANGHIT)]) audios[static_cast<int>(AudioType::FANGHIT)]->Play();
-		if (isAlive) {
-			if (audios[static_cast<int>(AudioType::FANGDEATH)]) audios[static_cast<int>(AudioType::FANGDEATH)]->Play();
-		}
+void Player::Hit(int damage_)
+{
+	lifePoints -= damage_;
+	if (audiosPlayer[static_cast<int>(AudioPlayer::HIT)]) audiosPlayer[static_cast<int>(AudioPlayer::HIT)]->Play();
+	if (lifePoints <= 0) {
+		if (audiosPlayer[static_cast<int>(AudioPlayer::DEATH)]) audiosPlayer[static_cast<int>(AudioPlayer::DEATH)]->Play();
+		isAlive = false;
+	}
 }
 
 MovementDirection Player::GetInputMovementDirection() const {

@@ -1,8 +1,29 @@
 #pragma once
 
 #include "Character.h"
+#include "Math/float3.h"
+
 enum class MovementDirection {
-	NONE = 0, UP = 1, UP_LEFT = 2, LEFT = 3, DOWN_LEFT = 4, DOWN = 5, DOWN_RIGHT = 6, RIGHT = 7, UP_RIGHT = 8
+	NONE = 0,
+	UP = 1, 
+	UP_LEFT = 2, 
+	LEFT = 3, 
+	DOWN_LEFT = 4,
+	DOWN = 5, 
+	DOWN_RIGHT = 6, 
+	RIGHT = 7, 
+	UP_RIGHT = 8
+};
+
+enum class AudioPlayer {
+	FIRST_ABILITY,
+	SECOND_ABILITY,
+	THIRD_ABILITY,
+	SWITCH,
+	SHOOT,
+	HIT,
+	DEATH,
+	TOTAL
 };
 
 class Player : public Character {
@@ -21,8 +42,8 @@ public:
 
 	// ------- Core Functions ------ //
 	void SetAttackSpeed(float attackSpeed_);
+	void Hit(int damage_) override;
 
-	void TakeDamage(bool ranged);
 	MovementDirection GetInputMovementDirection() const;
 	float3 GetDirection(MovementDirection md) const;
 	virtual void Shoot() {}
@@ -34,6 +55,8 @@ public:
 	float attackCooldownRemaining = 0.f;
 	bool shooting = false;
 	float3 facePointDir = float3(0, 0, 0);
+
+	ComponentAudioSource* audiosPlayer[static_cast<int>(AudioPlayer::TOTAL)] = { nullptr };
 
 private:
 

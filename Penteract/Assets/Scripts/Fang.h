@@ -2,17 +2,6 @@
 
 #include "Player.h"
 
-enum class AudioFang {
-	DASH,
-	EMP,
-	ULTIMATE,
-	SWITCH,
-	SHOOT,
-	HIT,
-	DEATH,
-	TOTAL
-};
-
 class Fang : public Player {
 public:
 
@@ -44,8 +33,7 @@ public:
 	float dashSpeed = 100.f;
 	float dashDuration = 0.1f;
 
-	ComponentAudioSource* audiosFang[static_cast<int>(AudioFang::TOTAL)] = { nullptr };
-
+	
 private:
 	//Dash
 	float dashCooldownRemaining = 0.f;
