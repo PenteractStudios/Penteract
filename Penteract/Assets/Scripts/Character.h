@@ -27,9 +27,9 @@ public:
 	float movementSpeed = 1.0f;
 	ComponentAgent* agent = nullptr;
 	ComponentAnimation* compAnimation = nullptr;
-	ComponentTransform* characterTransform = nullptr;
 	State* currentState = nullptr;
+	GameObject* characterGameObject = nullptr;
+
 private:
 	int totalLifePoints = 1;
-	
 };

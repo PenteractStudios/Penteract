@@ -10,8 +10,9 @@ public:
 	Fang() {};
 	Fang(int lifePoints_, float movementSpeed_, int damageHit_, float attackSpeed_, UID fangUID = 0, UID fangTrailUID = 0, UID fangLeftGunUID = 0, UID fangRightGunUID = 0,
 		UID fangBulletUID = 0);
-	void Update(MovementDirection md);
+	void Update();
 	void CheckCoolDowns(bool noCooldownMode = false);
+	float GetRealDashCooldown() { return 1.0f - (dashCooldownRemaining / dashCooldown); }
 
 public:
 	std::vector<std::string> states{ "Idle" ,
@@ -38,7 +39,6 @@ private:
 
 	//Shoot
 	bool rightShot = true;
-	GameObject * fang = nullptr;
 	ComponentTransform* rightGunTransform = nullptr;
 	ComponentTransform* leftGunTransform = nullptr;
 	ResourcePrefab* trail = nullptr;
@@ -48,12 +48,12 @@ private:
 	MovementDirection dashMovementDirection = MovementDirection::NONE;
 
 private:
-	void InitDash(MovementDirection md);
+	void InitDash();
 	void Dash();
 	bool CanDash();
 
 	bool CanShoot() override;
 	void Shoot() override;
-
+	void PlayAnimation();
 };
 

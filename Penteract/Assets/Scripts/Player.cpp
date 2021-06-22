@@ -1,4 +1,7 @@
 #include "Player.h"
+#include "Geometry/Plane.h"
+#include "Geometry/Frustum.h"
+#include "Geometry/LineSegment.h"
 
 void Player::SetAttackSpeed(float attackSpeed_)
 {
@@ -14,22 +17,17 @@ void Player::Hit(int damage_)
 		isAlive = false;
 	}
 }
-// Player
-void Player::SetInvincible(bool status) {
-	invincibleMode = status;
+
+void Player::ResetSwitchStatus() {
+	switchInProgress = false;
+	playSwitchParticles = true;
+	currentSwitchDelay = 0.f;
 }
-// Player
-void Player::SetOverpower(bool status) {
-	overpowerMode = status ? 999 : 1;
-}
-// Player
-int Player::GetOverPowerMode() {
-	return overpowerMode;
-}
-// Player
-void Player::SetNoCooldown(bool status) {
-	noCooldownMode = status;
-	ResetSwitchStatus();
+
+void Player::MoveTo() {
+	float3 newPosition = playerMainTransform->GetGlobalPosition() + GetDirection();
+	agent->SetMaxSpeed(movementSpeed);
+	agent->SetMoveTarget(newPosition, false);
 }
 
 MovementDirection Player::GetInputMovementDirection() const {
@@ -56,9 +54,28 @@ MovementDirection Player::GetInputMovementDirection() const {
 	return md;
 }
 
-float3 Player::GetDirection(MovementDirection md) const {
+int Player::GetMouseDirectionState() {
+	float3 inputDirection = GetDirection();
+	float dot = Dot(inputDirection.Normalized(), facePointDir.Normalized());
+	float3 cross = Cross(inputDirection.Normalized(), facePointDir.Normalized());
+
+	if (dot > 0.707) {
+		return 2; //RunForward
+	}
+	else if (dot < -0.707) {
+		return 1; //RunBackward
+	}
+	else if (cross.y > 0) {
+		return 4; //RunRight
+	}
+	else {
+		return 3; //RunLeft
+	}
+}
+
+float3 Player::GetDirection() const {
 	float3 direction;
-	switch (md) {
+	switch (movementInputDirection) {
 	case MovementDirection::UP:
 		direction = float3(0, 0, -1);
 		break;
@@ -88,3 +105,27 @@ float3 Player::GetDirection(MovementDirection md) const {
 	}
 	return direction.Normalized();
 }
+
+void Player::LookAtMouse() {
+	if (lookAtMouseCameraComp) {
+		float2 mousePos = Input::GetMousePositionNormalized();
+		LineSegment ray = lookAtMouseCameraComp->frustum.UnProjectLineSegment(mousePos.x, mousePos.y);
+		float3 planeTransform = lookAtMousePlanePosition;
+		Plane p = Plane(planeTransform, float3(0, 1, 0));
+		facePointDir = float3(0, 0, 0);
+		facePointDir = p.ClosestPoint(ray) - (playerMainTransform->GetGlobalPosition());
+		Quat quat = playerMainTransform->GetGlobalRotation();
+		float angle = Atan2(facePointDir.x, facePointDir.z);
+		Quat rotation = quat.RotateAxisAngle(float3(0, 1, 0), angle);
+		playerMainTransform->SetGlobalRotation(rotation);
+	}
+}
+
+void Player::Update(bool lockMovement) {
+	if(!lockMovement){
+		movementInputDirection = GetInputMovementDirection();
+		MoveTo();
+		LookAtMouse();
+	}
+}
+

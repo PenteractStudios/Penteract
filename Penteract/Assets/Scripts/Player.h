@@ -43,16 +43,14 @@ public:
 	// ------- Core Functions ------ //
 	void SetAttackSpeed(float attackSpeed_);
 	void Hit(int damage_) override;
-
-	//debug
-	void SetInvincible(bool status);
-	void SetOverpower(bool status);
-	void SetNoCooldown(bool status);
-	int GetOverPowerMode();
+	void LookAtMouse();
 
 	MovementDirection GetInputMovementDirection() const;
-	float3 GetDirection(MovementDirection md) const;
+	float3 GetDirection() const;
 	virtual void Shoot() {}
+	void Update(bool lockMovement = false);
+	int GetMouseDirectionState();
+	bool IsActive() { return (characterGameObject) ? characterGameObject->IsActive() : false; };
 
 public:
 	int rangedDamageTaken = 1;
@@ -60,11 +58,21 @@ public:
 	float attackSpeed = 1.0f;
 	float attackCooldownRemaining = 0.f;
 	bool shooting = false;
-	float3 facePointDir = float3(0, 0, 0);
-
+	float3 lookAtMousePlanePosition = float3(0, 0, 0);
+	ComponentCamera* lookAtMouseCameraComp = nullptr;
 	ComponentAudioSource* audiosPlayer[static_cast<int>(AudioPlayer::TOTAL)] = { nullptr };
+	float3 facePointDir = float3(0, 0, 0);
+	MovementDirection movementInputDirection = MovementDirection::NONE;
+	ComponentTransform* playerMainTransform = nullptr;
+private:
+	void MoveTo();
+	virtual bool CanShoot() { return !shooting; }
+	void ResetSwitchStatus();
 
 private:
+	float currentSwitchDelay = 0.f;
+	bool playSwitchParticles = true;
+	bool switchInProgress = false;
+	float switchDelay = 0.37f;
 
-	virtual bool CanShoot() { return !shooting; }
 };

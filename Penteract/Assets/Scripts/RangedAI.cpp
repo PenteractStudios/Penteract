@@ -434,7 +434,8 @@ void RangedAI::PlayAudio(AudioType audioType) {
 void RangedAI::ShootPlayerInRange() {
 	if (!player) return;
 	if (!playerController) return;
-	if (playerController->IsDead()) return;
+	if (!playerController->playerFang || !playerController->playerOnimaru) return;
+	if (!playerController->playerFang->isAlive || !playerController->playerOnimaru->isAlive) return;
 	if (CharacterInRange(player, rangerGruntCharacter.attackRange, true)) {
 		shot = true;
 

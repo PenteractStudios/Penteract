@@ -11,12 +11,12 @@ Fang::Fang(int lifePoints_, float movementSpeed_, int damageHit_, float attackSp
 	damageHit = damageHit_;
 	SetTotalLifePoints(lifePoints);
 
-	fang = GameplaySystems::GetGameObject(fangUID);
+	characterGameObject = GameplaySystems::GetGameObject(fangUID);
 
-	if (fang && fang->GetParent()) {
-		characterTransform = fang->GetParent()->GetComponent<ComponentTransform>();
-		agent = fang->GetParent()->GetComponent<ComponentAgent>();
-		compAnimation = fang->GetComponent<ComponentAnimation>();
+	if (characterGameObject && characterGameObject->GetParent()) {
+		playerMainTransform = characterGameObject->GetParent()->GetComponent<ComponentTransform>();
+		agent = characterGameObject->GetParent()->GetComponent<ComponentAgent>();
+		compAnimation = characterGameObject->GetComponent<ComponentAnimation>();
 
 		//right gun
 		GameObject* gunAux = GameplaySystems::GetGameObject(rightGunUID);
@@ -41,12 +41,12 @@ Fang::Fang(int lifePoints_, float movementSpeed_, int damageHit_, float attackSp
 
 }
 
-void Fang::InitDash(MovementDirection md) {
+void Fang::InitDash() {
 
 	if (CanDash()) {
-		if (md != MovementDirection::NONE) {
-			dashDirection = GetDirection(md);
-			dashMovementDirection = md;
+		if (movementInputDirection != MovementDirection::NONE) {
+			dashDirection = GetDirection();
+			dashMovementDirection = movementInputDirection;
 		}
 		else {
 			dashDirection = facePointDir;
@@ -71,7 +71,7 @@ void Fang::InitDash(MovementDirection md) {
 
 void Fang::Dash() {
 	if (dashing) {
-		float3 newPosition = characterTransform->GetGlobalPosition();
+		float3 newPosition = playerMainTransform->GetGlobalPosition();
 		newPosition += dashSpeed * dashDirection;
 		agent->SetMoveTarget(newPosition, false);
 	}
@@ -112,13 +112,8 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 	}
 }
 
-void Fang::Update(MovementDirection md) {
-	if (Input::GetMouseButtonDown(2)) {
-		InitDash(md);
-	}
-	if (!dashing) {
-		if (Input::GetMouseButtonDown(0)) Shoot();
-	}
+bool Fang::CanShoot() {
+	return !shooting;
 }
 
 void Fang::Shoot() {
@@ -139,9 +134,62 @@ void Fang::Shoot() {
 			shootingGunTransform = leftGunTransform;
 		}
 		if (trail && bullet && shootingGunTransform) {
-			GameplaySystems::Instantiate(bullet, shootingGunTransform->GetGlobalPosition(), characterTransform->GetGlobalRotation());
-			GameplaySystems::Instantiate(trail, shootingGunTransform->GetGlobalPosition(), characterTransform->GetGlobalRotation());
+			GameplaySystems::Instantiate(bullet, shootingGunTransform->GetGlobalPosition(), playerMainTransform->GetGlobalRotation());
+			GameplaySystems::Instantiate(trail, shootingGunTransform->GetGlobalPosition(), playerMainTransform->GetGlobalRotation());
 		}
 	}
 }
+
+void Fang::PlayAnimation() {
+	if (!compAnimation) return;
+
+	int dashAnimation = 0;
+	if (dashing) {
+		dashAnimation = 4;
+		movementInputDirection = dashMovementDirection;
+	}
+
+	if (movementInputDirection == MovementDirection::NONE) {
+		if (!isAlive) {
+			if (compAnimation->GetCurrentState()->name != states[9]) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[9]);
+					if (compAnimation->GetCurrentStateSecondary()->name == "RightShot") {
+						compAnimation->SendTriggerSecondary("RightShotDeath");
+					}
+					else if (compAnimation->GetCurrentStateSecondary()->name == "LeftShot") {
+						compAnimation->SendTriggerSecondary("LeftShotDeath");
+					}
+			}
+		}
+		else {
+			if (compAnimation->GetCurrentState()->name != states[0]) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[0]);
+			}
+		}
+	}
+	else {
+		if (compAnimation->GetCurrentState()->name != states[GetMouseDirectionState() + dashAnimation]) {
+			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState() + dashAnimation]);
+		}
+	}
+}
+
+void Fang::Update() {
+	if (isAlive) {
+		Player::Update();
+		if (Input::GetMouseButtonDown(2)) {
+			InitDash();
+		}
+		if (!dashing) {
+			if (Input::GetMouseButtonDown(0)) Shoot();
+		}
+		Dash();
+		PlayAnimation();
+	} 
+	else {
+		if (agent) agent->RemoveAgentFromCrowd();
+	}
+}
+
+
 

@@ -4,6 +4,8 @@
 #include "Scripting/Script.h"
 #include "Math/float3.h"
 #include <vector>
+#include "Fang.h"
+#include "Onimaru.h"
 
 class GameObject;
 class ComponentTransform;
@@ -30,48 +32,44 @@ class PlayerController : public Script {
 
 public:
 	enum class AudioType {
-		DASH,
 		SWITCH,
-		SHOOT,
-		FANGHIT,
-		ONIHIT,
-		FANGDEATH,
-		ONIDEATH,
 		TOTAL
 	};
 
 	void Start() override;
 	void Update() override;
 
-	bool IsDead();
-
-	void TakeDamage(bool ranged = true);
-
-
+	//Debug
+	void SetInvincible(bool status);
+	void SetOverpower(bool status);
+	void SetNoCooldown(bool status);
+	int GetOverPowerMode();
+	bool IsPlayerDead() { return !playerFang->isAlive || !playerOnimaru->isAlive; }
+	void TakeDamage(bool ranged = false);
 public:
+	//Debug
+	bool invincibleMode = false;
+	int overpowerMode = 1;
+	bool noCooldownMode = false;
 
 	bool debugGetHit = false;
 	// cada clase el suyo
-	GameObject* player = nullptr;
 	GameObject* camera = nullptr;
-	GameObject* fang = nullptr;
-	GameObject* onimaru = nullptr;
-	//character?
-	ComponentAgent* agent = nullptr;
-	ComponentAnimation* fangAnimation = nullptr;
 
-	//fang
+	Onimaru* playerOnimaru = nullptr;
+	Fang* playerFang =  nullptr;
+
 	UID fangUID = 0;
 	UID fangTrailUID = 0;
 	UID fangLeftGunUID = 0;
 	UID fangRightGunUID = 0;
 	UID fangBulletUID = 0;
-	//onimaru
+
 	UID onimaruUID = 0;
 	UID onimaruParticleUID = 0;
 	UID onimaruBulletUID = 0;
 	UID onimaruGunUID = 0;
-	//player
+
 	UID switchParticlesUID = 0;
 	UID mainNodeUID = 0;
 	//camera
@@ -98,8 +96,8 @@ public:
 	float cameraOffsetY = 10.f;
 	float cameraOffsetX = 0.f;
 	//split 	
-	int fangRecoveryRate = 1.0f;
-	int onimaruRecoveryRate = 1.0f;
+	float fangRecoveryRate = 1.0f;
+	float onimaruRecoveryRate = 1.0f;
 	//playercontroller
 	bool firstTime = true;
 	//player
@@ -123,64 +121,38 @@ public:
 	};
 
 private:
-
-	void PlayAnimation(MovementDirection md);
-	void MoveTo(MovementDirection md);
-	void InitDash(MovementDirection md);
-	void Dash();
-	void LookAtMouse();
-	void CheckCoolDowns();
-	void SwitchCharacter();
-	void Shoot();
+	void CheckCoolDowns(bool noCooldownMode = false);
+	void SwitchCharacter(bool noCooldownMode = false);
 	void UpdatePlayerStats();
 	void UpdateCameraPosition();
-	bool CanDash();
 	bool CanSwitch();
-	bool CanShoot();
 	void ResetSwitchStatus();
-
-	float3 GetDirection(MovementDirection md) const;
-	MovementDirection GetInputMovementDirection() const;
-	int GetMouseDirectionState(MovementDirection input);
-
+	
 private:
-	//player
+
 	float switchCooldownRemaining = 0.f;
 	bool switchInCooldown = false;
 
-	//player
-	bool invincibleMode = false;
-	int overpowerMode = 1;
-	bool noCooldownMode = false;
 	//split
 	float fangRecovering = 0.f;
 	float onimaruRecovering = 0.f;
+
 	//player
 	float currentSwitchDelay = 0.f;
 	bool playSwitchParticles = true;
+
 	//player
 	float3 initialPosition = float3(0, 0, 0);
-	//fang
-	float3 dashDirection = float3(0, 0, 0);
 	//player
 	float3 facePointDir = float3(0, 0, 0);
-	//fang
-	MovementDirection dashMovementDirection = MovementDirection::NONE;
-	//player
-	ComponentTransform* transform = nullptr;
 	//split
 	ComponentCamera* compCamera = nullptr;
 	ComponentTransform* cameraTransform = nullptr;
-	
-	//Animation (split)
-	State* fangCurrentState = nullptr;
-	State* onimaruCurrentState = nullptr;
-	//player
-	GameObject* switchEffects = nullptr;
 
-	//Audio (split)
-	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
+	GameObject* switchEffects = nullptr;
 	//playercontroller
 	HUDController* hudControllerScript = nullptr;
 	OnimaruBullet* onimaruBulletcript = nullptr;
+
+	ComponentAudioSource* audios[static_cast<int>(AudioPlayer::TOTAL)] = { nullptr };
 };

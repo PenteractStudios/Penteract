@@ -133,7 +133,7 @@ void AIMeleeGrunt::Update() {
     case AIState::SPAWN:
         break;
     case AIState::IDLE:
-        if (!playerController->IsDead()) {
+        if (!playerController->IsPlayerDead()) {
             if (movementScript->CharacterInSight(player, gruntCharacter.searchRadius)) {
                 animation->SendTrigger("IdleRun");
                 state = AIState::RUN;

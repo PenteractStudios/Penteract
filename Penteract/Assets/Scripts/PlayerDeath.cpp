@@ -20,7 +20,7 @@ void PlayerDeath::Start() {
 void PlayerDeath::Update() {
 	if (player) {
 		if (playerController) {
-			dead = playerController->IsDead();
+			dead = playerController->IsPlayerDead();
 		}
 	}
 	
@@ -35,8 +35,8 @@ void PlayerDeath::OnAnimationFinished() {
 void PlayerDeath::OnAnimationSecondaryFinished()
 {
 	if (playerController) {
-		if (playerController->shooting && playerController->fang->IsActive()) {
-			ComponentAnimation* animation = playerController->fangAnimation;
+		if (playerController->shooting && playerController->playerFang->IsActive()) {
+			ComponentAnimation* animation = playerController->playerFang->compAnimation;
 			if (playerController->rightShot) {
 				animation->SendTriggerSecondary(playerController->states[12] + animation->GetCurrentState()->name);
 				playerController->rightShot = false;
