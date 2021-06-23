@@ -25567,51 +25567,6 @@
                     }
                 ],
                 "Children": null
-            },
-            {
-                "Id": 15380584366980821228,
-                "Name": "GameManager",
-                "Active": true,
-                "Static": false,
-                "ActiveHierarchy": true,
-                "RootBoneId": 0,
-                "Mask": 0,
-                "Components": [
-                    {
-                        "Type": "Transform",
-                        "Id": 1514777615828029320,
-                        "Active": true,
-                        "Position": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ],
-                        "Rotation": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            1.0
-                        ],
-                        "Scale": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ],
-                        "LocalEulerAngles": [
-                            -0.0,
-                            0.0,
-                            -0.0
-                        ]
-                    },
-                    {
-                        "Type": "Script",
-                        "Id": 10357445134754201252,
-                        "Active": true,
-                        "Script": 1880386491730405946,
-                        "Values": null
-                    }
-                ],
-                "Children": null
             }
         ]
     }
