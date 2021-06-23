@@ -140,12 +140,12 @@
                     {
                         "Name": "onimaruUID",
                         "Type": "GameObjectUID",
-                        "Value": 12976891070772388993
+                        "Value": 14446156233729950543
                     },
                     {
                         "Name": "fangUID",
                         "Type": "GameObjectUID",
-                        "Value": 17630836846266351934
+                        "Value": 4473060853971005896
                     },
                     {
                         "Name": "scoreTextUID",
@@ -1653,7 +1653,7 @@
                                                     {
                                                         "Name": "avatarUID",
                                                         "Type": "GameObjectUID",
-                                                        "Value": 16946159852043739972
+                                                        "Value": 189561909595027362
                                                     },
                                                     {
                                                         "Name": "checkpointPosition1",
@@ -2371,12 +2371,6 @@
                                     {
                                         "Type": "Canvas",
                                         "Active": false
-                                    },
-                                    {
-                                        "Type": "Script",
-                                        "Active": false,
-                                        "Script": 6876061672568714869,
-                                        "Values": null
                                     }
                                 ],
                                 "Children": [
@@ -2521,7 +2515,13 @@
                                                 "Type": "Script",
                                                 "Active": false,
                                                 "Script": 6876061672568714869,
-                                                "Values": null
+                                                "Values": [
+                                                    {
+                                                        "Name": "sceneUID",
+                                                        "Type": "SceneResourceUID",
+                                                        "Value": 2968379164312150788
+                                                    }
+                                                ]
                                             }
                                         ],
                                         "Children": [
@@ -19590,7 +19590,7 @@
                                                         "Type": "Toggle",
                                                         "Active": false,
                                                         "IsOn": true,
-                                                        "EnabledImageID": 9371020534559817943,
+                                                        "EnabledImageID": 3910772361340524286,
                                                         "ClickedColor": [
                                                             0.6399999856948853,
                                                             0.6399999856948853,

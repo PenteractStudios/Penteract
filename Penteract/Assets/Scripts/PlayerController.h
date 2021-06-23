@@ -18,12 +18,16 @@ class State;
 class ResourcePrefab;
 struct TesseractEvent;
 
+// We should get these two values from the Character class
+
+#define ONIMARU_MAX_HEALTH 10.0f 
+#define FANG_MAX_HEALTH 10.0f
+
 enum class MovementDirection {
 	NONE = 0, UP = 1, UP_LEFT = 2, LEFT = 3, DOWN_LEFT = 4, DOWN = 5, DOWN_RIGHT = 6, RIGHT = 7, UP_RIGHT = 8
 };
 
-class PlayerController : public Script
-{
+class PlayerController : public Script {
 	GENERATE_BODY(PlayerController);
 
 public:
@@ -48,23 +52,21 @@ public:
 	void TakeDamage(bool ranged = true);
 	int GetOverPowerMode();
 public:
-
+	bool debugGetHit = false;
 	GameObject* player = nullptr;
 	GameObject* camera = nullptr;
 	GameObject* fang = nullptr;
 	GameObject* onimaru = nullptr;
 
-	GameObject* fangGun = nullptr;
-	GameObject* onimaruGun = nullptr;
-
-	GameObject* onimaruParticle = nullptr;
 	ComponentAgent* agent = nullptr;
 
 	ComponentAnimation* fangAnimation = nullptr;
 
+
 	UID fangUID = 0;
 	UID fangTrailUID = 0;
-	UID fangGunUID = 0;
+	UID fangLeftGunUID = 0;
+	UID fangRightGunUID = 0;
 	UID fangBulletUID = 0;
 
 	UID onimaruUID = 0;
@@ -83,8 +85,8 @@ public:
 
 	bool hitTaken = false;
 
-	Player fangCharacter = Player(7, 10.0f, 3, 1.0f);
-	Player onimaruCharacter = Player(7, 6.0f, 1, 1.0f);
+	Player fangCharacter = Player(10, 10.0f, 3, 1.0f);
+	Player onimaruCharacter = Player(10, 6.0f, 1, 1.0f);
 
 	float distanceRayCast = 2.f;
 	float switchCooldown = 5.f;
@@ -96,6 +98,10 @@ public:
 	float cameraOffsetZ = 20.f;
 	float cameraOffsetY = 10.f;
 	float cameraOffsetX = 0.f;
+
+	int fangRecoveryRate = 1.0f;
+	int onimaruRecoveryRate = 1.0f;
+
 	bool firstTime = true;
 
 	bool switchInProgress = false;
@@ -153,6 +159,8 @@ private:
 	int overpowerMode = 1;
 	bool noCooldownMode = false;
 
+	float fangRecovering = 0.f;
+	float onimaruRecovering = 0.f;
 	float currentSwitchDelay = 0.f;
 	bool playSwitchParticles = true;
 
@@ -162,13 +170,20 @@ private:
 	float3 facePointDir = float3(0, 0, 0);
 	MovementDirection dashMovementDirection = MovementDirection::NONE;
 	ComponentTransform* transform = nullptr;
-	ComponentTransform* fangGunTransform = nullptr;
 	ComponentTransform* onimaruGunTransform = nullptr;
 	ComponentCamera* compCamera = nullptr;
 	ComponentTransform* cameraTransform = nullptr;
+
+	GameObject* fangLeftGun = nullptr;
+	GameObject* fangRightGun = nullptr;
+	GameObject* onimaruGun = nullptr;
+	ComponentTransform* fangRightGunTransform = nullptr;
+	ComponentTransform* fangLeftGunTransform = nullptr;
+
+
 	//Animation
-	State* fangCurrentState = nullptr;
 	ComponentAnimation* onimaruAnimation = nullptr;
+	State* fangCurrentState = nullptr;
 	State* onimaruCurrentState = nullptr;
 
 	ResourcePrefab* onimaruTrail = nullptr;

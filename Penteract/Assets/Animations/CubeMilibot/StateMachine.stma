@@ -1,14 +1,17 @@
 {
-    "InitialState":8514878981633895468,
+    "InitialState": 16235311967390605721,
     "Clips": [
         7552987866281505142
     ],
     "States": [
         {
-            "Id": 8514878981633895468,
+            "Id": 16235311967390605721,
             "Name": "Idle",
             "ClipId": 7552987866281505142
         }
     ],
-    "Transitions": null
+    "Transitions": null,
+    "Bones": [
+        "rotation"
+    ]
 }
