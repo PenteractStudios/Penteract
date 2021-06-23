@@ -35,8 +35,8 @@ void PlayerDeath::OnAnimationFinished() {
 void PlayerDeath::OnAnimationSecondaryFinished()
 {
 	if (playerController) {
-		if (playerController->shooting && playerController->playerFang->IsActive()) {
-			ComponentAnimation* animation = playerController->playerFang->compAnimation;
+		if (playerController->shooting && playerController->playerFang.IsActive()) {
+			ComponentAnimation* animation = playerController->playerFang.compAnimation;
 			if (playerController->rightShot) {
 				animation->SendTriggerSecondary(playerController->states[12] + animation->GetCurrentState()->name);
 				playerController->rightShot = false;

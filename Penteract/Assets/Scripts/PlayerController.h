@@ -44,7 +44,7 @@ public:
 	void SetOverpower(bool status);
 	void SetNoCooldown(bool status);
 	int GetOverPowerMode();
-	bool IsPlayerDead() { return !playerFang->isAlive || !playerOnimaru->isAlive; }
+	bool IsPlayerDead() { return !playerFang.isAlive || !playerOnimaru.isAlive; }
 	void TakeDamage(bool ranged = false);
 public:
 	//Debug
@@ -56,8 +56,8 @@ public:
 	// cada clase el suyo
 	GameObject* camera = nullptr;
 
-	Onimaru* playerOnimaru = nullptr;
-	Fang* playerFang =  nullptr;
+	Onimaru playerOnimaru = Onimaru();
+	Fang playerFang = Fang();
 
 	UID fangUID = 0;
 	UID fangTrailUID = 0;
@@ -81,16 +81,9 @@ public:
 	bool shooting = false;
 
 	bool hitTaken = false;
-
-	Player fangCharacter = Player(10, 10.0f, 3, 1.0f);
-	Player onimaruCharacter = Player(10, 6.0f, 1, 1.0f);
 	
 	//player
 	float switchCooldown = 5.f;
-	//fang
-	float dashCooldown = 5.f;
-	float dashSpeed = 100.f;
-	float dashDuration = 0.1f;
 	//camera
 	float cameraOffsetZ = 20.f;
 	float cameraOffsetY = 10.f;

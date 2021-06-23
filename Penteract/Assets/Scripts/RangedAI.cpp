@@ -133,11 +133,11 @@ void RangedAI::OnCollision(GameObject& collidedWith) {
 		if (rangerGruntCharacter.isAlive && playerController) {
 			bool hitTaken = false;
 			if (collidedWith.name == "FangBullet") {
-				rangerGruntCharacter.Hit(playerController->fangCharacter.damageHit + playerController->GetOverPowerMode());
+				rangerGruntCharacter.Hit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
 				hitTaken = true;
 			}
 			else if (collidedWith.name == "OnimaruBullet") {
-				rangerGruntCharacter.Hit(playerController->onimaruCharacter.damageHit + playerController->GetOverPowerMode());
+				rangerGruntCharacter.Hit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
 				hitTaken = true;
 			}
 			if (hitTaken) {
@@ -434,8 +434,8 @@ void RangedAI::PlayAudio(AudioType audioType) {
 void RangedAI::ShootPlayerInRange() {
 	if (!player) return;
 	if (!playerController) return;
-	if (!playerController->playerFang || !playerController->playerOnimaru) return;
-	if (!playerController->playerFang->isAlive || !playerController->playerOnimaru->isAlive) return;
+	if (!playerController->playerFang.characterGameObject || !playerController->playerOnimaru.characterGameObject) return;
+	if (!playerController->playerFang.isAlive || !playerController->playerOnimaru.isAlive) return;
 	if (CharacterInRange(player, rangerGruntCharacter.attackRange, true)) {
 		shot = true;
 

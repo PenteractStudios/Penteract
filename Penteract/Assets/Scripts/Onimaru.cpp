@@ -1,34 +1,5 @@
 #include "Onimaru.h"
 
-Onimaru::Onimaru(int lifePoints_, float movementSpeed_, int damageHit_, float attackSpeed_, UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID)
-{
-	attackSpeed = attackSpeed_;
-	lifePoints = lifePoints_;
-	movementSpeed = movementSpeed_;
-	damageHit = damageHit_;
-	SetTotalLifePoints(lifePoints);
-
-	characterGameObject = GameplaySystems::GetGameObject(onimaruUID);
-
-	if (characterGameObject && characterGameObject->GetParent()) {
-		playerMainTransform = characterGameObject->GetParent()->GetComponent<ComponentTransform>();
-		agent = characterGameObject->GetParent()->GetComponent<ComponentAgent>();
-		compAnimation = characterGameObject->GetComponent<ComponentAnimation>();
-
-		if (agent) {
-			agent->SetMaxSpeed(movementSpeed);
-			agent->SetMaxAcceleration(MAX_ACCELERATION);
-		}
-	}
-
-	GameObject* onimaruGun = GameplaySystems::GetGameObject(onimaruGunUID);
-	if (onimaruGun) {
-		gunTransform = onimaruGun->GetComponent<ComponentTransform>();
-	}
-
-	bullet = GameplaySystems::GetResource<ResourcePrefab>(onimaruBulletUID);
-}
-
 bool Onimaru::CanShoot() {
 	return !shooting;
 }
@@ -72,7 +43,40 @@ void Onimaru::PlayAnimation() {
 	}
 }
 
-void Onimaru::Update() {
+void Onimaru::Init(int lifePoints_, float movementSpeed_, int damageHit_, float attackSpeed_, UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID cameraUID)
+{
+	attackSpeed = attackSpeed_;
+	lifePoints = lifePoints_;
+	movementSpeed = movementSpeed_;
+	damageHit = damageHit_;
+	SetTotalLifePoints(lifePoints);
+	characterGameObject = GameplaySystems::GetGameObject(onimaruUID);
+
+	if (characterGameObject && characterGameObject->GetParent()) {
+		playerMainTransform = characterGameObject->GetParent()->GetComponent<ComponentTransform>();
+		agent = characterGameObject->GetParent()->GetComponent<ComponentAgent>();
+		compAnimation = characterGameObject->GetComponent<ComponentAnimation>();
+
+		GameObject* cameraAux = GameplaySystems::GetGameObject(cameraUID);
+		if (cameraAux) {
+			lookAtMouseCameraComp = cameraAux->GetComponent<ComponentCamera>();
+		}
+
+		if (agent) {
+			agent->SetMaxSpeed(movementSpeed);
+			agent->SetMaxAcceleration(MAX_ACCELERATION);
+		}
+	}
+
+	GameObject* onimaruGun = GameplaySystems::GetGameObject(onimaruGunUID);
+	if (onimaruGun) {
+		gunTransform = onimaruGun->GetComponent<ComponentTransform>();
+	}
+
+	bullet = GameplaySystems::GetResource<ResourcePrefab>(onimaruBulletUID);
+}
+
+void Onimaru::Update(bool lockMovement) {
 	if (isAlive) {
 		Player::Update();
 		if (Input::GetMouseButtonDown(0)) {

@@ -2,29 +2,30 @@
 #include "GameplaySystems.h"
 #include "HUDController.h"
 
-Fang::Fang(int lifePoints_, float movementSpeed_, int damageHit_, float attackSpeed_, UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID,
-	UID bulletUID)
+void Fang::Init(int lifePoints_, float movementSpeed_, int damageHit_, float attackSpeed_,UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID)
 {
 	attackSpeed = attackSpeed_;
 	lifePoints = lifePoints_;
 	movementSpeed = movementSpeed_;
 	damageHit = damageHit_;
 	SetTotalLifePoints(lifePoints);
-
 	characterGameObject = GameplaySystems::GetGameObject(fangUID);
 
 	if (characterGameObject && characterGameObject->GetParent()) {
 		playerMainTransform = characterGameObject->GetParent()->GetComponent<ComponentTransform>();
 		agent = characterGameObject->GetParent()->GetComponent<ComponentAgent>();
 		compAnimation = characterGameObject->GetComponent<ComponentAnimation>();
-
+		GameObject* cameraAux = GameplaySystems::GetGameObject(cameraUID);
+		if (cameraAux) {
+			lookAtMouseCameraComp = cameraAux->GetComponent<ComponentCamera>();
+		}
 		//right gun
 		GameObject* gunAux = GameplaySystems::GetGameObject(rightGunUID);
 		if (gunAux) rightGunTransform = gunAux->GetComponent<ComponentTransform>();
 		//left gun
 		gunAux = GameplaySystems::GetGameObject(leftGunUID);
 		if (gunAux) leftGunTransform = gunAux->GetComponent<ComponentTransform>();
-		
+
 		trail = GameplaySystems::GetResource<ResourcePrefab>(trailUID);
 		bullet = GameplaySystems::GetResource<ResourcePrefab>(bulletUID);
 
@@ -38,11 +39,9 @@ Fang::Fang(int lifePoints_, float movementSpeed_, int damageHit_, float attackSp
 		}
 	}
 
-
 }
 
 void Fang::InitDash() {
-
 	if (CanDash()) {
 		if (movementInputDirection != MovementDirection::NONE) {
 			dashDirection = GetDirection();
@@ -174,7 +173,7 @@ void Fang::PlayAnimation() {
 	}
 }
 
-void Fang::Update() {
+void Fang::Update(bool lockMovement) {
 	if (isAlive) {
 		Player::Update();
 		if (Input::GetMouseButtonDown(2)) {

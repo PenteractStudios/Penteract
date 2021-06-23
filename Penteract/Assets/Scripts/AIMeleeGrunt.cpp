@@ -207,11 +207,11 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith)
             bool hitTaken = false;
             if (collidedWith.name == "FangBullet") {
                 hitTaken = true;
-                gruntCharacter.Hit(playerController->fangCharacter.damageHit + playerController->GetOverPowerMode());
+                gruntCharacter.Hit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
             }
             else if (collidedWith.name == "OnimaruBullet") {
                 hitTaken = true;
-                gruntCharacter.Hit(playerController->onimaruCharacter.damageHit + playerController->GetOverPowerMode());
+                gruntCharacter.Hit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
             }
 
             if (hitTaken) {

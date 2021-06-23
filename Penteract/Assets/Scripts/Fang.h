@@ -1,19 +1,16 @@
 #pragma once
 
 #include "Player.h"
-
 class Fang : public Player {
 public:
 
 
 	// ------- Contructors ------- //
 	Fang() {};
-	Fang(int lifePoints_, float movementSpeed_, int damageHit_, float attackSpeed_, UID fangUID = 0, UID fangTrailUID = 0, UID fangLeftGunUID = 0, UID fangRightGunUID = 0,
-		UID fangBulletUID = 0);
-	void Update();
+	void Update(bool lockMovement = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false);
 	float GetRealDashCooldown() { return 1.0f - (dashCooldownRemaining / dashCooldown); }
-
+	void Init(int lifePoints_, float movementSpeed_, int damageHit_, float attackSpeed_,UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID);
 public:
 	std::vector<std::string> states{ "Idle" ,
 						"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,

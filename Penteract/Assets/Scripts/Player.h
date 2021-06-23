@@ -48,7 +48,7 @@ public:
 	MovementDirection GetInputMovementDirection() const;
 	float3 GetDirection() const;
 	virtual void Shoot() {}
-	void Update(bool lockMovement = false);
+	virtual void Update(bool lockMovement = false);
 	int GetMouseDirectionState();
 	bool IsActive() { return (characterGameObject) ? characterGameObject->IsActive() : false; };
 

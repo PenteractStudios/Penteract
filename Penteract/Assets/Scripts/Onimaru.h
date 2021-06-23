@@ -14,10 +14,8 @@ public:
 public:
 	// ------- Contructors ------- //
 	Onimaru() {};
-
-	Onimaru(int lifePoints_, float movementSpeed_, int damageHit_, float attackSpeed_, UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID);
-
-	void Update();
+	void Init(int lifePoints_, float movementSpeed_, int damageHit_, float attackSpeed_, UID onimaruUID = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID cameraUID = 0);
+	void Update(bool lockMovement = false) override;
 private:
 
 	ResourcePrefab* trail = nullptr;
