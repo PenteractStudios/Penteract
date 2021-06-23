@@ -10,7 +10,7 @@ class SpawnPointController : public Script {
 public:
 	void Start() override;
 	void Update() override;
-	void OnCollision(GameObject& collidedWith) override;
+	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance) override;
 
 private:
 	GameObject* gameObject = nullptr;
