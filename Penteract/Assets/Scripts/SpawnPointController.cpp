@@ -13,7 +13,7 @@ void SpawnPointController::Start() {
 
 void SpawnPointController::Update() {}
 
-void SpawnPointController::OnCollision(GameObject& collidedWith) {
+void SpawnPointController::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance) {
 	for (GameObject* child : gameObject->GetChildren()) {
 		if (!child->IsActive()) child->Enable();
 	}
