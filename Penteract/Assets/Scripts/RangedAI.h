@@ -15,6 +15,8 @@ class ResourcePrefab;
 class HUDController;
 class PlayerController;
 class AIMovement;
+class WinLose;
+class EnemySpawnPoint;
 
 class RangedAI : public Script {
 	GENERATE_BODY(RangedAI);
@@ -32,7 +34,7 @@ public:
 	void Update() override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
-	void OnCollision(GameObject& collidedWith) override; //This is commented until merge with collisions
+	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance) override; //This is commented until merge with collisions
 	void ShootPlayerInRange(); //Sets in motion the shooting at the player, if found and close enough
 
 private:
@@ -52,11 +54,12 @@ public:
 	UID playerUID = 0;				//Reference to player main Gameobject UID, used to check distances
 	UID playerMeshUIDFang = 0;		//Reference to player Fang mesh holding Gameobject UID, used for raycasting if fang is active
 	UID playerMeshUIDOnimaru = 0;	//Reference to player Fang mesh holding Gameobject UID, used for raycasting if onimaru is active
-	UID meshUID = 0;				//First mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID meshUID1 = 0;				//Second mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID meshUID2 = 0;				//Third mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID trailPrefabUID = 0;			//Reference to projectile prefab UID , for shooting
 	UID hudControllerObjUID = 0;	//Reference to Hud UID , for incrementing score
+
+	UID winConditionUID = 0;
 
 	ResourcePrefab* shootTrailPrefab = nullptr; //Reference to projectile prefab , for shooting
 	GameObject* player = nullptr;				//Reference to player main Gameobject, used to check distances
@@ -82,10 +85,16 @@ public:
 	float attackSpeed = 0.5f;			//Shots per second
 	float actualShotMaxTime = 0.3f;		//Internal variable used to match the shooting animation and the projectile creation
 	float timeSinceLastHurt = 0.5f;		//Timer to keep track of how long it's been since AI was hurt, if higher than hurtFeedbackTimeDuration, this tries to make AI turn red with DamagedMaterial
+
 private:
+
+	EnemySpawnPoint* enemySpawnPointScript = nullptr;
+
 	AIMovement* aiMovement = nullptr;	//Reference to movement holding script
 	AIState state = AIState::START;		//AI State
 	float3 bbCenter = float3(0, 0, 0);	//Bounding box center, to generate an offset for raycasting
+
+	WinLose* winLoseScript = nullptr;
 
 	bool shot = false;					//Bool used to make sure shooting event happens only once whenever attackTimePool is low enough
 

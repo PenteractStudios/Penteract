@@ -136,7 +136,7 @@ A finder of the Assets folder with all the files imported
 - DeviL (http://openil.sourceforge.net/)
 - assimp (https://github.com/assimp/assimp)
 - ImGuizmo (https://github.com/CedricGuillemet/ImGuizmo)
-- RapidJason (https://github.com/Tencent/rapidjson)
+- RapidJson (https://github.com/Tencent/rapidjson)
 - Fmt (https://github.com/fmtlib/fmt)
 - Libsndfile (https://github.com/libsndfile/libsndfile)
 - OpenAl-soft (https://github.com/kcat/openal-soft)

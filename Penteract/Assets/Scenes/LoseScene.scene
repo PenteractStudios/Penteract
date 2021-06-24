@@ -185,6 +185,12 @@
                                 "Value": 2161515125610565667
                             }
                         ]
+                    },
+                    {
+                        "Type": "AudioListener",
+                        "Id": 11540703914281798444,
+                        "Active": true,
+                        "Gain": 0.3019999861717224
                     }
                 ],
                 "Children": null
@@ -749,6 +755,72 @@
                         "Children": null
                     }
                 ]
+            },
+            {
+                "Id": 11335580279262723268,
+                "Name": "AudioController",
+                "Active": true,
+                "Static": false,
+                "ActiveHierarchy": true,
+                "RootBoneId": 0,
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Id": 5852710296417070162,
+                        "Active": true,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Id": 1503324329216221673,
+                        "Active": true,
+                        "Pitch": 1.0,
+                        "Gain": 0.30000001192092898,
+                        "Mute": false,
+                        "Looping": false,
+                        "AudioClipId": 10565098881188359495,
+                        "SpatialBlend": 0,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0
+                    },
+                    {
+                        "Type": "Script",
+                        "Id": 5255514413889547187,
+                        "Active": true,
+                        "Script": 7262376774633688575,
+                        "Values": [
+                            {
+                                "Name": "audioSourceUID",
+                                "Type": "GameObjectUID",
+                                "Value": 11335580279262723268
+                            }
+                        ]
+                    }
+                ],
+                "Children": null
             }
         ]
     }

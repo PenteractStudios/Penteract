@@ -89,14 +89,20 @@ void PlayerController::Start() {
 	}
 	if (fang) {
 		fang->Enable();
+
+		ComponentCapsuleCollider* capsuleCollider = fang->GetComponent<ComponentCapsuleCollider>(); // workaround collider doesn't activate if onimaru starts disabled
+		if (capsuleCollider) capsuleCollider->Enable();
+
 		fangLeftGun = GameplaySystems::GetGameObject(fangLeftGunUID);
 		if (fangLeftGun) {
 			fangLeftGunTransform = fangLeftGun->GetComponent<ComponentTransform>();
 		}
+
 		fangRightGun = GameplaySystems::GetGameObject(fangRightGunUID);
 		if (fangRightGun) {
 			fangRightGunTransform = fangRightGun->GetComponent<ComponentTransform>();
 		}
+		
 		fangAnimation = fang->GetComponent<ComponentAnimation>();
 		fangTrail = GameplaySystems::GetResource<ResourcePrefab>(fangTrailUID);
 		fangBullet = GameplaySystems::GetResource<ResourcePrefab>(fangBulletUID);
@@ -108,8 +114,10 @@ void PlayerController::Start() {
 	if (onimaru) {
 		onimaru->Disable();
 		onimaruGun = GameplaySystems::GetGameObject(onimaruGunUID);
-		ComponentCapsuleCollider* ccc = onimaru->GetComponent<ComponentCapsuleCollider>(); // workaround collider doesn't activate if onimaru starts disabled
-		if (ccc) ccc->Enable();
+		
+		ComponentCapsuleCollider* capsuleCollider = onimaru->GetComponent<ComponentCapsuleCollider>(); // workaround collider doesn't activate if onimaru starts disabled
+		if (capsuleCollider) capsuleCollider->Enable();
+		
 		if (onimaruGun) {
 			onimaruGunTransform = onimaruGun->GetComponent<ComponentTransform>();
 		}
@@ -222,6 +230,10 @@ void PlayerController::SwitchCharacter() {
 			if (fang->IsActive()) {
 				fang->Disable();
 				onimaru->Enable();
+
+				ComponentCapsuleCollider* capsuleCollider = onimaru->GetComponent<ComponentCapsuleCollider>(); // workaround collider doesn't activate if onimaru starts disabled
+				if (capsuleCollider) capsuleCollider->Enable();
+
 				if (hudControllerScript){
 					hudControllerScript->UpdateHP(static_cast<float>(onimaruCharacter.lifePoints), static_cast<float>(fangCharacter.lifePoints));
 					hudControllerScript->ResetHealthRegenerationEffects(static_cast<float>(fangCharacter.lifePoints));
@@ -232,6 +244,10 @@ void PlayerController::SwitchCharacter() {
 			else {
 				onimaru->Disable();
 				fang->Enable();
+
+				ComponentCapsuleCollider* capsuleCollider = fang->GetComponent<ComponentCapsuleCollider>(); // workaround collider doesn't activate if onimaru starts disabled
+				if (capsuleCollider) capsuleCollider->Enable();
+
 				if(hudControllerScript){
 					hudControllerScript->UpdateHP(static_cast<float>(fangCharacter.lifePoints), static_cast<float>(onimaruCharacter.lifePoints));
 					hudControllerScript->ResetHealthRegenerationEffects(static_cast<float>(onimaruCharacter.lifePoints));

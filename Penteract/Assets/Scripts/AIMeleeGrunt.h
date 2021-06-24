@@ -10,6 +10,7 @@ class ComponentAnimation;
 class ComponentTransform;
 class ComponentAgent;
 class ComponentAudioSource;
+class ComponentMeshRenderer;
 class ResourcePrefab;
 class HUDController;
 class PlayerController;
@@ -33,7 +34,7 @@ public:
 	void Update() override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
-	void OnCollision(GameObject& collidedWith) override;
+	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance) override;
 
 public:
 
@@ -41,6 +42,12 @@ public:
 	UID canvasUID = 0;
 	UID winConditionUID = 0;
 	UID meleePunchUID = 0;
+
+	// Hit feedback
+	UID defaultMaterialPlaceHolderUID = 0;
+	UID damageMaterialPlaceHolderUID = 0;
+	UID defaultMaterialID = 0;
+	UID damageMaterialID = 0;
 
 	GameObject* player = nullptr;
 	GameObject* spawn = nullptr;
@@ -50,6 +57,8 @@ public:
 
 	Enemy gruntCharacter = Enemy(5, 8.0f, 1, 30, 40.f, 5.f, 5.f);
 	bool killSent = false;
+
+	float hurtFeedbackTimeDuration = 0.5f;
 
 private:
 
@@ -66,5 +75,7 @@ private:
 	EnemySpawnPoint* enemySpawnPointScript = nullptr;
 
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
+	ComponentMeshRenderer* componentMeshRenderer = nullptr;
 
+	float timeSinceLastHurt = 0.5f;
 };
