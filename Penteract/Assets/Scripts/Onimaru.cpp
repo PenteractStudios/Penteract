@@ -1,4 +1,5 @@
 #include "Onimaru.h"
+#include "OnimaruBullet.h"
 
 bool Onimaru::CanShoot() {
 	return !shooting;
@@ -8,16 +9,16 @@ void Onimaru::Shoot() {
 	if (CanShoot()) {
 		shooting = true;
 		attackCooldownRemaining = 1.f / attackSpeed;
-		if (audiosPlayer[static_cast<int>(AudioPlayer::SHOOT)]) {
-			audiosPlayer[static_cast<int>(AudioPlayer::SHOOT)]->Play();
+		if (playerAudios[static_cast<int>(AudioPlayer::SHOOT)]) {
+			playerAudios[static_cast<int>(AudioPlayer::SHOOT)]->Play();
 		}
-		/*if (onimaruBullet) {
-			GameObject* bullet = GameplaySystems::Instantiate(onimaruBullet, onimaruGunTransform->GetGlobalPosition(), Quat(0.0f, 0.0f, 0.0f, 0.0f));
-			if (bullet) {
-				onimaruBulletcript = GET_SCRIPT(bullet, OnimaruBullet);
-				if (onimaruBulletcript) onimaruBulletcript->SetOnimaruDirection(onimaruGunTransform->GetGlobalRotation());
+		if (bullet) {
+			GameObject* bulletInstance = GameplaySystems::Instantiate(bullet, gunTransform->GetGlobalPosition(), Quat(0.0f, 0.0f, 0.0f, 0.0f));
+			if (bulletInstance) {
+				OnimaruBullet* onimaruBulletScript = GET_SCRIPT(bulletInstance, OnimaruBullet);
+				if (onimaruBulletScript) onimaruBulletScript->SetOnimaruDirection(gunTransform->GetGlobalRotation());
 			}
-		}*/
+		}
 	}
 }
 
@@ -40,6 +41,17 @@ void Onimaru::PlayAnimation() {
 		if (compAnimation->GetCurrentState()->name != states[GetMouseDirectionState()]) {
 			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState()]);
 		}
+	}
+}
+
+void Onimaru::CheckCoolDowns(bool noCooldownMode) {
+	//AttackCooldown
+	if (attackCooldownRemaining <= 0.f) {
+		attackCooldownRemaining = 0.f;
+		shooting = false;
+	}
+	else {
+		attackCooldownRemaining -= Time::GetDeltaTime();
 	}
 }
 

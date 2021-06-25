@@ -11,9 +11,9 @@ void Player::SetAttackSpeed(float attackSpeed_)
 void Player::Hit(int damage_)
 {
 	lifePoints -= damage_;
-	if (audiosPlayer[static_cast<int>(AudioPlayer::HIT)]) audiosPlayer[static_cast<int>(AudioPlayer::HIT)]->Play();
+	if (playerAudios[static_cast<int>(AudioPlayer::HIT)]) playerAudios[static_cast<int>(AudioPlayer::HIT)]->Play();
 	if (lifePoints <= 0) {
-		if (audiosPlayer[static_cast<int>(AudioPlayer::DEATH)]) audiosPlayer[static_cast<int>(AudioPlayer::DEATH)]->Play();
+		if (playerAudios[static_cast<int>(AudioPlayer::DEATH)]) playerAudios[static_cast<int>(AudioPlayer::DEATH)]->Play();
 		isAlive = false;
 	}
 }
@@ -28,6 +28,11 @@ void Player::MoveTo() {
 	float3 newPosition = playerMainTransform->GetGlobalPosition() + GetDirection();
 	agent->SetMaxSpeed(movementSpeed);
 	agent->SetMoveTarget(newPosition, false);
+}
+
+bool Player::CanShoot()
+{
+	return !shooting;
 }
 
 MovementDirection Player::GetInputMovementDirection() const {
@@ -71,6 +76,11 @@ int Player::GetMouseDirectionState() {
 	else {
 		return 3; //RunLeft
 	}
+}
+
+bool Player::IsActive()
+{
+	return (characterGameObject) ? characterGameObject->IsActive() : false;
 }
 
 float3 Player::GetDirection() const {

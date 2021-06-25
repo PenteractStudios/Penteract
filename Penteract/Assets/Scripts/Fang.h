@@ -8,9 +8,10 @@ public:
 	// ------- Contructors ------- //
 	Fang() {};
 	void Update(bool lockMovement = false) override;
-	void CheckCoolDowns(bool noCooldownMode = false);
-	float GetRealDashCooldown() { return 1.0f - (dashCooldownRemaining / dashCooldown); }
+	void CheckCoolDowns(bool noCooldownMode = false) override;
+	float GetRealDashCooldown();
 	void Init(int lifePoints_, float movementSpeed_, int damageHit_, float attackSpeed_,UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID);
+
 public:
 	std::vector<std::string> states{ "Idle" ,
 						"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,

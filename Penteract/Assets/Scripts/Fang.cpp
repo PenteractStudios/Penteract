@@ -10,6 +10,7 @@ void Fang::Init(int lifePoints_, float movementSpeed_, int damageHit_, float att
 	damageHit = damageHit_;
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(fangUID);
+	characterGameObject->GetComponent<ComponentCapsuleCollider>()->Enable();
 
 	if (characterGameObject && characterGameObject->GetParent()) {
 		playerMainTransform = characterGameObject->GetParent()->GetComponent<ComponentTransform>();
@@ -38,6 +39,13 @@ void Fang::Init(int lifePoints_, float movementSpeed_, int damageHit_, float att
 			agent->SetMaxAcceleration(MAX_ACCELERATION);
 		}
 	}
+	//Get audio sources
+	int i = 0;
+
+	for (ComponentAudioSource& src : characterGameObject->GetComponents<ComponentAudioSource>()) {
+		if (i < static_cast<int>(AudioPlayer::TOTAL)) playerAudios[i] = &src;
+		i++;
+	}
 
 }
 
@@ -58,8 +66,8 @@ void Fang::InitDash() {
 		if (agent) {
 			agent->SetMaxSpeed(dashSpeed);
 		}
-		if (audiosPlayer[static_cast<int>(AudioPlayer::FIRST_ABILITY)]) {
-			audiosPlayer[static_cast<int>(AudioPlayer::FIRST_ABILITY)]->Play();
+		if (playerAudios[static_cast<int>(AudioPlayer::FIRST_ABILITY)]) {
+			playerAudios[static_cast<int>(AudioPlayer::FIRST_ABILITY)]->Play();
 		}
 	}
 	//para animacion de volver a tener la habilidad
@@ -81,34 +89,46 @@ bool Fang::CanDash() {
 }
 
 void Fang::CheckCoolDowns(bool noCooldownMode) {
+
 	//Dash Cooldown
-	if (noCooldownMode || dashCooldownRemaining <= 0.f) {
-		dashCooldownRemaining = 0.f;
-		dashInCooldown = false;
-		dashMovementDirection = MovementDirection::NONE;
-	}
-	else {
-		dashCooldownRemaining -= Time::GetDeltaTime();
+	if(dashInCooldown){
+		if (noCooldownMode || dashCooldownRemaining <= 0.f) {
+			dashCooldownRemaining = 0.f;
+			dashInCooldown = false;
+			dashMovementDirection = MovementDirection::NONE;
+		}
+		else {
+			dashCooldownRemaining -= Time::GetDeltaTime();
+		}
 	}
 
 	//Dash duration
-	if (dashRemaining <= 0.f) {
-		dashRemaining = 0.f;
-		dashing = false;
-		agent->SetMaxSpeed(movementSpeed);
-	}
-	else {
-		dashRemaining -= Time::GetDeltaTime();
+	if (dashing) {
+		if (dashRemaining <= 0.f) {
+			dashRemaining = 0.f;
+			dashing = false;
+			agent->SetMaxSpeed(movementSpeed);
+		}
+		else {
+			dashRemaining -= Time::GetDeltaTime();
+		}
 	}
 
 	//AttackCooldown
-	if (attackCooldownRemaining <= 0.f) {
-		attackCooldownRemaining = 0.f;
-		shooting = false;
+	if(shooting){
+		if (attackCooldownRemaining <= 0.f) {
+			attackCooldownRemaining = 0.f;
+			shooting = false;
+		}
+		else {
+			attackCooldownRemaining -= Time::GetDeltaTime();
+		}
 	}
-	else {
-		attackCooldownRemaining -= Time::GetDeltaTime();
-	}
+}
+
+float Fang::GetRealDashCooldown()
+{
+	return 1.0f - (dashCooldownRemaining / dashCooldown);
 }
 
 bool Fang::CanShoot() {
@@ -119,8 +139,8 @@ void Fang::Shoot() {
 	if (CanShoot()) {
 		shooting = true;
 		attackCooldownRemaining = 1.f / attackSpeed;
-		if (audiosPlayer[static_cast<int>(AudioPlayer::SHOOT)]) {
-			audiosPlayer[static_cast<int>(AudioPlayer::SHOOT)]->Play();
+		if (playerAudios[static_cast<int>(AudioPlayer::SHOOT)]) {
+			playerAudios[static_cast<int>(AudioPlayer::SHOOT)]->Play();
 		}
 
 		ComponentTransform* shootingGunTransform = nullptr;

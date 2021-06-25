@@ -44,13 +44,13 @@ public:
 	void SetAttackSpeed(float attackSpeed_);
 	void Hit(int damage_) override;
 	void LookAtMouse();
-
 	MovementDirection GetInputMovementDirection() const;
 	float3 GetDirection() const;
 	virtual void Shoot() {}
 	virtual void Update(bool lockMovement = false);
+	virtual void CheckCoolDowns(bool noCooldownMode = false) {}
 	int GetMouseDirectionState();
-	bool IsActive() { return (characterGameObject) ? characterGameObject->IsActive() : false; };
+	bool IsActive();
 
 public:
 	int rangedDamageTaken = 1;
@@ -60,13 +60,14 @@ public:
 	bool shooting = false;
 	float3 lookAtMousePlanePosition = float3(0, 0, 0);
 	ComponentCamera* lookAtMouseCameraComp = nullptr;
-	ComponentAudioSource* audiosPlayer[static_cast<int>(AudioPlayer::TOTAL)] = { nullptr };
+	ComponentAudioSource* playerAudios[static_cast<int>(AudioPlayer::TOTAL)] = { nullptr };
 	float3 facePointDir = float3(0, 0, 0);
 	MovementDirection movementInputDirection = MovementDirection::NONE;
 	ComponentTransform* playerMainTransform = nullptr;
+
 private:
 	void MoveTo();
-	virtual bool CanShoot() { return !shooting; }
+	virtual bool CanShoot();
 	void ResetSwitchStatus();
 
 private:

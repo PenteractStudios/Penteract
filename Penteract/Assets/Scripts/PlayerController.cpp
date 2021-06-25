@@ -123,7 +123,7 @@ void PlayerController::ResetSwitchStatus() {
 	currentSwitchDelay = 0.f;
 }
 
-void PlayerController::SwitchCharacter(bool noCooldownMode) {
+void PlayerController::SwitchCharacter() {
 	if (!playerFang.characterGameObject) return;
 	if (!playerOnimaru.characterGameObject) return;
 	if (CanSwitch()) {
@@ -180,10 +180,10 @@ void PlayerController::SwitchCharacter(bool noCooldownMode) {
 	}
 }
 //Timers
-void PlayerController::CheckCoolDowns(bool noCooldownMode) {
+void PlayerController::CheckCoolDowns() {
 
-	playerFang.CheckCoolDowns();
-	//if(playerOnimaru) playerOnimaru.
+	playerFang.CheckCoolDowns(noCooldownMode);
+	playerOnimaru.CheckCoolDowns(noCooldownMode);
 	if (noCooldownMode || switchCooldownRemaining <= 0.f) {
 		switchCooldownRemaining = 0.f;
 		switchInCooldown = false;
@@ -247,7 +247,7 @@ void PlayerController::UpdatePlayerStats() {
 		hudControllerScript->UpdateCooldowns(0.0f, 0.0f, 0.0f, playerFang.GetRealDashCooldown(), 0.0f, 0.0f, realSwitchCooldown);
 	}
 }
-// new script camera
+
 void PlayerController::UpdateCameraPosition() {
 	float3 playerGlobalPos = playerFang.playerMainTransform->GetGlobalPosition();
 
@@ -262,12 +262,15 @@ void PlayerController::UpdateCameraPosition() {
 }
 
 void PlayerController::TakeDamage(bool ranged) {
-	int damage = (ranged) ? rangedDamageTaken : meleeDamageTaken;
-	if (playerFang.IsActive()) {
-		playerFang.Hit(damage);
-	}
-	else {
-		playerOnimaru.Hit(damage);
+	if(!invincibleMode){
+		int damage = (ranged) ? rangedDamageTaken : meleeDamageTaken;
+		if (playerFang.IsActive()) {
+			playerFang.Hit(damage);
+		}
+		else {
+			playerOnimaru.Hit(damage);
+		}
+		hitTaken = true;
 	}
 }
 

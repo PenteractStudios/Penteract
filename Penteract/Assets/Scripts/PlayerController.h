@@ -114,8 +114,8 @@ public:
 	};
 
 private:
-	void CheckCoolDowns(bool noCooldownMode = false);
-	void SwitchCharacter(bool noCooldownMode = false);
+	void CheckCoolDowns();
+	void SwitchCharacter();
 	void UpdatePlayerStats();
 	void UpdateCameraPosition();
 	bool CanSwitch();
