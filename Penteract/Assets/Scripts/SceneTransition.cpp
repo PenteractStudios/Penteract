@@ -6,9 +6,8 @@
 
 EXPOSE_MEMBERS(SceneTransition) {
 	MEMBER(MemberType::GAME_OBJECT_UID, transitionUID),
-	MEMBER(MemberType::INT, speedTransition),
-	MEMBER(MemberType::BOOL, initTransition),
-	MEMBER(MemberType::BOOL, finishedTransition),
+	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
+	MEMBER(MemberType::INT, speedTransition)
 };
 
 GENERATE_BODY_IMPL(SceneTransition);
@@ -21,14 +20,12 @@ void SceneTransition::Start() {
 }
 
 void SceneTransition::Update() {
-	if (initTransition) {
-		if (transitionGO) {
-			MoveFade();
-			StopTransition();
-		}
-	} else {
-		Debug::Log("Dont start the transition");
+	if (transitionGO->IsActive()) {
+		Debug::Log("Esta activo!");
+		MoveFade();
 	}
+	// if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
+	// if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
 }
 
 void SceneTransition::MoveFade()
@@ -36,21 +33,9 @@ void SceneTransition::MoveFade()
 	ComponentTransform2D* transform = transitionGO->GetComponent<ComponentTransform2D>();
 	ComponentCanvas* canvas = transitionGO->GetComponent<ComponentCanvas>();
 	// Size should be equal then size of the screen
-	while (transform->GetPosition().x < 1920) {
+	/*while (transform->GetPosition().x < 1920) {
 		float actualPosition = transform->GetPosition().x;
 		transform->SetPosition(float3(actualPosition * speedTransition * Time::GetDeltaTime(), 0.f, 0.f));
-	}
-}
-
-void SceneTransition::InitTransition() {
-	initTransition = true;
-	transitionGO->Enable();
-	Update();
-}
-
-void SceneTransition::StopTransition()
-{
-	initTransition = false;
-	transitionGO->Disable();
-	finishedTransition = true;
+	}*/
+	transform->SetPosition(float3(0.f, 0.f, 0.f));
 }

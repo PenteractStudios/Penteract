@@ -15,16 +15,13 @@ public:
 	void Update() override;
 	
 	void MoveFade();
-	void InitTransition();
-	void StopTransition();
 
 public:
 
+	UID sceneUID = 0;
 	UID transitionUID = 0;
 
 	int speedTransition = 10;
-	bool initTransition = false;
-	bool finishedTransition = false;
 
 private:
 	GameObject* transitionGO = nullptr;

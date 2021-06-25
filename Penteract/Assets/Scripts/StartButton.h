@@ -23,7 +23,7 @@ public:
 
 private:
 	GameObject* player = nullptr;
-	GameObject* transitionGO = nullptr;
 
+	GameObject* transitionGO = nullptr;
 	SceneTransition* sceneTransition = nullptr;
 };

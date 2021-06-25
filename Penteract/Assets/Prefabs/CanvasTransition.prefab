@@ -1,13 +1,13 @@
 {
     "Root": {
         "Name": "CanvasTransition",
-        "Active": true,
+        "Active": false,
         "RootBoneName": "",
         "Mask": 0,
         "Components": [
             {
                 "Type": "Transform",
-                "Active": true,
+                "Active": false,
                 "Position": [
                     0.0,
                     0.0,
@@ -32,9 +32,9 @@
             },
             {
                 "Type": "Transform2D",
-                "Active": true,
+                "Active": false,
                 "Position": [
-                    0.0,
+                    -1920.0,
                     0.0,
                     0.0
                 ],
@@ -75,13 +75,30 @@
             },
             {
                 "Type": "Canvas",
-                "Active": true
+                "Active": false
+            },
+            {
+                "Type": "Script",
+                "Active": false,
+                "Script": 17754977454610005883,
+                "Values": [
+                    {
+                        "Name": "transitionUID",
+                        "Type": "GameObjectUID",
+                        "Value": 9439890822062605378
+                    },
+                    {
+                        "Name": "sceneUID",
+                        "Type": "SceneResourceUID",
+                        "Value": 16843640376619682028
+                    }
+                ]
             }
         ],
         "Children": [
             {
                 "Name": "Image",
-                "Active": false,
+                "Active": true,
                 "RootBoneName": "",
                 "Mask": 0,
                 "Components": [
@@ -89,7 +106,7 @@
                         "Type": "Transform2D",
                         "Active": false,
                         "Position": [
-                            -1920.0,
+                            0.0,
                             0.0,
                             0.0
                         ],
@@ -137,26 +154,14 @@
                         "Active": false,
                         "TextureId": 0,
                         "Color": [
-                            9.999999974752428e-7,
-                            9.999899930335233e-7,
-                            9.999899930335233e-7,
+                            1.0,
+                            1.0,
+                            1.0,
                             1.0
                         ],
                         "AlphaTransparency": false,
                         "IsFill": false,
                         "FillValue": 1.0
-                    },
-                    {
-                        "Type": "Script",
-                        "Active": false,
-                        "Script": 11031084851222569244,
-                        "Values": [
-                            {
-                                "Name": "transitionUID",
-                                "Type": "GameObjectUID",
-                                "Value": 1004643758105153125
-                            }
-                        ]
                     }
                 ],
                 "Children": null

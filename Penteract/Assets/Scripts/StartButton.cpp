@@ -24,19 +24,21 @@ void StartButton::Start() {
 }
 
 void StartButton::Update() {
+	/*
 	Debug::Log("Pulsado boton pero funciona Update");
 	if (sceneTransition) {
 		if (sceneTransition->finishedTransition) {
 			if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 			if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
 		}
-	}
+	}*/
 }
 
 void StartButton::OnButtonClick() {
 	checkpoint = checkpointNum;
 	if (sceneTransition) {
-		sceneTransition->InitTransition();
+		transitionGO->Enable();
+		sceneTransition->Update();
 	} else {
 		if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 		if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
