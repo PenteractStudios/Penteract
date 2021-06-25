@@ -25,23 +25,23 @@
 EXPOSE_MEMBERS(HUDController) {
 	// Add members here to expose them to the engine. Example:
 	MEMBER(MemberType::GAME_OBJECT_UID, fangMainCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruMainCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangSkillsMainCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillsMainCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangSkillsSecondCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillsSecondCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangHealthMainCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthMainCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangHealthSecondCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthSecondCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, swapingSkillCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, scoreTextUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, canvasHUDUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, lowHealthWarningEffectUID),
-	MEMBER(MemberType::FLOAT, timeToFadeDurableHealthFeedbackInternal),
-	MEMBER(MemberType::FLOAT, delaySwitchTime)
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruMainCanvasUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, fangSkillsMainCanvasUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillsMainCanvasUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, fangSkillsSecondCanvasUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillsSecondCanvasUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, fangHealthMainCanvasUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthMainCanvasUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, fangHealthSecondCanvasUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthSecondCanvasUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, swapingSkillCanvasUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, scoreTextUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, canvasHUDUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, lowHealthWarningEffectUID),
+		MEMBER(MemberType::FLOAT, timeToFadeDurableHealthFeedbackInternal),
+		MEMBER(MemberType::FLOAT, delaySwitchTime)
 };
 
 GENERATE_BODY_IMPL(HUDController);
@@ -454,7 +454,7 @@ void HUDController::UpdateCommonSkill() {
 			image->SetFillValue(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
 			image->SetColor(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1 ? float4(colorBlueForCD, 1.0f) : colorMagenta);
 
-			AbilityCoolDownEffectCheck(static_cast<Cooldowns>(Cooldowns::SWITCH_SKILL), swapingSkillCanvas);
+			AbilityCoolDownEffectCheck(Cooldowns::SWITCH_SKILL, swapingSkillCanvas);
 		}
 
 		if (cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1) {
@@ -489,7 +489,7 @@ void HUDController::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* c
 
 				if (cooldown < Cooldowns::ONIMARU_SKILL_1) {
 					if (canvas->GetChildren().size() > 0) {
-						if (canvas->GetChildren()[static_cast<int>(cooldown)]->GetChildren().size() > HIERARCHY_INDEX_MAIN_BUTTON_DOWN) {
+						if (canvas->GetChildren()[static_cast<int>(cooldown)]->GetChildren().size() > HIERARCHY_INDEX_MAIN_BUTTON_UP) {
 							ef = GET_SCRIPT(canvas->GetChildren()[static_cast<int>(cooldown)]->GetChildren()[HIERARCHY_INDEX_MAIN_ABILITY_EFFECT], AbilityRefreshEffect);
 							//Turn on button idle
 							canvas->GetChildren()[static_cast<int>(cooldown)]->GetChild(HIERARCHY_INDEX_MAIN_BUTTON_UP)->Enable();
@@ -499,7 +499,7 @@ void HUDController::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* c
 					}
 				} else if (cooldown < Cooldowns::SWITCH_SKILL) {
 					if (canvas->GetChildren().size() > 0) {
-						if (canvas->GetChildren()[static_cast<int>(cooldown) - 3]->GetChildren().size() > HIERARCHY_INDEX_MAIN_BUTTON_DOWN) {
+						if (canvas->GetChildren()[static_cast<int>(cooldown) - 3]->GetChildren().size() > HIERARCHY_INDEX_MAIN_BUTTON_UP) {
 							ef = GET_SCRIPT(canvas->GetChild(static_cast<int>(cooldown) - 3)->GetChildren()[HIERARCHY_INDEX_MAIN_ABILITY_EFFECT], AbilityRefreshEffect);
 							//Turn on button idle
 							canvas->GetChildren()[static_cast<int>(cooldown) - 3]->GetChild(HIERARCHY_INDEX_MAIN_BUTTON_UP)->Enable();
