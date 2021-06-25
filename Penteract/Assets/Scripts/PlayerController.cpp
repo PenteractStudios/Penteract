@@ -59,6 +59,8 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::INT, fangRecoveryRate),
 	MEMBER(MemberType::BOOL, debugGetHit),
 	MEMBER(MemberType::FLOAT, switchDelay),
+	MEMBER(MemberType::FLOAT, shakeMultiplier),
+	MEMBER(MemberType::FLOAT, shakeTotalTime)
 };
 
 GENERATE_BODY_IMPL(PlayerController);
@@ -102,7 +104,7 @@ void PlayerController::Start() {
 		if (fangRightGun) {
 			fangRightGunTransform = fangRightGun->GetComponent<ComponentTransform>();
 		}
-		
+
 		fangAnimation = fang->GetComponent<ComponentAnimation>();
 		fangTrail = GameplaySystems::GetResource<ResourcePrefab>(fangTrailUID);
 		fangBullet = GameplaySystems::GetResource<ResourcePrefab>(fangBulletUID);
@@ -114,10 +116,10 @@ void PlayerController::Start() {
 	if (onimaru) {
 		onimaru->Disable();
 		onimaruGun = GameplaySystems::GetGameObject(onimaruGunUID);
-		
+
 		ComponentCapsuleCollider* capsuleCollider = onimaru->GetComponent<ComponentCapsuleCollider>(); // workaround collider doesn't activate if onimaru starts disabled
 		if (capsuleCollider) capsuleCollider->Enable();
-		
+
 		if (onimaruGun) {
 			onimaruGunTransform = onimaruGun->GetComponent<ComponentTransform>();
 		}
@@ -127,7 +129,7 @@ void PlayerController::Start() {
 			onimaruCurrentState = onimaruAnimation->GetCurrentState();
 		}
 	}
-	
+
 	switchEffects = GameplaySystems::GetGameObject(switchParticlesUID);
 
 	firstTime = true;
@@ -145,6 +147,18 @@ void PlayerController::Start() {
 		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
 		i++;
 	}
+}
+
+float2 PlayerController::GetRandomPosInUnitaryCircle(float2 center) {
+	float random = (static_cast<float>(rand() % 101)) / 100.0f;
+	float random2 = (static_cast<float>(rand() % 101)) / 100.0f;
+
+	float r = sqrt(random);
+	float theta = random2 * 2 * PI;
+	float x = center.x + r * cos(theta);
+	float y = center.y + r * sin(theta);
+
+	return float2(x, y);
 }
 
 void PlayerController::MoveTo(MovementDirection md) {
@@ -234,25 +248,24 @@ void PlayerController::SwitchCharacter() {
 				ComponentCapsuleCollider* capsuleCollider = onimaru->GetComponent<ComponentCapsuleCollider>(); // workaround collider doesn't activate if onimaru starts disabled
 				if (capsuleCollider) capsuleCollider->Enable();
 
-				if (hudControllerScript){
+				if (hudControllerScript) {
 					hudControllerScript->UpdateHP(static_cast<float>(onimaruCharacter.lifePoints), static_cast<float>(fangCharacter.lifePoints));
 					hudControllerScript->ResetHealthRegenerationEffects(static_cast<float>(fangCharacter.lifePoints));
 				}
-				
+
 				fangRecovering = 0.0f;
-			}
-			else {
+			} else {
 				onimaru->Disable();
 				fang->Enable();
 
 				ComponentCapsuleCollider* capsuleCollider = fang->GetComponent<ComponentCapsuleCollider>(); // workaround collider doesn't activate if onimaru starts disabled
 				if (capsuleCollider) capsuleCollider->Enable();
 
-				if(hudControllerScript){
+				if (hudControllerScript) {
 					hudControllerScript->UpdateHP(static_cast<float>(fangCharacter.lifePoints), static_cast<float>(onimaruCharacter.lifePoints));
 					hudControllerScript->ResetHealthRegenerationEffects(static_cast<float>(onimaruCharacter.lifePoints));
 				}
-			
+
 				onimaruRecovering = 0.0f;
 			}
 			if (hudControllerScript) {
@@ -263,8 +276,7 @@ void PlayerController::SwitchCharacter() {
 			playSwitchParticles = true;
 			switchInCooldown = true;
 			if (noCooldownMode) switchInProgress = false;
-		}
-		else {
+		} else {
 			if (playSwitchParticles) {
 				if (switchEffects) {
 					SwitchParticles* script = GET_SCRIPT(switchEffects, SwitchParticles);
@@ -297,8 +309,7 @@ void PlayerController::Shoot() {
 			fangAttackCooldownRemaining = 1.f / fangCharacter.attackSpeed;
 			if (audios[static_cast<int>(AudioType::SHOOT)]) {
 				audios[static_cast<int>(AudioType::SHOOT)]->Play();
-			}
-			else {
+			} else {
 				Debug::Log(AUDIOSOURCE_NULL_MSG);
 			}
 			fangAttackCooldownRemaining = 1.f / fangCharacter.attackSpeed;
@@ -306,8 +317,7 @@ void PlayerController::Shoot() {
 			if (rightShot) {
 				fangAnimation->SendTriggerSecondary(fangAnimation->GetCurrentState()->name + PlayerController::states[12]);
 				shootingGunTransform = fangRightGunTransform;
-			}
-			else {
+			} else {
 				fangAnimation->SendTriggerSecondary(fangAnimation->GetCurrentState()->name + PlayerController::states[11]);
 				shootingGunTransform = fangLeftGunTransform;
 			}
@@ -315,13 +325,11 @@ void PlayerController::Shoot() {
 				GameplaySystems::Instantiate(fangBullet, shootingGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
 				GameplaySystems::Instantiate(fangTrail, shootingGunTransform->GetGlobalPosition(), transform->GetGlobalRotation());
 			}
-		}
-		else {
+		} else {
 			onimaruAttackCooldownRemaining = 1.f / onimaruCharacter.attackSpeed;
 			if (audios[static_cast<int>(AudioType::SHOOT)]) {
 				audios[static_cast<int>(AudioType::SHOOT)]->Play();
-			}
-			else {
+			} else {
 				Debug::Log(AUDIOSOURCE_NULL_MSG);
 			}
 			onimaruAttackCooldownRemaining = 1.f / onimaruCharacter.attackSpeed;
@@ -329,7 +337,7 @@ void PlayerController::Shoot() {
 				GameObject* bullet = GameplaySystems::Instantiate(onimaruBullet, onimaruGunTransform->GetGlobalPosition(), Quat(0.0f, 0.0f, 0.0f, 0.0f));
 				if (bullet) {
 					onimaruBulletcript = GET_SCRIPT(bullet, OnimaruBullet);
-					if(onimaruBulletcript) onimaruBulletcript->SetOnimaruDirection(onimaruGunTransform->GetGlobalRotation());
+					if (onimaruBulletcript) onimaruBulletcript->SetOnimaruDirection(onimaruGunTransform->GetGlobalRotation());
 				}
 			}
 		}
@@ -362,8 +370,7 @@ void PlayerController::CheckCoolDowns() {
 		switchCooldownRemaining = 0.f;
 		switchInCooldown = false;
 		if (!noCooldownMode) switchInProgress = false;
-	}
-	else {
+	} else {
 		switchCooldownRemaining -= Time::GetDeltaTime();
 	}
 	//Dash Cooldown
@@ -371,8 +378,7 @@ void PlayerController::CheckCoolDowns() {
 		dashCooldownRemaining = 0.f;
 		dashInCooldown = false;
 		dashMovementDirection = MovementDirection::NONE;
-	}
-	else {
+	} else {
 		dashCooldownRemaining -= Time::GetDeltaTime();
 	}
 	//Dash duration
@@ -380,8 +386,7 @@ void PlayerController::CheckCoolDowns() {
 		dashRemaining = 0.f;
 		dashing = false;
 		if (agent) agent->SetMaxSpeed(fangCharacter.movementSpeed);
-	}
-	else {
+	} else {
 		dashRemaining -= Time::GetDeltaTime();
 	}
 
@@ -392,8 +397,7 @@ void PlayerController::CheckCoolDowns() {
 		} else {
 			fangAttackCooldownRemaining -= Time::GetDeltaTime();
 		}
-	}
-	else {
+	} else {
 		if (onimaruAttackCooldownRemaining <= 0.f) {
 			onimaruAttackCooldownRemaining = 0.f;
 			shooting = false;
@@ -498,8 +502,7 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 	ComponentAnimation* animation = nullptr;
 	if (fang->IsActive()) {
 		animation = fangAnimation;
-	}
-	else {
+	} else {
 		animation = onimaruAnimation;
 	}
 
@@ -521,19 +524,16 @@ void PlayerController::PlayAnimation(MovementDirection md) {
 					} else if (animation->GetCurrentStateSecondary()->name == "LeftShot") {
 						animation->SendTriggerSecondary("LeftShotDeath");
 					}
-				}
-				else {
+				} else {
 					animation->SendTriggerSecondary("ShootingDeath");
 				}
 			}
-		}
-		else {
+		} else {
 			if (animation->GetCurrentState()->name != PlayerController::states[0]) {
 				animation->SendTrigger(animation->GetCurrentState()->name + PlayerController::states[0]);
 			}
 		}
-	}
-	else {
+	} else {
 		if (animation->GetCurrentState()->name != PlayerController::states[GetMouseDirectionState(md) + dashAnimation]) {
 			animation->SendTrigger(animation->GetCurrentState()->name + PlayerController::states[GetMouseDirectionState(md) + dashAnimation]);
 		}
@@ -550,20 +550,19 @@ void PlayerController::UpdatePlayerStats() {
 		if (hitTaken && fang->IsActive() && fangCharacter.lifePoints >= 0) {
 			hudControllerScript->UpdateHP(static_cast<float>(fangCharacter.lifePoints), static_cast<float>(onimaruCharacter.lifePoints));
 			hitTaken = false;
-		}
-		else if (hitTaken && onimaru->IsActive() && onimaruCharacter.lifePoints >= 0) {
+		} else if (hitTaken && onimaru->IsActive() && onimaruCharacter.lifePoints >= 0) {
 			hudControllerScript->UpdateHP(static_cast<float>(onimaruCharacter.lifePoints), static_cast<float>(fangCharacter.lifePoints));
 			hitTaken = false;
 		}
 
 		if (fang->IsActive() && onimaruCharacter.lifePoints != ONIMARU_MAX_HEALTH) {
 			float healthRecovered = (onimaruRecovering / onimaruRecoveryRate);
-			if (hudControllerScript){
+			if (hudControllerScript) {
 				hudControllerScript->HealthRegeneration(onimaruCharacter.lifePoints, healthRecovered);
 			}
 		} else if (onimaru->IsActive() && fangCharacter.lifePoints != FANG_MAX_HEALTH) {
 			float healthRecovered = (fangRecovering / fangRecoveryRate);
-			if (hudControllerScript){
+			if (hudControllerScript) {
 				hudControllerScript->HealthRegeneration(fangCharacter.lifePoints, healthRecovered);
 			}
 		}
@@ -588,7 +587,14 @@ void PlayerController::UpdateCameraPosition() {
 		smoothedPosition = float3::Lerp(cameraTransform->GetGlobalPosition(), desiredPosition, smoothCameraSpeed * Time::GetDeltaTime());
 	}
 
-	cameraTransform->SetGlobalPosition(smoothedPosition);
+	if (shakeTimer > 0) {
+		float2 shakeDir = GetRandomPosInUnitaryCircle(float2(0, 0));
+		cameraTransform->SetGlobalPosition(smoothedPosition + cameraTransform->GetRight() * shakeDir.x * shakeMultiplier + cameraTransform->GetUp() * shakeDir.y * shakeMultiplier);
+		shakeTimer -= Time::GetDeltaTime();
+	} else {
+		cameraTransform->SetGlobalPosition(smoothedPosition);
+	}
+
 }
 
 void PlayerController::TakeDamage(bool ranged) {
@@ -599,14 +605,19 @@ void PlayerController::TakeDamage(bool ranged) {
 		if (!fangCharacter.isAlive) {
 			if (audios[static_cast<int>(AudioType::FANGDEATH)]) audios[static_cast<int>(AudioType::FANGDEATH)]->Play();
 		}
-	}
-	else {
+	} else {
 		onimaruCharacter.Hit((ranged) ? rangedDamageTaken : meleeDamageTaken);
 		if (audios[static_cast<int>(AudioType::ONIHIT)]) audios[static_cast<int>(AudioType::ONIHIT)]->Play();
 		if (!onimaruCharacter.isAlive) {
 			if (audios[static_cast<int>(AudioType::ONIDEATH)]) audios[static_cast<int>(AudioType::ONIDEATH)]->Play();
 		}
 	}
+
+	//If we later want a cooldown between shakes, use here
+	if (shakeTimer <= 0) {
+		shakeTimer = shakeTotalTime;
+	}
+
 	hitTaken = true;
 }
 
@@ -626,8 +637,7 @@ void PlayerController::Update() {
 		if (firstTime) {
 			if (fang->IsActive()) {
 				hudControllerScript->UpdateHP(static_cast<float>(fangCharacter.lifePoints), static_cast<float>(onimaruCharacter.lifePoints));
-			}
-			else {
+			} else {
 				hudControllerScript->UpdateHP(static_cast<float>(onimaruCharacter.lifePoints), static_cast<float>(fangCharacter.lifePoints));
 			}
 			firstTime = false;
@@ -654,23 +664,19 @@ void PlayerController::Update() {
 		}
 		if (fang->IsActive()) {
 			if (Input::GetMouseButtonDown(0)) Shoot();
-		}
-		else {
+		} else {
 			if (Input::GetMouseButtonDown(0)) {
 				onimaruAnimation->SendTriggerSecondary(onimaruAnimation->GetCurrentState()->name + PlayerController::states[13]);
-			}
-			else if (Input::GetMouseButtonRepeat(0)) {
+			} else if (Input::GetMouseButtonRepeat(0)) {
 				Shoot();
-			}
-			else if (Input::GetMouseButtonUp(0)) {
+			} else if (Input::GetMouseButtonUp(0)) {
 				if (onimaruAnimation) {
 					onimaruAnimation->SendTriggerSecondary(PlayerController::states[13] + onimaruAnimation->GetCurrentState()->name);
 				}
 			}
 		}
 		PlayAnimation(md);
-	}
-	else {
-		if(agent) agent->RemoveAgentFromCrowd();
+	} else {
+		if (agent) agent->RemoveAgentFromCrowd();
 	}
 }

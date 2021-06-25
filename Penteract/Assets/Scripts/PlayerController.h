@@ -108,10 +108,10 @@ public:
 	float switchDelay = 0.37f;
 
 	/* Fang & onimaru damage */
-	
+
 	int rangedDamageTaken = 1;
 	int meleeDamageTaken = 1;
-	
+
 	//Camera
 	bool useSmoothCamera = true;
 	float smoothCameraSpeed = 5.0f;
@@ -122,6 +122,12 @@ public:
 								"Death" , "Hurt" , "LeftShot" , "RightShot", "Shooting", "RunForwardLeft",
 								"RunForwardRight", "RunBackwardLeft", "RunBarckwardRight"
 	};
+
+	//Shake values and method (TODO move to another script shortly after the Player rework kicks in)
+	float shakeTotalTime = 1.0f;
+	float shakeTimer = 0.0f;
+	float shakeMultiplier = 0.2f;
+	float2 GetRandomPosInUnitaryCircle(float2 center);
 
 private:
 
