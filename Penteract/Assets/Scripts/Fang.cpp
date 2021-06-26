@@ -21,7 +21,7 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 		//left gun
 		gunAux = GameplaySystems::GetGameObject(leftGunUID);
 		if (gunAux) leftGunTransform = gunAux->GetComponent<ComponentTransform>();
-
+		lookAtMousePlanePosition = leftGunTransform->GetGlobalPosition();
 		trail = GameplaySystems::GetResource<ResourcePrefab>(trailUID);
 		bullet = GameplaySystems::GetResource<ResourcePrefab>(bulletUID);
 
@@ -148,12 +148,10 @@ void Fang::Shoot() {
 		if (rightShot) {
 			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[11]);
 			shootingGunTransform = rightGunTransform;
-			rightShot = false;
 		}
 		else {
 			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[10]);
 			shootingGunTransform = leftGunTransform;
-			rightShot = true;
 		}
 		if (trail && bullet && shootingGunTransform) {
 			GameplaySystems::Instantiate(bullet, shootingGunTransform->GetGlobalPosition(), playerMainTransform->GetGlobalRotation());

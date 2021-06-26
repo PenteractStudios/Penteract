@@ -77,7 +77,6 @@ public:
 	//playercontroller
 	UID canvasUID = 0;
 
-	bool rightShot = true;
 	bool shooting = false;
 
 	bool hitTaken = false;

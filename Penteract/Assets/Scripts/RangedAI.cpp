@@ -435,7 +435,7 @@ void RangedAI::ShootPlayerInRange() {
 	if (!player) return;
 	if (!playerController) return;
 	if (!playerController->playerFang.characterGameObject || !playerController->playerOnimaru.characterGameObject) return;
-	if (!playerController->playerFang.isAlive || !playerController->playerOnimaru.isAlive) return;
+	if (!playerController->IsPlayerDead()) return;
 	if (CharacterInRange(player, rangerGruntCharacter.attackRange, true)) {
 		shot = true;
 

@@ -23,6 +23,7 @@ public:
 	float dashCooldown = 5.f;
 	float dashSpeed = 100.f;
 	float dashDuration = 0.1f;
+	bool rightShot = true;
 
 
 private:
@@ -36,7 +37,6 @@ private:
 
 
 	//Shoot
-	bool rightShot = true;
 	ComponentTransform* rightGunTransform = nullptr;
 	ComponentTransform* leftGunTransform = nullptr;
 	ResourcePrefab* trail = nullptr;

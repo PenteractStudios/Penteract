@@ -79,6 +79,7 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 	GameObject* onimaruGun = GameplaySystems::GetGameObject(onimaruGunUID);
 	if (onimaruGun) {
 		gunTransform = onimaruGun->GetComponent<ComponentTransform>();
+		lookAtMousePlanePosition = gunTransform->GetGlobalPosition();
 	}
 
 	bullet = GameplaySystems::GetResource<ResourcePrefab>(onimaruBulletUID);
