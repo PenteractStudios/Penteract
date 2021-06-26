@@ -95,17 +95,15 @@ void HUDController::Update() {
 	// In order to NOT control the canvas switch from SwapCharacterDisplayerAnimation
 	if (isSwitching) {
 		if (currentTime > delaySwitchTime) {
-			isSwitching = false; 
+			isSwitching = false;
 			if (fang && !fang->IsActive()) {
 				SetFangCanvas(false);
 				SetOnimaruCanvas(true);
-			}
-			else {
+			} else {
 				SetFangCanvas(true);
 				SetOnimaruCanvas(false);
 			}
-		}
-		else {
+		} else {
 			currentTime += Time::GetDeltaTime();
 		}
 	}
@@ -266,8 +264,7 @@ void HUDController::ResetHealthRegenerationEffects(float currentHp) {
 	}
 }
 
-void HUDController::ResetCooldownProgressBar()
-{
+void HUDController::ResetCooldownProgressBar() {
 	if (!swapingSkillCanvas) {
 		return;
 	}
@@ -291,30 +288,26 @@ float  HUDController::MapValue01(float value, float min, float max) {
 	return (value - min) / (max - min);
 }
 
-void HUDController::SetFangCanvas(bool value)
-{
+void HUDController::SetFangCanvas(bool value) {
 	if (!fangCanvas) {
 		return;
 	}
 
 	if (value) {
 		fangCanvas->Enable();
-	}
-	else {
+	} else {
 		fangCanvas->Disable();
 	}
 }
 
-void HUDController::SetOnimaruCanvas(bool value)
-{
+void HUDController::SetOnimaruCanvas(bool value) {
 	if (!onimaruCanvas) {
 		return;
 	}
 
 	if (value) {
 		onimaruCanvas->Enable();
-	}
-	else {
+	} else {
 		onimaruCanvas->Disable();
 	}
 }
@@ -465,8 +458,7 @@ void HUDController::PlayCoolDownEffect(AbilityRefreshEffect* ef, Cooldowns coold
 	}
 }
 
-void HUDController::PlayProgressBarEffect(AbilityRefreshEffectProgressBar* ef, Cooldowns cooldown)
-{
+void HUDController::PlayProgressBarEffect(AbilityRefreshEffectProgressBar* ef, Cooldowns cooldown) {
 	if (ef != nullptr) {
 		ef->Play();
 	}
@@ -578,28 +570,29 @@ void HUDController::UpdateVisualCooldowns(GameObject* canvas, bool isMain, int s
 void HUDController::OnHealthLost(GameObject* targetCanvas, int health) {
 	bool isFang = (targetCanvas->GetID() == fangHealthMainCanvas->GetID());
 
-	GameObject* obj = targetCanvas->GetChildren()[health];
+	int prevLivesToUse = isFang ? prevLivesFang : prevLivesOni;
+	std::vector<int>& remainingTimeActiveIndexesToUse = isFang ? remainingTimeActiveIndexesFang : remainingTimeActiveIndexesOni;
+	float* remainingDurableHealthTimesToUse = isFang ? remainingDurableHealthTimesFang : remainingDurableHealthTimesOni;
 
+	int healthLost = prevLivesToUse - health;
+	int healthToUse = health;
 
-	if (isFang) {
-		remainingTimeActiveIndexesFang.push_back(health);
-		remainingDurableHealthTimesFang[health] = timeToFadeDurableHealthFeedback;
-	} else {
-		remainingTimeActiveIndexesOni.push_back(health);
-		remainingDurableHealthTimesOni[health] = timeToFadeDurableHealthFeedback;
+	for (int i = 0; i < healthLost; i++) {
+
+		GameObject* obj = targetCanvas->GetChild(healthToUse);
+
+		remainingTimeActiveIndexesToUse.push_back(healthToUse);
+		remainingDurableHealthTimesToUse[healthToUse] = timeToFadeDurableHealthFeedback;
+
+		if (!obj) return;
+
+		HealthLostInstantFeedback* fb = GET_SCRIPT(obj, HealthLostInstantFeedback);
+
+		if (!fb) return;
+
+		fb->Play();
+		healthToUse++;
 	}
-
-
-
-	if (!obj) return;
-
-	HealthLostInstantFeedback* fb = GET_SCRIPT(obj, HealthLostInstantFeedback);
-
-	if (!fb) return;
-
-	fb->Play();
-
-
 }
 
 void HUDController::UpdateCanvasHP(GameObject* targetCanvas, int health, bool darkened) {
