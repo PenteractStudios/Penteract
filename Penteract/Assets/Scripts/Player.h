@@ -42,7 +42,7 @@ public:
 
 	// ------- Core Functions ------ //
 	void SetAttackSpeed(float attackSpeed_);
-	void Hit(int damage_) override;
+	void Hit(float damage_) override;
 	void LookAtMouse();
 	MovementDirection GetInputMovementDirection() const;
 	float3 GetDirection() const;
@@ -53,8 +53,8 @@ public:
 	bool IsActive();
 
 public:
-	int rangedDamageTaken = 1;
-	int meleeDamageTaken = 1;
+	float rangedDamageTaken = 1.0f;
+	float meleeDamageTaken = 1.0f;
 	float attackSpeed = 1.0f;
 	float attackCooldownRemaining = 0.f;
 	bool shooting = false;

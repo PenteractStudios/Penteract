@@ -8,13 +8,13 @@ void Player::SetAttackSpeed(float attackSpeed_)
 	attackSpeed = attackSpeed_;
 }
 
-void Player::Hit(int damage_)
+void Player::Hit(float damage_)
 {
 	lifePoints -= damage_;
 	if (playerAudios[static_cast<int>(AudioPlayer::HIT)]) playerAudios[static_cast<int>(AudioPlayer::HIT)]->Play();
-	if (lifePoints <= 0) {
+	isAlive = lifePoints > 0.0f;
+	if (!isAlive) {
 		if (playerAudios[static_cast<int>(AudioPlayer::DEATH)]) playerAudios[static_cast<int>(AudioPlayer::DEATH)]->Play();
-		isAlive = false;
 	}
 }
 

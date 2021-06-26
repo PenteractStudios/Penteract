@@ -1,10 +1,8 @@
 #include "Character.h"
 
-void Character::Hit(int damage_) {
+void Character::Hit(float damage_) {
 	lifePoints -= damage_;
-	if (lifePoints <= 0) {
-		isAlive = false;
-	}
+	isAlive = lifePoints > 0.0f;
 }
 
 void Character::Recover(int recoveryLife_)

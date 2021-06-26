@@ -9,14 +9,14 @@ public:
 	std::vector<std::string> states{ "Idle" ,
 					"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
 					"DashBackward", "DashForward" , "DashLeft" , "DashRight" ,
-					"Death" , "LeftShot" , "RightShot", "RunForwardLeft",
-					"RunForwardRight", "RunBackwardLeft", "RunBarckwardRight"
+					"Death" , "Shooting", "",""
+					"RunForwardLeft","RunForwardRight", "RunBackwardLeft", "RunBarckwardRight"
 	};
 
 public:
 	// ------- Contructors ------- //
 	Onimaru() {};
-	void Init(int lifePoints_, float movementSpeed_, int damageHit_, float attackSpeed_, UID onimaruUID = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID cameraUID = 0);
+	void Init(UID onimaruUID = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID cameraUID = 0);
 	void Update(bool lockMovement = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	

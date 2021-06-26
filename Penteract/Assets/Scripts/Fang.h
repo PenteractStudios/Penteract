@@ -10,14 +10,14 @@ public:
 	void Update(bool lockMovement = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	float GetRealDashCooldown();
-	void Init(int lifePoints_, float movementSpeed_, int damageHit_, float attackSpeed_,UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID);
+	void Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID);
 
 public:
 	std::vector<std::string> states{ "Idle" ,
-						"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
-						"DashBackward", "DashForward" , "DashLeft" , "DashRight" ,
-						"Death" , "LeftShot" , "RightShot", "RunForwardLeft",
-						"RunForwardRight", "RunBackwardLeft", "RunBarckwardRight"
+						"RunBackward" , "RunForward" , "RunLeft" , "RunRight" , //1 - 4
+						"DashBackward", "DashForward" , "DashLeft" , "DashRight" , //5 - 8 
+						"Death" , "LeftShot" , "RightShot", "" //9 - 12 
+						"RunForwardLeft", "RunForwardRight", "RunBackwardLeft", "RunBarckwardRight" // 13 - 16
 	};
 	//pasar a privado y hacer setters
 	float dashCooldown = 5.f;

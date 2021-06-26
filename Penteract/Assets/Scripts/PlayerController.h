@@ -99,8 +99,8 @@ public:
 
 	/* Fang & onimaru damage */
 	//split
-	int rangedDamageTaken = 1;
-	int meleeDamageTaken = 1;
+	float rangedDamageTaken = 1.0f;
+	float meleeDamageTaken = 1.0f;
 	
 	//Camera
 	bool useSmoothCamera = true;

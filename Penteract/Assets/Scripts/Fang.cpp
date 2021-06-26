@@ -2,15 +2,10 @@
 #include "GameplaySystems.h"
 #include "HUDController.h"
 
-void Fang::Init(int lifePoints_, float movementSpeed_, int damageHit_, float attackSpeed_,UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID)
+void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID)
 {
-	attackSpeed = attackSpeed_;
-	lifePoints = lifePoints_;
-	movementSpeed = movementSpeed_;
-	damageHit = damageHit_;
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(fangUID);
-	characterGameObject->GetComponent<ComponentCapsuleCollider>()->Enable();
 
 	if (characterGameObject && characterGameObject->GetParent()) {
 		playerMainTransform = characterGameObject->GetParent()->GetComponent<ComponentTransform>();
@@ -39,12 +34,18 @@ void Fang::Init(int lifePoints_, float movementSpeed_, int damageHit_, float att
 			agent->SetMaxAcceleration(MAX_ACCELERATION);
 		}
 	}
-	//Get audio sources
-	int i = 0;
+	if (characterGameObject) {
 
-	for (ComponentAudioSource& src : characterGameObject->GetComponents<ComponentAudioSource>()) {
-		if (i < static_cast<int>(AudioPlayer::TOTAL)) playerAudios[i] = &src;
-		i++;
+		characterGameObject->GetComponent<ComponentCapsuleCollider>()->Enable();
+
+		//Get audio sources
+		int i = 0;
+
+		for (ComponentAudioSource& src : characterGameObject->GetComponents<ComponentAudioSource>()) {
+			if (i < static_cast<int>(AudioPlayer::TOTAL)) playerAudios[i] = &src;
+			i++;
+		}
+
 	}
 
 }
@@ -145,12 +146,14 @@ void Fang::Shoot() {
 
 		ComponentTransform* shootingGunTransform = nullptr;
 		if (rightShot) {
-			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[12]);
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[11]);
 			shootingGunTransform = rightGunTransform;
+			rightShot = false;
 		}
 		else {
-			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[11]);
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[10]);
 			shootingGunTransform = leftGunTransform;
+			rightShot = true;
 		}
 		if (trail && bullet && shootingGunTransform) {
 			GameplaySystems::Instantiate(bullet, shootingGunTransform->GetGlobalPosition(), playerMainTransform->GetGlobalRotation());
@@ -203,11 +206,13 @@ void Fang::Update(bool lockMovement) {
 			if (Input::GetMouseButtonDown(0)) Shoot();
 		}
 		Dash();
-		PlayAnimation();
+		
 	} 
 	else {
 		if (agent) agent->RemoveAgentFromCrowd();
+		movementInputDirection = MovementDirection::NONE;
 	}
+	PlayAnimation();
 }
 
 
