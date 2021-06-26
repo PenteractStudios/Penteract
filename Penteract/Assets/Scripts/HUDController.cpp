@@ -279,11 +279,14 @@ void HUDController::ResetCooldownProgressBar() {
 	if (!swapingSkillCanvas) {
 		return;
 	}
-
-	AbilityRefreshEffectProgressBar* pef = GET_SCRIPT(swapingSkillCanvas->GetChildren()[HIERARCHY_INDEX_SWAP_ABILITY_EFFECT], AbilityRefreshEffectProgressBar);
-	if (pef != nullptr) {
-		pef->ResetBar();
+	GameObject* progressBarHoldingChild = swapingSkillCanvas->GetChild(HIERARCHY_INDEX_SWAP_ABILITY_EFFECT);
+	if (progressBarHoldingChild) {
+		AbilityRefreshEffectProgressBar* pef = GET_SCRIPT(progressBarHoldingChild, AbilityRefreshEffectProgressBar);
+		if (pef != nullptr) {
+			pef->ResetBar();
+		}
 	}
+
 }
 
 void HUDController::UpdateScore(int score_) {
