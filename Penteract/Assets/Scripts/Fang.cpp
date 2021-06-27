@@ -65,8 +65,10 @@ void Fang::InitDash() {
 		dashInCooldown = true;
 		dashing = true;
 		if (agent) {
+			Debug::Log(("dashspeed" + std::to_string(dashSpeed)).c_str());
 			agent->SetMaxSpeed(dashSpeed);
 		}
+
 		if (playerAudios[static_cast<int>(AudioPlayer::FIRST_ABILITY)]) {
 			playerAudios[static_cast<int>(AudioPlayer::FIRST_ABILITY)]->Play();
 		}
@@ -196,7 +198,7 @@ void Fang::PlayAnimation() {
 
 void Fang::Update(bool lockMovement) {
 	if (isAlive) {
-		Player::Update();
+		Player::Update(dashing);
 		if (Input::GetMouseButtonDown(2)) {
 			InitDash();
 		}
