@@ -433,13 +433,9 @@ void RangedAI::PlayAudio(AudioType audioType) {
 
 void RangedAI::ShootPlayerInRange() {
 	if (!player) return;
-	Debug::Log("paso1");
 	if (!playerController) return;
-	Debug::Log("paso2");
 	if (!playerController->playerFang.characterGameObject || !playerController->playerOnimaru.characterGameObject) return;
-	Debug::Log("paso3");
 	if (playerController->IsPlayerDead()) return;
-	Debug::Log("shooting entro");
 	if (CharacterInRange(player, rangerGruntCharacter.attackRange, true)) {
 		shot = true;
 

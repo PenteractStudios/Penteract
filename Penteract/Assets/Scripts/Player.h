@@ -19,7 +19,6 @@ enum class AudioPlayer {
 	FIRST_ABILITY, //dash, shield
 	SECOND_ABILITY, //EMP Field , Energy Blast
 	THIRD_ABILITY, // Ultimate
-	SWITCH,
 	SHOOT,
 	HIT,
 	DEATH,
