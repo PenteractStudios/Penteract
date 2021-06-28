@@ -16,28 +16,26 @@
 #include "Components/ComponentMeshRenderer.h"
 #include "Resources/ResourcePrefab.h"
 
-
 //clang-format off
 EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
-	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
-	MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
-	MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
-	MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),
-	MEMBER(MemberType::INT, rangerGruntCharacter.lifePoints),
-	MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
-	MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
-	MEMBER(MemberType::FLOAT, rangerGruntCharacter.timeToDie),
-	MEMBER(MemberType::FLOAT, attackSpeed),
-	MEMBER(MemberType::FLOAT, fleeingRange),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, trailPrefabUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
-	MEMBER(MemberType::GAME_OBJECT_UID, hudControllerObjUID),
-	MEMBER(MemberType::FLOAT, timeSinceLastHurt),
-	MEMBER(MemberType::FLOAT, approachOffset) //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
-
+		MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
+		MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
+		MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
+		MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
+		MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),
+		MEMBER(MemberType::INT, rangerGruntCharacter.lifePoints),
+		MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
+		MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
+		MEMBER(MemberType::FLOAT, rangerGruntCharacter.timeToDie),
+		MEMBER(MemberType::FLOAT, attackSpeed),
+		MEMBER(MemberType::FLOAT, fleeingRange),
+		MEMBER(MemberType::PREFAB_RESOURCE_UID, trailPrefabUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
+		MEMBER(MemberType::GAME_OBJECT_UID, hudControllerObjUID),
+		MEMBER(MemberType::FLOAT, timeSinceLastHurt),
+		MEMBER(MemberType::FLOAT, approachOffset) //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
 };//clang-format on
 
 GENERATE_BODY_IMPL(RangedAI);
@@ -97,14 +95,13 @@ void RangedAI::Start() {
 		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
 		++i;
 	}
-	
+
 	GameObject* winConditionGo = GameplaySystems::GetGameObject(winConditionUID);
 	if (winConditionGo) {
 		winLoseScript = GET_SCRIPT(winConditionGo, WinLose);
 	}
 
 	enemySpawnPointScript = GET_SCRIPT(GetOwner().GetParent(), EnemySpawnPoint);
-
 }
 
 void RangedAI::OnAnimationFinished() {
@@ -114,7 +111,8 @@ void RangedAI::OnAnimationFinished() {
 		animation->SendTrigger("SpawnIdle");
 		agent->AddAgentToCrowd();
 		state = AIState::IDLE;
-	} else if (state == AIState::DEATH) {
+	}
+	else if (state == AIState::DEATH) {
 		rangerGruntCharacter.destroying = true;
 	}
 }
@@ -155,11 +153,10 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 			ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
 			if (collider) collider->Disable();
 			ChangeState(AIState::DEATH);
-			if(winLoseScript) winLoseScript->IncrementDeadEnemies();
+			if (winLoseScript) winLoseScript->IncrementDeadEnemies();
 			if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
 		}
 	}
-
 }
 
 void RangedAI::Update() {
@@ -256,13 +253,10 @@ void RangedAI::EnterState(AIState newState) {
 void RangedAI::UpdateState() {
 	switch (state) {
 	case AIState::START:
-
-		if (Camera::CheckObjectInsideFrustum(GetOwner().GetChildren()[0])) {
-			if (aiMovement) aiMovement->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), rangerGruntCharacter.fallingSpeed, true);
-			if (ownerTransform->GetGlobalPosition().y < 2.7f + 0e-5f) {
-				animation->SendTrigger("StartSpawn");
-				ChangeState(AIState::SPAWN);
-			}
+		if (aiMovement) aiMovement->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), rangerGruntCharacter.fallingSpeed, true);
+		if (ownerTransform->GetGlobalPosition().y < 2.7f + 0e-5f) {
+			animation->SendTrigger("StartSpawn");
+			ChangeState(AIState::SPAWN);
 		}
 		break;
 	case AIState::SPAWN:
@@ -322,16 +316,15 @@ void RangedAI::UpdateState() {
 		break;
 	case AIState::DEATH:
 		if (rangerGruntCharacter.destroying) {
-			
 			if (rangerGruntCharacter.timeToDie > 0) {
 				rangerGruntCharacter.timeToDie -= Time::GetDeltaTime();
-			} else {
+			}
+			else {
 				if (hudControllerScript) {
 					hudControllerScript->UpdateScore(10);
 				}
 				GameplaySystems::DestroyGameObject(&GetOwner());
 			}
-			
 		}
 
 		break;
@@ -363,7 +356,6 @@ bool RangedAI::CharacterInRange(const GameObject* character, float range, bool u
 }
 
 bool RangedAI::FindsRayToPlayer(bool useForward) {
-
 	if (!meshObj) return false;
 
 	ComponentBoundingBox* box = meshObj->GetComponent<ComponentBoundingBox>();
@@ -405,7 +397,7 @@ void RangedAI::ActualShot() {
 	if (shootTrailPrefab) {
 		//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
 		if (!meshObj) return;
-		
+
 		ComponentBoundingBox* box = meshObj->GetComponent<ComponentBoundingBox>();
 
 		float offsetY = (box->GetWorldAABB().minPoint.y + box->GetWorldAABB().maxPoint.y) / 4;
@@ -424,7 +416,6 @@ void RangedAI::ActualShot() {
 	actualShotTimer = -1.0f;
 
 	PlayAudio(AudioType::SHOOT);
-
 }
 
 void RangedAI::PlayAudio(AudioType audioType) {
