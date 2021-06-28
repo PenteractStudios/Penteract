@@ -5,7 +5,7 @@
 
 EXPOSE_MEMBERS(SpawnPointController) {
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, meleeEnemyPrefabUID),
-		MEMBER(MemberType::PREFAB_RESOURCE_UID, rangeEnemyPrefabUID),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, rangeEnemyPrefabUID),
 };
 
 GENERATE_BODY_IMPL(SpawnPointController);

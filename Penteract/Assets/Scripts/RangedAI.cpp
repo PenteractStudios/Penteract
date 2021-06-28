@@ -19,23 +19,23 @@
 //clang-format off
 EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
-		MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
-		MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
-		MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),
-		MEMBER(MemberType::INT, rangerGruntCharacter.lifePoints),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.timeToDie),
-		MEMBER(MemberType::FLOAT, attackSpeed),
-		MEMBER(MemberType::FLOAT, fleeingRange),
-		MEMBER(MemberType::PREFAB_RESOURCE_UID, trailPrefabUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
-		MEMBER(MemberType::GAME_OBJECT_UID, hudControllerObjUID),
-		MEMBER(MemberType::FLOAT, timeSinceLastHurt),
-		MEMBER(MemberType::FLOAT, approachOffset) //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
+	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
+	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
+	MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
+	MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),
+	MEMBER(MemberType::INT, rangerGruntCharacter.lifePoints),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.timeToDie),
+	MEMBER(MemberType::FLOAT, attackSpeed),
+	MEMBER(MemberType::FLOAT, fleeingRange),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, trailPrefabUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
+	MEMBER(MemberType::GAME_OBJECT_UID, hudControllerObjUID),
+	MEMBER(MemberType::FLOAT, timeSinceLastHurt),
+	MEMBER(MemberType::FLOAT, approachOffset) //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
 };//clang-format on
 
 GENERATE_BODY_IMPL(RangedAI);
