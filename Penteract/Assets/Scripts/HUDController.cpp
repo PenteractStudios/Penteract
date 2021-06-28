@@ -602,11 +602,11 @@ void HUDController::OnHealthLost(GameObject* targetCanvas, int health) {
 		remainingTimeActiveIndexesToUse.push_back(healthToUse);
 		remainingDurableHealthTimesToUse[healthToUse] = timeToFadeDurableHealthFeedback;
 
-		if (!obj) return;
+		if (!obj) continue;
 
 		HealthLostInstantFeedback* fb = GET_SCRIPT(obj, HealthLostInstantFeedback);
 
-		if (!fb) return;
+		if (!fb) continue;
 
 		fb->Play();
 		healthToUse++;
