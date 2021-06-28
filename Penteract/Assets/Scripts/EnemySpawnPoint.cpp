@@ -28,11 +28,11 @@ void EnemySpawnPoint::Start() {
 	gameObject = &GetOwner();
 
 	/* Load the wave config into the enemy vector */
-	enemies.push_back(std::make_tuple(firstWaveMeleeAmount, firstWaveRangeAmount));
-	enemies.push_back(std::make_tuple(secondWaveMeleeAmount, secondWaveRangeAmount));
-	enemies.push_back(std::make_tuple(thirdWaveMeleeAmount, thirdWaveRangeAmount));
-	enemies.push_back(std::make_tuple(fourthWaveMeleeAmount, fourthWaveRangeAmount));
-	enemies.push_back(std::make_tuple(fifthWaveMeleeAmount, fifthWaveRangeAmount));
+	enemies.emplace_back(firstWaveMeleeAmount, firstWaveRangeAmount);
+	enemies.emplace_back(secondWaveMeleeAmount, secondWaveRangeAmount);
+	enemies.emplace_back(thirdWaveMeleeAmount, thirdWaveRangeAmount);
+	enemies.emplace_back(fourthWaveMeleeAmount, fourthWaveRangeAmount);
+	enemies.emplace_back(fifthWaveMeleeAmount, fifthWaveRangeAmount);
 	it = enemies.begin();
 
 	for (auto const& [melee, range] : enemies) amountOfEnemies += melee + range;
