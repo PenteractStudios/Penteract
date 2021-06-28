@@ -25,23 +25,23 @@
 EXPOSE_MEMBERS(HUDController) {
 	// Add members here to expose them to the engine. Example:
 	MEMBER(MemberType::GAME_OBJECT_UID, fangMainCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruMainCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangSkillsMainCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillsMainCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangSkillsSecondCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillsSecondCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangHealthMainCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthMainCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangHealthSecondCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthSecondCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, swapingSkillCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, scoreTextUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, canvasHUDUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, lowHealthWarningEffectUID),
-		MEMBER(MemberType::FLOAT, timeToFadeDurableHealthFeedbackInternal),
-		MEMBER(MemberType::FLOAT, delaySwitchTime)
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruMainCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangSkillsMainCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillsMainCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangSkillsSecondCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillsSecondCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangHealthMainCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthMainCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangHealthSecondCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthSecondCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, swapingSkillCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, scoreTextUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasHUDUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, lowHealthWarningEffectUID),
+	MEMBER(MemberType::FLOAT, timeToFadeDurableHealthFeedbackInternal),
+	MEMBER(MemberType::FLOAT, delaySwitchTime)
 };
 
 GENERATE_BODY_IMPL(HUDController);
@@ -588,26 +588,29 @@ void HUDController::UpdateVisualCooldowns(GameObject* canvas, bool isMain, int s
 void HUDController::OnHealthLost(GameObject* targetCanvas, int health) {
 	bool isFang = (targetCanvas->GetID() == fangHealthMainCanvas->GetID());
 
-	GameObject* obj = targetCanvas->GetChild(health);
+	int prevLivesToUse = isFang ? prevLivesFang : prevLivesOni;
+	std::vector<int>& remainingTimeActiveIndexesToUse = isFang ? remainingTimeActiveIndexesFang : remainingTimeActiveIndexesOni;
+	float* remainingDurableHealthTimesToUse = isFang ? remainingDurableHealthTimesFang : remainingDurableHealthTimesOni;
 
+	int healthLost = prevLivesToUse - health;
+	int healthToUse = health;
 
-	if (isFang) {
-		remainingTimeActiveIndexesFang.push_back(health);
-		remainingDurableHealthTimesFang[health] = timeToFadeDurableHealthFeedback;
-	} else {
-		remainingTimeActiveIndexesOni.push_back(health);
-		remainingDurableHealthTimesOni[health] = timeToFadeDurableHealthFeedback;
+	for (int i = 0; i < healthLost; i++) {
+
+		GameObject* obj = targetCanvas->GetChild(healthToUse);
+
+		remainingTimeActiveIndexesToUse.push_back(healthToUse);
+		remainingDurableHealthTimesToUse[healthToUse] = timeToFadeDurableHealthFeedback;
+
+		if (!obj) continue;
+
+		HealthLostInstantFeedback* fb = GET_SCRIPT(obj, HealthLostInstantFeedback);
+
+		if (!fb) continue;
+
+		fb->Play();
+		healthToUse++;
 	}
-
-	if (!obj) return;
-
-	HealthLostInstantFeedback* fb = GET_SCRIPT(obj, HealthLostInstantFeedback);
-
-	if (!fb) return;
-
-	fb->Play();
-
-
 }
 
 void HUDController::UpdateCanvasHP(GameObject* targetCanvas, int health, bool darkened) {
