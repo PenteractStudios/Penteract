@@ -46,53 +46,51 @@ public:
 	int GetOverPowerMode();
 	bool IsPlayerDead() { return !playerFang.isAlive || !playerOnimaru.isAlive; }
 	void TakeDamage(bool ranged = false);
+
 public:
 	//Debug
 	bool invincibleMode = false;
 	int overpowerMode = 1;
 	bool noCooldownMode = false;
-
 	bool debugGetHit = false;
-	// cada clase el suyo
-	GameObject* camera = nullptr;
 
 	Onimaru playerOnimaru = Onimaru();
 	Fang playerFang = Fang();
 
+	//MainGameObject
+	UID mainNodeUID = 0;
+
+	//Fang
 	UID fangUID = 0;
 	UID fangTrailUID = 0;
 	UID fangLeftGunUID = 0;
 	UID fangRightGunUID = 0;
 	UID fangBulletUID = 0;
-
+	//Onimaru
 	UID onimaruUID = 0;
 	UID onimaruParticleUID = 0;
 	UID onimaruBulletUID = 0;
 	UID onimaruGunUID = 0;
 
-	UID switchParticlesUID = 0;
-	UID mainNodeUID = 0;
-	//camera
-	UID cameraUID = 0;
-	//playercontroller
+	//HUD
 	UID canvasUID = 0;
-
-	bool shooting = false;
-
+	float fangRecoveryRate = 1.0f;
+	float onimaruRecoveryRate = 1.0f;
+	bool firstTime = true;
 	bool hitTaken = false;
-	
-	//player
-	float switchCooldown = 5.f;
-	//camera
+
+	//Camera
+	UID cameraUID = 0;
+	GameObject* camera = nullptr;
 	float cameraOffsetZ = 20.f;
 	float cameraOffsetY = 10.f;
 	float cameraOffsetX = 0.f;
-	//split 	
-	float fangRecoveryRate = 1.0f;
-	float onimaruRecoveryRate = 1.0f;
-	//playercontroller
-	bool firstTime = true;
-	//player
+	bool useSmoothCamera = true;
+	float smoothCameraSpeed = 5.0f;
+
+	//Switch
+	UID switchParticlesUID = 0;
+	float switchCooldown = 5.f;
 	bool switchInProgress = false;
 	float switchDelay = 0.37f;
 
@@ -100,17 +98,6 @@ public:
 	//split
 	float rangedDamageTaken = 1.0f;
 	float meleeDamageTaken = 1.0f;
-	
-	//Camera
-	bool useSmoothCamera = true;
-	float smoothCameraSpeed = 5.0f;
-	// split
-	std::vector<std::string> states{ "Idle" ,
-								"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
-								"DashBackward", "DashForward" , "DashLeft" , "DashRight" ,
-								"Death" , "Hurt" , "LeftShot" , "RightShot", "Shooting", "RunForwardLeft",
-								"RunForwardRight", "RunBackwardLeft", "RunBarckwardRight"
-	};
 
 private:
 	void CheckCoolDowns();
@@ -122,29 +109,24 @@ private:
 	
 private:
 
+	//Switch
 	float switchCooldownRemaining = 0.f;
 	bool switchInCooldown = false;
 
-	//split
+	//HUD
 	float fangRecovering = 0.f;
 	float onimaruRecovering = 0.f;
+	HUDController* hudControllerScript = nullptr;
 
-	//player
+	//Switch
 	float currentSwitchDelay = 0.f;
 	bool playSwitchParticles = true;
+	GameObject* switchEffects = nullptr;
 
-	//player
-	float3 initialPosition = float3(0, 0, 0);
-	//player
-	float3 facePointDir = float3(0, 0, 0);
-	//split
+	//Camera
 	ComponentCamera* compCamera = nullptr;
 	ComponentTransform* cameraTransform = nullptr;
 
-	GameObject* switchEffects = nullptr;
-	//playercontroller
-	HUDController* hudControllerScript = nullptr;
-	OnimaruBullet* onimaruBulletcript = nullptr;
-
+	//Audio
 	ComponentAudioSource* audios[static_cast<int>(AudioPlayer::TOTAL)] = { nullptr };
 };

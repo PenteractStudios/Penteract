@@ -8,7 +8,7 @@ void Player::SetAttackSpeed(float attackSpeed_)
 	attackSpeed = attackSpeed_;
 }
 
-void Player::Hit(float damage_)
+void Player::GetHit(float damage_)
 {
 	lifePoints -= damage_;
 	if (playerAudios[static_cast<int>(AudioPlayer::HIT)]) playerAudios[static_cast<int>(AudioPlayer::HIT)]->Play();

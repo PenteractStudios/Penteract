@@ -61,12 +61,10 @@ EXPOSE_MEMBERS(PlayerController) {
 
 GENERATE_BODY_IMPL(PlayerController);
 
-// crear player fang y onimaru crear una instancia de cada uno pasando por parametro los datos que necesite
-// sacar script de camera
 
 void PlayerController::Start() {
-	playerFang.Init(fangUID, fangTrailUID, fangLeftGunUID, fangRightGunUID, fangBulletUID, cameraUID);
-	playerOnimaru.Init(onimaruUID, onimaruBulletUID, onimaruGunUID, cameraUID);
+	playerFang.Init(fangUID, fangTrailUID, fangLeftGunUID, fangRightGunUID, fangBulletUID, cameraUID, canvasUID);
+	playerOnimaru.Init(onimaruUID, onimaruBulletUID, onimaruGunUID, cameraUID, canvasUID);
 
 	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
 	if (canvasGO) {

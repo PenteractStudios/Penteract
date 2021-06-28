@@ -2,7 +2,7 @@
 #include "GameplaySystems.h"
 #include "HUDController.h"
 
-void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID)
+void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID, UID canvasUID)
 {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(fangUID);
@@ -33,6 +33,10 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 			agent->SetMaxSpeed(movementSpeed);
 			agent->SetMaxAcceleration(MAX_ACCELERATION);
 		}
+	}
+	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
+	if (canvasGO) {
+		hudControllerScript = GET_SCRIPT(canvasGO, HUDController);
 	}
 	if (characterGameObject) {
 
@@ -65,7 +69,6 @@ void Fang::InitDash() {
 		dashInCooldown = true;
 		dashing = true;
 		if (agent) {
-			Debug::Log(("dashspeed" + std::to_string(dashSpeed)).c_str());
 			agent->SetMaxSpeed(dashSpeed);
 		}
 
@@ -73,10 +76,10 @@ void Fang::InitDash() {
 			playerAudios[static_cast<int>(AudioPlayer::FIRST_ABILITY)]->Play();
 		}
 	}
-	//para animacion de volver a tener la habilidad
-	//if (hudControllerScript) {
-	//	hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_1);
-	//}
+
+	if (hudControllerScript) {
+		hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_1);
+	}
 }
 
 void Fang::Dash() {
@@ -117,7 +120,7 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 		}
 	}
 
-	//AttackCooldown
+	//Attack Cooldown
 	if(shooting){
 		if (attackCooldownRemaining <= 0.f) {
 			attackCooldownRemaining = 0.f;

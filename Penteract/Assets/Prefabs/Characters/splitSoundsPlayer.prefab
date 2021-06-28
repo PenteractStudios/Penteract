@@ -48,7 +48,7 @@
                     {
                         "Name": "playerFang.damageHit",
                         "Type": "Float",
-                        "Value": 2.0
+                        "Value": 3.0
                     },
                     {
                         "Name": "fangLeftGunUID",
@@ -173,7 +173,12 @@
                     {
                         "Name": "playerFang.movementSpeed",
                         "Type": "Float",
-                        "Value": 10.0
+                        "Value": 8.0
+                    },
+                    {
+                        "Name": "playerFang.dashDuration",
+                        "Type": "Float",
+                        "Value": 0.15000000596046449
                     },
                     {
                         "Name": "switchCooldown",
@@ -184,6 +189,11 @@
                         "Name": "dashSpeed",
                         "Type": "Float",
                         "Value": 75.0
+                    },
+                    {
+                        "Name": "playerFang.dashCooldown",
+                        "Type": "Float",
+                        "Value": 2.0
                     },
                     {
                         "Name": "dashDuration",
@@ -214,6 +224,21 @@
                         "Name": "meleeDamageTaken",
                         "Type": "Float",
                         "Value": 1.0
+                    },
+                    {
+                        "Name": "playerFang.dashSpeed",
+                        "Type": "Float",
+                        "Value": 75.0
+                    },
+                    {
+                        "Name": "playerFang.attackSpeed",
+                        "Type": "Float",
+                        "Value": 2.0
+                    },
+                    {
+                        "Name": "playerOnimaru.attackSpeed",
+                        "Type": "Float",
+                        "Value": 6.0
                     }
                 ]
             },
