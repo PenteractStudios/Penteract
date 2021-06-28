@@ -91,7 +91,7 @@ void EnemySpawnPoint::RenderEnemy(EnemyType type, unsigned int amount) {
 				newXval = newXval < 1.f ? 1.f : newXval;
 				newPosition.x += xAxisPos * offset * newXval;
 				goTransform->SetPosition(newPosition);
-				/* After an enemy is spawn at a certain location th next one with be next to it */
+				/* After an enemy is spawned at a certain location th next one with be next to it */
 				xAxisPos++;
 			}
 		}
