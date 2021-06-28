@@ -14,7 +14,7 @@ class Character
 public:
 	Character() {}
 
-	virtual void Hit(float damage_);
+	virtual void GetHit(float damage_);
 	void Recover(int recoveryLife_);
 
 	void SetTotalLifePoints(int totalLifePoints_);

@@ -262,10 +262,10 @@ void PlayerController::TakeDamage(bool ranged) {
 	if(!invincibleMode){
 		float damage = (ranged) ? rangedDamageTaken : meleeDamageTaken;
 		if (playerFang.IsActive()) {
-			playerFang.Hit(damage);
+			playerFang.GetHit(damage);
 		}
 		else {
-			playerOnimaru.Hit(damage);
+			playerOnimaru.GetHit(damage);
 		}
 		hitTaken = true;
 	}

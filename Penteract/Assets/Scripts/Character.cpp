@@ -1,6 +1,6 @@
 #include "Character.h"
 
-void Character::Hit(float damage_) {
+void Character::GetHit(float damage_) {
 	lifePoints -= damage_;
 	isAlive = lifePoints > 0.0f;
 }
