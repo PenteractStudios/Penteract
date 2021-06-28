@@ -98,6 +98,7 @@ public:
 	float cameraOffsetZ = 20.f;
 	float cameraOffsetY = 10.f;
 	float cameraOffsetX = 0.f;
+	float maxOnimaruBulletSpread = 5.0f;
 
 	int fangRecoveryRate = 1.0f;
 	int onimaruRecoveryRate = 1.0f;
@@ -108,10 +109,10 @@ public:
 	float switchDelay = 0.37f;
 
 	/* Fang & onimaru damage */
-	
+
 	int rangedDamageTaken = 1;
 	int meleeDamageTaken = 1;
-	
+
 	//Camera
 	bool useSmoothCamera = true;
 	float smoothCameraSpeed = 5.0f;
@@ -139,7 +140,7 @@ private:
 	bool CanSwitch();
 	bool CanShoot();
 	void ResetSwitchStatus();
-
+	Quat GetSlightRandomSpread(float minValue, float maxValue) const;
 	float3 GetDirection(MovementDirection md) const;
 	MovementDirection GetInputMovementDirection() const;
 	int GetMouseDirectionState(MovementDirection input);
