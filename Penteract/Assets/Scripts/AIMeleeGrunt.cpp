@@ -197,7 +197,7 @@ void AIMeleeGrunt::OnAnimationSecondaryFinished()
     }
 }
 
-void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance)
+void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle)
 {
     if (state != AIState::START && state != AIState::SPAWN) {
         if (gruntCharacter.isAlive && playerController) {

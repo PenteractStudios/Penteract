@@ -126,7 +126,7 @@ void RangedAI::OnAnimationSecondaryFinished() {
 	}
 }
 
-void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance) {
+void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		if (rangerGruntCharacter.isAlive && playerController) {
 			bool hitTaken = false;
