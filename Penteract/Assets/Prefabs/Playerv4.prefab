@@ -1,6 +1,6 @@
 {
     "Root": {
-        "Name": "Playerv4",
+        "Name": "Player",
         "Active": true,
         "RootBoneName": "",
         "Mask": 0,
@@ -43,22 +43,27 @@
                     {
                         "Name": "onimaruUID",
                         "Type": "GameObjectUID",
-                        "Value": 17635260075174120653
+                        "Value": 9505835340036721608
+                    },
+                    {
+                        "Name": "playerFang.damageHit",
+                        "Type": "Float",
+                        "Value": 3.0
                     },
                     {
                         "Name": "fangLeftGunUID",
                         "Type": "GameObjectUID",
-                        "Value": 11492181898969885721
+                        "Value": 10738339418067505235
                     },
                     {
                         "Name": "mainNodeUID",
                         "Type": "GameObjectUID",
-                        "Value": 8838610656912784116
+                        "Value": 403437826872113792
                     },
                     {
                         "Name": "fangUID",
                         "Type": "GameObjectUID",
-                        "Value": 1003037154712228647
+                        "Value": 11296030499094782229
                     },
                     {
                         "Name": "cameraUID",
@@ -123,12 +128,12 @@
                     {
                         "Name": "onimaruGunUID",
                         "Type": "GameObjectUID",
-                        "Value": 6889833712014804355
+                        "Value": 4960266134977784828
                     },
                     {
                         "Name": "switchParticlesUID",
                         "Type": "GameObjectUID",
-                        "Value": 14300201876450426101
+                        "Value": 12660902927213564857
                     },
                     {
                         "Name": "onimaruBulletUID",
@@ -153,7 +158,7 @@
                     {
                         "Name": "fangRightGunUID",
                         "Type": "GameObjectUID",
-                        "Value": 13653654394295212661
+                        "Value": 5113256268112488512
                     },
                     {
                         "Name": "fangCharacter.movementSpeed",
@@ -166,6 +171,16 @@
                         "Value": 2.0
                     },
                     {
+                        "Name": "playerFang.movementSpeed",
+                        "Type": "Float",
+                        "Value": 8.0
+                    },
+                    {
+                        "Name": "playerFang.dashDuration",
+                        "Type": "Float",
+                        "Value": 0.15000000596046449
+                    },
+                    {
                         "Name": "switchCooldown",
                         "Type": "Float",
                         "Value": 7.0
@@ -176,9 +191,54 @@
                         "Value": 75.0
                     },
                     {
+                        "Name": "playerFang.dashCooldown",
+                        "Type": "Float",
+                        "Value": 2.0
+                    },
+                    {
                         "Name": "dashDuration",
                         "Type": "Float",
                         "Value": 0.15000000596046449
+                    },
+                    {
+                        "Name": "playerFang.lifePoints",
+                        "Type": "Float",
+                        "Value": 10.0
+                    },
+                    {
+                        "Name": "playerOnimaru.movementSpeed",
+                        "Type": "Float",
+                        "Value": 6.0
+                    },
+                    {
+                        "Name": "playerOnimaru.lifePoints",
+                        "Type": "Float",
+                        "Value": 10.0
+                    },
+                    {
+                        "Name": "rangedDamageTaken",
+                        "Type": "Float",
+                        "Value": 1.0
+                    },
+                    {
+                        "Name": "meleeDamageTaken",
+                        "Type": "Float",
+                        "Value": 1.0
+                    },
+                    {
+                        "Name": "playerFang.dashSpeed",
+                        "Type": "Float",
+                        "Value": 75.0
+                    },
+                    {
+                        "Name": "playerFang.attackSpeed",
+                        "Type": "Float",
+                        "Value": 2.0
+                    },
+                    {
+                        "Name": "playerOnimaru.attackSpeed",
+                        "Type": "Float",
+                        "Value": 6.0
                     }
                 ]
             },
@@ -193,94 +253,10 @@
                 "Type": "AudioSource",
                 "Active": true,
                 "Pitch": 1.0,
-                "Gain": 0.3050000071525574,
-                "Mute": false,
-                "Looping": false,
-                "AudioClipId": 2709513398060962764,
-                "SpatialBlend": 1,
-                "SourceType": 0,
-                "InnerAngle": 90.0,
-                "OuterAngle": 180.0,
-                "OuterGain": 0.0
-            },
-            {
-                "Type": "AudioSource",
-                "Active": true,
-                "Pitch": 1.0,
                 "Gain": 1.0,
                 "Mute": false,
                 "Looping": false,
                 "AudioClipId": 10133328817958406947,
-                "SpatialBlend": 1,
-                "SourceType": 0,
-                "InnerAngle": 90.0,
-                "OuterAngle": 180.0,
-                "OuterGain": 0.0
-            },
-            {
-                "Type": "AudioSource",
-                "Active": true,
-                "Pitch": 1.0,
-                "Gain": 0.6050000190734863,
-                "Mute": false,
-                "Looping": false,
-                "AudioClipId": 10685611266222420786,
-                "SpatialBlend": 1,
-                "SourceType": 0,
-                "InnerAngle": 90.0,
-                "OuterAngle": 180.0,
-                "OuterGain": 0.0
-            },
-            {
-                "Type": "AudioSource",
-                "Active": true,
-                "Pitch": 1.0,
-                "Gain": 0.20900000631809236,
-                "Mute": false,
-                "Looping": false,
-                "AudioClipId": 9595108440048790366,
-                "SpatialBlend": 1,
-                "SourceType": 0,
-                "InnerAngle": 90.0,
-                "OuterAngle": 180.0,
-                "OuterGain": 0.0
-            },
-            {
-                "Type": "AudioSource",
-                "Active": true,
-                "Pitch": 1.0,
-                "Gain": 0.4449999928474426,
-                "Mute": false,
-                "Looping": false,
-                "AudioClipId": 4996867956598617374,
-                "SpatialBlend": 1,
-                "SourceType": 0,
-                "InnerAngle": 90.0,
-                "OuterAngle": 180.0,
-                "OuterGain": 0.0
-            },
-            {
-                "Type": "AudioSource",
-                "Active": true,
-                "Pitch": 1.0,
-                "Gain": 0.39500001072883608,
-                "Mute": false,
-                "Looping": false,
-                "AudioClipId": 13399953858247124655,
-                "SpatialBlend": 1,
-                "SourceType": 0,
-                "InnerAngle": 90.0,
-                "OuterAngle": 180.0,
-                "OuterGain": 0.0
-            },
-            {
-                "Type": "AudioSource",
-                "Active": true,
-                "Pitch": 1.0,
-                "Gain": 0.38499999046325686,
-                "Mute": false,
-                "Looping": false,
-                "AudioClipId": 7212022815163123197,
                 "SpatialBlend": 1,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
@@ -299,7 +275,7 @@
                         "Type": "Transform",
                         "Active": false,
                         "Position": [
-                            0.0000152587890625,
+                            0.0,
                             0.0,
                             0.0
                         ],
@@ -332,9 +308,14 @@
                         "Script": 10002269642242264877,
                         "Values": [
                             {
+                                "Name": "sceneUID",
+                                "Type": "SceneResourceUID",
+                                "Value": 1827699931961010260
+                            },
+                            {
                                 "Name": "playerUID",
                                 "Type": "GameObjectUID",
-                                "Value": 8838610656912784116
+                                "Value": 403437826872113792
                             }
                         ]
                     },
@@ -353,6 +334,90 @@
                             0.0
                         ],
                         "freezeRotation": false
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": false,
+                        "Pitch": 1.0,
+                        "Gain": 1.0,
+                        "Mute": false,
+                        "Looping": false,
+                        "AudioClipId": 0,
+                        "SpatialBlend": 0,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": false,
+                        "Pitch": 1.0,
+                        "Gain": 1.0,
+                        "Mute": false,
+                        "Looping": false,
+                        "AudioClipId": 0,
+                        "SpatialBlend": 0,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": false,
+                        "Pitch": 1.0,
+                        "Gain": 1.0,
+                        "Mute": false,
+                        "Looping": false,
+                        "AudioClipId": 0,
+                        "SpatialBlend": 0,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": false,
+                        "Pitch": 1.0,
+                        "Gain": 1.0,
+                        "Mute": false,
+                        "Looping": false,
+                        "AudioClipId": 1413733556094671463,
+                        "SpatialBlend": 1,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": false,
+                        "Pitch": 1.0,
+                        "Gain": 1.0,
+                        "Mute": false,
+                        "Looping": false,
+                        "AudioClipId": 4996867956598617374,
+                        "SpatialBlend": 1,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": false,
+                        "Pitch": 1.0,
+                        "Gain": 1.0,
+                        "Mute": false,
+                        "Looping": false,
+                        "AudioClipId": 7212022815163123197,
+                        "SpatialBlend": 1,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0
                     }
                 ],
                 "Children": [
@@ -360,7 +425,7 @@
                         "Name": "Onimaru",
                         "Active": true,
                         "RootBoneName": "",
-                        "Mask": 16,
+                        "Mask": 0,
                         "Components": [
                             {
                                 "Type": "Transform",
@@ -3739,7 +3804,7 @@
                     },
                     {
                         "Name": "VFXArm",
-                        "Active": true,
+                        "Active": false,
                         "RootBoneName": "",
                         "Mask": 16,
                         "Components": [
@@ -3801,7 +3866,7 @@
                                 "Position": [
                                     0.0,
                                     0.0,
-                                    10.0
+                                    0.0
                                 ],
                                 "Rotation": [
                                     -1.6543612251060555e-24,
@@ -3836,6 +3901,40 @@
                                     117.80818939208985,
                                     39.55801773071289,
                                     102.19851684570313
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Name": "OnimaruBulletSpawnPoint",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Active": false,
+                                "Position": [
+                                    82.89199829101563,
+                                    101.58799743652344,
+                                    -1.7669999599456788
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
                                 ]
                             }
                         ],
@@ -3888,7 +3987,7 @@
                             {
                                 "Name": "playerUID",
                                 "Type": "GameObjectUID",
-                                "Value": 8838610656912784116
+                                "Value": 403437826872113792
                             },
                             {
                                 "Name": "sceneUID",
@@ -3899,7 +3998,7 @@
                     },
                     {
                         "Type": "CapsuleCollider",
-                        "Active": false,
+                        "Active": true,
                         "colliderType": 2,
                         "layerType": 3,
                         "mass": 1.0,
@@ -3912,6 +4011,90 @@
                             0.0
                         ],
                         "freezeRotation": false
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": true,
+                        "Pitch": 1.0,
+                        "Gain": 1.0,
+                        "Mute": false,
+                        "Looping": false,
+                        "AudioClipId": 2709513398060962764,
+                        "SpatialBlend": 1,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": true,
+                        "Pitch": 1.0,
+                        "Gain": 1.0,
+                        "Mute": false,
+                        "Looping": false,
+                        "AudioClipId": 0,
+                        "SpatialBlend": 1,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": true,
+                        "Pitch": 1.0,
+                        "Gain": 1.0,
+                        "Mute": false,
+                        "Looping": false,
+                        "AudioClipId": 0,
+                        "SpatialBlend": 1,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": true,
+                        "Pitch": 1.0,
+                        "Gain": 1.0,
+                        "Mute": false,
+                        "Looping": false,
+                        "AudioClipId": 10685611266222420786,
+                        "SpatialBlend": 1,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": true,
+                        "Pitch": 1.0,
+                        "Gain": 1.0,
+                        "Mute": false,
+                        "Looping": false,
+                        "AudioClipId": 9595108440048790366,
+                        "SpatialBlend": 1,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": true,
+                        "Pitch": 1.0,
+                        "Gain": 1.0,
+                        "Mute": false,
+                        "Looping": false,
+                        "AudioClipId": 13399953858247124655,
+                        "SpatialBlend": 1,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0
                     }
                 ],
                 "Children": [
@@ -6735,32 +6918,32 @@
                             {
                                 "Name": "shockWaveUID",
                                 "Type": "GameObjectUID",
-                                "Value": 10986070857341807388
+                                "Value": 12521675395831379670
                             },
                             {
                                 "Name": "explosionUID",
                                 "Type": "GameObjectUID",
-                                "Value": 15713053489969791899
+                                "Value": 1744358048767670823
                             },
                             {
                                 "Name": "absorptionUID",
                                 "Type": "GameObjectUID",
-                                "Value": 16248459229603731574
+                                "Value": 4744393093319373557
                             },
                             {
                                 "Name": "playerUID",
                                 "Type": "GameObjectUID",
-                                "Value": 8838610656912784116
+                                "Value": 403437826872113792
                             },
                             {
                                 "Name": "lightUID",
                                 "Type": "GameObjectUID",
-                                "Value": 5101395430954201222
+                                "Value": 9015404117451388261
                             },
                             {
                                 "Name": "groundLightUID",
                                 "Type": "GameObjectUID",
-                                "Value": 9390914158952870949
+                                "Value": 16510948218971887858
                             }
                         ]
                     }

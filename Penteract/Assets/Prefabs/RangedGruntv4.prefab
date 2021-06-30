@@ -44,12 +44,17 @@
                     {
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
-                        "Value": 983215537647111703
+                        "Value": 403437826872113792
                     },
                     {
                         "Name": "playerMeshUIDFang",
                         "Type": "GameObjectUID",
-                        "Value": 17625845214105133067
+                        "Value": 11296030499094782229
+                    },
+                    {
+                        "Name": "meshUID2",
+                        "Type": "GameObjectUID",
+                        "Value": 2117867286857697554
                     },
                     {
                         "Name": "fleeingRange",
@@ -59,12 +64,7 @@
                     {
                         "Name": "playerMeshUIDOnimaru",
                         "Type": "GameObjectUID",
-                        "Value": 14508850719219251872
-                    },
-                    {
-                        "Name": "meshUID2",
-                        "Type": "GameObjectUID",
-                        "Value": 7691413884628165645
+                        "Value": 9505835340036721608
                     },
                     {
                         "Name": "approachOffset",
@@ -84,7 +84,7 @@
                     {
                         "Name": "meshUID1",
                         "Type": "GameObjectUID",
-                        "Value": 7691413884628165645
+                        "Value": 2117867286857697554
                     },
                     {
                         "Name": "dmgMaterialObj",
