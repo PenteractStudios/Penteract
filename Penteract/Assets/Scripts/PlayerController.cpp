@@ -234,26 +234,6 @@ void PlayerController::UpdatePlayerStats() {
 	}
 }
 
-void PlayerController::UpdateCameraPosition() {
-	//float3 playerGlobalPos = playerFang.playerMainTransform->GetGlobalPosition();
-
-	//float3 desiredPosition = playerGlobalPos + float3(cameraOffsetX, cameraOffsetY, cameraOffsetZ);
-	//float3 smoothedPosition = desiredPosition;
-
-	//if (useSmoothCamera) {
-	//	smoothedPosition = float3::Lerp(cameraTransform->GetGlobalPosition(), desiredPosition, smoothCameraSpeed * Time::GetDeltaTime());
-	//}
-
-	//if (shakeTimer > 0) {
-	//	float2 shakeDir = GetRandomPosInUnitaryCircle(float2(0, 0));
-	//	cameraTransform->SetGlobalPosition(smoothedPosition + cameraTransform->GetRight() * shakeDir.x * shakeMultiplier + cameraTransform->GetUp() * shakeDir.y * shakeMultiplier);
-	//	shakeTimer -= Time::GetDeltaTime();
-	//} else {
-	//	cameraTransform->SetGlobalPosition(smoothedPosition);
-	//}
-
-}
-
 void PlayerController::TakeDamage(bool ranged) {
 	if (!invincibleMode) {
 		float damage = (ranged) ? rangedDamageTaken : meleeDamageTaken;
@@ -280,7 +260,6 @@ void PlayerController::Update() {
 	if (playerFang.isAlive && playerOnimaru.isAlive) {
 		CheckCoolDowns();
 		UpdatePlayerStats();
-		UpdateCameraPosition();
 
 		if (firstTime) {
 			if (playerFang.characterGameObject->IsActive()) {
