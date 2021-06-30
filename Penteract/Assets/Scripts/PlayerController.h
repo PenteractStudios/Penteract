@@ -99,7 +99,6 @@ public:
 	//split
 	float rangedDamageTaken = 1.0f;
 	float meleeDamageTaken = 1.0f;
-	float maxSpread = 5.0f;
 
 private:
 	void CheckCoolDowns();
