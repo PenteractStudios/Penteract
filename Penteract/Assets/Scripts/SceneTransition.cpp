@@ -21,21 +21,16 @@ void SceneTransition::Start() {
 
 void SceneTransition::Update() {
 	if (transitionGO->IsActive()) {
-		Debug::Log("Esta activo!");
-		MoveFade();
+		Debug::Log("Esta activo! %f", Time::GetDeltaTime());
+		// Transition
+		// Size should be equal then size of the screen
+		transform2D->SetPosition(float3(-1920 + (1.f * speedTransition), 0.f, 0.f));
+		//transform->SetPosition(float3(0.f, 0.f, 0.f));
+		finishedTransition = transform2D->GetPosition().x >= 1920;
+		if (finishedTransition) {
+			Debug::Log("Ha terminado la transicion");
+			// if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
+			// if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
+		}
 	}
-	// if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
-	// if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
-}
-
-void SceneTransition::MoveFade()
-{
-	ComponentTransform2D* transform = transitionGO->GetComponent<ComponentTransform2D>();
-	ComponentCanvas* canvas = transitionGO->GetComponent<ComponentCanvas>();
-	// Size should be equal then size of the screen
-	/*while (transform->GetPosition().x < 1920) {
-		float actualPosition = transform->GetPosition().x;
-		transform->SetPosition(float3(actualPosition * speedTransition * Time::GetDeltaTime(), 0.f, 0.f));
-	}*/
-	transform->SetPosition(float3(0.f, 0.f, 0.f));
 }

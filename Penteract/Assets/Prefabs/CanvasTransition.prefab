@@ -80,17 +80,17 @@
             {
                 "Type": "Script",
                 "Active": false,
-                "Script": 17754977454610005883,
+                "Script": 11031084851222569244,
                 "Values": [
-                    {
-                        "Name": "transitionUID",
-                        "Type": "GameObjectUID",
-                        "Value": 9439890822062605378
-                    },
                     {
                         "Name": "sceneUID",
                         "Type": "SceneResourceUID",
-                        "Value": 16843640376619682028
+                        "Value": 14394003145697928579
+                    },
+                    {
+                        "Name": "transitionUID",
+                        "Type": "GameObjectUID",
+                        "Value": 8571516048116398612
                     }
                 ]
             }

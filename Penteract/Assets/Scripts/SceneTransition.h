@@ -13,8 +13,6 @@ public:
 
 	void Start() override;
 	void Update() override;
-	
-	void MoveFade();
 
 public:
 
@@ -22,6 +20,7 @@ public:
 	UID transitionUID = 0;
 
 	int speedTransition = 10;
+	bool finishedTransition = false;
 
 private:
 	GameObject* transitionGO = nullptr;
