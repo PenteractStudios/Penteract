@@ -130,7 +130,7 @@ void AIMeleeGrunt::Update() {
     case AIState::SPAWN:
         break;
     case AIState::IDLE:
-        if (!playerController->IsDead()) {
+        if (!playerController->IsPlayerDead()) {
             if (movementScript->CharacterInSight(player, gruntCharacter.searchRadius)) {
                 animation->SendTrigger("IdleRun");
                 state = AIState::RUN;
@@ -204,11 +204,11 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
             bool hitTaken = false;
             if (collidedWith.name == "FangBullet") {
                 hitTaken = true;
-                gruntCharacter.Hit(playerController->fangCharacter.damageHit + playerController->GetOverPowerMode());
+                gruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
             }
             else if (collidedWith.name == "OnimaruBullet") {
                 hitTaken = true;
-                gruntCharacter.Hit(playerController->onimaruCharacter.damageHit + playerController->GetOverPowerMode());
+                gruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
             }
 
             if (hitTaken) {
