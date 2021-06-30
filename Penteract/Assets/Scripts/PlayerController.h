@@ -4,6 +4,8 @@
 #include "Scripting/Script.h"
 #include "Math/float3.h"
 #include <vector>
+#include "Fang.h"
+#include "Onimaru.h"
 
 class GameObject;
 class ComponentTransform;
@@ -23,184 +25,110 @@ struct TesseractEvent;
 #define ONIMARU_MAX_HEALTH 10.0f 
 #define FANG_MAX_HEALTH 10.0f
 
-enum class MovementDirection {
-	NONE = 0, UP = 1, UP_LEFT = 2, LEFT = 3, DOWN_LEFT = 4, DOWN = 5, DOWN_RIGHT = 6, RIGHT = 7, UP_RIGHT = 8
-};
+
 
 class PlayerController : public Script {
 	GENERATE_BODY(PlayerController);
 
 public:
 	enum class AudioType {
-		DASH,
 		SWITCH,
-		SHOOT,
-		FANGHIT,
-		ONIHIT,
-		FANGDEATH,
-		ONIDEATH,
 		TOTAL
 	};
 
 	void Start() override;
 	void Update() override;
 
-	bool IsDead();
+	//Debug
 	void SetInvincible(bool status);
 	void SetOverpower(bool status);
 	void SetNoCooldown(bool status);
-	void TakeDamage(bool ranged = true);
 	int GetOverPowerMode();
+	bool IsPlayerDead() { return !playerFang.isAlive || !playerOnimaru.isAlive; }
+	void TakeDamage(bool ranged = false);
+
 public:
+	//Debug
+	bool invincibleMode = false;
+	int overpowerMode = 1;
+	bool noCooldownMode = false;
 	bool debugGetHit = false;
-	GameObject* player = nullptr;
-	GameObject* camera = nullptr;
-	GameObject* fang = nullptr;
-	GameObject* onimaru = nullptr;
 
-	ComponentAgent* agent = nullptr;
+	Onimaru playerOnimaru = Onimaru();
+	Fang playerFang = Fang();
 
-	ComponentAnimation* fangAnimation = nullptr;
+	//MainGameObject
+	UID mainNodeUID = 0;
 
-
+	//Fang
 	UID fangUID = 0;
 	UID fangTrailUID = 0;
 	UID fangLeftGunUID = 0;
 	UID fangRightGunUID = 0;
 	UID fangBulletUID = 0;
-
+	//Onimaru
 	UID onimaruUID = 0;
 	UID onimaruParticleUID = 0;
 	UID onimaruBulletUID = 0;
 	UID onimaruGunUID = 0;
 
-	UID switchParticlesUID = 0;
-
-	UID mainNodeUID = 0;
-	UID cameraUID = 0;
+	//HUD
 	UID canvasUID = 0;
-
-	bool rightShot = true;
-	bool shooting = false;
-
+	float fangRecoveryRate = 1.0f;
+	float onimaruRecoveryRate = 1.0f;
+	bool firstTime = true;
 	bool hitTaken = false;
 
-	Player fangCharacter = Player(10, 10.0f, 3, 1.0f);
-	Player onimaruCharacter = Player(10, 6.0f, 1, 1.0f);
-
-	float distanceRayCast = 2.f;
-	float switchCooldown = 5.f;
-
-	float dashCooldown = 5.f;
-	float dashSpeed = 100.f;
-	float dashDuration = 0.1f;
-
+	//Camera
+	UID cameraUID = 0;
+	GameObject* camera = nullptr;
 	float cameraOffsetZ = 20.f;
 	float cameraOffsetY = 10.f;
 	float cameraOffsetX = 0.f;
+	bool useSmoothCamera = true;
+	float smoothCameraSpeed = 5.0f;
 	float maxOnimaruBulletSpread = 5.0f;
 
-	int fangRecoveryRate = 1.0f;
-	int onimaruRecoveryRate = 1.0f;
-
-	bool firstTime = true;
-
+	//Switch
+	UID switchParticlesUID = 0;
+	float switchCooldown = 5.f;
 	bool switchInProgress = false;
 	float switchDelay = 0.37f;
 
 	/* Fang & onimaru damage */
-
-	int rangedDamageTaken = 1;
-	int meleeDamageTaken = 1;
-
-	//Camera
-	bool useSmoothCamera = true;
-	float smoothCameraSpeed = 5.0f;
-
-	std::vector<std::string> states{ "Idle" ,
-								"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
-								"DashBackward", "DashForward" , "DashLeft" , "DashRight" ,
-								"Death" , "Hurt" , "LeftShot" , "RightShot", "Shooting", "RunForwardLeft",
-								"RunForwardRight", "RunBackwardLeft", "RunBarckwardRight"
-	};
+	//split
+	float rangedDamageTaken = 1.0f;
+	float meleeDamageTaken = 1.0f;
+	float maxSpread = 5.0f;
 
 private:
-
-	void PlayAnimation(MovementDirection md);
-	void MoveTo(MovementDirection md);
-	void InitDash(MovementDirection md);
-	void Dash();
-	void LookAtMouse();
 	void CheckCoolDowns();
 	void SwitchCharacter();
-	void Shoot();
 	void UpdatePlayerStats();
 	void UpdateCameraPosition();
-	bool CanDash();
 	bool CanSwitch();
-	bool CanShoot();
 	void ResetSwitchStatus();
-	Quat GetSlightRandomSpread(float minValue, float maxValue) const;
-	float3 GetDirection(MovementDirection md) const;
-	MovementDirection GetInputMovementDirection() const;
-	int GetMouseDirectionState(MovementDirection input);
+
 private:
 
-	float dashCooldownRemaining = 0.f;
-	bool dashInCooldown = false;
-	bool dashing = false;
-	float dashRemaining = 0.f;
-
+	//Switch
 	float switchCooldownRemaining = 0.f;
 	bool switchInCooldown = false;
 
-	float fangAttackCooldownRemaining = 0.f;
-	float onimaruAttackCooldownRemaining = 0.f;
-	bool invincibleMode = false;
-	int overpowerMode = 1;
-	bool noCooldownMode = false;
-
+	//HUD
 	float fangRecovering = 0.f;
 	float onimaruRecovering = 0.f;
+	HUDController* hudControllerScript = nullptr;
+
+	//Switch
 	float currentSwitchDelay = 0.f;
 	bool playSwitchParticles = true;
+	GameObject* switchEffects = nullptr;
 
-	float3 initialPosition = float3(0, 0, 0);
-	float3 dashDestination = float3(0, 0, 0);
-	float3 dashDirection = float3(0, 0, 0);
-	float3 facePointDir = float3(0, 0, 0);
-	MovementDirection dashMovementDirection = MovementDirection::NONE;
-	ComponentTransform* transform = nullptr;
-	ComponentTransform* onimaruGunTransform = nullptr;
+	//Camera
 	ComponentCamera* compCamera = nullptr;
 	ComponentTransform* cameraTransform = nullptr;
 
-	GameObject* fangLeftGun = nullptr;
-	GameObject* fangRightGun = nullptr;
-	GameObject* onimaruGun = nullptr;
-	ComponentTransform* fangRightGunTransform = nullptr;
-	ComponentTransform* fangLeftGunTransform = nullptr;
-
-
-	//Animation
-	ComponentAnimation* onimaruAnimation = nullptr;
-	State* fangCurrentState = nullptr;
-	State* onimaruCurrentState = nullptr;
-
-	ResourcePrefab* onimaruTrail = nullptr;
-	ResourcePrefab* fangTrail = nullptr;
-	ResourcePrefab* fangBullet = nullptr;
-	ResourcePrefab* onimaruBullet = nullptr;
-
-	GameObject* switchEffects = nullptr;
-
-	//Particles
-	ComponentParticleSystem* fangCompParticle = nullptr;
-	ComponentParticleSystem* onimaruCompParticle = nullptr;
-
 	//Audio
-	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
-
-	HUDController* hudControllerScript = nullptr;
-	OnimaruBullet* onimaruBulletcript = nullptr;
+	ComponentAudioSource* audios[static_cast<int>(AudioPlayer::TOTAL)] = { nullptr };
 };
