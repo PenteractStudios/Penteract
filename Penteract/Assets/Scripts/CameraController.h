@@ -16,7 +16,7 @@ public:
 	void StartShake();
 public:
 	float cameraOffsetZ = 20.f;
-	float cameraOffsetY = 10.f;
+	float cameraOffsetY = 20.f;
 	float cameraOffsetX = 0.f;
 	bool useSmoothCamera = true;
 	float smoothCameraSpeed = 5.0f;
