@@ -7,7 +7,7 @@
     ],
     "QuadtreeMaxDepth": 4,
     "QuadtreeElementsPerNode": 200,
-    "GameCamera": 5052706520133489350,
+    "GameCamera": 3202817792305297463,
     "AmbientLight": [
         0.0,
         0.0,
@@ -162,7 +162,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 200.0,
-                            "HorizontalFov": 1.634196400642395,
+                            "HorizontalFov": 1.5451143980026246,
                             "VerticalFov": 1.0
                         }
                     },
@@ -184,7 +184,7 @@
                         "Type": "AudioListener",
                         "Id": 13146572848985661355,
                         "Active": true,
-                        "Gain": 0.5083299875259399
+                        "Gain": 0.3019999861717224
                     }
                 ],
                 "Children": null
@@ -493,8 +493,8 @@
                                                     1.0
                                                 ],
                                                 "Scale": [
-                                                    1.0,
-                                                    1.0,
+                                                    0.5,
+                                                    0.5,
                                                     1.0
                                                 ],
                                                 "LocalEulerAngles": [
@@ -507,8 +507,8 @@
                                                     0.5
                                                 ],
                                                 "Size": [
-                                                    1920.0,
-                                                    1080.0
+                                                    3840.0,
+                                                    2160.0
                                                 ],
                                                 "AnchorMin": [
                                                     0.5,
@@ -530,7 +530,7 @@
                                                 "Type": "Image",
                                                 "Id": 4666030001373830128,
                                                 "Active": true,
-                                                "TextureId": 8828451403569804850,
+                                                "TextureId": 18174893293799281147,
                                                 "Color": [
                                                     1.0,
                                                     1.0,
@@ -4158,7 +4158,7 @@
                                                         "Active": true,
                                                         "MinValue": 0.0,
                                                         "MaxValue": 100.0,
-                                                        "CurrentValue": 50.83300018310547,
+                                                        "CurrentValue": 30.281999588012697,
                                                         "Direction": 0,
                                                         "StopOnEdges": true,
                                                         "ColorClick": [
@@ -25542,10 +25542,10 @@
                         "Id": 15762849361944929010,
                         "Active": true,
                         "Pitch": 1.0,
-                        "Gain": 1.0,
+                        "Gain": 0.30000001192092898,
                         "Mute": false,
-                        "Looping": false,
-                        "AudioClipId": 12622888090304038422,
+                        "Looping": true,
+                        "AudioClipId": 10905396094961812324,
                         "SpatialBlend": 0,
                         "SourceType": 0,
                         "InnerAngle": 90.0,

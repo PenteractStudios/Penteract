@@ -1,17 +1,19 @@
 #include "RangedAI.h"
 
-#include "GameObject.h"
-#include "GameplaySystems.h"
 #include "PlayerController.h"
 #include "HUDController.h"
+#include "AIMovement.h"
+#include "RangerProjectileScript.h"
+#include "EnemySpawnPoint.h"
+#include "WinLose.h"
 
+#include "GameObject.h"
+#include "GameplaySystems.h"
 #include "Components/ComponentTransform.h"
 #include "Components/ComponentAudioSource.h"
 #include "Components/ComponentAgent.h"
 #include "Components/ComponentAnimation.h"
 #include "Components/ComponentMeshRenderer.h"
-#include "AIMovement.h"
-#include "RangerProjectileScript.h"
 #include "Resources/ResourcePrefab.h"
 
 //clang-format off
@@ -19,7 +21,7 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
-	MEMBER(MemberType::GAME_OBJECT_UID, meshUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),
@@ -34,14 +36,13 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, hudControllerObjUID),
 	MEMBER(MemberType::FLOAT, timeSinceLastHurt),
 	MEMBER(MemberType::FLOAT, approachOffset) //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
-
 };//clang-format on
 
 GENERATE_BODY_IMPL(RangedAI);
 
 void RangedAI::Start() {
 	player = GameplaySystems::GetGameObject(playerUID);
-	meshObj = GameplaySystems::GetGameObject(meshUID);
+	meshObj = GetOwner().GetChildren()[0];
 	meshObjForFrustumPresenceCheck1 = GameplaySystems::GetGameObject(meshUID1);
 	meshObjForFrustumPresenceCheck2 = GameplaySystems::GetGameObject(meshUID2);
 	animation = GetOwner().GetComponent<ComponentAnimation>();
@@ -94,6 +95,13 @@ void RangedAI::Start() {
 		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
 		++i;
 	}
+
+	GameObject* winConditionGo = GameplaySystems::GetGameObject(winConditionUID);
+	if (winConditionGo) {
+		winLoseScript = GET_SCRIPT(winConditionGo, WinLose);
+	}
+
+	enemySpawnPointScript = GET_SCRIPT(GetOwner().GetParent(), EnemySpawnPoint);
 }
 
 void RangedAI::OnAnimationFinished() {
@@ -103,7 +111,8 @@ void RangedAI::OnAnimationFinished() {
 		animation->SendTrigger("SpawnIdle");
 		agent->AddAgentToCrowd();
 		state = AIState::IDLE;
-	} else if (state == AIState::DEATH) {
+	}
+	else if (state == AIState::DEATH) {
 		rangerGruntCharacter.destroying = true;
 	}
 }
@@ -117,16 +126,16 @@ void RangedAI::OnAnimationSecondaryFinished() {
 	}
 }
 
-void RangedAI::OnCollision(GameObject& collidedWith) {
+void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance) {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		if (rangerGruntCharacter.isAlive && playerController) {
 			bool hitTaken = false;
 			if (collidedWith.name == "FangBullet") {
-				rangerGruntCharacter.Hit(playerController->fangCharacter.damageHit + playerController->GetOverPowerMode());
+				rangerGruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
 				hitTaken = true;
 			}
 			else if (collidedWith.name == "OnimaruBullet") {
-				rangerGruntCharacter.Hit(playerController->onimaruCharacter.damageHit + playerController->GetOverPowerMode());
+				rangerGruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
 				hitTaken = true;
 			}
 			if (hitTaken) {
@@ -144,9 +153,10 @@ void RangedAI::OnCollision(GameObject& collidedWith) {
 			ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
 			if (collider) collider->Disable();
 			ChangeState(AIState::DEATH);
+			if (winLoseScript) winLoseScript->IncrementDeadEnemies();
+			if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
 		}
 	}
-
 }
 
 void RangedAI::Update() {
@@ -243,13 +253,10 @@ void RangedAI::EnterState(AIState newState) {
 void RangedAI::UpdateState() {
 	switch (state) {
 	case AIState::START:
-
-		if (Camera::CheckObjectInsideFrustum(GetOwner().GetChildren()[0])) {
-			if (aiMovement) aiMovement->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), rangerGruntCharacter.fallingSpeed, true);
-			if (ownerTransform->GetGlobalPosition().y < 2.7f + 0e-5f) {
-				animation->SendTrigger("StartSpawn");
-				ChangeState(AIState::SPAWN);
-			}
+		if (aiMovement) aiMovement->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), rangerGruntCharacter.fallingSpeed, true);
+		if (ownerTransform->GetGlobalPosition().y < 2.7f + 0e-5f) {
+			animation->SendTrigger("StartSpawn");
+			ChangeState(AIState::SPAWN);
 		}
 		break;
 	case AIState::SPAWN:
@@ -309,16 +316,15 @@ void RangedAI::UpdateState() {
 		break;
 	case AIState::DEATH:
 		if (rangerGruntCharacter.destroying) {
-			
 			if (rangerGruntCharacter.timeToDie > 0) {
 				rangerGruntCharacter.timeToDie -= Time::GetDeltaTime();
-			} else {
+			}
+			else {
 				if (hudControllerScript) {
 					hudControllerScript->UpdateScore(10);
 				}
 				GameplaySystems::DestroyGameObject(&GetOwner());
 			}
-			
 		}
 
 		break;
@@ -350,6 +356,8 @@ bool RangedAI::CharacterInRange(const GameObject* character, float range, bool u
 }
 
 bool RangedAI::FindsRayToPlayer(bool useForward) {
+	if (!meshObj) return false;
+
 	ComponentBoundingBox* box = meshObj->GetComponent<ComponentBoundingBox>();
 	float3 offset(0, 0, 0);
 
@@ -389,7 +397,7 @@ void RangedAI::ActualShot() {
 	if (shootTrailPrefab) {
 		//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
 		if (!meshObj) return;
-		
+
 		ComponentBoundingBox* box = meshObj->GetComponent<ComponentBoundingBox>();
 
 		float offsetY = (box->GetWorldAABB().minPoint.y + box->GetWorldAABB().maxPoint.y) / 4;
@@ -408,7 +416,6 @@ void RangedAI::ActualShot() {
 	actualShotTimer = -1.0f;
 
 	PlayAudio(AudioType::SHOOT);
-
 }
 
 void RangedAI::PlayAudio(AudioType audioType) {
@@ -418,7 +425,8 @@ void RangedAI::PlayAudio(AudioType audioType) {
 void RangedAI::ShootPlayerInRange() {
 	if (!player) return;
 	if (!playerController) return;
-	if (playerController->IsDead()) return;
+	if (!playerController->playerFang.characterGameObject || !playerController->playerOnimaru.characterGameObject) return;
+	if (playerController->IsPlayerDead()) return;
 	if (CharacterInRange(player, rangerGruntCharacter.attackRange, true)) {
 		shot = true;
 

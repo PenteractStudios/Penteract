@@ -34,7 +34,7 @@
                 "Type": "Billboard",
                 "Active": true,
                 "BillboardType": 1,
-                "TextureId": 465905571273810051,
+                "TextureId": 6651627206207097854,
                 "Ytiles": 1,
                 "Xtiles": 1,
                 "AnimationSpeed": 0.0,
@@ -44,12 +44,12 @@
                     9.999899930335233e-7
                 ],
                 "FinalColor": [
-                    0.0,
+                    0.9999997019767761,
                     1.0,
-                    1.0
+                    0.9999899864196777
                 ],
-                "StartTransition": 0.10000000149011612,
-                "EndTransition": 0.10000000149011612,
+                "StartTransition": 0.05000000074505806,
+                "EndTransition": 0.05000000074505806,
                 "FlipTexture": [
                     true,
                     false
@@ -68,7 +68,7 @@
                     {
                         "Name": "speed",
                         "Type": "Int",
-                        "Value": 10
+                        "Value": 100
                     }
                 ]
             },
@@ -78,7 +78,7 @@
                 "colliderType": 2,
                 "layerType": 5,
                 "mass": 1.0,
-                "radius": 1.0,
+                "radius": 0.25,
                 "centerOffset": [
                     0.0,
                     0.0,

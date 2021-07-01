@@ -4,6 +4,6 @@
     "BeginIndex": 10,
     "EndIndex": 60,
     "Loop": false,
-    "Speed": 1.0,
+    "Speed": 5.0,
     "FrameRate": 0.03319026902318001
 }
