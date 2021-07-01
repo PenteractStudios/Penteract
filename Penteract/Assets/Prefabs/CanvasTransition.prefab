@@ -1,38 +1,13 @@
 {
     "Root": {
         "Name": "CanvasTransition",
-        "Active": false,
+        "Active": true,
         "RootBoneName": "",
         "Mask": 0,
         "Components": [
             {
-                "Type": "Transform",
-                "Active": false,
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "LocalEulerAngles": [
-                    -0.0,
-                    0.0,
-                    -0.0
-                ]
-            },
-            {
                 "Type": "Transform2D",
-                "Active": false,
+                "Active": true,
                 "Position": [
                     -1920.0,
                     0.0,
@@ -75,22 +50,22 @@
             },
             {
                 "Type": "Canvas",
-                "Active": false
+                "Active": true
             },
             {
                 "Type": "Script",
-                "Active": false,
+                "Active": true,
                 "Script": 11031084851222569244,
                 "Values": [
+                    {
+                        "Name": "transitionUID",
+                        "Type": "GameObjectUID",
+                        "Value": 15988899048078766972
+                    },
                     {
                         "Name": "sceneUID",
                         "Type": "SceneResourceUID",
                         "Value": 14394003145697928579
-                    },
-                    {
-                        "Name": "transitionUID",
-                        "Type": "GameObjectUID",
-                        "Value": 8571516048116398612
                     }
                 ]
             }
@@ -104,7 +79,7 @@
                 "Components": [
                     {
                         "Type": "Transform2D",
-                        "Active": false,
+                        "Active": true,
                         "Position": [
                             0.0,
                             0.0,
@@ -147,16 +122,16 @@
                     },
                     {
                         "Type": "CanvasRenderer",
-                        "Active": false
+                        "Active": true
                     },
                     {
                         "Type": "Image",
-                        "Active": false,
+                        "Active": true,
                         "TextureId": 0,
                         "Color": [
-                            1.0,
-                            1.0,
-                            1.0,
+                            9.999999974752428e-7,
+                            9.999899930335233e-7,
+                            9.999899930335233e-7,
                             1.0
                         ],
                         "AlphaTransparency": false,
