@@ -9,7 +9,7 @@ public:
 
 	// ------- Contructors ------- //
 	Fang() {};
-	void Update(bool lockMovement = false) override;
+	void Update(bool lockMovement = false,bool lockOrientation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	float GetRealDashCooldown();
 	void Init(UID fangUID = 0, UID trailUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID bulletUID = 0, UID cameraUID = 0, UID canvasUID = 0);

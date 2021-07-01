@@ -5,13 +5,13 @@
 
 enum class MovementDirection {
 	NONE = 0,
-	UP = 1, 
-	UP_LEFT = 2, 
-	LEFT = 3, 
+	UP = 1,
+	UP_LEFT = 2,
+	LEFT = 3,
 	DOWN_LEFT = 4,
-	DOWN = 5, 
-	DOWN_RIGHT = 6, 
-	RIGHT = 7, 
+	DOWN = 5,
+	DOWN_RIGHT = 6,
+	RIGHT = 7,
 	UP_RIGHT = 8
 };
 
@@ -31,8 +31,8 @@ public:
 	Player() {};
 
 	Player(int lifePoints_, float movementSpeed_, int damageHit_, float attackSpeed_)
-		: 
-		attackSpeed(attackSpeed_){
+		:
+		attackSpeed(attackSpeed_) {
 		lifePoints = lifePoints_;
 		movementSpeed = movementSpeed_;
 		damageHit = damageHit_;
@@ -46,7 +46,7 @@ public:
 	MovementDirection GetInputMovementDirection() const;
 	float3 GetDirection() const;
 	virtual void Shoot() {}
-	virtual void Update(bool lockMovement = false);
+	virtual void Update(bool lockMovement = false, bool lockOrientation = false);
 	virtual void CheckCoolDowns(bool noCooldownMode = false) {}
 	int GetMouseDirectionState();
 	bool IsActive();
@@ -57,6 +57,9 @@ public:
 	float attackSpeed = 1.0f;
 	float attackCooldownRemaining = 0.f;
 	bool shooting = false;
+	float orientationSpeed = -1;
+	float orientationThreshold = 5.0f;
+
 	float3 lookAtMousePlanePosition = float3(0, 0, 0);
 	ComponentCamera* lookAtMouseCameraComp = nullptr;
 	ComponentAudioSource* playerAudios[static_cast<int>(AudioPlayer::TOTAL)] = { nullptr };
@@ -64,8 +67,10 @@ public:
 	MovementDirection movementInputDirection = MovementDirection::NONE;
 	ComponentTransform* playerMainTransform = nullptr;
 
-private:
+protected:
 	void MoveTo();
+
+private:
 	virtual bool CanShoot();
 	void ResetSwitchStatus();
 

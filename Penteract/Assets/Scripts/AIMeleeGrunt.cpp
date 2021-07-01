@@ -9,6 +9,7 @@
 #include "AIMovement.h"
 #include "WinLose.h"
 #include "Player.h"
+#include "Onimaru.h"
 
 EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
@@ -165,6 +166,13 @@ void AIMeleeGrunt::Update() {
 			winLoseScript->IncrementDeadEnemies();
 			if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
 			killSent = true;
+
+			if (playerController) {
+				if (playerController->playerOnimaru.characterGameObject->IsActive()) {
+					playerController->playerOnimaru.IncreaseUltimateCounter();
+				}
+			}
+
 		}
 		if (gruntCharacter.timeToDie > 0) {
 			gruntCharacter.timeToDie -= Time::GetDeltaTime();
@@ -238,6 +246,7 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 
 			agent->RemoveAgentFromCrowd();
 			state = AIState::DEATH;
+
 		}
 	}
 }

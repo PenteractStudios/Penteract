@@ -3,13 +3,11 @@
 #include "Geometry/Frustum.h"
 #include "Geometry/LineSegment.h"
 
-void Player::SetAttackSpeed(float attackSpeed_)
-{
+void Player::SetAttackSpeed(float attackSpeed_) {
 	attackSpeed = attackSpeed_;
 }
 
-void Player::GetHit(float damage_)
-{
+void Player::GetHit(float damage_) {
 	lifePoints -= damage_;
 	if (playerAudios[static_cast<int>(AudioPlayer::HIT)]) playerAudios[static_cast<int>(AudioPlayer::HIT)]->Play();
 	isAlive = lifePoints > 0.0f;
@@ -30,8 +28,7 @@ void Player::MoveTo() {
 	agent->SetMoveTarget(newPosition, false);
 }
 
-bool Player::CanShoot()
-{
+bool Player::CanShoot() {
 	return !shooting;
 }
 
@@ -66,20 +63,16 @@ int Player::GetMouseDirectionState() {
 
 	if (dot > 0.707) {
 		return 2; //RunForward
-	}
-	else if (dot < -0.707) {
+	} else if (dot < -0.707) {
 		return 1; //RunBackward
-	}
-	else if (cross.y > 0) {
+	} else if (cross.y > 0) {
 		return 4; //RunRight
-	}
-	else {
+	} else {
 		return 3; //RunLeft
 	}
 }
 
-bool Player::IsActive()
-{
+bool Player::IsActive() {
 	return (characterGameObject) ? characterGameObject->IsActive() : false;
 }
 
@@ -127,14 +120,41 @@ void Player::LookAtMouse() {
 		Quat quat = playerMainTransform->GetGlobalRotation();
 		float angle = Atan2(facePointDir.x, facePointDir.z);
 		Quat rotation = quat.RotateAxisAngle(float3(0, 1, 0), angle);
-		playerMainTransform->SetGlobalRotation(rotation);
+
+		if (orientationSpeed == -1) {
+			playerMainTransform->SetGlobalRotation(rotation);
+		} else {
+			float3 aux2 = playerMainTransform->GetFront();
+			aux2.y = 0;
+
+			float angle = facePointDir.AngleBetween(aux2);
+			float3 cross = Cross(aux2, facePointDir.Normalized());
+			float dot = Dot(cross, float3(0, 1, 0));
+			float multiplier = 1.0f;
+
+			if (dot < 0) {
+				angle *= -1;
+				multiplier = -1;
+			}
+
+			if (Abs(angle) > DEGTORAD * orientationThreshold) {
+				Quat rotationToAdd;
+				rotationToAdd.SetFromAxisAngle(float3(0, 1, 0), multiplier * Time::GetDeltaTime() * orientationSpeed);
+				playerMainTransform->SetGlobalRotation(rotationToAdd * quat);
+			} else {
+				playerMainTransform->SetGlobalRotation(rotation);
+			}
+
+		}
 	}
 }
 
-void Player::Update(bool lockMovement) {
-	if(!lockMovement){
+void Player::Update(bool lockMovement, bool lockOrientation) {
+	if (!lockMovement) {
 		movementInputDirection = GetInputMovementDirection();
 		MoveTo();
+	}
+	if (!lockOrientation) {
 		LookAtMouse();
 	}
 }

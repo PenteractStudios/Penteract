@@ -30,18 +30,33 @@ void Onimaru::PlayAnimation() {
 				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[9]);
 				compAnimation->SendTriggerSecondary("ShootingDeath");
 			}
-		}
-		else {
+		} else {
 			if (compAnimation->GetCurrentState()->name != states[0]) {
 				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[0]);
 			}
 		}
-	}
-	else {
+	} else {
 		if (compAnimation->GetCurrentState()->name != states[GetMouseDirectionState()]) {
 			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState()]);
 		}
 	}
+}
+
+void Onimaru::StartUltimate() {
+	//TODO COOLDOWN MANAGEMENT
+	onimaruUltimateChargePoints = 0;
+	onimaruUltimateTimeRemaining = onimaruUltimateTotalTime;
+	orientationSpeed = onimaruUltimateRotationSpeed;
+	attackSpeed = onimaruUltimateAttackSpeed;
+	movementInputDirection = MovementDirection::NONE;
+	Player::MoveTo();
+}
+
+void Onimaru::FinishUltimate() {
+	//TODO COOLDOWN MANAGEMENT
+	onimaruUltimateTimeRemaining = 0;
+	orientationSpeed = -1;
+	attackSpeed = originalAttackSpeed;
 }
 
 void Onimaru::CheckCoolDowns(bool noCooldownMode) {
@@ -49,17 +64,27 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 	if (attackCooldownRemaining <= 0.f) {
 		attackCooldownRemaining = 0.f;
 		shooting = false;
-	}
-	else {
+	} else {
 		attackCooldownRemaining -= Time::GetDeltaTime();
 	}
 }
 
-void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID cameraUID, UID canvasUID)
-{
+void Onimaru::IncreaseUltimateCounter() {
+	onimaruUltimateChargePoints++;
+}
+
+void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID cameraUID, UID canvasUID,
+	float onimaruUltimateAttackSpeed_, float onimaruUltimateTotalTime_,
+	float onimaruUltimateRotationSpeed_, int onimaruUltimateChargePoints_, int onimaruUltimateChargePointsTotal_) {
+
+	onimaruUltimateAttackSpeed = onimaruUltimateAttackSpeed_;
+	onimaruUltimateTotalTime = onimaruUltimateTotalTime_;
+	onimaruUltimateRotationSpeed = onimaruUltimateRotationSpeed_;
+	onimaruUltimateChargePoints = onimaruUltimateChargePoints_;
+	onimaruUltimateChargePointsTotal = onimaruUltimateChargePointsTotal_;
+
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(onimaruUID);
-	
 	if (characterGameObject && characterGameObject->GetParent()) {
 		playerMainTransform = characterGameObject->GetParent()->GetComponent<ComponentTransform>();
 		agent = characterGameObject->GetParent()->GetComponent<ComponentAgent>();
@@ -75,6 +100,8 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 			agent->SetMaxAcceleration(MAX_ACCELERATION);
 		}
 	}
+
+	originalAttackSpeed = attackSpeed;
 
 	GameObject* onimaruGun = GameplaySystems::GetGameObject(onimaruGunUID);
 	if (onimaruGun) {
@@ -96,24 +123,35 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 	}
 }
 
-void Onimaru::Update(bool lockMovement) {
+void Onimaru::Update(bool lockMovement, bool lockOrientation) {
 	if (isAlive) {
-		Player::Update();
+		Player::Update(onimaruUltimateTimeRemaining > 0, false);
+
+		if (onimaruUltimateTimeRemaining == 0) {
+			if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_E)) {
+				if (onimaruUltimateChargePoints >= onimaruUltimateChargePointsTotal) {
+					StartUltimate();
+				}
+			}
+		} else {
+			onimaruUltimateTimeRemaining -= Time::GetDeltaTime();
+			if (onimaruUltimateTimeRemaining <= 0) {
+				FinishUltimate();
+			}
+		}
+
 		if (Input::GetMouseButtonDown(0)) {
 			if (compAnimation) {
 				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[10]);
 			}
-		}
-		else if (Input::GetMouseButtonRepeat(0)) {
+		} else if (Input::GetMouseButtonRepeat(0)) {
 			Shoot();
-		}
-		else if (Input::GetMouseButtonUp(0)) {
+		} else if (Input::GetMouseButtonUp(0)) {
 			if (compAnimation) {
 				compAnimation->SendTriggerSecondary(states[10] + compAnimation->GetCurrentState()->name);
 			}
 		}
-	}
-	else {
+	} else {
 		if (agent) agent->RemoveAgentFromCrowd();
 		movementInputDirection = MovementDirection::NONE;
 	}

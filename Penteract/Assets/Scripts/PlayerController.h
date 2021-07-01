@@ -46,7 +46,6 @@ public:
 	int GetOverPowerMode();
 	bool IsPlayerDead() { return !playerFang.isAlive || !playerOnimaru.isAlive; }
 	void TakeDamage(bool ranged = false);
-
 public:
 	//Debug
 	bool invincibleMode = false;
@@ -99,6 +98,14 @@ public:
 	float rangedDamageTaken = 1.0f;
 	float meleeDamageTaken = 1.0f;
 
+
+	//Onimaru ultimate related
+	float onimaruUltimateAttackSpeed = 20.0f;
+	float onimaruUltimateTotalTime = 3.0f;
+	float onimaruUltimateRotationSpeed = 2.0f;
+	int onimaruUltimateChargePoints = 0;
+	int onimaruUltimateChargePointsTotal = 10;
+
 private:
 	void CheckCoolDowns();
 	void SwitchCharacter();
@@ -106,7 +113,7 @@ private:
 	void UpdateCameraPosition();
 	bool CanSwitch();
 	void ResetSwitchStatus();
-	
+
 private:
 
 	//Switch

@@ -6,6 +6,7 @@
 #include "RangerProjectileScript.h"
 #include "EnemySpawnPoint.h"
 #include "WinLose.h"
+#include "Onimaru.h"
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
@@ -174,8 +175,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 			ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
 			if (collider) collider->Disable();
 			ChangeState(AIState::DEATH);
-			if (winLoseScript) winLoseScript->IncrementDeadEnemies();
-			if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
+
 		}
 	}
 }
@@ -248,6 +248,15 @@ void RangedAI::EnterState(AIState newState) {
 		}
 		break;
 	case AIState::DEATH:
+
+		if (winLoseScript) winLoseScript->IncrementDeadEnemies();
+		if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
+		if (playerController) {
+			if (playerController->playerOnimaru.characterGameObject->IsActive()) {
+				playerController->playerOnimaru.IncreaseUltimateCounter();
+			}
+		}
+
 		if (state == AIState::IDLE) {
 			animation->SendTrigger("IdleDeath");
 		} else if (state == AIState::RUN) {
