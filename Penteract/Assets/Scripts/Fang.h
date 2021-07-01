@@ -13,6 +13,7 @@ public:
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	float GetRealDashCooldown();
 	void Init(UID fangUID = 0, UID trailUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID bulletUID = 0, UID cameraUID = 0, UID canvasUID = 0);
+	void GetHit(float damage_) override;
 
 public:
 	std::vector<std::string> states{ "Idle" ,

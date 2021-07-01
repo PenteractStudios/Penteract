@@ -41,7 +41,7 @@ public:
 
 	// ------- Core Functions ------ //
 	void SetAttackSpeed(float attackSpeed_);
-	void GetHit(float damage_) override;
+	virtual void GetHit(float damage_) override;
 	void LookAtMouse();
 	MovementDirection GetInputMovementDirection() const;
 	float3 GetDirection() const;

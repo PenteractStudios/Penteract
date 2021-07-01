@@ -54,6 +54,14 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 
 }
 
+void Fang::GetHit(float damage_) {
+	
+	if (!dashing) {
+		Player::GetHit(damage_);
+	}
+
+}
+
 void Fang::InitDash() {
 	if (CanDash()) {
 		if (movementInputDirection != MovementDirection::NONE) {
@@ -91,7 +99,7 @@ void Fang::Dash() {
 }
 
 bool Fang::CanDash() {
-	return !dashing && !dashInCooldown;
+	return isAlive && !dashing && !dashInCooldown;
 }
 
 void Fang::CheckCoolDowns(bool noCooldownMode) {
