@@ -22,7 +22,8 @@ public:
 	void Start() override;
 	void Update() override;
 
-	void StartTransition(bool isExit_ = false);
+	void StartTransition(bool isExit_ = false); // To iniciate the transition
+	void UpdateObjectToResolution(); // To update the size and the position of the image which made the transition
 
 public:
 
@@ -36,6 +37,8 @@ private:
 	GameObject* transitionGO = nullptr;
 	ComponentTransform2D* transform2D = nullptr;
 	ComponentImage* image2D = nullptr;
+
+	float2 actualResolution = float2(0.f, 0.f);
 
 	bool startTransition = false;
 	bool finishedTransition = false;

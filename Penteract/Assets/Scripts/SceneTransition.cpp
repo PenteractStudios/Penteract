@@ -19,6 +19,7 @@ EXPOSE_MEMBERS(SceneTransition) {
 GENERATE_BODY_IMPL(SceneTransition);
 
 void SceneTransition::Start() {
+	actualResolution = Screen::GetResolution();
 	transitionGO = GameplaySystems::GetGameObject(transitionUID);
 	if (transitionGO) {
 		transform2D = transitionGO->GetComponent<ComponentTransform2D>();
@@ -58,6 +59,8 @@ void SceneTransition::Update() {
 				}
 			}
 		}
+	} else {
+		UpdateObjectToResolution();
 	}
 }
 
@@ -65,4 +68,27 @@ void SceneTransition::StartTransition(bool isExit_)
 {
 	isExit = isExit_;
 	startTransition = true;
+}
+
+void SceneTransition::UpdateObjectToResolution()
+{
+	if (transitionGO) {
+		float2 newResolution = Screen::GetResolution();
+		if (actualResolution.x != newResolution.x || actualResolution.y != newResolution.y) {
+			actualResolution = newResolution;
+			transform2D->SetSize(actualResolution);
+			if (transitionMove == (int)TransitionMove::LEFT_TO_RIGHT) {
+				transform2D->SetPosition(float3(-actualResolution.x, 0.f, 0.f));
+			}
+			else if (transitionMove == (int)TransitionMove::RIGHT_TO_LEFT) {
+				transform2D->SetPosition(float3(actualResolution.x, 0.f, 0.f));
+			}
+			else if (transitionMove == (int)TransitionMove::TOP_TO_BOTTOM) {
+				transform2D->SetPosition(float3(0.f, actualResolution.y, 0.f));
+			}
+			else if (transitionMove == (int)TransitionMove::BOTTOM_TO_TOP) {
+				transform2D->SetPosition(float3(0.f, -actualResolution.y, 0.f));
+			}
+		}
+	}
 }
