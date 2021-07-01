@@ -28,8 +28,7 @@ void StartButton::Update() {}
 void StartButton::OnButtonClick() {
 	checkpoint = checkpointNum;
 	if (sceneTransition) {
-		transitionGO->Enable();
-		sceneTransition->Update();
+		sceneTransition->StartTransition();
 	} else {
 		if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 		if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
