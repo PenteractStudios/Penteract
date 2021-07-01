@@ -6,6 +6,27 @@ class OnimaruBullet;
 
 class Onimaru : public Player {
 public:
+
+	enum ONIMARU_STATES {
+		IDLE,
+		RUN_BACKWARD,
+		RUN_FORWARD,
+		RUN_LEFT,
+		RUN_RIGHT,
+		NONE1,
+		NONE2,
+		NONE3,
+		NONE4,
+		DEATH,
+		SHOOTING,
+		NONE5,
+		NONE6,
+		RUNFORWARDLEFT,
+		RUNFORWARDRIGHT,
+		RUNBACKWARDLEFT,
+		RUNBACKWARDRIGHT
+	};
+
 	std::vector<std::string> states{ "Idle" ,
 					"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
 					"DashBackward", "DashForward" , "DashLeft" , "DashRight" ,
