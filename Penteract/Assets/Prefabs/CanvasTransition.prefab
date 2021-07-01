@@ -1,6 +1,6 @@
 {
     "Root": {
-        "Name": "CanvasTransition",
+        "Name": "CanvasTranslation",
         "Active": true,
         "RootBoneName": "",
         "Mask": 0,
@@ -9,7 +9,7 @@
                 "Type": "Transform2D",
                 "Active": true,
                 "Position": [
-                    -1920.0,
+                    0.0,
                     0.0,
                     0.0
                 ],
@@ -51,28 +51,98 @@
             {
                 "Type": "Canvas",
                 "Active": true
-            },
-            {
-                "Type": "Script",
-                "Active": true,
-                "Script": 11031084851222569244,
-                "Values": [
-                    {
-                        "Name": "transitionUID",
-                        "Type": "GameObjectUID",
-                        "Value": 15988899048078766972
-                    },
-                    {
-                        "Name": "sceneUID",
-                        "Type": "SceneResourceUID",
-                        "Value": 14394003145697928579
-                    }
-                ]
             }
         ],
         "Children": [
             {
-                "Name": "Image",
+                "Name": "ImageStart",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform2D",
+                        "Active": true,
+                        "Position": [
+                            -1920.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Pivot": [
+                            0.5,
+                            0.5
+                        ],
+                        "Size": [
+                            1920.0,
+                            1080.0
+                        ],
+                        "AnchorMin": [
+                            0.5,
+                            0.5
+                        ],
+                        "AnchorMax": [
+                            0.5,
+                            0.5
+                        ],
+                        "AnchorSelected": 5,
+                        "IsCustomAnchor": false
+                    },
+                    {
+                        "Type": "CanvasRenderer",
+                        "Active": true
+                    },
+                    {
+                        "Type": "Image",
+                        "Active": true,
+                        "TextureId": 0,
+                        "Color": [
+                            9.999999974752428e-7,
+                            9.999899930335233e-7,
+                            9.999899930335233e-7,
+                            1.0
+                        ],
+                        "AlphaTransparency": false,
+                        "IsFill": false,
+                        "FillValue": 1.0
+                    },
+                    {
+                        "Type": "Script",
+                        "Active": true,
+                        "Script": 11031084851222569244,
+                        "Values": [
+                            {
+                                "Name": "transitionUID",
+                                "Type": "GameObjectUID",
+                                "Value": 14734912199153970579
+                            },
+                            {
+                                "Name": "sceneUID",
+                                "Type": "SceneResourceUID",
+                                "Value": 7141310542589317769
+                            }
+                        ]
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "ImageFadeOut_Exit",
                 "Active": true,
                 "RootBoneName": "",
                 "Mask": 0,
@@ -129,14 +199,41 @@
                         "Active": true,
                         "TextureId": 0,
                         "Color": [
-                            9.999999974752428e-7,
-                            9.999899930335233e-7,
-                            9.999899930335233e-7,
-                            1.0
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
                         ],
-                        "AlphaTransparency": false,
+                        "AlphaTransparency": true,
                         "IsFill": false,
                         "FillValue": 1.0
+                    },
+                    {
+                        "Type": "Script",
+                        "Active": true,
+                        "Script": 11031084851222569244,
+                        "Values": [
+                            {
+                                "Name": "transitionUID",
+                                "Type": "GameObjectUID",
+                                "Value": 16833730804882623932
+                            },
+                            {
+                                "Name": "transitionMove",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "sceneUID",
+                                "Type": "SceneResourceUID",
+                                "Value": 7141310542589317769
+                            },
+                            {
+                                "Name": "speedTransition",
+                                "Type": "Float",
+                                "Value": 0.10000000149011612
+                            }
+                        ]
                     }
                 ],
                 "Children": null
