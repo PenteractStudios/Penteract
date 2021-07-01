@@ -35,7 +35,8 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
 	MEMBER(MemberType::GAME_OBJECT_UID, hudControllerObjUID),
 	MEMBER(MemberType::FLOAT, timeSinceLastHurt),
-	MEMBER(MemberType::FLOAT, approachOffset) //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
+	MEMBER(MemberType::FLOAT, approachOffset), //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
+	MEMBER(MemberType::FLOAT, stunDuration)
 };//clang-format on
 
 GENERATE_BODY_IMPL(RangedAI);
@@ -153,11 +154,22 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 		if (rangerGruntCharacter.isAlive && playerController) {
 			bool hitTaken = false;
 			if (collidedWith.name == "FangBullet") {
-				rangerGruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
 				hitTaken = true;
-			} else if (collidedWith.name == "OnimaruBullet") {
-				rangerGruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
+				if (state == AIState::STUNNED && EMPUpgraded) {
+					rangerGruntCharacter.GetHit(99);
+				}
+				else {
+					rangerGruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
+				}
+			}
+			else if (collidedWith.name == "OnimaruBullet") {
 				hitTaken = true;
+				if (state == AIState::STUNNED && EMPUpgraded) {
+					rangerGruntCharacter.GetHit(99);
+				}
+				else {
+					rangerGruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
+				}
 			}
 			if (hitTaken) {
 				PlayAudio(AudioType::HIT);
@@ -167,6 +179,11 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 					}
 				}
 				timeSinceLastHurt = 0.0f;
+			}
+			if (collidedWith.name == "EMP") {
+				agent->RemoveAgentFromCrowd();
+				stunRemaining = stunDuration;
+				ChangeState(AIState::STUNNED);
 			}
 		}
 
@@ -247,6 +264,20 @@ void RangedAI::EnterState(AIState newState) {
 			}
 		}
 		break;
+	case AIState::STUNNED:
+		if (shot) {
+			//animation->SendTriggerSecondary("ShootStunned");
+		}
+		if (state == AIState::IDLE) {
+			//animation->SendTrigger("IdleStunned");
+		}
+		else if (state == AIState::RUN) {
+			//animation->SendTrigger("RunForwardStunned");
+		}
+		else if (state == AIState::FLEE) {
+			//animation->SendTrigger("RunBackwardStunned");
+		}
+		break;
 	case AIState::DEATH:
 		if (state == AIState::IDLE) {
 			animation->SendTrigger("IdleDeath");
@@ -324,6 +355,17 @@ void RangedAI::UpdateState() {
 			if (aiMovement) aiMovement->Flee(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), static_cast<int>(rangerGruntCharacter.movementSpeed), false);
 		} else {
 			ChangeState(AIState::IDLE);
+		}
+		break;
+	case AIState::STUNNED:
+		if (stunRemaining <= 0.f) {
+			stunRemaining = 0.f;
+			//animation->SendTrigger("StunnedIdle");
+			agent->AddAgentToCrowd();
+			state = AIState::IDLE;
+		}
+		else {
+			stunRemaining -= Time::GetDeltaTime();
 		}
 		break;
 	case AIState::DEATH:

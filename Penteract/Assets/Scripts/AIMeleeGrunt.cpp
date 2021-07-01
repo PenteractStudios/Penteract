@@ -160,6 +160,7 @@ void AIMeleeGrunt::Update() {
 		if (stunRemaining <= 0.f) {
 			stunRemaining = 0.f;
 			//animation->SendTrigger("StunnedIdle");
+			agent->AddAgentToCrowd();
 			state = AIState::IDLE;
 		}
 		else {
@@ -214,10 +215,20 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 			bool hitTaken = false;
 			if (collidedWith.name == "FangBullet") {
 				hitTaken = true;
-				gruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
+				if(state == AIState::STUNNED && EMPUpgraded){
+					gruntCharacter.GetHit(99);
+				}
+				else {
+					gruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
+				}
 			} else if (collidedWith.name == "OnimaruBullet") {
 				hitTaken = true;
-				gruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
+				if (state == AIState::STUNNED && EMPUpgraded) {
+					gruntCharacter.GetHit(99);
+				}
+				else {
+					gruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
+				}
 			}
 
 			if (hitTaken) {

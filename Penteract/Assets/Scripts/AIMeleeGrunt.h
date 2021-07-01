@@ -60,6 +60,8 @@ public:
 
 	float hurtFeedbackTimeDuration = 0.5f;
 
+	float stunDuration = 3.f;
+
 private:
 
 	float3 velocity = float3(0, 0, 0);
@@ -69,8 +71,9 @@ private:
 	ComponentTransform* ownerTransform = nullptr;
 	int damageRecieved = 0;
 
-	float stunDuration = 3.f;
 	float stunRemaining = 0.f;
+
+	float EMPUpgraded = false;
 
 	HUDController* hudControllerScript = nullptr;
 	PlayerController* playerController = nullptr;
