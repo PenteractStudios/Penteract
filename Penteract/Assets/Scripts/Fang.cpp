@@ -1,8 +1,9 @@
 #include "Fang.h"
 #include "GameplaySystems.h"
 #include "HUDController.h"
+#include "UltimateFang.h"
 
-void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID, UID canvasUID)
+void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID, UID canvasUID, UID fangUltimateUID)
 {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(fangUID);
@@ -50,6 +51,11 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 			i++;
 		}
 
+	}
+
+	GameObject* fangUltimateGameObject = GameplaySystems::GetGameObject(fangUltimateUID);
+	if (fangUltimateGameObject) {
+		fangUltimateScript = GET_SCRIPT(fangUltimateGameObject, UltimateFang);
 	}
 
 }
@@ -199,6 +205,14 @@ void Fang::PlayAnimation() {
 	}
 }
 
+void Fang::ActiveUltimateFang()
+{
+	Debug::Log("Ultimate Fang");
+	fangUltimateScript->StartUltiamte();
+	//GameObject* ulti = GameplaySystems::Instantiate(fangUltimate, transform->GetGlobalPosition(), transform->GetGlobalRotation());
+	//ulti->SetParent(fang);
+}
+
 void Fang::Update(bool lockMovement) {
 	if (isAlive) {
 		Player::Update(dashing);
@@ -207,6 +221,9 @@ void Fang::Update(bool lockMovement) {
 		}
 		if (!dashing) {
 			if (Input::GetMouseButtonDown(0)) Shoot();
+			if (Input::GetKeyCodeUp(Input::KEYCODE::KEY_E)) {
+				ActiveUltimateFang();
+			}
 		}
 		Dash();
 		
