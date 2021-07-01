@@ -24,11 +24,12 @@ public:
 
 	bool rightShot = true;
 
-private:
 	//Dash
 	float dashCooldown = 5.f;
 	float dashSpeed = 100.f;
 	float dashDuration = 0.1f;
+
+private:
 	float dashCooldownRemaining = 0.f;
 	float dashRemaining = 0.f;
 	bool dashing = false;

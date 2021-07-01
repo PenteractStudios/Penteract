@@ -270,7 +270,7 @@ void RangedAI::UpdateState() {
 	switch (state) {
 	case AIState::START:
 		if (aiMovement) aiMovement->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), rangerGruntCharacter.fallingSpeed, true);
-		if (ownerTransform->GetGlobalPosition().y < 2.7f + 0e-5f) {
+		if (ownerTransform->GetGlobalPosition().y < 3.f + 0e-5f) {
 			animation->SendTrigger("StartSpawn");
 			ChangeState(AIState::SPAWN);
 		}
