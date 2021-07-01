@@ -26,18 +26,16 @@ void Onimaru::PlayAnimation() {
 	if (!compAnimation) return;
 	if (movementInputDirection == MovementDirection::NONE) {
 		if (!isAlive) {
-			if (compAnimation->GetCurrentState()->name != states[9]) {
-				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[9]);
+			if (compAnimation->GetCurrentState()->name != states[DEATH]) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(DEATH)]);
 				compAnimation->SendTriggerSecondary("ShootingDeath");
 			}
-		}
-		else {
-			if (compAnimation->GetCurrentState()->name != states[0]) {
-				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[0]);
+		} else {
+			if (compAnimation->GetCurrentState()->name != states[IDLE]) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(IDLE)]);
 			}
 		}
-	}
-	else {
+	} else {
 		if (compAnimation->GetCurrentState()->name != states[GetMouseDirectionState()]) {
 			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState()]);
 		}
@@ -49,17 +47,15 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 	if (attackCooldownRemaining <= 0.f) {
 		attackCooldownRemaining = 0.f;
 		shooting = false;
-	}
-	else {
+	} else {
 		attackCooldownRemaining -= Time::GetDeltaTime();
 	}
 }
 
-void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID cameraUID, UID canvasUID)
-{
+void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID cameraUID, UID canvasUID) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(onimaruUID);
-	
+
 	if (characterGameObject && characterGameObject->GetParent()) {
 		playerMainTransform = characterGameObject->GetParent()->GetComponent<ComponentTransform>();
 		agent = characterGameObject->GetParent()->GetComponent<ComponentAgent>();
@@ -101,19 +97,16 @@ void Onimaru::Update(bool lockMovement) {
 		Player::Update();
 		if (Input::GetMouseButtonDown(0)) {
 			if (compAnimation) {
-				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[10]);
+				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHOOTING)]);
 			}
-		}
-		else if (Input::GetMouseButtonRepeat(0)) {
+		} else if (Input::GetMouseButtonRepeat(0)) {
 			Shoot();
-		}
-		else if (Input::GetMouseButtonUp(0)) {
+		} else if (Input::GetMouseButtonUp(0)) {
 			if (compAnimation) {
-				compAnimation->SendTriggerSecondary(states[10] + compAnimation->GetCurrentState()->name);
+				compAnimation->SendTriggerSecondary(states[static_cast<int>(SHOOTING)] + compAnimation->GetCurrentState()->name);
 			}
 		}
-	}
-	else {
+	} else {
 		if (agent) agent->RemoveAgentFromCrowd();
 		movementInputDirection = MovementDirection::NONE;
 	}
