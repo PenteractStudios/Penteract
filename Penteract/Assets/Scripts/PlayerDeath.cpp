@@ -5,6 +5,9 @@
 
 #include "PlayerController.h"
 
+#define LEFT_SHOT "LeftShot"
+#define RIGHT_SHOT "RightShot"
+
 EXPOSE_MEMBERS(PlayerDeath) {
 	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
     MEMBER(MemberType::GAME_OBJECT_UID, playerUID)
@@ -20,7 +23,7 @@ void PlayerDeath::Start() {
 void PlayerDeath::Update() {
 	if (player) {
 		if (playerController) {
-			dead = playerController->IsDead();
+			dead = playerController->IsPlayerDead();
 		}
 	}
 	
@@ -35,15 +38,15 @@ void PlayerDeath::OnAnimationFinished() {
 void PlayerDeath::OnAnimationSecondaryFinished()
 {
 	if (playerController) {
-		if (playerController->shooting && playerController->fang->IsActive()) {
-			ComponentAnimation* animation = playerController->fangAnimation;
-			if (playerController->rightShot) {
-				animation->SendTriggerSecondary(playerController->states[12] + animation->GetCurrentState()->name);
-				playerController->rightShot = false;
+		if (playerController->playerFang.IsActive()) {
+			ComponentAnimation* animation = playerController->playerFang.compAnimation;
+			if (animation->GetCurrentStateSecondary()->name == LEFT_SHOT) {
+				animation->SendTriggerSecondary(playerController->playerFang.states[10] + animation->GetCurrentState()->name);
+				playerController->playerFang.rightShot = true;
 			}
-			else {
-				animation->SendTriggerSecondary(playerController->states[11] + animation->GetCurrentState()->name);
-				playerController->rightShot = true;
+			else if(animation->GetCurrentStateSecondary()->name == RIGHT_SHOT) {
+				animation->SendTriggerSecondary(playerController->playerFang.states[11] + animation->GetCurrentState()->name);
+				playerController->playerFang.rightShot = false;
 			}
 		}
 	}

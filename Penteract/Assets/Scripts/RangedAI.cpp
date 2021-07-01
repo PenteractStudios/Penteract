@@ -83,6 +83,29 @@ void RangedAI::Start() {
 
 	if (player) {
 		playerController = GET_SCRIPT(player, PlayerController);
+	} else {
+		player = GameplaySystems::GetGameObject("Player");
+		if (player) {
+			playerController = GET_SCRIPT(player, PlayerController);
+		}
+	}
+
+	if (fangMeshObj == nullptr) {
+		if (player != nullptr) {
+			GameObject* fangObj = player->GetChild("Fang");
+			if (fangObj != nullptr) {
+				fangMeshObj = fangObj->GetChild("Fang");
+			}
+		}
+	}
+
+	if (onimaruMeshObj == nullptr) {
+		if (player != nullptr) {
+			GameObject* onimaruObj = player->GetChild("Onimaru");
+			if (onimaruObj != nullptr) {
+				onimaruMeshObj = onimaruObj->GetChild("Onimaru");
+			}
+		}
 	}
 
 	aiMovement = GET_SCRIPT(&GetOwner(), AIMovement);
@@ -111,8 +134,7 @@ void RangedAI::OnAnimationFinished() {
 		animation->SendTrigger("SpawnIdle");
 		agent->AddAgentToCrowd();
 		state = AIState::IDLE;
-	}
-	else if (state == AIState::DEATH) {
+	} else if (state == AIState::DEATH) {
 		rangerGruntCharacter.destroying = true;
 	}
 }
@@ -131,11 +153,10 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 		if (rangerGruntCharacter.isAlive && playerController) {
 			bool hitTaken = false;
 			if (collidedWith.name == "FangBullet") {
-				rangerGruntCharacter.Hit(playerController->fangCharacter.damageHit + playerController->GetOverPowerMode());
+				rangerGruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
 				hitTaken = true;
-			}
-			else if (collidedWith.name == "OnimaruBullet") {
-				rangerGruntCharacter.Hit(playerController->onimaruCharacter.damageHit + playerController->GetOverPowerMode());
+			} else if (collidedWith.name == "OnimaruBullet") {
+				rangerGruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
 				hitTaken = true;
 			}
 			if (hitTaken) {
@@ -201,8 +222,7 @@ void RangedAI::EnterState(AIState newState) {
 		if (animation) {
 			if (state == AIState::FLEE) {
 				animation->SendTrigger("RunBackwardIdle");
-			}
-			else if (state == AIState::RUN) {
+			} else if (state == AIState::RUN) {
 				animation->SendTrigger("RunForwardIdle");
 			}
 		}
@@ -213,8 +233,7 @@ void RangedAI::EnterState(AIState newState) {
 		if (animation) {
 			if (state == AIState::IDLE) {
 				animation->SendTrigger("IdleRunForward");
-			}
-			else if (state == AIState::FLEE) {
+			} else if (state == AIState::FLEE) {
 				animation->SendTrigger("RunBackwardRunForward");
 			}
 		}
@@ -223,8 +242,7 @@ void RangedAI::EnterState(AIState newState) {
 		if (animation) {
 			if (state == AIState::RUN) {
 				animation->SendTrigger("RunForwardRunBackward");
-			}
-			else if (state == AIState::IDLE) {
+			} else if (state == AIState::IDLE) {
 				animation->SendTrigger("IdleRunBackward");
 			}
 		}
@@ -232,11 +250,9 @@ void RangedAI::EnterState(AIState newState) {
 	case AIState::DEATH:
 		if (state == AIState::IDLE) {
 			animation->SendTrigger("IdleDeath");
-		}
-		else if (state == AIState::RUN) {
+		} else if (state == AIState::RUN) {
 			animation->SendTrigger("RunForwardDeath");
-		}
-		else if (state == AIState::FLEE) {
+		} else if (state == AIState::FLEE) {
 			animation->SendTrigger("RunBackwardDeath");
 		}
 		if (shot) {
@@ -277,8 +293,7 @@ void RangedAI::UpdateState() {
 
 					if (FindsRayToPlayer(false)) {
 						OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
-					}
-					else {
+					} else {
 						ChangeState(AIState::RUN);
 					}
 				}
@@ -293,12 +308,10 @@ void RangedAI::UpdateState() {
 				if (!CharacterInRange(player, rangerGruntCharacter.attackRange - approachOffset, true) || !FindsRayToPlayer(false)) {
 					if (!aiMovement->CharacterInSight(player, fleeingRange)) {
 						if (aiMovement) aiMovement->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), static_cast<int>(rangerGruntCharacter.movementSpeed), false);
-					}
-					else {
+					} else {
 						ChangeState(AIState::FLEE);
 					}
-				}
-				else {
+				} else {
 					ChangeState(AIState::IDLE);
 				}
 			}
@@ -309,8 +322,7 @@ void RangedAI::UpdateState() {
 
 		if (aiMovement->CharacterInSight(player, fleeingRange)) {
 			if (aiMovement) aiMovement->Flee(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), static_cast<int>(rangerGruntCharacter.movementSpeed), false);
-		}
-		else {
+		} else {
 			ChangeState(AIState::IDLE);
 		}
 		break;
@@ -318,8 +330,7 @@ void RangedAI::UpdateState() {
 		if (rangerGruntCharacter.destroying) {
 			if (rangerGruntCharacter.timeToDie > 0) {
 				rangerGruntCharacter.timeToDie -= Time::GetDeltaTime();
-			}
-			else {
+			} else {
 				if (hudControllerScript) {
 					hudControllerScript->UpdateScore(10);
 				}
@@ -368,24 +379,26 @@ bool RangedAI::FindsRayToPlayer(bool useForward) {
 
 	float3 start = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + offset;
 
-	GameObject* activePlayerMeshObj = fangMeshObj;
+	if (fangMeshObj != nullptr && onimaruMeshObj != nullptr) {
+		GameObject* activePlayerMeshObj = fangMeshObj;
 
-	if (!activePlayerMeshObj->IsActive()) {
-		activePlayerMeshObj = onimaruMeshObj;
+		if (!activePlayerMeshObj->IsActive()) {
+			activePlayerMeshObj = onimaruMeshObj;
+		}
+
+		float3 dir = GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation() * float3(0, 0, 1);
+
+		if (!useForward) {
+			dir = activePlayerMeshObj->GetComponent<ComponentTransform>()->GetGlobalPosition() - start;
+			dir.y = 0;
+			dir.Normalize();
+		}
+
+		int mask = static_cast<int>(MaskType::PLAYER);
+		GameObject* hitGo = Physics::Raycast(start, start + dir * rangerGruntCharacter.attackRange, mask);
+		return hitGo != nullptr;
 	}
-
-	float3 dir = GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation() * float3(0, 0, 1);
-
-	if (!useForward) {
-		dir = activePlayerMeshObj->GetComponent<ComponentTransform>()->GetGlobalPosition() - start;
-		dir.y = 0;
-		dir.Normalize();
-	}
-
-	int mask = static_cast<int>(MaskType::PLAYER);
-	GameObject* hitGo = Physics::Raycast(start, start + dir * rangerGruntCharacter.attackRange, mask);
-
-	return hitGo != nullptr;
+	return true;
 }
 
 void RangedAI::OrientateTo(const float3& direction) {
@@ -425,7 +438,8 @@ void RangedAI::PlayAudio(AudioType audioType) {
 void RangedAI::ShootPlayerInRange() {
 	if (!player) return;
 	if (!playerController) return;
-	if (playerController->IsDead()) return;
+	if (!playerController->playerFang.characterGameObject || !playerController->playerOnimaru.characterGameObject) return;
+	if (playerController->IsPlayerDead()) return;
 	if (CharacterInRange(player, rangerGruntCharacter.attackRange, true)) {
 		shot = true;
 
