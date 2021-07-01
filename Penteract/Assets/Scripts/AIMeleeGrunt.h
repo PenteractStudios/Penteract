@@ -69,6 +69,9 @@ private:
 	ComponentTransform* ownerTransform = nullptr;
 	int damageRecieved = 0;
 
+	float stunDuration = 3.f;
+	float stunRemaining = 0.f;
+
 	HUDController* hudControllerScript = nullptr;
 	PlayerController* playerController = nullptr;
 	AIMovement* movementScript = nullptr;

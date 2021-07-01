@@ -156,6 +156,16 @@ void AIMeleeGrunt::Update() {
 		break;
 	case AIState::ATTACK:
 		break;
+	case AIState::STUNNED:
+		if (stunRemaining <= 0.f) {
+			stunRemaining = 0.f;
+			//animation->SendTrigger("StunnedIdle");
+			state = AIState::IDLE;
+		}
+		else {
+			stunRemaining -= Time::GetDeltaTime();
+		}
+		break;
 	case AIState::DEATH:
 		break;
 	}
@@ -218,6 +228,22 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 
 				timeSinceLastHurt = 0.0f;
 
+			}
+
+			if (collidedWith.name == "EMP") {
+				if (state == AIState::ATTACK) {
+					//animation->SendTrigger("RunStunned");
+					//animation->SendTriggerSecondary("AttackStunned");
+				}
+				else if (state == AIState::IDLE) {
+					//animation->SendTrigger("IdleStunned");
+				}
+				else if (state == AIState::RUN) {
+					//animation->SendTrigger("RunStunned");
+				}
+				agent->RemoveAgentFromCrowd();
+				stunRemaining = stunDuration;
+				state = AIState::STUNNED;
 			}
 
 		}

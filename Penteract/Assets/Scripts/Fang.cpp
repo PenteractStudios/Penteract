@@ -2,7 +2,7 @@
 #include "GameplaySystems.h"
 #include "HUDController.h"
 
-void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID, UID canvasUID)
+void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID, UID canvasUID, UID EMPUID)
 {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(fangUID);
@@ -51,7 +51,7 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 		}
 
 	}
-
+	EMP = GameplaySystems::GetGameObject(EMPUID);
 }
 
 void Fang::InitDash() {
@@ -91,7 +91,19 @@ void Fang::Dash() {
 }
 
 bool Fang::CanDash() {
-	return !dashing && !dashInCooldown;
+	return !dashing && !dashInCooldown && !EMP->IsActive();
+}
+
+void Fang::ActivateEMP() {
+	if (CanEMP() && EMP) {
+		EMP->Enable();
+		EMPCooldownRemaining = EMPCooldown;
+		EMPInCooldown = true;
+	}
+}
+
+bool Fang::CanEMP() {
+	return !EMP->IsActive() && !EMPInCooldown && !dashing;
 }
 
 void Fang::CheckCoolDowns(bool noCooldownMode) {
@@ -128,6 +140,17 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 		}
 		else {
 			attackCooldownRemaining -= Time::GetDeltaTime();
+		}
+	}
+
+	//EMP Cooldown
+	if (EMPInCooldown) {
+		if (noCooldownMode || EMPCooldownRemaining <= 0.f) {
+			EMPCooldownRemaining = 0.f;
+			EMPInCooldown = false;
+		}
+		else {
+			EMPCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
 }
@@ -200,15 +223,18 @@ void Fang::PlayAnimation() {
 }
 
 void Fang::Update(bool lockMovement) {
-	if (isAlive) {
+	if (isAlive && EMP) {
 		Player::Update(dashing);
 		if (Input::GetMouseButtonDown(2)) {
 			InitDash();
 		}
-		if (!dashing) {
+		if (!dashing && !EMP->IsActive()) {
 			if (Input::GetMouseButtonDown(0)) Shoot();
 		}
 		Dash();
+		if (Input::GetKeyCodeDown(Input::KEY_E)) {
+			ActivateEMP();			
+		}
 		
 	} 
 	else {
