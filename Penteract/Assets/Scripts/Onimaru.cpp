@@ -73,6 +73,10 @@ void Onimaru::IncreaseUltimateCounter() {
 	onimaruUltimateChargePoints++;
 }
 
+bool Onimaru::CanSwitch() const {
+	return onimaruUltimateTimeRemaining <= 0;
+}
+
 void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID cameraUID, UID canvasUID,
 	float onimaruUltimateAttackSpeed_, float onimaruUltimateTotalTime_,
 	float onimaruUltimateRotationSpeed_, int onimaruUltimateChargePoints_, int onimaruUltimateChargePointsTotal_) {

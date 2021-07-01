@@ -53,6 +53,10 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 
 }
 
+bool Fang::CanSwitch() const {
+	return true;
+}
+
 void Fang::InitDash() {
 	if (CanDash()) {
 		if (movementInputDirection != MovementDirection::NONE) {

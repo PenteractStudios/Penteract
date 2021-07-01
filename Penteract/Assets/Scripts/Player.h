@@ -48,6 +48,7 @@ public:
 	virtual void Shoot() {}
 	virtual void Update(bool lockMovement = false, bool lockOrientation = false);
 	virtual void CheckCoolDowns(bool noCooldownMode = false) {}
+	virtual bool CanSwitch() const = 0;
 	int GetMouseDirectionState();
 	bool IsActive();
 

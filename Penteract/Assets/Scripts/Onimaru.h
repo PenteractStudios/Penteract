@@ -23,6 +23,7 @@ public:
 	void Update(bool lockMovement = false, bool lockOrientation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	void IncreaseUltimateCounter();
+	bool CanSwitch() const override;
 
 private:
 
