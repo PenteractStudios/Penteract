@@ -403,7 +403,9 @@ void HUDController::UpdateDurableHPLoss(GameObject* targetCanvas) {
 		}
 
 		for (int i = 0; i < vectorIndexesToRemove.size(); i++) {
-			indexes.erase(vectorIndexesToRemove[i]);
+			if (std::find(indexes.begin(), indexes.end(), vectorIndexesToRemove[i]) != indexes.end()) {
+				indexes.erase(vectorIndexesToRemove[i]);
+			}
 		}
 
 	}
