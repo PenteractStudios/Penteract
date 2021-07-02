@@ -50,7 +50,8 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, onimaruRecoveryRate),
 	MEMBER(MemberType::FLOAT, fangRecoveryRate),
 	MEMBER(MemberType::BOOL, debugGetHit),
-	MEMBER(MemberType::FLOAT, switchDelay)
+	MEMBER(MemberType::FLOAT, switchDelay),
+	MEMBER(MemberType::FLOAT, maxOnimaruBulletSpread)
 };
 
 GENERATE_BODY_IMPL(PlayerController);
@@ -58,7 +59,7 @@ GENERATE_BODY_IMPL(PlayerController);
 
 void PlayerController::Start() {
 	playerFang.Init(fangUID, fangTrailUID, fangLeftGunUID, fangRightGunUID, fangBulletUID, cameraUID, canvasUID);
-	playerOnimaru.Init(onimaruUID, onimaruBulletUID, onimaruGunUID, cameraUID, canvasUID);
+	playerOnimaru.Init(onimaruUID, onimaruBulletUID, onimaruGunUID, cameraUID, canvasUID, maxOnimaruBulletSpread);
 
 	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
 	if (canvasGO) {
@@ -281,3 +282,4 @@ void PlayerController::Update() {
 		}
 	}
 }
+
