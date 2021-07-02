@@ -17,7 +17,9 @@ void Onimaru::Shoot() {
 			GameObject* bulletInstance = GameplaySystems::Instantiate(bullet, gunTransform->GetGlobalPosition(), Quat(0.0f, 0.0f, 0.0f, 0.0f));
 			if (bulletInstance) {
 				OnimaruBullet* onimaruBulletScript = GET_SCRIPT(bulletInstance, OnimaruBullet);
-				if (onimaruBulletScript) onimaruBulletScript->SetOnimaruDirection(gunTransform->GetGlobalRotation());
+				if (onimaruBulletScript) {
+					onimaruBulletScript->SetOnimaruDirection(GetSlightRandomSpread(0, maxBulletSpread) * gunTransform->GetGlobalRotation());
+				}
 			}
 		}
 	}
@@ -53,7 +55,7 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 	}
 }
 
-void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID cameraUID, UID canvasUID) {
+void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID cameraUID, UID canvasUID, float maxSpread_) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(onimaruUID);
 
@@ -73,6 +75,8 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 			agent->SetMaxAcceleration(MAX_ACCELERATION);
 		}
 	}
+
+	maxBulletSpread = maxSpread_;
 
 	GameObject* onimaruGun = GameplaySystems::GetGameObject(onimaruGunUID);
 	if (onimaruGun) {
@@ -113,4 +117,19 @@ void Onimaru::Update(bool lockMovement) {
 		movementInputDirection = MovementDirection::NONE;
 	}
 	PlayAnimation();
+}
+
+Quat Onimaru::GetSlightRandomSpread(float minValue, float maxValue) const {
+
+	float sign = rand() % 2 < 1 ? 1.0f : -1.0f;
+
+	float4 axis = float4(gunTransform->GetUp(), 1);
+
+	float randomAngle = static_cast<float>((rand() % static_cast<int>(maxValue * 100))) / 100 + minValue;
+
+	Quat result = Quat(0, 0, 0, 1);
+
+	result.SetFromAxisAngle(axis, DEGTORAD * randomAngle * sign);
+
+	return result;
 }
