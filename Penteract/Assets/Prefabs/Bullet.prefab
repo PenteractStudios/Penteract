@@ -88,7 +88,13 @@
                         "Active": true,
                         "TextureId": 6070033773294191873,
                         "MaxVertices": 1500,
-                        "TrailQuads": 50
+                        "TrailQuads": 50,
+                        "Width": 0.0,
+                        "TextureRepeats": 1,
+                        "QuadLife": 0.0,
+                        "HasColorOverTrail": false,
+                        "GradientColor": null,
+                        "NumColors": 0
                     },
                     {
                         "Type": "Script",
@@ -135,7 +141,13 @@
                         "Active": true,
                         "TextureId": 6070033773294191873,
                         "MaxVertices": 1500,
-                        "TrailQuads": 50
+                        "TrailQuads": 50,
+                        "Width": 0.0,
+                        "TextureRepeats": 1,
+                        "QuadLife": 0.0,
+                        "HasColorOverTrail": false,
+                        "GradientColor": null,
+                        "NumColors": 0
                     },
                     {
                         "Type": "Script",

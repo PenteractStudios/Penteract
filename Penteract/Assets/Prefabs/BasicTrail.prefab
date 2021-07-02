@@ -35,7 +35,13 @@
                 "Active": true,
                 "TextureId": 2431905999764896589,
                 "MaxVertices": 240,
-                "TrailQuads": 8
+                "TrailQuads": 8,
+                "Width": 0.0,
+                "TextureRepeats": 1,
+                "QuadLife": 0.0,
+                "HasColorOverTrail": false,
+                "GradientColor": null,
+                "NumColors": 0
             },
             {
                 "Type": "Script",

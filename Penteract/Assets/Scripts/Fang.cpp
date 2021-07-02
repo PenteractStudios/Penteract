@@ -1,9 +1,9 @@
 #include "Fang.h"
 #include "GameplaySystems.h"
 #include "HUDController.h"
+#include "CameraController.h"
 
-void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID, UID canvasUID)
-{
+void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID, UID canvasUID) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(fangUID);
 
@@ -14,6 +14,7 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 		GameObject* cameraAux = GameplaySystems::GetGameObject(cameraUID);
 		if (cameraAux) {
 			lookAtMouseCameraComp = cameraAux->GetComponent<ComponentCamera>();
+			cameraController = GET_SCRIPT(cameraAux, CameraController);
 		}
 		//right gun
 		GameObject* gunAux = GameplaySystems::GetGameObject(rightGunUID);
@@ -54,13 +55,20 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 
 }
 
+void Fang::GetHit(float damage_) {
+	
+	if (!dashing) {
+		Player::GetHit(damage_);
+	}
+
+}
+
 void Fang::InitDash() {
 	if (CanDash()) {
 		if (movementInputDirection != MovementDirection::NONE) {
 			dashDirection = GetDirection();
 			dashMovementDirection = movementInputDirection;
-		}
-		else {
+		} else {
 			dashDirection = facePointDir;
 		}
 
@@ -91,19 +99,18 @@ void Fang::Dash() {
 }
 
 bool Fang::CanDash() {
-	return !dashing && !dashInCooldown;
+	return isAlive && !dashing && !dashInCooldown;
 }
 
 void Fang::CheckCoolDowns(bool noCooldownMode) {
 
 	//Dash Cooldown
-	if(dashInCooldown){
+	if (dashInCooldown) {
 		if (noCooldownMode || dashCooldownRemaining <= 0.f) {
 			dashCooldownRemaining = 0.f;
 			dashInCooldown = false;
 			dashMovementDirection = MovementDirection::NONE;
-		}
-		else {
+		} else {
 			dashCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
@@ -114,26 +121,23 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 			dashRemaining = 0.f;
 			dashing = false;
 			agent->SetMaxSpeed(movementSpeed);
-		}
-		else {
+		} else {
 			dashRemaining -= Time::GetDeltaTime();
 		}
 	}
 
 	//Attack Cooldown
-	if(shooting){
+	if (shooting) {
 		if (attackCooldownRemaining <= 0.f) {
 			attackCooldownRemaining = 0.f;
 			shooting = false;
-		}
-		else {
+		} else {
 			attackCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
 }
 
-float Fang::GetRealDashCooldown()
-{
+float Fang::GetRealDashCooldown() {
 	return 1.0f - (dashCooldownRemaining / dashCooldown);
 }
 
@@ -153,8 +157,7 @@ void Fang::Shoot() {
 		if (rightShot) {
 			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[11]);
 			shootingGunTransform = rightGunTransform;
-		}
-		else {
+		} else {
 			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[10]);
 			shootingGunTransform = leftGunTransform;
 		}
@@ -178,21 +181,18 @@ void Fang::PlayAnimation() {
 		if (!isAlive) {
 			if (compAnimation->GetCurrentState()->name != states[9]) {
 				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[9]);
-					if (compAnimation->GetCurrentStateSecondary()->name == "RightShot") {
-						compAnimation->SendTriggerSecondary("RightShotDeath");
-					}
-					else if (compAnimation->GetCurrentStateSecondary()->name == "LeftShot") {
-						compAnimation->SendTriggerSecondary("LeftShotDeath");
-					}
+				if (compAnimation->GetCurrentStateSecondary()->name == "RightShot") {
+					compAnimation->SendTriggerSecondary("RightShotDeath");
+				} else if (compAnimation->GetCurrentStateSecondary()->name == "LeftShot") {
+					compAnimation->SendTriggerSecondary("LeftShotDeath");
+				}
 			}
-		}
-		else {
+		} else {
 			if (compAnimation->GetCurrentState()->name != states[0]) {
 				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[0]);
 			}
 		}
-	}
-	else {
+	} else {
 		if (compAnimation->GetCurrentState()->name != states[GetMouseDirectionState() + dashAnimation]) {
 			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState() + dashAnimation]);
 		}
@@ -209,9 +209,8 @@ void Fang::Update(bool lockMovement) {
 			if (Input::GetMouseButtonDown(0)) Shoot();
 		}
 		Dash();
-		
-	} 
-	else {
+
+	} else {
 		if (agent) agent->RemoveAgentFromCrowd();
 		movementInputDirection = MovementDirection::NONE;
 	}
