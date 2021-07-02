@@ -1,6 +1,7 @@
 #include "Fang.h"
 #include "GameplaySystems.h"
 #include "HUDController.h"
+#include "CameraController.h"
 
 void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID, UID canvasUID) {
 	SetTotalLifePoints(lifePoints);
@@ -13,6 +14,7 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 		GameObject* cameraAux = GameplaySystems::GetGameObject(cameraUID);
 		if (cameraAux) {
 			lookAtMouseCameraComp = cameraAux->GetComponent<ComponentCamera>();
+			cameraController = GET_SCRIPT(cameraAux, CameraController);
 		}
 		//right gun
 		GameObject* gunAux = GameplaySystems::GetGameObject(rightGunUID);
@@ -57,6 +59,14 @@ bool Fang::CanSwitch() const {
 	return true;
 }
 
+void Fang::GetHit(float damage_) {
+	
+	if (!dashing) {
+		Player::GetHit(damage_);
+	}
+
+}
+
 void Fang::InitDash() {
 	if (CanDash()) {
 		if (movementInputDirection != MovementDirection::NONE) {
@@ -93,7 +103,7 @@ void Fang::Dash() {
 }
 
 bool Fang::CanDash() {
-	return !dashing && !dashInCooldown;
+	return isAlive && !dashing && !dashInCooldown;
 }
 
 void Fang::CheckCoolDowns(bool noCooldownMode) {

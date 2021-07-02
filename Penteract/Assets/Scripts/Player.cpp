@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "CameraController.h"
 #include "Geometry/Plane.h"
 #include "Geometry/Frustum.h"
 #include "Geometry/LineSegment.h"
@@ -8,6 +9,9 @@ void Player::SetAttackSpeed(float attackSpeed_) {
 }
 
 void Player::GetHit(float damage_) {
+	if (cameraController) {
+		cameraController->StartShake();
+	}
 	lifePoints -= damage_;
 	if (playerAudios[static_cast<int>(AudioPlayer::HIT)]) playerAudios[static_cast<int>(AudioPlayer::HIT)]->Play();
 	isAlive = lifePoints > 0.0f;

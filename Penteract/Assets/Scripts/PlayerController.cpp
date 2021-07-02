@@ -23,42 +23,39 @@
 EXPOSE_MEMBERS(PlayerController) {
 	// Add members here to expose them to the engine. Example:
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
-		MEMBER(MemberType::PREFAB_RESOURCE_UID, fangBulletUID),
-		MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
-		MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruBulletUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangLeftGunUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangRightGunUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
-		MEMBER(MemberType::FLOAT, switchCooldown),
-		MEMBER(MemberType::FLOAT, cameraOffsetZ),
-		MEMBER(MemberType::FLOAT, cameraOffsetY),
-		MEMBER(MemberType::FLOAT, cameraOffsetX),
-		MEMBER(MemberType::FLOAT, playerFang.lifePoints),
-		MEMBER(MemberType::FLOAT, playerFang.movementSpeed),
-		MEMBER(MemberType::FLOAT, playerFang.damageHit),
-		MEMBER(MemberType::FLOAT, playerFang.attackSpeed),
-		MEMBER(MemberType::FLOAT, playerOnimaru.lifePoints),
-		MEMBER(MemberType::FLOAT, playerOnimaru.movementSpeed),
-		MEMBER(MemberType::FLOAT, playerOnimaru.damageHit),
-		MEMBER(MemberType::FLOAT, playerOnimaru.attackSpeed),
-		MEMBER(MemberType::FLOAT, rangedDamageTaken),
-		MEMBER(MemberType::FLOAT, meleeDamageTaken),
-		MEMBER(MemberType::BOOL, useSmoothCamera),
-		MEMBER(MemberType::FLOAT, smoothCameraSpeed),
-		MEMBER(MemberType::FLOAT, onimaruRecoveryRate),
-		MEMBER(MemberType::FLOAT, fangRecoveryRate),
-		MEMBER(MemberType::BOOL, debugGetHit),
-		MEMBER(MemberType::FLOAT, switchDelay),
-		MEMBER(MemberType::FLOAT, onimaruUltimateAttackSpeed),
-		MEMBER(MemberType::FLOAT, onimaruUltimateTotalTime),
-		MEMBER(MemberType::FLOAT, onimaruUltimateRotationSpeed),
-		MEMBER(MemberType::INT, onimaruUltimateChargePoints),
-		MEMBER(MemberType::INT, onimaruUltimateChargePointsTotal)
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangBulletUID),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruBulletUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangLeftGunUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangRightGunUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
+	MEMBER(MemberType::FLOAT, switchCooldown),
+	MEMBER(MemberType::FLOAT, playerFang.lifePoints),
+	MEMBER(MemberType::FLOAT, playerFang.movementSpeed),
+	MEMBER(MemberType::FLOAT, playerFang.damageHit),
+	MEMBER(MemberType::FLOAT, playerFang.attackSpeed),
+	MEMBER(MemberType::FLOAT, playerOnimaru.lifePoints),
+	MEMBER(MemberType::FLOAT, playerOnimaru.movementSpeed),
+	MEMBER(MemberType::FLOAT, playerOnimaru.damageHit),
+	MEMBER(MemberType::FLOAT, playerOnimaru.attackSpeed),
+	MEMBER(MemberType::FLOAT, rangedDamageTaken),
+	MEMBER(MemberType::FLOAT, meleeDamageTaken),
+	MEMBER(MemberType::BOOL, useSmoothCamera),
+	MEMBER(MemberType::FLOAT, smoothCameraSpeed),
+	MEMBER(MemberType::FLOAT, onimaruRecoveryRate),
+	MEMBER(MemberType::FLOAT, fangRecoveryRate),
+	MEMBER(MemberType::BOOL, debugGetHit),
+	MEMBER(MemberType::FLOAT, switchDelay),
+	MEMBER(MemberType::FLOAT, onimaruUltimateAttackSpeed),
+	MEMBER(MemberType::FLOAT, onimaruUltimateTotalTime),
+	MEMBER(MemberType::FLOAT, onimaruUltimateRotationSpeed),
+	MEMBER(MemberType::INT, onimaruUltimateChargePoints),
+	MEMBER(MemberType::INT, onimaruUltimateChargePointsTotal)
 };
 
 
@@ -99,6 +96,8 @@ void PlayerController::Start() {
 		i++;
 	}
 }
+
+
 //Debug
 void PlayerController::SetInvincible(bool status) {
 	invincibleMode = status;
@@ -244,19 +243,6 @@ void PlayerController::UpdatePlayerStats() {
 	}
 }
 
-void PlayerController::UpdateCameraPosition() {
-	float3 playerGlobalPos = playerFang.playerMainTransform->GetGlobalPosition();
-
-	float3 desiredPosition = playerGlobalPos + float3(cameraOffsetX, cameraOffsetY, cameraOffsetZ);
-	float3 smoothedPosition = desiredPosition;
-
-	if (useSmoothCamera) {
-		smoothedPosition = float3::Lerp(cameraTransform->GetGlobalPosition(), desiredPosition, smoothCameraSpeed * Time::GetDeltaTime());
-	}
-
-	cameraTransform->SetGlobalPosition(smoothedPosition);
-}
-
 void PlayerController::TakeDamage(bool ranged) {
 	if (!invincibleMode) {
 		float damage = (ranged) ? rangedDamageTaken : meleeDamageTaken;
@@ -283,7 +269,6 @@ void PlayerController::Update() {
 	if (playerFang.isAlive && playerOnimaru.isAlive) {
 		CheckCoolDowns();
 		UpdatePlayerStats();
-		UpdateCameraPosition();
 
 		if (firstTime) {
 			if (playerFang.characterGameObject->IsActive()) {
