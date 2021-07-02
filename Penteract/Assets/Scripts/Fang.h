@@ -18,8 +18,9 @@ public:
 	std::vector<std::string> states{ "Idle" ,
 						"RunBackward" , "RunForward" , "RunLeft" , "RunRight" , //1 - 4
 						"DashBackward", "DashForward" , "DashLeft" , "DashRight" , //5 - 8 
-						"Death" , "LeftShot" , "RightShot", "" //9 - 12 
-						"RunForwardLeft", "RunForwardRight", "RunBackwardLeft", "RunBarckwardRight" // 13 - 16
+						"Death" , "LeftShot" , "RightShot", "", //9 - 12 
+						"RunForwardLeft", "RunForwardRight", "RunBackwardLeft", "RunBackwardRight", // 13 - 16
+						"DashBackward", "DashForward" , "DashLeft" , "DashRight"
 	};
 
 	bool rightShot = true;

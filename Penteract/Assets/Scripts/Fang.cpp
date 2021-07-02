@@ -193,6 +193,8 @@ void Fang::PlayAnimation() {
 		}
 	}
 	else {
+		Debug::Log(std::to_string(GetMouseDirectionState()).c_str());
+		Debug::Log(states[GetMouseDirectionState()].c_str());
 		if (compAnimation->GetCurrentState()->name != states[GetMouseDirectionState() + dashAnimation]) {
 			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState() + dashAnimation]);
 		}
