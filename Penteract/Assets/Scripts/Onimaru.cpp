@@ -1,5 +1,6 @@
 #include "Onimaru.h"
 #include "OnimaruBullet.h"
+#include "CameraController.h"
 
 bool Onimaru::CanShoot() {
 	return !shooting;
@@ -66,6 +67,7 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 		GameObject* cameraAux = GameplaySystems::GetGameObject(cameraUID);
 		if (cameraAux) {
 			lookAtMouseCameraComp = cameraAux->GetComponent<ComponentCamera>();
+			cameraController = GET_SCRIPT(cameraAux, CameraController);
 		}
 
 		if (agent) {
