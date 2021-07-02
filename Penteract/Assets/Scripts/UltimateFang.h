@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Scripting/Script.h"
-#include <list>
+#include <vector>
 
 class ResourcePrefab;
 
@@ -16,6 +16,9 @@ public:
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance) override;
 	void StartUltiamte();
 
+private:
+	Quat DirectionToQuat(float3 dir);
+
 public:
 	float radius = 5.0f;
 	float duration = 3.0f;
@@ -29,7 +32,7 @@ private:
 	bool tickOn = false;
 	float tickCurrent = 0.2f;
 	float tickDuration = 0.2f;
-	std::list<GameObject> collisionedGameObject;
+	std::vector<GameObject> collisionedGameObject;
 
 	bool active = false;
 	float currentDuration = 5.0f;

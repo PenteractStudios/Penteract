@@ -209,8 +209,6 @@ void Fang::ActiveUltimateFang()
 {
 	Debug::Log("Ultimate Fang");
 	fangUltimateScript->StartUltiamte();
-	//GameObject* ulti = GameplaySystems::Instantiate(fangUltimate, transform->GetGlobalPosition(), transform->GetGlobalRotation());
-	//ulti->SetParent(fang);
 }
 
 void Fang::Update(bool lockMovement) {

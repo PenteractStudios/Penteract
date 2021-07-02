@@ -28,6 +28,7 @@ void TrailScript::Update() {
 }
 
 void TrailScript::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance) {
-	if (collidedWith.name == "Fang" || collidedWith.name == "Onimaru") return;
+	if (collidedWith.name == "Fang" || collidedWith.name == "Onimaru" || collidedWith.name == "FangUltimate") return;
+	Debug::Log(collidedWith.name.c_str());
 	GameplaySystems::DestroyGameObject(&GetOwner());
 }
