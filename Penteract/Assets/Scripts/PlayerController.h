@@ -103,10 +103,9 @@ private:
 	void CheckCoolDowns();
 	void SwitchCharacter();
 	void UpdatePlayerStats();
-	void UpdateCameraPosition();
 	bool CanSwitch();
 	void ResetSwitchStatus();
-	
+
 private:
 
 	//Switch
