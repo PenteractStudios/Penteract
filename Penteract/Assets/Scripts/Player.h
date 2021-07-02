@@ -3,15 +3,17 @@
 #include "Character.h"
 #include "Math/float3.h"
 
+class CameraController;
+
 enum class MovementDirection {
 	NONE = 0,
-	UP = 1, 
-	UP_LEFT = 2, 
-	LEFT = 3, 
+	UP = 1,
+	UP_LEFT = 2,
+	LEFT = 3,
 	DOWN_LEFT = 4,
-	DOWN = 5, 
-	DOWN_RIGHT = 6, 
-	RIGHT = 7, 
+	DOWN = 5,
+	DOWN_RIGHT = 6,
+	RIGHT = 7,
 	UP_RIGHT = 8
 };
 
@@ -31,8 +33,8 @@ public:
 	Player() {};
 
 	Player(int lifePoints_, float movementSpeed_, int damageHit_, float attackSpeed_)
-		: 
-		attackSpeed(attackSpeed_){
+		:
+		attackSpeed(attackSpeed_) {
 		lifePoints = lifePoints_;
 		movementSpeed = movementSpeed_;
 		damageHit = damageHit_;
@@ -41,7 +43,7 @@ public:
 
 	// ------- Core Functions ------ //
 	void SetAttackSpeed(float attackSpeed_);
-	void GetHit(float damage_) override;
+	virtual void GetHit(float damage_) override;
 	void LookAtMouse();
 	MovementDirection GetInputMovementDirection() const;
 	float3 GetDirection() const;
@@ -59,6 +61,7 @@ public:
 	bool canShoot = false;
 	float3 lookAtMousePlanePosition = float3(0, 0, 0);
 	ComponentCamera* lookAtMouseCameraComp = nullptr;
+	CameraController* cameraController = nullptr;
 	ComponentAudioSource* playerAudios[static_cast<int>(AudioPlayer::TOTAL)] = { nullptr };
 	float3 facePointDir = float3(0, 0, 0);
 	MovementDirection movementInputDirection = MovementDirection::NONE;

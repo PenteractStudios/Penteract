@@ -13,6 +13,7 @@ public:
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	float GetRealDashCooldown();
 	void Init(UID fangUID = 0, UID trailUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID bulletUID = 0, UID cameraUID = 0, UID canvasUID = 0);
+	void GetHit(float damage_) override;
 
 public:
 	std::vector<std::string> states{ "Idle" ,
@@ -24,11 +25,12 @@ public:
 
 	bool rightShot = true;
 
-private:
 	//Dash
 	float dashCooldown = 5.f;
 	float dashSpeed = 100.f;
 	float dashDuration = 0.1f;
+
+private:
 	float dashCooldownRemaining = 0.f;
 	float dashRemaining = 0.f;
 	bool dashing = false;

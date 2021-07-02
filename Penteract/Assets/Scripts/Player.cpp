@@ -1,20 +1,25 @@
 #include "Player.h"
+#include "CameraController.h"
 #include "Geometry/Plane.h"
 #include "Geometry/Frustum.h"
 #include "Geometry/LineSegment.h"
 
-void Player::SetAttackSpeed(float attackSpeed_)
-{
+void Player::SetAttackSpeed(float attackSpeed_) {
 	attackSpeed = attackSpeed_;
 }
 
-void Player::GetHit(float damage_)
-{
+void Player::GetHit(float damage_) {
+	bool wasAlive = lifePoints > 0.0f;
+	if (cameraController) {
+		cameraController->StartShake();
+	}
 	lifePoints -= damage_;
 	if (playerAudios[static_cast<int>(AudioPlayer::HIT)]) playerAudios[static_cast<int>(AudioPlayer::HIT)]->Play();
 	isAlive = lifePoints > 0.0f;
-	if (!isAlive) {
+
+	if (!isAlive && wasAlive) {
 		if (playerAudios[static_cast<int>(AudioPlayer::DEATH)]) playerAudios[static_cast<int>(AudioPlayer::DEATH)]->Play();
+		OnDeath();
 	}
 }
 
@@ -30,8 +35,7 @@ void Player::MoveTo() {
 	agent->SetMoveTarget(newPosition, false);
 }
 
-bool Player::CanShoot()
-{
+bool Player::CanShoot() {
 	return !canShoot;
 }
 
@@ -66,20 +70,16 @@ int Player::GetMouseDirectionState() {
 
 	if (dot > 0.707) {
 		return 2; //RunForward
-	}
-	else if (dot < -0.707) {
+	} else if (dot < -0.707) {
 		return 1; //RunBackward
-	}
-	else if (cross.y > 0) {
+	} else if (cross.y > 0) {
 		return 4; //RunRight
-	}
-	else {
+	} else {
 		return 3; //RunLeft
 	}
 }
 
-bool Player::IsActive()
-{
+bool Player::IsActive() {
 	return (characterGameObject) ? characterGameObject->IsActive() : false;
 }
 
@@ -132,7 +132,7 @@ void Player::LookAtMouse() {
 }
 
 void Player::Update(bool lockMovement) {
-	if(!lockMovement){
+	if (!lockMovement) {
 		movementInputDirection = GetInputMovementDirection();
 		MoveTo();
 		LookAtMouse();
