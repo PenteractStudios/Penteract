@@ -1,6 +1,6 @@
 {
     "Root": {
-        "Name": "CanvasTranslation",
+        "Name": "CanvasTransition",
         "Active": true,
         "RootBoneName": "",
         "Mask": 0,
@@ -55,7 +55,7 @@
         ],
         "Children": [
             {
-                "Name": "ImageStart",
+                "Name": "ImagePlay",
                 "Active": true,
                 "RootBoneName": "",
                 "Mask": 0,
@@ -112,12 +112,12 @@
                         "Active": true,
                         "TextureId": 0,
                         "Color": [
-                            9.999999974752428e-7,
-                            9.999899930335233e-7,
-                            9.999899930335233e-7,
-                            1.0
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.7411764860153198
                         ],
-                        "AlphaTransparency": false,
+                        "AlphaTransparency": true,
                         "IsFill": false,
                         "FillValue": 1.0
                     },
@@ -129,12 +129,12 @@
                             {
                                 "Name": "transitionUID",
                                 "Type": "GameObjectUID",
-                                "Value": 14734912199153970579
+                                "Value": 6995581975511945313
                             },
                             {
                                 "Name": "sceneUID",
                                 "Type": "SceneResourceUID",
-                                "Value": 7141310542589317769
+                                "Value": 14394003145697928579
                             }
                         ]
                     }
@@ -142,7 +142,7 @@
                 "Children": null
             },
             {
-                "Name": "ImageFadeOut_Exit",
+                "Name": "ImageFadeIn_Exit",
                 "Active": true,
                 "RootBoneName": "",
                 "Mask": 0,
@@ -216,22 +216,22 @@
                             {
                                 "Name": "transitionUID",
                                 "Type": "GameObjectUID",
-                                "Value": 16833730804882623932
-                            },
-                            {
-                                "Name": "transitionMove",
-                                "Type": "Int",
-                                "Value": 0
+                                "Value": 2024180298796212051
                             },
                             {
                                 "Name": "sceneUID",
                                 "Type": "SceneResourceUID",
-                                "Value": 7141310542589317769
+                                "Value": 14394003145697928579
+                            },
+                            {
+                                "Name": "transitionMove",
+                                "Type": "Int",
+                                "Value": 4
                             },
                             {
                                 "Name": "speedTransition",
                                 "Type": "Float",
-                                "Value": 0.10000000149011612
+                                "Value": 10.0
                             }
                         ]
                     }
