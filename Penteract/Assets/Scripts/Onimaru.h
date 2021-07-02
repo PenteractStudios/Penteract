@@ -9,8 +9,8 @@ public:
 	std::vector<std::string> states{ "Idle" ,
 					"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
 					"DashBackward", "DashForward" , "DashLeft" , "DashRight" ,
-					"Death" , "Shooting", "",""
-					"RunForwardLeft","RunForwardRight", "RunBackwardLeft", "RunBarckwardRight"
+					"Death" , "Shooting", "","",
+					"RunForwardLeft","RunForwardRight", "RunBackwardLeft", "RunBackwardRight"
 	};
 
 public:
