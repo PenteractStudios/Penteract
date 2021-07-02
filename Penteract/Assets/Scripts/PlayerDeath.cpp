@@ -52,7 +52,7 @@ void PlayerDeath::OnAnimationSecondaryFinished()
 	}
 }
 
-void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance) {
+void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 	
 	if (collidedWith.name == "RangerProjectile") {
 		playerController->TakeDamage(true);

@@ -14,8 +14,7 @@ public:
 	void Update() override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
-	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance) override;
-	
+	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
 public:
 
 	UID playerUID = 0;
