@@ -56,13 +56,16 @@ public:
 	float meleeDamageTaken = 1.0f;
 	float attackSpeed = 1.0f;
 	float attackCooldownRemaining = 0.f;
-	bool shooting = false;
+	bool canShoot = false;
 	float3 lookAtMousePlanePosition = float3(0, 0, 0);
 	ComponentCamera* lookAtMouseCameraComp = nullptr;
 	ComponentAudioSource* playerAudios[static_cast<int>(AudioPlayer::TOTAL)] = { nullptr };
 	float3 facePointDir = float3(0, 0, 0);
 	MovementDirection movementInputDirection = MovementDirection::NONE;
 	ComponentTransform* playerMainTransform = nullptr;
+	
+protected:
+	bool shooting = false;
 
 private:
 	void MoveTo();

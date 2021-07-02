@@ -32,7 +32,7 @@ void Player::MoveTo() {
 
 bool Player::CanShoot()
 {
-	return !shooting;
+	return !canShoot;
 }
 
 MovementDirection Player::GetInputMovementDirection() const {

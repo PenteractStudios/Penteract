@@ -13,14 +13,14 @@ public:
 		RUN_FORWARD,
 		RUN_LEFT,
 		RUN_RIGHT,
+		BLAST,
 		NONE1,
-		NONE2,
-		NONE3,
-		NONE4,
+		ULTI_INTRO,
+		ULTI_LOOP,
 		DEATH,
 		SHOOTING,
-		NONE5,
-		NONE6,
+		SHIELD,
+		SHOOTSHIELD,
 		RUNFORWARDLEFT,
 		RUNFORWARDRIGHT,
 		RUNBACKWARDLEFT,
@@ -29,8 +29,8 @@ public:
 
 	std::vector<std::string> states{ "Idle" ,
 					"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
-					"DashBackward", "DashForward" , "DashLeft" , "DashRight" ,
-					"Death" , "Shooting", "",""
+					"EnergyBlast", "" , "UltiIntro" , "UltiLoop" ,
+					"Death" , "Shooting", "Shield","ShootingShield"
 					"RunForwardLeft","RunForwardRight", "RunBackwardLeft", "RunBarckwardRight"
 	};
 
@@ -40,13 +40,17 @@ public:
 	void Init(UID onimaruUID = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID cameraUID = 0, UID canvasUID = 0);
 	void Update(bool lockMovement = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
-	
+	void OnDeath() override;
 private:
 
 	ResourcePrefab* trail = nullptr;
 	ResourcePrefab* bullet = nullptr;
 	ComponentTransform* gunTransform = nullptr;
 	ComponentParticleSystem* compParticle = nullptr;
+
+	bool shieldInUse = false;
+	bool blastInUse = false;
+	bool ultimateInUse = false;
 
 private:
 

@@ -5,6 +5,10 @@ void Character::GetHit(float damage_) {
 	isAlive = lifePoints > 0.0f;
 }
 
+void Character::OnDeath() {
+
+}
+
 void Character::Recover(int recoveryLife_)
 {
 	int difference = totalLifePoints - lifePoints;
