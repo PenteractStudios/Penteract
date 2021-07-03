@@ -7,7 +7,7 @@
     ],
     "QuadtreeMaxDepth": 4,
     "QuadtreeElementsPerNode": 200,
-    "GameCamera": 9917392790603670182,
+    "GameCamera": 9876389384990613501,
     "AmbientLight": [
         0.0,
         0.0,
@@ -21148,6 +21148,36 @@
                                                                                 "Value": 16893504836010757748
                                                                             }
                                                                         ]
+                                                                    },
+                                                                    {
+                                                                        "Type": "AudioSource",
+                                                                        "Id": 9635947393082808930,
+                                                                        "Active": true,
+                                                                        "Pitch": 1.0,
+                                                                        "Gain": 1.0,
+                                                                        "Mute": false,
+                                                                        "Looping": false,
+                                                                        "AudioClipId": 10133328817958406947,
+                                                                        "SpatialBlend": 0,
+                                                                        "SourceType": 0,
+                                                                        "InnerAngle": 90.0,
+                                                                        "OuterAngle": 180.0,
+                                                                        "OuterGain": 0.0
+                                                                    },
+                                                                    {
+                                                                        "Type": "AudioSource",
+                                                                        "Id": 1674385338258456584,
+                                                                        "Active": true,
+                                                                        "Pitch": 1.0,
+                                                                        "Gain": 1.0,
+                                                                        "Mute": false,
+                                                                        "Looping": false,
+                                                                        "AudioClipId": 0,
+                                                                        "SpatialBlend": 0,
+                                                                        "SourceType": 0,
+                                                                        "InnerAngle": 90.0,
+                                                                        "OuterAngle": 180.0,
+                                                                        "OuterGain": 0.0
                                                                     }
                                                                 ],
                                                                 "Children": [
@@ -21610,6 +21640,36 @@
                                                                                 "Value": 16893504836010757748
                                                                             }
                                                                         ]
+                                                                    },
+                                                                    {
+                                                                        "Type": "AudioSource",
+                                                                        "Id": 16151996753364193056,
+                                                                        "Active": true,
+                                                                        "Pitch": 1.0,
+                                                                        "Gain": 1.0,
+                                                                        "Mute": false,
+                                                                        "Looping": false,
+                                                                        "AudioClipId": 10133328817958406947,
+                                                                        "SpatialBlend": 0,
+                                                                        "SourceType": 0,
+                                                                        "InnerAngle": 90.0,
+                                                                        "OuterAngle": 180.0,
+                                                                        "OuterGain": 0.0
+                                                                    },
+                                                                    {
+                                                                        "Type": "AudioSource",
+                                                                        "Id": 12100845305913325413,
+                                                                        "Active": true,
+                                                                        "Pitch": 1.0,
+                                                                        "Gain": 1.0,
+                                                                        "Mute": false,
+                                                                        "Looping": false,
+                                                                        "AudioClipId": 10685611266222420786,
+                                                                        "SpatialBlend": 0,
+                                                                        "SourceType": 0,
+                                                                        "InnerAngle": 90.0,
+                                                                        "OuterAngle": 180.0,
+                                                                        "OuterGain": 0.0
                                                                     }
                                                                 ],
                                                                 "Children": [
@@ -22072,6 +22132,36 @@
                                                                                 "Value": 16893504836010757748
                                                                             }
                                                                         ]
+                                                                    },
+                                                                    {
+                                                                        "Type": "AudioSource",
+                                                                        "Id": 9166190887973299318,
+                                                                        "Active": true,
+                                                                        "Pitch": 1.0,
+                                                                        "Gain": 1.0,
+                                                                        "Mute": false,
+                                                                        "Looping": false,
+                                                                        "AudioClipId": 10133328817958406947,
+                                                                        "SpatialBlend": 0,
+                                                                        "SourceType": 0,
+                                                                        "InnerAngle": 90.0,
+                                                                        "OuterAngle": 180.0,
+                                                                        "OuterGain": 0.0
+                                                                    },
+                                                                    {
+                                                                        "Type": "AudioSource",
+                                                                        "Id": 17262736687404444275,
+                                                                        "Active": true,
+                                                                        "Pitch": 1.0,
+                                                                        "Gain": 1.0,
+                                                                        "Mute": false,
+                                                                        "Looping": false,
+                                                                        "AudioClipId": 10685611266222420786,
+                                                                        "SpatialBlend": 0,
+                                                                        "SourceType": 0,
+                                                                        "InnerAngle": 90.0,
+                                                                        "OuterAngle": 180.0,
+                                                                        "OuterGain": 0.0
                                                                     }
                                                                 ],
                                                                 "Children": [
@@ -22534,6 +22624,36 @@
                                                                                 "Value": 16893504836010757748
                                                                             }
                                                                         ]
+                                                                    },
+                                                                    {
+                                                                        "Type": "AudioSource",
+                                                                        "Id": 9796435983705665489,
+                                                                        "Active": true,
+                                                                        "Pitch": 1.0,
+                                                                        "Gain": 1.0,
+                                                                        "Mute": false,
+                                                                        "Looping": false,
+                                                                        "AudioClipId": 10133328817958406947,
+                                                                        "SpatialBlend": 0,
+                                                                        "SourceType": 0,
+                                                                        "InnerAngle": 90.0,
+                                                                        "OuterAngle": 180.0,
+                                                                        "OuterGain": 0.0
+                                                                    },
+                                                                    {
+                                                                        "Type": "AudioSource",
+                                                                        "Id": 4135696078459751653,
+                                                                        "Active": true,
+                                                                        "Pitch": 1.0,
+                                                                        "Gain": 1.0,
+                                                                        "Mute": false,
+                                                                        "Looping": false,
+                                                                        "AudioClipId": 10685611266222420786,
+                                                                        "SpatialBlend": 0,
+                                                                        "SourceType": 0,
+                                                                        "InnerAngle": 90.0,
+                                                                        "OuterAngle": 180.0,
+                                                                        "OuterGain": 0.0
                                                                     }
                                                                 ],
                                                                 "Children": [
@@ -22996,6 +23116,36 @@
                                                                                 "Value": 16893504836010757748
                                                                             }
                                                                         ]
+                                                                    },
+                                                                    {
+                                                                        "Type": "AudioSource",
+                                                                        "Id": 14403080974421621586,
+                                                                        "Active": true,
+                                                                        "Pitch": 1.0,
+                                                                        "Gain": 1.0,
+                                                                        "Mute": false,
+                                                                        "Looping": false,
+                                                                        "AudioClipId": 10133328817958406947,
+                                                                        "SpatialBlend": 0,
+                                                                        "SourceType": 0,
+                                                                        "InnerAngle": 90.0,
+                                                                        "OuterAngle": 180.0,
+                                                                        "OuterGain": 0.0
+                                                                    },
+                                                                    {
+                                                                        "Type": "AudioSource",
+                                                                        "Id": 12565601789844133399,
+                                                                        "Active": true,
+                                                                        "Pitch": 1.0,
+                                                                        "Gain": 1.0,
+                                                                        "Mute": false,
+                                                                        "Looping": false,
+                                                                        "AudioClipId": 10685611266222420786,
+                                                                        "SpatialBlend": 0,
+                                                                        "SourceType": 0,
+                                                                        "InnerAngle": 90.0,
+                                                                        "OuterAngle": 180.0,
+                                                                        "OuterGain": 0.0
                                                                     }
                                                                 ],
                                                                 "Children": [
@@ -24784,6 +24934,36 @@
                                                         "Value": 5330883967110963743
                                                     }
                                                 ]
+                                            },
+                                            {
+                                                "Type": "AudioSource",
+                                                "Id": 2612166173769710561,
+                                                "Active": true,
+                                                "Pitch": 1.0,
+                                                "Gain": 1.0,
+                                                "Mute": false,
+                                                "Looping": false,
+                                                "AudioClipId": 10133328817958406947,
+                                                "SpatialBlend": 0,
+                                                "SourceType": 0,
+                                                "InnerAngle": 90.0,
+                                                "OuterAngle": 180.0,
+                                                "OuterGain": 0.0
+                                            },
+                                            {
+                                                "Type": "AudioSource",
+                                                "Id": 2105686956830103466,
+                                                "Active": true,
+                                                "Pitch": 1.0,
+                                                "Gain": 1.0,
+                                                "Mute": false,
+                                                "Looping": false,
+                                                "AudioClipId": 10685611266222420786,
+                                                "SpatialBlend": 0,
+                                                "SourceType": 0,
+                                                "InnerAngle": 90.0,
+                                                "OuterAngle": 180.0,
+                                                "OuterGain": 0.0
                                             }
                                         ],
                                         "Children": [

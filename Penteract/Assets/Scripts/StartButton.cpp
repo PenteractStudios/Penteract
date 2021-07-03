@@ -16,13 +16,43 @@ EXPOSE_MEMBERS(StartButton) {
 GENERATE_BODY_IMPL(StartButton);
 
 void StartButton::Start() {
+
+	selectable = GetOwner().GetComponent < ComponentSelectable>();
+
+	int i = 0;
+	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
+		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
+		++i;
+	}
 }
 
 void StartButton::Update() {
+    if (selectable) {
+        ComponentSelectable* hoveredComponent = UserInterface::GetCurrentEventSystem()->GetCurrentlyHovered();
+        if (hoveredComponent) {
+            bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
+            if (hovered) {
+                if (playHoveredAudio) {
+                    PlayAudio(AudioType::HOVERED);
+                    playHoveredAudio = false;
+                }
+            }
+            else {
+                playHoveredAudio = true;
+            }
+        }
+        else {
+            playHoveredAudio = true;
+        }
+    }
 }
 
 void StartButton::OnButtonClick() {
 	checkpoint = checkpointNum;
 	if(sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 	if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
+}
+
+void StartButton::PlayAudio(AudioType type) {
+    if (audios[static_cast<int>(type)]) audios[static_cast<int>(type)]->Play();
 }
