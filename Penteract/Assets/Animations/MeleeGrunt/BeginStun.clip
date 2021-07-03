@@ -1,8 +1,8 @@
 {
-    "Name": "Death2",
+    "Name": "BeginStun",
     "AnimationUID": 2079947762376111639,
-    "BeginIndex": 233,
-    "EndIndex": 264,
+    "BeginIndex": 270,
+    "EndIndex": 288,
     "Loop": false,
     "Speed": 1.0,
     "FrameRate": 0.033222589641809466
