@@ -9,15 +9,16 @@ void Player::SetAttackSpeed(float attackSpeed_) {
 }
 
 void Player::GetHit(float damage_) {
-	bool wasAlive = lifePoints > 0.0f;
+	//We assume that the player is always alive when this method gets called, so no need to check if character was alive before taking lives
 	if (cameraController) {
 		cameraController->StartShake();
 	}
+
 	lifePoints -= damage_;
 	if (playerAudios[static_cast<int>(AudioPlayer::HIT)]) playerAudios[static_cast<int>(AudioPlayer::HIT)]->Play();
 	isAlive = lifePoints > 0.0f;
 
-	if (!isAlive && wasAlive) {
+	if (!isAlive) {
 		if (playerAudios[static_cast<int>(AudioPlayer::DEATH)]) playerAudios[static_cast<int>(AudioPlayer::DEATH)]->Play();
 		OnDeath();
 	}
