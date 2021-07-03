@@ -1,0 +1,9 @@
+{
+    "Name": "EndStun",
+    "AnimationUID": 4855359609359038063,
+    "BeginIndex": 330,
+    "EndIndex": 340,
+    "Loop": false,
+    "Speed": 1.0,
+    "FrameRate": 0.0332355797290802
+}

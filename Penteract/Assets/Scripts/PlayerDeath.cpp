@@ -10,7 +10,7 @@
 
 EXPOSE_MEMBERS(PlayerDeath) {
 	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, playerUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, playerUID)
 };
 
 GENERATE_BODY_IMPL(PlayerDeath);
@@ -31,9 +31,7 @@ void PlayerDeath::Update() {
 
 void PlayerDeath::OnAnimationFinished() {
 	if (dead) {
-		if (sceneUID != 0) {
-			SceneManager::ChangeScene(sceneUID);
-		}
+		if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 	} else {
 		if (!playerController)return;
 		if (playerController->playerFang.characterGameObject->IsActive()) {
@@ -42,7 +40,6 @@ void PlayerDeath::OnAnimationFinished() {
 			playerController->playerOnimaru.OnAnimationFinished();
 		}
 	}
-
 }
 
 void PlayerDeath::OnAnimationSecondaryFinished() {

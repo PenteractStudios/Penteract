@@ -9,15 +9,16 @@ void Player::SetAttackSpeed(float attackSpeed_) {
 }
 
 void Player::GetHit(float damage_) {
-	bool wasAlive = lifePoints > 0.0f;
+	//We assume that the player is always alive when this method gets called, so no need to check if character was alive before taking lives
 	if (cameraController) {
 		cameraController->StartShake();
 	}
+
 	lifePoints -= damage_;
 	if (playerAudios[static_cast<int>(AudioPlayer::HIT)]) playerAudios[static_cast<int>(AudioPlayer::HIT)]->Play();
 	isAlive = lifePoints > 0.0f;
 
-	if (!isAlive && wasAlive) {
+	if (!isAlive) {
 		if (playerAudios[static_cast<int>(AudioPlayer::DEATH)]) playerAudios[static_cast<int>(AudioPlayer::DEATH)]->Play();
 		OnDeath();
 	}
@@ -36,7 +37,7 @@ void Player::MoveTo() {
 }
 
 bool Player::CanShoot() {
-	return !canShoot;
+	return !shootingOnCooldown;
 }
 
 MovementDirection Player::GetInputMovementDirection() const {
@@ -73,34 +74,31 @@ int Player::GetMouseDirectionState() {
 
 	if (dot >= 0.923) {
 		return 2; //RunForward
-	}
-	else if (dot <= -0.923) {
+	} else if (dot <= -0.923) {
 		return 1; //RunBackward
-	}
-	else if (dot >= 0.383 && dot < 0.923) {
+	} else if (dot >= 0.383 && dot < 0.923) {
 		if (cross.y > 0) {
 			return 14; //RunForwardRight
-		}
-		else {
+		} else {
 			return 13; //RunForwardLeft
 		}
-	}
-	else if (dot > -0.923 && dot <= -0.383) {
+	} else if (dot > -0.923 && dot <= -0.383) {
 		if (cross.y > 0) {
 			return 16; //RunBackwardRight
-		}
-		else {
+		} else {
 			return 15; //RunBackwarLeft
 		}
-	}
-	else if (cross.y > 0) {
+	} else if (cross.y > 0) {
 		return 4; //RunRight
-	}
-	else return 3; //RunLeft
+	} else return 3; //RunLeft
 }
 
 bool Player::IsActive() {
 	return (characterGameObject) ? characterGameObject->IsActive() : false;
+}
+
+void Player::IncreaseUltimateCounter() {
+	ultimateChargePoints++;
 }
 
 float3 Player::GetDirection() const {

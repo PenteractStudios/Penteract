@@ -40,8 +40,6 @@ public:
 	float ultimateTimeRemaining = 0.0f;
 	float ultimateTotalTime = 3.0f;
 	float ultimateRotationSpeed = 2.0f;
-	int ultimateChargePoints = 0;
-	int ultimateChargePointsTotal = 10;
 	float maxBulletSpread = 5.0f;
 
 public:
@@ -51,7 +49,6 @@ public:
 
 	void Update(bool lockMovement = false, bool lockOrientation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
-	void IncreaseUltimateCounter();
 	bool CanSwitch() const override;
 
 	void OnAnimationFinished() override;

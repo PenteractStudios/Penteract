@@ -11,11 +11,12 @@ public:
 	Fang() {};
 	void Update(bool lockMovement = false, bool lockOrientation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
+	void OnAnimationFinished() override;
+	void GetHit(float damage_) override;
+	bool CanSwitch() const override;
+
 	float GetRealDashCooldown();
 	void Init(UID fangUID = 0, UID trailUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID bulletUID = 0, UID cameraUID = 0, UID canvasUID = 0);
-	bool CanSwitch() const override;
-	void GetHit(float damage_) override;
-	void OnAnimationFinished() override;
 
 public:
 	std::vector<std::string> states{ "Idle" ,

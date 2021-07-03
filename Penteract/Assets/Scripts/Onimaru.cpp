@@ -3,12 +3,12 @@
 #include "CameraController.h"
 
 bool Onimaru::CanShoot() {
-	return !canShoot;
+	return !shootingOnCooldown;
 }
 
 void Onimaru::Shoot() {
 	if (CanShoot()) {
-		canShoot = true;
+		shootingOnCooldown = true;
 		attackCooldownRemaining = 1.f / attackSpeed;
 		if (playerAudios[static_cast<int>(AudioPlayer::SHOOT)]) {
 			playerAudios[static_cast<int>(AudioPlayer::SHOOT)]->Play();
@@ -75,14 +75,10 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 	//AttackCooldown
 	if (attackCooldownRemaining <= 0.f) {
 		attackCooldownRemaining = 0.f;
-		canShoot = false;
+		shootingOnCooldown = false;
 	} else {
 		attackCooldownRemaining -= Time::GetDeltaTime();
 	}
-}
-
-void Onimaru::IncreaseUltimateCounter() {
-	ultimateChargePoints++;
 }
 
 bool Onimaru::CanSwitch() const {
