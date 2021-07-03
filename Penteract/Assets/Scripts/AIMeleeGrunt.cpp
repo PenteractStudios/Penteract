@@ -251,13 +251,17 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 }
 
 void AIMeleeGrunt::EnableBlastPushBack() {
-	gruntCharacter.beingPushed = true;
-	state = AIState::PUSHED;
+	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
+		gruntCharacter.beingPushed = true;
+		state = AIState::PUSHED;
+	}
 }
 
 void AIMeleeGrunt::DisableBlastPushBack() {
-	gruntCharacter.beingPushed = false;
-	state = AIState::IDLE;
+	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
+		gruntCharacter.beingPushed = false;
+		state = AIState::IDLE;
+	}
 }
 
 bool AIMeleeGrunt::IsBeingPushed() const {

@@ -61,7 +61,7 @@ void Onimaru::Blast() {
 						}
 					}
 					else {
-						if (!script->IsBeingPushed())	script->DisableBlastPushBack();
+						if (!script->IsBeingPushed()) script->DisableBlastPushBack();
 					}
 				}
 			}
