@@ -60,7 +60,7 @@ public:
 	float meleeDamageTaken = 1.0f;
 	float attackSpeed = 1.0f;
 	float attackCooldownRemaining = 0.f;
-	bool canShoot = false;
+	bool shootingOnCooldown = false;
 	float3 lookAtMousePlanePosition = float3(0, 0, 0);
 	ComponentCamera* lookAtMouseCameraComp = nullptr;
 	CameraController* cameraController = nullptr;
