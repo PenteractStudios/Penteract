@@ -131,10 +131,12 @@ void Player::LookAtMouse() {
 	}
 }
 
-void Player::Update(bool lockMovement) {
+void Player::Update(bool lockMovement, bool lockRotation) {
+	movementInputDirection = GetInputMovementDirection();
 	if(!lockMovement){
-		movementInputDirection = GetInputMovementDirection();
 		MoveTo();
+	}
+	if (!lockRotation) {
 		LookAtMouse();
 	}
 }

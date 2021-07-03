@@ -10,7 +10,7 @@ public:
 
 	// ------- Contructors ------- //
 	Fang() {};
-	void Update(bool lockMovement = false) override;
+	void Update(bool lockMovement = false, bool lockRotation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	float GetRealDashCooldown();
 	float GetRealUltimateCooldown();
@@ -26,8 +26,11 @@ public:
 	};
 
 	bool rightShot = true;
+
+	//Ultimate
 	float ultimateDuration = 5.0f;
-	float ultimateCooldown = 2.0;
+	int ultimateCooldown = 2;
+	bool ultimateOn = false;
 
 private:
 	//Dash
@@ -55,8 +58,7 @@ private:
 
 	//Ultimate	
 	float ultimateRamaining = 0.0f;
-	float ultimateCooldownRemaining = 2;
-	bool ultimateOn = false;
+	int ultimateCooldownRemaining = 2;	
 	bool ultimateInCooldown = false;
 	UltimateFang* ultimateScript = nullptr;
 

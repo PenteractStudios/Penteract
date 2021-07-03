@@ -104,7 +104,7 @@ void Fang::Dash() {
 }
 
 bool Fang::CanDash() {
-	return !dashing && !dashInCooldown;
+	return !dashing && !dashInCooldown && !ultimateOn;
 }
 
 void Fang::CheckCoolDowns(bool noCooldownMode) {
@@ -177,7 +177,7 @@ float Fang::GetRealUltimateCooldown()
 }
 
 bool Fang::CanShoot() {
-	return !shooting;
+	return !shooting && !ultimateOn;
 }
 
 void Fang::Shoot() {
@@ -247,6 +247,10 @@ void Fang::ActiveUltimate()
 		ultimateOn = true;
 		ultimateInCooldown = true;
 		ultimateScript->StartUltiamte();
+
+		if (playerAudios[static_cast<int>(AudioPlayer::THIRD_ABILITY)]) {
+			playerAudios[static_cast<int>(AudioPlayer::THIRD_ABILITY)]->Play();
+		}
 	}
 }
 
@@ -255,9 +259,9 @@ bool Fang::CanUltimate()
 	return ultimateCooldownRemaining >= ultimateCooldown && !ultimateOn;
 }
 
-void Fang::Update(bool lockMovement) {
+void Fang::Update(bool lockMovement, bool lockRotation) {
 	if (isAlive) {
-		Player::Update(dashing);
+		Player::Update(dashing, dashing || ultimateOn);
 		if (Input::GetMouseButtonDown(2)) {
 			InitDash();
 		}

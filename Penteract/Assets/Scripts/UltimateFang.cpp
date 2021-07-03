@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "GameplaySystems.h"
 #include "Modules/ModulePhysics.h"
+#include "Components/ComponentBoundingBox.h"
 
 EXPOSE_MEMBERS(UltimateFang) {
 	MEMBER(MemberType::FLOAT, radius),
@@ -35,11 +36,19 @@ void UltimateFang::Update() {
 			ComponentTransform* transformOwner = GetOwner().GetComponent<ComponentTransform>();
 			ComponentTransform* transformTarget = collisionedGameObject[i].GetComponent<ComponentTransform>();
 
+			GameObject* fang = GetOwner().GetParent();
+
+			ComponentCapsuleCollider* ccOwner = fang->GetComponent<ComponentCapsuleCollider>();
+			float midHeight = 0.0f;
+			if(ccOwner){
+				midHeight = ccOwner->height;//bbOwner->GetLocalMaxPointAABB().y / 2;
+			}
+
 			float3 posFang = transformOwner->GetGlobalPosition();
 			float3 posTarget = transformTarget->GetGlobalPosition();
 			float3 dir = float3(posTarget.x - posFang.x, posTarget.y - posFang.y, posTarget.z - posFang.z).Normalized();
-			GameplaySystems::Instantiate(bullet, transformOwner->GetGlobalPosition(), DirectionToQuat(dir));
-			GameplaySystems::Instantiate(trail, transformOwner->GetGlobalPosition(), DirectionToQuat(dir));
+			GameplaySystems::Instantiate(bullet, transformOwner->GetGlobalPosition() + float3(0, midHeight, 0), DirectionToQuat(dir));
+			GameplaySystems::Instantiate(trail,  transformOwner->GetGlobalPosition() + float3(0, midHeight, 0), DirectionToQuat(dir));
 		}
 	}
 	collisionedGameObject.clear();
@@ -69,7 +78,7 @@ void UltimateFang::StartUltiamte()
 {
 	ComponentSphereCollider* sphereCollider = GetOwner().GetComponent<ComponentSphereCollider>();
 	sphereCollider->radius = radius;
-	//App->physics->UpdateSphereRigidbody(sphereCollider); //TODO We need this function to be exposed, to use it
+	//App->physics->UpdateSphereRigidbody(sphereCollider); //TODO We need this function to be exposed, then we can use it
 
 	active = true;
 	tickCurrent = tickDuration;

@@ -40,7 +40,7 @@ EXPOSE_MEMBERS(PlayerController) {
 		MEMBER(MemberType::FLOAT, playerFang.dashSpeed),
 		MEMBER(MemberType::FLOAT, playerFang.dashDuration),
 		MEMBER(MemberType::FLOAT, playerFang.ultimateDuration),
-		MEMBER(MemberType::FLOAT, playerFang.ultimateCooldown),
+		MEMBER(MemberType::INT, playerFang.ultimateCooldown),
 		MEMBER(MemberType::FLOAT, cameraOffsetZ),
 		MEMBER(MemberType::FLOAT, cameraOffsetY),
 		MEMBER(MemberType::FLOAT, cameraOffsetX),
@@ -115,7 +115,7 @@ void PlayerController::SetNoCooldown(bool status) {
 }
 //Switch
 bool PlayerController::CanSwitch() {
-	return !switchInCooldown;
+	return !switchInCooldown && !playerFang.ultimateOn;
 }
 
 void PlayerController::ResetSwitchStatus() {
@@ -177,6 +177,9 @@ void PlayerController::SwitchCharacter() {
 			}
 			currentSwitchDelay += Time::GetDeltaTime();
 		}
+	} 
+	else {
+		switchInProgress = false;
 	}
 }
 //Timers

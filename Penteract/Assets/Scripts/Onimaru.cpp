@@ -96,7 +96,7 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 	}
 }
 
-void Onimaru::Update(bool lockMovement) {
+void Onimaru::Update(bool lockMovement, bool lockRotation) {
 	if (isAlive) {
 		Player::Update();
 		if (Input::GetMouseButtonDown(0)) {
