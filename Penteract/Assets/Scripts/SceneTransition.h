@@ -31,7 +31,7 @@ public:
 	UID sceneUID = 0;
 	UID transitionUID = 0;
 
-	int transitionMove = (int) TransitionMove::LEFT_TO_RIGHT;
+	int transitionMove = static_cast<int>(TransitionMove::LEFT_TO_RIGHT);
 	float speedTransition = 20;
 
 private:

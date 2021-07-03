@@ -29,6 +29,9 @@ void SceneTransition::Start() {
 }
 
 void SceneTransition::Update() {
+	if (!transform2D) return;
+	if (!image2D) return;
+
 	if (startTransition) {
 		if (finishedTransition) {
 			if (sceneUID != 0) {
@@ -37,35 +40,24 @@ void SceneTransition::Update() {
 			}
 		}
 		else {
-			// Transition
-			// Size should be equal then size of the screen
-			if (transitionMove == (int)TransitionMove::LEFT_TO_RIGHT) {
+			if (transitionMove == static_cast<int>(TransitionMove::LEFT_TO_RIGHT)) {
 				transform2D->SetPosition(float3(transform2D->GetPosition().x + (1.f * speedTransition), 0.f, 0.f));
 				finishedTransition = transform2D->GetPosition().x == CENTER_POSITION;
-			} else if (transitionMove == (int)TransitionMove::RIGHT_TO_LEFT) {
+			} else if (transitionMove == static_cast<int>(TransitionMove::RIGHT_TO_LEFT)) {
 				transform2D->SetPosition(float3(transform2D->GetPosition().x - (1.f * speedTransition), 0.f, 0.f));
 				finishedTransition = transform2D->GetPosition().x == CENTER_POSITION;
-			} else if (transitionMove == (int)TransitionMove::TOP_TO_BOTTOM) {
+			} else if (transitionMove == static_cast<int>(TransitionMove::TOP_TO_BOTTOM)) {
 				transform2D->SetPosition(float3(0.f, transform2D->GetPosition().y - (1.f * speedTransition), 0.f));
 				finishedTransition = transform2D->GetPosition().y == CENTER_POSITION;
-			} else if (transitionMove == (int)TransitionMove::BOTTOM_TO_TOP) {
+			} else if (transitionMove == static_cast<int>(TransitionMove::BOTTOM_TO_TOP)) {
 				transform2D->SetPosition(float3(0.f, transform2D->GetPosition().y + (1.f * speedTransition), 0.f));
 				finishedTransition = transform2D->GetPosition().y == CENTER_POSITION;
-			} else if (transitionMove == (int)TransitionMove::FADE_IN) {
-				if (image2D) {
-					image2D->SetColor(float4(image2D->GetColor().xyz(), image2D->GetColor().w + (FADE_SPEED * speedTransition)));
-					finishedTransition = image2D->GetColor().w >= FULL_OPACY;
-				} else {
-					finishedTransition = true;
-				}
-			} else if (transitionMove == (int)TransitionMove::FADE_OUT) {
-				if (image2D) {
-					image2D->SetColor(float4(image2D->GetColor().xyz(), image2D->GetColor().w - (FADE_SPEED * speedTransition)));
-					finishedTransition = image2D->GetColor().w <= FULL_TRANSPARENCY;
-				}
-				else {
-					finishedTransition = true;
-				}
+			} else if (transitionMove == static_cast<int>(TransitionMove::FADE_IN)) {
+				image2D->SetColor(float4(image2D->GetColor().xyz(), image2D->GetColor().w + (FADE_SPEED * speedTransition)));
+				finishedTransition = image2D->GetColor().w >= FULL_OPACY;
+			} else if (transitionMove == static_cast<int>(TransitionMove::FADE_OUT)) {
+				image2D->SetColor(float4(image2D->GetColor().xyz(), image2D->GetColor().w - (FADE_SPEED * speedTransition)));
+				finishedTransition = image2D->GetColor().w <= FULL_TRANSPARENCY;
 			}
 		}
 	} else {
