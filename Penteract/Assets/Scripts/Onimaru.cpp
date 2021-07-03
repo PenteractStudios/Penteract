@@ -54,14 +54,14 @@ void Onimaru::Blast() {
 						angle = RadToDeg(playerMainTransform->GetFront().AngleBetweenNorm(direction));
 						if (angle <= blastAngle / 2.0f) {
 							Debug::Log("Hit. Angle: %s", std::to_string(angle));
-							//script->ActivateBlastPushBack();
+							script->EnableBlastPushBack();
 						}
 						else {
 							Debug::Log("Miss. Angle: %s", std::to_string(angle));
 						}
 					}
 					else {
-						//if (!script->BeingPushed())	script->DeactivateBlastPushBack();
+						if (!script->IsBeingPushed())	script->DisableBlastPushBack();
 					}
 				}
 			}

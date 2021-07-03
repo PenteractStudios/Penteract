@@ -436,6 +436,18 @@ void RangedAI::PlayAudio(AudioType audioType) {
 	if (audios[static_cast<int>(audioType)]) audios[static_cast<int>(audioType)]->Play();
 }
 
+void RangedAI::EnableBlastPushBack() {
+	rangerGruntCharacter.beingPushed = true;
+}
+
+void RangedAI::DisableBlastPushBack() {
+	rangerGruntCharacter.beingPushed = false;
+}
+
+bool RangedAI::IsBeingPushed() const {
+	return rangerGruntCharacter.beingPushed;
+}
+
 void RangedAI::ShootPlayerInRange() {
 	if (!player) return;
 	if (!playerController) return;

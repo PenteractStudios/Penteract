@@ -242,3 +242,15 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 		}
 	}
 }
+
+void AIMeleeGrunt::EnableBlastPushBack() {
+	gruntCharacter.beingPushed = true;
+}
+
+void AIMeleeGrunt::DisableBlastPushBack() {
+	gruntCharacter.beingPushed = false;
+}
+
+bool AIMeleeGrunt::IsBeingPushed() const {
+	return gruntCharacter.beingPushed;
+}
