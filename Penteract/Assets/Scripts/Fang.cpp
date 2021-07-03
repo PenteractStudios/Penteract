@@ -56,7 +56,7 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 }
 
 void Fang::GetHit(float damage_) {
-	
+
 	if (!dashing) {
 		Player::GetHit(damage_);
 	}
@@ -127,10 +127,10 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 	}
 
 	//Attack Cooldown
-	if (shooting) {
+	if (!canShoot) {
 		if (attackCooldownRemaining <= 0.f) {
 			attackCooldownRemaining = 0.f;
-			shooting = false;
+			canShoot = true;
 		} else {
 			attackCooldownRemaining -= Time::GetDeltaTime();
 		}
@@ -142,12 +142,12 @@ float Fang::GetRealDashCooldown() {
 }
 
 bool Fang::CanShoot() {
-	return !shooting;
+	return canShoot;
 }
 
 void Fang::Shoot() {
 	if (CanShoot()) {
-		shooting = true;
+		canShoot = false;
 		attackCooldownRemaining = 1.f / attackSpeed;
 		if (playerAudios[static_cast<int>(AudioPlayer::SHOOT)]) {
 			playerAudios[static_cast<int>(AudioPlayer::SHOOT)]->Play();
@@ -199,14 +199,16 @@ void Fang::PlayAnimation() {
 	}
 }
 
-void Fang::Update(bool lockMovement) {
+void Fang::Update(bool lastInputgamePad, bool lockMovement) {
 	if (isAlive) {
-		Player::Update(dashing);
-		if (Input::GetMouseButtonDown(2)) {
+		Player::Update(lastInputgamePad, dashing);
+		if (Input::GetMouseButtonDown(2) || Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_TRIGGERLEFT, 0) > 0.3f) {
 			InitDash();
 		}
 		if (!dashing) {
-			if (Input::GetMouseButtonDown(0)) Shoot();
+			if (Input::GetMouseButtonDown(0) || Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_TRIGGERRIGHT, 0) > 0.3f) {
+				Shoot();
+			}
 		}
 		Dash();
 

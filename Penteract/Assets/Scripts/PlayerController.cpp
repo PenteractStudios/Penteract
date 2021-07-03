@@ -51,7 +51,9 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, fangRecoveryRate),
 	MEMBER(MemberType::BOOL, debugGetHit),
 	MEMBER(MemberType::FLOAT, switchDelay),
-	MEMBER(MemberType::FLOAT, maxOnimaruBulletSpread)
+	MEMBER(MemberType::FLOAT, maxOnimaruBulletSpread),
+	MEMBER(MemberType::FLOAT, playerOnimaru.normalAngularSpeed),
+	MEMBER(MemberType::FLOAT, playerFang.normalAngularSpeed)
 };
 
 GENERATE_BODY_IMPL(PlayerController);
@@ -116,6 +118,20 @@ void PlayerController::ResetSwitchStatus() {
 	switchInProgress = false;
 	playSwitchParticles = true;
 	currentSwitchDelay = 0.f;
+}
+
+bool PlayerController::AnyInputGamepad() const {
+	if (!Input::IsGamepadConnected(0))return false;
+
+	/*bool res =	Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_LEFTX, 0) != 0 &&
+				Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_LEFTY, 0) != 0 &&
+				Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_RIGHTX, 0) != 0 &&
+				Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_RIGHTY, 0) != 0 &&
+				Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_TRIGGERLEFT, 0) != 0 &&
+				Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_TRIGGERRIGHT, 0) != 0 &&
+				Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_TRIGGERRIGHT, 0) != 0 &&
+				Input::GetController*/
+	return true;
 }
 
 void PlayerController::SwitchCharacter() {
@@ -252,10 +268,12 @@ void PlayerController::Update() {
 	if (!playerOnimaru.characterGameObject) return;
 	if (!camera) return;
 
+	lastInputGamepad = AnyInputGamepad();
+
 	if (playerFang.characterGameObject->IsActive()) {
-		playerFang.Update();
+		playerFang.Update(lastInputGamepad);
 	} else {
-		playerOnimaru.Update();
+		playerOnimaru.Update(lastInputGamepad);
 	}
 
 	if (playerFang.isAlive && playerOnimaru.isAlive) {
@@ -271,12 +289,12 @@ void PlayerController::Update() {
 			firstTime = false;
 		}
 
-		if (switchInProgress || (noCooldownMode && Input::GetKeyCodeUp(Input::KEYCODE::KEY_R))) {
+		if (switchInProgress || (noCooldownMode && (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0)))) {
 			switchInProgress = true;
 			SwitchCharacter();
 		}
 
-		if (!switchInProgress && Input::GetKeyCodeUp(Input::KEYCODE::KEY_R)) {
+		if (!switchInProgress && (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0))) {
 			switchInProgress = true;
 			switchCooldownRemaining = switchCooldown;
 		}

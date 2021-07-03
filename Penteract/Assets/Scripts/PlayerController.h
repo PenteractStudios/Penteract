@@ -106,7 +106,7 @@ private:
 	void UpdatePlayerStats();
 	bool CanSwitch();
 	void ResetSwitchStatus();
-
+	bool AnyInputGamepad()const;
 private:
 
 	//Switch
@@ -121,6 +121,7 @@ private:
 	//Switch
 	float currentSwitchDelay = 0.f;
 	bool playSwitchParticles = true;
+	bool lastInputGamepad = false;
 	GameObject* switchEffects = nullptr;
 
 	//Camera

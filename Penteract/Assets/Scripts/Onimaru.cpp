@@ -2,13 +2,15 @@
 #include "OnimaruBullet.h"
 #include "CameraController.h"
 
+#define PRESSED_TRIGGER_THRESHOLD 0.3f
+
 bool Onimaru::CanShoot() {
-	return !shooting;
+	return canShoot;
 }
 
 void Onimaru::Shoot() {
 	if (CanShoot()) {
-		shooting = true;
+		canShoot = false;
 		attackCooldownRemaining = 1.f / attackSpeed;
 		if (playerAudios[static_cast<int>(AudioPlayer::SHOOT)]) {
 			playerAudios[static_cast<int>(AudioPlayer::SHOOT)]->Play();
@@ -47,11 +49,13 @@ void Onimaru::PlayAnimation() {
 
 void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 	//AttackCooldown
-	if (attackCooldownRemaining <= 0.f) {
-		attackCooldownRemaining = 0.f;
-		shooting = false;
-	} else {
-		attackCooldownRemaining -= Time::GetDeltaTime();
+	if (!canShoot) {
+		if (attackCooldownRemaining <= 0.f) {
+			attackCooldownRemaining = 0.f;
+			canShoot = true;
+		} else {
+			attackCooldownRemaining -= Time::GetDeltaTime();
+		}
 	}
 }
 
@@ -97,19 +101,20 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 
 	}
 }
-
-void Onimaru::Update(bool lockMovement) {
+void Onimaru::Update(bool lastInputGamepad, bool lockMovement) {
 	if (isAlive) {
 		Player::Update();
-		if (Input::GetMouseButtonDown(0)) {
+		if (!shooting && (Input::GetMouseButtonDown(0) || Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_TRIGGERRIGHT, 0) > PRESSED_TRIGGER_THRESHOLD)) {
 			if (compAnimation) {
+				shooting = true;
 				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[10]);
 			}
-		} else if (Input::GetMouseButtonRepeat(0)) {
+		} else if (Input::GetMouseButtonRepeat(0) || Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_TRIGGERRIGHT, 0) > PRESSED_TRIGGER_THRESHOLD) {
 			Shoot();
-		} else if (Input::GetMouseButtonUp(0)) {
+		} else if (shooting && (Input::GetMouseButtonUp(0) || Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_TRIGGERRIGHT, 0) < PRESSED_TRIGGER_THRESHOLD)) {
 			if (compAnimation) {
 				compAnimation->SendTriggerSecondary(states[10] + compAnimation->GetCurrentState()->name);
+				shooting = false;
 			}
 		}
 	} else {

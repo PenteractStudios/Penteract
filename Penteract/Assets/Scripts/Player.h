@@ -48,7 +48,7 @@ public:
 	MovementDirection GetInputMovementDirection() const;
 	float3 GetDirection() const;
 	virtual void Shoot() {}
-	virtual void Update(bool lockMovement = false);
+	virtual void Update(bool lastInputGamepad = false, bool lockMovement = false);
 	virtual void CheckCoolDowns(bool noCooldownMode = false) {}
 	int GetMouseDirectionState();
 	bool IsActive();
@@ -58,6 +58,8 @@ public:
 	float meleeDamageTaken = 1.0f;
 	float attackSpeed = 1.0f;
 	float attackCooldownRemaining = 0.f;
+	float normalAngularSpeed = 5.0f;
+	bool canShoot = true;
 	bool shooting = false;
 	float3 lookAtMousePlanePosition = float3(0, 0, 0);
 	ComponentCamera* lookAtMouseCameraComp = nullptr;
@@ -71,11 +73,14 @@ private:
 	void MoveTo();
 	virtual bool CanShoot();
 	void ResetSwitchStatus();
-
+	MovementDirection GetControllerMovementDirection() const;
+	float2 GetControllerOrientationDirection() const;
+	void LookAtGamepadDir();
+	void LookAtFacePointTarget();
 private:
 	float currentSwitchDelay = 0.f;
 	bool playSwitchParticles = true;
 	bool switchInProgress = false;
 	float switchDelay = 0.37f;
-
+	bool lastInputGamepad = true;
 };

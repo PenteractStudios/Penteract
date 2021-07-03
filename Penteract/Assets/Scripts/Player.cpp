@@ -26,6 +26,55 @@ void Player::ResetSwitchStatus() {
 	currentSwitchDelay = 0.f;
 }
 
+MovementDirection Player::GetControllerMovementDirection() const {
+	float2 leftAxisInput = float2(Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_LEFTX, 0), Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_LEFTY, 0));
+	MovementDirection md = MovementDirection::NONE;
+
+	if (leftAxisInput.y < 0) {
+		md = MovementDirection::UP;
+	}
+
+	if (leftAxisInput.y > 0) {
+		md = MovementDirection::DOWN;
+	}
+
+	if (leftAxisInput.x < 0) {
+		if (md == MovementDirection::UP) md = MovementDirection::UP_LEFT;
+		else if (md == MovementDirection::DOWN) md = MovementDirection::DOWN_LEFT;
+		else md = MovementDirection::LEFT;
+	}
+
+	if (leftAxisInput.x > 0) {
+		if (md == MovementDirection::UP) md = MovementDirection::UP_RIGHT;
+		else if (md == MovementDirection::DOWN) md = MovementDirection::DOWN_RIGHT;
+		else md = MovementDirection::RIGHT;
+	}
+
+	return md;
+}
+
+float2 Player::GetControllerOrientationDirection() const {
+	return float2(Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_RIGHTX, 0), Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_RIGHTY, 0));
+}
+
+void Player::LookAtGamepadDir() {
+	float2 lookAtInput = GetControllerOrientationDirection();
+	if (lookAtInput.x == 0 && lookAtInput.y == 0) return;
+
+	float3 desiredFacePointDir = float3(lookAtInput.x, 0, lookAtInput.y);
+	desiredFacePointDir = Lerp(facePointDir, desiredFacePointDir, Time::GetDeltaTime() * normalAngularSpeed);
+
+
+	facePointDir = desiredFacePointDir;
+}
+
+void Player::LookAtFacePointTarget() {
+	Quat quat = playerMainTransform->GetGlobalRotation();
+	float angle = Atan2(facePointDir.x, facePointDir.z);
+	Quat rotation = quat.RotateAxisAngle(float3(0, 1, 0), angle);
+	playerMainTransform->SetGlobalRotation(rotation);
+}
+
 void Player::MoveTo() {
 	float3 newPosition = playerMainTransform->GetGlobalPosition() + GetDirection();
 	agent->SetMaxSpeed(movementSpeed);
@@ -33,29 +82,32 @@ void Player::MoveTo() {
 }
 
 bool Player::CanShoot() {
-	return !shooting;
+	return canShoot;
 }
 
 MovementDirection Player::GetInputMovementDirection() const {
-	MovementDirection md = MovementDirection::NONE;
-	if (Input::GetKeyCode(Input::KEYCODE::KEY_W)) {
-		md = MovementDirection::UP;
-	}
+	MovementDirection md = GetControllerMovementDirection();
+	if (md == MovementDirection::NONE) {
 
-	if (Input::GetKeyCode(Input::KEYCODE::KEY_S)) {
-		md = MovementDirection::DOWN;
-	}
+		if (Input::GetKeyCode(Input::KEYCODE::KEY_W)) {
+			md = MovementDirection::UP;
+		}
 
-	if (Input::GetKeyCode(Input::KEYCODE::KEY_A)) {
-		if (md == MovementDirection::UP) md = MovementDirection::UP_LEFT;
-		else if (md == MovementDirection::DOWN) md = MovementDirection::DOWN_LEFT;
-		else md = MovementDirection::LEFT;
-	}
+		if (Input::GetKeyCode(Input::KEYCODE::KEY_S)) {
+			md = MovementDirection::DOWN;
+		}
 
-	if (Input::GetKeyCode(Input::KEYCODE::KEY_D)) {
-		if (md == MovementDirection::UP) md = MovementDirection::UP_RIGHT;
-		else if (md == MovementDirection::DOWN) md = MovementDirection::DOWN_RIGHT;
-		else md = MovementDirection::RIGHT;
+		if (Input::GetKeyCode(Input::KEYCODE::KEY_A)) {
+			if (md == MovementDirection::UP) md = MovementDirection::UP_LEFT;
+			else if (md == MovementDirection::DOWN) md = MovementDirection::DOWN_LEFT;
+			else md = MovementDirection::LEFT;
+		}
+
+		if (Input::GetKeyCode(Input::KEYCODE::KEY_D)) {
+			if (md == MovementDirection::UP) md = MovementDirection::UP_RIGHT;
+			else if (md == MovementDirection::DOWN) md = MovementDirection::DOWN_RIGHT;
+			else md = MovementDirection::RIGHT;
+		}
 	}
 	return md;
 }
@@ -70,30 +122,23 @@ int Player::GetMouseDirectionState() {
 
 	if (dot >= 0.923) {
 		return 2; //RunForward
-	}
-	else if (dot <= -0.923) {
+	} else if (dot <= -0.923) {
 		return 1; //RunBackward
-	}
-	else if (dot >= 0.383 && dot < 0.923) {
+	} else if (dot >= 0.383 && dot < 0.923) {
 		if (cross.y > 0) {
 			return 14; //RunForwardRight
-		}
-		else {
+		} else {
 			return 13; //RunForwardLeft
 		}
-	}
-	else if (dot > -0.923 && dot <= -0.383) {
+	} else if (dot > -0.923 && dot <= -0.383) {
 		if (cross.y > 0) {
 			return 16; //RunBackwardRight
-		}
-		else {
+		} else {
 			return 15; //RunBackwarLeft
 		}
-	}
-	else if (cross.y > 0) {
+	} else if (cross.y > 0) {
 		return 4; //RunRight
-	}
-	else return 3; //RunLeft
+	} else return 3; //RunLeft
 }
 
 bool Player::IsActive() {
@@ -141,18 +186,21 @@ void Player::LookAtMouse() {
 		Plane p = Plane(planeTransform, float3(0, 1, 0));
 		facePointDir = float3(0, 0, 0);
 		facePointDir = p.ClosestPoint(ray) - (playerMainTransform->GetGlobalPosition());
-		Quat quat = playerMainTransform->GetGlobalRotation();
-		float angle = Atan2(facePointDir.x, facePointDir.z);
-		Quat rotation = quat.RotateAxisAngle(float3(0, 1, 0), angle);
-		playerMainTransform->SetGlobalRotation(rotation);
 	}
 }
 
-void Player::Update(bool lockMovement) {
+void Player::Update(bool lastInputGamepad,bool lockMovement) {
 	if (!lockMovement) {
 		movementInputDirection = GetInputMovementDirection();
 		MoveTo();
-		LookAtMouse();
+		if (!Input::IsGamepadConnected(0)) {
+			LookAtMouse();
+		} else {
+			if (lastInputGamepad) {
+				LookAtGamepadDir();
+			}
+		}
+		LookAtFacePointTarget();
 	}
 }
 

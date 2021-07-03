@@ -87,7 +87,7 @@ void GameController::Update() {
 		}
 	}
 
-	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE)) {
+	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)) {
 		if (pauseCanvas) {
 			if (!isPaused) {
 				Time::PauseGame();
