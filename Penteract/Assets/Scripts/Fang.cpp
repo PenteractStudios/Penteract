@@ -164,7 +164,7 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 		if (ultimateRamaining <= 0.f) {
 			ultimateRamaining = 0.f;
 			ultimateOn = false;
-			ultimateScript->EndUltiamte();
+			ultimateScript->EndUltimate();
 		}
 		else {
 			ultimateRamaining -= Time::GetDeltaTime();

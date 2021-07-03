@@ -66,8 +66,7 @@ Quat UltimateFang::DirectionToQuat(float3 dir) {
 void UltimateFang::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 	if (!active) return;
 	if (tickOn) {
-		//tickOn = false;
-		if (collidedWith.name == "MeleeGrunt" || collidedWith.name == "RangeGrunt") {
+		if (collidedWith.name == "MeleeGruntWeaponized" || collidedWith.name == "RangeGrunt") {
 			collisionedGameObject.push_back(collidedWith);
 			Debug::Log(collidedWith.name.c_str());
 		}
@@ -84,7 +83,7 @@ void UltimateFang::StartUltiamte()
 	tickCurrent = tickDuration;
 }
 
-void UltimateFang::EndUltiamte()
+void UltimateFang::EndUltimate()
 {
 	active = false;
 	Debug::Log("Finish ultimate");

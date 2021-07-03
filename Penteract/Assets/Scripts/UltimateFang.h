@@ -15,7 +15,7 @@ public:
 	void Update() override;
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
 	void StartUltiamte();
-	void EndUltiamte();
+	void EndUltimate();
 
 private:
 	Quat DirectionToQuat(float3 dir);
