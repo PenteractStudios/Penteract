@@ -6,6 +6,7 @@
 EXPOSE_MEMBERS(SpawnPointController) {
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, meleeEnemyPrefabUID),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, rangeEnemyPrefabUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, doorUID),
 };
 
 GENERATE_BODY_IMPL(SpawnPointController);
@@ -16,6 +17,8 @@ void SpawnPointController::Start() {
 	/* Enemy prefabs to be used by the controller's children */
 	meleeEnemyPrefab = GameplaySystems::GetResource<ResourcePrefab>(meleeEnemyPrefabUID);
 	rangeEnemyPrefab = GameplaySystems::GetResource<ResourcePrefab>(rangeEnemyPrefabUID);
+
+	doorObstacle = GameplaySystems::GetGameObject(doorUID);
 }
 
 void SpawnPointController::Update() {}
@@ -26,4 +29,8 @@ void SpawnPointController::OnCollision(GameObject& collidedWith, float3 collisio
 	}
 	ComponentBoxCollider* boxCollider = gameObject->GetComponent<ComponentBoxCollider>();
 	if (boxCollider) boxCollider->Disable();
+}
+
+void SpawnPointController::OpenDoor() {
+	if (doorObstacle && doorObstacle->IsActive()) doorObstacle->Disable();
 }
