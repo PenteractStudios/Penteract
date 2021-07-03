@@ -1,5 +1,8 @@
 #include "Onimaru.h"
 #include "OnimaruBullet.h"
+#include "GameplaySystems.h"
+#include "HUDController.h"
+#include "Shield.h"
 
 bool Onimaru::CanShoot() {
 	return !shooting;
@@ -44,6 +47,23 @@ void Onimaru::PlayAnimation() {
 	}
 }
 
+bool Onimaru::IsShielding() {
+	return shield->GetIsActive();
+}
+
+float Onimaru::GetRealShieldCooldown()
+{
+	float realShieldCooldown = 1.0f;
+	float chargesWasted = (float)(shield->max_charges - shield->GetNumCharges()) / (float)shield->max_charges;
+	if (shield->GetIsActive()) {
+		realShieldCooldown = chargesWasted;
+	} else if (shield->GetCoolDown() > 0) {
+		realShieldCooldown = 1.0f - (shieldCooldownRemaining / (shield->GetCoolDown() / (1.0f- chargesWasted)));
+	}
+
+	return realShieldCooldown;
+}
+
 void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 	//AttackCooldown
 	if (attackCooldownRemaining <= 0.f) {
@@ -53,9 +73,18 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 	else {
 		attackCooldownRemaining -= Time::GetDeltaTime();
 	}
+
+	//ShieldCooldown
+	if (noCooldownMode || shieldCooldownRemaining <= 0.f) {
+		shieldCooldownRemaining = 0.f;
+		shieldInCooldown = false;
+	}
+	else {
+		shieldCooldownRemaining -= Time::GetDeltaTime();
+	}
 }
 
-void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID cameraUID, UID canvasUID)
+void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID cameraUID, UID canvasUID, UID shieldUID)
 {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(onimaruUID);
@@ -81,7 +110,16 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 		gunTransform = onimaruGun->GetComponent<ComponentTransform>();
 		lookAtMousePlanePosition = gunTransform->GetGlobalPosition();
 	}
+	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
+	if (canvasGO) {
+		hudControllerScript = GET_SCRIPT(canvasGO, HUDController);
+	}
+	shieldGO = GameplaySystems::GetGameObject(shieldUID);
+	if (shieldGO) {
+		shield = GET_SCRIPT(shieldGO, Shield);
+	}
 
+	shieldGO->Disable();
 	bullet = GameplaySystems::GetResource<ResourcePrefab>(onimaruBulletUID);
 
 	if (characterGameObject) {
@@ -96,6 +134,38 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 	}
 }
 
+bool Onimaru::CanShield() {
+	return !shieldInCooldown && !shield->GetIsActive();
+}
+
+void Onimaru::InitShield() {
+	if (CanShield()) {
+
+		shield->InitShield();
+
+		shieldInCooldown = false;
+		if (agent) {
+			agent->SetMaxSpeed(movementSpeed/2);
+		}
+		/*if (audios[static_cast<int>(AudioType::DASH)]) {
+			audios[static_cast<int>(AudioType::DASH)]->Play();
+		}
+		else {
+			Debug::Log(AUDIOSOURCE_NULL_MSG);
+		}*/
+		shieldGO->Enable();
+	}
+}
+
+void Onimaru::FadeShield() {
+	shield->FadeShield();
+	shieldInCooldown = true;
+	shieldCooldownRemaining = shield->GetCoolDown();
+	if (agent) agent->SetMaxSpeed(movementSpeed);
+	shieldGO->Disable();
+}
+
+
 void Onimaru::Update(bool lockMovement) {
 	if (isAlive) {
 		Player::Update();
@@ -104,6 +174,15 @@ void Onimaru::Update(bool lockMovement) {
 				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[10]);
 			}
 		}
+		if (Input::GetMouseButtonDown(2)) {
+			InitShield();
+		}
+		if (shield->GetIsActive()) {
+			if (Input::GetMouseButtonUp(2) || shield->GetNumCharges() == shield->max_charges) {
+				FadeShield();
+			}
+		}
+		
 		else if (Input::GetMouseButtonRepeat(0)) {
 			Shoot();
 		}
