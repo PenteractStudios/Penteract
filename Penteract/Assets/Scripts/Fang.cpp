@@ -244,7 +244,7 @@ void Fang::PlayAnimation() {
 
 void Fang::Update(bool lockMovement) {
 	if (isAlive) {
-		Player::Update(dashing && EMP->IsActive());
+		Player::Update(dashing || EMP->IsActive());
 		if (Input::GetMouseButtonDown(2)) {
 			InitDash();
 		}
@@ -253,7 +253,7 @@ void Fang::Update(bool lockMovement) {
 		}
 		Dash();
 		if (Input::GetKeyCodeDown(Input::KEY_Q)) {
-			ActivateEMP();			
+			ActivateEMP();
 		}
 		
 	} 
