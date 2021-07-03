@@ -37,6 +37,10 @@ public:
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override; //This is commented until merge with collisions
 	void ShootPlayerInRange(); //Sets in motion the shooting at the player, if found and close enough
 
+	void EnableBlastPushBack();
+	void DisableBlastPushBack();
+	bool IsBeingPushed() const;
+
 private:
 	//State machine handling
 	void EnterState(AIState newState);
@@ -49,9 +53,7 @@ private:
 	void ActualShot();																//Generates projectile prefab instance
 	void PlayAudio(AudioType audioType);											//Plays audio (if not null)
 
-	void EnableBlastPushBack();
-	void DisableBlastPushBack();
-	bool IsBeingPushed() const;
+	void UpdatePushBackPosition();
 
 public:
 	Enemy rangerGruntCharacter = Enemy(5, 8.0f, 1, 30, 40.f, 5.f, 5.f, 5.f, 5.f); //Enemy class instance (for shared values)
@@ -112,4 +114,6 @@ private:
 	ComponentMeshRenderer* meshRenderer = nullptr;	//Reference to a meshRendererComponent, used for material setting on hurt
 
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr }; //Array of ints used to play audios
+
+	float currentPushBackDistance = 0.f;
 };

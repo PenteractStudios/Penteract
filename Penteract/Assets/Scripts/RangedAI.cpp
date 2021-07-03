@@ -173,6 +173,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 		if (!rangerGruntCharacter.isAlive) {
 			ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
 			if (collider) collider->Disable();
+			if (rangerGruntCharacter.beingPushed) DisableBlastPushBack();
 			ChangeState(AIState::DEATH);
 			if (winLoseScript) winLoseScript->IncrementDeadEnemies();
 			if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
@@ -340,6 +341,9 @@ void RangedAI::UpdateState() {
 		}
 
 		break;
+	case AIState::PUSHED:
+		UpdatePushBackPosition();
+		break;
 	default:
 		break;
 	}
@@ -437,11 +441,17 @@ void RangedAI::PlayAudio(AudioType audioType) {
 }
 
 void RangedAI::EnableBlastPushBack() {
-	rangerGruntCharacter.beingPushed = true;
+	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
+		ChangeState(AIState::PUSHED);
+		rangerGruntCharacter.beingPushed = true;
+	}
 }
 
 void RangedAI::DisableBlastPushBack() {
-	rangerGruntCharacter.beingPushed = false;
+	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
+		ChangeState(AIState::IDLE);
+		rangerGruntCharacter.beingPushed = false;
+	}
 }
 
 bool RangedAI::IsBeingPushed() const {
@@ -461,5 +471,25 @@ void RangedAI::ShootPlayerInRange() {
 		}
 
 		actualShotTimer = actualShotMaxTime;
+	}
+}
+
+void RangedAI::UpdatePushBackPosition() {
+	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
+	float3 initialPos = enemyPos;
+
+	float3 direction = (enemyPos - playerPos).Normalized();
+
+	if (agent) {
+		enemyPos += direction * rangerGruntCharacter.pushBackSpeed * Time::GetDeltaTime();
+		agent->SetMoveTarget(enemyPos, false);
+		float distance = enemyPos.Distance(initialPos);
+		currentPushBackDistance += distance;
+
+		if (currentPushBackDistance >= rangerGruntCharacter.pushBackDistance) {
+			DisableBlastPushBack();
+			currentPushBackDistance = 0.f;
+		}
 	}
 }

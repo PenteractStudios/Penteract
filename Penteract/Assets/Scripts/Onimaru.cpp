@@ -38,10 +38,10 @@ void Onimaru::Blast() {
 			hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::ONIMARU_SKILL_2);
 		}
 		for (GameObject* enemy : enemiesInMap) {
-			AIMeleeGrunt* script = GET_SCRIPT(enemy, AIMeleeGrunt);
-			if (!script) GET_SCRIPT(enemy, RangedAI);
+			AIMeleeGrunt* meleeScript = GET_SCRIPT(enemy, AIMeleeGrunt);
+			RangedAI* rangedScript = GET_SCRIPT(enemy, RangedAI);
 			float offset = 3.034f;
-			if (script) {
+			if (rangedScript || meleeScript) {
 				if (rightHand && playerMainTransform) {
 					float3 onimaruRightArmPos = rightHand->GetGlobalPosition();
 					float3 enemyPos = enemy->GetComponent<ComponentTransform>()->GetGlobalPosition();
@@ -54,14 +54,21 @@ void Onimaru::Blast() {
 						angle = RadToDeg(playerMainTransform->GetFront().AngleBetweenNorm(direction));
 						if (angle <= blastAngle / 2.0f) {
 							Debug::Log("Hit. Angle: %s", std::to_string(angle));
-							script->EnableBlastPushBack();
+							if (meleeScript) meleeScript->EnableBlastPushBack();
+							else if (rangedScript) rangedScript->EnableBlastPushBack();
 						}
 						else {
 							Debug::Log("Miss. Angle: %s", std::to_string(angle));
 						}
 					}
 					else {
-						if (!script->IsBeingPushed()) script->DisableBlastPushBack();
+						if (meleeScript) {
+							if (!meleeScript->IsBeingPushed()) meleeScript->DisableBlastPushBack();
+						}
+						else if (rangedScript) {
+							if (!rangedScript->IsBeingPushed()) rangedScript->DisableBlastPushBack();
+						}
+						
 					}
 				}
 			}
