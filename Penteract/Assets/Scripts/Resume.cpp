@@ -14,7 +14,8 @@ void Resume::Start() {
 	pauseCanvas = GameplaySystems::GetGameObject(pauseUID);
 	hudCanvas = GameplaySystems::GetGameObject(hudUID);
 
-	selectable = GetOwner().GetComponent < ComponentSelectable>();
+	/* Audio */
+	selectable = GetOwner().GetComponent<ComponentSelectable>();
 
 	int i = 0;
 	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
@@ -24,6 +25,7 @@ void Resume::Start() {
 }
 
 void Resume::Update() {
+	/* Audio */
 	if (selectable) {
 		ComponentSelectable* hoveredComponent = UserInterface::GetCurrentEventSystem()->GetCurrentlyHovered();
 		if (hoveredComponent) {
@@ -45,6 +47,7 @@ void Resume::Update() {
 }
 
 void Resume::OnButtonClick() {
+	PlayAudio(AudioType::CLICKED);
 	if (!pauseCanvas) return;
 
 	if (pauseCanvas->IsActive()) {

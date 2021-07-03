@@ -3,6 +3,8 @@
 #include "Scripting/Script.h"
 
 class ComponentText;
+class ComponentAudioSource;
+class ComponentSelectable;
 
  /// <summary>
  /// This class is meant to modify externs delcared inside ScreenResolution confirmer whenever Button is pressed, as well as setting the text (if found)
@@ -12,9 +14,16 @@ class ComponentText;
 
 public:
 
+	enum class AudioType {
+		HOVERED,
+		CLICKED,
+		TOTAL
+	};
+
 	void Start() override;
 	void Update() override;
 	void OnButtonClick() override;
+	void PlayAudio(AudioType type);
 
 public:
 	bool increasing = false;
@@ -26,5 +35,9 @@ private:
 private:
 
 	ComponentText* text = nullptr;
+
+	bool playHoveredAudio = true;
+	ComponentSelectable* selectable = nullptr;
+	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
 };
 

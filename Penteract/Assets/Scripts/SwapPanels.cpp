@@ -17,6 +17,7 @@ void SwapPanels::Start() {
     target = GameplaySystems::GetGameObject(targetUID);
     current = GameplaySystems::GetGameObject(currentUID);
 
+    /* Audio */
     selectable = GetOwner().GetComponent<ComponentSelectable>();
 
     int i = 0;
@@ -27,6 +28,7 @@ void SwapPanels::Start() {
 }
 
 void SwapPanels::Update() {
+    /* Audio */
     if (selectable) {
         ComponentSelectable* hoveredComponent = UserInterface::GetCurrentEventSystem()->GetCurrentlyHovered();
         if (hoveredComponent) {

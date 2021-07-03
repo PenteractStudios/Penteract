@@ -13,6 +13,7 @@ GENERATE_BODY_IMPL(ExitButton);
 
 void ExitButton::Start() {
 
+    /* Audio */
 	selectable = GetOwner().GetComponent<ComponentSelectable>();
 
 	int i = 0;
@@ -23,6 +24,7 @@ void ExitButton::Start() {
 }
 
 void ExitButton::Update() {
+    /* Audio */
     if (selectable) {
         ComponentSelectable* hoveredComponent = UserInterface::GetCurrentEventSystem()->GetCurrentlyHovered();
         if (hoveredComponent) {

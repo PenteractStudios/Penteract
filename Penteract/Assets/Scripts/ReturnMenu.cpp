@@ -11,6 +11,7 @@ EXPOSE_MEMBERS(ReturnMenu) {
 GENERATE_BODY_IMPL(ReturnMenu);
 
 void ReturnMenu::Start() {
+    /* Audio */
     selectable = GetOwner().GetComponent<ComponentSelectable>();
 
     int i = 0;
@@ -21,6 +22,7 @@ void ReturnMenu::Start() {
 }
 
 void ReturnMenu::Update() {
+    /* Audio */
     if (selectable) {
         ComponentSelectable* hoveredComponent = UserInterface::GetCurrentEventSystem()->GetCurrentlyHovered();
         if (hoveredComponent) {

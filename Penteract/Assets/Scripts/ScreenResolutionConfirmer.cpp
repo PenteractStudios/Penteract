@@ -8,6 +8,9 @@ EXPOSE_MEMBERS(ScreenResolutionConfirmer) {
 GENERATE_BODY_IMPL(ScreenResolutionConfirmer);
 
 void ScreenResolutionConfirmer::Start() {
+
+    /* Audio */
+    selectable = GetOwner().GetComponent<ComponentSelectable>();
     int i = 0;
     for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
         if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
@@ -18,6 +21,27 @@ void ScreenResolutionConfirmer::Start() {
 void ScreenResolutionConfirmer::Update() {
     
     screenResolutionChangeConfirmationWasRequested = true;
+
+    /* Audio */
+    if (selectable) {
+        ComponentSelectable* hoveredComponent = UserInterface::GetCurrentEventSystem()->GetCurrentlyHovered();
+        if (hoveredComponent) {
+            bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
+            if (hovered) {
+                if (playHoveredAudio) {
+                    PlayAudio(AudioType::HOVERED);
+                    playHoveredAudio = false;
+                }
+            }
+            else {
+                playHoveredAudio = true;
+            }
+        }
+        else {
+            playHoveredAudio = true;
+        }
+    }
+
 }
 
 void ScreenResolutionConfirmer::OnButtonClick() {

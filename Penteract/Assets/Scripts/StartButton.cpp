@@ -16,7 +16,7 @@ EXPOSE_MEMBERS(StartButton) {
 GENERATE_BODY_IMPL(StartButton);
 
 void StartButton::Start() {
-
+    /* Audio */
 	selectable = GetOwner().GetComponent<ComponentSelectable>();
 
 	int i = 0;
@@ -27,6 +27,7 @@ void StartButton::Start() {
 }
 
 void StartButton::Update() {
+    /* Audio */
     if (selectable) {
         ComponentSelectable* hoveredComponent = UserInterface::GetCurrentEventSystem()->GetCurrentlyHovered();
         if (hoveredComponent) {

@@ -20,6 +20,7 @@ void SetUpgradesButtonColor::Start() {
     imageOn = buttonOn->GetComponent<ComponentImage>();
     imageOff = buttonOff->GetComponent<ComponentImage>();
 
+    /* Audio */
     selectable = GetOwner().GetComponent<ComponentSelectable>();
 
     int i = 0;
@@ -30,6 +31,7 @@ void SetUpgradesButtonColor::Start() {
 }
 
 void SetUpgradesButtonColor::Update() {
+    /* Audio */
     if (selectable) {
         ComponentSelectable* hoveredComponent = UserInterface::GetCurrentEventSystem()->GetCurrentlyHovered();
         if (hoveredComponent) {

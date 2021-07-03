@@ -27,6 +27,15 @@ void ScreenResolutionSetter::Start() {
 	UpdateText();
 	screenResolutionChangeConfirmationWasRequested = false;
 	preSelectedScreenResolutionPreset = 2;
+
+	/* Audio */
+	selectable = GetOwner().GetComponent<ComponentSelectable>();
+
+	int i = 0;
+	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
+		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
+		++i;
+	}
 }
 
 void ScreenResolutionSetter::Update() {
@@ -38,10 +47,35 @@ void ScreenResolutionSetter::Update() {
 		}
 		screenResolutionChangeConfirmationWasRequested = false;
 	}
+
+	/* Audio */
+	if (selectable) {
+		ComponentSelectable* hoveredComponent = UserInterface::GetCurrentEventSystem()->GetCurrentlyHovered();
+		if (hoveredComponent) {
+			bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
+			if (hovered) {
+				if (playHoveredAudio) {
+					PlayAudio(AudioType::HOVERED);
+					playHoveredAudio = false;
+				}
+			}
+			else {
+				playHoveredAudio = true;
+			}
+		}
+		else {
+			playHoveredAudio = true;
+		}
+	}
 }
 
 void ScreenResolutionSetter::OnButtonClick() {
+	PlayAudio(AudioType::CLICKED);
 	IncreaseResolution(increasing ? 1 : -1);
+}
+
+void ScreenResolutionSetter::PlayAudio(AudioType type) {
+	if (audios[static_cast<int>(type)]) audios[static_cast<int>(type)]->Play();
 }
 
 void ScreenResolutionSetter::IncreaseResolution(int multiplier) {
