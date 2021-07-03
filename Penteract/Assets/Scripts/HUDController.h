@@ -91,7 +91,7 @@ private:
 	void AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canvas);
 	void PlayCoolDownEffect(AbilityRefreshEffect* effect, Cooldowns cooldown);
 	void PlayProgressBarEffect(AbilityRefreshEffectProgressBar* effect, Cooldowns cooldown);
-
+	bool AnyTimerCounting(bool isFang);
 private:
 
 	GameObject* fang = nullptr;
@@ -137,8 +137,9 @@ private:
 	float remainingDurableHealthTimesOni[MAX_HEALTH] = { 0,0,0,0,0,0,0,0,0,0 };
 	bool abilityCoolDownsRetreived[static_cast<int>(Cooldowns::TOTAL)] = { true,true,true,true,true,true,true };
 
-	std::vector<int>remainingTimeActiveIndexesFang;
-	std::vector<int>remainingTimeActiveIndexesOni;
+	//std::vector<int>remainingTimeActiveIndexesFang;
+	//std::vector<int>remainingTimeActiveIndexesOni;
+
 
 	ComponentText* scoreText = nullptr;
 	int score = 0;

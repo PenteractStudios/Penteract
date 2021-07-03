@@ -149,7 +149,7 @@ void RangedAI::OnAnimationSecondaryFinished() {
 	}
 }
 
-void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance) {
+void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		if (rangerGruntCharacter.isAlive && playerController) {
 			bool hitTaken = false;
@@ -301,7 +301,7 @@ void RangedAI::UpdateState() {
 	switch (state) {
 	case AIState::START:
 		if (aiMovement) aiMovement->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), rangerGruntCharacter.fallingSpeed, true);
-		if (ownerTransform->GetGlobalPosition().y < 2.7f + 0e-5f) {
+		if (ownerTransform->GetGlobalPosition().y < 3.5f + 0e-5f) {
 			animation->SendTrigger("StartSpawn");
 			ChangeState(AIState::SPAWN);
 		}
