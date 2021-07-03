@@ -1,9 +1,9 @@
 {
-    "Name": "Idle2",
+    "Name": "Ultimate",
     "AnimationUID": 7205282894549297040,
-    "BeginIndex": 452,
-    "EndIndex": 520,
-    "Loop": true,
+    "BeginIndex": 815,
+    "EndIndex": 884,
+    "Loop": false,
     "Speed": 1.0,
     "FrameRate": 0.034687500447034839
 }
