@@ -82,4 +82,9 @@ private:
 	ComponentMeshRenderer* componentMeshRenderer = nullptr;
 
 	float timeSinceLastHurt = 0.5f;
+
+	float currentPushBackDistance = 0.f;
+
+private:
+	void UpdatePushBackPosition();
 };

@@ -176,7 +176,7 @@ void Onimaru::Update(bool lockMovement) {
 			}
 		}
 
-		if (Input::GetKeyCodeUp(Input::KEYCODE::KEY_Q)) {
+		if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_Q)) {
 			Blast();
 		}
 
