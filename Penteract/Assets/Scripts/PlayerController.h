@@ -87,6 +87,7 @@ public:
 	float cameraOffsetX = 0.f;
 	bool useSmoothCamera = true;
 	float smoothCameraSpeed = 5.0f;
+	float maxOnimaruBulletSpread = 5.0f;
 
 	//Switch
 	UID switchParticlesUID = 0;

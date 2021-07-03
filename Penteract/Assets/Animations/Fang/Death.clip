@@ -1,9 +1,9 @@
 {
     "Name": "Death",
-    "AnimationUID": 1406535842475188602,
+    "AnimationUID": 7205282894549297040,
     "BeginIndex": 200,
     "EndIndex": 275,
     "Loop": false,
     "Speed": 1.0,
-    "FrameRate": 0.0332796536386013
+    "FrameRate": 0.034687500447034839
 }

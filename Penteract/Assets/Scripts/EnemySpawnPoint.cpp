@@ -1,5 +1,4 @@
 #include "EnemySpawnPoint.h"
-#include "SpawnPointController.h"
 
 #include "Resources/ResourcePrefab.h"
 #include "GameplaySystems.h"
@@ -37,7 +36,7 @@ void EnemySpawnPoint::Start() {
 
 	for (auto const& [melee, range] : enemies) amountOfEnemies += melee + range;
 
-	SpawnPointController* spawnPointControllerScript = GET_SCRIPT(gameObject->GetParent(), SpawnPointController);
+	spawnPointControllerScript = GET_SCRIPT(gameObject->GetParent(), SpawnPointController);
 	if (spawnPointControllerScript) {
 		meleeEnemyPrefab = spawnPointControllerScript->GetMeleePrefab();
 		rangeEnemyPrefab = spawnPointControllerScript->GetRangePrefab();
@@ -62,7 +61,12 @@ void EnemySpawnPoint::Update() {
 	/* Condition to spawn the next wave */
 	if (waveRemainingEnemies == 0) {
 		spawn = true;
-		if (it != enemies.end()) it++;
+		if (it != enemies.end()) {
+			it++;
+		}
+		else {
+			spawnPointControllerScript->OpenDoor();
+		}
 	}
 }
 
