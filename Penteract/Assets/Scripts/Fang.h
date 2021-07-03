@@ -16,16 +16,23 @@ public:
 	float GetRealUltimateCooldown();
 	void Init(UID fangUID = 0, UID trailUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID bulletUID = 0, UID cameraUID = 0, UID canvasUID = 0, UID fangUltimateUID = 0);
 	void IncreaseUltimateCounter();
+	void GetHit(float damage_) override;
 
 public:
 	std::vector<std::string> states{ "Idle" ,
 						"RunBackward" , "RunForward" , "RunLeft" , "RunRight" , //1 - 4
 						"DashBackward", "DashForward" , "DashLeft" , "DashRight" , //5 - 8 
-						"Death" , "LeftShot" , "RightShot", "" //9 - 12 
-						"RunForwardLeft", "RunForwardRight", "RunBackwardLeft", "RunBarckwardRight" // 13 - 16
+						"Death" , "LeftShot" , "RightShot", "", //9 - 12 
+						"RunForwardLeft", "RunForwardRight", "RunBackwardLeft", "RunBackwardRight", // 13 - 16
+						"DashBackward", "DashForward" , "DashLeft" , "DashRight"
 	};
 
 	bool rightShot = true;
+
+	//Dash
+	float dashCooldown = 5.f;
+	float dashSpeed = 100.f;
+	float dashDuration = 0.1f;
 
 	//Ultimate
 	float ultimateDuration = 5.0f;
@@ -33,10 +40,6 @@ public:
 	bool ultimateOn = false;
 
 private:
-	//Dash
-	float dashCooldown = 5.f;
-	float dashSpeed = 100.f;
-	float dashDuration = 0.1f;
 	float dashCooldownRemaining = 0.f;
 	float dashRemaining = 0.f;
 	bool dashing = false;

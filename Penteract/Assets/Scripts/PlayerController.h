@@ -88,6 +88,7 @@ public:
 	float cameraOffsetX = 0.f;
 	bool useSmoothCamera = true;
 	float smoothCameraSpeed = 5.0f;
+	float maxOnimaruBulletSpread = 5.0f;
 
 	//Switch
 	UID switchParticlesUID = 0;
@@ -104,10 +105,9 @@ private:
 	void CheckCoolDowns();
 	void SwitchCharacter();
 	void UpdatePlayerStats();
-	void UpdateCameraPosition();
 	bool CanSwitch();
 	void ResetSwitchStatus();
-	
+
 private:
 
 	//Switch

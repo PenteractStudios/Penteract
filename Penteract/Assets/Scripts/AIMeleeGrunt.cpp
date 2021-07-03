@@ -10,6 +10,8 @@
 #include "WinLose.h"
 #include "Player.h"
 
+#include <math.h>
+
 EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
@@ -126,7 +128,7 @@ void AIMeleeGrunt::Update() {
 	switch (state) {
 	case AIState::START:
 		movementScript->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), gruntCharacter.fallingSpeed, true);
-		if (ownerTransform->GetGlobalPosition().y < 2.7 + 0e-5f) {
+		if (ownerTransform->GetGlobalPosition().y < 3.5f + 0e-5f) {
 			animation->SendTrigger("StartSpawn");
 			if (audios[static_cast<int>(AudioType::SPAWN)]) audios[static_cast<int>(AudioType::SPAWN)]->Play();
 			state = AIState::SPAWN;
@@ -203,7 +205,7 @@ void AIMeleeGrunt::OnAnimationSecondaryFinished() {
 	}
 }
 
-void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance) {
+void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 	if (state != AIState::START && state != AIState::SPAWN) {
 		if (gruntCharacter.isAlive && playerController) {
 			bool hitTaken = false;
@@ -227,15 +229,35 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 
 		}
 
-		if (!gruntCharacter.isAlive) {
-			if (state == AIState::ATTACK) {
-				animation->SendTrigger("RunDeath");
-				animation->SendTriggerSecondary("AttackDeath");
-			} else if (state == AIState::IDLE) {
-				animation->SendTrigger("IdleDeath");
-			} else if (state == AIState::RUN) {
-				animation->SendTrigger("RunDeath");
-			}
+        if (!gruntCharacter.isAlive) {
+            deadType = (rand() % 2 == 0) ? true : false;
+            if (state == AIState::ATTACK) {
+                if (deadType) {
+                    animation->SendTrigger("RunDeath1");
+                    animation->SendTriggerSecondary("AttackDeath1");
+                }
+                else {
+                    animation->SendTrigger("RunDeath2");
+                    animation->SendTriggerSecondary("AttackDeath2");
+                }
+                
+            }
+            else if (state == AIState::IDLE) {
+                if (deadType) {
+                    animation->SendTrigger("IdleDeath1");
+                }
+                else {
+                    animation->SendTrigger("IdleDeath1");
+                }
+            }
+            else if (state == AIState::RUN) {
+                if (deadType) {
+                    animation->SendTrigger("RunDeath1");
+                }
+                else {
+                    animation->SendTrigger("RunDeath2");
+                }
+            }
 
 			if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
 			ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
