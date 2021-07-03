@@ -7,6 +7,7 @@ bool Onimaru::CanShoot() {
 }
 
 void Onimaru::Shoot() {
+	if (!gunTransform || !transformForUltimateProjectileOrigin) return;
 	if (CanShoot()) {
 		shootingOnCooldown = true;
 		attackCooldownRemaining = 1.f / attackSpeed;
@@ -14,7 +15,8 @@ void Onimaru::Shoot() {
 			playerAudios[static_cast<int>(AudioPlayer::SHOOT)]->Play();
 		}
 		if (bullet) {
-			GameObject* bulletInstance = GameplaySystems::Instantiate(bullet, gunTransform->GetGlobalPosition(), Quat(0.0f, 0.0f, 0.0f, 0.0f));
+			float3 projectilePos = ultimateInUse ? transformForUltimateProjectileOrigin->GetGlobalPosition() : gunTransform->GetGlobalPosition();
+			GameObject* bulletInstance = GameplaySystems::Instantiate(bullet, projectilePos, Quat(0.0f, 0.0f, 0.0f, 0.0f));
 			if (bulletInstance) {
 				OnimaruBullet* onimaruBulletScript = GET_SCRIPT(bulletInstance, OnimaruBullet);
 				if (onimaruBulletScript) {
@@ -82,10 +84,10 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 }
 
 bool Onimaru::CanSwitch() const {
-	return ultimateTimeRemaining <= 0;
+	return ultimateTimeRemaining <= 0 && !ultimateInUse;
 }
 
-void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID cameraUID, UID canvasUID) {
+void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID cameraUID, UID canvasUID, UID onimaruTransformForUltimateProjectileOriginUID) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(onimaruUID);
 	if (characterGameObject && characterGameObject->GetParent()) {
@@ -107,10 +109,20 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 
 	originalAttackSpeed = attackSpeed;
 
+
 	GameObject* onimaruGun = GameplaySystems::GetGameObject(onimaruGunUID);
 	if (onimaruGun) {
 		gunTransform = onimaruGun->GetComponent<ComponentTransform>();
 		lookAtMousePlanePosition = gunTransform->GetGlobalPosition();
+	}
+
+	GameObject* onimaruObjForUltProj = GameplaySystems::GetGameObject(onimaruTransformForUltimateProjectileOriginUID);
+	if (onimaruObjForUltProj) {
+		transformForUltimateProjectileOrigin = onimaruObjForUltProj->GetComponent<ComponentTransform>();
+	}
+
+	if (transformForUltimateProjectileOrigin == nullptr) {
+		transformForUltimateProjectileOrigin = gunTransform;
 	}
 
 	bullet = GameplaySystems::GetResource<ResourcePrefab>(onimaruBulletUID);
