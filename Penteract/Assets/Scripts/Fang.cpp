@@ -56,7 +56,7 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 }
 
 void Fang::GetHit(float damage_) {
-	
+
 	if (!dashing) {
 		Player::GetHit(damage_);
 	}
@@ -127,15 +127,18 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 	}
 
 	//Attack Cooldown
-	if(canShoot){
+	if (canShoot) {
 		if (attackCooldownRemaining <= 0.f) {
 			attackCooldownRemaining = 0.f;
 			canShoot = false;
-		}
-		else {
+		} else {
 			attackCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
+}
+
+void Fang::OnAnimationFinished() {
+	//TODO use if necesary
 }
 
 float Fang::GetRealDashCooldown() {

@@ -36,7 +36,7 @@ void Onimaru::PlayAnimation() {
 		}
 	} else {
 		//If Movement is found, Primary state machine will be in charge of getting movement animations
-		if (compAnimation->GetCurrentState()->name != (states[GetMouseDirectionState()]) ) {
+		if (compAnimation->GetCurrentState()->name != (states[GetMouseDirectionState()])) {
 			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState()]);
 		}
 	}
@@ -58,6 +58,11 @@ void Onimaru::OnDeath() {
 		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(DEATH)]);
 	}
 	ultimateInUse = blastInUse = shieldInUse = false;
+}
+
+void Onimaru::OnAnimationFinished() {
+	//TODO use for ultimate ability
+	//Other abilities may also make use of this
 }
 
 void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID cameraUID, UID canvasUID, float maxSpread_) {

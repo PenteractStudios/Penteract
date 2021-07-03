@@ -44,6 +44,8 @@ public:
 	// ------- Core Functions ------ //
 	void SetAttackSpeed(float attackSpeed_);
 	virtual void GetHit(float damage_) override;
+	virtual void OnAnimationFinished() = 0;
+
 	void LookAtMouse();
 	MovementDirection GetInputMovementDirection() const;
 	float3 GetDirection() const;
@@ -66,7 +68,7 @@ public:
 	float3 facePointDir = float3(0, 0, 0);
 	MovementDirection movementInputDirection = MovementDirection::NONE;
 	ComponentTransform* playerMainTransform = nullptr;
-	
+
 protected:
 	bool shooting = false;
 

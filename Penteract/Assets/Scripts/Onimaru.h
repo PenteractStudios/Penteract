@@ -41,6 +41,7 @@ public:
 	void Update(bool lockMovement = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	void OnDeath() override;
+	void OnAnimationFinished() override;
 	Quat GetSlightRandomSpread(float minValue, float maxValue) const;
 private:
 
