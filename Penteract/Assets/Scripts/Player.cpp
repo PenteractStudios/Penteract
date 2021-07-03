@@ -73,34 +73,31 @@ int Player::GetMouseDirectionState() {
 
 	if (dot >= 0.923) {
 		return 2; //RunForward
-	}
-	else if (dot <= -0.923) {
+	} else if (dot <= -0.923) {
 		return 1; //RunBackward
-	}
-	else if (dot >= 0.383 && dot < 0.923) {
+	} else if (dot >= 0.383 && dot < 0.923) {
 		if (cross.y > 0) {
 			return 14; //RunForwardRight
-		}
-		else {
+		} else {
 			return 13; //RunForwardLeft
 		}
-	}
-	else if (dot > -0.923 && dot <= -0.383) {
+	} else if (dot > -0.923 && dot <= -0.383) {
 		if (cross.y > 0) {
 			return 16; //RunBackwardRight
-		}
-		else {
+		} else {
 			return 15; //RunBackwarLeft
 		}
-	}
-	else if (cross.y > 0) {
+	} else if (cross.y > 0) {
 		return 4; //RunRight
-	}
-	else return 3; //RunLeft
+	} else return 3; //RunLeft
 }
 
 bool Player::IsActive() {
 	return (characterGameObject) ? characterGameObject->IsActive() : false;
+}
+
+void Player::IncreaseUltimateCounter() {
+	ultimateChargePoints++;
 }
 
 float3 Player::GetDirection() const {

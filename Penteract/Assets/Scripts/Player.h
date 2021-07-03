@@ -54,7 +54,7 @@ public:
 	virtual void CheckCoolDowns(bool noCooldownMode = false) {}
 	int GetMouseDirectionState();
 	bool IsActive();
-
+	void IncreaseUltimateCounter();
 public:
 	float rangedDamageTaken = 1.0f;
 	float meleeDamageTaken = 1.0f;
@@ -68,7 +68,8 @@ public:
 	float3 facePointDir = float3(0, 0, 0);
 	MovementDirection movementInputDirection = MovementDirection::NONE;
 	ComponentTransform* playerMainTransform = nullptr;
-
+	int ultimateChargePoints = 0;
+	int ultimateChargePointsTotal = 10;
 protected:
 	bool shooting = false;
 
