@@ -13,7 +13,9 @@ public:
 	void Update(bool lockMovement = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	float GetRealDashCooldown();
+	float GetRealUltimateCooldown();
 	void Init(UID fangUID = 0, UID trailUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID bulletUID = 0, UID cameraUID = 0, UID canvasUID = 0, UID fangUltimateUID = 0);
+	void IncreaseUltimateCounter();
 
 public:
 	std::vector<std::string> states{ "Idle" ,
@@ -24,6 +26,8 @@ public:
 	};
 
 	bool rightShot = true;
+	float ultimateDuration = 5.0f;
+	float ultimateCooldown = 2.0;
 
 private:
 	//Dash
@@ -49,8 +53,12 @@ private:
 	//HUD
 	HUDController* hudControllerScript = nullptr;
 
-	//Ultimate
-	UltimateFang* fangUltimateScript = nullptr;
+	//Ultimate	
+	float ultimateRamaining = 0.0f;
+	float ultimateCooldownRemaining = 2;
+	bool ultimateOn = false;
+	bool ultimateInCooldown = false;
+	UltimateFang* ultimateScript = nullptr;
 
 
 private:
@@ -62,6 +70,7 @@ private:
 	void Shoot() override;
 	void PlayAnimation();
 
-	void ActiveUltimateFang();
+	void ActiveUltimate();
+	bool CanUltimate();
 };
 

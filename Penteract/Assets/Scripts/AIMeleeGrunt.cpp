@@ -165,6 +165,11 @@ void AIMeleeGrunt::Update() {
 			winLoseScript->IncrementDeadEnemies();
 			if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
 			killSent = true;
+			if (playerController) {
+				if (playerController->playerFang.characterGameObject->IsActive()) {
+					playerController->playerFang.IncreaseUltimateCounter();
+				}
+			}
 		}
 		if (gruntCharacter.timeToDie > 0) {
 			gruntCharacter.timeToDie -= Time::GetDeltaTime();

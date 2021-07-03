@@ -55,9 +55,16 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 
 	GameObject* fangUltimateGameObject = GameplaySystems::GetGameObject(fangUltimateUID);
 	if (fangUltimateGameObject) {
-		fangUltimateScript = GET_SCRIPT(fangUltimateGameObject, UltimateFang);
+		ultimateScript = GET_SCRIPT(fangUltimateGameObject, UltimateFang);
+		ultimateCooldownRemaining = ultimateCooldown;
 	}
 
+}
+
+void Fang::IncreaseUltimateCounter()
+{
+	ultimateCooldownRemaining++;
+	Debug::Log("IncreaseUltimateCounter");
 }
 
 void Fang::InitDash() {
@@ -136,11 +143,37 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 			attackCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
+
+	//Ultimate Cooldown
+	if (ultimateInCooldown) {
+		if (noCooldownMode || ultimateCooldownRemaining >= ultimateCooldown) {
+			ultimateCooldownRemaining = ultimateCooldown;
+			ultimateInCooldown = false;
+			Debug::Log("Ultiante ON");
+		}
+	}
+
+	//Ultimate duration
+	if (ultimateOn) {
+		if (ultimateRamaining <= 0.f) {
+			ultimateRamaining = 0.f;
+			ultimateOn = false;
+			ultimateScript->EndUltiamte();
+		}
+		else {
+			ultimateRamaining -= Time::GetDeltaTime();
+		}
+	}
 }
 
 float Fang::GetRealDashCooldown()
 {
 	return 1.0f - (dashCooldownRemaining / dashCooldown);
+}
+
+float Fang::GetRealUltimateCooldown()
+{
+	return (ultimateCooldownRemaining / ultimateCooldown);
 }
 
 bool Fang::CanShoot() {
@@ -205,10 +238,21 @@ void Fang::PlayAnimation() {
 	}
 }
 
-void Fang::ActiveUltimateFang()
+void Fang::ActiveUltimate()
 {
-	Debug::Log("Ultimate Fang");
-	fangUltimateScript->StartUltiamte();
+	if (CanUltimate()) {
+		Debug::Log("Ultimate Fang");
+		ultimateCooldownRemaining = 0;
+		ultimateRamaining = ultimateDuration;
+		ultimateOn = true;
+		ultimateInCooldown = true;
+		ultimateScript->StartUltiamte();
+	}
+}
+
+bool Fang::CanUltimate()
+{
+	return ultimateCooldownRemaining >= ultimateCooldown && !ultimateOn;
 }
 
 void Fang::Update(bool lockMovement) {
@@ -220,7 +264,7 @@ void Fang::Update(bool lockMovement) {
 		if (!dashing) {
 			if (Input::GetMouseButtonDown(0)) Shoot();
 			if (Input::GetKeyCodeUp(Input::KEYCODE::KEY_E)) {
-				ActiveUltimateFang();
+				ActiveUltimate();
 			}
 		}
 		Dash();

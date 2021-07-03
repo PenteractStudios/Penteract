@@ -15,13 +15,13 @@ public:
 	void Update() override;
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance) override;
 	void StartUltiamte();
+	void EndUltiamte();
 
 private:
 	Quat DirectionToQuat(float3 dir);
 
 public:
 	float radius = 5.0f;
-	float duration = 3.0f;
 	UID fangBulletUID = 0;
 	UID fangTrailUID = 0;
 
@@ -35,5 +35,4 @@ private:
 	std::vector<GameObject> collisionedGameObject;
 
 	bool active = false;
-	float currentDuration = 5.0f;
 };

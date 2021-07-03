@@ -39,6 +39,8 @@ EXPOSE_MEMBERS(PlayerController) {
 		MEMBER(MemberType::FLOAT, playerFang.dashCooldown),
 		MEMBER(MemberType::FLOAT, playerFang.dashSpeed),
 		MEMBER(MemberType::FLOAT, playerFang.dashDuration),
+		MEMBER(MemberType::FLOAT, playerFang.ultimateDuration),
+		MEMBER(MemberType::FLOAT, playerFang.ultimateCooldown),
 		MEMBER(MemberType::FLOAT, cameraOffsetZ),
 		MEMBER(MemberType::FLOAT, cameraOffsetY),
 		MEMBER(MemberType::FLOAT, cameraOffsetX),
@@ -242,7 +244,7 @@ void PlayerController::UpdatePlayerStats() {
 		}
 
 		float realSwitchCooldown = 1.0f - (switchCooldownRemaining / switchCooldown);
-		hudControllerScript->UpdateCooldowns(0.0f, 0.0f, 0.0f, playerFang.GetRealDashCooldown(), 0.0f, 0.0f, realSwitchCooldown);
+		hudControllerScript->UpdateCooldowns(0.0f, 0.0f, 0.0f, playerFang.GetRealDashCooldown(), 0.0f, playerFang.GetRealUltimateCooldown(), realSwitchCooldown);
 	}
 }
 
