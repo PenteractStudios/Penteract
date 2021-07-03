@@ -104,10 +104,17 @@ bool Fang::CanDash() {
 }
 
 void Fang::ActivateEMP() {
-	if (CanEMP() && EMP) {
+	if (EMP && CanEMP()) {
 		EMP->Enable();
 		EMPCooldownRemaining = EMPCooldown;
 		EMPInCooldown = true;
+
+		if (playerAudios[static_cast<int>(AudioPlayer::SECOND_ABILITY)]) {
+			playerAudios[static_cast<int>(AudioPlayer::SECOND_ABILITY)]->Play();
+		}
+		if (hudControllerScript) {
+			hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_2);
+		}
 	}
 }
 
@@ -165,6 +172,11 @@ float Fang::GetRealDashCooldown() {
 	return 1.0f - (dashCooldownRemaining / dashCooldown);
 }
 
+float Fang::GetRealEMPCooldown()
+{
+	return 1.0f - (EMPCooldownRemaining / EMPCooldown);
+}
+
 bool Fang::CanShoot() {
 	return !shooting;
 }
@@ -212,8 +224,11 @@ void Fang::PlayAnimation() {
 				}
 			}
 		} else {
-			if (compAnimation->GetCurrentState()->name != states[0]) {
+			if (compAnimation->GetCurrentState()->name != states[0] && compAnimation->GetCurrentState()->name != states[21]) {
 				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[0]);
+			}
+			if (compAnimation->GetCurrentState()->name == states[0] && EMP->IsActive()) {
+				compAnimation->SendTrigger(states[0] + states[21]);
 			}
 		}
 	} else {
@@ -224,8 +239,8 @@ void Fang::PlayAnimation() {
 }
 
 void Fang::Update(bool lockMovement) {
-	if (isAlive && EMP) {
-		Player::Update(dashing);
+	if (isAlive) {
+		Player::Update(dashing && EMP->IsActive());
 		if (Input::GetMouseButtonDown(2)) {
 			InitDash();
 		}
