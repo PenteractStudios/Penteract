@@ -18,7 +18,7 @@ public:
 	void Update() override;
 
 	/* Enable the spawn points on trigger  */
-	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance) override;
+	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
 
 	ResourcePrefab* GetMeleePrefab() { return meleeEnemyPrefab; };
 	ResourcePrefab* GetRangePrefab() { return rangeEnemyPrefab; };
