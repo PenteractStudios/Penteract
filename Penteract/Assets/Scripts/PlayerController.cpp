@@ -32,6 +32,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fangLeftGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangRightGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruRightHandUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
 	MEMBER(MemberType::FLOAT, switchCooldown),
@@ -45,6 +46,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, playerOnimaru.attackSpeed),
 	MEMBER(MemberType::FLOAT, playerOnimaru.blastCooldown),
 	MEMBER(MemberType::FLOAT, playerOnimaru.blastDistance),
+	MEMBER(MemberType::FLOAT, playerOnimaru.blastAngle),
 	MEMBER(MemberType::FLOAT, rangedDamageTaken),
 	MEMBER(MemberType::FLOAT, meleeDamageTaken),
 	MEMBER(MemberType::BOOL, useSmoothCamera),
@@ -61,7 +63,7 @@ GENERATE_BODY_IMPL(PlayerController);
 
 void PlayerController::Start() {
 	playerFang.Init(fangUID, fangTrailUID, fangLeftGunUID, fangRightGunUID, fangBulletUID, cameraUID, canvasUID);
-	playerOnimaru.Init(onimaruUID, onimaruBulletUID, onimaruGunUID, cameraUID, canvasUID, maxOnimaruBulletSpread);
+	playerOnimaru.Init(onimaruUID, onimaruBulletUID, onimaruGunUID, onimaruRightHandUID, cameraUID, canvasUID, maxOnimaruBulletSpread);
 
 	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
 	if (canvasGO) {

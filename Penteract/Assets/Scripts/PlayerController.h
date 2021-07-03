@@ -73,6 +73,7 @@ public:
 	UID onimaruParticleUID = 0;
 	UID onimaruBulletUID = 0;
 	UID onimaruGunUID = 0;
+	UID onimaruRightHandUID = 0;
 
 	//HUD
 	UID canvasUID = 0;

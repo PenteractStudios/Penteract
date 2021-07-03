@@ -1,5 +1,7 @@
 #include "Onimaru.h"
 #include "OnimaruBullet.h"
+#include "AIMeleeGrunt.h"
+#include "RangedAI.h"
 #include "HUDController.h"
 #include "CameraController.h"
 
@@ -36,11 +38,36 @@ void Onimaru::Blast() {
 			hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::ONIMARU_SKILL_2);
 		}
 		for (GameObject* enemy : enemiesInMap) {
-
+			AIMeleeGrunt* script = GET_SCRIPT(enemy, AIMeleeGrunt);
+			if (!script) GET_SCRIPT(enemy, RangedAI);
+			float offset = 3.034f;
+			if (script) {
+				if (rightHand && playerMainTransform) {
+					float3 onimaruRightArmPos = rightHand->GetGlobalPosition();
+					float3 enemyPos = enemy->GetComponent<ComponentTransform>()->GetGlobalPosition();
+					onimaruRightArmPos = float3(onimaruRightArmPos.x, onimaruRightArmPos.y - offset, onimaruRightArmPos.z);
+					enemyPos = float3(enemyPos.x, enemyPos.y, enemyPos.z);
+					float distance = enemyPos.Distance(onimaruRightArmPos);
+					float3 direction = (enemyPos - onimaruRightArmPos).Normalized();
+					if (distance <= blastDistance) {
+						float angle = 0.f;
+						angle = RadToDeg(playerMainTransform->GetFront().AngleBetweenNorm(direction));
+						if (angle <= blastAngle / 2.0f) {
+							Debug::Log("Hit. Angle: %s", std::to_string(angle));
+							//script->ActivateBlastPushBack();
+						}
+						else {
+							Debug::Log("Miss. Angle: %s", std::to_string(angle));
+						}
+					}
+					else {
+						//if (!script->BeingPushed())	script->DeactivateBlastPushBack();
+					}
+				}
+			}
 		}
 		blastCooldownRemaining = blastCooldown;
 		blastInCooldown = true;
-		Debug::Log("Blasting");
 	}
 }
 
@@ -83,7 +110,7 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 	}
 }
 
-void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID cameraUID, UID canvasUID, float maxSpread_) {
+void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID onimaruRightHandUID, UID cameraUID, UID canvasUID, float maxSpread_) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(onimaruUID);
 
@@ -129,6 +156,9 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 	if (canvasGO) {
 		hudControllerScript = GET_SCRIPT(canvasGO, HUDController);
 	}
+
+	GameObject* rightHandGO = GameplaySystems::GetGameObject(onimaruRightHandUID);
+	if (rightHandGO) rightHand = rightHandGO->GetComponent<ComponentTransform>();
 }
 
 void Onimaru::Update(bool lockMovement) {
