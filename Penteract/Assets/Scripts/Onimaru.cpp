@@ -1,9 +1,14 @@
 #include "Onimaru.h"
 #include "OnimaruBullet.h"
+#include "HUDController.h"
 #include "CameraController.h"
 
 bool Onimaru::CanShoot() {
 	return !shooting;
+}
+
+bool Onimaru::CanBlast() {
+	return !blastInCooldown;
 }
 
 void Onimaru::Shoot() {
@@ -22,6 +27,20 @@ void Onimaru::Shoot() {
 				}
 			}
 		}
+	}
+}
+
+void Onimaru::Blast() {
+	if (CanBlast()) {
+		if (hudControllerScript) {
+			hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::ONIMARU_SKILL_2);
+		}
+		for (GameObject* enemy : enemiesInMap) {
+
+		}
+		blastCooldownRemaining = blastCooldown;
+		blastInCooldown = true;
+		Debug::Log("Blasting");
 	}
 }
 
@@ -52,6 +71,15 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 		shooting = false;
 	} else {
 		attackCooldownRemaining -= Time::GetDeltaTime();
+	}
+
+	//Blast Cooldown
+	if (noCooldownMode || blastCooldownRemaining <= 0.f) {
+		blastCooldownRemaining = 0.f;
+		blastInCooldown = false;
+	}
+	else {
+		blastCooldownRemaining -= Time::GetDeltaTime();
 	}
 }
 
@@ -96,6 +124,11 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 		}
 
 	}
+
+	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
+	if (canvasGO) {
+		hudControllerScript = GET_SCRIPT(canvasGO, HUDController);
+	}
 }
 
 void Onimaru::Update(bool lockMovement) {
@@ -112,6 +145,11 @@ void Onimaru::Update(bool lockMovement) {
 				compAnimation->SendTriggerSecondary(states[10] + compAnimation->GetCurrentState()->name);
 			}
 		}
+
+		if (Input::GetKeyCodeUp(Input::KEYCODE::KEY_Q)) {
+			Blast();
+		}
+
 	} else {
 		if (agent) agent->RemoveAgentFromCrowd();
 		movementInputDirection = MovementDirection::NONE;
@@ -132,4 +170,8 @@ Quat Onimaru::GetSlightRandomSpread(float minValue, float maxValue) const {
 	result.SetFromAxisAngle(axis, DEGTORAD * randomAngle * sign);
 
 	return result;
+}
+
+float Onimaru::GetRealBlastCooldown() {
+	return 1.f - (blastCooldownRemaining / blastCooldown);
 }

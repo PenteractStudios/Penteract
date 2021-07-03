@@ -43,6 +43,8 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, playerOnimaru.movementSpeed),
 	MEMBER(MemberType::FLOAT, playerOnimaru.damageHit),
 	MEMBER(MemberType::FLOAT, playerOnimaru.attackSpeed),
+	MEMBER(MemberType::FLOAT, playerOnimaru.blastCooldown),
+	MEMBER(MemberType::FLOAT, playerOnimaru.blastDistance),
 	MEMBER(MemberType::FLOAT, rangedDamageTaken),
 	MEMBER(MemberType::FLOAT, meleeDamageTaken),
 	MEMBER(MemberType::BOOL, useSmoothCamera),
@@ -231,7 +233,7 @@ void PlayerController::UpdatePlayerStats() {
 		}
 
 		float realSwitchCooldown = 1.0f - (switchCooldownRemaining / switchCooldown);
-		hudControllerScript->UpdateCooldowns(0.0f, 0.0f, 0.0f, playerFang.GetRealDashCooldown(), 0.0f, 0.0f, realSwitchCooldown);
+		hudControllerScript->UpdateCooldowns(0.0f, playerOnimaru.GetRealBlastCooldown(), 0.0f, playerFang.GetRealDashCooldown(), 0.0f, 0.0f, realSwitchCooldown);
 	}
 }
 
