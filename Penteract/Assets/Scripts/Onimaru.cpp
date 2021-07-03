@@ -174,14 +174,6 @@ void Onimaru::Update(bool lockMovement) {
 				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[10]);
 			}
 		}
-		if (Input::GetMouseButtonDown(2)) {
-			InitShield();
-		}
-		if (shield->GetIsActive()) {
-			if (Input::GetMouseButtonUp(2) || shield->GetNumCharges() == shield->max_charges) {
-				FadeShield();
-			}
-		}
 		
 		else if (Input::GetMouseButtonRepeat(0)) {
 			Shoot();
@@ -189,6 +181,15 @@ void Onimaru::Update(bool lockMovement) {
 		else if (Input::GetMouseButtonUp(0)) {
 			if (compAnimation) {
 				compAnimation->SendTriggerSecondary(states[10] + compAnimation->GetCurrentState()->name);
+			}
+		}
+
+		if (Input::GetMouseButtonDown(2)) {
+			InitShield();
+		}
+		if (shield->GetIsActive()) {
+			if (Input::GetMouseButtonUp(2) || shield->GetNumCharges() == shield->max_charges) {
+				FadeShield();
 			}
 		}
 	}
