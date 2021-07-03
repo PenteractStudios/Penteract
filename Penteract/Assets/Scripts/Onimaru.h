@@ -29,6 +29,10 @@ public:
 
 	// Abilities' cooldowns
 	float GetRealBlastCooldown();
+
+	/* Update enemies' vector */
+	void AddEnemy(GameObject* enemy);
+	void RemoveEnemy(GameObject* enemy);
 private:
 
 	ResourcePrefab* trail = nullptr;

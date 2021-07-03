@@ -175,3 +175,17 @@ Quat Onimaru::GetSlightRandomSpread(float minValue, float maxValue) const {
 float Onimaru::GetRealBlastCooldown() {
 	return 1.f - (blastCooldownRemaining / blastCooldown);
 }
+
+void Onimaru::AddEnemy(GameObject* enemy) {
+	enemiesInMap.push_back(enemy);
+}
+
+void Onimaru::RemoveEnemy(GameObject* enemy) {
+
+	std::vector<GameObject*>::iterator enemyToRemove;
+	enemyToRemove = std::find(enemiesInMap.begin(), enemiesInMap.end(), enemy);
+
+	if (enemyToRemove != enemiesInMap.end()) {
+		enemiesInMap.erase(enemyToRemove);
+	}
+}

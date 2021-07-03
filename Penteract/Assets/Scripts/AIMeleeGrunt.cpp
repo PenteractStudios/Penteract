@@ -172,6 +172,7 @@ void AIMeleeGrunt::Update() {
 			if (hudControllerScript) {
 				hudControllerScript->UpdateScore(10);
 			}
+			if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
 			GameplaySystems::DestroyGameObject(&GetOwner());
 		}
 	}

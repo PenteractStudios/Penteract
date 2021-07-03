@@ -47,6 +47,8 @@ public:
 	bool IsPlayerDead() { return !playerFang.isAlive || !playerOnimaru.isAlive; }
 	void TakeDamage(bool ranged = false);
 
+	void AddEnemyInMap(GameObject* enemy);
+	void RemoveEnemyFromMap(GameObject* enemy);
 public:
 	//Debug
 	bool invincibleMode = false;

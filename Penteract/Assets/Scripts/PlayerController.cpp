@@ -249,6 +249,14 @@ void PlayerController::TakeDamage(bool ranged) {
 	}
 }
 
+void PlayerController::AddEnemyInMap(GameObject* enemy) {
+	playerOnimaru.AddEnemy(enemy);
+}
+
+void PlayerController::RemoveEnemyFromMap(GameObject* enemy) {
+	playerOnimaru.RemoveEnemy(enemy);
+}
+
 void PlayerController::Update() {
 	if (!playerFang.characterGameObject) return;
 	if (!playerOnimaru.characterGameObject) return;

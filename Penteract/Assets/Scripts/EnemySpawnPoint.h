@@ -6,6 +6,7 @@
 
 class GameObject;
 class ResourcePrefab;
+class PlayerController;
 
 class EnemySpawnPoint : public Script {
 	GENERATE_BODY(EnemySpawnPoint);
@@ -38,6 +39,9 @@ public:
 	float xAxisPos = 0;
 	float zAxisPos = 4;
 
+	/* Player */
+	UID playerUID = 0;
+
 private:
 	/* Owner */
 	GameObject* gameObject = nullptr;
@@ -45,6 +49,9 @@ private:
 	/* Prefabs */
 	ResourcePrefab* meleeEnemyPrefab = nullptr;
 	ResourcePrefab* rangeEnemyPrefab = nullptr;
+
+	/* Player Controller */
+	PlayerController* playerScript = nullptr;
 
 	/* Enemy vector & iterator */
 	std::vector<std::tuple<unsigned int, unsigned int>> enemies;
