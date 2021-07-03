@@ -17,7 +17,7 @@ void SwapPanels::Start() {
     target = GameplaySystems::GetGameObject(targetUID);
     current = GameplaySystems::GetGameObject(currentUID);
 
-    selectable = GetOwner().GetComponent < ComponentSelectable>();
+    selectable = GetOwner().GetComponent<ComponentSelectable>();
 
     int i = 0;
     for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {

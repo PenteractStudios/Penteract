@@ -6,6 +6,9 @@
 
 extern int checkpoint;
 
+class ComponentAudioSource;
+class ComponentSelectable;
+
 /// <summary>
 /// This class should only have an instance on a particular scene, it will check the player's position every X seconds
 /// If the player gets distanceThreshold close to one of the checkpoint positions, that one is set as checkpoint
@@ -16,8 +19,18 @@ class CheckpointManager : public Script {
 
 public:
 
+	enum class AudioType {
+		HOVERED,
+		CLICKED,
+		TOTAL
+	};
+
+
 	void Start() override;
 	void Update() override;
+	void OnButtonClick() override;
+
+	void PlayAudio(AudioType type);
 public:
 	UID avatarUID;
 	GameObject* avatarObj;
@@ -29,6 +42,9 @@ private:
 
 private:
 	float3 runtimeCheckpointPositions[N_CHECKPOINTS];
+	bool playHoveredAudio = true;
+	ComponentSelectable* selectable = nullptr;
+	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
 
 };
 

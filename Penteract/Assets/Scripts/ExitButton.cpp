@@ -13,7 +13,7 @@ GENERATE_BODY_IMPL(ExitButton);
 
 void ExitButton::Start() {
 
-	selectable = GetOwner().GetComponent < ComponentSelectable>();
+	selectable = GetOwner().GetComponent<ComponentSelectable>();
 
 	int i = 0;
 	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {

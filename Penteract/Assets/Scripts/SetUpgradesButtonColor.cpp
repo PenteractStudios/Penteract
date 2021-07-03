@@ -20,7 +20,7 @@ void SetUpgradesButtonColor::Start() {
     imageOn = buttonOn->GetComponent<ComponentImage>();
     imageOff = buttonOff->GetComponent<ComponentImage>();
 
-    selectable = GetOwner().GetComponent < ComponentSelectable>();
+    selectable = GetOwner().GetComponent<ComponentSelectable>();
 
     int i = 0;
     for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {

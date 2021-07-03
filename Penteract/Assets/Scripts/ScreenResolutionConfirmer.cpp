@@ -16,11 +16,12 @@ void ScreenResolutionConfirmer::Start() {
 }
 
 void ScreenResolutionConfirmer::Update() {
-    PlayAudio(AudioType::CLICKED);
+    
     screenResolutionChangeConfirmationWasRequested = true;
 }
 
 void ScreenResolutionConfirmer::OnButtonClick() {
+    PlayAudio(AudioType::CLICKED);
 	screenResolutionChangeConfirmationWasRequested = true;
 }
 
