@@ -18,7 +18,7 @@ public:
 	void Recover(int recoveryLife_);
 
 	void SetTotalLifePoints(int totalLifePoints_);
-	void SetDamageHit(int damageHit_);
+	void SetDamageHit(float damageHit_);
 public:
 	bool isAlive = true;
 	float lifePoints = 1;

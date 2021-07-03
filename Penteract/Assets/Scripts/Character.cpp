@@ -1,10 +1,10 @@
 #include "Character.h"
 
 void Character::GetHit(float damage_) {
-	bool wasAlive = lifePoints > 0.0f;
+	//We assume that the character is always alive when this method gets called, so no need to check if character was alive before taking lives
 	lifePoints -= damage_;
 	isAlive = lifePoints > 0.0f;
-	if (!isAlive && wasAlive) {
+	if (!isAlive) {
 		OnDeath();
 	}
 }
@@ -26,6 +26,6 @@ void Character::SetTotalLifePoints(int totalLifePoints_) {
 	totalLifePoints = totalLifePoints_;
 }
 
-void Character::SetDamageHit(int damageHit_) {
+void Character::SetDamageHit(float damageHit_) {
 	damageHit = damageHit_;
 }

@@ -69,7 +69,7 @@ public:
 	MovementDirection movementInputDirection = MovementDirection::NONE;
 	ComponentTransform* playerMainTransform = nullptr;
 	int ultimateChargePoints = 0;
-	int ultimateChargePointsTotal = 10;
+	const int ultimateChargePointsTotal = 10;
 protected:
 	bool shooting = false;
 
