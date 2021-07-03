@@ -16,6 +16,12 @@ void SwapPanels::Start() {
     
     target = GameplaySystems::GetGameObject(targetUID);
     current = GameplaySystems::GetGameObject(currentUID);
+
+    int i = 0;
+    for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
+        if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
+        ++i;
+    }
 }
 
 void SwapPanels::Update() {
@@ -24,8 +30,14 @@ void SwapPanels::Update() {
 
 void SwapPanels::OnButtonClick()
 {
+    PlayAudio(AudioType::CLICKED);
+
     if (target != nullptr && current != nullptr) {
         target->Enable();
         current->Disable();
     }
+}
+
+void SwapPanels::PlayAudio(AudioType type) {
+    if (audios[static_cast<int>(type)]) audios[static_cast<int>(type)]->Play();
 }
