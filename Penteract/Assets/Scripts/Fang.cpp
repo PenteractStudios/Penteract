@@ -67,6 +67,10 @@ void Fang::GetHit(float damage_) {
 
 }
 
+void Fang::OnAnimationFinished() {
+
+}
+
 void Fang::InitDash() {
 	if (CanDash()) {
 		if (movementInputDirection != MovementDirection::NONE) {
@@ -131,11 +135,12 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 	}
 
 	//Attack Cooldown
-	if (shooting) {
+	if(canShoot){
 		if (attackCooldownRemaining <= 0.f) {
 			attackCooldownRemaining = 0.f;
-			shooting = false;
-		} else {
+			canShoot = false;
+		}
+		else {
 			attackCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
@@ -146,12 +151,12 @@ float Fang::GetRealDashCooldown() {
 }
 
 bool Fang::CanShoot() {
-	return !shooting;
+	return !canShoot;
 }
 
 void Fang::Shoot() {
 	if (CanShoot()) {
-		shooting = true;
+		canShoot = true;
 		attackCooldownRemaining = 1.f / attackSpeed;
 		if (playerAudios[static_cast<int>(AudioPlayer::SHOOT)]) {
 			playerAudios[static_cast<int>(AudioPlayer::SHOOT)]->Play();

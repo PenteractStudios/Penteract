@@ -3,12 +3,12 @@
 #include "CameraController.h"
 
 bool Onimaru::CanShoot() {
-	return !shooting;
+	return !canShoot;
 }
 
 void Onimaru::Shoot() {
 	if (CanShoot()) {
-		shooting = true;
+		canShoot = true;
 		attackCooldownRemaining = 1.f / attackSpeed;
 		if (playerAudios[static_cast<int>(AudioPlayer::SHOOT)]) {
 			playerAudios[static_cast<int>(AudioPlayer::SHOOT)]->Play();
@@ -17,7 +17,9 @@ void Onimaru::Shoot() {
 			GameObject* bulletInstance = GameplaySystems::Instantiate(bullet, gunTransform->GetGlobalPosition(), Quat(0.0f, 0.0f, 0.0f, 0.0f));
 			if (bulletInstance) {
 				OnimaruBullet* onimaruBulletScript = GET_SCRIPT(bulletInstance, OnimaruBullet);
-				if (onimaruBulletScript) onimaruBulletScript->SetOnimaruDirection(gunTransform->GetGlobalRotation());
+				if (onimaruBulletScript) {
+					onimaruBulletScript->SetOnimaruDirection(GetSlightRandomSpread(0, maxBulletSpread) * gunTransform->GetGlobalRotation());
+				}
 			}
 		}
 	}
@@ -25,19 +27,16 @@ void Onimaru::Shoot() {
 
 void Onimaru::PlayAnimation() {
 	if (!compAnimation) return;
+	if (ultimateInUse || !isAlive) return; //Ultimate will block out all movement and idle from happening
+
 	if (movementInputDirection == MovementDirection::NONE) {
-		if (!isAlive) {
-			if (compAnimation->GetCurrentState()->name != states[9]) {
-				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[9]);
-				compAnimation->SendTriggerSecondary("ShootingDeath");
-			}
-		} else {
-			if (compAnimation->GetCurrentState()->name != states[0]) {
-				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[0]);
-			}
+		//Primery state machine idle when alive, without input movement
+		if (compAnimation->GetCurrentState()->name != states[IDLE]) {
+			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(IDLE)]);
 		}
 	} else {
-		if (compAnimation->GetCurrentState()->name != states[GetMouseDirectionState()]) {
+		//If Movement is found, Primary state machine will be in charge of getting movement animations
+		if (compAnimation->GetCurrentState()->name != (states[GetMouseDirectionState()])) {
 			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState()]);
 		}
 	}
@@ -45,49 +44,52 @@ void Onimaru::PlayAnimation() {
 
 void Onimaru::StartUltimate() {
 	//TODO COOLDOWN MANAGEMENT
-	onimaruUltimateChargePoints = 0;
-	onimaruUltimateTimeRemaining = onimaruUltimateTotalTime;
-	orientationSpeed = onimaruUltimateRotationSpeed;
-	attackSpeed = onimaruUltimateAttackSpeed;
+	if (!compAnimation) return;
+
+	if (compAnimation->GetCurrentStateSecondary()->name != compAnimation->GetCurrentState()->name) {
+		compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+	}
+
+	compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[ULTI_INTRO]);
+
+	ultimateChargePoints = 0;
+	//ultimateTimeRemaining = ultimateTotalTime;
+	orientationSpeed = ultimateRotationSpeed;
+	attackSpeed = ultimateAttackSpeed;
 	movementInputDirection = MovementDirection::NONE;
 	Player::MoveTo();
+	ultimateInUse = true;
 }
 
 void Onimaru::FinishUltimate() {
 	//TODO COOLDOWN MANAGEMENT
-	onimaruUltimateTimeRemaining = 0;
+	ultimateTimeRemaining = 0;
 	orientationSpeed = -1;
 	attackSpeed = originalAttackSpeed;
+	ultimateInUse = false;
+	compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[IDLE]);
+
 }
 
 void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 	//AttackCooldown
 	if (attackCooldownRemaining <= 0.f) {
 		attackCooldownRemaining = 0.f;
-		shooting = false;
+		canShoot = false;
 	} else {
 		attackCooldownRemaining -= Time::GetDeltaTime();
 	}
 }
 
 void Onimaru::IncreaseUltimateCounter() {
-	onimaruUltimateChargePoints++;
+	ultimateChargePoints++;
 }
 
 bool Onimaru::CanSwitch() const {
-	return onimaruUltimateTimeRemaining <= 0;
+	return ultimateTimeRemaining <= 0;
 }
 
-void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID cameraUID, UID canvasUID,
-	float onimaruUltimateAttackSpeed_, float onimaruUltimateTotalTime_,
-	float onimaruUltimateRotationSpeed_, int onimaruUltimateChargePoints_, int onimaruUltimateChargePointsTotal_) {
-
-	onimaruUltimateAttackSpeed = onimaruUltimateAttackSpeed_;
-	onimaruUltimateTotalTime = onimaruUltimateTotalTime_;
-	onimaruUltimateRotationSpeed = onimaruUltimateRotationSpeed_;
-	onimaruUltimateChargePoints = onimaruUltimateChargePoints_;
-	onimaruUltimateChargePointsTotal = onimaruUltimateChargePointsTotal_;
-
+void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID cameraUID, UID canvasUID) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(onimaruUID);
 	if (characterGameObject && characterGameObject->GetParent()) {
@@ -127,39 +129,86 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 		}
 
 	}
+
 }
+void Onimaru::OnAnimationFinished() {
+	if (!compAnimation)return;
+	if (ultimateInUse) {
+		ultimateTimeRemaining = ultimateTotalTime;
+		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(ULTI_LOOP)]);
+	}
+}
+
+void Onimaru::OnDeath() {
+	if (compAnimation->GetCurrentState()->name != states[DEATH]) {
+		compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(DEATH)]);
+	}
+	ultimateInUse = blastInUse = shieldInUse = false;
+}
+
 
 void Onimaru::Update(bool lockMovement, bool lockOrientation) {
 	if (isAlive) {
-		Player::Update(onimaruUltimateTimeRemaining > 0, false);
+		Player::Update(ultimateInUse, false);
 
-		if (onimaruUltimateTimeRemaining == 0) {
+		if (!ultimateInUse) {
+			ultimateChargePoints = ultimateChargePointsTotal;
 			if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_E)) {
-				if (onimaruUltimateChargePoints >= onimaruUltimateChargePointsTotal) {
+				if (ultimateChargePoints >= ultimateChargePointsTotal) {
 					StartUltimate();
 				}
 			}
 		} else {
-			onimaruUltimateTimeRemaining -= Time::GetDeltaTime();
-			if (onimaruUltimateTimeRemaining <= 0) {
-				FinishUltimate();
+			if (ultimateTimeRemaining > 0) {
+				ultimateTimeRemaining -= Time::GetDeltaTime();
+				Shoot();
+				if (ultimateTimeRemaining <= 0) {
+					FinishUltimate();
+				}
 			}
 		}
 
-		if (Input::GetMouseButtonDown(0)) {
-			if (compAnimation) {
-				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[10]);
-			}
-		} else if (Input::GetMouseButtonRepeat(0)) {
-			Shoot();
-		} else if (Input::GetMouseButtonUp(0)) {
-			if (compAnimation) {
-				compAnimation->SendTriggerSecondary(states[10] + compAnimation->GetCurrentState()->name);
+		if (!ultimateInUse && !blastInUse) {
+			if (Input::GetMouseButtonDown(0)) {
+				if (compAnimation) {
+					if (!shieldInUse) {
+						compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHOOTING)]);
+					} else {
+						compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHOOTSHIELD)]);
+					}
+				}
+				shooting = true;
+			} else if (Input::GetMouseButtonRepeat(0)) {
+				Shoot();
+			} else if (Input::GetMouseButtonUp(0)) {
+				if (compAnimation) {
+					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+				}
+				shooting = false;
 			}
 		}
+		//TODO Ability handling
+		//Whenever an ability starts being used, make sure that as well as setting the secondary trigger to whatever, if (shooting was true, it must be turned to false)
+
 	} else {
 		if (agent) agent->RemoveAgentFromCrowd();
 		movementInputDirection = MovementDirection::NONE;
 	}
 	PlayAnimation();
+}
+
+Quat Onimaru::GetSlightRandomSpread(float minValue, float maxValue) const {
+
+	float sign = rand() % 2 < 1 ? 1.0f : -1.0f;
+
+	float4 axis = float4(gunTransform->GetUp(), 1);
+
+	float randomAngle = static_cast<float>((rand() % static_cast<int>(maxValue * 100))) / 100 + minValue;
+
+	Quat result = Quat(0, 0, 0, 1);
+
+	result.SetFromAxisAngle(axis, DEGTORAD * randomAngle * sign);
+
+	return result;
 }

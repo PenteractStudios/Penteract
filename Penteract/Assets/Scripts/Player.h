@@ -51,6 +51,7 @@ public:
 	virtual void Update(bool lockMovement = false, bool lockOrientation = false);
 	virtual void CheckCoolDowns(bool noCooldownMode = false) {}
 	virtual bool CanSwitch() const = 0;
+	virtual void OnAnimationFinished() = 0;
 	int GetMouseDirectionState();
 	bool IsActive();
 
@@ -63,6 +64,7 @@ public:
 	float orientationSpeed = -1;
 	float orientationThreshold = 5.0f;
 
+	bool canShoot = false;
 	float3 lookAtMousePlanePosition = float3(0, 0, 0);
 	ComponentCamera* lookAtMouseCameraComp = nullptr;
 	CameraController* cameraController = nullptr;

@@ -23,39 +23,42 @@
 EXPOSE_MEMBERS(PlayerController) {
 	// Add members here to expose them to the engine. Example:
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangBulletUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruBulletUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangLeftGunUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangRightGunUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
-	MEMBER(MemberType::FLOAT, switchCooldown),
-	MEMBER(MemberType::FLOAT, playerFang.lifePoints),
-	MEMBER(MemberType::FLOAT, playerFang.movementSpeed),
-	MEMBER(MemberType::FLOAT, playerFang.damageHit),
-	MEMBER(MemberType::FLOAT, playerFang.attackSpeed),
-	MEMBER(MemberType::FLOAT, playerOnimaru.lifePoints),
-	MEMBER(MemberType::FLOAT, playerOnimaru.movementSpeed),
-	MEMBER(MemberType::FLOAT, playerOnimaru.damageHit),
-	MEMBER(MemberType::FLOAT, playerOnimaru.attackSpeed),
-	MEMBER(MemberType::FLOAT, rangedDamageTaken),
-	MEMBER(MemberType::FLOAT, meleeDamageTaken),
-	MEMBER(MemberType::BOOL, useSmoothCamera),
-	MEMBER(MemberType::FLOAT, smoothCameraSpeed),
-	MEMBER(MemberType::FLOAT, onimaruRecoveryRate),
-	MEMBER(MemberType::FLOAT, fangRecoveryRate),
-	MEMBER(MemberType::BOOL, debugGetHit),
-	MEMBER(MemberType::FLOAT, switchDelay),
-	MEMBER(MemberType::FLOAT, onimaruUltimateAttackSpeed),
-	MEMBER(MemberType::FLOAT, onimaruUltimateTotalTime),
-	MEMBER(MemberType::FLOAT, onimaruUltimateRotationSpeed),
-	MEMBER(MemberType::INT, onimaruUltimateChargePoints),
-	MEMBER(MemberType::INT, onimaruUltimateChargePointsTotal)
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
+		MEMBER(MemberType::PREFAB_RESOURCE_UID, fangBulletUID),
+		MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
+		MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruBulletUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, fangLeftGunUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, fangRightGunUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
+		MEMBER(MemberType::FLOAT, switchCooldown),
+		MEMBER(MemberType::FLOAT, playerFang.lifePoints),
+		MEMBER(MemberType::FLOAT, playerFang.movementSpeed),
+		MEMBER(MemberType::FLOAT, playerFang.damageHit),
+		MEMBER(MemberType::FLOAT, playerFang.attackSpeed),
+		MEMBER(MemberType::FLOAT, playerOnimaru.lifePoints),
+		MEMBER(MemberType::FLOAT, playerOnimaru.movementSpeed),
+		MEMBER(MemberType::FLOAT, playerOnimaru.damageHit),
+		MEMBER(MemberType::FLOAT, playerOnimaru.attackSpeed),
+		MEMBER(MemberType::FLOAT, rangedDamageTaken),
+		MEMBER(MemberType::FLOAT, meleeDamageTaken),
+		MEMBER(MemberType::BOOL, useSmoothCamera),
+		MEMBER(MemberType::FLOAT, smoothCameraSpeed),
+		MEMBER(MemberType::FLOAT, onimaruRecoveryRate),
+		MEMBER(MemberType::FLOAT, fangRecoveryRate),
+		MEMBER(MemberType::BOOL, debugGetHit),
+		MEMBER(MemberType::FLOAT, switchDelay),
+		MEMBER(MemberType::FLOAT, playerOnimaru.ultimateAttackSpeed),
+		MEMBER(MemberType::FLOAT, playerOnimaru.ultimateTotalTime),
+		MEMBER(MemberType::FLOAT, playerOnimaru.ultimateRotationSpeed),
+		MEMBER(MemberType::INT, playerOnimaru.ultimateChargePoints),
+		MEMBER(MemberType::INT, playerOnimaru.ultimateChargePointsTotal),
+		MEMBER(MemberType::FLOAT, playerOnimaru.maxBulletSpread)
+
+
 };
 
 
@@ -65,9 +68,7 @@ GENERATE_BODY_IMPL(PlayerController);
 
 void PlayerController::Start() {
 	playerFang.Init(fangUID, fangTrailUID, fangLeftGunUID, fangRightGunUID, fangBulletUID, cameraUID, canvasUID);
-	playerOnimaru.Init(onimaruUID, onimaruBulletUID, onimaruGunUID, cameraUID, canvasUID,
-		onimaruUltimateAttackSpeed, onimaruUltimateTotalTime,
-		onimaruUltimateRotationSpeed, onimaruUltimateChargePoints, onimaruUltimateChargePointsTotal);
+	playerOnimaru.Init(onimaruUID, onimaruBulletUID, onimaruGunUID, cameraUID, canvasUID);
 
 	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
 	if (canvasGO) {

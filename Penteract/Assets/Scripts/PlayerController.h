@@ -86,6 +86,7 @@ public:
 	float cameraOffsetX = 0.f;
 	bool useSmoothCamera = true;
 	float smoothCameraSpeed = 5.0f;
+	//float maxOnimaruBulletSpread = 5.0f;
 
 	//Switch
 	UID switchParticlesUID = 0;
@@ -99,20 +100,12 @@ public:
 	float meleeDamageTaken = 1.0f;
 
 
-	//Onimaru ultimate related
-	float onimaruUltimateAttackSpeed = 20.0f;
-	float onimaruUltimateTotalTime = 3.0f;
-	float onimaruUltimateRotationSpeed = 2.0f;
-	int onimaruUltimateChargePoints = 0;
-	int onimaruUltimateChargePointsTotal = 10;
-
 private:
 	void CheckCoolDowns();
 	void SwitchCharacter();
 	void UpdatePlayerStats();
 	bool CanSwitch();
 	void ResetSwitchStatus();
-
 private:
 
 	//Switch
