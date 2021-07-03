@@ -32,7 +32,16 @@ void PlayerDeath::Update() {
 void PlayerDeath::OnAnimationFinished() {
 	if (dead) {
 		if(sceneUID != 0) SceneManager::ChangeScene(sceneUID);
-	}	
+	}
+	if (playerController) {
+		if (playerController->playerFang.IsActive()) {
+			ComponentAnimation* animation = playerController->playerFang.compAnimation;
+			if (animation->GetCurrentState()->name == "EMP") {
+				animation->SendTrigger(playerController->playerFang.states[21] + playerController->playerFang.states[0]);
+				playerController->playerFang.EMP->Disable();
+			}
+		}
+	}
 }
 
 void PlayerDeath::OnAnimationSecondaryFinished()

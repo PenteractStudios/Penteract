@@ -54,6 +54,10 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 
 	}
 	EMP = GameplaySystems::GetGameObject(EMPUID);
+	if (EMP) {
+		ComponentSphereCollider* sCollider = EMP->GetComponent<ComponentSphereCollider>();
+		if (sCollider) sCollider->radius = EMPRadius;
+	}
 }
 
 void Fang::GetHit(float damage_) {
@@ -248,7 +252,7 @@ void Fang::Update(bool lockMovement) {
 			if (Input::GetMouseButtonDown(0)) Shoot();
 		}
 		Dash();
-		if (Input::GetKeyCodeDown(Input::KEY_E)) {
+		if (Input::GetKeyCodeDown(Input::KEY_Q)) {
 			ActivateEMP();			
 		}
 		

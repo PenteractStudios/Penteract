@@ -35,6 +35,8 @@ public:
 	float dashDuration = 0.1f;
 
 	//EMP
+	GameObject* EMP = nullptr;
+	float EMPRadius = 5.f;
 	float EMPCooldown = 7.f;
 
 private:
@@ -48,9 +50,7 @@ private:
 
 	//EMP
 	float EMPCooldownRemaining = 0.f;
-	float EMPRadius = 5.f;
-	bool EMPInCooldown = false;
-	GameObject* EMP = nullptr;
+	bool EMPInCooldown = false;	
 
 	//Shoot
 	ComponentTransform* rightGunTransform = nullptr;

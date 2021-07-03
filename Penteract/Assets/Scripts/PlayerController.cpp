@@ -31,6 +31,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruBulletUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangLeftGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangRightGunUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, EMPUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
@@ -39,6 +40,9 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, playerFang.movementSpeed),
 	MEMBER(MemberType::FLOAT, playerFang.damageHit),
 	MEMBER(MemberType::FLOAT, playerFang.attackSpeed),
+	MEMBER(MemberType::FLOAT, playerFang.EMPRadius),
+	MEMBER(MemberType::FLOAT, playerFang.dashCooldown),
+	MEMBER(MemberType::FLOAT, playerFang.EMPCooldown),
 	MEMBER(MemberType::FLOAT, playerOnimaru.lifePoints),
 	MEMBER(MemberType::FLOAT, playerOnimaru.movementSpeed),
 	MEMBER(MemberType::FLOAT, playerOnimaru.damageHit),
@@ -58,7 +62,7 @@ GENERATE_BODY_IMPL(PlayerController);
 
 
 void PlayerController::Start() {
-	playerFang.Init(fangUID, fangTrailUID, fangLeftGunUID, fangRightGunUID, fangBulletUID, cameraUID, canvasUID);
+	playerFang.Init(fangUID, fangTrailUID, fangLeftGunUID, fangRightGunUID, fangBulletUID, cameraUID, canvasUID, EMPUID);
 	playerOnimaru.Init(onimaruUID, onimaruBulletUID, onimaruGunUID, cameraUID, canvasUID, maxOnimaruBulletSpread);
 
 	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
