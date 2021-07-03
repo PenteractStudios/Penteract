@@ -4,6 +4,8 @@
 
 class GameObject;
 class ComponentImage;
+class ComponentAudioSource;
+class ComponentSelectable;
 
 class SetUpgradesButtonColor : public Script
 {
@@ -11,10 +13,18 @@ class SetUpgradesButtonColor : public Script
 
 public:
 
+	enum class AudioType {
+		HOVERED,
+		CLICKED,
+		TOTAL
+	};
+
 	void Start() override;
 	void Update() override;
 
 	void OnButtonClick() override;
+
+	void PlayAudio(AudioType type);
 
 public:
 	UID onUID = 0;
@@ -29,6 +39,10 @@ private:
 
 	float4 selected = float4(0.92f, 0.23f, 0.54f, 1.f);
 	float4 notSelected = float4(0.f, 0.34f, 0.53f, 0.9f);
+
+	bool playHoveredAudio = true;
+	ComponentSelectable* selectable = nullptr;
+	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
 
 };
 

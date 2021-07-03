@@ -19,15 +19,42 @@ void SetUpgradesButtonColor::Start() {
     if (!buttonOn || !buttonOff) return;
     imageOn = buttonOn->GetComponent<ComponentImage>();
     imageOff = buttonOff->GetComponent<ComponentImage>();
+
+    selectable = GetOwner().GetComponent < ComponentSelectable>();
+
+    int i = 0;
+    for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
+        if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
+        ++i;
+    }
 }
 
 void SetUpgradesButtonColor::Update() {
-	
+    if (selectable) {
+        ComponentSelectable* hoveredComponent = UserInterface::GetCurrentEventSystem()->GetCurrentlyHovered();
+        if (hoveredComponent) {
+            bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
+            if (hovered) {
+                if (playHoveredAudio) {
+                    PlayAudio(AudioType::HOVERED);
+                    playHoveredAudio = false;
+                }
+            }
+            else {
+                playHoveredAudio = true;
+            }
+        }
+        else {
+            playHoveredAudio = true;
+        }
+    }
 }
 
 void SetUpgradesButtonColor::OnButtonClick() {
     if (!buttonOn || !buttonOff) return;
     if (!imageOn || !imageOff) return;
+
+    PlayAudio(AudioType::CLICKED);
 
     if (GetOwner().GetID() == buttonOn->GetID()) {
         imageOn->SetColor(selected);
@@ -37,4 +64,8 @@ void SetUpgradesButtonColor::OnButtonClick() {
         imageOff->SetColor(selected);
         imageOn->SetColor(notSelected);
     }
+}
+
+void SetUpgradesButtonColor::PlayAudio(AudioType type) {
+    if (audios[static_cast<int>(type)]) audios[static_cast<int>(type)]->Play();
 }

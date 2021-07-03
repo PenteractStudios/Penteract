@@ -48,6 +48,9 @@ void StartButton::Update() {
 }
 
 void StartButton::OnButtonClick() {
+
+    PlayAudio(AudioType::CLICKED);
+
 	checkpoint = checkpointNum;
 	if(sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 	if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
