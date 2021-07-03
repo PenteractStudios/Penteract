@@ -17,6 +17,8 @@ void SwapPanels::Start() {
     target = GameplaySystems::GetGameObject(targetUID);
     current = GameplaySystems::GetGameObject(currentUID);
 
+    selectable = GetOwner().GetComponent < ComponentSelectable>();
+
     int i = 0;
     for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
         if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
@@ -25,7 +27,24 @@ void SwapPanels::Start() {
 }
 
 void SwapPanels::Update() {
-
+    if (selectable) {
+        ComponentSelectable* hoveredComponent = UserInterface::GetCurrentEventSystem()->GetCurrentlyHovered();
+        if (hoveredComponent) {
+            bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
+            if (hovered) {
+                if (playHoveredAudio) {
+                    PlayAudio(AudioType::HOVERED);
+                    playHoveredAudio = false;
+                }
+            }
+            else {
+                playHoveredAudio = true;
+            }
+        }
+        else {
+            playHoveredAudio = true;
+        }
+    }
 }
 
 void SwapPanels::OnButtonClick()

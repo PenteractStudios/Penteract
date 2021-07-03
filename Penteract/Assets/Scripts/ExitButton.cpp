@@ -12,6 +12,9 @@ EXPOSE_MEMBERS(ExitButton) {
 GENERATE_BODY_IMPL(ExitButton);
 
 void ExitButton::Start() {
+
+	selectable = GetOwner().GetComponent < ComponentSelectable>();
+
 	int i = 0;
 	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
 		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
@@ -20,6 +23,24 @@ void ExitButton::Start() {
 }
 
 void ExitButton::Update() {
+    if (selectable) {
+        ComponentSelectable* hoveredComponent = UserInterface::GetCurrentEventSystem()->GetCurrentlyHovered();
+        if (hoveredComponent) {
+            bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
+            if (hovered) {
+                if (playHoveredAudio) {
+                    PlayAudio(AudioType::HOVERED);
+                    playHoveredAudio = false;
+                }
+            }
+            else {
+                playHoveredAudio = true;
+            }
+        }
+        else {
+            playHoveredAudio = true;
+        }
+    }
 }
 
 void ExitButton::OnButtonClick() {

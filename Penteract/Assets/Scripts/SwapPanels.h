@@ -5,6 +5,7 @@
 #include "GameObject.h"
 
 class ComponentAudioSource;
+class ComponentSelectable;
 
 class SwapPanels : public Script
 {
@@ -30,6 +31,8 @@ public:
 	GameObject* current;
 
 private:
+	bool playHoveredAudio = true;
+	ComponentSelectable* selectable = nullptr;
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
 };
 
