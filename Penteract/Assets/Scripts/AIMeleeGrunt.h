@@ -74,6 +74,7 @@ private:
 	float stunRemaining = 0.f;
 
 	float EMPUpgraded = false;
+	float deathType = 0.f;
 
 	HUDController* hudControllerScript = nullptr;
 	PlayerController* playerController = nullptr;

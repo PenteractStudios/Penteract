@@ -272,9 +272,9 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 		}
 
         if (!gruntCharacter.isAlive) {
-            deadType = (rand() % 2 == 0) ? true : false;
+            deathType = (rand() % 2 == 0) ? true : false;
             if (state == AIState::ATTACK) {
-                if (deadType) {
+                if (deathType) {
                     animation->SendTrigger("RunDeath1");
                     animation->SendTriggerSecondary("AttackDeath1");
                 }
@@ -285,7 +285,7 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
                 
             }
             else if (state == AIState::IDLE) {
-                if (deadType) {
+                if (deathType) {
                     animation->SendTrigger("IdleDeath1");
                 }
                 else {
@@ -293,7 +293,7 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
                 }
             }
             else if (state == AIState::RUN) {
-                if (deadType) {
+                if (deathType) {
                     animation->SendTrigger("RunDeath1");
                 }
                 else {
