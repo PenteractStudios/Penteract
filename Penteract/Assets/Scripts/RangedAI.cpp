@@ -135,7 +135,19 @@ void RangedAI::OnAnimationFinished() {
 		animation->SendTrigger("SpawnIdle");
 		agent->AddAgentToCrowd();
 		state = AIState::IDLE;
-	} else if (state == AIState::DEATH) {
+	}
+	else if (state == AIState::STUNNED) {
+		State* current = animation->GetCurrentState();
+		if (current->name == "BeginStun") {
+			animation->SendTrigger("BeginStunStunned");
+		}
+		else if (current->name == "EndStun") {
+			animation->SendTrigger("EndStunIdle");
+			agent->AddAgentToCrowd();
+			state = AIState::IDLE;
+		}
+	}
+	else if (state == AIState::DEATH) {
 		rangerGruntCharacter.destroying = true;
 	}
 }
@@ -266,16 +278,16 @@ void RangedAI::EnterState(AIState newState) {
 		break;
 	case AIState::STUNNED:
 		if (shot) {
-			//animation->SendTriggerSecondary("ShootStunned");
+			animation->SendTriggerSecondary("ShootBeginStun");
 		}
 		if (state == AIState::IDLE) {
-			//animation->SendTrigger("IdleStunned");
+			animation->SendTrigger("IdleBeginStun");
 		}
 		else if (state == AIState::RUN) {
-			//animation->SendTrigger("RunForwardStunned");
+			animation->SendTrigger("RunForwardBeginStun");
 		}
 		else if (state == AIState::FLEE) {
-			//animation->SendTrigger("RunBackwardStunned");
+			animation->SendTrigger("RunBackwardBeginStun");
 		}
 		break;
 	case AIState::DEATH:
@@ -360,9 +372,7 @@ void RangedAI::UpdateState() {
 	case AIState::STUNNED:
 		if (stunRemaining <= 0.f) {
 			stunRemaining = 0.f;
-			//animation->SendTrigger("StunnedIdle");
-			agent->AddAgentToCrowd();
-			state = AIState::IDLE;
+			animation->SendTrigger("StunnedEndStun");			
 		}
 		else {
 			stunRemaining -= Time::GetDeltaTime();

@@ -24,7 +24,8 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, gruntCharacter.attackRange),
 	MEMBER(MemberType::FLOAT, gruntCharacter.timeToDie),
-	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration)
+	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
+	MEMBER(MemberType::FLOAT, stunDuration)
 };
 
 GENERATE_BODY_IMPL(AIMeleeGrunt);
@@ -159,9 +160,7 @@ void AIMeleeGrunt::Update() {
 	case AIState::STUNNED:
 		if (stunRemaining <= 0.f) {
 			stunRemaining = 0.f;
-			//animation->SendTrigger("StunnedIdle");
-			agent->AddAgentToCrowd();
-			state = AIState::IDLE;
+			animation->SendTrigger("StunnedEndStun");			
 		}
 		else {
 			stunRemaining -= Time::GetDeltaTime();
@@ -194,6 +193,17 @@ void AIMeleeGrunt::OnAnimationFinished() {
 		animation->SendTrigger("SpawnIdle");
 		state = AIState::IDLE;
 		agent->AddAgentToCrowd();
+	}
+	else if (state == AIState::STUNNED) {
+		State* current = animation->GetCurrentState();
+		if (current->name == "BeginStun") {
+			animation->SendTrigger("BeginStunStunned");
+		}
+		else if (current->name == "EndStun") {
+			animation->SendTrigger("EndStunIdle");
+			agent->AddAgentToCrowd();
+			state = AIState::IDLE;
+		}
 	}
 
 	else if (state == AIState::DEATH) {
@@ -243,14 +253,14 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 
 			if (collidedWith.name == "EMP") {
 				if (state == AIState::ATTACK) {
-					//animation->SendTrigger("RunStunned");
-					//animation->SendTriggerSecondary("AttackStunned");
+					animation->SendTrigger("RunBeginStun");
+					animation->SendTriggerSecondary("AttackBeginStun");
 				}
 				else if (state == AIState::IDLE) {
-					//animation->SendTrigger("IdleStunned");
+					animation->SendTrigger("IdleBeginStun");
 				}
 				else if (state == AIState::RUN) {
-					//animation->SendTrigger("RunStunned");
+					animation->SendTrigger("RunBeginStun");
 				}
 				agent->RemoveAgentFromCrowd();
 				stunRemaining = stunDuration;
