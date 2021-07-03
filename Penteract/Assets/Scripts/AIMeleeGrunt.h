@@ -69,6 +69,8 @@ private:
 	ComponentTransform* ownerTransform = nullptr;
 	int damageRecieved = 0;
 
+	bool deadType = false;
+
 	HUDController* hudControllerScript = nullptr;
 	PlayerController* playerController = nullptr;
 	AIMovement* movementScript = nullptr;

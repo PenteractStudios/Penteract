@@ -9,16 +9,16 @@ class ComponentAgent;
 class ComponentAnimation;
 class ComponentTransform;
 
-class Character
-{
+class Character {
 public:
 	Character() {}
 
 	virtual void GetHit(float damage_);
+	virtual void OnDeath();
 	void Recover(int recoveryLife_);
 
 	void SetTotalLifePoints(int totalLifePoints_);
-	void SetDamageHit(int damageHit_);
+	void SetDamageHit(float damageHit_);
 public:
 	bool isAlive = true;
 	float lifePoints = 1;
