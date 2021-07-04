@@ -137,9 +137,6 @@ private:
 	float remainingDurableHealthTimesOni[MAX_HEALTH] = { 0,0,0,0,0,0,0,0,0,0 };
 	bool abilityCoolDownsRetreived[static_cast<int>(Cooldowns::TOTAL)] = { false,false,false,false,false,false,false };
 
-	//std::vector<int>remainingTimeActiveIndexesFang;
-	//std::vector<int>remainingTimeActiveIndexesOni;
-
 
 	ComponentText* scoreText = nullptr;
 	int score = 0;

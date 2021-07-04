@@ -66,13 +66,11 @@ void Onimaru::StartUltimate() {
 }
 
 void Onimaru::FinishUltimate() {
-	//TODO COOLDOWN MANAGEMENT
 	ultimateTimeRemaining = 0;
 	orientationSpeed = -1;
 	attackSpeed = originalAttackSpeed;
 	ultimateInUse = false;
 	compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[IDLE]);
-
 }
 
 void Onimaru::CheckCoolDowns(bool noCooldownMode) {
