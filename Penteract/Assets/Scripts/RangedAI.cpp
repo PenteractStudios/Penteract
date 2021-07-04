@@ -143,8 +143,10 @@ void RangedAI::OnAnimationSecondaryFinished() {
 	std::string currentStateString = "";
 	if (!animation) return;
 	if (shot) {
-		animation->SendTriggerSecondary("Shoot" + animation->GetCurrentState()->name);
-		shot = false;
+		if (animation->GetCurrentState()) {
+			animation->SendTriggerSecondary("Shoot" + animation->GetCurrentState()->name);
+			shot = false;
+		}
 	}
 }
 
@@ -444,7 +446,7 @@ void RangedAI::ShootPlayerInRange() {
 		shot = true;
 
 		if (animation) {
-			animation->SendTriggerSecondary(animation->GetCurrentState()->name + "Shoot");
+			if(animation->GetCurrentState()) animation->SendTriggerSecondary(animation->GetCurrentState()->name + "Shoot");
 		}
 
 		actualShotTimer = actualShotMaxTime;
