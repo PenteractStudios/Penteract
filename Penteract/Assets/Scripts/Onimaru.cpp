@@ -33,15 +33,20 @@ void Onimaru::PlayAnimation() {
 	if (ultimateInUse || !isAlive) return; //Ultimate will block out all movement and idle from happening
 
 	if (movementInputDirection == MovementDirection::NONE) {
-		//Primery state machine idle when alive, without input movement
-		if (compAnimation->GetCurrentState()->name != states[IDLE]) {
-			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(IDLE)]);
+		if (compAnimation->GetCurrentState()) {
+			//Primery state machine idle when alive, without input movement
+			if (compAnimation->GetCurrentState()->name != states[IDLE]) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(IDLE)]);
+			}
 		}
+		
 	} else {
-		//If Movement is found, Primary state machine will be in charge of getting movement animations
-		if (compAnimation->GetCurrentState()->name != (states[GetMouseDirectionState()])) {
-			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState()]);
-		}
+		if (compAnimation->GetCurrentStateSecondary()) {
+			//If Movement is found, Primary state machine will be in charge of getting movement animations
+			if (compAnimation->GetCurrentState()->name != (states[GetMouseDirectionState()])) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState()]);
+			}
+		}	
 	}
 }
 
@@ -82,9 +87,11 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 }
 
 void Onimaru::OnDeath() {
-	if (compAnimation->GetCurrentState()->name != states[DEATH]) {
-		compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
-		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(DEATH)]);
+	if (compAnimation->GetCurrentState() && compAnimation->GetCurrentStateSecondary()) {
+		if (compAnimation->GetCurrentState()->name != states[DEATH]) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(DEATH)]);
+		}
 	}
 	ultimateInUse = blastInUse = false;
 }
@@ -160,10 +167,14 @@ void Onimaru::InitShield() {
 			agent->SetMaxSpeed(movementSpeed/2);
 		}
 		if (!shooting) {
-			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHIELD)]);
+			if (compAnimation->GetCurrentState()) {
+				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHIELD)]);
+			}
 		}
 		else {
-			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHOOTSHIELD)]);
+			if (compAnimation->GetCurrentStateSecondary()) {
+				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHOOTSHIELD)]);
+			}
 		}
 		if (playerAudios[static_cast<int>(AudioPlayer::FIRST_ABILITY)]) {
 			playerAudios[static_cast<int>(AudioPlayer::FIRST_ABILITY)]->Play();
@@ -179,10 +190,14 @@ void Onimaru::FadeShield() {
 	if (agent) agent->SetMaxSpeed(movementSpeed);
 	
 	if (!shooting) {
-		compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+		if (compAnimation->GetCurrentStateSecondary() && compAnimation->GetCurrentState()) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+		}
 	}
 	else {
-		compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHOOTING)]);
+		if (compAnimation->GetCurrentStateSecondary()) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHOOTING)]);
+		}
 	}
 	if (playerAudios[static_cast<int>(AudioPlayer::DEATH)]) {
 		playerAudios[static_cast<int>(AudioPlayer::DEATH)]->Play();
@@ -206,10 +221,14 @@ void Onimaru::Update(bool lockMovement) {
 			if (Input::GetMouseButtonDown(0)) {
 				if (compAnimation) {
 					if (!shield->GetIsActive()) {
-						compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHOOTING)]);
+						if (compAnimation->GetCurrentState()) {
+							compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHOOTING)]);
+						}
 					}
 					else {
-						compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHOOTSHIELD)]);
+						if (compAnimation->GetCurrentStateSecondary()) {
+							compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHOOTSHIELD)]);
+						}
 					}
 				}
 				shooting = true;
@@ -219,10 +238,14 @@ void Onimaru::Update(bool lockMovement) {
 			} else if (Input::GetMouseButtonUp(0)) {
 				if (compAnimation) {
 					if (shield->GetIsActive()) {
-						compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHIELD)]);
+						if (compAnimation->GetCurrentStateSecondary()) {
+							compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHIELD)]);
+						}
 					}
 					else {
-						compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+						if (compAnimation->GetCurrentStateSecondary() && compAnimation->GetCurrentState()) {
+							compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+						}
 					}
 					
 				}
@@ -231,7 +254,9 @@ void Onimaru::Update(bool lockMovement) {
 		} 
 		else if (Input::GetMouseButtonUp(0)) {
 			if (compAnimation) {
-				compAnimation->SendTriggerSecondary(states[10] + compAnimation->GetCurrentState()->name);
+				if (compAnimation->GetCurrentState()) {
+					compAnimation->SendTriggerSecondary(states[10] + compAnimation->GetCurrentState()->name);
+				}
 			}
 		}
 	} 
