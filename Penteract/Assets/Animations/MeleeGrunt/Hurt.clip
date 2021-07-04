@@ -1,9 +1,9 @@
 {
     "Name": "Hurt",
-    "AnimationUID": 14070918630652862611,
+    "AnimationUID": 4855359609359038063,
     "BeginIndex": 151,
     "EndIndex": 170,
     "Loop": false,
     "Speed": 1.0,
-    "FrameRate": 0.03319026902318001
+    "FrameRate": 0.0332355797290802
 }

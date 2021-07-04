@@ -10,6 +10,8 @@
 #include "WinLose.h"
 #include "Player.h"
 
+#include <math.h>
+
 EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
@@ -226,17 +228,41 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 
 		}
 
-		if (!gruntCharacter.isAlive) {
-			if (state == AIState::ATTACK) {
-				animation->SendTrigger("RunDeath");
-				animation->SendTriggerSecondary("AttackDeath");
-			} else if (state == AIState::IDLE) {
-				animation->SendTrigger("IdleDeath");
-			} else if (state == AIState::RUN) {
-				animation->SendTrigger("RunDeath");
-			}
-			else if (state == AIState::PUSHED) {
-				animation->SendTrigger("RunDeath");
+        if (!gruntCharacter.isAlive) {
+            deadType = (rand() % 2 == 0) ? true : false;
+            if (state == AIState::ATTACK) {
+                if (deadType) {
+                    animation->SendTrigger("RunDeath1");
+                    animation->SendTriggerSecondary("AttackDeath1");
+                }
+                else {
+                    animation->SendTrigger("RunDeath2");
+                    animation->SendTriggerSecondary("AttackDeath2");
+                }
+                
+            }
+            else if (state == AIState::IDLE) {
+                if (deadType) {
+                    animation->SendTrigger("IdleDeath1");
+                }
+                else {
+                    animation->SendTrigger("IdleDeath1");
+                }
+            }
+            else if (state == AIState::RUN) {
+                if (deadType) {
+                    animation->SendTrigger("RunDeath1");
+                }
+                else {
+                    animation->SendTrigger("RunDeath2");
+                }
+            } else if (state == AIState::PUSHED) {
+				if (deadType) {
+                    animation->SendTrigger("RunDeath1");
+                }
+                else {
+                    animation->SendTrigger("RunDeath2");
+                }
 			}
 
 			if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();

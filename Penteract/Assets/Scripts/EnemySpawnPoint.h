@@ -1,12 +1,15 @@
 #pragma once
 
 #include "Scripting/Script.h"
+#include "SpawnPointController.h"
+
 #include <vector>
 #include <tuple>
 
 class GameObject;
 class ResourcePrefab;
 class PlayerController;
+class SpawnPointController;
 
 class EnemySpawnPoint : public Script {
 	GENERATE_BODY(EnemySpawnPoint);
@@ -72,6 +75,9 @@ private:
 		MELEE,
 		RANGE
 	};
+
+	/* Parent script */
+	SpawnPointController* spawnPointControllerScript = nullptr;
 
 private:
 	void RenderEnemy(EnemyType type, unsigned int amount);
