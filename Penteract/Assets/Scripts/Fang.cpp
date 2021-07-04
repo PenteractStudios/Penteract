@@ -203,14 +203,14 @@ void Fang::PlayAnimation() {
 	}
 }
 
-void Fang::Update(bool lastInputgamePad, bool lockMovement) {
+void Fang::Update(bool useGamepad, bool lockMovement) {
 	if (isAlive) {
-		Player::Update(lastInputgamePad, dashing);
-		if (Input::GetMouseButtonDown(2) || Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_TRIGGERLEFT, 0) > 0.3f) {
+		Player::Update(useGamepad, dashing);
+		if (!dashing && GetInputBool(InputActions::ABILITY_1, useGamepad)) {
 			InitDash();
 		}
 		if (!dashing) {
-			if (Input::GetMouseButtonDown(0) || Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_TRIGGERRIGHT, 0) > 0.3f) {
+			if (GetInputBool(InputActions::SHOOT, useGamepad)) {
 				Shoot();
 			}
 		}

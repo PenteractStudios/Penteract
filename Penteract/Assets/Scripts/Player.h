@@ -57,7 +57,7 @@ public:
 	virtual void OnAnimationFinished() = 0;
 
 	void LookAtMouse();
-	MovementDirection GetInputMovementDirection() const;
+	MovementDirection GetInputMovementDirection(bool useGamepad) const;
 	float3 GetDirection() const;
 	virtual void Shoot() {}
 	virtual void Update(bool lastInputGamepad = false, bool lockMovement = false);
@@ -66,7 +66,8 @@ public:
 	bool IsActive();
 	void IncreaseUltimateCounter();
 	static bool GetInputBool(InputActions action, bool useGamepad = false);
-	static float2 GetInputFloat2(InputActions action, bool useGamepad = false);
+	float2 GetInputFloat2(InputActions action, bool useGamepad = false) const;
+	void UpdateFacePointDir(bool useGamepad);
 public:
 	float rangedDamageTaken = 1.0f;
 	float meleeDamageTaken = 1.0f;
@@ -90,7 +91,7 @@ private:
 	void MoveTo();
 	virtual bool CanShoot();
 	void ResetSwitchStatus();
-	MovementDirection GetControllerMovementDirection() const;
+	MovementDirection GetControllerMovementDirection(bool useGamepad = false) const;
 	float2 GetControllerOrientationDirection() const;
 	void LookAtGamepadDir();
 	void LookAtFacePointTarget();
@@ -99,5 +100,4 @@ private:
 	bool playSwitchParticles = true;
 	bool switchInProgress = false;
 	float switchDelay = 0.37f;
-	bool lastInputGamepad = true;
 };

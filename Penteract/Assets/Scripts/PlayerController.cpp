@@ -23,37 +23,37 @@
 EXPOSE_MEMBERS(PlayerController) {
 	// Add members here to expose them to the engine. Example:
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangBulletUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruBulletUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangLeftGunUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangRightGunUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
-	MEMBER(MemberType::FLOAT, switchCooldown),
-	MEMBER(MemberType::FLOAT, playerFang.lifePoints),
-	MEMBER(MemberType::FLOAT, playerFang.movementSpeed),
-	MEMBER(MemberType::FLOAT, playerFang.damageHit),
-	MEMBER(MemberType::FLOAT, playerFang.attackSpeed),
-	MEMBER(MemberType::FLOAT, playerOnimaru.lifePoints),
-	MEMBER(MemberType::FLOAT, playerOnimaru.movementSpeed),
-	MEMBER(MemberType::FLOAT, playerOnimaru.damageHit),
-	MEMBER(MemberType::FLOAT, playerOnimaru.attackSpeed),
-	MEMBER(MemberType::FLOAT, rangedDamageTaken),
-	MEMBER(MemberType::FLOAT, meleeDamageTaken),
-	MEMBER(MemberType::BOOL, useSmoothCamera),
-	MEMBER(MemberType::FLOAT, smoothCameraSpeed),
-	MEMBER(MemberType::FLOAT, onimaruRecoveryRate),
-	MEMBER(MemberType::FLOAT, fangRecoveryRate),
-	MEMBER(MemberType::BOOL, debugGetHit),
-	MEMBER(MemberType::FLOAT, switchDelay),
-	MEMBER(MemberType::FLOAT, maxOnimaruBulletSpread),
-	MEMBER(MemberType::FLOAT, playerOnimaru.normalAngularSpeed),
-	MEMBER(MemberType::FLOAT, playerFang.normalAngularSpeed)
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
+		MEMBER(MemberType::PREFAB_RESOURCE_UID, fangBulletUID),
+		MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
+		MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruBulletUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, fangLeftGunUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, fangRightGunUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
+		MEMBER(MemberType::FLOAT, switchCooldown),
+		MEMBER(MemberType::FLOAT, playerFang.lifePoints),
+		MEMBER(MemberType::FLOAT, playerFang.movementSpeed),
+		MEMBER(MemberType::FLOAT, playerFang.damageHit),
+		MEMBER(MemberType::FLOAT, playerFang.attackSpeed),
+		MEMBER(MemberType::FLOAT, playerOnimaru.lifePoints),
+		MEMBER(MemberType::FLOAT, playerOnimaru.movementSpeed),
+		MEMBER(MemberType::FLOAT, playerOnimaru.damageHit),
+		MEMBER(MemberType::FLOAT, playerOnimaru.attackSpeed),
+		MEMBER(MemberType::FLOAT, rangedDamageTaken),
+		MEMBER(MemberType::FLOAT, meleeDamageTaken),
+		MEMBER(MemberType::BOOL, useSmoothCamera),
+		MEMBER(MemberType::FLOAT, smoothCameraSpeed),
+		MEMBER(MemberType::FLOAT, onimaruRecoveryRate),
+		MEMBER(MemberType::FLOAT, fangRecoveryRate),
+		MEMBER(MemberType::BOOL, debugGetHit),
+		MEMBER(MemberType::FLOAT, switchDelay),
+		MEMBER(MemberType::FLOAT, maxOnimaruBulletSpread),
+		MEMBER(MemberType::FLOAT, playerOnimaru.normalAngularSpeed),
+		MEMBER(MemberType::FLOAT, playerFang.normalAngularSpeed)
 };
 
 GENERATE_BODY_IMPL(PlayerController);
@@ -118,20 +118,6 @@ void PlayerController::ResetSwitchStatus() {
 	switchInProgress = false;
 	playSwitchParticles = true;
 	currentSwitchDelay = 0.f;
-}
-
-bool PlayerController::AnyInputGamepad() const {
-	if (!Input::IsGamepadConnected(0))return false;
-
-	/*bool res =	Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_LEFTX, 0) != 0 &&
-				Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_LEFTY, 0) != 0 &&
-				Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_RIGHTX, 0) != 0 &&
-				Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_RIGHTY, 0) != 0 &&
-				Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_TRIGGERLEFT, 0) != 0 &&
-				Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_TRIGGERRIGHT, 0) != 0 &&
-				Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_TRIGGERRIGHT, 0) != 0 &&
-				Input::GetController*/
-	return true;
 }
 
 void PlayerController::SwitchCharacter() {
@@ -263,17 +249,24 @@ void PlayerController::TakeDamage(bool ranged) {
 	}
 }
 
+void PlayerController::SetUseGamepad(bool useGamepad_) {
+	//Other callbacks would go here
+	useGamepad = useGamepad_;
+}
+
 void PlayerController::Update() {
 	if (!playerFang.characterGameObject) return;
 	if (!playerOnimaru.characterGameObject) return;
 	if (!camera) return;
 
-	lastInputGamepad = AnyInputGamepad();
+	if (Input::GetKeyCodeDown(Input::KEY_KP_PLUS)) {
+		SetUseGamepad(!useGamepad);
+	}
 
 	if (playerFang.characterGameObject->IsActive()) {
-		playerFang.Update(lastInputGamepad);
+		playerFang.Update(useGamepad);
 	} else {
-		playerOnimaru.Update(lastInputGamepad);
+		playerOnimaru.Update(useGamepad);
 	}
 
 	if (playerFang.isAlive && playerOnimaru.isAlive) {

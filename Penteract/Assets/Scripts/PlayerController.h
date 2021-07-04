@@ -46,13 +46,15 @@ public:
 	int GetOverPowerMode();
 	bool IsPlayerDead() { return !playerFang.isAlive || !playerOnimaru.isAlive; }
 	void TakeDamage(bool ranged = false);
-
+	void SetUseGamepad(bool useGamepad_);
 public:
 	//Debug
 	bool invincibleMode = false;
 	int overpowerMode = 1;
 	bool noCooldownMode = false;
 	bool debugGetHit = false;
+
+	bool useGamepad = false;
 
 	Onimaru playerOnimaru = Onimaru();
 	Fang playerFang = Fang();
@@ -99,14 +101,12 @@ public:
 	//split
 	float rangedDamageTaken = 1.0f;
 	float meleeDamageTaken = 1.0f;
-
 private:
 	void CheckCoolDowns();
 	void SwitchCharacter();
 	void UpdatePlayerStats();
 	bool CanSwitch();
 	void ResetSwitchStatus();
-	bool AnyInputGamepad()const;
 private:
 
 	//Switch
@@ -121,7 +121,6 @@ private:
 	//Switch
 	float currentSwitchDelay = 0.f;
 	bool playSwitchParticles = true;
-	bool lastInputGamepad = false;
 	GameObject* switchEffects = nullptr;
 
 	//Camera

@@ -109,11 +109,11 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 
 	}
 }
-void Onimaru::Update(bool lastInputGamepad, bool lockMovement) {
+void Onimaru::Update(bool useGamepad, bool lockMovement) {
 	if (isAlive) {
-		Player::Update(true, ultimateInUse);
+		Player::Update(useGamepad, ultimateInUse);
 		if (!ultimateInUse && !blastInUse) {
-			if (Input::GetMouseButtonDown(0) && (!shooting && (Input::GetMouseButtonDown(0) || Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_TRIGGERRIGHT, 0) > PRESSED_TRIGGER_THRESHOLD))) {
+			if (!shooting && GetInputBool(InputActions::SHOOT, useGamepad)) {
 
 				if (compAnimation) {
 					if (!shieldInUse) {
@@ -123,9 +123,9 @@ void Onimaru::Update(bool lastInputGamepad, bool lockMovement) {
 					}
 				}
 				shooting = true;
-			} else if (Input::GetMouseButtonRepeat(0) || Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_TRIGGERRIGHT, 0) > PRESSED_TRIGGER_THRESHOLD) {
+			} else if (GetInputBool(InputActions::SHOOT, useGamepad)) {
 				Shoot();
-			} else if (shooting && (Input::GetMouseButtonUp(0) || Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_TRIGGERRIGHT, 0) < PRESSED_TRIGGER_THRESHOLD)) {
+			} else if (shooting && !(GetInputBool(InputActions::SHOOT, useGamepad))) {
 				if (compAnimation) {
 					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 				}

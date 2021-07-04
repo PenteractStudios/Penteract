@@ -4,6 +4,8 @@
 #include "Geometry/Frustum.h"
 #include "Geometry/LineSegment.h"
 
+#define PRESSED_TRIGGER_THRESHOLD 0.3f
+
 void Player::SetAttackSpeed(float attackSpeed_) {
 	attackSpeed = attackSpeed_;
 }
@@ -34,9 +36,8 @@ bool Player::CanShoot() {
 	return !shootingOnCooldown;
 }
 
-MovementDirection Player::GetControllerMovementDirection() const {
-	float2 leftAxisInput = float2(Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_LEFTX, 0), Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_LEFTY, 0));
-
+MovementDirection Player::GetControllerMovementDirection(bool useGamepad) const {
+	float2 leftAxisInput = GetInputFloat2(InputActions::MOVEMENT, useGamepad);
 	MovementDirection md = MovementDirection::NONE;
 
 	if (leftAxisInput.y < 0) {
@@ -69,11 +70,8 @@ float2 Player::GetControllerOrientationDirection() const {
 void Player::LookAtGamepadDir() {
 	float2 lookAtInput = GetControllerOrientationDirection();
 	if (lookAtInput.x == 0 && lookAtInput.y == 0) return;
-
 	float3 desiredFacePointDir = float3(lookAtInput.x, 0, lookAtInput.y);
 	desiredFacePointDir = Lerp(facePointDir, desiredFacePointDir, Time::GetDeltaTime() * normalAngularSpeed);
-
-
 	facePointDir = desiredFacePointDir;
 }
 
@@ -90,30 +88,8 @@ void Player::MoveTo() {
 	agent->SetMoveTarget(newPosition, false);
 }
 
-MovementDirection Player::GetInputMovementDirection() const {
-	MovementDirection md = GetControllerMovementDirection();
-	if (md == MovementDirection::NONE) {
-
-		if (Input::GetKeyCode(Input::KEYCODE::KEY_W)) {
-			md = MovementDirection::UP;
-		}
-
-		if (Input::GetKeyCode(Input::KEYCODE::KEY_S)) {
-			md = MovementDirection::DOWN;
-		}
-
-		if (Input::GetKeyCode(Input::KEYCODE::KEY_A)) {
-			if (md == MovementDirection::UP) md = MovementDirection::UP_LEFT;
-			else if (md == MovementDirection::DOWN) md = MovementDirection::DOWN_LEFT;
-			else md = MovementDirection::LEFT;
-		}
-
-		if (Input::GetKeyCode(Input::KEYCODE::KEY_D)) {
-			if (md == MovementDirection::UP) md = MovementDirection::UP_RIGHT;
-			else if (md == MovementDirection::DOWN) md = MovementDirection::DOWN_RIGHT;
-			else md = MovementDirection::RIGHT;
-		}
-	}
+MovementDirection Player::GetInputMovementDirection(bool useGamepad) const {
+	MovementDirection md = GetControllerMovementDirection(useGamepad);
 	return md;
 }
 
@@ -157,33 +133,94 @@ void Player::IncreaseUltimateCounter() {
 bool Player::GetInputBool(InputActions action, bool useGamepad) {
 	switch (action) {
 	case InputActions::SWITCH:
+		if (useGamepad && Input::IsGamepadConnected(0)) {
+			return Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0);
+		} else {
+			return Input::GetKeyCodeDown(Input::KEYCODE::KEY_R);
+		}
 		break;
 	case InputActions::SHOOT:
+		if (useGamepad && Input::IsGamepadConnected(0)) {
+			return Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_TRIGGERRIGHT, 0) > PRESSED_TRIGGER_THRESHOLD;
+		} else {
+			return Input::GetMouseButtonRepeat(0) || Input::GetMouseButtonDown(0);
+		}
 		break;
 	case InputActions::ABILITY_1:
-		break;
+		if (useGamepad && Input::IsGamepadConnected(0)) {
+			return Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_TRIGGERLEFT, 0) > PRESSED_TRIGGER_THRESHOLD;
+		} else {
+			return Input::GetMouseButtonDown(2);
+		}
 	case InputActions::ABILITY_2:
+		if (useGamepad && Input::IsGamepadConnected(0)) {
+			return Input::GetControllerButton(Input::SDL_CONTROLLER_BUTTON_LEFTSHOULDER, 0);
+		} else {
+			return Input::GetKeyCodeDown(Input::KEYCODE::KEY_E);
+		}
 		break;
 	case InputActions::ABILITY_3:
+		if (useGamepad && Input::IsGamepadConnected(0)) {
+			return Input::GetControllerButton(Input::SDL_CONTROLLER_BUTTON_RIGHTSHOULDER, 0);
+		} else {
+			return Input::GetKeyCodeDown(Input::KEYCODE::KEY_R);
+		}
 		break;
 	default:
 		return false;
 	}
-	return false;
 }
 
-float2 Player::GetInputFloat2(InputActions action, bool useGamepad) {
-
+float2 Player::GetInputFloat2(InputActions action, bool useGamepad) const {
+	float2 result = float2(0, 0);
 	switch (action) {
 	case InputActions::MOVEMENT:
+		if (useGamepad && Input::IsGamepadConnected(0)) {
+			result.x = Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_LEFTX, 0);
+			result.y = Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_LEFTY, 0);
+		} else {
+			if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_D) || Input::GetKeyCodeRepeat(Input::KEYCODE::KEY_D)) {
+				result.x = 1;
+			} else if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_A) || Input::GetKeyCodeRepeat(Input::KEYCODE::KEY_A)) {
+				result.x = -1;
+			}
+
+			if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_S) || Input::GetKeyCodeRepeat(Input::KEYCODE::KEY_S)) {
+				result.y = 1;
+			} else if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_W) || Input::GetKeyCodeRepeat(Input::KEYCODE::KEY_W)) {
+				result.y = -1;
+			}
+		}
 		break;
 	case InputActions::ORIENTATION:
+		if (useGamepad && Input::IsGamepadConnected(0)) {
+			result.x = Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_RIGHTX, 0);
+			result.y = Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_RIGHTY, 0);
+		} else {
+			//Mouse handling
+			float2 mousePos = Input::GetMousePositionNormalized();
+			LineSegment ray = lookAtMouseCameraComp->frustum.UnProjectLineSegment(mousePos.x, mousePos.y);
+			float3 planeTransform = lookAtMousePlanePosition;
+			Plane p = Plane(planeTransform, float3(0, 1, 0));
+			result = (p.ClosestPoint(ray) - (playerMainTransform->GetGlobalPosition())).xy();
+
+		}
 		break;
 	default:
 		return float2(0, 0);
 	}
 
-	return float2(0, 0);
+	return result;
+}
+
+void Player::UpdateFacePointDir(bool useGamepad) {
+	if (useGamepad) {
+		float2 inputFloat2 = GetInputFloat2(InputActions::ORIENTATION, useGamepad);
+		facePointDir.x = inputFloat2.x;
+		facePointDir.z = inputFloat2.y;
+	} else {
+		LookAtMouse();
+	}
 }
 
 float3 Player::GetDirection() const {
@@ -230,17 +267,12 @@ void Player::LookAtMouse() {
 	}
 }
 
-void Player::Update(bool lastInputGamepad, bool lockMovement) {
+void Player::Update(bool useGamepad, bool lockMovement) {
 	if (!lockMovement) {
-		movementInputDirection = GetInputMovementDirection();
+
+		movementInputDirection = GetInputMovementDirection(useGamepad && Input::IsGamepadConnected(0));
 		MoveTo();
-		if (!Input::IsGamepadConnected(0)) {
-			LookAtMouse();
-		} else {
-			if (lastInputGamepad) {
-				LookAtGamepadDir();
-			}
-		}
+		UpdateFacePointDir(useGamepad && Input::IsGamepadConnected(0));
 		LookAtFacePointTarget();
 	}
 }
