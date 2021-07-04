@@ -55,14 +55,14 @@
                 "Script": 1991507863247597087,
                 "Values": [
                     {
+                        "Name": "playerUID",
+                        "Type": "GameObjectUID",
+                        "Value": 403437826872113792
+                    },
+                    {
                         "Name": "defaultMaterialPlaceHolderUID",
                         "Type": "GameObjectUID",
                         "Value": 9837534394034980895
-                    },
-                    {
-                        "Name": "playerUID",
-                        "Type": "GameObjectUID",
-                        "Value": 8838610656912784116
                     },
                     {
                         "Name": "canvasUID",
@@ -194,7 +194,7 @@
                     {
                         "Type": "MeshRenderer",
                         "Active": true,
-                        "MeshID": 14005260280551832265,
+                        "MeshID": 6556143868892488259,
                         "MaterialID": 4886769671297062398
                     },
                     {
@@ -783,7 +783,7 @@
                                                                                                     {
                                                                                                         "Type": "MeshRenderer",
                                                                                                         "Active": true,
-                                                                                                        "MeshID": 3658229596289725283,
+                                                                                                        "MeshID": 17121207945218769703,
                                                                                                         "MaterialID": 6324482706962870118
                                                                                                     },
                                                                                                     {
@@ -1422,7 +1422,7 @@
                                                                                                     {
                                                                                                         "Type": "MeshRenderer",
                                                                                                         "Active": true,
-                                                                                                        "MeshID": 15379475118038618069,
+                                                                                                        "MeshID": 18105222696987181348,
                                                                                                         "MaterialID": 6324482706962870118
                                                                                                     },
                                                                                                     {
