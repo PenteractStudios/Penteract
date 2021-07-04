@@ -19,7 +19,7 @@ void Resume::Start() {
 
 	int i = 0;
 	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
-		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
+		if (i < static_cast<int>(UIAudio::TOTAL)) audios[i] = &src;
 		++i;
 	}
 }
@@ -32,7 +32,7 @@ void Resume::Update() {
 			bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
 			if (hovered) {
 				if (playHoveredAudio) {
-					PlayAudio(AudioType::HOVERED);
+					PlayAudio(UIAudio::HOVERED);
 					playHoveredAudio = false;
 				}
 			}
@@ -47,7 +47,7 @@ void Resume::Update() {
 }
 
 void Resume::OnButtonClick() {
-	PlayAudio(AudioType::CLICKED);
+	PlayAudio(UIAudio::CLICKED);
 	if (!pauseCanvas) return;
 
 	if (pauseCanvas->IsActive()) {
@@ -57,6 +57,6 @@ void Resume::OnButtonClick() {
 	}
 }
 
-void Resume::PlayAudio(AudioType type) {
+void Resume::PlayAudio(UIAudio type) {
 	if (audios[static_cast<int>(type)]) audios[static_cast<int>(type)]->Play();
 }

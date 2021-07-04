@@ -18,7 +18,7 @@ void ExitButton::Start() {
 
 	int i = 0;
 	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
-		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
+		if (i < static_cast<int>(UIAudio::TOTAL)) audios[i] = &src;
 		++i;
 	}
 }
@@ -31,7 +31,7 @@ void ExitButton::Update() {
             bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
             if (hovered) {
                 if (playHoveredAudio) {
-                    PlayAudio(AudioType::HOVERED);
+                    PlayAudio(UIAudio::HOVERED);
                     playHoveredAudio = false;
                 }
             }
@@ -46,10 +46,10 @@ void ExitButton::Update() {
 }
 
 void ExitButton::OnButtonClick() {
-	PlayAudio(AudioType::CLICKED);
+	PlayAudio(UIAudio::CLICKED);
 	SceneManager::ExitGame();
 }
 
-void ExitButton::PlayAudio(AudioType type) {
+void ExitButton::PlayAudio(UIAudio type) {
 	if (audios[static_cast<int>(type)]) audios[static_cast<int>(type)]->Play();
 }

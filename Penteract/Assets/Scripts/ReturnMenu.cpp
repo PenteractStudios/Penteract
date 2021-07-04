@@ -16,7 +16,7 @@ void ReturnMenu::Start() {
 
     int i = 0;
     for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
-        if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
+        if (i < static_cast<int>(UIAudio::TOTAL)) audios[i] = &src;
         ++i;
     }
 }
@@ -29,7 +29,7 @@ void ReturnMenu::Update() {
             bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
             if (hovered) {
                 if (playHoveredAudio) {
-                    PlayAudio(AudioType::HOVERED);
+                    PlayAudio(UIAudio::HOVERED);
                     playHoveredAudio = false;
                 }
             }
@@ -44,11 +44,11 @@ void ReturnMenu::Update() {
 }
 
 void ReturnMenu::OnButtonClick() {
-    PlayAudio(AudioType::CLICKED);
+    PlayAudio(UIAudio::CLICKED);
 	if(sceneUID != 0)SceneManager::ChangeScene(sceneUID);
 	if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
 }
 
-void ReturnMenu::PlayAudio(AudioType type) {
+void ReturnMenu::PlayAudio(UIAudio type) {
     if (audios[static_cast<int>(type)]) audios[static_cast<int>(type)]->Play();
 }

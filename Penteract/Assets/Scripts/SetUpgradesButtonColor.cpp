@@ -25,7 +25,7 @@ void SetUpgradesButtonColor::Start() {
 
     int i = 0;
     for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
-        if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
+        if (i < static_cast<int>(UIAudio::TOTAL)) audios[i] = &src;
         ++i;
     }
 }
@@ -38,7 +38,7 @@ void SetUpgradesButtonColor::Update() {
             bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
             if (hovered) {
                 if (playHoveredAudio) {
-                    PlayAudio(AudioType::HOVERED);
+                    PlayAudio(UIAudio::HOVERED);
                     playHoveredAudio = false;
                 }
             }
@@ -56,7 +56,7 @@ void SetUpgradesButtonColor::OnButtonClick() {
     if (!buttonOn || !buttonOff) return;
     if (!imageOn || !imageOff) return;
 
-    PlayAudio(AudioType::CLICKED);
+    PlayAudio(UIAudio::CLICKED);
 
     if (GetOwner().GetID() == buttonOn->GetID()) {
         imageOn->SetColor(selected);
@@ -68,6 +68,6 @@ void SetUpgradesButtonColor::OnButtonClick() {
     }
 }
 
-void SetUpgradesButtonColor::PlayAudio(AudioType type) {
+void SetUpgradesButtonColor::PlayAudio(UIAudio type) {
     if (audios[static_cast<int>(type)]) audios[static_cast<int>(type)]->Play();
 }

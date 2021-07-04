@@ -33,7 +33,7 @@ void ScreenResolutionSetter::Start() {
 
 	int i = 0;
 	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
-		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
+		if (i < static_cast<int>(UIAudio::TOTAL)) audios[i] = &src;
 		++i;
 	}
 }
@@ -55,7 +55,7 @@ void ScreenResolutionSetter::Update() {
 			bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
 			if (hovered) {
 				if (playHoveredAudio) {
-					PlayAudio(AudioType::HOVERED);
+					PlayAudio(UIAudio::HOVERED);
 					playHoveredAudio = false;
 				}
 			}
@@ -70,11 +70,11 @@ void ScreenResolutionSetter::Update() {
 }
 
 void ScreenResolutionSetter::OnButtonClick() {
-	PlayAudio(AudioType::CLICKED);
+	PlayAudio(UIAudio::CLICKED);
 	IncreaseResolution(increasing ? 1 : -1);
 }
 
-void ScreenResolutionSetter::PlayAudio(AudioType type) {
+void ScreenResolutionSetter::PlayAudio(UIAudio type) {
 	if (audios[static_cast<int>(type)]) audios[static_cast<int>(type)]->Play();
 }
 

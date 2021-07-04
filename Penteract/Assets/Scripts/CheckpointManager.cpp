@@ -25,7 +25,7 @@ void CheckpointManager::Start() {
 
 	int i = 0;
 	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
-		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
+		if (i < static_cast<int>(UIAudio::TOTAL)) audios[i] = &src;
 		++i;
 	}
 
@@ -111,7 +111,7 @@ void CheckpointManager::Update() {
 			bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
 			if (hovered) {
 				if (playHoveredAudio) {
-					PlayAudio(AudioType::HOVERED);
+					PlayAudio(UIAudio::HOVERED);
 					playHoveredAudio = false;
 				}
 			}
@@ -126,10 +126,10 @@ void CheckpointManager::Update() {
 }
 
 void CheckpointManager::OnButtonClick() {
-	PlayAudio(AudioType::CLICKED);
+	PlayAudio(UIAudio::CLICKED);
 }
 
-void CheckpointManager::PlayAudio(AudioType type) {
+void CheckpointManager::PlayAudio(UIAudio type) {
 	if (audios[static_cast<int>(type)]) audios[static_cast<int>(type)]->Play();
 }
 

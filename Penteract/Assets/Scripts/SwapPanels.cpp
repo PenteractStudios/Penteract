@@ -22,7 +22,7 @@ void SwapPanels::Start() {
 
     int i = 0;
     for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
-        if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
+        if (i < static_cast<int>(UIAudio::TOTAL)) audios[i] = &src;
         ++i;
     }
 }
@@ -35,7 +35,7 @@ void SwapPanels::Update() {
             bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
             if (hovered) {
                 if (playHoveredAudio) {
-                    PlayAudio(AudioType::HOVERED);
+                    PlayAudio(UIAudio::HOVERED);
                     playHoveredAudio = false;
                 }
             }
@@ -51,7 +51,7 @@ void SwapPanels::Update() {
 
 void SwapPanels::OnButtonClick()
 {
-    PlayAudio(AudioType::CLICKED);
+    PlayAudio(UIAudio::CLICKED);
 
     if (target != nullptr && current != nullptr) {
         target->Enable();
@@ -59,6 +59,6 @@ void SwapPanels::OnButtonClick()
     }
 }
 
-void SwapPanels::PlayAudio(AudioType type) {
+void SwapPanels::PlayAudio(UIAudio type) {
     if (audios[static_cast<int>(type)]) audios[static_cast<int>(type)]->Play();
 }

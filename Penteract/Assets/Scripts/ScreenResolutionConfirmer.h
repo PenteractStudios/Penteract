@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Scripting/Script.h"
+#include "UIAudioType.h"
 
 class ComponentAudioSource;
 class ComponentSelectable;
@@ -13,20 +14,14 @@ class ScreenResolutionConfirmer : public Script {
 
 public:
 
-	enum class AudioType {
-		HOVERED,
-		CLICKED,
-		TOTAL
-	};
-
 	void Start() override;
 	void Update() override;
 	void OnButtonClick()override;
-	void PlayAudio(AudioType type);
+	void PlayAudio(UIAudio type);
 
 private:
 	bool playHoveredAudio = true;
 	ComponentSelectable* selectable = nullptr;
-	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
+	ComponentAudioSource* audios[static_cast<int>(UIAudio::TOTAL)] = { nullptr };
 };
 
