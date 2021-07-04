@@ -7,17 +7,17 @@
 
 EXPOSE_MEMBERS(EnemySpawnPoint) {
 	MEMBER(MemberType::FLOAT, xAxisPos),
-	MEMBER(MemberType::FLOAT, zAxisPos),
-	MEMBER(MemberType::INT, firstWaveMeleeAmount),
-	MEMBER(MemberType::INT, firstWaveRangeAmount),
-	MEMBER(MemberType::INT, secondWaveMeleeAmount),
-	MEMBER(MemberType::INT, secondWaveRangeAmount),
-	MEMBER(MemberType::INT, thirdWaveMeleeAmount),
-	MEMBER(MemberType::INT, thirdWaveRangeAmount),
-	MEMBER(MemberType::INT, fourthWaveMeleeAmount),
-	MEMBER(MemberType::INT, fourthWaveRangeAmount),
-	MEMBER(MemberType::INT, fifthWaveMeleeAmount),
-	MEMBER(MemberType::INT, fifthWaveRangeAmount),
+		MEMBER(MemberType::FLOAT, zAxisPos),
+		MEMBER(MemberType::INT, firstWaveMeleeAmount),
+		MEMBER(MemberType::INT, firstWaveRangeAmount),
+		MEMBER(MemberType::INT, secondWaveMeleeAmount),
+		MEMBER(MemberType::INT, secondWaveRangeAmount),
+		MEMBER(MemberType::INT, thirdWaveMeleeAmount),
+		MEMBER(MemberType::INT, thirdWaveRangeAmount),
+		MEMBER(MemberType::INT, fourthWaveMeleeAmount),
+		MEMBER(MemberType::INT, fourthWaveRangeAmount),
+		MEMBER(MemberType::INT, fifthWaveMeleeAmount),
+		MEMBER(MemberType::INT, fifthWaveRangeAmount),
 };
 
 GENERATE_BODY_IMPL(EnemySpawnPoint);
@@ -65,7 +65,7 @@ void EnemySpawnPoint::Update() {
 			it++;
 		}
 		else {
-			spawnPointControllerScript->OpenDoor();
+			if (spawnPointControllerScript) spawnPointControllerScript->OpenDoor();
 		}
 	}
 }
