@@ -141,7 +141,9 @@ void Onimaru::OnAnimationSecondaryFinished() {
 			currentBlastDuration = 0.f;
 			calculateEnemiesInRange = true;
 			if (compAnimation) {
-				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+				if (compAnimation->GetCurrentStateSecondary() && compAnimation->GetCurrentState()) {
+					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+				}
 			}
 		}
 	}
@@ -245,7 +247,9 @@ void Onimaru::Update(bool lockMovement) {
 					blastCooldownRemaining = blastCooldown;
 					if (compAnimation) {
 						Debug::Log((compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(BLAST)]).c_str());
-						compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(BLAST)]);
+						if (compAnimation->GetCurrentState()) {
+							compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(BLAST)]);
+						}
 					}
 					Blast();
 				}
