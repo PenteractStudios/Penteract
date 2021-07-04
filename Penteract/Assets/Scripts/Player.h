@@ -44,6 +44,8 @@ public:
 	// ------- Core Functions ------ //
 	void SetAttackSpeed(float attackSpeed_);
 	virtual void GetHit(float damage_) override;
+	virtual void OnAnimationFinished() = 0;
+
 	void LookAtMouse();
 	MovementDirection GetInputMovementDirection() const;
 	float3 GetDirection() const;
@@ -52,15 +54,17 @@ public:
 	virtual void CheckCoolDowns(bool noCooldownMode = false) {}
 	int GetMouseDirectionState();
 	bool IsActive();
-
+	void IncreaseUltimateCounter();
 public:
 	float rangedDamageTaken = 1.0f;
 	float meleeDamageTaken = 1.0f;
 	float attackSpeed = 1.0f;
 	float attackCooldownRemaining = 0.f;
+
 	float normalAngularSpeed = 5.0f;
-	bool canShoot = true;
 	bool shooting = false;
+	bool shootingOnCooldown = false;
+
 	float3 lookAtMousePlanePosition = float3(0, 0, 0);
 	ComponentCamera* lookAtMouseCameraComp = nullptr;
 	CameraController* cameraController = nullptr;
@@ -68,6 +72,8 @@ public:
 	float3 facePointDir = float3(0, 0, 0);
 	MovementDirection movementInputDirection = MovementDirection::NONE;
 	ComponentTransform* playerMainTransform = nullptr;
+	int ultimateChargePoints = 0;
+	const int ultimateChargePointsTotal = 10;
 
 private:
 	void MoveTo();

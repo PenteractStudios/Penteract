@@ -127,14 +127,18 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 	}
 
 	//Attack Cooldown
-	if (!canShoot) {
+	if (shootingOnCooldown) {
 		if (attackCooldownRemaining <= 0.f) {
 			attackCooldownRemaining = 0.f;
-			canShoot = true;
+			shootingOnCooldown = false;
 		} else {
 			attackCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
+}
+
+void Fang::OnAnimationFinished() {
+	//TODO use if necesary
 }
 
 float Fang::GetRealDashCooldown() {
@@ -142,12 +146,12 @@ float Fang::GetRealDashCooldown() {
 }
 
 bool Fang::CanShoot() {
-	return canShoot;
+	return !shootingOnCooldown;
 }
 
 void Fang::Shoot() {
 	if (CanShoot()) {
-		canShoot = false;
+		shootingOnCooldown = true;
 		attackCooldownRemaining = 1.f / attackSpeed;
 		if (playerAudios[static_cast<int>(AudioPlayer::SHOOT)]) {
 			playerAudios[static_cast<int>(AudioPlayer::SHOOT)]->Play();

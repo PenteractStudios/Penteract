@@ -9,14 +9,18 @@ void Player::SetAttackSpeed(float attackSpeed_) {
 }
 
 void Player::GetHit(float damage_) {
+	//We assume that the player is always alive when this method gets called, so no need to check if character was alive before taking lives
 	if (cameraController) {
 		cameraController->StartShake();
 	}
+
 	lifePoints -= damage_;
 	if (playerAudios[static_cast<int>(AudioPlayer::HIT)]) playerAudios[static_cast<int>(AudioPlayer::HIT)]->Play();
 	isAlive = lifePoints > 0.0f;
+
 	if (!isAlive) {
 		if (playerAudios[static_cast<int>(AudioPlayer::DEATH)]) playerAudios[static_cast<int>(AudioPlayer::DEATH)]->Play();
+		OnDeath();
 	}
 }
 
@@ -26,8 +30,13 @@ void Player::ResetSwitchStatus() {
 	currentSwitchDelay = 0.f;
 }
 
+bool Player::CanShoot() {
+	return !shootingOnCooldown;
+}
+
 MovementDirection Player::GetControllerMovementDirection() const {
 	float2 leftAxisInput = float2(Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_LEFTX, 0), Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_LEFTY, 0));
+	
 	MovementDirection md = MovementDirection::NONE;
 
 	if (leftAxisInput.y < 0) {
@@ -79,10 +88,6 @@ void Player::MoveTo() {
 	float3 newPosition = playerMainTransform->GetGlobalPosition() + GetDirection();
 	agent->SetMaxSpeed(movementSpeed);
 	agent->SetMoveTarget(newPosition, false);
-}
-
-bool Player::CanShoot() {
-	return canShoot;
 }
 
 MovementDirection Player::GetInputMovementDirection() const {
@@ -143,6 +148,10 @@ int Player::GetMouseDirectionState() {
 
 bool Player::IsActive() {
 	return (characterGameObject) ? characterGameObject->IsActive() : false;
+}
+
+void Player::IncreaseUltimateCounter() {
+	ultimateChargePoints++;
 }
 
 float3 Player::GetDirection() const {
