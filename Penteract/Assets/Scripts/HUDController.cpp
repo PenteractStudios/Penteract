@@ -53,13 +53,6 @@ void HUDController::Start() {
 		remainingDurableHealthTimesFang[i] = remainingDurableHealthTimesOni[i] = 0;
 	}
 
-	//for (int i = 0; i < static_cast<int>(Cooldowns::TOTAL); i++) {
-	//	abilityCoolDownsRetreived[i] = true;
-	//}
-
-	//remainingTimeActiveIndexesFang.clear();
-	//remainingTimeActiveIndexesOni.clear();
-
 	timeToFadeDurableHealthFeedback = timeToFadeDurableHealthFeedbackInternal;
 
 	fangCanvas = GameplaySystems::GetGameObject(fangMainCanvasUID);
