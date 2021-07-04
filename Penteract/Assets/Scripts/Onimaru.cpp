@@ -33,20 +33,17 @@ void Onimaru::Shoot() {
 }
 
 void Onimaru::Blast() {
-	if (CanBlast()) {
-		if (hudControllerScript) {
-			hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::ONIMARU_SKILL_2);
-		}
+	bool releaseBlast = currentBlastDuration <= blastDuration / 2.0f ? false : true;
+	if (releaseBlast) {
 		for (GameObject* enemy : enemiesInMap) {
 			AIMeleeGrunt* meleeScript = GET_SCRIPT(enemy, AIMeleeGrunt);
 			RangedAI* rangedScript = GET_SCRIPT(enemy, RangedAI);
-			float offset = 3.034f;
 			if (rangedScript || meleeScript) {
 				if (rightHand && playerMainTransform) {
 					float3 onimaruRightArmPos = rightHand->GetGlobalPosition();
 					float3 enemyPos = enemy->GetComponent<ComponentTransform>()->GetGlobalPosition();
-					onimaruRightArmPos = float3(onimaruRightArmPos.x, onimaruRightArmPos.y - offset, onimaruRightArmPos.z);
-					enemyPos = float3(enemyPos.x, enemyPos.y, enemyPos.z);
+					onimaruRightArmPos = float3(onimaruRightArmPos.x, 0.f, onimaruRightArmPos.z);
+					enemyPos = float3(enemyPos.x, 0.f, enemyPos.z);
 					float distance = enemyPos.Distance(onimaruRightArmPos);
 					float3 direction = (enemyPos - onimaruRightArmPos).Normalized();
 					if (distance <= blastDistance) {
@@ -68,13 +65,22 @@ void Onimaru::Blast() {
 						else if (rangedScript) {
 							if (!rangedScript->IsBeingPushed()) rangedScript->DisableBlastPushBack();
 						}
-						
+
 					}
 				}
 			}
 		}
-		blastCooldownRemaining = blastCooldown;
 		blastInCooldown = true;
+		currentBlastDuration = 0.f;
+		blastInUse = false;
+
+		if (compAnimation) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+		}
+	}
+	else {
+		currentBlastDuration += Time::GetDeltaTime();
+		blastInUse = true;
 	}
 }
 
@@ -110,7 +116,7 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 		blastInCooldown = false;
 	}
 	else {
-		blastCooldownRemaining -= Time::GetDeltaTime();
+		if (!blastInUse) blastCooldownRemaining -= Time::GetDeltaTime();
 	}
 }
 
@@ -205,26 +211,30 @@ void Onimaru::Update(bool lockMovement) {
 				}
 				shooting = false;
 			}
-			Debug::Log("Before blast");
-			if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_Q)) {
-				Debug::Log("Entering blast");
-				blastInUse = true;
-				Blast();
-				if (compAnimation) {
-					Debug::Log((compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(BLAST)]).c_str());
-					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(BLAST)]);
+			if (CanBlast()) {
+				if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_Q)) {
+					if (hudControllerScript) {
+						hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::ONIMARU_SKILL_2);
+					}
+					blastCooldownRemaining = blastCooldown;
+					if (compAnimation) {
+						Debug::Log((compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(BLAST)]).c_str());
+						compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(BLAST)]);
+					}
+					Blast();
 				}
 			}
 		}
 		//TODO Ability handling
 		//Whenever an ability starts being used, make sure that as well as setting the secondary trigger to whatever, if (shooting was true, it must be turned to false)
+		if (blastInUse) {
+			Blast();
+		}
 
 	} else {
 		if (agent) agent->RemoveAgentFromCrowd();
 		movementInputDirection = MovementDirection::NONE;
 	}
-	Debug::Log("Secondary state:");
-	Debug::Log(compAnimation->GetCurrentStateSecondary()->name.c_str());
 	PlayAnimation();
 }
 

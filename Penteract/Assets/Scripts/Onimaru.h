@@ -72,7 +72,8 @@ private:
 	float maxBulletSpread = 5.0f;
 
 	// Blast ability
-	float blastDuration = 1.5;
+	float blastDuration = 1.5f;
+	float currentBlastDuration = 0.f;
 	float blastCooldownRemaining = 0.f;
 	float blastRemaining = 0.f;
 	bool blastInCooldown = false;
