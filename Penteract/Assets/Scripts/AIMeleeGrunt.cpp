@@ -26,7 +26,9 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, gruntCharacter.attackRange),
 	MEMBER(MemberType::FLOAT, gruntCharacter.timeToDie),
-	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration)
+	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
+	MEMBER(MemberType::FLOAT, gruntCharacter.pushBackDistance),
+	MEMBER(MemberType::FLOAT, gruntCharacter.pushBackSpeed)
 };
 
 GENERATE_BODY_IMPL(AIMeleeGrunt);
@@ -258,10 +260,10 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
                 }
             } else if (state == AIState::PUSHED) {
 				if (deadType) {
-                    animation->SendTrigger("RunDeath1");
+                    animation->SendTrigger("HurtDeath1");
                 }
                 else {
-                    animation->SendTrigger("RunDeath2");
+                    animation->SendTrigger("HurtDeath2");
                 }
 			}
 
@@ -280,12 +282,14 @@ void AIMeleeGrunt::EnableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		gruntCharacter.beingPushed = true;
 		state = AIState::PUSHED;
+		if (animation->GetCurrentState()) animation->SendTrigger(animation->GetCurrentState()->name + "Hurt");
 	}
 }
 
 void AIMeleeGrunt::DisableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		gruntCharacter.beingPushed = false;
+		if (animation->GetCurrentState()) animation->SendTrigger(animation->GetCurrentState()->name + "Idle");
 		state = AIState::IDLE;
 	}
 }
