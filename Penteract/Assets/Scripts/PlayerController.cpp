@@ -240,7 +240,7 @@ void PlayerController::UpdatePlayerStats() {
 		}
 
 		float realSwitchCooldown = 1.0f - (switchCooldownRemaining / switchCooldown);
-		hudControllerScript->UpdateCooldowns(0.0f, 0.0f, 0.0f, playerFang.GetRealDashCooldown(), 0.0f, 0.0f, realSwitchCooldown);
+		hudControllerScript->UpdateCooldowns(0.0f, 0.0f, playerOnimaru.GetRealUltimateCooldown(), playerFang.GetRealDashCooldown(), 0.0f, 0.0f, realSwitchCooldown);
 	}
 }
 

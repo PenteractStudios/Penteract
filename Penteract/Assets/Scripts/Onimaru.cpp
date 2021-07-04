@@ -139,6 +139,7 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 	}
 
 }
+
 void Onimaru::OnAnimationFinished() {
 	if (!compAnimation)return;
 	if (ultimateInUse) {
@@ -161,13 +162,13 @@ void Onimaru::Update(bool lockMovement, bool lockOrientation) {
 		Player::Update(ultimateInUse, false);
 
 		if (!ultimateInUse) {
-			ultimateChargePoints = ultimateChargePointsTotal;
 			if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_E)) {
 				if (ultimateChargePoints >= ultimateChargePointsTotal) {
 					StartUltimate();
 				}
 			}
 		} else {
+			//Ultimate execution
 			if (ultimateTimeRemaining > 0) {
 				ultimateTimeRemaining -= Time::GetDeltaTime();
 				Shoot();
@@ -219,4 +220,8 @@ Quat Onimaru::GetSlightRandomSpread(float minValue, float maxValue) const {
 	result.SetFromAxisAngle(axis, DEGTORAD * randomAngle * sign);
 
 	return result;
+}
+
+float Onimaru::GetRealUltimateCooldown() {
+	return static_cast<float>(ultimateChargePoints) / static_cast<float>(ultimateChargePointsTotal);
 }

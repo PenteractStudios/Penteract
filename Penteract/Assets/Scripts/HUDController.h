@@ -135,7 +135,7 @@ private:
 
 	float remainingDurableHealthTimesFang[MAX_HEALTH] = { 0,0,0,0,0,0,0,0,0,0 };
 	float remainingDurableHealthTimesOni[MAX_HEALTH] = { 0,0,0,0,0,0,0,0,0,0 };
-	bool abilityCoolDownsRetreived[static_cast<int>(Cooldowns::TOTAL)] = { true,true,true,true,true,true,true };
+	bool abilityCoolDownsRetreived[static_cast<int>(Cooldowns::TOTAL)] = { true,true,false,true,true,false,true };
 
 	//std::vector<int>remainingTimeActiveIndexesFang;
 	//std::vector<int>remainingTimeActiveIndexesOni;

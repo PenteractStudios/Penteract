@@ -54,6 +54,7 @@ public:
 	void OnAnimationFinished() override;
 	void OnDeath() override;
 	Quat GetSlightRandomSpread(float minValue, float maxValue) const;
+	float GetRealUltimateCooldown();
 private:
 
 	ResourcePrefab* trail = nullptr;
