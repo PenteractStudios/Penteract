@@ -32,16 +32,14 @@ void Onimaru::PlayAnimation() {
 	if (!compAnimation) return;
 	if (ultimateInUse || !isAlive) return; //Ultimate will block out all movement and idle from happening
 
-	if (movementInputDirection == MovementDirection::NONE) {
-		if (compAnimation->GetCurrentState()) {
+	if (compAnimation->GetCurrentState()) {
+		if (movementInputDirection == MovementDirection::NONE) {
 			//Primery state machine idle when alive, without input movement
 			if (compAnimation->GetCurrentState()->name != states[IDLE]) {
 				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(IDLE)]);
 			}
 		}
-		
-	} else {
-		if (compAnimation->GetCurrentStateSecondary()) {
+		else {
 			//If Movement is found, Primary state machine will be in charge of getting movement animations
 			if (compAnimation->GetCurrentState()->name != (states[GetMouseDirectionState()])) {
 				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState()]);
@@ -87,9 +85,9 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 }
 
 void Onimaru::OnDeath() {
-	if (compAnimation->GetCurrentState() && compAnimation->GetCurrentStateSecondary()) {
+	if (compAnimation->GetCurrentState()) {
 		if (compAnimation->GetCurrentState()->name != states[DEATH]) {
-			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+			if(compAnimation->GetCurrentStateSecondary()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(DEATH)]);
 		}
 	}

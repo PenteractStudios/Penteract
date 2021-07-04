@@ -195,7 +195,11 @@ void AIMeleeGrunt::OnAnimationFinished() {
 
 void AIMeleeGrunt::OnAnimationSecondaryFinished() {
 	if (state == AIState::ATTACK) {
-		if (animation) animation->SendTriggerSecondary("Attack" + animation->GetCurrentState()->name);
+		if (animation) {
+			if (animation->GetCurrentState()) {
+				animation->SendTriggerSecondary("Attack" + animation->GetCurrentState()->name);
+			}
+		}
 		state = AIState::IDLE;
 	}
 }
