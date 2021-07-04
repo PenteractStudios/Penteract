@@ -3,12 +3,12 @@
 #include "CameraController.h"
 
 bool Onimaru::CanShoot() {
-	return !shooting;
+	return !shootingOnCooldown;
 }
 
 void Onimaru::Shoot() {
 	if (CanShoot()) {
-		shooting = true;
+		shootingOnCooldown = true;
 		attackCooldownRemaining = 1.f / attackSpeed;
 		if (playerAudios[static_cast<int>(AudioPlayer::SHOOT)]) {
 			playerAudios[static_cast<int>(AudioPlayer::SHOOT)]->Play();
@@ -27,20 +27,20 @@ void Onimaru::Shoot() {
 
 void Onimaru::PlayAnimation() {
 	if (!compAnimation) return;
-	if (movementInputDirection == MovementDirection::NONE) {
-		if (!isAlive) {
-			if (compAnimation->GetCurrentState()->name != states[9]) {
-				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[9]);
-				compAnimation->SendTriggerSecondary("ShootingDeath");
-			}
-		} else {
-			if (compAnimation->GetCurrentState()->name != states[0]) {
-				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[0]);
+	if (ultimateInUse || !isAlive) return; //Ultimate will block out all movement and idle from happening
+
+	if (compAnimation->GetCurrentState()) {
+		if (movementInputDirection == MovementDirection::NONE) {
+			//Primery state machine idle when alive, without input movement
+			if (compAnimation->GetCurrentState()->name != states[IDLE]) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(IDLE)]);
 			}
 		}
-	} else {
-		if (compAnimation->GetCurrentState()->name != states[GetMouseDirectionState()]) {
-			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState()]);
+		else {
+			//If Movement is found, Primary state machine will be in charge of getting movement animations
+			if (compAnimation->GetCurrentState()->name != (states[GetMouseDirectionState()])) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState()]);
+			}
 		}
 	}
 }
@@ -49,10 +49,25 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 	//AttackCooldown
 	if (attackCooldownRemaining <= 0.f) {
 		attackCooldownRemaining = 0.f;
-		shooting = false;
+		shootingOnCooldown = false;
 	} else {
 		attackCooldownRemaining -= Time::GetDeltaTime();
 	}
+}
+
+void Onimaru::OnDeath() {
+	if (compAnimation->GetCurrentState()) {
+		if (compAnimation->GetCurrentState()->name != states[DEATH]) {
+			if(compAnimation->GetCurrentStateSecondary()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(DEATH)]);
+		}
+	}
+	ultimateInUse = blastInUse = shieldInUse = false;
+}
+
+void Onimaru::OnAnimationFinished() {
+	//TODO use for ultimate ability
+	//Other abilities may also make use of this
 }
 
 void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID cameraUID, UID canvasUID, float maxSpread_) {
@@ -101,17 +116,31 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 void Onimaru::Update(bool lockMovement) {
 	if (isAlive) {
 		Player::Update();
-		if (Input::GetMouseButtonDown(0)) {
-			if (compAnimation) {
-				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[10]);
-			}
-		} else if (Input::GetMouseButtonRepeat(0)) {
-			Shoot();
-		} else if (Input::GetMouseButtonUp(0)) {
-			if (compAnimation) {
-				compAnimation->SendTriggerSecondary(states[10] + compAnimation->GetCurrentState()->name);
+		if (!ultimateInUse && !blastInUse) {
+			if (Input::GetMouseButtonDown(0)) {
+				if (compAnimation) {
+					if (compAnimation->GetCurrentState()) {
+						if (!shieldInUse) {
+							compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHOOTING)]);
+						}
+						else {
+							compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHOOTSHIELD)]);
+						}
+					}
+				}
+				shooting = true;
+			} else if (Input::GetMouseButtonRepeat(0)) {
+				Shoot();
+			} else if (Input::GetMouseButtonUp(0)) {
+				if (compAnimation) {
+					if(compAnimation->GetCurrentState() && compAnimation->GetCurrentStateSecondary()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+				}
+				shooting = false;
 			}
 		}
+		//TODO Ability handling
+		//Whenever an ability starts being used, make sure that as well as setting the secondary trigger to whatever, if (shooting was true, it must be turned to false)
+
 	} else {
 		if (agent) agent->RemoveAgentFromCrowd();
 		movementInputDirection = MovementDirection::NONE;

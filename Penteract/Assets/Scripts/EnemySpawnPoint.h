@@ -41,6 +41,9 @@ public:
 	float xAxisPos = 0;
 	float zAxisPos = 4;
 
+	/* Distance between the enemies */
+	unsigned int offset = 2;
+
 private:
 	/* Owner */
 	GameObject* gameObject = nullptr;
@@ -55,9 +58,6 @@ private:
 
 	/* Amount of enemies for the win condition */
 	unsigned int amountOfEnemies = 0;
-
-	/* Distance between the enemies */
-	unsigned int offset = 2;
 
 	/* Flags to handle when to spawn the waves */
 	bool spawn = true;
