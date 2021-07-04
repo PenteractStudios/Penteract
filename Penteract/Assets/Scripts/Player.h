@@ -27,6 +27,16 @@ enum class AudioPlayer {
 	TOTAL
 };
 
+enum class InputActions {
+	MOVEMENT,
+	ORIENTATION,
+	SWITCH,
+	SHOOT,
+	ABILITY_1,
+	ABILITY_2,
+	ABILITY_3
+};
+
 class Player : public Character {
 public:
 	// ------- Contructors ------- //
@@ -55,6 +65,8 @@ public:
 	int GetMouseDirectionState();
 	bool IsActive();
 	void IncreaseUltimateCounter();
+	static bool GetInputBool(InputActions action, bool useGamepad = false);
+	static float2 GetInputFloat2(InputActions action, bool useGamepad = false);
 public:
 	float rangedDamageTaken = 1.0f;
 	float meleeDamageTaken = 1.0f;
@@ -74,7 +86,6 @@ public:
 	ComponentTransform* playerMainTransform = nullptr;
 	int ultimateChargePoints = 0;
 	const int ultimateChargePointsTotal = 10;
-
 private:
 	void MoveTo();
 	virtual bool CanShoot();

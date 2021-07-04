@@ -36,7 +36,7 @@ bool Player::CanShoot() {
 
 MovementDirection Player::GetControllerMovementDirection() const {
 	float2 leftAxisInput = float2(Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_LEFTX, 0), Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_LEFTY, 0));
-	
+
 	MovementDirection md = MovementDirection::NONE;
 
 	if (leftAxisInput.y < 0) {
@@ -154,6 +154,38 @@ void Player::IncreaseUltimateCounter() {
 	ultimateChargePoints++;
 }
 
+bool Player::GetInputBool(InputActions action, bool useGamepad) {
+	switch (action) {
+	case InputActions::SWITCH:
+		break;
+	case InputActions::SHOOT:
+		break;
+	case InputActions::ABILITY_1:
+		break;
+	case InputActions::ABILITY_2:
+		break;
+	case InputActions::ABILITY_3:
+		break;
+	default:
+		return false;
+	}
+	return false;
+}
+
+float2 Player::GetInputFloat2(InputActions action, bool useGamepad) {
+
+	switch (action) {
+	case InputActions::MOVEMENT:
+		break;
+	case InputActions::ORIENTATION:
+		break;
+	default:
+		return float2(0, 0);
+	}
+
+	return float2(0, 0);
+}
+
 float3 Player::GetDirection() const {
 	float3 direction;
 	switch (movementInputDirection) {
@@ -198,7 +230,7 @@ void Player::LookAtMouse() {
 	}
 }
 
-void Player::Update(bool lastInputGamepad,bool lockMovement) {
+void Player::Update(bool lastInputGamepad, bool lockMovement) {
 	if (!lockMovement) {
 		movementInputDirection = GetInputMovementDirection();
 		MoveTo();
