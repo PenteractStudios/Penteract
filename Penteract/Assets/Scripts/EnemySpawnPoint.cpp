@@ -72,7 +72,7 @@ void EnemySpawnPoint::Update() {
 			it++;
 		}
 		else {
-			spawnPointControllerScript->OpenDoor();
+			if (spawnPointControllerScript) spawnPointControllerScript->OpenDoor();
 		}
 	}
 }
