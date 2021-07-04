@@ -34,7 +34,7 @@ void Onimaru::PlayAnimation() {
 	if (compAnimation->GetCurrentState()) {
 		if (movementInputDirection == MovementDirection::NONE) {
 			//Primery state machine idle when alive, without input movement
-			if (compAnimation->GetCurrentState()->name != states[IDLE]) {
+			if (compAnimation->GetCurrentState()->name != states[static_cast<int>(IDLE)]) {
 				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(IDLE)]);
 			}
 		} else {
@@ -54,7 +54,7 @@ void Onimaru::StartUltimate() {
 				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 			}
 		}
-		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[ULTI_INTRO]);
+		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(ULTI_INTRO)]);
 	}
 
 	ultimateChargePoints = 0;
@@ -70,7 +70,7 @@ void Onimaru::FinishUltimate() {
 	orientationSpeed = -1;
 	attackSpeed = originalAttackSpeed;
 	ultimateInUse = false;
-	compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[IDLE]);
+	compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(IDLE)]);
 }
 
 void Onimaru::CheckCoolDowns(bool noCooldownMode) {
@@ -90,7 +90,7 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 void Onimaru::OnDeath() {
 	if (compAnimation == nullptr) return;
 	if (compAnimation->GetCurrentState()) {
-		if (compAnimation->GetCurrentState()->name != states[DEATH]) {
+		if (compAnimation->GetCurrentState()->name != states[static_cast<int>(DEATH)]) {
 			if (compAnimation->GetCurrentStateSecondary()) {
 				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 			}
