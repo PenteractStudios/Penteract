@@ -11,7 +11,7 @@
                 "Position": [
                     0.0,
                     0.0,
-                    0.0
+                    0.24735641479492188
                 ],
                 "Rotation": [
                     0.0,
@@ -21,7 +21,7 @@
                 ],
                 "Scale": [
                     1.0,
-                    1.0,
+                    0.9999999403953552,
                     1.0
                 ],
                 "LocalEulerAngles": [
@@ -38,32 +38,32 @@
                     {
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
-                        "Value": 8960886680822700415
+                        "Value": 403437826872113792
                     },
                     {
                         "Name": "absorptionUID",
                         "Type": "GameObjectUID",
-                        "Value": 763007206508917646
+                        "Value": 4744393093319373557
                     },
                     {
                         "Name": "explosionUID",
                         "Type": "GameObjectUID",
-                        "Value": 3299547936084660895
+                        "Value": 1744358048767670823
                     },
                     {
                         "Name": "shockWaveUID",
                         "Type": "GameObjectUID",
-                        "Value": 17949166800051354293
+                        "Value": 12521675395831379670
                     },
                     {
                         "Name": "lightUID",
                         "Type": "GameObjectUID",
-                        "Value": 5918349869959326560
+                        "Value": 9015404117451388261
                     },
                     {
                         "Name": "groundLightUID",
                         "Type": "GameObjectUID",
-                        "Value": 15309818427319738123
+                        "Value": 16510948218971887858
                     }
                 ]
             }
@@ -103,44 +103,56 @@
                     {
                         "Type": "Particle",
                         "Active": true,
-                        "EmitterType": 1,
-                        "BillboardType": 1,
-                        "TextureId": 18076704291587492614,
+                        "DrawGizmo": false,
                         "IsPlaying": false,
-                        "IsLooping": false,
-                        "IsSizeOverTime": false,
-                        "ScaleFactor": 2.4000000953674318,
-                        "ParticleScale": 7.0,
-                        "MaxParticle": 60,
-                        "Velocity": 8.0,
-                        "LifeParticle": 0.20000000298023225,
-                        "DistanceReverse": 14.0,
-                        "ReverseEffect": true,
                         "StartDelay": 0.0,
+                        "Duration": 0.36000001430511477,
+                        "Looping": false,
+                        "Life": 0.36000001430511477,
+                        "Velocity": 15.0,
+                        "Scale": 7.0,
+                        "ReverseEffect": true,
+                        "ReverseDistance": 7.0,
+                        "MaxParticle": 60,
+                        "AttachEmitter": true,
+                        "ParticleEmitterType": 1,
+                        "ConeRadiusUp": 1.0,
+                        "ConeRadiusDown": 0.5,
+                        "RandomConeRadiusUp": false,
+                        "RandomConeRadiusDown": false,
+                        "SizeOverLifetime": false,
+                        "ScaleFactor": 2.4000000953674318,
+                        "ColorOverLifetime": true,
+                        "GradientColors": [
+                            [
+                                0.0,
+                                0.49803921580314639,
+                                1.0,
+                                1.0,
+                                0.3668639063835144
+                            ],
+                            [
+                                0.1411764770746231,
+                                0.1411764770746231,
+                                0.1411764770746231,
+                                1.0,
+                                0.960885226726532
+                            ]
+                        ],
+                        "NumberColors": 2,
                         "Ytiles": 1,
                         "Xtiles": 1,
                         "AnimationSpeed": 0.0,
                         "IsRandomFrame": true,
-                        "InitColor": [
-                            0.2392156422138214,
-                            0.9803921580314636,
-                            0.893194854259491,
-                            1.0
-                        ],
-                        "FinalColor": [
-                            0.14215683937072755,
-                            0.14215540885925294,
-                            0.14215540885925294,
-                            1.0
-                        ],
-                        "StartTransition": 0.0,
-                        "EndTransition": 0.23000000417232514,
+                        "TextureId": 18076704291587492614,
+                        "BillboardType": 0,
+                        "ParticleRenderMode": 0,
                         "FlipTexture": [
                             false,
                             false
                         ],
-                        "ConeRadiusUp": 1.0,
-                        "ConeRadiusDown": 0.5
+                        "HasCollision": false,
+                        "LayerIndex": 0
                     }
                 ],
                 "Children": null
@@ -179,44 +191,56 @@
                     {
                         "Type": "Particle",
                         "Active": true,
-                        "EmitterType": 1,
-                        "BillboardType": 0,
-                        "TextureId": 8245452397566252486,
+                        "DrawGizmo": false,
                         "IsPlaying": false,
-                        "IsLooping": false,
-                        "IsSizeOverTime": true,
-                        "ScaleFactor": 35.0,
-                        "ParticleScale": 1.0,
-                        "MaxParticle": 4,
-                        "Velocity": 1.0,
-                        "LifeParticle": 0.30000001192092898,
-                        "DistanceReverse": 0.0,
-                        "ReverseEffect": true,
                         "StartDelay": 0.3700000047683716,
+                        "Duration": 0.30000001192092898,
+                        "Looping": false,
+                        "Life": 0.30000001192092898,
+                        "Velocity": 1.0,
+                        "Scale": 1.0,
+                        "ReverseEffect": true,
+                        "ReverseDistance": 0.0,
+                        "MaxParticle": 4,
+                        "AttachEmitter": true,
+                        "ParticleEmitterType": 1,
+                        "ConeRadiusUp": 1.0,
+                        "ConeRadiusDown": 0.5,
+                        "RandomConeRadiusUp": false,
+                        "RandomConeRadiusDown": false,
+                        "SizeOverLifetime": true,
+                        "ScaleFactor": 35.0,
+                        "ColorOverLifetime": true,
+                        "GradientColors": [
+                            [
+                                0.0,
+                                0.49803921580314639,
+                                1.0,
+                                1.0,
+                                0.754448652267456
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0,
+                                0.9964417219161987
+                            ]
+                        ],
+                        "NumberColors": 2,
                         "Ytiles": 1,
                         "Xtiles": 1,
                         "AnimationSpeed": 0.0,
                         "IsRandomFrame": false,
-                        "InitColor": [
-                            0.0,
-                            0.5588235855102539,
-                            1.0,
-                            1.0
-                        ],
-                        "FinalColor": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            1.0
-                        ],
-                        "StartTransition": 0.20000000298023225,
-                        "EndTransition": 0.3499999940395355,
+                        "TextureId": 8245452397566252486,
+                        "BillboardType": 0,
+                        "ParticleRenderMode": 0,
                         "FlipTexture": [
                             false,
                             false
                         ],
-                        "ConeRadiusUp": 1.0,
-                        "ConeRadiusDown": 0.5
+                        "HasCollision": false,
+                        "LayerIndex": 0
                     }
                 ],
                 "Children": null
@@ -255,44 +279,56 @@
                     {
                         "Type": "Particle",
                         "Active": true,
-                        "EmitterType": 1,
-                        "BillboardType": 0,
-                        "TextureId": 18076704291587492614,
+                        "DrawGizmo": false,
                         "IsPlaying": false,
-                        "IsLooping": false,
-                        "IsSizeOverTime": true,
-                        "ScaleFactor": 50.0,
-                        "ParticleScale": 2.0,
-                        "MaxParticle": 2,
-                        "Velocity": 0.10000000149011612,
-                        "LifeParticle": 0.5,
-                        "DistanceReverse": 0.0,
-                        "ReverseEffect": true,
                         "StartDelay": 0.3700000047683716,
+                        "Duration": 0.5,
+                        "Looping": false,
+                        "Life": 0.5,
+                        "Velocity": 0.10000000149011612,
+                        "Scale": 2.0,
+                        "ReverseEffect": true,
+                        "ReverseDistance": 0.0,
+                        "MaxParticle": 2,
+                        "AttachEmitter": true,
+                        "ParticleEmitterType": 1,
+                        "ConeRadiusUp": 1.0,
+                        "ConeRadiusDown": 0.5,
+                        "RandomConeRadiusUp": false,
+                        "RandomConeRadiusDown": false,
+                        "SizeOverLifetime": true,
+                        "ScaleFactor": 50.0,
+                        "ColorOverLifetime": true,
+                        "GradientColors": [
+                            [
+                                0.0,
+                                0.46666666865348818,
+                                1.0,
+                                1.0,
+                                0.5266904830932617
+                            ],
+                            [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0,
+                                0.9822065234184265
+                            ]
+                        ],
+                        "NumberColors": 2,
                         "Ytiles": 1,
                         "Xtiles": 1,
                         "AnimationSpeed": 0.0,
                         "IsRandomFrame": false,
-                        "InitColor": [
-                            0.0,
-                            0.47058820724487307,
-                            1.0,
-                            1.0
-                        ],
-                        "FinalColor": [
-                            9.999999974752428e-7,
-                            9.999899930335233e-7,
-                            9.999899930335233e-7,
-                            1.0
-                        ],
-                        "StartTransition": 0.28999999165534975,
-                        "EndTransition": 0.46000000834465029,
+                        "TextureId": 18076704291587492614,
+                        "BillboardType": 0,
+                        "ParticleRenderMode": 0,
                         "FlipTexture": [
                             false,
                             false
                         ],
-                        "ConeRadiusUp": 1.0,
-                        "ConeRadiusDown": 0.5
+                        "HasCollision": false,
+                        "LayerIndex": 0
                     }
                 ],
                 "Children": null
@@ -331,44 +367,56 @@
                     {
                         "Type": "Particle",
                         "Active": true,
-                        "EmitterType": 1,
-                        "BillboardType": 2,
-                        "TextureId": 18076704291587492614,
+                        "DrawGizmo": false,
                         "IsPlaying": false,
-                        "IsLooping": false,
-                        "IsSizeOverTime": true,
-                        "ScaleFactor": 70.0,
-                        "ParticleScale": 5.0,
-                        "MaxParticle": 1,
-                        "Velocity": 0.10000000149011612,
-                        "LifeParticle": 0.5,
-                        "DistanceReverse": 0.0,
-                        "ReverseEffect": true,
                         "StartDelay": 0.3700000047683716,
+                        "Duration": 0.5,
+                        "Looping": false,
+                        "Life": 0.5,
+                        "Velocity": 0.10000000149011612,
+                        "Scale": 5.0,
+                        "ReverseEffect": true,
+                        "ReverseDistance": 0.0,
+                        "MaxParticle": 1,
+                        "AttachEmitter": true,
+                        "ParticleEmitterType": 1,
+                        "ConeRadiusUp": 1.0,
+                        "ConeRadiusDown": 0.5,
+                        "RandomConeRadiusUp": false,
+                        "RandomConeRadiusDown": false,
+                        "SizeOverLifetime": true,
+                        "ScaleFactor": 70.0,
+                        "ColorOverLifetime": true,
+                        "GradientColors": [
+                            [
+                                0.21960784494876862,
+                                0.41960784792900088,
+                                0.45098039507865908,
+                                1.0,
+                                0.5824797749519348
+                            ],
+                            [
+                                9.999999974752428e-7,
+                                9.999899930335233e-7,
+                                9.999899930335233e-7,
+                                1.0,
+                                0.9928829669952393
+                            ]
+                        ],
+                        "NumberColors": 2,
                         "Ytiles": 1,
                         "Xtiles": 1,
                         "AnimationSpeed": 0.0,
                         "IsRandomFrame": false,
-                        "InitColor": [
-                            0.2234717309474945,
-                            0.4212875962257385,
-                            0.45588237047195437,
-                            1.0
-                        ],
-                        "FinalColor": [
-                            9.999999974752428e-7,
-                            9.999899930335233e-7,
-                            9.999899930335233e-7,
-                            1.0
-                        ],
-                        "StartTransition": 0.27000001072883608,
-                        "EndTransition": 0.4399999976158142,
+                        "TextureId": 18076704291587492614,
+                        "BillboardType": 2,
+                        "ParticleRenderMode": 0,
                         "FlipTexture": [
                             false,
                             false
                         ],
-                        "ConeRadiusUp": 1.0,
-                        "ConeRadiusDown": 0.5
+                        "HasCollision": false,
+                        "LayerIndex": 0
                     }
                 ],
                 "Children": null
@@ -407,44 +455,56 @@
                     {
                         "Type": "Particle",
                         "Active": true,
-                        "EmitterType": 1,
-                        "BillboardType": 0,
-                        "TextureId": 12441453756307210230,
+                        "DrawGizmo": false,
                         "IsPlaying": false,
-                        "IsLooping": false,
-                        "IsSizeOverTime": true,
-                        "ScaleFactor": 80.0,
-                        "ParticleScale": 5.0,
-                        "MaxParticle": 1,
-                        "Velocity": 0.10000000149011612,
-                        "LifeParticle": 0.20000000298023225,
-                        "DistanceReverse": 0.0,
-                        "ReverseEffect": true,
                         "StartDelay": 0.41999998688697817,
+                        "Duration": 0.20000000298023225,
+                        "Looping": false,
+                        "Life": 0.20000000298023225,
+                        "Velocity": 0.10000000149011612,
+                        "Scale": 5.0,
+                        "ReverseEffect": true,
+                        "ReverseDistance": 0.0,
+                        "MaxParticle": 1,
+                        "AttachEmitter": true,
+                        "ParticleEmitterType": 1,
+                        "ConeRadiusUp": 1.0,
+                        "ConeRadiusDown": 0.5,
+                        "RandomConeRadiusUp": false,
+                        "RandomConeRadiusDown": false,
+                        "SizeOverLifetime": true,
+                        "ScaleFactor": 80.0,
+                        "ColorOverLifetime": true,
+                        "GradientColors": [
+                            [
+                                0.7803921699523926,
+                                0.7803921699523926,
+                                0.7803921699523926,
+                                1.0,
+                                0.5978648066520691
+                            ],
+                            [
+                                9.999999974752428e-7,
+                                9.999899930335233e-7,
+                                9.999899930335233e-7,
+                                1.0,
+                                0.9857650995254517
+                            ]
+                        ],
+                        "NumberColors": 2,
                         "Ytiles": 1,
                         "Xtiles": 1,
                         "AnimationSpeed": 0.0,
                         "IsRandomFrame": false,
-                        "InitColor": [
-                            0.7843137383460999,
-                            0.7843058705329895,
-                            0.7843058705329895,
-                            1.0
-                        ],
-                        "FinalColor": [
-                            9.999999974752428e-7,
-                            9.999899930335233e-7,
-                            9.999899930335233e-7,
-                            1.0
-                        ],
-                        "StartTransition": 0.10000000149011612,
-                        "EndTransition": 0.15000000596046449,
+                        "TextureId": 12441453756307210230,
+                        "BillboardType": 0,
+                        "ParticleRenderMode": 0,
                         "FlipTexture": [
                             false,
                             false
                         ],
-                        "ConeRadiusUp": 1.0,
-                        "ConeRadiusDown": 0.5
+                        "HasCollision": false,
+                        "LayerIndex": 0
                     }
                 ],
                 "Children": null

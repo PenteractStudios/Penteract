@@ -61,7 +61,7 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 }
 
 void Fang::GetHit(float damage_) {
-	
+
 	if (!dashing) {
 		Player::GetHit(damage_);
 	}
@@ -151,10 +151,10 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 	}
 
 	//Attack Cooldown
-	if (shooting) {
+	if (shootingOnCooldown) {
 		if (attackCooldownRemaining <= 0.f) {
 			attackCooldownRemaining = 0.f;
-			shooting = false;
+			shootingOnCooldown = false;
 		} else {
 			attackCooldownRemaining -= Time::GetDeltaTime();
 		}
@@ -172,6 +172,15 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 	}
 }
 
+void Fang::OnAnimationFinished() {
+	if (compAnimation->GetCurrentState()) {
+		if (compAnimation->GetCurrentState()->name == "EMP") {
+			compAnimation->SendTrigger(states[21] + states[0]);
+			EMP->Disable();
+		}
+	}
+}
+
 float Fang::GetRealDashCooldown() {
 	return 1.0f - (dashCooldownRemaining / dashCooldown);
 }
@@ -182,12 +191,12 @@ float Fang::GetRealEMPCooldown()
 }
 
 bool Fang::CanShoot() {
-	return !shooting;
+	return !shootingOnCooldown;
 }
 
 void Fang::Shoot() {
 	if (CanShoot()) {
-		shooting = true;
+		shootingOnCooldown = true;
 		attackCooldownRemaining = 1.f / attackSpeed;
 		if (playerAudios[static_cast<int>(AudioPlayer::SHOOT)]) {
 			playerAudios[static_cast<int>(AudioPlayer::SHOOT)]->Play();
