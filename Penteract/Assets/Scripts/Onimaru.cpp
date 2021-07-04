@@ -72,11 +72,6 @@ void Onimaru::Blast() {
 		}
 		blastInCooldown = true;
 		currentBlastDuration = 0.f;
-		blastInUse = false;
-
-		if (compAnimation) {
-			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
-		}
 	}
 	else {
 		currentBlastDuration += Time::GetDeltaTime();
@@ -131,12 +126,18 @@ void Onimaru::OnDeath() {
 void Onimaru::OnAnimationFinished() {
 	//TODO use for ultimate ability
 	//Other abilities may also make use of this
-	if (blastInUse) {
-		if (compAnimation) {
-			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+}
+
+void Onimaru::OnAnimationSecondaryFinished() {
+	if (compAnimation) {
+		if (blastInUse) {
+			blastInUse = false;
+			if (compAnimation) {
+				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+			}
 		}
-		blastInUse = false;
 	}
+
 }
 
 void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID onimaruRightHandUID, UID cameraUID, UID canvasUID, float maxSpread_) {
@@ -194,25 +195,37 @@ void Onimaru::Update(bool lockMovement) {
 	if (isAlive) {
 		Player::Update();
 		if (!ultimateInUse && !blastInUse) {
-			if (Input::GetMouseButtonDown(0)) {
-				if (compAnimation) {
-					if (!shieldInUse) {
-						compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHOOTING)]);
-					} else {
-						compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHOOTSHIELD)]);
+			if (Input::GetMouseButtonRepeat(0) || Input::GetMouseButtonDown(0)) {
+				if (!shooting) {
+					if (compAnimation) {
+						if (!shieldInUse) {
+							compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHOOTING)]);
+						}
+						else {
+							compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHOOTSHIELD)]);
+						}
 					}
+					shooting = true;
 				}
-				shooting = true;
-			} else if (Input::GetMouseButtonRepeat(0)) {
-				Shoot();
+				else {
+					Shoot();
+				}
 			} else if (Input::GetMouseButtonUp(0)) {
-				if (compAnimation) {
-					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+				if (shooting) {
+					if (compAnimation) {
+						compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+					}
+					shooting = false;
 				}
-				shooting = false;
 			}
 			if (CanBlast()) {
 				if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_Q)) {
+					if (shooting) {
+						shooting = false;
+						if (compAnimation) {
+							compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+						}
+					}
 					if (hudControllerScript) {
 						hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::ONIMARU_SKILL_2);
 					}

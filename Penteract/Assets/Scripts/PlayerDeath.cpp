@@ -54,6 +54,9 @@ void PlayerDeath::OnAnimationSecondaryFinished() {
 				playerController->playerFang.rightShot = false;
 			}
 		}
+		else {
+			playerController->playerOnimaru.OnAnimationSecondaryFinished();
+		}
 	}
 }
 
