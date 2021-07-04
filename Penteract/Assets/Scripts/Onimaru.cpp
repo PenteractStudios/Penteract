@@ -31,27 +31,31 @@ void Onimaru::PlayAnimation() {
 	if (!compAnimation) return;
 	if (ultimateInUse || !isAlive) return; //Ultimate will block out all movement and idle from happening
 
-	if (movementInputDirection == MovementDirection::NONE) {
-		//Primery state machine idle when alive, without input movement
-		if (compAnimation->GetCurrentState()->name != states[IDLE]) {
-			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(IDLE)]);
-		}
-	} else {
-		//If Movement is found, Primary state machine will be in charge of getting movement animations
-		if (compAnimation->GetCurrentState()->name != (states[GetMouseDirectionState()])) {
-			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState()]);
+	if (compAnimation->GetCurrentState()) {
+		if (movementInputDirection == MovementDirection::NONE) {
+			//Primery state machine idle when alive, without input movement
+			if (compAnimation->GetCurrentState()->name != states[IDLE]) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(IDLE)]);
+			}
+		} else {
+			//If Movement is found, Primary state machine will be in charge of getting movement animations
+			if (compAnimation->GetCurrentState()->name != (states[GetMouseDirectionState()])) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState()]);
+			}
 		}
 	}
 }
 
 void Onimaru::StartUltimate() {
 	if (!compAnimation) return;
-
-	if (compAnimation->GetCurrentStateSecondary()->name != compAnimation->GetCurrentState()->name) {
-		compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+	if (compAnimation->GetCurrentState()) {
+		if (compAnimation->GetCurrentStateSecondary()) {
+			if (compAnimation->GetCurrentStateSecondary()->name != compAnimation->GetCurrentState()->name) {
+				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+			}
+		}
+		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[ULTI_INTRO]);
 	}
-
-	compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[ULTI_INTRO]);
 
 	ultimateChargePoints = 0;
 	orientationSpeed = ultimateRotationSpeed;
@@ -83,7 +87,19 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 	if (noCooldownMode) {
 		ultimateChargePoints = ultimateChargePointsTotal;
 	}
+}
 
+void Onimaru::OnDeath() {
+	if (compAnimation == nullptr) return;
+	if (compAnimation->GetCurrentState()) {
+		if (compAnimation->GetCurrentState()->name != states[DEATH]) {
+			if (compAnimation->GetCurrentStateSecondary()) {
+				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+			}
+			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(DEATH)]);
+		}
+	}
+	ultimateInUse = blastInUse = shieldInUse = false;
 }
 
 bool Onimaru::CanSwitch() const {
@@ -147,16 +163,10 @@ void Onimaru::OnAnimationFinished() {
 	if (!compAnimation)return;
 	if (ultimateInUse) {
 		ultimateTimeRemaining = ultimateTotalTime;
-		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(ULTI_LOOP)]);
+		if (compAnimation->GetCurrentState()) {
+			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(ULTI_LOOP)]);
+		}
 	}
-}
-
-void Onimaru::OnDeath() {
-	if (compAnimation->GetCurrentState()->name != states[DEATH]) {
-		compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
-		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(DEATH)]);
-	}
-	ultimateInUse = blastInUse = shieldInUse = false;
 }
 
 
@@ -184,10 +194,14 @@ void Onimaru::Update(bool lockMovement, bool lockOrientation) {
 		if (!ultimateInUse && !blastInUse) {
 			if (Input::GetMouseButtonDown(0)) {
 				if (compAnimation) {
-					if (!shieldInUse) {
-						compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHOOTING)]);
-					} else {
-						compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHOOTSHIELD)]);
+					if (compAnimation->GetCurrentState()) {
+						if (compAnimation->GetCurrentStateSecondary()) {
+							if (!shieldInUse) {
+								compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHOOTING)]);
+							} else {
+								compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHOOTSHIELD)]);
+							}
+						}
 					}
 				}
 				shooting = true;
@@ -195,7 +209,9 @@ void Onimaru::Update(bool lockMovement, bool lockOrientation) {
 				Shoot();
 			} else if (Input::GetMouseButtonUp(0)) {
 				if (compAnimation) {
-					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+					if (compAnimation->GetCurrentState() && compAnimation->GetCurrentStateSecondary()) {
+						compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+					}
 				}
 				shooting = false;
 			}
