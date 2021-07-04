@@ -125,6 +125,12 @@ void Onimaru::OnDeath() {
 void Onimaru::OnAnimationFinished() {
 	//TODO use for ultimate ability
 	//Other abilities may also make use of this
+	if (blastInUse) {
+		if (compAnimation) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+		}
+		blastInUse = false;
+	}
 }
 
 void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID onimaruRightHandUID, UID cameraUID, UID canvasUID, float maxSpread_) {
@@ -199,9 +205,15 @@ void Onimaru::Update(bool lockMovement) {
 				}
 				shooting = false;
 			}
-
+			Debug::Log("Before blast");
 			if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_Q)) {
+				Debug::Log("Entering blast");
+				blastInUse = true;
 				Blast();
+				if (compAnimation) {
+					Debug::Log((compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(BLAST)]).c_str());
+					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(BLAST)]);
+				}
 			}
 		}
 		//TODO Ability handling
@@ -211,6 +223,8 @@ void Onimaru::Update(bool lockMovement) {
 		if (agent) agent->RemoveAgentFromCrowd();
 		movementInputDirection = MovementDirection::NONE;
 	}
+	Debug::Log("Secondary state:");
+	Debug::Log(compAnimation->GetCurrentStateSecondary()->name.c_str());
 	PlayAnimation();
 }
 

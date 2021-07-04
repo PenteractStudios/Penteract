@@ -76,7 +76,6 @@ private:
 	float blastCooldownRemaining = 0.f;
 	float blastRemaining = 0.f;
 	bool blastInCooldown = false;
-	bool blasting = false;
 
 	// HUD
 	HUDController* hudControllerScript = nullptr;
