@@ -32,7 +32,7 @@ public:
 					"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
 					"EnergyBlast", "" , "UltiIntro" , "UltiLoop" ,
 					"Death" , "Shooting", "Shield","ShootingShield" ,
-					"RunForwardLeft","RunForwardRight", "RunBackwardLeft", "RunBarckwardRight"
+					"RunForwardLeft","RunForwardRight", "RunBackwardLeft", "RunBackwardRight"
 	};
 
 	// Blast ability
@@ -78,6 +78,7 @@ private:
 	float blastCooldownRemaining = 0.f;
 	float blastRemaining = 0.f;
 	bool blastInCooldown = false;
+	bool calculateEnemiesInRange = true;
 
 	// HUD
 	HUDController* hudControllerScript = nullptr;

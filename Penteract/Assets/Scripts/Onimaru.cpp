@@ -34,7 +34,8 @@ void Onimaru::Shoot() {
 
 void Onimaru::Blast() {
 	bool releaseBlast = currentBlastDuration <= blastDuration / 2.0f ? false : true;
-	if (releaseBlast) {
+	if (releaseBlast && calculateEnemiesInRange) {
+		calculateEnemiesInRange = false;
 		for (GameObject* enemy : enemiesInMap) {
 			AIMeleeGrunt* meleeScript = GET_SCRIPT(enemy, AIMeleeGrunt);
 			RangedAI* rangedScript = GET_SCRIPT(enemy, RangedAI);
@@ -70,12 +71,10 @@ void Onimaru::Blast() {
 				}
 			}
 		}
-		blastInCooldown = true;
-		currentBlastDuration = 0.f;
 	}
 	else {
 		currentBlastDuration += Time::GetDeltaTime();
-		blastInUse = true;
+		if (currentBlastDuration >= 1.8f) OnAnimationSecondaryFinished(); // Temporary hack
 	}
 }
 
@@ -131,7 +130,11 @@ void Onimaru::OnAnimationFinished() {
 void Onimaru::OnAnimationSecondaryFinished() {
 	if (compAnimation) {
 		if (blastInUse) {
+			Debug::Log("Finish blast");
 			blastInUse = false;
+			blastInCooldown = true;
+			currentBlastDuration = 0.f;
+			calculateEnemiesInRange = true;
 			if (compAnimation) {
 				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 			}
@@ -220,6 +223,7 @@ void Onimaru::Update(bool lockMovement) {
 			}
 			if (CanBlast()) {
 				if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_Q)) {
+					blastInUse = true;
 					if (shooting) {
 						shooting = false;
 						if (compAnimation) {
@@ -241,6 +245,7 @@ void Onimaru::Update(bool lockMovement) {
 		//TODO Ability handling
 		//Whenever an ability starts being used, make sure that as well as setting the secondary trigger to whatever, if (shooting was true, it must be turned to false)
 		if (blastInUse) {
+			//Debug::Log(compAnimation->GetCurrentStateSecondary()->name.c_str());
 			Blast();
 		}
 
