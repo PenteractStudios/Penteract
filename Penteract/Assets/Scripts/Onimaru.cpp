@@ -45,7 +45,6 @@ void Onimaru::PlayAnimation() {
 }
 
 void Onimaru::StartUltimate() {
-	//TODO COOLDOWN MANAGEMENT
 	if (!compAnimation) return;
 
 	if (compAnimation->GetCurrentStateSecondary()->name != compAnimation->GetCurrentState()->name) {
@@ -55,7 +54,6 @@ void Onimaru::StartUltimate() {
 	compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[ULTI_INTRO]);
 
 	ultimateChargePoints = 0;
-	//ultimateTimeRemaining = ultimateTotalTime;
 	orientationSpeed = ultimateRotationSpeed;
 	attackSpeed = ultimateAttackSpeed;
 	movementInputDirection = MovementDirection::NONE;
@@ -81,6 +79,11 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 	} else {
 		attackCooldownRemaining -= Time::GetDeltaTime();
 	}
+
+	if (noCooldownMode) {
+		ultimateChargePoints = ultimateChargePointsTotal;
+	}
+
 }
 
 bool Onimaru::CanSwitch() const {
