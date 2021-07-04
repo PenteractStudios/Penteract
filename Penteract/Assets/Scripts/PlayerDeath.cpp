@@ -10,14 +10,14 @@
 
 EXPOSE_MEMBERS(PlayerDeath) {
 	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
-    MEMBER(MemberType::GAME_OBJECT_UID, playerUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, playerUID)
 };
 
 GENERATE_BODY_IMPL(PlayerDeath);
 
 void PlayerDeath::Start() {
 	player = GameplaySystems::GetGameObject(playerUID);
-	if(player) playerController = GET_SCRIPT(player, PlayerController);
+	if (player) playerController = GET_SCRIPT(player, PlayerController);
 }
 
 void PlayerDeath::Update() {
@@ -26,25 +26,30 @@ void PlayerDeath::Update() {
 			dead = playerController->IsPlayerDead();
 		}
 	}
-	
+
 }
 
 void PlayerDeath::OnAnimationFinished() {
 	if (dead) {
-		if(sceneUID != 0) SceneManager::ChangeScene(sceneUID);
-	}	
+		if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
+	} else {
+		if (!playerController)return;
+		if (playerController->playerFang.characterGameObject->IsActive()) {
+			playerController->playerFang.OnAnimationFinished();
+		} else {
+			playerController->playerOnimaru.OnAnimationFinished();
+		}
+	}
 }
 
-void PlayerDeath::OnAnimationSecondaryFinished()
-{
+void PlayerDeath::OnAnimationSecondaryFinished() {
 	if (playerController) {
 		if (playerController->playerFang.IsActive()) {
 			ComponentAnimation* animation = playerController->playerFang.compAnimation;
 			if (animation->GetCurrentStateSecondary()->name == LEFT_SHOT) {
 				animation->SendTriggerSecondary(playerController->playerFang.states[10] + animation->GetCurrentState()->name);
 				playerController->playerFang.rightShot = true;
-			}
-			else if(animation->GetCurrentStateSecondary()->name == RIGHT_SHOT) {
+			} else if (animation->GetCurrentStateSecondary()->name == RIGHT_SHOT) {
 				animation->SendTriggerSecondary(playerController->playerFang.states[11] + animation->GetCurrentState()->name);
 				playerController->playerFang.rightShot = false;
 			}
@@ -52,12 +57,11 @@ void PlayerDeath::OnAnimationSecondaryFinished()
 	}
 }
 
-void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance) {
-	
+void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+
 	if (collidedWith.name == "RangerProjectile") {
 		playerController->TakeDamage(true);
-	}
-	else if (collidedWith.name == "MeleePunch") {
+	} else if (collidedWith.name == "MeleePunch") {
 		playerController->TakeDamage(false);
 	}
 }

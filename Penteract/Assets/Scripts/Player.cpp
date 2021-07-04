@@ -1,20 +1,26 @@
 #include "Player.h"
+#include "CameraController.h"
 #include "Geometry/Plane.h"
 #include "Geometry/Frustum.h"
 #include "Geometry/LineSegment.h"
 
-void Player::SetAttackSpeed(float attackSpeed_)
-{
+void Player::SetAttackSpeed(float attackSpeed_) {
 	attackSpeed = attackSpeed_;
 }
 
-void Player::GetHit(float damage_)
-{
+void Player::GetHit(float damage_) {
+	//We assume that the player is always alive when this method gets called, so no need to check if character was alive before taking lives
+	if (cameraController) {
+		cameraController->StartShake();
+	}
+
 	lifePoints -= damage_;
 	if (playerAudios[static_cast<int>(AudioPlayer::HIT)]) playerAudios[static_cast<int>(AudioPlayer::HIT)]->Play();
 	isAlive = lifePoints > 0.0f;
+
 	if (!isAlive) {
 		if (playerAudios[static_cast<int>(AudioPlayer::DEATH)]) playerAudios[static_cast<int>(AudioPlayer::DEATH)]->Play();
+		OnDeath();
 	}
 }
 
@@ -30,9 +36,8 @@ void Player::MoveTo() {
 	agent->SetMoveTarget(newPosition, false);
 }
 
-bool Player::CanShoot()
-{
-	return !shooting;
+bool Player::CanShoot() {
+	return !shootingOnCooldown;
 }
 
 MovementDirection Player::GetInputMovementDirection() const {
@@ -64,23 +69,36 @@ int Player::GetMouseDirectionState() {
 	float dot = Dot(inputDirection.Normalized(), facePointDir.Normalized());
 	float3 cross = Cross(inputDirection.Normalized(), facePointDir.Normalized());
 
-	if (dot > 0.707) {
+	// 45� for all animations (Magic numbers 0.923 , 0.383)
+	// 60� for axis and 30 for diagonals animations (Magic numbers 0.866 , 0.5)
+
+	if (dot >= 0.923) {
 		return 2; //RunForward
-	}
-	else if (dot < -0.707) {
+	} else if (dot <= -0.923) {
 		return 1; //RunBackward
-	}
-	else if (cross.y > 0) {
+	} else if (dot >= 0.383 && dot < 0.923) {
+		if (cross.y > 0) {
+			return 14; //RunForwardRight
+		} else {
+			return 13; //RunForwardLeft
+		}
+	} else if (dot > -0.923 && dot <= -0.383) {
+		if (cross.y > 0) {
+			return 16; //RunBackwardRight
+		} else {
+			return 15; //RunBackwarLeft
+		}
+	} else if (cross.y > 0) {
 		return 4; //RunRight
-	}
-	else {
-		return 3; //RunLeft
-	}
+	} else return 3; //RunLeft
 }
 
-bool Player::IsActive()
-{
+bool Player::IsActive() {
 	return (characterGameObject) ? characterGameObject->IsActive() : false;
+}
+
+void Player::IncreaseUltimateCounter() {
+	ultimateChargePoints++;
 }
 
 float3 Player::GetDirection() const {
@@ -132,7 +150,7 @@ void Player::LookAtMouse() {
 }
 
 void Player::Update(bool lockMovement) {
-	if(!lockMovement){
+	if (!lockMovement) {
 		movementInputDirection = GetInputMovementDirection();
 		MoveTo();
 		LookAtMouse();
