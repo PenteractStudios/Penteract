@@ -41,8 +41,6 @@ void DroneWayPoints::CheckWayPoint()
     if (!ownerTransform || wayPoints.size() == 0){
         return;
     }
-    std::string aux = "Current " + std::to_string(currentWayPoint);
-    Debug::Log(aux.c_str());
 
     if (wayPoints[currentWayPoint]) {
         ComponentTransform *destinyTransform = wayPoints[currentWayPoint]->GetComponent<ComponentTransform>();
