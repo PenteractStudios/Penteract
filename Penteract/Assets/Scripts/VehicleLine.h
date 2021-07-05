@@ -2,6 +2,7 @@
 
 #include "Scripting/Script.h"
 
+#include <queue>
 #include <vector>
 
 class ComponentTransform;

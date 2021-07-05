@@ -58,18 +58,24 @@ void VehicleLine::Update() {
 
 void VehicleLine::UpdateVehicles()
 {
+    int vehiclesToClear = 0;
     for (GameObject* vehicle : vehicles) {
         ComponentTransform* transformVehicle = vehicle->GetComponent<ComponentTransform>();
         if (!transformVehicle) return;
         float3 position = transformVehicle->GetGlobalPosition();
-        float3 direction = float3(1, 0, 0);
+        float3 direction = transformVehicle->GetGlobalRotation() * float3(1, 0, 0);
         float3 velocity = direction.Normalized() * speed;
         position += velocity * Time::GetDeltaTime();
         transformVehicle->SetGlobalPosition(position);
         if (VehicleOutsideMap(transformVehicle->GetGlobalPosition())){
             GameplaySystems::DestroyGameObject(vehicle);
+            ++vehiclesToClear;
         }
     }
+    for (int i = 0; i < vehiclesToClear; ++i) {
+        vehicles.erase(vehicles.begin());
+    }
+    
 }
 
 bool VehicleLine::VehicleOutsideMap(const float3 posVehicle)
