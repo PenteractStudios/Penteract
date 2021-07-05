@@ -67,6 +67,11 @@
                         "Value": 7691413884628165645
                     },
                     {
+                        "Name": "meshUID2",
+                        "Type": "GameObjectUID",
+                        "Value": 7691413884628165645
+                    },
+                    {
                         "Name": "approachOffset",
                         "Type": "Float",
                         "Value": 5.0
@@ -192,7 +197,7 @@
                 "Type": "CapsuleCollider",
                 "Active": true,
                 "colliderType": 2,
-                "layerType": 3,
+                "layerType": 4,
                 "mass": 1.0,
                 "radius": 1.0,
                 "height": 1.8300000429153443,

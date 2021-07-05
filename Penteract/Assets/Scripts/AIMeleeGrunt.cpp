@@ -132,6 +132,7 @@ void AIMeleeGrunt::Update() {
 	case AIState::START:
 		movementScript->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), gruntCharacter.fallingSpeed, true);
 		if (ownerTransform->GetGlobalPosition().y < 3.5f + 0e-5f) {
+			ownerTransform->SetGlobalPosition(float3(ownerTransform->GetGlobalPosition().x, 3.0f, ownerTransform->GetGlobalPosition().z));
 			animation->SendTrigger("StartSpawn");
 			if (audios[static_cast<int>(AudioType::SPAWN)]) audios[static_cast<int>(AudioType::SPAWN)]->Play();
 			state = AIState::SPAWN;
