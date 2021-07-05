@@ -9,6 +9,7 @@
 EXPOSE_MEMBERS(EnemySpawnPoint) {
 	MEMBER(MemberType::FLOAT, xAxisPos),
 	MEMBER(MemberType::FLOAT, zAxisPos),
+	MEMBER(MemberType::INT, offset),
 	MEMBER(MemberType::INT, firstWaveMeleeAmount),
 	MEMBER(MemberType::INT, firstWaveRangeAmount),
 	MEMBER(MemberType::INT, secondWaveMeleeAmount),

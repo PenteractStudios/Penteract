@@ -4,6 +4,7 @@
 
 class OnimaruBullet;
 class HUDController;
+class Shield;
 
 class Onimaru : public Player {
 public:
@@ -43,7 +44,7 @@ public:
 public:
 	// ------- Contructors ------- //
 	Onimaru() {};
-	void Init(UID onimaruUID = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0, UID cameraUID = 0, UID canvasUID = 0, float maxSpread = 5.0f);
+	void Init(UID onimaruUID = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0,UID shieldUID = 0, UID cameraUID = 0, UID canvasUID = 0, float maxSpread = 5.0f);
 	void Update(bool lockMovement = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	void OnDeath() override;
@@ -54,10 +55,13 @@ public:
 
 	// Abilities' cooldowns
 	float GetRealBlastCooldown();
+	float GetRealShieldCooldown();
 
 	/* Update enemies' vector */
 	void AddEnemy(GameObject* enemy);
 	void RemoveEnemy(GameObject* enemy);
+	bool IsShielding();
+	
 private:
 
 	ResourcePrefab* trail = nullptr;
@@ -66,7 +70,12 @@ private:
 	ComponentTransform* rightHand = nullptr;
 	ComponentParticleSystem* compParticle = nullptr;
 
-	bool shieldInUse = false;
+	Shield* shield = nullptr;
+	GameObject* shieldGO = nullptr;
+	
+	bool shieldInCooldown = false;
+	float shieldCooldownRemaining = 0.f;
+
 	bool blastInUse = false;
 	bool ultimateInUse = false;
 
@@ -92,5 +101,8 @@ private:
 	void Shoot() override;
 	void Blast();
 	void PlayAnimation();
+	void InitShield();
+	void FadeShield();
+	bool CanShield();
 
 };
