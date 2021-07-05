@@ -44,12 +44,12 @@
                     {
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
-                        "Value": 403437826872113792
+                        "Value": 9349791306028942696
                     },
                     {
                         "Name": "playerMeshUIDFang",
                         "Type": "GameObjectUID",
-                        "Value": 7570567483379837993
+                        "Value": 2487887245066891169
                     },
                     {
                         "Name": "fleeingRange",
@@ -59,7 +59,12 @@
                     {
                         "Name": "playerMeshUIDOnimaru",
                         "Type": "GameObjectUID",
-                        "Value": 17646006585412658978
+                        "Value": 3106065943855864347
+                    },
+                    {
+                        "Name": "meshUID2",
+                        "Type": "GameObjectUID",
+                        "Value": 7691413884628165645
                     },
                     {
                         "Name": "meshUID2",

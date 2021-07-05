@@ -7,6 +7,6 @@
     ],
     "Flip": false,
     "Wrap": 0,
-    "MinFilter": 3,
+    "MinFilter": 5,
     "MagFilter": 1
 }
