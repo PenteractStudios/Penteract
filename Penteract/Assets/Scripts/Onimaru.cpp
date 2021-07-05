@@ -101,6 +101,7 @@ bool Onimaru::IsShielding() {
 }
 
 float Onimaru::GetRealShieldCooldown() {
+	if (shield == nullptr || shieldGO == nullptr) return;
 	float realShieldCooldown = 1.0f;
 	float chargesWasted = (float)(shield->max_charges - shield->GetNumCharges()) / (float)shield->max_charges;
 	if (shield->GetIsActive()) {
@@ -205,9 +206,9 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 	shieldGO = GameplaySystems::GetGameObject(shieldUID);
 	if (shieldGO) {
 		shield = GET_SCRIPT(shieldGO, Shield);
+		shieldGO->Disable();
 	}
 
-	shieldGO->Disable();
 	bullet = GameplaySystems::GetResource<ResourcePrefab>(onimaruBulletUID);
 
 	if (characterGameObject) {
@@ -226,10 +227,14 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 }
 
 bool Onimaru::CanShield() {
+	if (shield == nullptr || shieldGO == nullptr) return false;
+
 	return !shieldInCooldown && !shield->GetIsActive();
 }
 
 void Onimaru::InitShield() {
+	if (shield == nullptr || shieldGO == nullptr) return;
+
 	if (CanShield()) {
 
 		shield->InitShield();
@@ -255,6 +260,7 @@ void Onimaru::InitShield() {
 }
 
 void Onimaru::FadeShield() {
+	if (shield == nullptr || shieldGO == nullptr) return;
 	shield->FadeShield();
 	shieldInCooldown = true;
 	shieldCooldownRemaining = shield->GetCoolDown();
@@ -277,6 +283,7 @@ void Onimaru::FadeShield() {
 
 
 void Onimaru::Update(bool lockMovement) {
+	if (shield == nullptr || shieldGO == nullptr) return;
 	if (isAlive) {
 		Player::Update();
 		if (!ultimateInUse && !blastInUse) {
