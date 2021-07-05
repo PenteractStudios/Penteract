@@ -179,7 +179,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 			ChangeState(AIState::DEATH);
 			if (winLoseScript) winLoseScript->IncrementDeadEnemies();
 			if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
-			if (playerController) {
+			if (playerController && playerController->playerFang.characterGameObject) {
 				if (playerController->playerFang.characterGameObject->IsActive()) {
 					playerController->playerFang.IncreaseUltimateCounter();
 				}
