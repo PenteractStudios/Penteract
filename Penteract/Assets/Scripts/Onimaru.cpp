@@ -13,7 +13,7 @@ bool Onimaru::CanShoot() {
 }
 
 bool Onimaru::CanBlast() {
-	return !blastInCooldown && !IsShielding() && ultimateInUse;
+	return !blastInCooldown && !IsShielding() && !ultimateInUse;
 }
 
 void Onimaru::Shoot() {
@@ -307,7 +307,7 @@ void Onimaru::OnAnimationFinished() {
 bool Onimaru::CanShield() {
 	if (shield == nullptr || shieldGO == nullptr) return false;
 
-	return !shieldInCooldown && !shield->GetIsActive();
+	return !shieldInCooldown && !shield->GetIsActive() && !ultimateInUse;
 }
 
 void Onimaru::InitShield() {
