@@ -71,7 +71,6 @@ public:
 
 	UID swapingSkillCanvasUID = 0;
 
-
 	UID scoreTextUID = 0;
 
 	UID canvasHUDUID = 0;
@@ -124,7 +123,7 @@ private:
 	const float4 colorWhite = float4(255, 255, 255, 255) / 255;
 
 	const float3 colorBlueForCD = float3(47.0f, 187.0f, 200.0f) / 255.0f;
-
+	const float4 colorBlueBackground = float4(0, 81, 127, 255) / 255;
 
 	int prevLivesFang = MAX_HEALTH;
 	int prevLivesOni = MAX_HEALTH;
