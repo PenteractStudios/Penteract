@@ -26,9 +26,9 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, gruntCharacter.attackRange),
 	MEMBER(MemberType::FLOAT, gruntCharacter.timeToDie),
-	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
 	MEMBER(MemberType::FLOAT, gruntCharacter.pushBackDistance),
-	MEMBER(MemberType::FLOAT, gruntCharacter.pushBackSpeed)
+	MEMBER(MemberType::FLOAT, gruntCharacter.pushBackSpeed),
+	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration)
 };
 
 GENERATE_BODY_IMPL(AIMeleeGrunt);
@@ -234,41 +234,35 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 
 		}
 
-        if (!gruntCharacter.isAlive) {
-            deadType = (rand() % 2 == 0) ? true : false;
-            if (state == AIState::ATTACK) {
-                if (deadType) {
-                    animation->SendTrigger("RunDeath1");
-                    animation->SendTriggerSecondary("AttackDeath1");
-                }
-                else {
-                    animation->SendTrigger("RunDeath2");
-                    animation->SendTriggerSecondary("AttackDeath2");
-                }
-                
-            }
-            else if (state == AIState::IDLE) {
-                if (deadType) {
-                    animation->SendTrigger("IdleDeath1");
-                }
-                else {
-                    animation->SendTrigger("IdleDeath1");
-                }
-            }
-            else if (state == AIState::RUN) {
-                if (deadType) {
-                    animation->SendTrigger("RunDeath1");
-                }
-                else {
-                    animation->SendTrigger("RunDeath2");
-                }
-            } else if (state == AIState::PUSHED) {
+		if (!gruntCharacter.isAlive) {
+			deadType = (rand() % 2 == 0) ? true : false;
+			if (state == AIState::ATTACK) {
 				if (deadType) {
-                    animation->SendTrigger("HurtDeath1");
-                }
-                else {
-                    animation->SendTrigger("HurtDeath2");
-                }
+					animation->SendTrigger("RunDeath1");
+					animation->SendTriggerSecondary("AttackDeath1");
+				} else {
+					animation->SendTrigger("RunDeath2");
+					animation->SendTriggerSecondary("AttackDeath2");
+				}
+
+			} else if (state == AIState::IDLE) {
+				if (deadType) {
+					animation->SendTrigger("IdleDeath1");
+				} else {
+					animation->SendTrigger("IdleDeath1");
+				}
+			} else if (state == AIState::RUN) {
+				if (deadType) {
+					animation->SendTrigger("RunDeath1");
+				} else {
+					animation->SendTrigger("RunDeath2");
+				}
+			} else if (state == AIState::PUSHED) {
+				if (deadType) {
+					animation->SendTrigger("HurtDeath1");
+				} else {
+					animation->SendTrigger("HurtDeath2");
+				}
 			}
 
 			if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
