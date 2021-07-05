@@ -320,6 +320,9 @@ void Onimaru::InitShield() {
 	if (CanShield()) {
 
 		shield->InitShield();
+		if (shieldParticles) {
+			shieldParticles->Play();
+		}
 
 		shieldInCooldown = false;
 		if (agent) {
