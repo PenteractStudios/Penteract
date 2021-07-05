@@ -21,8 +21,8 @@ public:
 	bool useSmoothCamera = true;
 	float smoothCameraSpeed = 5.0f;
 	UID playerControllerObjUID = 0;
-	PlayerController* playerController;
-	ComponentTransform* transform;
+	PlayerController* playerController = nullptr;
+	ComponentTransform* transform = nullptr;
 	float shakeTotalTime = 1.0f;
 	float shakeTimer = 0.0f;
 	float shakeMultiplier = 0.2f;
