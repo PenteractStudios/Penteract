@@ -8,6 +8,7 @@
 
 class GameObject;
 class ResourcePrefab;
+class PlayerController;
 class SpawnPointController;
 
 class EnemySpawnPoint : public Script {
@@ -44,6 +45,10 @@ public:
 	/* Distance between the enemies */
 	unsigned int offset = 2;
 
+	/* Player */
+	UID playerUID = 0;
+
+
 private:
 	/* Owner */
 	GameObject* gameObject = nullptr;
@@ -51,6 +56,9 @@ private:
 	/* Prefabs */
 	ResourcePrefab* meleeEnemyPrefab = nullptr;
 	ResourcePrefab* rangeEnemyPrefab = nullptr;
+
+	/* Player Controller */
+	PlayerController* playerScript = nullptr;
 
 	/* Enemy vector & iterator */
 	std::vector<std::tuple<unsigned int, unsigned int>> enemies;

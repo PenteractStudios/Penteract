@@ -171,6 +171,9 @@ void Fang::OnAnimationFinished() {
 	}
 }
 
+void Fang::OnAnimationSecondaryFinished() {
+}
+
 float Fang::GetRealDashCooldown() {
 	return 1.0f - (dashCooldownRemaining / dashCooldown);
 }

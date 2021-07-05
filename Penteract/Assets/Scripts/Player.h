@@ -45,6 +45,7 @@ public:
 	void SetAttackSpeed(float attackSpeed_);
 	virtual void GetHit(float damage_) override;
 	virtual void OnAnimationFinished() = 0;
+	virtual void OnAnimationSecondaryFinished() = 0;
 
 	void LookAtMouse();
 	MovementDirection GetInputMovementDirection() const;

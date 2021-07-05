@@ -13,6 +13,7 @@ public:
 	void Update(bool lockMovement = false, bool lockRotation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	void OnAnimationFinished() override;
+	void OnAnimationSecondaryFinished() override;
 	void GetHit(float damage_) override;
 
 	float GetRealDashCooldown();
