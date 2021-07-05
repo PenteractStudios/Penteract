@@ -24,14 +24,20 @@ GENERATE_BODY_IMPL(VehicleLine);
 
 void VehicleLine::Start() {
 
-    vehiclesUID[1] = vehicle1;
-    vehiclesUID[2] = vehicle2;
+    vehiclesUID[0] = vehicle1;
+    vehiclesUID[1] = vehicle2;
+    vehiclesUID[2] = vehicle3;
+    vehiclesUID[3] = vehicle4;
+    vehiclesUID[4] = vehicle5;
+    vehiclesUID[5] = vehicle6;
+    vehiclesUID[6] = vehicle7;
+    vehiclesUID[7] = vehicle8;
+    vehiclesUID[8] = vehicle9;
 	
 }
 
 void VehicleLine::Update() {
 
-    UpdateVehicles();
     if (timeToSpawn <= 0) {
         while (actualVehicle == previousVehicle) {
             actualVehicle = rand() % 9;
@@ -46,6 +52,7 @@ void VehicleLine::Update() {
     else {
         timeToSpawn -= Time::GetDeltaTime();
     }
+    UpdateVehicles();
 	
 }
 
@@ -53,8 +60,10 @@ void VehicleLine::UpdateVehicles()
 {
     for (GameObject* vehicle : vehicles) {
         ComponentTransform* transformVehicle = vehicle->GetComponent<ComponentTransform>();
+        if (!transformVehicle) return;
         float3 position = transformVehicle->GetGlobalPosition();
-        float3 velocity = position.Normalized() * speed;
+        float3 direction = float3(1, 0, 0);
+        float3 velocity = direction.Normalized() * speed;
         position += velocity * Time::GetDeltaTime();
         transformVehicle->SetGlobalPosition(position);
         if (VehicleOutsideMap(transformVehicle->GetGlobalPosition())){
