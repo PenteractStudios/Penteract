@@ -80,6 +80,7 @@ void EnemySpawnPoint::Update() {
 
 /* Called each time an enemy dies */
 void EnemySpawnPoint::UpdateRemainingEnemies() {
+	Debug::Log("waveRemainingEnemies--");
 	waveRemainingEnemies--;
 }
 
