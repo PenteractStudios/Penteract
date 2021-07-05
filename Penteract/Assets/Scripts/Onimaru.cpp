@@ -310,6 +310,10 @@ bool Onimaru::CanShield() {
 	return !shieldInCooldown && !shield->GetIsActive() && !ultimateInUse;
 }
 
+bool Onimaru::CanUltimate() {
+	return !blastInUse && !IsShielding() && ultimateChargePoints >= ultimateChargePointsTotal;
+}
+
 void Onimaru::InitShield() {
 	if (shield == nullptr || shieldGO == nullptr) return;
 
@@ -367,7 +371,7 @@ void Onimaru::Update(bool lockMovement, bool lockOrientation) {
 
 		if (!ultimateInUse) {
 			if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_E)) {
-				if (ultimateChargePoints >= ultimateChargePointsTotal) {
+				if (CanUltimate()) {
 					StartUltimate();
 				}
 			}

@@ -125,5 +125,5 @@ private:
 	void InitShield();
 	void FadeShield();
 	bool CanShield();
-
+	bool CanUltimate();
 };
