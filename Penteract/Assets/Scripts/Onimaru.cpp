@@ -101,7 +101,7 @@ bool Onimaru::IsShielding() {
 }
 
 float Onimaru::GetRealShieldCooldown() {
-	if (shield == nullptr || shieldGO == nullptr) return;
+	if (shield == nullptr || shieldGO == nullptr) return 0.0f;
 	float realShieldCooldown = 1.0f;
 	float chargesWasted = (float)(shield->max_charges - shield->GetNumCharges()) / (float)shield->max_charges;
 	if (shield->GetIsActive()) {
