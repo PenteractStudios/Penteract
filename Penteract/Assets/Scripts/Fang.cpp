@@ -55,6 +55,10 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 
 }
 
+bool Fang::CanSwitch() const {
+	return true;
+}
+
 void Fang::GetHit(float damage_) {
 
 	if (!dashing) {
@@ -141,6 +145,9 @@ void Fang::OnAnimationFinished() {
 	//TODO use if necesary
 }
 
+void Fang::OnAnimationSecondaryFinished() {
+}
+
 float Fang::GetRealDashCooldown() {
 	return 1.0f - (dashCooldownRemaining / dashCooldown);
 }
@@ -159,7 +166,7 @@ void Fang::Shoot() {
 
 		ComponentTransform* shootingGunTransform = nullptr;
 		if (rightShot) {
-			if(compAnimation->GetCurrentState()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[11]);
+			if (compAnimation->GetCurrentState()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[11]);
 			shootingGunTransform = rightGunTransform;
 		} else {
 			if (compAnimation->GetCurrentState()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[10]);
@@ -189,8 +196,7 @@ void Fang::PlayAnimation() {
 					if (compAnimation->GetCurrentStateSecondary()) {
 						if (compAnimation->GetCurrentStateSecondary()->name == "RightShot") {
 							compAnimation->SendTriggerSecondary("RightShotDeath");
-						}
-						else if (compAnimation->GetCurrentStateSecondary()->name == "LeftShot") {
+						} else if (compAnimation->GetCurrentStateSecondary()->name == "LeftShot") {
 							compAnimation->SendTriggerSecondary("LeftShotDeath");
 						}
 					}
@@ -205,12 +211,12 @@ void Fang::PlayAnimation() {
 				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState() + dashAnimation]);
 			}
 		}
-	} 
+	}
 }
 
-void Fang::Update(bool useGamepad, bool lockMovement) {
+void Fang::Update(bool useGamepad, bool lockMovement, bool lockOrientation) {
 	if (isAlive) {
-		Player::Update(useGamepad, dashing);
+		Player::Update(useGamepad, dashing, dashing);
 		if (!dashing && GetInputBool(InputActions::ABILITY_1, useGamepad)) {
 			InitDash();
 		}

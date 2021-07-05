@@ -47,6 +47,9 @@ public:
 	bool IsPlayerDead() { return !playerFang.isAlive || !playerOnimaru.isAlive; }
 	void TakeDamage(bool ranged = false);
 	void SetUseGamepad(bool useGamepad_);
+
+	void AddEnemyInMap(GameObject* enemy);
+	void RemoveEnemyFromMap(GameObject* enemy);
 public:
 	//Debug
 	bool invincibleMode = false;
@@ -73,6 +76,9 @@ public:
 	UID onimaruParticleUID = 0;
 	UID onimaruBulletUID = 0;
 	UID onimaruGunUID = 0;
+	UID onimaruUltimateProjectileOriginUID = 0;
+	UID onimaruRightHandUID = 0;
+	UID onimaruShieldUID = 0;
 
 	//HUD
 	UID canvasUID = 0;
@@ -89,7 +95,7 @@ public:
 	float cameraOffsetX = 0.f;
 	bool useSmoothCamera = true;
 	float smoothCameraSpeed = 5.0f;
-	float maxOnimaruBulletSpread = 5.0f;
+	//float maxOnimaruBulletSpread = 5.0f;
 
 	//Switch
 	UID switchParticlesUID = 0;
@@ -101,6 +107,7 @@ public:
 	//split
 	float rangedDamageTaken = 1.0f;
 	float meleeDamageTaken = 1.0f;
+
 private:
 	void CheckCoolDowns();
 	void SwitchCharacter();

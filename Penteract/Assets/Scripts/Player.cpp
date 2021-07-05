@@ -150,20 +150,20 @@ bool Player::GetInputBool(InputActions action, bool useGamepad) {
 		if (useGamepad && Input::IsGamepadConnected(0)) {
 			return Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_TRIGGERLEFT, 0) > PRESSED_TRIGGER_THRESHOLD;
 		} else {
-			return Input::GetMouseButtonDown(2);
+			return Input::GetMouseButtonDown(2) || Input::GetMouseButtonRepeat(2);
 		}
 	case InputActions::ABILITY_2:
 		if (useGamepad && Input::IsGamepadConnected(0)) {
 			return Input::GetControllerButton(Input::SDL_CONTROLLER_BUTTON_LEFTSHOULDER, 0);
 		} else {
-			return Input::GetKeyCodeDown(Input::KEYCODE::KEY_E);
+			return Input::GetKeyCodeDown(Input::KEYCODE::KEY_Q);
 		}
 		break;
 	case InputActions::ABILITY_3:
 		if (useGamepad && Input::IsGamepadConnected(0)) {
 			return Input::GetControllerButton(Input::SDL_CONTROLLER_BUTTON_RIGHTSHOULDER, 0);
 		} else {
-			return Input::GetKeyCodeDown(Input::KEYCODE::KEY_R);
+			return Input::GetKeyCodeDown(Input::KEYCODE::KEY_E);
 		}
 		break;
 	default:
@@ -267,13 +267,49 @@ void Player::LookAtMouse() {
 	}
 }
 
-void Player::Update(bool useGamepad, bool lockMovement) {
+void Player::Update(bool useGamepad, bool lockMovement, bool lockOrientation) {
+	Quat quat = playerMainTransform->GetGlobalRotation();
+	float angle = Atan2(facePointDir.x, facePointDir.z);
+	Quat rotation = quat.RotateAxisAngle(float3(0, 1, 0), angle);
+
+	if (orientationSpeed == -1) {
+		playerMainTransform->SetGlobalRotation(rotation);
+	} else {
+		float3 aux2 = playerMainTransform->GetFront();
+		aux2.y = 0;
+
+		float angle = facePointDir.AngleBetween(aux2);
+		float3 cross = Cross(aux2, facePointDir.Normalized());
+		float dot = Dot(cross, float3(0, 1, 0));
+		float multiplier = 1.0f;
+
+		if (dot < 0) {
+			angle *= -1;
+			multiplier = -1;
+		}
+
+		if (Abs(angle) > DEGTORAD * orientationThreshold) {
+			Quat rotationToAdd;
+			rotationToAdd.SetFromAxisAngle(float3(0, 1, 0), multiplier * Time::GetDeltaTime() * orientationSpeed);
+			playerMainTransform->SetGlobalRotation(rotationToAdd * quat);
+		} else {
+			playerMainTransform->SetGlobalRotation(rotation);
+			Debug::Log("BelowThreshold");
+		}
+
+	}
+
+
 	if (!lockMovement) {
 
 		movementInputDirection = GetInputMovementDirection(useGamepad && Input::IsGamepadConnected(0));
 		MoveTo();
+	}
+
+	if (!lockOrientation) {
 		UpdateFacePointDir(useGamepad && Input::IsGamepadConnected(0));
 		LookAtFacePointTarget();
 	}
+
 }
 

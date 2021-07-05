@@ -7,6 +7,7 @@ enum class AIState {
 	RUN,
 	ATTACK,
 	FLEE,
+	PUSHED,
 	DEATH,
 	LENGTH
 };

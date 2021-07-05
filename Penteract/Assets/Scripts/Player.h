@@ -24,6 +24,7 @@ enum class AudioPlayer {
 	SHOOT,
 	HIT,
 	DEATH,
+	SPECIAL_SHOOT,
 	TOTAL
 };
 
@@ -54,14 +55,18 @@ public:
 	// ------- Core Functions ------ //
 	void SetAttackSpeed(float attackSpeed_);
 	virtual void GetHit(float damage_) override;
-	virtual void OnAnimationFinished() = 0;
 
 	void LookAtMouse();
 	MovementDirection GetInputMovementDirection(bool useGamepad) const;
 	float3 GetDirection() const;
 	virtual void Shoot() {}
-	virtual void Update(bool lastInputGamepad = false, bool lockMovement = false);
+	virtual void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockOrientation = false);
 	virtual void CheckCoolDowns(bool noCooldownMode = false) {}
+	virtual bool CanSwitch() const = 0;
+	
+	virtual void OnAnimationFinished() = 0;
+	virtual void OnAnimationSecondaryFinished() = 0;
+	
 	int GetMouseDirectionState();
 	bool IsActive();
 	void IncreaseUltimateCounter();
@@ -73,10 +78,13 @@ public:
 	float meleeDamageTaken = 1.0f;
 	float attackSpeed = 1.0f;
 	float attackCooldownRemaining = 0.f;
-
-	float normalAngularSpeed = 5.0f;
 	bool shooting = false;
+	float orientationSpeed = -1;
+	float orientationThreshold = 5.0f;
+	int ultimateChargePoints = 0;
+	const int ultimateChargePointsTotal = 10;
 	bool shootingOnCooldown = false;
+	float normalAngularSpeed = 5.0f;
 
 	float3 lookAtMousePlanePosition = float3(0, 0, 0);
 	ComponentCamera* lookAtMouseCameraComp = nullptr;
@@ -85,10 +93,11 @@ public:
 	float3 facePointDir = float3(0, 0, 0);
 	MovementDirection movementInputDirection = MovementDirection::NONE;
 	ComponentTransform* playerMainTransform = nullptr;
-	int ultimateChargePoints = 0;
-	const int ultimateChargePointsTotal = 10;
-private:
+
+protected:
 	void MoveTo();
+
+private:
 	virtual bool CanShoot();
 	void ResetSwitchStatus();
 	MovementDirection GetControllerMovementDirection(bool useGamepad = false) const;
