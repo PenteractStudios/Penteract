@@ -209,7 +209,7 @@ void Onimaru::OnDeath() {
 }
 
 bool Onimaru::CanSwitch() const {
-	return ultimateTimeRemaining <= 0 && !ultimateInUse && !IsShielding();
+	return ultimateTimeRemaining <= 0 && !ultimateInUse && !IsShielding() && !blastInUse;
 }
 
 void Onimaru::OnAnimationSecondaryFinished() {
