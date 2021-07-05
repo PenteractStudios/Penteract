@@ -134,9 +134,9 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 	shieldGO = GameplaySystems::GetGameObject(shieldUID);
 	if (shieldGO) {
 		shield = GET_SCRIPT(shieldGO, Shield);
+		shieldGO->Disable();
 	}
 
-	shieldGO->Disable();
 	bullet = GameplaySystems::GetResource<ResourcePrefab>(onimaruBulletUID);
 
 	if (characterGameObject) {
