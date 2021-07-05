@@ -63,7 +63,7 @@
                     {
                         "Name": "playerControllerUID",
                         "Type": "GameObjectUID",
-                        "Value": 189561909595027362
+                        "Value": 403437826872113792
                     },
                     {
                         "Name": "gameCameraUID",
@@ -148,7 +148,7 @@
                             {
                                 "Name": "prefabUID",
                                 "Type": "PrefabResourceUID",
-                                "Value": 9998956702901793097
+                                "Value": 6161494011548713161
                             }
                         ]
                     }
@@ -3169,42 +3169,8 @@
                             {
                                 "Name": "prefabUID",
                                 "Type": "PrefabResourceUID",
-                                "Value": 9998956702901793097
+                                "Value": 12176188256985043906
                             }
-                        ]
-                    }
-                ],
-                "Children": null
-            },
-            {
-                "Name": "TBD",
-                "Active": false,
-                "RootBoneName": "",
-                "Mask": 0,
-                "Components": [
-                    {
-                        "Type": "Transform",
-                        "Active": false,
-                        "Position": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ],
-                        "Rotation": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            1.0
-                        ],
-                        "Scale": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ],
-                        "LocalEulerAngles": [
-                            -0.0,
-                            0.0,
-                            -0.0
                         ]
                     }
                 ],

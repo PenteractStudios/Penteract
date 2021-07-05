@@ -19,7 +19,6 @@ public:
 	float GetRealUltimateCooldown();
 	void Init(UID fangUID = 0, UID trailUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID bulletUID = 0, UID cameraUID = 0, UID canvasUID = 0, UID fangUltimateUID = 0);
 	void IncreaseUltimateCounter();
-	void GetHit(float damage_) override;
 
 public:
 	std::vector<std::string> states{ "Idle" ,
@@ -27,7 +26,8 @@ public:
 						"DashBackward", "DashForward" , "DashLeft" , "DashRight" , //5 - 8 
 						"Death" , "LeftShot" , "RightShot", "", //9 - 12 
 						"RunForwardLeft", "RunForwardRight", "RunBackwardLeft", "RunBackwardRight", // 13 - 16
-						"DashBackward", "DashForward" , "DashLeft" , "DashRight"
+						"DashBackward", "DashForward" , "DashLeft" , "DashRight", //17 - 20
+						"EMP", "Ultimate" //21 - 22
 	};
 
 	bool rightShot = true;
@@ -38,9 +38,9 @@ public:
 	float dashDuration = 0.1f;
 
 	//Ultimate
-	float ultimateDuration = 5.0f;
 	int ultimateCooldown = 2;
 	bool ultimateOn = false;
+	float ultimateMovementSpeed = 4.0f;
 
 private:
 	float dashCooldownRemaining = 0.f;
@@ -62,12 +62,11 @@ private:
 	//HUD
 	HUDController* hudControllerScript = nullptr;
 
-	//Ultimate	
-	float ultimateRamaining = 0.0f;
+	//Ultimate
 	int ultimateCooldownRemaining = 2;	
 	bool ultimateInCooldown = false;
+	float oldMovementSpeed = 1.0f;
 	UltimateFang* ultimateScript = nullptr;
-
 
 private:
 	void InitDash();

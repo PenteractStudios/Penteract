@@ -18,12 +18,10 @@ void UltimateFang::Start() {
 	trail = GameplaySystems::GetResource<ResourcePrefab>(fangTrailUID);
 	bullet = GameplaySystems::GetResource<ResourcePrefab>(fangBulletUID);
 
-	active = false;
+	GetOwner().Disable();
 }
 
 void UltimateFang::Update() {
-	if (!active) return;
-
 	tickCurrent -= Time::GetDeltaTime();
 	if (tickCurrent <= 0) {
 		tickOn = true;
@@ -64,9 +62,8 @@ Quat UltimateFang::DirectionToQuat(float3 dir) {
 }
 
 void UltimateFang::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
-	if (!active) return;
 	if (tickOn) {
-		if (collidedWith.name == "MeleeGruntWeaponized" || collidedWith.name == "RangeGrunt") {
+		if (collidedWith.name == "MeleeGruntWeaponized" || collidedWith.name == "RangedGrunt") {
 			collisionedGameObject.push_back(collidedWith);
 			Debug::Log(collidedWith.name.c_str());
 		}
@@ -79,12 +76,12 @@ void UltimateFang::StartUltiamte()
 	sphereCollider->radius = radius;
 	//App->physics->UpdateSphereRigidbody(sphereCollider); //TODO We need this function to be exposed, then we can use it
 
-	active = true;
+	GetOwner().Enable();
 	tickCurrent = tickDuration;
 }
 
 void UltimateFang::EndUltimate()
 {
-	active = false;
+	GetOwner().Disable();
 	Debug::Log("Finish ultimate");
 }

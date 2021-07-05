@@ -158,22 +158,17 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 			Debug::Log("Ultiante ON");
 		}
 	}
-
-	//Ultimate duration
-	if (ultimateOn) {
-		if (ultimateRamaining <= 0.f) {
-			ultimateRamaining = 0.f;
-			ultimateOn = false;
-			ultimateScript->EndUltimate();
-		}
-		else {
-			ultimateRamaining -= Time::GetDeltaTime();
-		}
-	}
 }
 
 void Fang::OnAnimationFinished() {
-	//TODO use if necesary
+	if (compAnimation->GetCurrentState()) {
+		if (compAnimation->GetCurrentState()->name == "Ultimate") {
+			compAnimation->SendTrigger(states[22] + states[0]);
+			ultimateOn = false;
+			movementSpeed = oldMovementSpeed;
+			ultimateScript->EndUltimate();
+		}
+	}
 }
 
 float Fang::GetRealDashCooldown() {
@@ -222,7 +217,12 @@ void Fang::PlayAnimation() {
 	}
 
 	if (compAnimation->GetCurrentState()) {
-		if (movementInputDirection == MovementDirection::NONE) {
+		if (ultimateOn || compAnimation->GetCurrentState()->name == states[22]) {
+			if (compAnimation->GetCurrentState()->name != states[22]) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[22]);
+			}
+		}
+		else if (movementInputDirection == MovementDirection::NONE) {
 			if (!isAlive) {
 				if (compAnimation->GetCurrentState()->name != states[9]) {
 					compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[9]);
@@ -253,10 +253,12 @@ void Fang::ActiveUltimate()
 	if (CanUltimate()) {
 		Debug::Log("Ultimate Fang");
 		ultimateCooldownRemaining = 0;
-		ultimateRamaining = ultimateDuration;
 		ultimateOn = true;
 		ultimateInCooldown = true;
 		ultimateScript->StartUltiamte();
+
+		oldMovementSpeed = movementSpeed;
+		movementSpeed = ultimateMovementSpeed;
 
 		if (playerAudios[static_cast<int>(AudioPlayer::THIRD_ABILITY)]) {
 			playerAudios[static_cast<int>(AudioPlayer::THIRD_ABILITY)]->Play();

@@ -33,6 +33,4 @@ private:
 	float tickCurrent = 0.2f;
 	float tickDuration = 0.2f;
 	std::vector<GameObject> collisionedGameObject;
-
-	bool active = false;
 };
