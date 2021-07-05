@@ -5,11 +5,21 @@
 #include "GameObject.h"
 #include "Components/UI/ComponentText.h"
 
+// TODO:
+// Collisions with everything?
+// F outside dialoges should do nothing
+// IsBlocking to "pause" the gameplay
+// Transition effect between dialogue boxes
+
 EXPOSE_MEMBERS(DialogueManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fangTextObjectUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruTextObjectUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialFangUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialOnimaruUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, tutorialSwapUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, tutorialUpgrades1UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, tutorialUpgrades2UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, tutorialUpgrades3UID),
 	MEMBER(MemberType::FLOAT3, dialogueStartPosition),
 	MEMBER(MemberType::FLOAT3, dialogueEndPosition),
 	MEMBER(MemberType::FLOAT3, tutorialStartPosition),
@@ -25,18 +35,35 @@ void DialogueManager::Start() {
 	GameObject* onimaruTextObject = GameplaySystems::GetGameObject(onimaruTextObjectUID);
 	tutorialFang = GameplaySystems::GetGameObject(tutorialFangUID);
 	tutorialOnimaru = GameplaySystems::GetGameObject(tutorialOnimaruUID);
+	tutorialSwap = GameplaySystems::GetGameObject(tutorialSwapUID);
+	tutorialUpgrades1 = GameplaySystems::GetGameObject(tutorialUpgrades1UID);
+	tutorialUpgrades2 = GameplaySystems::GetGameObject(tutorialUpgrades2UID);
+	tutorialUpgrades3 = GameplaySystems::GetGameObject(tutorialUpgrades3UID);
 
 	if (fangTextObject && onimaruTextObject) {
 		fangTextComponent = fangTextObject->GetComponent<ComponentText>();
 		onimaruTextComponent = onimaruTextObject->GetComponent<ComponentText>();
 	}
 
+	// UPGRADES
+	dialoguesArray[0] = Dialogue(2, "Hey Fang, look at this.", &dialoguesArray[1]);
+	dialoguesArray[1] = Dialogue(1, "Hmm...\nIt looks like Milibot has been\nresearching in some\nnew technologies...", &dialoguesArray[2]);
+	dialoguesArray[2] = Dialogue(1, "I might be able to\nseize its power for ourselves\nif we find a couple more.", &dialoguesArray[3]);
+	dialoguesArray[3] = Dialogue(8, "", nullptr);
+
+	dialoguesArray[4] = Dialogue(9, "", nullptr);
+
+	
+	dialoguesArray[5] = Dialogue(1, "I think I got it...\nYou can power it up this way,\nthen connect this here...\nand that there...", &dialoguesArray[6]);
+	dialoguesArray[6] = Dialogue(1, "Plug it in our core and...\nWHOAH! Oni, try this!", &dialoguesArray[7]);
+	dialoguesArray[7] = Dialogue(2, "I am not sure about this Fang...\nBut OK, I trust you.", &dialoguesArray[8]);
+	dialoguesArray[8] = Dialogue(10, "", nullptr);
+
 	// SWAP DIALOGUE + ONIMARU TUTORIAL
-	dialoguesArray[0] = Dialogue(1, "Hi, I'm Fang!\n akljafddoadf\ndlskds\nldsjds", &dialoguesArray[1]);
-	dialoguesArray[1] = Dialogue(2, "And I'm Onimaru", &dialoguesArray[2]);
-	dialoguesArray[2] = Dialogue(2, "N' we gonna kik yur arse!", &dialoguesArray[3]);
-	dialoguesArray[3] = Dialogue(5, "", &dialoguesArray[4]);
-	dialoguesArray[4] = Dialogue(2, "And I'm Onimaru", nullptr);
+	dialoguesArray[9] = Dialogue(1, "Oni, you perform better\nin closed spaces.\nTake the lead here!", &dialoguesArray[10]);
+	dialoguesArray[10] = Dialogue(7, "", &dialoguesArray[11]);
+	dialoguesArray[11] = Dialogue(2, "OK Fang.\nWatch how it is done.", &dialoguesArray[12]);
+	dialoguesArray[12] = Dialogue(6, "", nullptr);
 
 }
 
@@ -45,6 +72,10 @@ void DialogueManager::Update() {
 	if (!onimaruTextComponent) return;
 	if (!tutorialFang) return;
 	if (!tutorialOnimaru) return;
+	if (!tutorialSwap) return;
+	if (!tutorialUpgrades1) return;
+	if (!tutorialUpgrades2) return;
+	if (!tutorialUpgrades3) return;
 
 	if (activeDialogue) {
 		if (runOpenAnimation) ActivateDialogue(activeDialogue);
@@ -71,6 +102,12 @@ void DialogueManager::Update() {
 
 void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation)
 {
+	if (activeDialogueObject) {
+		if (activeDialogueObject->IsActive()) {
+			activeDialogueObject->Disable();
+		}
+	}
+
 	if (dialogue) {
 		if (dialogue->character >= 5) {
 			currentStartPosition = tutorialStartPosition;
@@ -82,29 +119,46 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation)
 		}
 
 		activeDialogue = dialogue;
-		if (dialogue->character == 1) {          // FANG
+		switch (dialogue->character)
+		{
+		case 1:			// FANG
 			activeDialogueObject = fangTextComponent->GetOwner().GetParent();
 			fangTextComponent->SetText(dialogue->text);
-		}
-		else if (dialogue->character == 2) {     // ONIMARU
+			break;
+		case 2:			// ONIMARU
 			activeDialogueObject = onimaruTextComponent->GetOwner().GetParent();
 			onimaruTextComponent->SetText(dialogue->text);
-		}
-		else if (dialogue->character == 3) {     // DUKE
-		}
-		else if (dialogue->character == 4) {     // ROSAMONDE
-		}
-		else if (dialogue->character == 5) {     // TUTORIAL
+			break;
+		case 3:			// DUKE
+			break;
+		case 4:			// ROSAMONDE
+			break;
+		case 5:			// TUTORIAL Fang
 			activeDialogueObject = tutorialFang;
-		}
-		else if (dialogue->character == 6) {     // TUTORIAL
+			break;
+		case 6:			// TUTORIAL Oni
 			activeDialogueObject = tutorialOnimaru;
+			break;
+		case 7:			// TUTORIAL Swap
+			activeDialogueObject = tutorialSwap;
+			break;
+		case 8:			// UPGRADES 1/3
+			activeDialogueObject = tutorialUpgrades1;
+			break;
+		case 9:			// UPGRADES 2/3
+			activeDialogueObject = tutorialUpgrades2;
+			break;
+		case 10:			// UPGRADES 3/3
+			activeDialogueObject = tutorialUpgrades3;
+			break;
+		default:
+			break;
 		}
+
 		runOpenAnimation = runAnimation;
 		RetrieveUIComponents(activeDialogueObject);
 	}
 	else {
-		//activeDialogue = nullptr;
 		activeDialogueObject = nullptr;
 	}
 }
@@ -172,6 +226,28 @@ void DialogueManager::CloseDialogue(Dialogue* dialogue)
 			if (!dialogue->nextDialogue) SetActiveDialogue(nullptr);
 		}
 	}
+}
+
+void DialogueManager::ActivatePowerUpDialogue()
+{
+	obtainedPowerUps += 1;
+	int nextDialogue;
+	switch (obtainedPowerUps)
+	{
+	case 1:
+		nextDialogue = 0;
+		break;
+	case 2:
+		nextDialogue = 4;
+		break;
+	case 3:
+		nextDialogue = 5;
+		break;
+	default:
+		break;
+	}
+	SetActiveDialogue(&dialoguesArray[nextDialogue]);
+	
 }
 
 void DialogueManager::TransitionUIElementsColor(bool appearing, bool mustLerp)

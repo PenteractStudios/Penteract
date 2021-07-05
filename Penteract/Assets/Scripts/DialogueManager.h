@@ -13,7 +13,7 @@ class DialogueManager : public Script
 		Dialogue(int character, const char* text, Dialogue* nextDialogue);
 		~Dialogue();
 	public:
-		int character = 0; // 1 = Fang, 2 = Onimaru, 3 = Duke, 4 = Rosamonde, 5 = Tutorial Window
+		int character = 0; // 1 = Fang, 2 = Onimaru, 3 = Duke, 4 = Rosamonde, 5 = Tutorial Fang, 6 = Tutorial Oni, 7 = Tutorial Swap, 8 = Upgrades 1/3, 9 = Upgrades 2/3, 10 = Upgrades 3/3
 		const char* text = nullptr;
 		Dialogue* nextDialogue = nullptr;
 	};
@@ -27,12 +27,13 @@ public:
 	void ActivateDialogue(Dialogue* dialogue);
 	void ActivateNextDialogue(Dialogue* dialogue);
 	void CloseDialogue(Dialogue* dialogue);
+	void ActivatePowerUpDialogue();
 
 	void TransitionUIElementsColor(bool appearing = true, bool mustLerp = true);
 	void RetrieveUIComponents(GameObject* current);
 
 public:
-	Dialogue dialoguesArray[5];
+	Dialogue dialoguesArray[13];
 	Dialogue* activeDialogue = nullptr;			// Pointer to the Dialogue Tree
 	GameObject* activeDialogueObject = nullptr; // Pointer to the Dialogue GameObject in the scene (DialogueFang, DialogueOnimaru or DialogueDuke)
 
@@ -44,8 +45,17 @@ public:
 
 	UID tutorialFangUID = 0;
 	UID tutorialOnimaruUID = 0;
+	UID tutorialSwapUID = 0;
 	GameObject* tutorialFang = nullptr;
 	GameObject* tutorialOnimaru = nullptr;
+	GameObject* tutorialSwap = nullptr;
+
+	UID tutorialUpgrades1UID = 0;
+	UID tutorialUpgrades2UID = 0;
+	UID tutorialUpgrades3UID = 0;
+	GameObject* tutorialUpgrades1 = nullptr;
+	GameObject* tutorialUpgrades2 = nullptr;
+	GameObject* tutorialUpgrades3 = nullptr;
 
 	// ------ TRANSITION INFO ------ //
 	float3 dialogueStartPosition = float3(0, 0, 0);
@@ -64,6 +74,6 @@ public:
 	bool runCloseAnimation = false;
 	bool runSecondaryOpen = false;
 
-	// ---------- TRIGGERS --------- //
-	bool triggerSwapDialogues = false;
+
+	int obtainedPowerUps = 0; // PowerUp counter
 };
