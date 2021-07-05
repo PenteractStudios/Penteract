@@ -40,6 +40,7 @@ private:
 	bool dashing = false;
 	bool dashInCooldown = false;
 	bool hasDashed = false;
+
 	float3 initialPosition = float3(0, 0, 0);
 	float3 dashDirection = float3(0, 0, 0);
 

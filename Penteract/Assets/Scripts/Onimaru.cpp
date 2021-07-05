@@ -2,28 +2,8 @@
 #include "OnimaruBullet.h"
 #include "CameraController.h"
 
-bool Onimaru::CanShoot() {
-	return !shootingOnCooldown;
-}
 
-void Onimaru::Shoot() {
-	if (CanShoot()) {
-		shootingOnCooldown = true;
-		attackCooldownRemaining = 1.f / attackSpeed;
-		if (playerAudios[static_cast<int>(AudioPlayer::SHOOT)]) {
-			playerAudios[static_cast<int>(AudioPlayer::SHOOT)]->Play();
-		}
-		if (bullet) {
-			GameObject* bulletInstance = GameplaySystems::Instantiate(bullet, gunTransform->GetGlobalPosition(), Quat(0.0f, 0.0f, 0.0f, 0.0f));
-			if (bulletInstance) {
-				OnimaruBullet* onimaruBulletScript = GET_SCRIPT(bulletInstance, OnimaruBullet);
-				if (onimaruBulletScript) {
-					onimaruBulletScript->SetOnimaruDirection(GetSlightRandomSpread(0, maxBulletSpread) * gunTransform->GetGlobalRotation());
-				}
-			}
-		}
-	}
-}
+
 
 void Onimaru::PlayAnimation() {
 	if (!compAnimation) return;
@@ -50,7 +30,8 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 	if (attackCooldownRemaining <= 0.f) {
 		attackCooldownRemaining = 0.f;
 		shootingOnCooldown = false;
-	} else {
+	}
+	else {
 		attackCooldownRemaining -= Time::GetDeltaTime();
 	}
 }
@@ -58,7 +39,7 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 void Onimaru::OnDeath() {
 	if (compAnimation->GetCurrentState()) {
 		if (compAnimation->GetCurrentState()->name != states[DEATH]) {
-			if(compAnimation->GetCurrentStateSecondary()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+			if (compAnimation->GetCurrentStateSecondary()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(DEATH)]);
 		}
 	}
@@ -89,6 +70,12 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 			agent->SetMaxSpeed(movementSpeed);
 			agent->SetMaxAcceleration(MAX_ACCELERATION);
 		}
+		GameObject* bulletAux = GameplaySystems::GetGameObject(onimaruBulletUID);
+		if (bulletAux) {
+			bullet = bulletAux->GetComponent<ComponentParticleSystem>();
+			bullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
+			bullet->Play();
+		}
 	}
 
 	maxBulletSpread = maxSpread_;
@@ -99,8 +86,6 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 		lookAtMousePlanePosition = gunTransform->GetGlobalPosition();
 	}
 
-	bullet = GameplaySystems::GetResource<ResourcePrefab>(onimaruBulletUID);
-
 	if (characterGameObject) {
 		//Get audio sources
 		int i = 0;
@@ -109,7 +94,6 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 			if (i < static_cast<int>(AudioPlayer::TOTAL)) playerAudios[i] = &src;
 			i++;
 		}
-
 	}
 }
 
@@ -118,6 +102,7 @@ void Onimaru::Update(bool lockMovement) {
 		Player::Update();
 		if (!ultimateInUse && !blastInUse) {
 			if (Input::GetMouseButtonDown(0)) {
+				Debug::Log("ENTRO");
 				if (compAnimation) {
 					if (compAnimation->GetCurrentState()) {
 						if (!shieldInUse) {
@@ -129,19 +114,26 @@ void Onimaru::Update(bool lockMovement) {
 					}
 				}
 				shooting = true;
-			} else if (Input::GetMouseButtonRepeat(0)) {
-				Shoot();
-			} else if (Input::GetMouseButtonUp(0)) {
+				if (bullet) {
+					if (playerAudios[static_cast<int>(AudioPlayer::SHOOT)]) {
+						playerAudios[static_cast<int>(AudioPlayer::SHOOT)]->Play();
+					}
+					bullet->Play();
+					bullet->SetParticlesPerSecond(float2(attackSpeed, attackSpeed));
+				}
+			}
+			else if (Input::GetMouseButtonUp(0)) {
 				if (compAnimation) {
-					if(compAnimation->GetCurrentState() && compAnimation->GetCurrentStateSecondary()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+					if (compAnimation->GetCurrentState() && compAnimation->GetCurrentStateSecondary()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 				}
 				shooting = false;
+				bullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
 			}
 		}
 		//TODO Ability handling
 		//Whenever an ability starts being used, make sure that as well as setting the secondary trigger to whatever, if (shooting was true, it must be turned to false)
-
-	} else {
+	}
+	else {
 		if (agent) agent->RemoveAgentFromCrowd();
 		movementInputDirection = MovementDirection::NONE;
 	}
@@ -149,7 +141,6 @@ void Onimaru::Update(bool lockMovement) {
 }
 
 Quat Onimaru::GetSlightRandomSpread(float minValue, float maxValue) const {
-
 	float sign = rand() % 2 < 1 ? 1.0f : -1.0f;
 
 	float4 axis = float4(gunTransform->GetUp(), 1);

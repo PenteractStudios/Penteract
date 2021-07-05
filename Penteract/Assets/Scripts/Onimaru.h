@@ -46,7 +46,7 @@ public:
 private:
 
 	ResourcePrefab* trail = nullptr;
-	ResourcePrefab* bullet = nullptr;
+	ComponentParticleSystem* bullet = nullptr;
 	ComponentTransform* gunTransform = nullptr;
 	ComponentParticleSystem* compParticle = nullptr;
 
@@ -57,8 +57,6 @@ private:
 	float maxBulletSpread = 5.0f;
 private:
 
-	bool CanShoot() override;
-	void Shoot() override;
 	void PlayAnimation();
 
 };

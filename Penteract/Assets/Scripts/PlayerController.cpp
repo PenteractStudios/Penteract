@@ -30,7 +30,7 @@ EXPOSE_MEMBERS(PlayerController) {
 		MEMBER(MemberType::GAME_OBJECT_UID, fangLeftBulletUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, fangTrailDashUID),
 		MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailGunUID),
-		MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruBulletUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruBulletUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, fangLeftGunUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, fangRightGunUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
