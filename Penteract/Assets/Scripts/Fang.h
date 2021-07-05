@@ -6,7 +6,6 @@ class HUDController;
 class Fang : public Player {
 public:
 
-
 	// ------- Contructors ------- //
 	Fang() {};
 	void Update(bool lockMovement = false) override;
@@ -15,13 +14,13 @@ public:
 	void GetHit(float damage_) override;
 
 	float GetRealDashCooldown();
-	void Init(UID fangUID = 0, UID trailUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID bulletUID = 0, UID cameraUID = 0, UID canvasUID = 0);
+	void Init(UID fangUID = 0, UID trailGunUID = 0, UID trailDashUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID bulletUID = 0, UID cameraUID = 0, UID canvasUID = 0);
 
 public:
 	std::vector<std::string> states{ "Idle" ,
 						"RunBackward" , "RunForward" , "RunLeft" , "RunRight" , //1 - 4
-						"DashBackward", "DashForward" , "DashLeft" , "DashRight" , //5 - 8 
-						"Death" , "LeftShot" , "RightShot", "", //9 - 12 
+						"DashBackward", "DashForward" , "DashLeft" , "DashRight" , //5 - 8
+						"Death" , "LeftShot" , "RightShot", "", //9 - 12
 						"RunForwardLeft", "RunForwardRight", "RunBackwardLeft", "RunBackwardRight", // 13 - 16
 						"DashBackward", "DashForward" , "DashLeft" , "DashRight"
 	};
@@ -32,7 +31,7 @@ public:
 	float dashCooldown = 5.f;
 	float dashSpeed = 100.f;
 	float dashDuration = 0.1f;
-
+	float trailDuration = 0.2f;
 private:
 	float dashCooldownRemaining = 0.f;
 	float dashRemaining = 0.f;
@@ -44,7 +43,8 @@ private:
 	//Shoot
 	ComponentTransform* rightGunTransform = nullptr;
 	ComponentTransform* leftGunTransform = nullptr;
-	ResourcePrefab* trail = nullptr;
+	ComponentTrail* trailDash = nullptr;
+	ResourcePrefab* trailGun = nullptr;
 	ResourcePrefab* bullet = nullptr;
 
 	//Movement
@@ -56,10 +56,10 @@ private:
 private:
 	void InitDash();
 	void Dash();
+	void trailDelay();
 	bool CanDash();
 
 	bool CanShoot() override;
 	void Shoot() override;
 	void PlayAnimation();
 };
-

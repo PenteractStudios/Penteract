@@ -22,10 +22,8 @@ struct TesseractEvent;
 
 // We should get these two values from the Character class
 
-#define ONIMARU_MAX_HEALTH 10.0f 
+#define ONIMARU_MAX_HEALTH 10.0f
 #define FANG_MAX_HEALTH 10.0f
-
-
 
 class PlayerController : public Script {
 	GENERATE_BODY(PlayerController);
@@ -62,7 +60,8 @@ public:
 
 	//Fang
 	UID fangUID = 0;
-	UID fangTrailUID = 0;
+	UID fangtrailDashUID = 0;
+	UID fangtrailGunUID = 0;
 	UID fangLeftGunUID = 0;
 	UID fangRightGunUID = 0;
 	UID fangBulletUID = 0;

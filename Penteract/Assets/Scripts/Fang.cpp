@@ -3,7 +3,7 @@
 #include "HUDController.h"
 #include "CameraController.h"
 
-void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID, UID canvasUID) {
+void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID, UID canvasUID) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(fangUID);
 
@@ -23,7 +23,13 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 		gunAux = GameplaySystems::GetGameObject(leftGunUID);
 		if (gunAux) leftGunTransform = gunAux->GetComponent<ComponentTransform>();
 		lookAtMousePlanePosition = leftGunTransform->GetGlobalPosition();
-		trail = GameplaySystems::GetResource<ResourcePrefab>(trailUID);
+
+		GameObject* trailAux = GameplaySystems::GetGameObject(trailDashUID);
+		if (trailAux) {
+			trailDash = trailAux->GetComponent<ComponentTrail>();
+			trailDash->Stop();
+		}
+		trailGun = GameplaySystems::GetResource<ResourcePrefab>(trailGunUID);
 		bullet = GameplaySystems::GetResource<ResourcePrefab>(bulletUID);
 
 		if (compAnimation) {
@@ -40,7 +46,6 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 		hudControllerScript = GET_SCRIPT(canvasGO, HUDController);
 	}
 	if (characterGameObject) {
-
 		characterGameObject->GetComponent<ComponentCapsuleCollider>()->Enable();
 
 		//Get audio sources
@@ -50,17 +55,13 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 			if (i < static_cast<int>(AudioPlayer::TOTAL)) playerAudios[i] = &src;
 			i++;
 		}
-
 	}
-
 }
 
 void Fang::GetHit(float damage_) {
-
 	if (!dashing) {
 		Player::GetHit(damage_);
 	}
-
 }
 
 void Fang::InitDash() {
@@ -68,7 +69,8 @@ void Fang::InitDash() {
 		if (movementInputDirection != MovementDirection::NONE) {
 			dashDirection = GetDirection();
 			dashMovementDirection = movementInputDirection;
-		} else {
+		}
+		else {
 			dashDirection = facePointDir;
 		}
 
@@ -92,25 +94,38 @@ void Fang::InitDash() {
 
 void Fang::Dash() {
 	if (dashing) {
+		trailDuration = 0.2f;
+		trailDash->Play();
 		float3 newPosition = playerMainTransform->GetGlobalPosition();
 		newPosition += dashSpeed * dashDirection;
 		agent->SetMoveTarget(newPosition, false);
 	}
+	else {
+		trailDelay();
+		//trailDash->Stop();
+	}
 }
-
+void Fang::trailDelay() {
+	if (trailDuration >= 0) {
+		trailDuration -= Time::GetDeltaTime();
+	}
+	else {
+		trailDash->Stop();
+	}
+}
 bool Fang::CanDash() {
 	return isAlive && !dashing && !dashInCooldown;
 }
 
 void Fang::CheckCoolDowns(bool noCooldownMode) {
-
 	//Dash Cooldown
 	if (dashInCooldown) {
 		if (noCooldownMode || dashCooldownRemaining <= 0.f) {
 			dashCooldownRemaining = 0.f;
 			dashInCooldown = false;
 			dashMovementDirection = MovementDirection::NONE;
-		} else {
+		}
+		else {
 			dashCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
@@ -121,7 +136,8 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 			dashRemaining = 0.f;
 			dashing = false;
 			agent->SetMaxSpeed(movementSpeed);
-		} else {
+		}
+		else {
 			dashRemaining -= Time::GetDeltaTime();
 		}
 	}
@@ -131,7 +147,8 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 		if (attackCooldownRemaining <= 0.f) {
 			attackCooldownRemaining = 0.f;
 			shootingOnCooldown = false;
-		} else {
+		}
+		else {
 			attackCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
@@ -159,15 +176,16 @@ void Fang::Shoot() {
 
 		ComponentTransform* shootingGunTransform = nullptr;
 		if (rightShot) {
-			if(compAnimation->GetCurrentState()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[11]);
+			if (compAnimation->GetCurrentState()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[11]);
 			shootingGunTransform = rightGunTransform;
-		} else {
+		}
+		else {
 			if (compAnimation->GetCurrentState()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[10]);
 			shootingGunTransform = leftGunTransform;
 		}
-		if (trail && bullet && shootingGunTransform) {
+		if (trailGun && bullet && shootingGunTransform) {
 			GameplaySystems::Instantiate(bullet, shootingGunTransform->GetGlobalPosition(), playerMainTransform->GetGlobalRotation());
-			GameplaySystems::Instantiate(trail, shootingGunTransform->GetGlobalPosition(), playerMainTransform->GetGlobalRotation());
+			GameplaySystems::Instantiate(trailGun, shootingGunTransform->GetGlobalPosition(), playerMainTransform->GetGlobalRotation());
 		}
 	}
 }
@@ -195,17 +213,19 @@ void Fang::PlayAnimation() {
 						}
 					}
 				}
-			} else {
+			}
+			else {
 				if (compAnimation->GetCurrentState()->name != states[0]) {
 					compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[0]);
 				}
 			}
-		} else {
+		}
+		else {
 			if (compAnimation->GetCurrentState()->name != states[GetMouseDirectionState() + dashAnimation]) {
 				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState() + dashAnimation]);
 			}
 		}
-	} 
+	}
 }
 
 void Fang::Update(bool lockMovement) {
@@ -218,13 +238,10 @@ void Fang::Update(bool lockMovement) {
 			if (Input::GetMouseButtonDown(0)) Shoot();
 		}
 		Dash();
-
-	} else {
+	}
+	else {
 		if (agent) agent->RemoveAgentFromCrowd();
 		movementInputDirection = MovementDirection::NONE;
 	}
 	PlayAnimation();
 }
-
-
-
