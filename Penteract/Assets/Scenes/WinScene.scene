@@ -7,7 +7,7 @@
     ],
     "QuadtreeMaxDepth": 4,
     "QuadtreeElementsPerNode": 200,
-    "GameCamera": 5052706520133489350,
+    "GameCamera": 7282935821569311443,
     "AmbientLight": [
         0.0,
         0.0,
@@ -162,7 +162,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 200.0,
-                            "HorizontalFov": 1.634196400642395,
+                            "HorizontalFov": 1.7860602140426636,
                             "VerticalFov": 1.0
                         }
                     },
