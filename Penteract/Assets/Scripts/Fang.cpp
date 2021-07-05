@@ -3,7 +3,7 @@
 #include "HUDController.h"
 #include "CameraController.h"
 
-void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID, UID canvasUID) {
+void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, UID rightBulletUID, UID leftBulletUID, UID cameraUID, UID canvasUID) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(fangUID);
 
@@ -30,8 +30,16 @@ void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, 
 			trailDash->Stop();
 		}
 		trailGun = GameplaySystems::GetResource<ResourcePrefab>(trailGunUID);
-		bullet = GameplaySystems::GetResource<ResourcePrefab>(bulletUID);
-
+		GameObject* rightBulletAux = GameplaySystems::GetGameObject(rightBulletUID);
+		if (rightBulletAux) {
+			rightBullet = rightBulletAux->GetComponent<ComponentParticleSystem>();
+			rightBullet->Stop();
+		}
+		GameObject* leftBulletAux = GameplaySystems::GetGameObject(leftBulletUID);
+		if (leftBulletAux) {
+			leftBullet = leftBulletAux->GetComponent<ComponentParticleSystem>();
+			leftBullet->Stop();
+		}
 		if (compAnimation) {
 			currentState = compAnimation->GetCurrentState();
 		}
@@ -183,9 +191,23 @@ void Fang::Shoot() {
 			if (compAnimation->GetCurrentState()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[10]);
 			shootingGunTransform = leftGunTransform;
 		}
-		if (trailGun && bullet && shootingGunTransform) {
-			GameplaySystems::Instantiate(bullet, shootingGunTransform->GetGlobalPosition(), playerMainTransform->GetGlobalRotation());
-			GameplaySystems::Instantiate(trailGun, shootingGunTransform->GetGlobalPosition(), playerMainTransform->GetGlobalRotation());
+		if (trailGun && rightBullet && leftBullet && shootingGunTransform) {
+			if (rightShot) {
+				//rightBullet->Play();
+			//	rightBullet->SetParticlesPerSecond(float2(10.0f, 10.0f));
+				//leftBullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
+			}
+			else {
+				//leftBullet->Play();
+				//rightBullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
+				//leftBullet->SetParticlesPerSecond(float2(10.0f, 10.0f));
+			}
+			GameObject* bullet = GameplaySystems::Instantiate(trailGun, shootingGunTransform->GetGlobalPosition(), (playerMainTransform->GetGlobalMatrix().RotatePart() * float3x3::FromEulerXYZ(pi/2, 0.0f, 0.0f)).ToQuat());
+			if (bullet->GetComponent<ComponentParticleSystem>()) {
+				//	float3 newWorldRotation = (bullet->GetComponent<ComponentTransform>()->GetGlobalMatrix().RotatePart() * float3x3::FromEulerXYZ(90.0f, 0.0f, 0.0f)).ToEulerXYZ();
+				//bullet->GetComponent<ComponentTransform>()->SetGlobalRotation(newWorldRotation);
+				bullet->GetComponent<ComponentParticleSystem>()->Play();
+			}
 		}
 	}
 }

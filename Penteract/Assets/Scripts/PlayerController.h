@@ -60,11 +60,13 @@ public:
 
 	//Fang
 	UID fangUID = 0;
-	UID fangtrailDashUID = 0;
-	UID fangtrailGunUID = 0;
+	UID fangTrailDashUID = 0;
+	UID fangTrailGunUID = 0;
 	UID fangLeftGunUID = 0;
 	UID fangRightGunUID = 0;
-	UID fangBulletUID = 0;
+	UID fangLeftBulletUID = 0;
+	UID fangRightBulletUID = 0;
+
 	//Onimaru
 	UID onimaruUID = 0;
 	UID onimaruParticleUID = 0;

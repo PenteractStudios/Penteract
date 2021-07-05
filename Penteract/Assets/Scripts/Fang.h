@@ -14,7 +14,7 @@ public:
 	void GetHit(float damage_) override;
 
 	float GetRealDashCooldown();
-	void Init(UID fangUID = 0, UID trailGunUID = 0, UID trailDashUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID bulletUID = 0, UID cameraUID = 0, UID canvasUID = 0);
+	void Init(UID fangUID = 0, UID trailGunUID = 0, UID trailDashUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID cameraUID = 0, UID canvasUID = 0);
 
 public:
 	std::vector<std::string> states{ "Idle" ,
@@ -45,7 +45,8 @@ private:
 	ComponentTransform* leftGunTransform = nullptr;
 	ComponentTrail* trailDash = nullptr;
 	ResourcePrefab* trailGun = nullptr;
-	ResourcePrefab* bullet = nullptr;
+	ComponentParticleSystem* rightBullet = nullptr;
+	ComponentParticleSystem* leftBullet = nullptr;
 
 	//Movement
 	MovementDirection dashMovementDirection = MovementDirection::NONE;
