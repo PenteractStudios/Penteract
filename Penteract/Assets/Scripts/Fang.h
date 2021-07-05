@@ -6,6 +6,15 @@ class HUDController;
 class Fang : public Player {
 public:
 
+	enum class FANG_AUDIOS {
+		DASH,
+		EMP,
+		ULTIMATE,
+		SHOOT,
+		HIT,
+		DEATH,
+		TOTAL
+	};
 
 	// ------- Contructors ------- //
 	Fang() {};
@@ -53,6 +62,9 @@ private:
 
 	//HUD
 	HUDController* hudControllerScript = nullptr;
+
+	//Audios
+	ComponentAudioSource* fangAudios[static_cast<int>(FANG_AUDIOS::TOTAL)] = { nullptr };
 
 private:
 	void InitDash();

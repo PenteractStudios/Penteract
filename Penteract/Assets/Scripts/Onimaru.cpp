@@ -16,12 +16,28 @@ bool Onimaru::CanBlast() {
 	return !blastInCooldown && !IsShielding();
 }
 
+void Onimaru::GetHit(float damage_) {
+	//We assume that the player is always alive when this method gets called, so no need to check if character was alive before taking lives
+	if (cameraController) {
+		cameraController->StartShake();
+	}
+
+	lifePoints -= damage_;
+	if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::HIT)]) onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::HIT)]->Play();
+	isAlive = lifePoints > 0.0f;
+
+	if (!isAlive) {
+		if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::DEATH)]) onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::DEATH)]->Play();
+		OnDeath();
+	}
+}
+
 void Onimaru::Shoot() {
 	if (CanShoot()) {
 		shootingOnCooldown = true;
 		attackCooldownRemaining = 1.f / attackSpeed;
-		if (playerAudios[static_cast<int>(AudioPlayer::SHOOT)]) {
-			playerAudios[static_cast<int>(AudioPlayer::SHOOT)]->Play();
+		if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHOOT)]) {
+			onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHOOT)]->Play();
 		}
 		if (bullet) {
 			GameObject* bulletInstance = GameplaySystems::Instantiate(bullet, gunTransform->GetGlobalPosition(), Quat(0.0f, 0.0f, 0.0f, 0.0f));
@@ -216,7 +232,7 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 		int i = 0;
 
 		for (ComponentAudioSource& src : characterGameObject->GetComponents<ComponentAudioSource>()) {
-			if (i < static_cast<int>(AudioPlayer::TOTAL)) playerAudios[i] = &src;
+			if (i < static_cast<int>(ONIMARU_AUDIOS::TOTAL)) onimaruAudios[i] = &src;
 			i++;
 		}
 
@@ -252,8 +268,8 @@ void Onimaru::InitShield() {
 				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHOOTSHIELD)]);
 			}
 		}
-		if (playerAudios[static_cast<int>(AudioPlayer::FIRST_ABILITY)]) {
-			playerAudios[static_cast<int>(AudioPlayer::FIRST_ABILITY)]->Play();
+		if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHIELD_ON)]) {
+			onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHIELD_ON)]->Play();
 		}
 		shieldGO->Enable();
 	}
@@ -275,8 +291,8 @@ void Onimaru::FadeShield() {
 			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHOOTING)]);
 		}
 	}
-	if (playerAudios[static_cast<int>(AudioPlayer::DEATH)]) {
-		playerAudios[static_cast<int>(AudioPlayer::DEATH)]->Play();
+	if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHIELD_OFF)]) {
+		onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHIELD_OFF)]->Play();
 	}
 	shieldGO->Disable();
 }

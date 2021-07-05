@@ -132,5 +132,5 @@ private:
 	ComponentTransform* cameraTransform = nullptr;
 
 	//Audio
-	ComponentAudioSource* audios[static_cast<int>(AudioPlayer::TOTAL)] = { nullptr };
+	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
 };

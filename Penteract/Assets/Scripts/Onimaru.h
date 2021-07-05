@@ -9,6 +9,18 @@ class Shield;
 class Onimaru : public Player {
 public:
 
+	enum class ONIMARU_AUDIOS {
+		SHIELD_ON,
+		SHIELD_BLOCK,
+		SHIELD_OFF,
+		ENERGY_BLAST,
+		ULTIMATE,
+		SHOOT,
+		HIT,
+		DEATH,
+		TOTAL
+	};
+
 	enum ONIMARU_STATES {
 		IDLE,
 		RUN_BACKWARD,
@@ -44,9 +56,10 @@ public:
 public:
 	// ------- Contructors ------- //
 	Onimaru() {};
-	void Init(UID onimaruUID = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0,UID shieldUID = 0, UID cameraUID = 0, UID canvasUID = 0, float maxSpread = 5.0f);
+	void Init(UID onimaruUID = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0, UID shieldUID = 0, UID cameraUID = 0, UID canvasUID = 0, float maxSpread = 5.0f);
 	void Update(bool lockMovement = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
+	void GetHit(float damage_) override;
 	void OnDeath() override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
@@ -61,7 +74,7 @@ public:
 	void AddEnemy(GameObject* enemy);
 	void RemoveEnemy(GameObject* enemy);
 	bool IsShielding();
-	
+
 private:
 
 	ResourcePrefab* trail = nullptr;
@@ -69,10 +82,11 @@ private:
 	ComponentTransform* gunTransform = nullptr;
 	ComponentTransform* rightHand = nullptr;
 	ComponentParticleSystem* compParticle = nullptr;
+	ComponentAudioSource* onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::TOTAL)] = { nullptr };
 
 	Shield* shield = nullptr;
 	GameObject* shieldGO = nullptr;
-	
+
 	bool shieldInCooldown = false;
 	float shieldCooldownRemaining = 0.f;
 
