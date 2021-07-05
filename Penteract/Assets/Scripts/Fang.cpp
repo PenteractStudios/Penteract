@@ -204,10 +204,10 @@ void Fang::Shoot() {
 
 		ComponentTransform* shootingGunTransform = nullptr;
 		if (rightShot) {
-			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[11]);
+			if(compAnimation->GetCurrentState()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[11]);
 			shootingGunTransform = rightGunTransform;
 		} else {
-			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[10]);
+			if (compAnimation->GetCurrentState()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[10]);
 			shootingGunTransform = leftGunTransform;
 		}
 		if (trail && bullet && shootingGunTransform) {
@@ -226,29 +226,31 @@ void Fang::PlayAnimation() {
 		movementInputDirection = dashMovementDirection;
 	}
 
-	if (movementInputDirection == MovementDirection::NONE) {
-		if (!isAlive) {
-			if (compAnimation->GetCurrentState()->name != states[9]) {
-				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[9]);
-				if (compAnimation->GetCurrentStateSecondary()->name == "RightShot") {
-					compAnimation->SendTriggerSecondary("RightShotDeath");
-				} else if (compAnimation->GetCurrentStateSecondary()->name == "LeftShot") {
-					compAnimation->SendTriggerSecondary("LeftShotDeath");
+	if (compAnimation->GetCurrentState()) {
+		if (movementInputDirection == MovementDirection::NONE) {
+			if (!isAlive) {
+				if (compAnimation->GetCurrentState()->name != states[9]) {
+					compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[9]);
+					if (compAnimation->GetCurrentStateSecondary()) {
+						if (compAnimation->GetCurrentStateSecondary()->name == "RightShot") {
+							compAnimation->SendTriggerSecondary("RightShotDeath");
+						}
+						else if (compAnimation->GetCurrentStateSecondary()->name == "LeftShot") {
+							compAnimation->SendTriggerSecondary("LeftShotDeath");
+						}
+					}
+				}
+			} else {
+				if (compAnimation->GetCurrentState()->name != states[0]) {
+					compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[0]);
 				}
 			}
 		} else {
-			if (compAnimation->GetCurrentState()->name != states[0] && compAnimation->GetCurrentState()->name != states[21]) {
-				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[0]);
-			}
-			if (compAnimation->GetCurrentState()->name == states[0] && EMP->IsActive()) {
-				compAnimation->SendTrigger(states[0] + states[21]);
+			if (compAnimation->GetCurrentState()->name != states[GetMouseDirectionState() + dashAnimation]) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState() + dashAnimation]);
 			}
 		}
-	} else {
-		if (compAnimation->GetCurrentState()->name != states[GetMouseDirectionState() + dashAnimation]) {
-			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState() + dashAnimation]);
-		}
-	}
+	} 
 }
 
 void Fang::Update(bool lockMovement) {
