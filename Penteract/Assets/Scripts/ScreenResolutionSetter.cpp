@@ -41,7 +41,7 @@ void ScreenResolutionSetter::Update() {
 }
 
 void ScreenResolutionSetter::OnButtonClick() {
-	IncreaseResolution(increasing ? 1 : -1);
+	IncreaseResolution(increasing ? -1 : 1);		// This is reversed because the list obtained goes from highest to lowest, being position 0 the highest.
 }
 
 void ScreenResolutionSetter::IncreaseResolution(int multiplier) {
