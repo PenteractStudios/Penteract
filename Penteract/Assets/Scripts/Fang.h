@@ -12,6 +12,7 @@ public:
 	void Update(bool lockMovement = false, bool lockOrientation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	void OnAnimationFinished() override;
+	void OnAnimationSecondaryFinished() override;
 	void GetHit(float damage_) override;
 	bool CanSwitch() const override;
 

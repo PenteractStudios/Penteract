@@ -57,6 +57,9 @@ void PlayerDeath::OnAnimationSecondaryFinished() {
 				}
 			}
 		}
+		else {
+			playerController->playerOnimaru.OnAnimationSecondaryFinished();
+		}
 	}
 }
 

@@ -46,6 +46,9 @@ public:
 	int GetOverPowerMode();
 	bool IsPlayerDead() { return !playerFang.isAlive || !playerOnimaru.isAlive; }
 	void TakeDamage(bool ranged = false);
+
+	void AddEnemyInMap(GameObject* enemy);
+	void RemoveEnemyFromMap(GameObject* enemy);
 public:
 	//Debug
 	bool invincibleMode = false;
@@ -71,6 +74,8 @@ public:
 	UID onimaruBulletUID = 0;
 	UID onimaruGunUID = 0;
 	UID onimaruUltimateProjectileOriginUID = 0;
+	UID onimaruRightHandUID = 0;
+	UID onimaruShieldUID = 0;
 
 	//HUD
 	UID canvasUID = 0;

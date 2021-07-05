@@ -145,6 +145,9 @@ void Fang::OnAnimationFinished() {
 	//TODO use if necesary
 }
 
+void Fang::OnAnimationSecondaryFinished() {
+}
+
 float Fang::GetRealDashCooldown() {
 	return 1.0f - (dashCooldownRemaining / dashCooldown);
 }

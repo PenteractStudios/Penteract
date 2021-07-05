@@ -53,7 +53,10 @@ public:
 	virtual void Update(bool lockMovement = false, bool lockOrientation = false);
 	virtual void CheckCoolDowns(bool noCooldownMode = false) {}
 	virtual bool CanSwitch() const = 0;
+	
 	virtual void OnAnimationFinished() = 0;
+	virtual void OnAnimationSecondaryFinished() = 0;
+	
 	int GetMouseDirectionState();
 	bool IsActive();
 	void IncreaseUltimateCounter();

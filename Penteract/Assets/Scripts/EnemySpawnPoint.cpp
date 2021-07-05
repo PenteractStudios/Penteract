@@ -1,6 +1,7 @@
 #include "EnemySpawnPoint.h"
 
 #include "Resources/ResourcePrefab.h"
+#include "PlayerController.h"
 #include "GameplaySystems.h"
 #include "GameObject.h"
 #include "WinLose.h"
@@ -19,6 +20,7 @@ EXPOSE_MEMBERS(EnemySpawnPoint) {
 	MEMBER(MemberType::INT, fourthWaveRangeAmount),
 	MEMBER(MemberType::INT, fifthWaveMeleeAmount),
 	MEMBER(MemberType::INT, fifthWaveRangeAmount),
+	MEMBER(MemberType::GAME_OBJECT_UID, playerUID)
 };
 
 GENERATE_BODY_IMPL(EnemySpawnPoint);
@@ -41,6 +43,11 @@ void EnemySpawnPoint::Start() {
 	if (spawnPointControllerScript) {
 		meleeEnemyPrefab = spawnPointControllerScript->GetMeleePrefab();
 		rangeEnemyPrefab = spawnPointControllerScript->GetRangePrefab();
+	}
+
+	GameObject* player = GameplaySystems::GetGameObject(playerUID);
+	if (player) {
+		playerScript = GET_SCRIPT(player, PlayerController);
 	}
 }
 
@@ -99,6 +106,8 @@ void EnemySpawnPoint::RenderEnemy(EnemyType type, unsigned int amount) {
 				/* After an enemy is spawned at a certain location th next one with be next to it */
 				xAxisPos++;
 			}
+
+			if (playerScript) playerScript->AddEnemyInMap(go);
 		}
 	}
 }
