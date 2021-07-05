@@ -304,6 +304,14 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
                     animation->SendTrigger("RunDeath2");
                 }
             }
+			else if (state == AIState::STUNNED) {
+				if (deathType) {
+					animation->SendTrigger("StunnedDeath1");
+				}
+				else {
+					animation->SendTrigger("StunnedDeath2");
+				}
+			}
 
 			if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
 			ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();

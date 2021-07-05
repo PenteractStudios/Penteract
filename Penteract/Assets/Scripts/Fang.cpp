@@ -225,6 +225,7 @@ void Fang::PlayAnimation() {
 		dashAnimation = 4;
 		movementInputDirection = dashMovementDirection;
 	}
+	if (EMP->IsActive()) movementInputDirection = MovementDirection::NONE;
 
 	if (compAnimation->GetCurrentState()) {
 		if (movementInputDirection == MovementDirection::NONE) {
@@ -241,8 +242,11 @@ void Fang::PlayAnimation() {
 					}
 				}
 			} else {
-				if (compAnimation->GetCurrentState()->name != states[0]) {
+				if (compAnimation->GetCurrentState()->name != states[0] && compAnimation->GetCurrentState()->name != states[21]) {
 					compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[0]);
+				}
+				if (compAnimation->GetCurrentState()->name == states[0] && EMP->IsActive()) {
+					compAnimation->SendTrigger(states[0] + states[21]);
 				}
 			}
 		} else {
