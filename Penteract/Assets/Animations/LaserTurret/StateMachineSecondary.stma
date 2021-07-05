@@ -1,0 +1,17 @@
+{
+    "InitialState": 4730572649535276022,
+    "Clips": [
+        5422970764507468936
+    ],
+    "States": [
+        {
+            "Id": 4730572649535276022,
+            "Name": "Idle",
+            "ClipId": 5422970764507468936
+        }
+    ],
+    "Transitions": null,
+    "Bones": [
+        "FEED_ME_WITH_BONES_IAM_STARVING"
+    ]
+}

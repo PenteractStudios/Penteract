@@ -1,0 +1,21 @@
+{
+    "InitialState": 4730572649535276022,
+    "Clips": [
+        5422970764507468936
+    ],
+    "States": [
+        {
+            "Id": 4730572649535276022,
+            "Name": "Idle",
+            "ClipId": 5422970764507468936
+        }
+    ],
+    "Transitions": null,
+    "Bones": [
+        "LaserTurret0",
+		"LaserTurret1",
+		"LaserTurret2",
+		"LaserTurret3",
+		"LaserTurret4"
+    ]
+}
