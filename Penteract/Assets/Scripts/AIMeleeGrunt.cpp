@@ -26,6 +26,8 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, gruntCharacter.attackRange),
 	MEMBER(MemberType::FLOAT, gruntCharacter.timeToDie),
+	MEMBER(MemberType::FLOAT, gruntCharacter.pushBackDistance),
+	MEMBER(MemberType::FLOAT, gruntCharacter.pushBackSpeed),
 	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
 	MEMBER(MemberType::FLOAT, stunDuration)
 };
@@ -168,6 +170,9 @@ void AIMeleeGrunt::Update() {
 			stunRemaining -= Time::GetDeltaTime();
 		}
 		break;
+	case AIState::PUSHED:
+		UpdatePushBackPosition();
+		break;
 	case AIState::DEATH:
 		break;
 	}
@@ -184,6 +189,7 @@ void AIMeleeGrunt::Update() {
 			if (hudControllerScript) {
 				hudControllerScript->UpdateScore(10);
 			}
+			if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
 			GameplaySystems::DestroyGameObject(&GetOwner());
 		}
 	}
@@ -312,13 +318,62 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 					animation->SendTrigger("StunnedDeath2");
 				}
 			}
+			else if (state == AIState::PUSHED) {
+				if (deadType) {
+					animation->SendTrigger("HurtDeath1");
+				}
+				else {
+					animation->SendTrigger("HurtDeath2");
+				}
+			}
 
 			if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
 			ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
 			if (collider) collider->Disable();
 
 			agent->RemoveAgentFromCrowd();
+			if (gruntCharacter.beingPushed) gruntCharacter.beingPushed = false;
 			state = AIState::DEATH;
+		}
+	}
+}
+
+void AIMeleeGrunt::EnableBlastPushBack() {
+	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
+		gruntCharacter.beingPushed = true;
+		state = AIState::PUSHED;
+		if (animation->GetCurrentState()) animation->SendTrigger(animation->GetCurrentState()->name + "Hurt");
+	}
+}
+
+void AIMeleeGrunt::DisableBlastPushBack() {
+	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
+		gruntCharacter.beingPushed = false;
+		if (animation->GetCurrentState()) animation->SendTrigger(animation->GetCurrentState()->name + "Idle");
+		state = AIState::IDLE;
+	}
+}
+
+bool AIMeleeGrunt::IsBeingPushed() const {
+	return gruntCharacter.beingPushed;
+}
+
+void AIMeleeGrunt::UpdatePushBackPosition() {
+	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
+	float3 initialPos = enemyPos;
+
+	float3 direction = (enemyPos - playerPos).Normalized();
+
+	if (agent) {
+		enemyPos += direction * gruntCharacter.pushBackSpeed * Time::GetDeltaTime();
+		agent->SetMoveTarget(enemyPos, false);
+		float distance = enemyPos.Distance(initialPos);
+		currentPushBackDistance += distance;
+
+		if (currentPushBackDistance >= gruntCharacter.pushBackDistance) {
+			DisableBlastPushBack();
+			currentPushBackDistance = 0.f;
 		}
 	}
 }

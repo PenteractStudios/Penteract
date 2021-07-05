@@ -9,6 +9,7 @@ enum class AIState {
 	STUNNED,
 	PUSHED,
 	FLEE,
+	PUSHED,
 	DEATH,
 	LENGTH
 };
