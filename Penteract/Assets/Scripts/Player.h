@@ -24,6 +24,7 @@ enum class AudioPlayer {
 	SHOOT,
 	HIT,
 	DEATH,
+	SPECIAL_SHOOT,
 	TOTAL
 };
 

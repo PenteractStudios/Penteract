@@ -59,8 +59,10 @@ private:
 
 	ResourcePrefab* trail = nullptr;
 	ResourcePrefab* bullet = nullptr;
+	ResourcePrefab* ultimateBullet = nullptr;
+	ComponentParticleSystem* ultimateSystem = nullptr;
 	ComponentTransform* gunTransform = nullptr;
-	ComponentParticleSystem* compParticle = nullptr;
+	ComponentParticleSystem* ultimateParticles = nullptr;
 	ComponentTransform* transformForUltimateProjectileOrigin = nullptr;
 
 

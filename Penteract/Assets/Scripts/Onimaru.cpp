@@ -11,12 +11,31 @@ void Onimaru::Shoot() {
 	if (CanShoot()) {
 		shootingOnCooldown = true;
 		attackCooldownRemaining = 1.f / attackSpeed;
-		if (playerAudios[static_cast<int>(AudioPlayer::SHOOT)]) {
-			playerAudios[static_cast<int>(AudioPlayer::SHOOT)]->Play();
+
+		//NullRef on ultimate values
+		if (playerAudios[static_cast<int>(AudioPlayer::SPECIAL_SHOOT)] == nullptr) {
+			playerAudios[static_cast<int>(AudioPlayer::SPECIAL_SHOOT)] = playerAudios[static_cast<int>(AudioPlayer::SHOOT)];
 		}
-		if (bullet) {
-			float3 projectilePos = ultimateInUse ? transformForUltimateProjectileOrigin->GetGlobalPosition() : gunTransform->GetGlobalPosition();
-			GameObject* bulletInstance = GameplaySystems::Instantiate(bullet, projectilePos, Quat(0.0f, 0.0f, 0.0f, 0.0f));
+		if (ultimateBullet == nullptr) {
+			ultimateBullet = bullet;
+		}
+
+		ComponentAudioSource* audioSourceToPlay = !ultimateInUse ? playerAudios[static_cast<int>(AudioPlayer::SHOOT)] : playerAudios[static_cast<int>(AudioPlayer::SPECIAL_SHOOT)];
+		ResourcePrefab* bulletToInstantiate = !ultimateInUse ? bullet : ultimateBullet;
+		float3 projectilePos = ultimateInUse ? transformForUltimateProjectileOrigin->GetGlobalPosition() : gunTransform->GetGlobalPosition();
+
+		if (audioSourceToPlay) {
+			audioSourceToPlay->Play();
+		}
+
+		if (ultimateInUse) {
+			if (ultimateParticles) {
+				ultimateParticles->Play();
+			}
+		}
+
+		if (bulletToInstantiate) {
+			GameObject* bulletInstance = GameplaySystems::Instantiate(bulletToInstantiate, projectilePos, Quat(0.0f, 0.0f, 0.0f, 0.0f));
 			if (bulletInstance) {
 				OnimaruBullet* onimaruBulletScript = GET_SCRIPT(bulletInstance, OnimaruBullet);
 				if (onimaruBulletScript) {
@@ -26,6 +45,7 @@ void Onimaru::Shoot() {
 		}
 	}
 }
+
 
 void Onimaru::PlayAnimation() {
 	if (!compAnimation) return;
@@ -55,6 +75,12 @@ void Onimaru::StartUltimate() {
 			}
 		}
 		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(ULTI_INTRO)]);
+	}
+
+	if (playerAudios[static_cast<int>(AudioPlayer::THIRD_ABILITY)] == nullptr) {
+		if (!playerAudios[static_cast<int>(AudioPlayer::THIRD_ABILITY)]->IsPlaying()) {
+			playerAudios[static_cast<int>(AudioPlayer::THIRD_ABILITY)]->Play();
+		}
 	}
 
 	ultimateChargePoints = 0;
