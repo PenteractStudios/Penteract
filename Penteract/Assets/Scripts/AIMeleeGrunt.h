@@ -62,6 +62,7 @@ public:
 
 private:
 
+	float attackRemaining = 0.0f;
 	float3 velocity = float3(0, 0, 0);
 	AIState state = AIState::START;
 	bool hitTaken = false;

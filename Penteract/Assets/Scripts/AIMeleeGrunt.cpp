@@ -9,6 +9,7 @@
 #include "AIMovement.h"
 #include "WinLose.h"
 #include "Player.h"
+#include "Resources/ResourceClip.h"
 
 #include <math.h>
 
@@ -148,15 +149,23 @@ void AIMeleeGrunt::Update() {
 		movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), gruntCharacter.movementSpeed, true);
 		if (movementScript->CharacterInAttackRange(player, gruntCharacter.attackRange)) {
 			animation->SendTriggerSecondary("RunAttack");
+			ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(animation->GetCurrentStateSecondary()->clipUid);
+			clip->duration = 5.0f;
+			if(clip) attackRemaining = clip->duration;
 			agent->SetMaxSpeed(0);
 			if (agent) agent->SetMaxSpeed(gruntCharacter.movementSpeed);
-			float3 aux = ownerTransform->GetGlobalPosition() + ownerTransform->GetGlobalRotation().Transform(float3(0, 0, 1)) * 2 + float3(0, 2, 0);
-			if (meleePunch) GameplaySystems::Instantiate(meleePunch, aux, ownerTransform->GetGlobalRotation());
 			if (audios[static_cast<int>(AudioType::ATTACK)]) audios[static_cast<int>(AudioType::ATTACK)]->Play();
 			state = AIState::ATTACK;
 		}
 		break;
 	case AIState::ATTACK:
+		movementScript->Stop();
+		attackRemaining -= Time::GetDeltaTime();
+		if (attackRemaining < 0.5f) {
+			float3 aux = ownerTransform->GetGlobalPosition() + ownerTransform->GetGlobalRotation().Transform(float3(0, 0, 1)) * 2 + float3(0, 2, 0);
+			if (meleePunch) GameplaySystems::Instantiate(meleePunch, aux, ownerTransform->GetGlobalRotation());
+			// generate collider code
+		}
 		break;
 	case AIState::DEATH:
 		break;

@@ -10,7 +10,7 @@
                 "Active": true,
                 "Position": [
                     0.0,
-                    0.0,
+                    5.012494087219238,
                     0.0
                 ],
                 "Rotation": [
@@ -31,24 +31,26 @@
                 ]
             },
             {
-                "Type": "SphereCollider",
+                "Type": "Script",
+                "Active": true,
+                "Script": 6164434189831620833,
+                "Values": null
+            },
+            {
+                "Type": "CapsuleCollider",
                 "Active": true,
                 "colliderType": 2,
                 "layerType": 4,
                 "mass": 1.0,
                 "radius": 1.0,
+                "height": 1.0,
+                "capsuleType": 2,
                 "centerOffset": [
                     0.0,
                     0.0,
                     0.0
                 ],
                 "freezeRotation": false
-            },
-            {
-                "Type": "Script",
-                "Active": true,
-                "Script": 6164434189831620833,
-                "Values": null
             }
         ],
         "Children": null
