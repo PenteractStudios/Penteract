@@ -44,6 +44,7 @@ EXPOSE_MEMBERS(PlayerController) {
 		MEMBER(MemberType::FLOAT, playerFang.dashCooldown),
 		MEMBER(MemberType::FLOAT, playerFang.dashSpeed),
 		MEMBER(MemberType::FLOAT, playerFang.dashDuration),
+		MEMBER(MemberType::FLOAT, playerFang.trailDashOffsetDuration),
 		MEMBER(MemberType::FLOAT, playerOnimaru.lifePoints),
 		MEMBER(MemberType::FLOAT, playerOnimaru.movementSpeed),
 		MEMBER(MemberType::FLOAT, playerOnimaru.damageHit),

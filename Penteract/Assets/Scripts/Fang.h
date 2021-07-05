@@ -31,12 +31,15 @@ public:
 	float dashCooldown = 5.f;
 	float dashSpeed = 100.f;
 	float dashDuration = 0.1f;
-	float trailDuration = 0.2f;
+	float trailDashOffsetDuration = 0.2f;
+
 private:
 	float dashCooldownRemaining = 0.f;
 	float dashRemaining = 0.f;
+	float trailDuration = 0.2f;
 	bool dashing = false;
 	bool dashInCooldown = false;
+	bool hasDashed = false;
 	float3 initialPosition = float3(0, 0, 0);
 	float3 dashDirection = float3(0, 0, 0);
 

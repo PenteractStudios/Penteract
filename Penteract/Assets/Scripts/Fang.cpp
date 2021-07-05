@@ -74,6 +74,8 @@ void Fang::GetHit(float damage_) {
 
 void Fang::InitDash() {
 	if (CanDash()) {
+		trailDash->Play();
+		trailDuration = dashDuration + trailDashOffsetDuration;
 		if (movementInputDirection != MovementDirection::NONE) {
 			dashDirection = GetDirection();
 			dashMovementDirection = movementInputDirection;
@@ -102,15 +104,13 @@ void Fang::InitDash() {
 
 void Fang::Dash() {
 	if (dashing) {
-		trailDuration = 0.2f;
-		trailDash->Play();
+		hasDashed = true;
 		float3 newPosition = playerMainTransform->GetGlobalPosition();
 		newPosition += dashSpeed * dashDirection;
 		agent->SetMoveTarget(newPosition, false);
 	}
 	else {
-		trailDelay();
-		//trailDash->Stop();
+		if(hasDashed)trailDelay();
 	}
 }
 void Fang::trailDelay() {
@@ -118,6 +118,7 @@ void Fang::trailDelay() {
 		trailDuration -= Time::GetDeltaTime();
 	}
 	else {
+		hasDashed = false;
 		trailDash->Stop();
 	}
 }
@@ -192,20 +193,8 @@ void Fang::Shoot() {
 			shootingGunTransform = leftGunTransform;
 		}
 		if (trailGun && rightBullet && leftBullet && shootingGunTransform) {
-			if (rightShot) {
-				//rightBullet->Play();
-			//	rightBullet->SetParticlesPerSecond(float2(10.0f, 10.0f));
-				//leftBullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
-			}
-			else {
-				//leftBullet->Play();
-				//rightBullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
-				//leftBullet->SetParticlesPerSecond(float2(10.0f, 10.0f));
-			}
 			GameObject* bullet = GameplaySystems::Instantiate(trailGun, shootingGunTransform->GetGlobalPosition(), (playerMainTransform->GetGlobalMatrix().RotatePart() * float3x3::FromEulerXYZ(pi/2, 0.0f, 0.0f)).ToQuat());
 			if (bullet->GetComponent<ComponentParticleSystem>()) {
-				//	float3 newWorldRotation = (bullet->GetComponent<ComponentTransform>()->GetGlobalMatrix().RotatePart() * float3x3::FromEulerXYZ(90.0f, 0.0f, 0.0f)).ToEulerXYZ();
-				//bullet->GetComponent<ComponentTransform>()->SetGlobalRotation(newWorldRotation);
 				bullet->GetComponent<ComponentParticleSystem>()->Play();
 			}
 		}
