@@ -31,7 +31,7 @@ void RangerProjectileScript::Update() {
 
 void RangerProjectileScript::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 	//There appears to be an issue, projectiles colliding with each other, for now it should only collide with player (walls later)
-	if (collidedWith.name == "Onimaru" || collidedWith.name == "Fang") {
+	if (collidedWith.name == "Onimaru" || collidedWith.name == "Fang" || collidedWith.name == "Shield") {
 			GameplaySystems::DestroyGameObject(&GetOwner());
 	}
 }

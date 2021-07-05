@@ -32,6 +32,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fangLeftGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangRightGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruShieldUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
 	MEMBER(MemberType::FLOAT, switchCooldown),
@@ -62,7 +63,7 @@ GENERATE_BODY_IMPL(PlayerController);
 
 void PlayerController::Start() {
 	playerFang.Init(fangUID, fangTrailUID, fangLeftGunUID, fangRightGunUID, fangBulletUID, cameraUID, canvasUID);
-	playerOnimaru.Init(onimaruUID, onimaruBulletUID, onimaruGunUID, cameraUID, canvasUID, maxOnimaruBulletSpread);
+	playerOnimaru.Init(onimaruUID, onimaruBulletUID, onimaruGunUID, cameraUID, canvasUID, onimaruShieldUID, maxOnimaruBulletSpread);
 
 	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
 	if (canvasGO) {
@@ -112,7 +113,7 @@ void PlayerController::SetNoCooldown(bool status) {
 }
 //Switch
 bool PlayerController::CanSwitch() {
-	return !switchInCooldown;
+	return !switchInCooldown && !playerOnimaru.IsShielding();
 }
 
 void PlayerController::ResetSwitchStatus() {
@@ -234,7 +235,7 @@ void PlayerController::UpdatePlayerStats() {
 		}
 
 		float realSwitchCooldown = 1.0f - (switchCooldownRemaining / switchCooldown);
-		hudControllerScript->UpdateCooldowns(0.0f, 0.0f, 0.0f, playerFang.GetRealDashCooldown(), 0.0f, 0.0f, realSwitchCooldown);
+		hudControllerScript->UpdateCooldowns(playerOnimaru.GetRealShieldCooldown(), 0.0f, 0.0f, playerFang.GetRealDashCooldown(), 0.0f, 0.0f, realSwitchCooldown);
 	}
 }
 
