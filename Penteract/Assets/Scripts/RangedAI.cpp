@@ -299,6 +299,8 @@ void RangedAI::EnterState(AIState newState) {
 			animation->SendTrigger("RunForwardDeath");
 		} else if (state == AIState::FLEE) {
 			animation->SendTrigger("RunBackwardDeath");
+		} else if (state == AIState::STUNNED) {
+			animation->SendTrigger("StunnedDeath");
 		}
 		if (shot) {
 			animation->SendTriggerSecondary("ShootDeath");
