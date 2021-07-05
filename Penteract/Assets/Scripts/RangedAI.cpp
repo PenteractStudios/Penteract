@@ -1,6 +1,7 @@
 #include "RangedAI.h"
 
 #include "PlayerController.h"
+#include "PlayerDeath.h"
 #include "HUDController.h"
 #include "AIMovement.h"
 #include "RangerProjectileScript.h"
@@ -19,6 +20,7 @@
 //clang-format off
 EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
 	MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
@@ -90,6 +92,11 @@ void RangedAI::Start() {
 		}
 	}
 
+	fang = GameplaySystems::GetGameObject(fangUID);
+
+	if (fang) {
+		playerDeath = GET_SCRIPT(fang, PlayerDeath);
+	}
 	if (fangMeshObj == nullptr) {
 		if (player != nullptr) {
 			GameObject* fangObj = player->GetChild("Fang");
@@ -159,6 +166,10 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 				hitTaken = true;
 			} else if (collidedWith.name == "OnimaruBullet") {
 				rangerGruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
+				hitTaken = true;
+			}
+			else if (collidedWith.name == "Barrel") {
+				rangerGruntCharacter.GetHit(playerDeath->barrelDamageTaken);
 				hitTaken = true;
 			}
 			if (hitTaken) {

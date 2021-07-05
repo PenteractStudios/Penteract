@@ -49,8 +49,6 @@ EXPOSE_MEMBERS(PlayerController) {
 		MEMBER(MemberType::FLOAT, playerOnimaru.movementSpeed),
 		MEMBER(MemberType::FLOAT, playerOnimaru.damageHit),
 		MEMBER(MemberType::FLOAT, playerOnimaru.attackSpeed),
-		MEMBER(MemberType::FLOAT, rangedDamageTaken),
-		MEMBER(MemberType::FLOAT, meleeDamageTaken),
 		MEMBER(MemberType::BOOL, useSmoothCamera),
 		MEMBER(MemberType::FLOAT, smoothCameraSpeed),
 		MEMBER(MemberType::FLOAT, onimaruRecoveryRate),
@@ -244,9 +242,8 @@ void PlayerController::UpdatePlayerStats() {
 	}
 }
 
-void PlayerController::TakeDamage(bool ranged) {
+void PlayerController::TakeDamage(float damage) {
 	if (!invincibleMode) {
-		float damage = (ranged) ? rangedDamageTaken : meleeDamageTaken;
 		if (playerFang.IsActive()) {
 			playerFang.GetHit(damage);
 		}

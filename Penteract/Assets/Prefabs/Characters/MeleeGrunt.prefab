@@ -86,24 +86,24 @@
                         "Value": 11
                     },
                     {
-                        "Name": "meleeRange",
-                        "Type": "Float",
-                        "Value": 3.5
-                    },
-                    {
                         "Name": "winConditionUID",
                         "Type": "GameObjectUID",
                         "Value": 16579210181260590797
                     },
                     {
-                        "Name": "damagePlaceHolderUID",
-                        "Type": "GameObjectUID",
-                        "Value": 6162056736887938687
+                        "Name": "meleeRange",
+                        "Type": "Float",
+                        "Value": 3.5
                     },
                     {
                         "Name": "meleePunchUID",
                         "Type": "PrefabResourceUID",
                         "Value": 11264029273027514993
+                    },
+                    {
+                        "Name": "damagePlaceHolderUID",
+                        "Type": "GameObjectUID",
+                        "Value": 6162056736887938687
                     },
                     {
                         "Name": "meshUID",
@@ -119,6 +119,11 @@
                         "Name": "gruntCharacter.attackRange",
                         "Type": "Float",
                         "Value": 3.5
+                    },
+                    {
+                        "Name": "fangUID",
+                        "Type": "GameObjectUID",
+                        "Value": 11296030499094782229
                     }
                 ]
             },
@@ -134,7 +139,10 @@
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
-                "OuterGain": 0.0
+                "OuterGain": 0.0,
+                "RolloffFactor": 0.0,
+                "ReferenceDistance": 0.0,
+                "MaxDistance": 0.0
             },
             {
                 "Type": "AudioSource",
@@ -148,7 +156,10 @@
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
-                "OuterGain": 0.0
+                "OuterGain": 0.0,
+                "RolloffFactor": 0.0,
+                "ReferenceDistance": 0.0,
+                "MaxDistance": 0.0
             },
             {
                 "Type": "AudioSource",
@@ -162,7 +173,10 @@
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
-                "OuterGain": 0.0
+                "OuterGain": 0.0,
+                "RolloffFactor": 0.0,
+                "ReferenceDistance": 0.0,
+                "MaxDistance": 0.0
             },
             {
                 "Type": "AudioSource",
@@ -176,7 +190,10 @@
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
-                "OuterGain": 0.0
+                "OuterGain": 0.0,
+                "RolloffFactor": 0.0,
+                "ReferenceDistance": 0.0,
+                "MaxDistance": 0.0
             },
             {
                 "Type": "CapsuleCollider",

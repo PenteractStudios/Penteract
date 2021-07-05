@@ -10,7 +10,10 @@
 
 EXPOSE_MEMBERS(PlayerDeath) {
 	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, playerUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
+	MEMBER(MemberType::FLOAT, rangedDamageTaken),
+	MEMBER(MemberType::FLOAT, meleeDamageTaken),
+	MEMBER(MemberType::FLOAT, barrelDamageTaken)
 };
 
 GENERATE_BODY_IMPL(PlayerDeath);
@@ -63,8 +66,10 @@ void PlayerDeath::OnAnimationSecondaryFinished() {
 void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 
 	if (collidedWith.name == "RangerProjectile") {
-		playerController->TakeDamage(true);
+		playerController->TakeDamage(rangedDamageTaken);
 	} else if (collidedWith.name == "MeleePunch") {
-		playerController->TakeDamage(false);
+		playerController->TakeDamage(meleeDamageTaken);
+	}else if (collidedWith.name == "Barrel") {
+		playerController->TakeDamage(barrelDamageTaken);
 	}
 }

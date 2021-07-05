@@ -43,7 +43,7 @@ public:
 	void SetNoCooldown(bool status);
 	int GetOverPowerMode();
 	bool IsPlayerDead() { return !playerFang.isAlive || !playerOnimaru.isAlive; }
-	void TakeDamage(bool ranged = false);
+	void TakeDamage(float damage);
 
 public:
 	//Debug
@@ -96,10 +96,7 @@ public:
 	bool switchInProgress = false;
 	float switchDelay = 0.37f;
 
-	/* Fang & onimaru damage */
-	//split
-	float rangedDamageTaken = 1.0f;
-	float meleeDamageTaken = 1.0f;
+
 
 private:
 	void CheckCoolDowns();

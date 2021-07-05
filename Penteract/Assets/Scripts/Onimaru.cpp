@@ -2,9 +2,6 @@
 #include "OnimaruBullet.h"
 #include "CameraController.h"
 
-
-
-
 void Onimaru::PlayAnimation() {
 	if (!compAnimation) return;
 	if (ultimateInUse || !isAlive) return; //Ultimate will block out all movement and idle from happening
@@ -113,7 +110,6 @@ void Onimaru::Update(bool lockMovement) {
 						}
 					}
 				}
-				shooting = true;
 				if (bullet) {
 					if (playerAudios[static_cast<int>(AudioPlayer::SHOOT)]) {
 						playerAudios[static_cast<int>(AudioPlayer::SHOOT)]->Play();
@@ -126,7 +122,6 @@ void Onimaru::Update(bool lockMovement) {
 				if (compAnimation) {
 					if (compAnimation->GetCurrentState() && compAnimation->GetCurrentStateSecondary()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 				}
-				shooting = false;
 				bullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
 			}
 		}

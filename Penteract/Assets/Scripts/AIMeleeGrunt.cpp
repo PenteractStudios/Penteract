@@ -4,6 +4,7 @@
 #include "GameplaySystems.h"
 
 #include "PlayerController.h"
+#include "PlayerDeath.h"
 #include "EnemySpawnPoint.h"
 #include "HUDController.h"
 #include "AIMovement.h"
@@ -17,6 +18,7 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, meleePunchUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, damageMaterialPlaceHolderUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, defaultMaterialPlaceHolderUID),
 	MEMBER(MemberType::INT, gruntCharacter.lifePoints),
@@ -43,6 +45,14 @@ void AIMeleeGrunt::Start() {
 			playerController = GET_SCRIPT(player, PlayerController);
 		}
 	}
+
+	fang = GameplaySystems::GetGameObject(fangUID);
+
+	if (fang) {
+		playerDeath = GET_SCRIPT(fang, PlayerDeath);
+	}
+	
+
 
 	meleePunch = GameplaySystems::GetResource<ResourcePrefab>(meleePunchUID);
 
@@ -117,7 +127,7 @@ void AIMeleeGrunt::Update() {
 	if (!ownerTransform) return;
 	if (!animation) return;
 	if (!componentMeshRenderer) return;
-
+	if (!playerDeath) return;
 	if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
 		timeSinceLastHurt += Time::GetDeltaTime();
 		if (timeSinceLastHurt > hurtFeedbackTimeDuration) {
@@ -215,6 +225,11 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 				hitTaken = true;
 				gruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
 			}
+			else if (collidedWith.name == "Barrel") {
+				hitTaken = true;
+				gruntCharacter.GetHit(playerDeath->barrelDamageTaken);
+			}
+
 
 			if (hitTaken) {
 				if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();

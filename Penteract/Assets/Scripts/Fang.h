@@ -2,6 +2,7 @@
 
 #include "Player.h"
 
+
 class HUDController;
 class Fang : public Player {
 public:
