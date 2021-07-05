@@ -178,7 +178,6 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 			if (collider) collider->Disable();
 			if (rangerGruntCharacter.beingPushed) DisableBlastPushBack();
 			ChangeState(AIState::DEATH);
-			if (winLoseScript) winLoseScript->IncrementDeadEnemies();
 			if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
 		}
 	}
