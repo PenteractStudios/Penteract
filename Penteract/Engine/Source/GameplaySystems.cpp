@@ -10,12 +10,11 @@
 #include "Modules/ModuleInput.h"
 #include "Modules/ModuleEvents.h"
 #include "Modules/ModuleCamera.h"
-#include "Modules/ModuleRender.h"
 #include "Modules/ModuleWindow.h"
 #include "Modules/ModuleEditor.h"
-#include "Modules/ModuleRender.h"
 #include "Modules/ModuleCamera.h"
 #include "Modules/ModuleAudio.h"
+#include "Modules/ModuleUserInterface.h"
 #include "Resources/ResourcePrefab.h"
 #include "Resources/ResourceMaterial.h"
 #include "FileSystem/SceneImporter.h"
@@ -232,22 +231,17 @@ bool Input::GetKeyCode(KEYCODE keycode) {
 
 bool Input::GetControllerButtonDown(SDL_GameControllerButton button, int playerID) {
 	PlayerController* player = App->input->GetPlayerController(playerID);
-	return player ? false : player->gameControllerButtons[button] == KS_DOWN;
+	return player ? player->gameControllerButtons[button] == KS_DOWN : false;
 }
 
 bool Input::GetControllerButtonUp(SDL_GameControllerButton button, int playerID) {
 	PlayerController* player = App->input->GetPlayerController(playerID);
-	return player ? false : player->gameControllerButtons[button] == KS_UP;
-}
-
-bool Input::GetControllerButtonRepeat(SDL_GameControllerButton button, int playerID) {
-	PlayerController* player = App->input->GetPlayerController(playerID);
-	return player ? false : player->gameControllerButtons[button] == KS_REPEAT;
+	return player ? player->gameControllerButtons[button] == KS_UP : false;
 }
 
 bool Input::GetControllerButton(SDL_GameControllerButton button, int playerID) {
 	PlayerController* player = App->input->GetPlayerController(playerID);
-	return player ? false : player->gameControllerButtons[button];
+	return player ? player->gameControllerButtons[button] == KS_REPEAT : false;
 }
 
 float Input::GetControllerAxisValue(SDL_GameControllerAxis axis, int playerID) {
@@ -379,6 +373,32 @@ float2 Screen::GetResolution() {
 	return float2(static_cast<float>(App->window->GetWidth()), static_cast<float>(App->window->GetHeight()));
 }
 
+void Screen::SetMSAAActive(bool value) {
+	App->renderer->msaaActive = value;
+	App->renderer->UpdateFramebuffers();
+}
+
+void Screen::SetMSAAType(MSAA_SAMPLES_TYPE value) {
+	App->renderer->msaaSampleType = value;
+	App->renderer->UpdateFramebuffers();
+}
+
+const bool Screen::IsMSAAActive() {
+	return App->renderer->msaaActive;
+}
+
+const MSAA_SAMPLES_TYPE Screen::GetMSAAType() {
+	return App->renderer->msaaSampleType;
+}
+
+const float Screen::GetBloomThreshold() {
+	return App->renderer->bloomThreshold;
+}
+
+void Screen::SetBloomThreshold(float value) {
+	App->renderer->bloomThreshold = value;
+}
+
 // --------- Camera --------- //
 
 bool Camera::CheckObjectInsideFrustum(GameObject* gameObject) {
@@ -389,4 +409,8 @@ bool Camera::CheckObjectInsideFrustum(GameObject* gameObject) {
 
 void Audio::StopAllSources() {
 	App->audio->StopAllSources();
+}
+
+ComponentEventSystem* UserInterface::GetCurrentEventSystem() {
+	return App->userInterface->GetCurrentEventSystem();
 }

@@ -21,8 +21,8 @@ void MeleePunch::Update() {
 	}
 }
 
-void MeleePunch::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance) {
-	if (collidedWith.name == "Onimaru" || collidedWith.name == "Fang") {
+void MeleePunch::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+	if (collidedWith.name == "Onimaru" || collidedWith.name == "Fang" || collidedWith.name == "Shield") {
 		GameplaySystems::DestroyGameObject(&GetOwner());
 	}
 }

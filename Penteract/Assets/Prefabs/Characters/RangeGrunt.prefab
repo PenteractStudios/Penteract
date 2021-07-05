@@ -44,12 +44,12 @@
                     {
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
-                        "Value": 8838610656912784116
+                        "Value": 9349791306028942696
                     },
                     {
                         "Name": "playerMeshUIDFang",
                         "Type": "GameObjectUID",
-                        "Value": 548657457207361532
+                        "Value": 2487887245066891169
                     },
                     {
                         "Name": "fleeingRange",
@@ -59,7 +59,7 @@
                     {
                         "Name": "playerMeshUIDOnimaru",
                         "Type": "GameObjectUID",
-                        "Value": 7442917403967632346
+                        "Value": 3106065943855864347
                     },
                     {
                         "Name": "meshUID2",
@@ -132,7 +132,10 @@
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
-                "OuterGain": 0.0
+                "OuterGain": 0.0,
+                "RolloffFactor": 0.0,
+                "ReferenceDistance": 0.0,
+                "MaxDistance": 0.0
             },
             {
                 "Type": "AudioSource",
@@ -146,7 +149,10 @@
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
-                "OuterGain": 0.0
+                "OuterGain": 0.0,
+                "RolloffFactor": 0.0,
+                "ReferenceDistance": 0.0,
+                "MaxDistance": 0.0
             },
             {
                 "Type": "AudioSource",
@@ -160,7 +166,10 @@
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
-                "OuterGain": 0.0
+                "OuterGain": 0.0,
+                "RolloffFactor": 0.0,
+                "ReferenceDistance": 0.0,
+                "MaxDistance": 0.0
             },
             {
                 "Type": "AudioSource",
@@ -174,7 +183,10 @@
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
-                "OuterGain": 0.0
+                "OuterGain": 0.0,
+                "RolloffFactor": 0.0,
+                "ReferenceDistance": 0.0,
+                "MaxDistance": 0.0
             },
             {
                 "Type": "CapsuleCollider",
