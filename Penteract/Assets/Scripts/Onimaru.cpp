@@ -137,7 +137,7 @@ void Onimaru::StartUltimate() {
 	}
 
 	ultimateChargePoints = 0;
-	orientationSpeed = ultimateRotationSpeed;
+	orientationSpeed = ultimateOrientationSpeed;
 	attackSpeed = ultimateAttackSpeed;
 	movementInputDirection = MovementDirection::NONE;
 	Player::MoveTo();
@@ -146,7 +146,7 @@ void Onimaru::StartUltimate() {
 
 void Onimaru::FinishUltimate() {
 	ultimateTimeRemaining = 0;
-	orientationSpeed = -1;
+	orientationSpeed = normalOrientationSpeed;
 	attackSpeed = originalAttackSpeed;
 	ultimateInUse = false;
 	compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(IDLE)]);
@@ -230,6 +230,11 @@ void Onimaru::OnAnimationSecondaryFinished() {
 		}
 	}
 
+}
+
+bool Onimaru::IsInstantOrientation(bool useGamepad) const {
+	//This must return true only when ultimate not in use and Gamepad is either not used or not connected
+	return !ultimateInUse && (!useGamepad || !Input::IsGamepadConnected(0));
 }
 
 void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID onimaruRightHandUID, UID shieldUID, UID onimaruTransformForUltimateProjectileOriginUID, UID cameraUID, UID canvasUID, float maxSpread_) {

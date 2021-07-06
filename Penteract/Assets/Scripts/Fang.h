@@ -9,12 +9,13 @@ public:
 
 	// ------- Contructors ------- //
 	Fang() {};
-	void Update(bool lastInputGamepad = false,bool lockMovement = false, bool lockOrientation = false) override;
+	void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockOrientation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
 	void GetHit(float damage_) override;
 	bool CanSwitch() const override;
+	bool IsInstantOrientation(bool useGamepad) const override;
 
 	float GetRealDashCooldown();
 	void Init(UID fangUID = 0, UID trailUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID bulletUID = 0, UID cameraUID = 0, UID canvasUID = 0);

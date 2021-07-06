@@ -71,15 +71,42 @@ void Player::LookAtGamepadDir() {
 	float2 lookAtInput = GetControllerOrientationDirection();
 	if (lookAtInput.x == 0 && lookAtInput.y == 0) return;
 	float3 desiredFacePointDir = float3(lookAtInput.x, 0, lookAtInput.y);
-	desiredFacePointDir = Lerp(facePointDir, desiredFacePointDir, Time::GetDeltaTime() * normalAngularSpeed);
+	desiredFacePointDir = Lerp(facePointDir, desiredFacePointDir, Time::GetDeltaTime() * normalOrientationSpeed);
 	facePointDir = desiredFacePointDir;
 }
 
-void Player::LookAtFacePointTarget() {
+void Player::LookAtFacePointTarget(bool useGamepad) {
+
 	Quat quat = playerMainTransform->GetGlobalRotation();
 	float angle = Atan2(facePointDir.x, facePointDir.z);
 	Quat rotation = quat.RotateAxisAngle(float3(0, 1, 0), angle);
-	playerMainTransform->SetGlobalRotation(rotation);
+
+	float orientationSpeedToUse = IsInstantOrientation(useGamepad) ? -1 : orientationSpeed;
+
+	if (orientationSpeedToUse == -1) {
+		playerMainTransform->SetGlobalRotation(rotation);
+	} else {
+		float3 aux2 = playerMainTransform->GetFront();
+		aux2.y = 0;
+
+		angle = facePointDir.AngleBetween(aux2);
+		float3 cross = Cross(aux2, facePointDir.Normalized());
+		float dot = Dot(cross, float3(0, 1, 0));
+		float multiplier = 1.0f;
+
+		if (dot < 0) {
+			angle *= -1;
+			multiplier = -1;
+		}
+
+		if (Abs(angle) > DEGTORAD * orientationThreshold) {
+			Quat rotationToAdd;
+			rotationToAdd.SetFromAxisAngle(float3(0, 1, 0), multiplier * Time::GetDeltaTime() * orientationSpeed);
+			playerMainTransform->SetGlobalRotation(rotationToAdd * quat);
+		} else {
+			playerMainTransform->SetGlobalRotation(rotation);
+		}
+	}
 }
 
 void Player::MoveTo() {
@@ -268,37 +295,6 @@ void Player::LookAtMouse() {
 }
 
 void Player::Update(bool useGamepad, bool lockMovement, bool lockOrientation) {
-	Quat quat = playerMainTransform->GetGlobalRotation();
-	float angle = Atan2(facePointDir.x, facePointDir.z);
-	Quat rotation = quat.RotateAxisAngle(float3(0, 1, 0), angle);
-
-	if (orientationSpeed == -1) {
-		playerMainTransform->SetGlobalRotation(rotation);
-	} else {
-		float3 aux2 = playerMainTransform->GetFront();
-		aux2.y = 0;
-
-		float angle = facePointDir.AngleBetween(aux2);
-		float3 cross = Cross(aux2, facePointDir.Normalized());
-		float dot = Dot(cross, float3(0, 1, 0));
-		float multiplier = 1.0f;
-
-		if (dot < 0) {
-			angle *= -1;
-			multiplier = -1;
-		}
-
-		if (Abs(angle) > DEGTORAD * orientationThreshold) {
-			Quat rotationToAdd;
-			rotationToAdd.SetFromAxisAngle(float3(0, 1, 0), multiplier * Time::GetDeltaTime() * orientationSpeed);
-			playerMainTransform->SetGlobalRotation(rotationToAdd * quat);
-		} else {
-			playerMainTransform->SetGlobalRotation(rotation);
-			Debug::Log("BelowThreshold");
-		}
-
-	}
-
 
 	if (!lockMovement) {
 
@@ -308,7 +304,7 @@ void Player::Update(bool useGamepad, bool lockMovement, bool lockOrientation) {
 
 	if (!lockOrientation) {
 		UpdateFacePointDir(useGamepad && Input::IsGamepadConnected(0));
-		LookAtFacePointTarget();
+		LookAtFacePointTarget(useGamepad && Input::IsGamepadConnected(0));
 	}
 
 }

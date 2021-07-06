@@ -41,7 +41,7 @@ public:
 	float ultimateAttackSpeed = 20.0f;
 	float ultimateTimeRemaining = 0.0f;
 	float ultimateTotalTime = 3.0f;
-	float ultimateRotationSpeed = 2.0f;
+	float ultimateOrientationSpeed = 2.0f;
 	float maxBulletSpread = 5.0f;
 	// Blast ability
 	float blastCooldown = 7.f;
@@ -58,6 +58,7 @@ public:
 	void OnAnimationFinished() override;
 	void OnDeath() override;
 	void OnAnimationSecondaryFinished() override;
+	bool IsInstantOrientation(bool useGampead) const override;
 
 	float GetRealUltimateCooldown();
 

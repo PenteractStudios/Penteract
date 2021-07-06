@@ -63,10 +63,11 @@ public:
 	virtual void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockOrientation = false);
 	virtual void CheckCoolDowns(bool noCooldownMode = false) {}
 	virtual bool CanSwitch() const = 0;
-	
+
 	virtual void OnAnimationFinished() = 0;
 	virtual void OnAnimationSecondaryFinished() = 0;
-	
+	virtual bool IsInstantOrientation(bool useGamepad) const = 0;
+
 	int GetMouseDirectionState();
 	bool IsActive();
 	void IncreaseUltimateCounter();
@@ -79,12 +80,12 @@ public:
 	float attackSpeed = 1.0f;
 	float attackCooldownRemaining = 0.f;
 	bool shooting = false;
-	float orientationSpeed = -1;
+	float orientationSpeed = 5.0f;
 	float orientationThreshold = 5.0f;
 	int ultimateChargePoints = 0;
 	const int ultimateChargePointsTotal = 10;
 	bool shootingOnCooldown = false;
-	float normalAngularSpeed = 5.0f;
+	float normalOrientationSpeed = 5.0f;
 
 	float3 lookAtMousePlanePosition = float3(0, 0, 0);
 	ComponentCamera* lookAtMouseCameraComp = nullptr;
@@ -103,7 +104,7 @@ private:
 	MovementDirection GetControllerMovementDirection(bool useGamepad = false) const;
 	float2 GetControllerOrientationDirection() const;
 	void LookAtGamepadDir();
-	void LookAtFacePointTarget();
+	void LookAtFacePointTarget(bool useGamepad);
 private:
 	float currentSwitchDelay = 0.f;
 	bool playSwitchParticles = true;

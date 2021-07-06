@@ -59,6 +59,10 @@ bool Fang::CanSwitch() const {
 	return true;
 }
 
+bool Fang::IsInstantOrientation(bool useGamepad) const {
+	return !useGamepad || !Input::IsGamepadConnected(0);
+}
+
 void Fang::GetHit(float damage_) {
 
 	if (!dashing) {
