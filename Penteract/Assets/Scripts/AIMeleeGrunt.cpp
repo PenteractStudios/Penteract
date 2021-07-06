@@ -29,7 +29,8 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::FLOAT, gruntCharacter.timeToDie),
 	MEMBER(MemberType::FLOAT, gruntCharacter.pushBackDistance),
 	MEMBER(MemberType::FLOAT, gruntCharacter.pushBackSpeed),
-	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration)
+	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
+	MEMBER(MemberType::FLOAT, stunDuration)
 };
 
 GENERATE_BODY_IMPL(AIMeleeGrunt);
@@ -162,6 +163,15 @@ void AIMeleeGrunt::Update() {
 		break;
 	case AIState::ATTACK:
 		break;
+	case AIState::STUNNED:
+		if (stunTimeRemaining <= 0.f) {
+			stunTimeRemaining = 0.f;
+			animation->SendTrigger("StunnedEndStun");			
+		}
+		else {
+			stunTimeRemaining -= Time::GetDeltaTime();
+		}
+		break;
 	case AIState::PUSHED:
 		UpdatePushBackPosition();
 		break;
@@ -178,6 +188,8 @@ void AIMeleeGrunt::Update() {
 			if (playerController) {
 				if (playerController->playerOnimaru.characterGameObject->IsActive()) {
 					playerController->playerOnimaru.IncreaseUltimateCounter();
+				} else if (playerController->playerFang.characterGameObject->IsActive()) {
+					playerController->playerFang.IncreaseUltimateCounter();
 				}
 			}
 
@@ -200,6 +212,17 @@ void AIMeleeGrunt::OnAnimationFinished() {
 		animation->SendTrigger("SpawnIdle");
 		state = AIState::IDLE;
 		agent->AddAgentToCrowd();
+	}
+	else if (state == AIState::STUNNED) {
+		State* current = animation->GetCurrentState();
+		if (current->name == "BeginStun") {
+			animation->SendTrigger("BeginStunStunned");
+		}
+		else if (current->name == "EndStun") {
+			animation->SendTrigger("EndStunIdle");
+			agent->AddAgentToCrowd();
+			state = AIState::IDLE;
+		}
 	}
 
 	else if (state == AIState::DEATH) {
@@ -225,10 +248,20 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 			bool hitTaken = false;
 			if (collidedWith.name == "FangBullet") {
 				hitTaken = true;
-				gruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
+				if(state == AIState::STUNNED && EMPUpgraded){
+					gruntCharacter.GetHit(99);
+				}
+				else {
+					gruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
+				}
 			} else if (collidedWith.name == "OnimaruBullet") {
 				hitTaken = true;
-				gruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
+				if (state == AIState::STUNNED && EMPUpgraded) {
+					gruntCharacter.GetHit(99);
+				}
+				else {
+					gruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
+				}
 			}
 
 			if (hitTaken) {
@@ -241,35 +274,66 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 
 			}
 
+			if (collidedWith.name == "EMP") {
+				if (state == AIState::ATTACK) {
+					animation->SendTrigger("RunBeginStun");
+					animation->SendTriggerSecondary("AttackBeginStun");
+				}
+				else if (state == AIState::IDLE) {
+					animation->SendTrigger("IdleBeginStun");
+				}
+				else if (state == AIState::RUN) {
+					animation->SendTrigger("RunBeginStun");
+				}
+				agent->RemoveAgentFromCrowd();
+				stunTimeRemaining = stunDuration;
+				state = AIState::STUNNED;
+			}
+
 		}
 
-		if (!gruntCharacter.isAlive) {
-			deadType = (rand() % 2 == 0) ? true : false;
-			if (state == AIState::ATTACK) {
-				if (deadType) {
-					animation->SendTrigger("RunDeath1");
-					animation->SendTriggerSecondary("AttackDeath1");
-				} else {
-					animation->SendTrigger("RunDeath2");
-					animation->SendTriggerSecondary("AttackDeath2");
+        if (!gruntCharacter.isAlive) {
+            deathType = (rand() % 2 == 0) ? true : false;
+            if (state == AIState::ATTACK) {
+                if (deathType) {
+                    animation->SendTrigger("RunDeath1");
+                    animation->SendTriggerSecondary("AttackDeath1");
+                }
+                else {
+                    animation->SendTrigger("RunDeath2");
+                    animation->SendTriggerSecondary("AttackDeath2");
+                }
+                
+            }
+            else if (state == AIState::IDLE) {
+                if (deathType) {
+                    animation->SendTrigger("IdleDeath1");
+                }
+                else {
+                    animation->SendTrigger("IdleDeath1");
+                }
+            }
+            else if (state == AIState::RUN) {
+                if (deathType) {
+                    animation->SendTrigger("RunDeath1");
+                }
+                else {
+                    animation->SendTrigger("RunDeath2");
+                }
+            }
+			else if (state == AIState::STUNNED) {
+				if (deathType) {
+					animation->SendTrigger("StunnedDeath1");
 				}
-
-			} else if (state == AIState::IDLE) {
-				if (deadType) {
-					animation->SendTrigger("IdleDeath1");
-				} else {
-					animation->SendTrigger("IdleDeath1");
+				else {
+					animation->SendTrigger("StunnedDeath2");
 				}
-			} else if (state == AIState::RUN) {
-				if (deadType) {
-					animation->SendTrigger("RunDeath1");
-				} else {
-					animation->SendTrigger("RunDeath2");
-				}
-			} else if (state == AIState::PUSHED) {
-				if (deadType) {
+			}
+			else if (state == AIState::PUSHED) {
+				if (deathType) {
 					animation->SendTrigger("HurtDeath1");
-				} else {
+				}
+				else {
 					animation->SendTrigger("HurtDeath2");
 				}
 			}

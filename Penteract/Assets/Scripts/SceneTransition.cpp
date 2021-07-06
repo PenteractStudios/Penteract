@@ -4,7 +4,7 @@
 #include "GameObject.h"
 #include "GameplaySystems.h"
 
-#define FADE_SPEED 0.01f
+#define FADE_SPEED 0.001f
 #define CENTER_POSITION 0.f
 #define ALPHA_TRANSPARENCY 255.f
 #define FULL_OPACY 1.f
