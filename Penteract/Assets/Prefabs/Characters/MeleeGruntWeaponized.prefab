@@ -55,12 +55,12 @@
                 "Script": 1991507863247597087,
                 "Values": [
                     {
-                        "Name": "playerUID",
+                        "Name": "defaultMaterialPlaceHolderUID",
                         "Type": "GameObjectUID",
-                        "Value": 403437826872113792
+                        "Value": 9837534394034980895
                     },
                     {
-                        "Name": "defaultMaterialPlaceHolderUID",
+                        "Name": "playerUID",
                         "Type": "GameObjectUID",
                         "Value": 9349791306028942696
                     },
