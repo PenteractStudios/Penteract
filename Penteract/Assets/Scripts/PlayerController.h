@@ -69,6 +69,8 @@ public:
 	UID fangLeftBulletUID = 0;
 	UID fangRightBulletUID = 0;
 	UID EMPUID = 0;
+	UID fangUltimateUID = 0;
+
 	//Onimaru
 	UID onimaruUID = 0;
 	UID onimaruParticleUID = 0;

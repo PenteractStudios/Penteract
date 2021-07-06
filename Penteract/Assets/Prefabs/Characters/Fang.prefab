@@ -44,7 +44,7 @@
                     {
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
-                        "Value": 403437826872113792
+                        "Value": 9349791306028942696
                     },
                     {
                         "Name": "sceneUID",
@@ -3604,7 +3604,7 @@
                         "Type": "SphereCollider",
                         "Active": false,
                         "colliderType": 2,
-                        "layerType": 4,
+                        "layerType": 5,
                         "mass": 1.0,
                         "radius": 5.0,
                         "centerOffset": [

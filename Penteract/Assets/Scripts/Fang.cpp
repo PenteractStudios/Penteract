@@ -3,7 +3,7 @@
 #include "HUDController.h"
 #include "CameraController.h"
 
-void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, UID rightBulletUID, UID leftBulletUID, UID cameraUID, UID canvasUID, UID EMPUID) {
+void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID, UID canvasUID) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(fangUID);
 
@@ -23,23 +23,10 @@ void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, 
 		gunAux = GameplaySystems::GetGameObject(leftGunUID);
 		if (gunAux) leftGunTransform = gunAux->GetComponent<ComponentTransform>();
 		lookAtMousePlanePosition = leftGunTransform->GetGlobalPosition();
-
-		GameObject* trailAux = GameplaySystems::GetGameObject(trailDashUID);
-		if (trailAux) {
-			trailDash = trailAux->GetComponent<ComponentTrail>();
-			trailDash->Stop();
-		}
 		trailGun = GameplaySystems::GetResource<ResourcePrefab>(trailGunUID);
-		GameObject* rightBulletAux = GameplaySystems::GetGameObject(rightBulletUID);
-		if (rightBulletAux) {
-			rightBullet = rightBulletAux->GetComponent<ComponentParticleSystem>();
-			rightBullet->Stop();
-		}
-		GameObject* leftBulletAux = GameplaySystems::GetGameObject(leftBulletUID);
-		if (leftBulletAux) {
-			leftBullet = leftBulletAux->GetComponent<ComponentParticleSystem>();
-			leftBullet->Stop();
-		}
+		bullet = GameplaySystems::GetGameObject(bulletUID);
+		//DashTrail
+		trailDash = GameplaySystems::GetResource<ResourcePrefab>(trailGunUID);
 		if (compAnimation) {
 			currentState = compAnimation->GetCurrentState();
 		}
@@ -64,20 +51,8 @@ void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, 
 			i++;
 		}
 	}
-	EMP = GameplaySystems::GetGameObject(EMPUID);
-	if (EMP) {
-		ComponentSphereCollider* sCollider = EMP->GetComponent<ComponentSphereCollider>();
-		if (sCollider) sCollider->radius = EMPRadius;
-	}
 }
 
-bool Fang::CanSwitch() const {
-	return true;
-}
-void Fang::IncreaseUltimateCounter()
-{
-	ultimateCooldownRemaining++;
-}
 void Fang::GetHit(float damage_) {
 	if (!dashing) {
 		Player::GetHit(damage_);
@@ -86,8 +61,6 @@ void Fang::GetHit(float damage_) {
 
 void Fang::InitDash() {
 	if (CanDash()) {
-		trailDash->Play();
-		trailDuration = dashDuration + trailDashOffsetDuration;
 		if (movementInputDirection != MovementDirection::NONE) {
 			dashDirection = GetDirection();
 			dashMovementDirection = movementInputDirection;
@@ -116,45 +89,14 @@ void Fang::InitDash() {
 
 void Fang::Dash() {
 	if (dashing) {
-		hasDashed = true;
 		float3 newPosition = playerMainTransform->GetGlobalPosition();
 		newPosition += dashSpeed * dashDirection;
 		agent->SetMoveTarget(newPosition, false);
 	}
-	else {
-		if (hasDashed)trailDelay();
-	}
 }
-void Fang::trailDelay() {
-	if (trailDuration >= 0) {
-		trailDuration -= Time::GetDeltaTime();
-	}
-	else {
-		hasDashed = false;
-		trailDash->Stop();
-	}
-}
+
 bool Fang::CanDash() {
-	return !dashing && !dashInCooldown && !EMP->IsActive();
-}
-
-void Fang::ActivateEMP() {
-	if (EMP && CanEMP()) {
-		EMP->Enable();
-		EMPCooldownRemaining = EMPCooldown;
-		EMPInCooldown = true;
-
-		if (playerAudios[static_cast<int>(AudioPlayer::SECOND_ABILITY)]) {
-			playerAudios[static_cast<int>(AudioPlayer::SECOND_ABILITY)]->Play();
-		}
-		if (hudControllerScript) {
-			hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_2);
-		}
-	}
-}
-
-bool Fang::CanEMP() {
-	return !EMP->IsActive() && !EMPInCooldown && !dashing;
+	return isAlive && !dashing && !dashInCooldown;
 }
 
 void Fang::CheckCoolDowns(bool noCooldownMode) {
@@ -187,50 +129,18 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 		if (attackCooldownRemaining <= 0.f) {
 			attackCooldownRemaining = 0.f;
 			shootingOnCooldown = false;
-		}
-		else {
+		} else {
 			attackCooldownRemaining -= Time::GetDeltaTime();
-		}
-	}
-
-	//EMP Cooldown
-	if (EMPInCooldown) {
-		if (noCooldownMode || EMPCooldownRemaining <= 0.f) {
-			EMPCooldownRemaining = 0.f;
-			EMPInCooldown = false;
-		}
-		else {
-			EMPCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
 }
 
 void Fang::OnAnimationFinished() {
-	if (compAnimation) {
-		if (compAnimation->GetCurrentState()) {
-			if (compAnimation->GetCurrentState()->name == "EMP") {
-				compAnimation->SendTrigger(states[21] + states[0]);
-				EMP->Disable();
-			}
-		}
-	}
-}
-
-void Fang::OnAnimationSecondaryFinished() {
+	//TODO use if necesary
 }
 
 float Fang::GetRealDashCooldown() {
 	return 1.0f - (dashCooldownRemaining / dashCooldown);
-}
-
-float Fang::GetRealEMPCooldown()
-{
-	return 1.0f - (EMPCooldownRemaining / EMPCooldown);
-}
-
-float Fang::GetRealUltimateCooldown()
-{
-	return (ultimateCooldownRemaining / (float)ultimateCooldown);
 }
 
 bool Fang::CanShoot() {
@@ -247,18 +157,15 @@ void Fang::Shoot() {
 
 		ComponentTransform* shootingGunTransform = nullptr;
 		if (rightShot) {
-			if (compAnimation->GetCurrentState()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[11]);
+			if(compAnimation->GetCurrentState()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[11]);
 			shootingGunTransform = rightGunTransform;
-		}
-		else {
+		} else {
 			if (compAnimation->GetCurrentState()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[10]);
 			shootingGunTransform = leftGunTransform;
 		}
-		if (trailGun && rightBullet && leftBullet && shootingGunTransform) {
-			GameObject* bullet = GameplaySystems::Instantiate(trailGun, shootingGunTransform->GetGlobalPosition(), (playerMainTransform->GetGlobalMatrix().RotatePart() * float3x3::FromEulerXYZ(pi / 2, 0.0f, 0.0f)).ToQuat());
-			if (bullet->GetComponent<ComponentParticleSystem>()) {
-				bullet->GetComponent<ComponentParticleSystem>()->Play();
-			}
+		if (trailGun && bullet && shootingGunTransform) {
+			bullet->GetComponent<ComponentParticleSystem>()->Play();
+			GameplaySystems::Instantiate(trailGun, shootingGunTransform->GetGlobalPosition(), playerMainTransform->GetGlobalRotation());
 		}
 	}
 }
@@ -271,7 +178,6 @@ void Fang::PlayAnimation() {
 		dashAnimation = 4;
 		movementInputDirection = dashMovementDirection;
 	}
-	if (EMP->IsActive()) movementInputDirection = MovementDirection::NONE;
 
 	if (compAnimation->GetCurrentState()) {
 		if (movementInputDirection == MovementDirection::NONE) {
@@ -287,58 +193,30 @@ void Fang::PlayAnimation() {
 						}
 					}
 				}
-				<<<<<< < HEAD
-			}
-			else {
+			} else {
 				if (compAnimation->GetCurrentState()->name != states[0]) {
-					====== =
-				}
-				else {
-					if (compAnimation->GetCurrentState()->name != states[0] && compAnimation->GetCurrentState()->name != states[21]) {
-						>>>>>> > develop
-							compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[0]);
-					}
-					if (compAnimation->GetCurrentState()->name == states[0] && EMP->IsActive()) {
-						compAnimation->SendTrigger(states[0] + states[21]);
-					}
+					compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[0]);
 				}
 			}
-		else {
+		} else {
 			if (compAnimation->GetCurrentState()->name != states[GetMouseDirectionState() + dashAnimation]) {
 				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState() + dashAnimation]);
 			}
 		}
-		}
-	}
+	} 
+}
 
-	void Fang::Update(bool lockMovement, bool lockOrientation) {
-		if (isAlive) {
-			<<<<<< < HEAD
-				Player::Update(dashing);
-			if (Input::GetMouseButtonDown(2)) {
-				InitDash();
-			}
-			if (!dashing) {
-				if (Input::GetMouseButtonDown(0)) Shoot();
-			}
-			Dash();
+void Fang::Update(bool lockMovement) {
+	if (isAlive) {
+		Player::Update(dashing);
+		if (Input::GetMouseButtonDown(2)) {
+			InitDash();
 		}
-		====== =
-			if (EMP) {
-				Player::Update(dashing || EMP->IsActive(), dashing || EMP->IsActive());
-				if (Input::GetMouseButtonDown(2) && !EMP->IsActive()) {
-					InitDash();
-				}
-				if (!dashing && !EMP->IsActive()) {
-					if (Input::GetMouseButtonDown(0)) Shoot();
-				}
-				Dash();
-				if (Input::GetKeyCodeDown(Input::KEY_Q)) {
-					ActivateEMP();
-				}
-			}
+		if (!dashing) {
+			if (Input::GetMouseButtonDown(0)) Shoot();
+		}
+		Dash();
 	}
-	>>>>>> > develop
 	else {
 		if (agent) agent->RemoveAgentFromCrowd();
 		movementInputDirection = MovementDirection::NONE;
