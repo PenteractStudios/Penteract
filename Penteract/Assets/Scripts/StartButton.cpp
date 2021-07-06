@@ -29,21 +29,24 @@ void StartButton::Start() {
 void StartButton::Update() {
     /* Audio */
     if (selectable) {
-        ComponentSelectable* hoveredComponent = UserInterface::GetCurrentEventSystem()->GetCurrentlyHovered();
-        if (hoveredComponent) {
-            bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
-            if (hovered) {
-                if (playHoveredAudio) {
-                    PlayAudio(UIAudio::HOVERED);
-                    playHoveredAudio = false;
+        ComponentEventSystem* eventSystem = UserInterface::GetCurrentEventSystem();
+        if (eventSystem) {
+            ComponentSelectable* hoveredComponent = eventSystem->GetCurrentlyHovered();
+            if (hoveredComponent) {
+                bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
+                if (hovered) {
+                    if (playHoveredAudio) {
+                        PlayAudio(UIAudio::HOVERED);
+                        playHoveredAudio = false;
+                    }
+                }
+                else {
+                    playHoveredAudio = true;
                 }
             }
             else {
                 playHoveredAudio = true;
             }
-        }
-        else {
-            playHoveredAudio = true;
         }
     }
 }
