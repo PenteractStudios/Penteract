@@ -44,12 +44,17 @@
                     {
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
-                        "Value": 403437826872113792
+                        "Value": 9349791306028942696
                     },
                     {
                         "Name": "playerMeshUIDFang",
                         "Type": "GameObjectUID",
-                        "Value": 7570567483379837993
+                        "Value": 5514062913432514002
+                    },
+                    {
+                        "Name": "meshUID2",
+                        "Type": "GameObjectUID",
+                        "Value": 7691413884628165645
                     },
                     {
                         "Name": "fleeingRange",
@@ -59,12 +64,7 @@
                     {
                         "Name": "playerMeshUIDOnimaru",
                         "Type": "GameObjectUID",
-                        "Value": 17646006585412658978
-                    },
-                    {
-                        "Name": "meshUID2",
-                        "Type": "GameObjectUID",
-                        "Value": 7691413884628165645
+                        "Value": 3106065943855864347
                     },
                     {
                         "Name": "approachOffset",
@@ -102,14 +102,14 @@
                         "Value": 20.0
                     },
                     {
-                        "Name": "attackSpeed",
-                        "Type": "Float",
-                        "Value": 1.0
-                    },
-                    {
                         "Name": "winConditionUID",
                         "Type": "GameObjectUID",
                         "Value": 16579210181260590797
+                    },
+                    {
+                        "Name": "attackSpeed",
+                        "Type": "Float",
+                        "Value": 1.0
                     }
                 ]
             },
@@ -192,7 +192,7 @@
                 "Type": "CapsuleCollider",
                 "Active": true,
                 "colliderType": 2,
-                "layerType": 3,
+                "layerType": 4,
                 "mass": 1.0,
                 "radius": 1.0,
                 "height": 1.8300000429153443,
