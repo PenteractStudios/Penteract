@@ -17,6 +17,8 @@ public:
 		ULTIMATE,
 		SHOOT,
 		SPECIAL_SHOOT,
+		FOOTSTEP_RIGHT,
+		FOOTSTEP_LEFT,
 		HIT,
 		DEATH,
 		TOTAL
@@ -72,6 +74,7 @@ public:
 	void GetHit(float damage_) override;
 	void OnDeath() override;
 	void OnAnimationSecondaryFinished() override;
+	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
 
 	float GetRealUltimateCooldown();
 

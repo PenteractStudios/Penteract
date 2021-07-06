@@ -158,6 +158,21 @@ void Fang::OnAnimationFinished() {
 void Fang::OnAnimationSecondaryFinished() {
 }
 
+void Fang::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
+	if (stateMachineEnum == StateMachineEnum::PRINCIPAL) {
+		if (std::strcmp(eventName, "FootstepRight")) {
+			if (fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_RIGHT)]) {
+				fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_RIGHT)]->Play();
+			}
+		}
+		else if (std::strcmp(eventName, "FootstepLeft")) {
+			if (fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_LEFT)]) {
+				fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_LEFT)]->Play();
+			}
+		}
+	}
+}
+
 float Fang::GetRealDashCooldown() {
 	return 1.0f - (dashCooldownRemaining / dashCooldown);
 }

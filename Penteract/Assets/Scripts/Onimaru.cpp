@@ -243,7 +243,21 @@ void Onimaru::OnAnimationSecondaryFinished() {
 			}
 		}
 	}
+}
 
+void Onimaru::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
+	if (stateMachineEnum == StateMachineEnum::PRINCIPAL) {
+		if (std::strcmp(eventName, "FootstepRight")) {
+			if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_RIGHT)]) {
+				onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_RIGHT)]->Play();
+			}
+		}
+		else if (std::strcmp(eventName, "FootstepLeft")) {
+			if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_LEFT)]) {
+				onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_LEFT)]->Play();
+			}
+		}
+	}
 }
 
 void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID onimaruRightHandUID, UID shieldUID, UID onimaruTransformForUltimateProjectileOriginUID, UID cameraUID, UID canvasUID, float maxSpread_) {
