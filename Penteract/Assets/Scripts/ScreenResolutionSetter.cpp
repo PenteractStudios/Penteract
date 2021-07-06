@@ -24,9 +24,9 @@ void ScreenResolutionSetter::Start() {
 		text = textObj->GetComponent<ComponentText>();
 	}
 
-	UpdateText();
 	screenResolutionChangeConfirmationWasRequested = false;
-	preSelectedScreenResolutionPreset = 2;
+	preSelectedScreenResolutionPreset = Screen::GetCurrentDisplayMode();
+	UpdateResolution();
 
 	/* Audio */
 	selectable = GetOwner().GetComponent<ComponentSelectable>();
@@ -36,14 +36,13 @@ void ScreenResolutionSetter::Start() {
 		if (i < static_cast<int>(UIAudio::TOTAL)) audios[i] = &src;
 		++i;
 	}
+
 }
 
 void ScreenResolutionSetter::Update() {
 	if (screenResolutionChangeConfirmationWasRequested) {
 		if (Screen::GetCurrentDisplayMode() != preSelectedScreenResolutionPreset) {
-
 			Screen::SetCurrentDisplayMode(preSelectedScreenResolutionPreset);
-
 		}
 		screenResolutionChangeConfirmationWasRequested = false;
 	}
@@ -74,7 +73,7 @@ void ScreenResolutionSetter::Update() {
 
 void ScreenResolutionSetter::OnButtonClick() {
 	PlayAudio(UIAudio::CLICKED);
-	IncreaseResolution(increasing ? 1 : -1);
+	IncreaseResolution(increasing ? -1 : 1);		// This is reversed because the list obtained goes from highest to lowest, being position 0 the highest.
 }
 
 void ScreenResolutionSetter::PlayAudio(UIAudio type) {
@@ -82,17 +81,16 @@ void ScreenResolutionSetter::PlayAudio(UIAudio type) {
 }
 
 void ScreenResolutionSetter::IncreaseResolution(int multiplier) {
-	preSelectedScreenResolutionPreset = preSelectedScreenResolutionPreset + multiplier;
+	int newSelectedPreset = preSelectedScreenResolutionPreset + multiplier;
 
 	//Avoid getting out of bounds
-	if (preSelectedScreenResolutionPreset >= Screen::GetNumDisplayModes()) {
-		preSelectedScreenResolutionPreset = Screen::GetNumDisplayModes() - 1;
+	if (newSelectedPreset >= 0 && newSelectedPreset < Screen::GetNumDisplayModes()) {
+		preSelectedScreenResolutionPreset = newSelectedPreset;
+		UpdateResolution();
 	}
-
-	UpdateText();
 }
 
-void ScreenResolutionSetter::UpdateText() {
+void ScreenResolutionSetter::UpdateResolution() {
 	if (!text) return;
 
 	Screen::DisplayMode displayMode = Screen::GetDisplayMode(preSelectedScreenResolutionPreset);

@@ -5,8 +5,8 @@
 
 EXPOSE_MEMBERS(SpawnPointController) {
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, meleeEnemyPrefabUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, rangeEnemyPrefabUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, doorUID),
+		MEMBER(MemberType::PREFAB_RESOURCE_UID, rangeEnemyPrefabUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, doorUID),
 };
 
 GENERATE_BODY_IMPL(SpawnPointController);
@@ -32,5 +32,13 @@ void SpawnPointController::OnCollision(GameObject& collidedWith, float3 collisio
 }
 
 void SpawnPointController::OpenDoor() {
-	if (doorObstacle && doorObstacle->IsActive()) doorObstacle->Disable();
+	if (doorObstacle && doorObstacle->IsActive()) {
+		Debug::Log("Open door");
+		doorObstacle->Disable();
+	}
+	else {
+		if (!doorObstacle) {
+			Debug::Log("Door obstacle null");
+		}
+	}
 }

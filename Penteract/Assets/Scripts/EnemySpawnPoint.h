@@ -8,6 +8,7 @@
 
 class GameObject;
 class ResourcePrefab;
+class PlayerController;
 class SpawnPointController;
 
 class EnemySpawnPoint : public Script {
@@ -41,6 +42,13 @@ public:
 	float xAxisPos = 0;
 	float zAxisPos = 4;
 
+	/* Distance between the enemies */
+	unsigned int offset = 2;
+
+	/* Player */
+	UID playerUID = 0;
+
+
 private:
 	/* Owner */
 	GameObject* gameObject = nullptr;
@@ -49,15 +57,15 @@ private:
 	ResourcePrefab* meleeEnemyPrefab = nullptr;
 	ResourcePrefab* rangeEnemyPrefab = nullptr;
 
+	/* Player Controller */
+	PlayerController* playerScript = nullptr;
+
 	/* Enemy vector & iterator */
 	std::vector<std::tuple<unsigned int, unsigned int>> enemies;
 	std::vector<std::tuple<unsigned int, unsigned int>>::iterator it;
 
 	/* Amount of enemies for the win condition */
 	unsigned int amountOfEnemies = 0;
-
-	/* Distance between the enemies */
-	unsigned int offset = 2;
 
 	/* Flags to handle when to spawn the waves */
 	bool spawn = true;

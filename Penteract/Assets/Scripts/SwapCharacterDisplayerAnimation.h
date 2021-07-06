@@ -28,8 +28,8 @@ public:
 	float positionToLerpSwapMain = 232;				// This is the final position to set on the lerp of swapAnimation
 	float positionToLerpSwapAlternative = 300;
 	bool isFang = true;								// Default value to who's set atm
-	float3 initialPositionMainCanvas = float3(0, 0, 0);
-	float3 initialPositionAlternativeCanvas = float3(64, 400, 0);
+	float3 initialPositionMainCanvas = float3(-45.200, 168.650, 0);
+	float3 initialPositionAlternativeCanvas = float3(26.400, -9.000, 0);
 
 	bool debugPlay = false;
 

@@ -6,6 +6,7 @@
 #include "RangerProjectileScript.h"
 #include "EnemySpawnPoint.h"
 #include "WinLose.h"
+#include "Onimaru.h"
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
@@ -35,7 +36,8 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
 	MEMBER(MemberType::GAME_OBJECT_UID, hudControllerObjUID),
 	MEMBER(MemberType::FLOAT, timeSinceLastHurt),
-	MEMBER(MemberType::FLOAT, approachOffset) //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
+	MEMBER(MemberType::FLOAT, approachOffset), //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
+	MEMBER(MemberType::FLOAT, stunDuration)
 };//clang-format on
 
 GENERATE_BODY_IMPL(RangedAI);
@@ -129,12 +131,25 @@ void RangedAI::Start() {
 
 void RangedAI::OnAnimationFinished() {
 	if (animation == nullptr) return;
+	if (agent == nullptr) return;
 
 	if (state == AIState::SPAWN) {
 		animation->SendTrigger("SpawnIdle");
 		agent->AddAgentToCrowd();
 		state = AIState::IDLE;
-	} else if (state == AIState::DEATH) {
+	}
+	else if (state == AIState::STUNNED) {
+		State* current = animation->GetCurrentState();
+		if (current->name == "BeginStun") {
+			animation->SendTrigger("BeginStunStunned");
+		}
+		else if (current->name == "EndStun") {
+			animation->SendTrigger("EndStunIdle");
+			agent->AddAgentToCrowd();
+			state = AIState::IDLE;
+		}
+	}
+	else if (state == AIState::DEATH) {
 		rangerGruntCharacter.destroying = true;
 	}
 }
@@ -155,11 +170,22 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 		if (rangerGruntCharacter.isAlive && playerController) {
 			bool hitTaken = false;
 			if (collidedWith.name == "FangBullet") {
-				rangerGruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
 				hitTaken = true;
-			} else if (collidedWith.name == "OnimaruBullet") {
-				rangerGruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
+				if (state == AIState::STUNNED && EMPUpgraded) {
+					rangerGruntCharacter.GetHit(99);
+				}
+				else {
+					rangerGruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
+				}
+			}
+			else if (collidedWith.name == "OnimaruBullet") {
 				hitTaken = true;
+				if (state == AIState::STUNNED && EMPUpgraded) {
+					rangerGruntCharacter.GetHit(99);
+				}
+				else {
+					rangerGruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
+				}
 			}
 			if (hitTaken) {
 				PlayAudio(AudioType::HIT);
@@ -170,14 +196,19 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 				}
 				timeSinceLastHurt = 0.0f;
 			}
+			if (collidedWith.name == "EMP") {
+				if (agent) agent->RemoveAgentFromCrowd();
+				stunTimeRemaining = stunDuration;
+				ChangeState(AIState::STUNNED);
+			}
 		}
 
 		if (!rangerGruntCharacter.isAlive) {
 			ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
 			if (collider) collider->Disable();
+			if (rangerGruntCharacter.beingPushed) DisableBlastPushBack();
 			ChangeState(AIState::DEATH);
-			if (winLoseScript) winLoseScript->IncrementDeadEnemies();
-			if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
+			if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
 		}
 	}
 }
@@ -214,6 +245,9 @@ void RangedAI::Update() {
 }
 
 void RangedAI::EnterState(AIState newState) {
+	if (!agent) return;
+	if (!animation) return;
+	
 	switch (newState) {
 	case AIState::START:
 		break;
@@ -221,41 +255,62 @@ void RangedAI::EnterState(AIState newState) {
 		PlayAudio(AudioType::SPAWN);
 		break;
 	case AIState::IDLE:
-		if (animation) {
-			if (state == AIState::FLEE) {
-				animation->SendTrigger("RunBackwardIdle");
-			} else if (state == AIState::RUN) {
-				animation->SendTrigger("RunForwardIdle");
-			}
+		if (state == AIState::FLEE) {
+			animation->SendTrigger("RunBackwardIdle");
+		} else if (state == AIState::RUN) {
+			animation->SendTrigger("RunForwardIdle");
 		}
-
+		
 		if (aiMovement) aiMovement->Stop();
 		break;
 	case AIState::RUN:
-		if (animation) {
-			if (state == AIState::IDLE) {
-				animation->SendTrigger("IdleRunForward");
-			} else if (state == AIState::FLEE) {
-				animation->SendTrigger("RunBackwardRunForward");
-			}
-		}
+		if (state == AIState::IDLE) {
+			animation->SendTrigger("IdleRunForward");
+		} else if (state == AIState::FLEE) {
+			animation->SendTrigger("RunBackwardRunForward");
+		}		
 		break;
 	case AIState::FLEE:
-		if (animation) {
-			if (state == AIState::RUN) {
-				animation->SendTrigger("RunForwardRunBackward");
-			} else if (state == AIState::IDLE) {
-				animation->SendTrigger("IdleRunBackward");
-			}
+		if (state == AIState::RUN) {
+			animation->SendTrigger("RunForwardRunBackward");
+		} else if (state == AIState::IDLE) {
+			animation->SendTrigger("IdleRunBackward");
+		}		
+		break;
+	case AIState::STUNNED:
+		if (shot) {
+			animation->SendTriggerSecondary("ShootBeginStun");
+		}
+		if (state == AIState::IDLE) {
+			animation->SendTrigger("IdleBeginStun");
+		}
+		else if (state == AIState::RUN) {
+			animation->SendTrigger("RunForwardBeginStun");
+		}
+		else if (state == AIState::FLEE) {
+			animation->SendTrigger("RunBackwardBeginStun");
 		}
 		break;
 	case AIState::DEATH:
+
+		if (winLoseScript) winLoseScript->IncrementDeadEnemies();
+		if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
+		if (playerController) {
+			if (playerController->playerOnimaru.characterGameObject->IsActive()) {
+				playerController->playerOnimaru.IncreaseUltimateCounter();
+			} else if (playerController->playerFang.characterGameObject->IsActive()) {
+				playerController->playerFang.IncreaseUltimateCounter();
+			}
+		}
+
 		if (state == AIState::IDLE) {
 			animation->SendTrigger("IdleDeath");
 		} else if (state == AIState::RUN) {
 			animation->SendTrigger("RunForwardDeath");
 		} else if (state == AIState::FLEE) {
 			animation->SendTrigger("RunBackwardDeath");
+		} else if (state == AIState::STUNNED) {
+			animation->SendTrigger("StunnedDeath");
 		}
 		if (shot) {
 			animation->SendTriggerSecondary("ShootDeath");
@@ -269,10 +324,12 @@ void RangedAI::EnterState(AIState newState) {
 }
 
 void RangedAI::UpdateState() {
+	if (!animation) return;
 	switch (state) {
 	case AIState::START:
 		if (aiMovement) aiMovement->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), rangerGruntCharacter.fallingSpeed, true);
 		if (ownerTransform->GetGlobalPosition().y < 3.5f + 0e-5f) {
+			ownerTransform->SetGlobalPosition(float3(ownerTransform->GetGlobalPosition().x, 3.0f, ownerTransform->GetGlobalPosition().z));
 			animation->SendTrigger("StartSpawn");
 			ChangeState(AIState::SPAWN);
 		}
@@ -328,6 +385,15 @@ void RangedAI::UpdateState() {
 			ChangeState(AIState::IDLE);
 		}
 		break;
+	case AIState::STUNNED:
+		if (stunTimeRemaining <= 0.f) {
+			stunTimeRemaining = 0.f;
+			animation->SendTrigger("StunnedEndStun");			
+		}
+		else {
+			stunTimeRemaining -= Time::GetDeltaTime();
+		}
+		break;
 	case AIState::DEATH:
 		if (rangerGruntCharacter.destroying) {
 			if (rangerGruntCharacter.timeToDie > 0) {
@@ -340,6 +406,9 @@ void RangedAI::UpdateState() {
 			}
 		}
 
+		break;
+	case AIState::PUSHED:
+		UpdatePushBackPosition();
 		break;
 	default:
 		break;
@@ -437,6 +506,24 @@ void RangedAI::PlayAudio(AudioType audioType) {
 	if (audios[static_cast<int>(audioType)]) audios[static_cast<int>(audioType)]->Play();
 }
 
+void RangedAI::EnableBlastPushBack() {
+	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
+		ChangeState(AIState::PUSHED);
+		rangerGruntCharacter.beingPushed = true;
+	}
+}
+
+void RangedAI::DisableBlastPushBack() {
+	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
+		ChangeState(AIState::IDLE);
+		rangerGruntCharacter.beingPushed = false;
+	}
+}
+
+bool RangedAI::IsBeingPushed() const {
+	return rangerGruntCharacter.beingPushed;
+}
+
 void RangedAI::ShootPlayerInRange() {
 	if (!player) return;
 	if (!playerController) return;
@@ -450,5 +537,25 @@ void RangedAI::ShootPlayerInRange() {
 		}
 
 		actualShotTimer = actualShotMaxTime;
+	}
+}
+
+void RangedAI::UpdatePushBackPosition() {
+	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
+	float3 initialPos = enemyPos;
+
+	float3 direction = (enemyPos - playerPos).Normalized();
+
+	if (agent) {
+		enemyPos += direction * rangerGruntCharacter.pushBackSpeed * Time::GetDeltaTime();
+		agent->SetMoveTarget(enemyPos, false);
+		float distance = enemyPos.Distance(initialPos);
+		currentPushBackDistance += distance;
+
+		if (currentPushBackDistance >= rangerGruntCharacter.pushBackDistance) {
+			DisableBlastPushBack();
+			currentPushBackDistance = 0.f;
+		}
 	}
 }

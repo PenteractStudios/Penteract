@@ -26,7 +26,9 @@ EXPOSE_MEMBERS(SwapCharacterDisplayerAnimation) {
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruPrimaryUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruAlternativeUID),
 	MEMBER(MemberType::FLOAT, positionToLerpSwapMain),
-	MEMBER(MemberType::FLOAT, positionToLerpSwapAlternative)
+	MEMBER(MemberType::FLOAT, positionToLerpSwapAlternative),
+	MEMBER(MemberType::FLOAT3, initialPositionMainCanvas),
+	MEMBER(MemberType::FLOAT3, initialPositionAlternativeCanvas)
 };
 
 GENERATE_BODY_IMPL(SwapCharacterDisplayerAnimation);
@@ -42,18 +44,6 @@ void SwapCharacterDisplayerAnimation::Start() {
 	onimaruMainDisplayer = GameplaySystems::GetGameObject(onimaruMainDisplayerUID);
 	onimaruPrimary = GameplaySystems::GetGameObject(onimaruPrimaryUID);
 	onimaruAlternative = GameplaySystems::GetGameObject(onimaruAlternativeUID);
-
-	if (fangMainDisplayer != nullptr) {
-		ComponentTransform2D* transform = fangPrimary->GetComponent<ComponentTransform2D>();
-		if (transform != nullptr) {
-			initialPositionMainCanvas = transform->GetPosition();
-		}
-
-		transform = fangAlternative->GetComponent<ComponentTransform2D>();
-		if (transform != nullptr) {
-			initialPositionAlternativeCanvas = transform->GetPosition();
-		}
-	}
 }
 
 void SwapCharacterDisplayerAnimation::Update() {

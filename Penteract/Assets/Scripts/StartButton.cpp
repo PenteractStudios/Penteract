@@ -1,6 +1,7 @@
 #include "StartButton.h"
 
 #include "CheckpointManager.h"
+#include "SceneTransition.h"
 
 #include "GameplaySystems.h"
 #include "GameObject.h"
@@ -9,9 +10,9 @@ int checkpoint;
 
 EXPOSE_MEMBERS(StartButton) {
 	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
-	MEMBER(MemberType::INT, checkpointNum)
+	MEMBER(MemberType::GAME_OBJECT_UID, transitionUID),
+	MEMBER(MemberType::INT, checkpointNum),
 };
-
 
 GENERATE_BODY_IMPL(StartButton);
 
@@ -23,6 +24,11 @@ void StartButton::Start() {
 	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
 		if (i < static_cast<int>(UIAudio::TOTAL)) audios[i] = &src;
 		++i;
+	}
+
+    if (transitionUID != 0) {
+		transitionGO = GameplaySystems::GetGameObject(transitionUID);
+		if (transitionGO) sceneTransition = GET_SCRIPT(transitionGO, SceneTransition);
 	}
 }
 
@@ -56,8 +62,13 @@ void StartButton::OnButtonClick() {
     PlayAudio(UIAudio::CLICKED);
 
 	checkpoint = checkpointNum;
-	if(sceneUID != 0) SceneManager::ChangeScene(sceneUID);
-	if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
+    
+    if (sceneTransition) {
+		sceneTransition->StartTransition();
+	} else {
+		if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
+		if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
+	}
 }
 
 void StartButton::PlayAudio(UIAudio type) {
