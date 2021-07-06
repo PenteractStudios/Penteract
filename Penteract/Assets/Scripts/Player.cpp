@@ -182,5 +182,8 @@ void Player::Update(bool lockMovement, bool lockOrientation) {
 	if (!lockOrientation) {
 		LookAtMouse();
 	}
+	else {
+		if(agent) agent->SetMoveTarget(playerMainTransform->GetGlobalPosition(), false);
+	}
 }
 
