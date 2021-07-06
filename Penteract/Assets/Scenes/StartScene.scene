@@ -7,7 +7,7 @@
     ],
     "QuadtreeMaxDepth": 4,
     "QuadtreeElementsPerNode": 200,
-    "GameCamera": 3202817792305297463,
+    "GameCamera": 7282935821569311443,
     "AmbientLight": [
         0.0,
         0.0,
@@ -162,7 +162,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 200.0,
-                            "HorizontalFov": 1.5451143980026246,
+                            "HorizontalFov": 1.7860602140426636,
                             "VerticalFov": 1.0
                         }
                     },
@@ -184,7 +184,10 @@
                         "Type": "AudioListener",
                         "Id": 13146572848985661355,
                         "Active": true,
-                        "Gain": 0.3019999861717224
+                        "Gain": 0.3019999861717224,
+                        "ModelIndex": 0,
+                        "DistanceModel": 0,
+                        "Clamped": false
                     }
                 ],
                 "Children": null
@@ -25550,7 +25553,10 @@
                         "SourceType": 0,
                         "InnerAngle": 90.0,
                         "OuterAngle": 180.0,
-                        "OuterGain": 0.0
+                        "OuterGain": 0.0,
+                        "RolloffFactor": 0.0,
+                        "ReferenceDistance": 0.0,
+                        "MaxDistance": 0.0
                     },
                     {
                         "Type": "Script",

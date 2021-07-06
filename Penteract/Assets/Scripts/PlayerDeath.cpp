@@ -4,6 +4,7 @@
 #include "GameplaySystems.h"
 
 #include "PlayerController.h"
+#include "SceneTransition.h"
 
 #define LEFT_SHOT "LeftShot"
 #define RIGHT_SHOT "RightShot"
@@ -14,6 +15,8 @@ EXPOSE_MEMBERS(PlayerDeath) {
 	MEMBER(MemberType::FLOAT, rangedDamageTaken),
 	MEMBER(MemberType::FLOAT, meleeDamageTaken),
 	MEMBER(MemberType::FLOAT, barrelDamageTaken)
+	MEMBER(MemberType::GAME_OBJECT_UID, transitionUID),
+
 };
 
 GENERATE_BODY_IMPL(PlayerDeath);
@@ -21,6 +24,10 @@ GENERATE_BODY_IMPL(PlayerDeath);
 void PlayerDeath::Start() {
 	player = GameplaySystems::GetGameObject(playerUID);
 	if (player) playerController = GET_SCRIPT(player, PlayerController);
+	if (transitionUID != 0) {
+		transitionGO = GameplaySystems::GetGameObject(transitionUID);
+		if (transitionGO) sceneTransition = GET_SCRIPT(transitionGO, SceneTransition);
+	}
 }
 
 void PlayerDeath::Update() {
@@ -34,7 +41,11 @@ void PlayerDeath::Update() {
 
 void PlayerDeath::OnAnimationFinished() {
 	if (dead) {
-		if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
+		if (sceneTransition) {
+			sceneTransition->StartTransition();
+		} else {
+			if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
+		}
 	} else {
 		if (!playerController)return;
 		if (playerController->playerFang.characterGameObject->IsActive()) {
@@ -59,6 +70,9 @@ void PlayerDeath::OnAnimationSecondaryFinished() {
 					playerController->playerFang.rightShot = false;
 				}
 			}
+		}
+		else {
+			playerController->playerOnimaru.OnAnimationSecondaryFinished();
 		}
 	}
 }

@@ -9,13 +9,15 @@ public:
 
 	// ------- Contructors ------- //
 	Fang() {};
-	void Update(bool lockMovement = false) override;
+	void Update(bool lockMovement = false, bool lockOrientation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	void OnAnimationFinished() override;
+	void OnAnimationSecondaryFinished() override;
 	void GetHit(float damage_) override;
+	bool CanSwitch() const override;
 
 	float GetRealDashCooldown();
-	void Init(UID fangUID = 0, UID trailGunUID = 0, UID trailDashUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID cameraUID = 0, UID canvasUID = 0);
+	void Init(UID fangUID = 0, UID trailGunUID = 0, UID trailDashUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID cameraUID = 0, UID canvasUID = 0,UID EMPUID = 0);
 
 public:
 	std::vector<std::string> states{ "Idle" ,
@@ -23,10 +25,12 @@ public:
 						"DashBackward", "DashForward" , "DashLeft" , "DashRight" , //5 - 8
 						"Death" , "LeftShot" , "RightShot", "", //9 - 12
 						"RunForwardLeft", "RunForwardRight", "RunBackwardLeft", "RunBackwardRight", // 13 - 16
-						"DashBackward", "DashForward" , "DashLeft" , "DashRight"
+						"DashBackward", "DashForward" , "DashLeft" , "DashRight", //17 - 20
+						"EMP" //21
 	};
 
 	bool rightShot = true;
+
 
 	//Dash
 	float dashCooldown = 5.f;
@@ -34,7 +38,13 @@ public:
 	float dashDuration = 0.1f;
 	float trailDashOffsetDuration = 0.2f;
 
+	//EMP
+	GameObject* EMP = nullptr;
+	float EMPRadius = 5.f;
+	float EMPCooldown = 7.f;
+
 private:
+	//Dash
 	float dashCooldownRemaining = 0.f;
 	float dashRemaining = 0.f;
 	float trailDuration = 0.2f;
@@ -44,6 +54,10 @@ private:
 
 	float3 initialPosition = float3(0, 0, 0);
 	float3 dashDirection = float3(0, 0, 0);
+
+	//EMP
+	float EMPCooldownRemaining = 0.f;
+	bool EMPInCooldown = false;	
 
 	//Shoot
 	ComponentTransform* rightGunTransform = nullptr;
@@ -64,6 +78,9 @@ private:
 	void Dash();
 	void trailDelay();
 	bool CanDash();
+
+	void ActivateEMP();
+	bool CanEMP();
 
 	bool CanShoot() override;
 	void Shoot() override;
