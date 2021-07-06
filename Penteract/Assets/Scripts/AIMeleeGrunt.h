@@ -75,10 +75,10 @@ private:
 	ComponentTransform* ownerTransform = nullptr;
 	int damageRecieved = 0;
 
-	float stunRemaining = 0.f;
+	float stunTimeRemaining = 0.f;
 
 	bool EMPUpgraded = false;
-	float deathType = 0.f;
+	int deathType = 0;
 
 	HUDController* hudControllerScript = nullptr;
 	PlayerController* playerController = nullptr;

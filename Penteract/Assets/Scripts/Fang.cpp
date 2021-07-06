@@ -270,7 +270,7 @@ void Fang::Update(bool lockMovement, bool lockOrientation) {
 	if (isAlive) {
 		if (EMP) {
 			Player::Update(dashing || EMP->IsActive(), dashing || EMP->IsActive());
-			if (Input::GetMouseButtonDown(2)) {
+			if (Input::GetMouseButtonDown(2) && !EMP->IsActive()) {
 				InitDash();
 			}
 			if (!dashing && !EMP->IsActive()) {

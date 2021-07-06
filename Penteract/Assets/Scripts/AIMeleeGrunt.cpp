@@ -164,12 +164,12 @@ void AIMeleeGrunt::Update() {
 	case AIState::ATTACK:
 		break;
 	case AIState::STUNNED:
-		if (stunRemaining <= 0.f) {
-			stunRemaining = 0.f;
+		if (stunTimeRemaining <= 0.f) {
+			stunTimeRemaining = 0.f;
 			animation->SendTrigger("StunnedEndStun");			
 		}
 		else {
-			stunRemaining -= Time::GetDeltaTime();
+			stunTimeRemaining -= Time::GetDeltaTime();
 		}
 		break;
 	case AIState::PUSHED:
@@ -284,7 +284,7 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 					animation->SendTrigger("RunBeginStun");
 				}
 				agent->RemoveAgentFromCrowd();
-				stunRemaining = stunDuration;
+				stunTimeRemaining = stunDuration;
 				state = AIState::STUNNED;
 			}
 

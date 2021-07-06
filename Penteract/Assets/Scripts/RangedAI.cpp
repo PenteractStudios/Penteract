@@ -198,7 +198,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 			}
 			if (collidedWith.name == "EMP") {
 				if (agent) agent->RemoveAgentFromCrowd();
-				stunRemaining = stunDuration;
+				stunTimeRemaining = stunDuration;
 				ChangeState(AIState::STUNNED);
 			}
 		}
@@ -384,12 +384,12 @@ void RangedAI::UpdateState() {
 		}
 		break;
 	case AIState::STUNNED:
-		if (stunRemaining <= 0.f) {
-			stunRemaining = 0.f;
+		if (stunTimeRemaining <= 0.f) {
+			stunTimeRemaining = 0.f;
 			animation->SendTrigger("StunnedEndStun");			
 		}
 		else {
-			stunRemaining -= Time::GetDeltaTime();
+			stunTimeRemaining -= Time::GetDeltaTime();
 		}
 		break;
 	case AIState::DEATH:

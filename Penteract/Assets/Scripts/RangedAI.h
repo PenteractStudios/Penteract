@@ -105,7 +105,7 @@ private:
 
 	bool shot = false;					//Bool used to make sure shooting event happens only once whenever attackTimePool is low enough
 
-	float stunRemaining = 0.f;			//Time remaining stunned
+	float stunTimeRemaining = 0.f;			//Time remaining stunned
 
 	bool EMPUpgraded = false;			//Flag to control if the ability is uprgraded
 
