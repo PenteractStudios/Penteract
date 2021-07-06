@@ -55,6 +55,10 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 
 }
 
+bool Fang::CanSwitch() const {
+	return true;
+}
+
 void Fang::GetHit(float damage_) {
 
 	if (!dashing) {
@@ -220,9 +224,9 @@ void Fang::PlayAnimation() {
 	}
 }
 
-void Fang::Update(bool lockMovement) {
+void Fang::Update(bool lockMovement, bool lockOrientation) {
 	if (isAlive) {
-		Player::Update(dashing);
+		Player::Update(dashing, dashing);
 		if (Input::GetMouseButtonDown(2)) {
 			InitDash();
 		}

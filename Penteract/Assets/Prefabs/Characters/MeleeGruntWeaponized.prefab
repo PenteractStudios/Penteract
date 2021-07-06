@@ -55,14 +55,14 @@
                 "Script": 1991507863247597087,
                 "Values": [
                     {
-                        "Name": "playerUID",
-                        "Type": "GameObjectUID",
-                        "Value": 403437826872113792
-                    },
-                    {
                         "Name": "defaultMaterialPlaceHolderUID",
                         "Type": "GameObjectUID",
                         "Value": 9837534394034980895
+                    },
+                    {
+                        "Name": "playerUID",
+                        "Type": "GameObjectUID",
+                        "Value": 9349791306028942696
                     },
                     {
                         "Name": "canvasUID",
@@ -98,7 +98,10 @@
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
-                "OuterGain": 0.0
+                "OuterGain": 0.0,
+                "RolloffFactor": 0.0,
+                "ReferenceDistance": 0.0,
+                "MaxDistance": 0.0
             },
             {
                 "Type": "AudioSource",
@@ -112,7 +115,10 @@
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
-                "OuterGain": 0.0
+                "OuterGain": 0.0,
+                "RolloffFactor": 0.0,
+                "ReferenceDistance": 0.0,
+                "MaxDistance": 0.0
             },
             {
                 "Type": "AudioSource",
@@ -126,7 +132,10 @@
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
-                "OuterGain": 0.0
+                "OuterGain": 0.0,
+                "RolloffFactor": 0.0,
+                "ReferenceDistance": 0.0,
+                "MaxDistance": 0.0
             },
             {
                 "Type": "AudioSource",
@@ -140,7 +149,10 @@
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
-                "OuterGain": 0.0
+                "OuterGain": 0.0,
+                "RolloffFactor": 0.0,
+                "ReferenceDistance": 0.0,
+                "MaxDistance": 0.0
             },
             {
                 "Type": "CapsuleCollider",

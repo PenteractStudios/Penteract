@@ -34,15 +34,18 @@ public:
 	// ------- Core Functions ------ //
 	void SetAttackSpeed(float attackSpeed_);
 	virtual void GetHit(float damage_) override;
-	virtual void OnAnimationFinished() = 0;
-	virtual void OnAnimationSecondaryFinished() = 0;
 
 	void LookAtMouse();
 	MovementDirection GetInputMovementDirection() const;
 	float3 GetDirection() const;
 	virtual void Shoot() {}
-	virtual void Update(bool lockMovement = false);
+	virtual void Update(bool lockMovement = false, bool lockOrientation = false);
 	virtual void CheckCoolDowns(bool noCooldownMode = false) {}
+	virtual bool CanSwitch() const = 0;
+	
+	virtual void OnAnimationFinished() = 0;
+	virtual void OnAnimationSecondaryFinished() = 0;
+	
 	int GetMouseDirectionState();
 	bool IsActive();
 	void IncreaseUltimateCounter();
@@ -51,20 +54,24 @@ public:
 	float meleeDamageTaken = 1.0f;
 	float attackSpeed = 1.0f;
 	float attackCooldownRemaining = 0.f;
+	bool shooting = false;
+	float orientationSpeed = -1;
+	float orientationThreshold = 5.0f;
+	int ultimateChargePoints = 0;
+	const int ultimateChargePointsTotal = 10;
 	bool shootingOnCooldown = false;
+
 	float3 lookAtMousePlanePosition = float3(0, 0, 0);
 	ComponentCamera* lookAtMouseCameraComp = nullptr;
 	CameraController* cameraController = nullptr;
 	float3 facePointDir = float3(0, 0, 0);
 	MovementDirection movementInputDirection = MovementDirection::NONE;
 	ComponentTransform* playerMainTransform = nullptr;
-	int ultimateChargePoints = 0;
-	const int ultimateChargePointsTotal = 10;
+
 protected:
-	bool shooting = false;
+	void MoveTo();
 
 private:
-	void MoveTo();
 	virtual bool CanShoot();
 	void ResetSwitchStatus();
 
