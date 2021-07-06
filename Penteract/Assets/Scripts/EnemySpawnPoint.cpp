@@ -52,7 +52,7 @@ void EnemySpawnPoint::Start() {
 }
 
 void EnemySpawnPoint::Update() {
-	if (!gameObject->IsActive()) return;
+	if (!gameObject->IsActive() || !meleeEnemyPrefab || !rangeEnemyPrefab) return;
 
 	if (it != enemies.end() && spawn) {
 		RenderEnemy(EnemyType::MELEE, std::get<0>(*it));

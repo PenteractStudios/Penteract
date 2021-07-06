@@ -191,9 +191,9 @@
                         "Id": 11540703914281798444,
                         "Active": true,
                         "Gain": 0.3019999861717224,
-                        "ModelIndex": 0,
-                        "DistanceModel": 0,
-                        "Clamped": false
+                        "ModelIndex": 2,
+                        "DistanceModel": 2,
+                        "Clamped": true
                     }
                 ],
                 "Children": null
