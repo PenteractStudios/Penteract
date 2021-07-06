@@ -83,5 +83,4 @@ void UltimateFang::StartUltiamte()
 void UltimateFang::EndUltimate()
 {
 	GetOwner().Disable();
-	Debug::Log("Finish ultimate");
 }

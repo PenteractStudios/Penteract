@@ -6,6 +6,7 @@ enum class AIState {
 	IDLE,
 	RUN,
 	ATTACK,
+	STUNNED,
 	FLEE,
 	PUSHED,
 	DEATH,

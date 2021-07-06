@@ -53,13 +53,6 @@ void HUDController::Start() {
 		remainingDurableHealthTimesFang[i] = remainingDurableHealthTimesOni[i] = 0;
 	}
 
-	for (int i = 0; i < static_cast<int>(Cooldowns::TOTAL); i++) {
-		abilityCoolDownsRetreived[i] = true;
-	}
-
-	//remainingTimeActiveIndexesFang.clear();
-	//remainingTimeActiveIndexesOni.clear();
-
 	timeToFadeDurableHealthFeedback = timeToFadeDurableHealthFeedbackInternal;
 
 	fangCanvas = GameplaySystems::GetGameObject(fangMainCanvasUID);
@@ -520,6 +513,7 @@ void HUDController::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* c
 				AbilityRefreshEffectProgressBar* pef = nullptr;
 
 				if (cooldown < Cooldowns::ONIMARU_SKILL_1) {
+					//Fang skill
 					if (canvas->GetChildren().size() > 0) {
 						if (canvas->GetChildren()[static_cast<int>(cooldown)]->GetChildren().size() > HIERARCHY_INDEX_MAIN_BUTTON_UP) {
 							ef = GET_SCRIPT(canvas->GetChildren()[static_cast<int>(cooldown)]->GetChildren()[HIERARCHY_INDEX_MAIN_ABILITY_EFFECT], AbilityRefreshEffect);
@@ -530,6 +524,7 @@ void HUDController::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* c
 						}
 					}
 				} else if (cooldown < Cooldowns::SWITCH_SKILL) {
+					//Onimaru skill
 					if (canvas->GetChildren().size() > 0) {
 						if (canvas->GetChildren()[static_cast<int>(cooldown) - 3]->GetChildren().size() > HIERARCHY_INDEX_MAIN_BUTTON_UP) {
 							ef = GET_SCRIPT(canvas->GetChild(static_cast<int>(cooldown) - 3)->GetChildren()[HIERARCHY_INDEX_MAIN_ABILITY_EFFECT], AbilityRefreshEffect);

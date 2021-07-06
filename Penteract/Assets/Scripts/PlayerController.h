@@ -68,12 +68,15 @@ public:
 	UID fangLeftGunUID = 0;
 	UID fangRightGunUID = 0;
 	UID fangBulletUID = 0;
+	UID EMPUID = 0;
 	UID fangUltimateUID = 0;
+
 	//Onimaru
 	UID onimaruUID = 0;
 	UID onimaruParticleUID = 0;
 	UID onimaruBulletUID = 0;
 	UID onimaruGunUID = 0;
+	UID onimaruUltimateProjectileOriginUID = 0;
 	UID onimaruRightHandUID = 0;
 	UID onimaruShieldUID = 0;
 
@@ -92,7 +95,7 @@ public:
 	float cameraOffsetX = 0.f;
 	bool useSmoothCamera = true;
 	float smoothCameraSpeed = 5.0f;
-	float maxOnimaruBulletSpread = 5.0f;
+	//float maxOnimaruBulletSpread = 5.0f;
 
 	//Switch
 	UID switchParticlesUID = 0;
@@ -105,13 +108,13 @@ public:
 	float rangedDamageTaken = 1.0f;
 	float meleeDamageTaken = 1.0f;
 
+
 private:
 	void CheckCoolDowns();
 	void SwitchCharacter();
 	void UpdatePlayerStats();
 	bool CanSwitch();
 	void ResetSwitchStatus();
-
 private:
 
 	//Switch

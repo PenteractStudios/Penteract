@@ -94,12 +94,7 @@
                             {
                                 "Name": "rangeEnemyPrefabUID",
                                 "Type": "PrefabResourceUID",
-                                "Value": 12176188256985043906
-                            },
-                            {
-                                "Name": "doorUID",
-                                "Type": "GameObjectUID",
-                                "Value": 10136555471852881612
+                                "Value": 12995336514148150898
                             }
                         ]
                     }
@@ -147,19 +142,19 @@
                                         "Value": 9998956702901793097
                                     },
                                     {
-                                        "Name": "secondWaveMeleeAmount",
-                                        "Type": "Int",
-                                        "Value": 3
-                                    },
-                                    {
                                         "Name": "amountOfEnemies",
                                         "Type": "Int",
                                         "Value": 1
                                     },
                                     {
+                                        "Name": "secondWaveMeleeAmount",
+                                        "Type": "Int",
+                                        "Value": 3
+                                    },
+                                    {
                                         "Name": "offset",
                                         "Type": "Int",
-                                        "Value": 2
+                                        "Value": 0
                                     },
                                     {
                                         "Name": "winUID",
@@ -283,14 +278,14 @@
                                 "Script": 14237604830987124740,
                                 "Values": [
                                     {
-                                        "Name": "relatedSpawn3UID",
-                                        "Type": "GameObjectUID",
-                                        "Value": 17431264478654342066
-                                    },
-                                    {
                                         "Name": "prefabId",
                                         "Type": "PrefabResourceUID",
                                         "Value": 9998956702901793097
+                                    },
+                                    {
+                                        "Name": "relatedSpawn3UID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 17431264478654342066
                                     },
                                     {
                                         "Name": "amountOfEnemies",
@@ -308,14 +303,14 @@
                                         "Value": 9998956702901793097
                                     },
                                     {
-                                        "Name": "relatedSpawn4UID",
-                                        "Type": "GameObjectUID",
-                                        "Value": 4418791074677225861
-                                    },
-                                    {
                                         "Name": "winUID",
                                         "Type": "GameObjectUID",
                                         "Value": 16579210181260590797
+                                    },
+                                    {
+                                        "Name": "relatedSpawn4UID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 4418791074677225861
                                     },
                                     {
                                         "Name": "relatedSpawn2UID",
@@ -1175,14 +1170,14 @@
                                 "Script": 14237604830987124740,
                                 "Values": [
                                     {
-                                        "Name": "relatedSpawn3UID",
-                                        "Type": "GameObjectUID",
-                                        "Value": 13799258698709286522
-                                    },
-                                    {
                                         "Name": "prefabId",
                                         "Type": "PrefabResourceUID",
                                         "Value": 9998956702901793097
+                                    },
+                                    {
+                                        "Name": "relatedSpawn3UID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 13799258698709286522
                                     },
                                     {
                                         "Name": "amountOfEnemies",

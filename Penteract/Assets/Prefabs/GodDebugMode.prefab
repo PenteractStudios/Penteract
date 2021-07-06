@@ -46,11 +46,6 @@
                         "Value": 12467949130155930994
                     },
                     {
-                        "Name": "enemiesUID",
-                        "Type": "GameObjectUID",
-                        "Value": 9424093591244721738
-                    },
-                    {
                         "Name": "spawnRangedUID",
                         "Type": "GameObjectUID",
                         "Value": 17732647909550886280
@@ -61,6 +56,16 @@
                         "Value": 9424093591244721738
                     },
                     {
+                        "Name": "enemiesUID",
+                        "Type": "GameObjectUID",
+                        "Value": 9424093591244721738
+                    },
+                    {
+                        "Name": "debugEnemiesUID",
+                        "Type": "GameObjectUID",
+                        "Value": 8956077401393633822
+                    },
+                    {
                         "Name": "playerControllerUID",
                         "Type": "GameObjectUID",
                         "Value": 403437826872113792
@@ -69,11 +74,6 @@
                         "Name": "gameCameraUID",
                         "Type": "GameObjectUID",
                         "Value": 680618938873982628
-                    },
-                    {
-                        "Name": "debugEnemiesUID",
-                        "Type": "GameObjectUID",
-                        "Value": 8956077401393633822
                     },
                     {
                         "Name": "godCameraUID",
@@ -141,14 +141,14 @@
                                 "Value": 11128356192968719727
                             },
                             {
-                                "Name": "enemiesUID",
-                                "Type": "GameObjectUID",
-                                "Value": 8956077401393633822
-                            },
-                            {
                                 "Name": "prefabUID",
                                 "Type": "PrefabResourceUID",
                                 "Value": 6161494011548713161
+                            },
+                            {
+                                "Name": "enemiesUID",
+                                "Type": "GameObjectUID",
+                                "Value": 8956077401393633822
                             }
                         ]
                     }
@@ -3162,14 +3162,14 @@
                                 "Value": 564339191826698320
                             },
                             {
+                                "Name": "prefabUID",
+                                "Type": "PrefabResourceUID",
+                                "Value": 12995336514148150898
+                            },
+                            {
                                 "Name": "enemiesUID",
                                 "Type": "GameObjectUID",
                                 "Value": 8956077401393633822
-                            },
-                            {
-                                "Name": "prefabUID",
-                                "Type": "PrefabResourceUID",
-                                "Value": 12176188256985043906
                             }
                         ]
                     }

@@ -36,6 +36,13 @@ public:
 					"RunForwardLeft","RunForwardRight", "RunBackwardLeft", "RunBackwardRight"
 	};
 
+	//Onimaru ultimate related
+	float originalAttackSpeed = 0.0f;
+	float ultimateAttackSpeed = 20.0f;
+	float ultimateTimeRemaining = 0.0f;
+	float ultimateTotalTime = 3.0f;
+	float ultimateRotationSpeed = 2.0f;
+	float maxBulletSpread = 5.0f;
 	// Blast ability
 	float blastCooldown = 7.f;
 	float blastDistance = 15.f;
@@ -44,13 +51,16 @@ public:
 public:
 	// ------- Contructors ------- //
 	Onimaru() {};
-	void Init(UID onimaruUID = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0,UID shieldUID = 0, UID cameraUID = 0, UID canvasUID = 0, float maxSpread = 5.0f);
+	void Init(UID onimaruUID = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0, UID shieldUID = 0, UID onimaruTransformForUltimateProjectileOriginUID = 0, UID cameraUID = 0, UID canvasUID = 0, float maxSpread = 5.0f);
 	void Update(bool lockMovement = false, bool lockRotation = false) override;
-
 	void CheckCoolDowns(bool noCooldownMode = false) override;
-	void OnDeath() override;
+	bool CanSwitch() const override;
 	void OnAnimationFinished() override;
+	void OnDeath() override;
 	void OnAnimationSecondaryFinished() override;
+
+	float GetRealUltimateCooldown();
+
 	Quat GetSlightRandomSpread(float minValue, float maxValue) const;
 
 
@@ -61,26 +71,33 @@ public:
 	/* Update enemies' vector */
 	void AddEnemy(GameObject* enemy);
 	void RemoveEnemy(GameObject* enemy);
-	bool IsShielding();
-	
+	bool IsShielding() const;
+
 private:
 
 	ResourcePrefab* trail = nullptr;
 	ResourcePrefab* bullet = nullptr;
+	ResourcePrefab* ultimateBullet = nullptr;
+	ComponentParticleSystem* ultimateSystem = nullptr;
 	ComponentTransform* gunTransform = nullptr;
+
+	ComponentParticleSystem* ultimateParticles = nullptr;
+	ComponentTransform* transformForUltimateProjectileOrigin = nullptr;
+
 	ComponentTransform* rightHand = nullptr;
-	ComponentParticleSystem* compParticle = nullptr;
+	ComponentParticleSystem* blastParticles = nullptr;
+
+	ComponentParticleSystem* shieldParticles = nullptr;
 
 	Shield* shield = nullptr;
 	GameObject* shieldGO = nullptr;
-	
+
 	bool shieldInCooldown = false;
 	float shieldCooldownRemaining = 0.f;
 
 	bool blastInUse = false;
 	bool ultimateInUse = false;
 
-	float maxBulletSpread = 5.0f;
 
 	// Blast ability
 	float blastDuration = 1.5f;
@@ -102,8 +119,11 @@ private:
 	void Shoot() override;
 	void Blast();
 	void PlayAnimation();
+
+	void StartUltimate();
+	void FinishUltimate();
 	void InitShield();
 	void FadeShield();
 	bool CanShield();
-
+	bool CanUltimate();
 };
