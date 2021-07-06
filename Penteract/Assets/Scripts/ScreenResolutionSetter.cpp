@@ -24,38 +24,35 @@ void ScreenResolutionSetter::Start() {
 		text = textObj->GetComponent<ComponentText>();
 	}
 
-	UpdateText();
 	screenResolutionChangeConfirmationWasRequested = false;
-	preSelectedScreenResolutionPreset = 2;
+	preSelectedScreenResolutionPreset = Screen::GetCurrentDisplayMode();
+	UpdateResolution();
 }
 
 void ScreenResolutionSetter::Update() {
 	if (screenResolutionChangeConfirmationWasRequested) {
 		if (Screen::GetCurrentDisplayMode() != preSelectedScreenResolutionPreset) {
-
 			Screen::SetCurrentDisplayMode(preSelectedScreenResolutionPreset);
-
 		}
 		screenResolutionChangeConfirmationWasRequested = false;
 	}
 }
 
 void ScreenResolutionSetter::OnButtonClick() {
-	IncreaseResolution(increasing ? 1 : -1);
+	IncreaseResolution(increasing ? -1 : 1);		// This is reversed because the list obtained goes from highest to lowest, being position 0 the highest.
 }
 
 void ScreenResolutionSetter::IncreaseResolution(int multiplier) {
-	preSelectedScreenResolutionPreset = preSelectedScreenResolutionPreset + multiplier;
+	int newSelectedPreset = preSelectedScreenResolutionPreset + multiplier;
 
 	//Avoid getting out of bounds
-	if (preSelectedScreenResolutionPreset >= Screen::GetNumDisplayModes()) {
-		preSelectedScreenResolutionPreset = Screen::GetNumDisplayModes() - 1;
+	if (newSelectedPreset >= 0 && newSelectedPreset < Screen::GetNumDisplayModes()) {
+		preSelectedScreenResolutionPreset = newSelectedPreset;
+		UpdateResolution();
 	}
-
-	UpdateText();
 }
 
-void ScreenResolutionSetter::UpdateText() {
+void ScreenResolutionSetter::UpdateResolution() {
 	if (!text) return;
 
 	Screen::DisplayMode displayMode = Screen::GetDisplayMode(preSelectedScreenResolutionPreset);
