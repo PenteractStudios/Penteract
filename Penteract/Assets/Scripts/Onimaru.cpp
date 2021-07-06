@@ -258,8 +258,10 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 		GameObject* bulletAux = GameplaySystems::GetGameObject(onimaruBulletUID);
 		if (bulletAux) {
 			bullet = bulletAux->GetComponent<ComponentParticleSystem>();
-			bullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
-			bullet->Play();
+			if (bullet) {
+				bullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
+				bullet->Play();
+			}
 		}
 	}
 

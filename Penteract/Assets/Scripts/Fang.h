@@ -14,6 +14,7 @@ public:
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
 	void GetHit(float damage_) override;
+	void trailDelay();
 	bool CanSwitch() const override;
 
 	float GetRealDashCooldown();
@@ -89,7 +90,6 @@ private:
 private:
 	void InitDash();
 	void Dash();
-	void trailDelay();
 	bool CanDash();
 
 	void ActivateEMP();

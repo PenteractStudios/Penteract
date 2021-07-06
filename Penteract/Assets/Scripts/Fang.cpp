@@ -50,6 +50,32 @@ void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, 
 			agent->SetMaxSpeed(movementSpeed);
 			agent->SetMaxAcceleration(MAX_ACCELERATION);
 		}
+		GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
+		if (canvasGO) {
+			hudControllerScript = GET_SCRIPT(canvasGO, HUDController);
+		}
+		if (characterGameObject) {
+			characterGameObject->GetComponent<ComponentCapsuleCollider>()->Enable();
+
+			//Get audio sources
+			int i = 0;
+
+			for (ComponentAudioSource& src : characterGameObject->GetComponents<ComponentAudioSource>()) {
+				if (i < static_cast<int>(AudioPlayer::TOTAL)) playerAudios[i] = &src;
+				i++;
+			}
+		}
+		EMP = GameplaySystems::GetGameObject(EMPUID);
+		if (EMP) {
+			ComponentSphereCollider* sCollider = EMP->GetComponent<ComponentSphereCollider>();
+			if (sCollider) sCollider->radius = EMPRadius;
+		}
+
+		GameObject* fangUltimateGameObject = GameplaySystems::GetGameObject(fangUltimateUID);
+		if (fangUltimateGameObject) {
+			ultimateScript = GET_SCRIPT(fangUltimateGameObject, UltimateFang);
+			ultimateCooldownRemaining = ultimateCooldown;
+		}
 	}
 	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
 	if (canvasGO) {
@@ -85,6 +111,9 @@ void Fang::GetHit(float damage_) {
 
 void Fang::InitDash() {
 	if (CanDash()) {
+		hasDashed = true;
+		trailDash->Play();
+		trailDuration = dashDuration + trailDashOffsetDuration;
 		if (movementInputDirection != MovementDirection::NONE) {
 			dashDirection = GetDirection();
 			dashMovementDirection = movementInputDirection;
@@ -116,6 +145,19 @@ void Fang::Dash() {
 		float3 newPosition = playerMainTransform->GetGlobalPosition();
 		newPosition += dashSpeed * dashDirection;
 		agent->SetMoveTarget(newPosition, false);
+	}
+	else {
+		if (hasDashed)trailDelay();
+	}
+}
+
+void Fang::trailDelay() {
+	if (trailDuration >= 0) {
+		trailDuration -= Time::GetDeltaTime();
+	}
+	else {
+		hasDashed = false;
+		trailDash->Stop();
 	}
 }
 

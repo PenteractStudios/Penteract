@@ -71,7 +71,7 @@
                     },
                     {
                         "Type": "BoundingBox",
-                        "Active": false,
+                        "Active": true,
                         "LocalBoundingBox": [
                             -5.18971061706543,
                             -5.216899871826172,
@@ -107,9 +107,9 @@
                                 "Type": "Transform",
                                 "Active": true,
                                 "Position": [
-                                    0.000518798828125,
-                                    -0.00048828125,
-                                    24.467926025390626
+                                    0.008026123046875,
+                                    0.007080078125,
+                                    24.275758743286134
                                 ],
                                 "Rotation": [
                                     0.0,
@@ -132,9 +132,9 @@
                                 "Type": "SphereCollider",
                                 "Active": true,
                                 "colliderType": 2,
-                                "layerType": 5,
+                                "layerType": 2,
                                 "mass": 1.0,
-                                "radius": 1.875,
+                                "radius": 1.4800000190734864,
                                 "centerOffset": [
                                     0.0,
                                     0.0,
@@ -150,7 +150,7 @@
                                     {
                                         "Name": "barrelUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 525968066063556863
+                                        "Value": 18337460025082955316
                                     },
                                     {
                                         "Name": "BarrelUID",
@@ -165,7 +165,7 @@
                                     {
                                         "Name": "particlesUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 6994622993064376541
+                                        "Value": 15521854794254235727
                                     },
                                     {
                                         "Name": "timeToDestroy",

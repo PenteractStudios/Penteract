@@ -51,6 +51,7 @@ EXPOSE_MEMBERS(PlayerController) {
 		MEMBER(MemberType::FLOAT, playerFang.dashCooldown),
 		MEMBER(MemberType::FLOAT, playerFang.dashSpeed),
 		MEMBER(MemberType::FLOAT, playerFang.dashDuration),
+		MEMBER(MemberType::FLOAT, playerFang.trailDashOffsetDuration),
 		MEMBER(MemberType::FLOAT, playerFang.EMPRadius),
 		MEMBER(MemberType::FLOAT, playerFang.EMPCooldown),
 		MEMBER(MemberType::FLOAT, playerOnimaru.lifePoints),
@@ -285,7 +286,6 @@ void PlayerController::Update() {
 	if (!playerFang.characterGameObject) return;
 	if (!playerOnimaru.characterGameObject) return;
 	if (!camera) return;
-
 	if (playerFang.characterGameObject->IsActive()) {
 		playerFang.Update();
 	}
