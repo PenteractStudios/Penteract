@@ -20,7 +20,7 @@ void TriggerPowerUp::Update() {
 	
 }
 
-void TriggerPowerUp::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+void TriggerPowerUp::OnCollision(GameObject& /*collidedWith*/, float3 /*collisionNormal*/, float3 /*penetrationDistance*/, void* /*particle*/) {
 
     if (dialogueManagerScript) {
         dialogueManagerScript->ActivatePowerUpDialogue();
