@@ -74,7 +74,7 @@ bool Fang::CanSwitch() const {
 
 void Fang::IncreaseUltimateCounter()
 {
-	ultimateCooldownRemaining++;
+	if(!ultimateOn) ultimateCooldownRemaining++;
 }
 
 void Fang::GetHit(float damage_) {
