@@ -2,8 +2,9 @@
 #include "GameplaySystems.h"
 #include "HUDController.h"
 #include "CameraController.h"
+#include "UltimateFang.h"
 
-void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID, UID canvasUID) {
+void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, UID rightBulletUID, UID leftBulletUID, UID cameraUID, UID canvasUID, UID EMPUID, UID fangUltimateUID) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(fangUID);
 
@@ -23,10 +24,24 @@ void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, 
 		gunAux = GameplaySystems::GetGameObject(leftGunUID);
 		if (gunAux) leftGunTransform = gunAux->GetComponent<ComponentTransform>();
 		lookAtMousePlanePosition = leftGunTransform->GetGlobalPosition();
+
+		GameObject* trailAux = GameplaySystems::GetGameObject(trailDashUID);
+		if (trailAux) {
+			trailDash = trailAux->GetComponent<ComponentTrail>();
+			trailDash->Stop();
+		}
 		trailGun = GameplaySystems::GetResource<ResourcePrefab>(trailGunUID);
-		bullet = GameplaySystems::GetGameObject(bulletUID);
-		//DashTrail
-		trailDash = GameplaySystems::GetResource<ResourcePrefab>(trailGunUID);
+
+		GameObject* rightBulletAux = GameplaySystems::GetGameObject(rightBulletUID);
+		if (rightBulletAux) {
+			rightBullet = rightBulletAux->GetComponent<ComponentParticleSystem>();
+			rightBullet->Stop();
+		}
+		GameObject* leftBulletAux = GameplaySystems::GetGameObject(leftBulletUID);
+		if (leftBulletAux) {
+			leftBullet = leftBulletAux->GetComponent<ComponentParticleSystem>();
+			leftBullet->Stop();
+		}
 		if (compAnimation) {
 			currentState = compAnimation->GetCurrentState();
 		}
@@ -51,6 +66,15 @@ void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, 
 			i++;
 		}
 	}
+}
+bool Fang::CanSwitch() const {
+	if (!EMP) return false;
+	return !EMP->IsActive() && !ultimateOn;
+}
+
+void Fang::IncreaseUltimateCounter()
+{
+	ultimateCooldownRemaining++;
 }
 
 void Fang::GetHit(float damage_) {
@@ -99,6 +123,25 @@ bool Fang::CanDash() {
 	return isAlive && !dashing && !dashInCooldown;
 }
 
+void Fang::ActivateEMP() {
+	if (EMP && CanEMP()) {
+		EMP->Enable();
+		EMPCooldownRemaining = EMPCooldown;
+		EMPInCooldown = true;
+
+		if (playerAudios[static_cast<int>(AudioPlayer::SECOND_ABILITY)]) {
+			playerAudios[static_cast<int>(AudioPlayer::SECOND_ABILITY)]->Play();
+		}
+		if (hudControllerScript) {
+			hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_2);
+		}
+	}
+}
+
+bool Fang::CanEMP() {
+	return !EMP->IsActive() && !EMPInCooldown && !dashing;
+}
+
 void Fang::CheckCoolDowns(bool noCooldownMode) {
 	//Dash Cooldown
 	if (dashInCooldown) {
@@ -129,18 +172,45 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 		if (attackCooldownRemaining <= 0.f) {
 			attackCooldownRemaining = 0.f;
 			shootingOnCooldown = false;
-		} else {
+		}
+		else {
 			attackCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
 }
 
 void Fang::OnAnimationFinished() {
-	//TODO use if necesary
+	if (compAnimation) {
+		if (compAnimation->GetCurrentState()) {
+			if (compAnimation->GetCurrentState()->name == "EMP") {
+				compAnimation->SendTrigger(states[21] + states[0]);
+				EMP->Disable();
+			}
+			else if (compAnimation->GetCurrentState()->name == "Ultimate") {
+				compAnimation->SendTrigger(states[22] + states[0]);
+				ultimateOn = false;
+				movementSpeed = oldMovementSpeed;
+				ultimateScript->EndUltimate();
+			}
+		}
+	}
+}
+
+void Fang::OnAnimationSecondaryFinished() {
 }
 
 float Fang::GetRealDashCooldown() {
 	return 1.0f - (dashCooldownRemaining / dashCooldown);
+}
+
+float Fang::GetRealEMPCooldown()
+{
+	return 1.0f - (EMPCooldownRemaining / EMPCooldown);
+}
+
+float Fang::GetRealUltimateCooldown()
+{
+	return (ultimateCooldownRemaining / (float)ultimateCooldown);
 }
 
 bool Fang::CanShoot() {
@@ -157,15 +227,18 @@ void Fang::Shoot() {
 
 		ComponentTransform* shootingGunTransform = nullptr;
 		if (rightShot) {
-			if(compAnimation->GetCurrentState()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[11]);
+			if (compAnimation->GetCurrentState()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[11]);
 			shootingGunTransform = rightGunTransform;
-		} else {
+		}
+		else {
 			if (compAnimation->GetCurrentState()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[10]);
 			shootingGunTransform = leftGunTransform;
 		}
-		if (trailGun && bullet && shootingGunTransform) {
-			bullet->GetComponent<ComponentParticleSystem>()->Play();
-			GameplaySystems::Instantiate(trailGun, shootingGunTransform->GetGlobalPosition(), playerMainTransform->GetGlobalRotation());
+		if (trailGun && rightBullet && leftBullet && shootingGunTransform) {
+			GameObject* bullet = GameplaySystems::Instantiate(trailGun, shootingGunTransform->GetGlobalPosition(), (playerMainTransform->GetGlobalMatrix().RotatePart() * float3x3::FromEulerXYZ(pi / 2, 0.0f, 0.0f)).ToQuat());
+			if (bullet->GetComponent<ComponentParticleSystem>()) {
+				bullet->GetComponent<ComponentParticleSystem>()->Play();
+			}
 		}
 	}
 }
@@ -193,29 +266,65 @@ void Fang::PlayAnimation() {
 						}
 					}
 				}
-			} else {
+			}
+			else {
 				if (compAnimation->GetCurrentState()->name != states[0]) {
 					compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[0]);
 				}
 			}
-		} else {
+		}
+		else {
 			if (compAnimation->GetCurrentState()->name != states[GetMouseDirectionState() + dashAnimation]) {
 				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState() + dashAnimation]);
 			}
 		}
-	} 
+	}
 }
 
-void Fang::Update(bool lockMovement) {
+void Fang::ActiveUltimate()
+{
+	if (CanUltimate()) {
+		ultimateCooldownRemaining = 0;
+		ultimateOn = true;
+		ultimateInCooldown = true;
+		ultimateScript->StartUltimate();
+
+		oldMovementSpeed = movementSpeed;
+		movementSpeed = ultimateMovementSpeed;
+
+		if (playerAudios[static_cast<int>(AudioPlayer::THIRD_ABILITY)]) {
+			playerAudios[static_cast<int>(AudioPlayer::THIRD_ABILITY)]->Play();
+		}
+
+		if (hudControllerScript) {
+			hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_3);
+		}
+	}
+}
+
+bool Fang::CanUltimate()
+{
+	return ultimateCooldownRemaining >= ultimateCooldown && !ultimateOn;
+}
+
+void Fang::Update(bool lockMovement, bool lockRotation) {
 	if (isAlive) {
-		Player::Update(dashing);
-		if (Input::GetMouseButtonDown(2)) {
-			InitDash();
+		if (EMP) {
+			Player::Update(dashing || EMP->IsActive(), dashing || EMP->IsActive() || ultimateOn);
+			if (Input::GetMouseButtonDown(2) && !EMP->IsActive()) {
+				InitDash();
+			}
+			if (!dashing && !EMP->IsActive()) {
+				if (Input::GetMouseButtonDown(0)) Shoot();
+			}
+			Dash();
+			if (Input::GetKeyCodeDown(Input::KEY_Q)) {
+				ActivateEMP();
+			}
+			if (Input::GetKeyCodeUp(Input::KEYCODE::KEY_E)) {
+				ActiveUltimate();
+			}
 		}
-		if (!dashing) {
-			if (Input::GetMouseButtonDown(0)) Shoot();
-		}
-		Dash();
 	}
 	else {
 		if (agent) agent->RemoveAgentFromCrowd();

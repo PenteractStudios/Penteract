@@ -20,7 +20,7 @@ public:
 	float GetRealEMPCooldown();
 	float GetRealUltimateCooldown();
 	void IncreaseUltimateCounter();
-	void Init(UID fangUID = 0, UID trailGunUID = 0, UID trailDashUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID cameraUID = 0, UID canvasUID = 0, UID EMPUID = 0,UID fangUltimateUID = 0);
+	void Init(UID fangUID = 0, UID trailGunUID = 0, UID trailDashUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID cameraUID = 0, UID canvasUID = 0, UID EMPUID = 0, UID fangUltimateUID = 0);
 
 public:
 	std::vector<std::string> states{ "Idle" ,
@@ -81,11 +81,7 @@ private:
 	HUDController* hudControllerScript = nullptr;
 
 	//Ultimate
-<<<<<<< HEAD
 	int ultimateCooldownRemaining = 2;
-=======
-	int ultimateCooldownRemaining = 2;	
->>>>>>> develop
 	bool ultimateInCooldown = false;
 	float oldMovementSpeed = 1.0f;
 	UltimateFang* ultimateScript = nullptr;

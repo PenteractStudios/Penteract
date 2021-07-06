@@ -11,12 +11,11 @@
 
 EXPOSE_MEMBERS(PlayerDeath) {
 	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-	MEMBER(MemberType::FLOAT, rangedDamageTaken),
-	MEMBER(MemberType::FLOAT, meleeDamageTaken),
-	MEMBER(MemberType::FLOAT, barrelDamageTaken)
-	MEMBER(MemberType::GAME_OBJECT_UID, transitionUID),
-
+		MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
+		MEMBER(MemberType::FLOAT, rangedDamageTaken),
+		MEMBER(MemberType::FLOAT, meleeDamageTaken),
+		MEMBER(MemberType::FLOAT, barrelDamageTaken),
+		MEMBER(MemberType::GAME_OBJECT_UID, transitionUID)
 };
 
 GENERATE_BODY_IMPL(PlayerDeath);
@@ -36,21 +35,23 @@ void PlayerDeath::Update() {
 			dead = playerController->IsPlayerDead();
 		}
 	}
-
 }
 
 void PlayerDeath::OnAnimationFinished() {
 	if (dead) {
 		if (sceneTransition) {
 			sceneTransition->StartTransition();
-		} else {
+		}
+		else {
 			if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 		}
-	} else {
+	}
+	else {
 		if (!playerController)return;
 		if (playerController->playerFang.characterGameObject->IsActive()) {
 			playerController->playerFang.OnAnimationFinished();
-		} else {
+		}
+		else {
 			playerController->playerOnimaru.OnAnimationFinished();
 		}
 	}
@@ -78,12 +79,13 @@ void PlayerDeath::OnAnimationSecondaryFinished() {
 }
 
 void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
-
 	if (collidedWith.name == "RangerProjectile") {
 		playerController->TakeDamage(rangedDamageTaken);
-	} else if (collidedWith.name == "MeleePunch") {
+	}
+	else if (collidedWith.name == "MeleePunch") {
 		playerController->TakeDamage(meleeDamageTaken);
-	}else if (collidedWith.name == "Barrel") {
+	}
+	else if (collidedWith.name == "Barrel") {
 		playerController->TakeDamage(barrelDamageTaken);
 	}
 }
