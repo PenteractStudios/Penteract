@@ -76,7 +76,7 @@ void Player::LookAtGamepadDir() {
 }
 
 void Player::LookAtFacePointTarget(bool useGamepad) {
-
+	if (facePointDir.x == 0 && facePointDir.z == 0)return;
 	Quat quat = playerMainTransform->GetGlobalRotation();
 	float angle = Atan2(facePointDir.x, facePointDir.z);
 	Quat rotation = quat.RotateAxisAngle(float3(0, 1, 0), angle);
@@ -89,6 +89,8 @@ void Player::LookAtFacePointTarget(bool useGamepad) {
 		float3 aux2 = playerMainTransform->GetFront();
 		aux2.y = 0;
 
+		facePointDir.Normalize();
+		
 		angle = facePointDir.AngleBetween(aux2);
 		float3 cross = Cross(aux2, facePointDir.Normalized());
 		float dot = Dot(cross, float3(0, 1, 0));
@@ -99,7 +101,12 @@ void Player::LookAtFacePointTarget(bool useGamepad) {
 			multiplier = -1;
 		}
 
+
 		if (Abs(angle) > DEGTORAD * orientationThreshold) {
+
+			std::string message = std::to_string(Abs(angle)) + " > " + std::to_string(DEGTORAD * orientationThreshold);
+			Debug::Log(message.c_str());
+
 			Quat rotationToAdd;
 			rotationToAdd.SetFromAxisAngle(float3(0, 1, 0), multiplier * Time::GetDeltaTime() * orientationSpeed);
 			playerMainTransform->SetGlobalRotation(rotationToAdd * quat);
@@ -245,6 +252,7 @@ void Player::UpdateFacePointDir(bool useGamepad) {
 		float2 inputFloat2 = GetInputFloat2(InputActions::ORIENTATION, useGamepad);
 		facePointDir.x = inputFloat2.x;
 		facePointDir.z = inputFloat2.y;
+
 	} else {
 		LookAtMouse();
 	}
@@ -294,18 +302,17 @@ void Player::LookAtMouse() {
 	}
 }
 
-void Player::Update(bool useGamepad, bool lockMovement, bool lockOrientation) {
+void Player::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 
 	if (!lockMovement) {
-
 		movementInputDirection = GetInputMovementDirection(useGamepad && Input::IsGamepadConnected(0));
 		MoveTo();
+	} else {
+		if (agent) agent->SetMoveTarget(playerMainTransform->GetGlobalPosition(), false);
 	}
-
-	if (!lockOrientation) {
+	if (!lockRotation) {
 		UpdateFacePointDir(useGamepad && Input::IsGamepadConnected(0));
 		LookAtFacePointTarget(useGamepad && Input::IsGamepadConnected(0));
 	}
-
 }
 

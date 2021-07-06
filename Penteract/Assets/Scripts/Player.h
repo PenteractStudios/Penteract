@@ -60,7 +60,7 @@ public:
 	MovementDirection GetInputMovementDirection(bool useGamepad) const;
 	float3 GetDirection() const;
 	virtual void Shoot() {}
-	virtual void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockOrientation = false);
+	virtual void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockRotation = false);
 	virtual void CheckCoolDowns(bool noCooldownMode = false) {}
 	virtual bool CanSwitch() const = 0;
 

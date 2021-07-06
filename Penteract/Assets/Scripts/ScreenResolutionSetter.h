@@ -22,7 +22,7 @@ public:
 
 private:
 	void IncreaseResolution(int multiplier);
-	void UpdateText();
+	void UpdateResolution();
 private:
 
 	ComponentText* text = nullptr;
