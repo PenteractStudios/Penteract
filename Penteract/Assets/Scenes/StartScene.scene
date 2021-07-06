@@ -162,7 +162,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 200.0,
-                            "HorizontalFov": 1.7860602140426636,
+                            "HorizontalFov": 1.667648196220398,
                             "VerticalFov": 1.0
                         }
                     },
@@ -185,9 +185,9 @@
                         "Id": 13146572848985661355,
                         "Active": true,
                         "Gain": 0.3019999861717224,
-                        "ModelIndex": 0,
-                        "DistanceModel": 0,
-                        "Clamped": false
+                        "ModelIndex": 2,
+                        "DistanceModel": 2,
+                        "Clamped": true
                     }
                 ],
                 "Children": null
@@ -25548,15 +25548,15 @@
                         "Gain": 0.30000001192092898,
                         "Mute": false,
                         "Looping": true,
-                        "AudioClipId": 10905396094961812324,
+                        "AudioClipId": 12026735492238304694,
                         "SpatialBlend": 0,
                         "SourceType": 0,
                         "InnerAngle": 90.0,
                         "OuterAngle": 180.0,
                         "OuterGain": 0.0,
-                        "RolloffFactor": 0.0,
-                        "ReferenceDistance": 0.0,
-                        "MaxDistance": 0.0
+                        "RolloffFactor": 1.0,
+                        "ReferenceDistance": 10.0,
+                        "MaxDistance": 30.0
                     },
                     {
                         "Type": "Script",
