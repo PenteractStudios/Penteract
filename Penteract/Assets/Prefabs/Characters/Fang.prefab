@@ -3,14 +3,15 @@
         "Name": "Fang",
         "Active": true,
         "RootBoneName": "CenterHip",
+        "Mask": 0,
         "Components": [
             {
                 "Type": "Transform",
                 "Active": true,
                 "Position": [
-                    -2.600708484649658,
-                    3.0321311950683595,
-                    -0.6725026965141296
+                    0.0000152587890625,
+                    0.0,
+                    0.0
                 ],
                 "Rotation": [
                     0.0,
@@ -19,9 +20,9 @@
                     1.0
                 ],
                 "Scale": [
-                    0.019999999552965165,
-                    0.019999999552965165,
-                    0.019999999552965165
+                    0.030000001192092897,
+                    0.029999997466802598,
+                    0.030000001192092897
                 ],
                 "LocalEulerAngles": [
                     -0.0,
@@ -32,8 +33,143 @@
             {
                 "Type": "Animation",
                 "Active": true,
-                "StateMachineId": 0,
-                "InitalState": 0
+                "StateMachinePrincipalId": 244436462561078256,
+                "StateMachineSecondaryId": 3864718281598596542
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 10002269642242264877,
+                "Values": [
+                    {
+                        "Name": "playerUID",
+                        "Type": "GameObjectUID",
+                        "Value": 403437826872113792
+                    },
+                    {
+                        "Name": "sceneUID",
+                        "Type": "SceneResourceUID",
+                        "Value": 1827699931961010260
+                    }
+                ]
+            },
+            {
+                "Type": "CapsuleCollider",
+                "Active": true,
+                "colliderType": 2,
+                "layerType": 3,
+                "mass": 1.0,
+                "radius": 1.0,
+                "height": 1.440000057220459,
+                "capsuleType": 1,
+                "centerOffset": [
+                    0.0,
+                    1.7999999523162842,
+                    0.0
+                ],
+                "freezeRotation": false
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 1.0,
+                "Gain": 1.0,
+                "Mute": false,
+                "Looping": false,
+                "AudioClipId": 2709513398060962764,
+                "SpatialBlend": 1,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0,
+                "RolloffFactor": 0.0,
+                "ReferenceDistance": 0.0,
+                "MaxDistance": 0.0
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 1.0,
+                "Gain": 1.0,
+                "Mute": false,
+                "Looping": false,
+                "AudioClipId": 0,
+                "SpatialBlend": 1,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0,
+                "RolloffFactor": 0.0,
+                "ReferenceDistance": 0.0,
+                "MaxDistance": 0.0
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 1.0,
+                "Gain": 1.0,
+                "Mute": false,
+                "Looping": false,
+                "AudioClipId": 0,
+                "SpatialBlend": 1,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0,
+                "RolloffFactor": 0.0,
+                "ReferenceDistance": 0.0,
+                "MaxDistance": 0.0
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 1.0,
+                "Gain": 1.0,
+                "Mute": false,
+                "Looping": false,
+                "AudioClipId": 10685611266222420786,
+                "SpatialBlend": 1,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0,
+                "RolloffFactor": 0.0,
+                "ReferenceDistance": 0.0,
+                "MaxDistance": 0.0
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 1.0,
+                "Gain": 1.0,
+                "Mute": false,
+                "Looping": false,
+                "AudioClipId": 9595108440048790366,
+                "SpatialBlend": 1,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0,
+                "RolloffFactor": 0.0,
+                "ReferenceDistance": 0.0,
+                "MaxDistance": 0.0
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 1.0,
+                "Gain": 1.0,
+                "Mute": false,
+                "Looping": false,
+                "AudioClipId": 13399953858247124655,
+                "SpatialBlend": 1,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0,
+                "RolloffFactor": 0.0,
+                "ReferenceDistance": 0.0,
+                "MaxDistance": 0.0
             }
         ],
         "Children": [
@@ -41,6 +177,7 @@
                 "Name": "Fang_Bones",
                 "Active": true,
                 "RootBoneName": "",
+                "Mask": 0,
                 "Components": [
                     {
                         "Type": "Transform",
@@ -73,20 +210,21 @@
                         "Name": "CenterHip",
                         "Active": true,
                         "RootBoneName": "",
+                        "Mask": 0,
                         "Components": [
                             {
                                 "Type": "Transform",
                                 "Active": true,
                                 "Position": [
-                                    4.304622173309326,
-                                    68.85514831542969,
-                                    1.3399817943572999
+                                    0.00007152557373046875,
+                                    74.745361328125,
+                                    1.2204747200012208
                                 ],
                                 "Rotation": [
-                                    0.6790295839309692,
-                                    0.47227829694747927,
-                                    0.4308103919029236,
-                                    0.3609355390071869
+                                    0.5,
+                                    0.5,
+                                    0.5,
+                                    0.5
                                 ],
                                 "Scale": [
                                     0.9999999403953552,
@@ -94,9 +232,9 @@
                                     0.9999999403953552
                                 ],
                                 "LocalEulerAngles": [
-                                    167.261962890625,
-                                    67.81813049316406,
-                                    -61.05683898925781
+                                    90.0,
+                                    90.0,
+                                    0.0
                                 ]
                             }
                         ],
@@ -105,6 +243,7 @@
                                 "Name": "CenterSpine1",
                                 "Active": true,
                                 "RootBoneName": "",
+                                "Mask": 0,
                                 "Components": [
                                     {
                                         "Type": "Transform",
@@ -137,6 +276,7 @@
                                         "Name": "CenterSpine2",
                                         "Active": true,
                                         "RootBoneName": "",
+                                        "Mask": 0,
                                         "Components": [
                                             {
                                                 "Type": "Transform",
@@ -144,7 +284,7 @@
                                                 "Position": [
                                                     8.197219848632813,
                                                     -0.7889622449874878,
-                                                    -1.7763568394002506e-15
+                                                    0.0
                                                 ],
                                                 "Rotation": [
                                                     0.0,
@@ -169,6 +309,7 @@
                                                 "Name": "CenterSpine3",
                                                 "Active": true,
                                                 "RootBoneName": "",
+                                                "Mask": 0,
                                                 "Components": [
                                                     {
                                                         "Type": "Transform",
@@ -176,7 +317,7 @@
                                                         "Position": [
                                                             9.24349594116211,
                                                             -1.7596169710159302,
-                                                            8.659739592076221e-15
+                                                            1.3552527156068805e-20
                                                         ],
                                                         "Rotation": [
                                                             0.0,
@@ -201,6 +342,7 @@
                                                         "Name": "CenterNeck1",
                                                         "Active": true,
                                                         "RootBoneName": "",
+                                                        "Mask": 0,
                                                         "Components": [
                                                             {
                                                                 "Type": "Transform",
@@ -214,7 +356,7 @@
                                                                     0.0,
                                                                     0.0,
                                                                     0.0718778446316719,
-                                                                    0.9974134564399719
+                                                                    0.9974135160446167
                                                                 ],
                                                                 "Scale": [
                                                                     1.0,
@@ -233,6 +375,7 @@
                                                                 "Name": "CenterNeck2",
                                                                 "Active": true,
                                                                 "RootBoneName": "",
+                                                                "Mask": 0,
                                                                 "Components": [
                                                                     {
                                                                         "Type": "Transform",
@@ -243,10 +386,10 @@
                                                                             -0.00007152557373046875
                                                                         ],
                                                                         "Rotation": [
-                                                                            0.650094747543335,
-                                                                            0.5449342727661133,
-                                                                            0.42530879378318789,
-                                                                            -0.31549322605133059
+                                                                            -0.4839162826538086,
+                                                                            -0.5155822038650513,
+                                                                            -0.483916312456131,
+                                                                            0.5155822038650513
                                                                         ],
                                                                         "Scale": [
                                                                             1.0,
@@ -254,9 +397,9 @@
                                                                             1.0
                                                                         ],
                                                                         "LocalEulerAngles": [
-                                                                            -116.68492126464844,
-                                                                            12.071718215942383,
-                                                                            -87.4024429321289
+                                                                            -90.0,
+                                                                            -3.629251718521118,
+                                                                            -90.0
                                                                         ]
                                                                     }
                                                                 ],
@@ -265,6 +408,7 @@
                                                                         "Name": "CenterHead",
                                                                         "Active": true,
                                                                         "RootBoneName": "",
+                                                                        "Mask": 0,
                                                                         "Components": [
                                                                             {
                                                                                 "Type": "Transform",
@@ -297,6 +441,7 @@
                                                                                 "Name": "LeftEye",
                                                                                 "Active": true,
                                                                                 "RootBoneName": "",
+                                                                                "Mask": 0,
                                                                                 "Components": [
                                                                                     {
                                                                                         "Type": "Transform",
@@ -307,10 +452,10 @@
                                                                                             2.449002742767334
                                                                                         ],
                                                                                         "Rotation": [
-                                                                                            -0.0015593944117426873,
-                                                                                            0.06725873798131943,
-                                                                                            -0.0019299873383715749,
-                                                                                            0.9977325797080994
+                                                                                            0.002819178393110633,
+                                                                                            0.00018116607679985464,
+                                                                                            -0.001759801059961319,
+                                                                                            0.9999944567680359
                                                                                         ],
                                                                                         "Scale": [
                                                                                             1.0,
@@ -318,9 +463,9 @@
                                                                                             1.0
                                                                                         ],
                                                                                         "LocalEulerAngles": [
-                                                                                            -0.1649056375026703,
-                                                                                            7.713430881500244,
-                                                                                            -0.2105456441640854
+                                                                                            0.323090523481369,
+                                                                                            0.020191477611660959,
+                                                                                            -0.20171618461608888
                                                                                         ]
                                                                                     }
                                                                                 ],
@@ -330,19 +475,20 @@
                                                                                 "Name": "HairBun1",
                                                                                 "Active": true,
                                                                                 "RootBoneName": "",
+                                                                                "Mask": 0,
                                                                                 "Components": [
                                                                                     {
                                                                                         "Type": "Transform",
                                                                                         "Active": true,
                                                                                         "Position": [
-                                                                                            5.206711292266846,
-                                                                                            -6.3978118896484379,
-                                                                                            -0.00007125839329091832
+                                                                                            5.2067108154296879,
+                                                                                            -6.397812843322754,
+                                                                                            -0.00007152557373046875
                                                                                         ],
                                                                                         "Rotation": [
                                                                                             0.0,
                                                                                             0.0,
-                                                                                            -0.48733094334602358,
+                                                                                            -0.48733091354370119,
                                                                                             0.8732174038887024
                                                                                         ],
                                                                                         "Scale": [
@@ -353,7 +499,7 @@
                                                                                         "LocalEulerAngles": [
                                                                                             0.0,
                                                                                             0.0,
-                                                                                            -58.33060836791992
+                                                                                            -58.33060073852539
                                                                                         ]
                                                                                     }
                                                                                 ],
@@ -362,6 +508,7 @@
                                                                                         "Name": "HairBun2",
                                                                                         "Active": true,
                                                                                         "RootBoneName": "",
+                                                                                        "Mask": 0,
                                                                                         "Components": [
                                                                                             {
                                                                                                 "Type": "Transform",
@@ -397,20 +544,21 @@
                                                                                 "Name": "RightEye",
                                                                                 "Active": true,
                                                                                 "RootBoneName": "",
+                                                                                "Mask": 0,
                                                                                 "Components": [
                                                                                     {
                                                                                         "Type": "Transform",
                                                                                         "Active": true,
                                                                                         "Position": [
-                                                                                            -1.3437002897262574,
+                                                                                            -1.3437004089355469,
                                                                                             5.4983720779418949,
                                                                                             -2.454789400100708
                                                                                         ],
                                                                                         "Rotation": [
-                                                                                            0.0669013187289238,
-                                                                                            0.007055805530399084,
-                                                                                            0.9977334141731262,
-                                                                                            0.0015793918864801527
+                                                                                            -0.000172668689629063,
+                                                                                            0.0026885000988841058,
+                                                                                            0.9999948143959045,
+                                                                                            0.0017643033061176539
                                                                                         ],
                                                                                         "Scale": [
                                                                                             1.0,
@@ -418,9 +566,9 @@
                                                                                             1.0
                                                                                         ],
                                                                                         "LocalEulerAngles": [
-                                                                                            -0.8018003702163696,
-                                                                                            7.6731438636779789,
-                                                                                            179.87237548828126
+                                                                                            -0.308114230632782,
+                                                                                            -0.019242726266384126,
+                                                                                            179.7977752685547
                                                                                         ]
                                                                                     }
                                                                                 ],
@@ -430,6 +578,7 @@
                                                                                 "Name": "HairLong1",
                                                                                 "Active": true,
                                                                                 "RootBoneName": "",
+                                                                                "Mask": 0,
                                                                                 "Components": [
                                                                                     {
                                                                                         "Type": "Transform",
@@ -462,6 +611,7 @@
                                                                                         "Name": "HairLong2",
                                                                                         "Active": true,
                                                                                         "RootBoneName": "",
+                                                                                        "Mask": 0,
                                                                                         "Components": [
                                                                                             {
                                                                                                 "Type": "Transform",
@@ -494,6 +644,7 @@
                                                                                                 "Name": "HairLong3",
                                                                                                 "Active": true,
                                                                                                 "RootBoneName": "",
+                                                                                                "Mask": 0,
                                                                                                 "Components": [
                                                                                                     {
                                                                                                         "Type": "Transform",
@@ -537,6 +688,7 @@
                                                         "Name": "LeftCollar",
                                                         "Active": true,
                                                         "RootBoneName": "",
+                                                        "Mask": 0,
                                                         "Components": [
                                                             {
                                                                 "Type": "Transform",
@@ -569,6 +721,7 @@
                                                                 "Name": "LeftShoulder",
                                                                 "Active": true,
                                                                 "RootBoneName": "",
+                                                                "Mask": 0,
                                                                 "Components": [
                                                                     {
                                                                         "Type": "Transform",
@@ -579,10 +732,10 @@
                                                                             -1.2724968194961548
                                                                         ],
                                                                         "Rotation": [
-                                                                            -0.18704044818878175,
-                                                                            0.8194640874862671,
-                                                                            -0.38237062096595766,
-                                                                            -0.38378018140792849
+                                                                            0.467205673456192,
+                                                                            -0.6349315643310547,
+                                                                            0.3878096640110016,
+                                                                            0.47768673300743105
                                                                         ],
                                                                         "Scale": [
                                                                             0.9999999403953552,
@@ -590,9 +743,9 @@
                                                                             0.9999999403953552
                                                                         ],
                                                                         "LocalEulerAngles": [
-                                                                            118.20060729980469,
-                                                                            -29.074769973754884,
-                                                                            136.64208984375
+                                                                            104.50245666503906,
+                                                                            -14.135921478271485,
+                                                                            96.33908081054688
                                                                         ]
                                                                     }
                                                                 ],
@@ -601,6 +754,7 @@
                                                                         "Name": "LeftElbow",
                                                                         "Active": true,
                                                                         "RootBoneName": "",
+                                                                        "Mask": 0,
                                                                         "Components": [
                                                                             {
                                                                                 "Type": "Transform",
@@ -611,10 +765,10 @@
                                                                                     -1.3478187322616578
                                                                                 ],
                                                                                 "Rotation": [
-                                                                                    0.010542524978518486,
-                                                                                    0.03596652299165726,
-                                                                                    -0.165551096200943,
-                                                                                    0.985488772392273
+                                                                                    0.00039617420407012105,
+                                                                                    0.005692501086741686,
+                                                                                    0.049253787845373157,
+                                                                                    0.9987700581550598
                                                                                 ],
                                                                                 "Scale": [
                                                                                     1.0,
@@ -622,9 +776,9 @@
                                                                                     1.0
                                                                                 ],
                                                                                 "LocalEulerAngles": [
-                                                                                    1.8774702548980713,
-                                                                                    3.8645825386047365,
-                                                                                    -19.135372161865236
+                                                                                    0.013214374892413617,
+                                                                                    0.653760552406311,
+                                                                                    5.646369934082031
                                                                                 ]
                                                                             }
                                                                         ],
@@ -633,6 +787,7 @@
                                                                                 "Name": "LeftHand1",
                                                                                 "Active": true,
                                                                                 "RootBoneName": "",
+                                                                                "Mask": 0,
                                                                                 "Components": [
                                                                                     {
                                                                                         "Type": "Transform",
@@ -665,20 +820,21 @@
                                                                                         "Name": "LeftFingersBase",
                                                                                         "Active": true,
                                                                                         "RootBoneName": "",
+                                                                                        "Mask": 0,
                                                                                         "Components": [
                                                                                             {
                                                                                                 "Type": "Transform",
                                                                                                 "Active": true,
                                                                                                 "Position": [
-                                                                                                    7.3089213371276859,
-                                                                                                    0.37443649768829348,
-                                                                                                    -0.8659473657608032
+                                                                                                    4.155515670776367,
+                                                                                                    -1.2564791440963746,
+                                                                                                    -1.0268560647964478
                                                                                                 ],
                                                                                                 "Rotation": [
-                                                                                                    -0.3329057991504669,
-                                                                                                    0.04691057652235031,
-                                                                                                    -0.007873257622122765,
-                                                                                                    0.9417597055435181
+                                                                                                    -0.4544220566749573,
+                                                                                                    0.12621040642261506,
+                                                                                                    -0.16271093487739564,
+                                                                                                    0.8666583895683289
                                                                                                 ],
                                                                                                 "Scale": [
                                                                                                     1.0,
@@ -686,9 +842,9 @@
                                                                                                     1.0
                                                                                                 ],
                                                                                                 "LocalEulerAngles": [
-                                                                                                    -38.980613708496097,
-                                                                                                    5.370694160461426,
-                                                                                                    0.9440769553184509
+                                                                                                    -53.36640548706055,
+                                                                                                    21.508638381958009,
+                                                                                                    -10.360918998718262
                                                                                                 ]
                                                                                             }
                                                                                         ],
@@ -697,6 +853,7 @@
                                                                                                 "Name": "LeftFingers1",
                                                                                                 "Active": true,
                                                                                                 "RootBoneName": "",
+                                                                                                "Mask": 0,
                                                                                                 "Components": [
                                                                                                     {
                                                                                                         "Type": "Transform",
@@ -710,7 +867,7 @@
                                                                                                             -0.033690668642520908,
                                                                                                             -0.44356411695480349,
                                                                                                             0.059736140072345737,
-                                                                                                            0.8936148285865784
+                                                                                                            0.8936147689819336
                                                                                                         ],
                                                                                                         "Scale": [
                                                                                                             0.9999999403953552,
@@ -718,8 +875,8 @@
                                                                                                             0.9999999403953552
                                                                                                         ],
                                                                                                         "LocalEulerAngles": [
-                                                                                                            -0.6845360398292542,
-                                                                                                            -52.82332992553711,
+                                                                                                            -0.6845356822013855,
+                                                                                                            -52.823326110839847,
                                                                                                             7.3088250160217289
                                                                                                         ]
                                                                                                     }
@@ -729,6 +886,7 @@
                                                                                                         "Name": "LeftFingers2",
                                                                                                         "Active": true,
                                                                                                         "RootBoneName": "",
+                                                                                                        "Mask": 0,
                                                                                                         "Components": [
                                                                                                             {
                                                                                                                 "Type": "Transform",
@@ -739,9 +897,9 @@
                                                                                                                     0.981251060962677
                                                                                                                 ],
                                                                                                                 "Rotation": [
-                                                                                                                    -0.08305457979440689,
+                                                                                                                    -0.08305458724498749,
                                                                                                                     -0.3001073896884918,
-                                                                                                                    -0.012295519933104515,
+                                                                                                                    -0.01229552086442709,
                                                                                                                     0.9502032995223999
                                                                                                                 ],
                                                                                                                 "Scale": [
@@ -750,9 +908,9 @@
                                                                                                                     1.0
                                                                                                                 ],
                                                                                                                 "LocalEulerAngles": [
-                                                                                                                    -11.583219528198243,
+                                                                                                                    -11.583220481872559,
                                                                                                                     -34.6306266784668,
-                                                                                                                    -5.105029106140137
+                                                                                                                    -5.105029582977295
                                                                                                                 ]
                                                                                                             }
                                                                                                         ],
@@ -761,6 +919,7 @@
                                                                                                                 "Name": "LeftFingers3",
                                                                                                                 "Active": true,
                                                                                                                 "RootBoneName": "",
+                                                                                                                "Mask": 0,
                                                                                                                 "Components": [
                                                                                                                     {
                                                                                                                         "Type": "Transform",
@@ -798,6 +957,7 @@
                                                                                                 "Name": "LeftIndex1",
                                                                                                 "Active": true,
                                                                                                 "RootBoneName": "",
+                                                                                                "Mask": 0,
                                                                                                 "Components": [
                                                                                                     {
                                                                                                         "Type": "Transform",
@@ -808,10 +968,10 @@
                                                                                                             -0.12972642481327058
                                                                                                         ],
                                                                                                         "Rotation": [
-                                                                                                            -0.1197052001953125,
-                                                                                                            -0.26887473464012148,
-                                                                                                            0.1564117819070816,
-                                                                                                            0.9428216218948364
+                                                                                                            -0.1197051852941513,
+                                                                                                            -0.26887470483779909,
+                                                                                                            0.1564117670059204,
+                                                                                                            0.9428215026855469
                                                                                                         ],
                                                                                                         "Scale": [
                                                                                                             1.0,
@@ -819,9 +979,9 @@
                                                                                                             1.0
                                                                                                         ],
                                                                                                         "LocalEulerAngles": [
-                                                                                                            -9.719613075256348,
-                                                                                                            -32.98698043823242,
-                                                                                                            15.954693794250489
+                                                                                                            -9.719609260559082,
+                                                                                                            -32.98697280883789,
+                                                                                                            15.954689025878907
                                                                                                         ]
                                                                                                     }
                                                                                                 ],
@@ -830,6 +990,7 @@
                                                                                                         "Name": "LeftIndex2",
                                                                                                         "Active": true,
                                                                                                         "RootBoneName": "",
+                                                                                                        "Mask": 0,
                                                                                                         "Components": [
                                                                                                             {
                                                                                                                 "Type": "Transform",
@@ -840,10 +1001,10 @@
                                                                                                                     -1.0322635173797608
                                                                                                                 ],
                                                                                                                 "Rotation": [
-                                                                                                                    -0.07732798904180527,
-                                                                                                                    -0.49966850876808169,
+                                                                                                                    -0.07732797414064408,
+                                                                                                                    -0.4996684789657593,
                                                                                                                     -0.1819612979888916,
-                                                                                                                    0.8433516025543213
+                                                                                                                    0.8433517217636108
                                                                                                                 ],
                                                                                                                 "Scale": [
                                                                                                                     1.0,
@@ -851,9 +1012,9 @@
                                                                                                                     1.0
                                                                                                                 ],
                                                                                                                 "LocalEulerAngles": [
-                                                                                                                    -32.57761764526367,
-                                                                                                                    -54.55287551879883,
-                                                                                                                    -41.487335205078128
+                                                                                                                    -32.577613830566409,
+                                                                                                                    -54.55289077758789,
+                                                                                                                    -41.48733139038086
                                                                                                                 ]
                                                                                                             }
                                                                                                         ],
@@ -862,6 +1023,7 @@
                                                                                                                 "Name": "LeftIndex3",
                                                                                                                 "Active": true,
                                                                                                                 "RootBoneName": "",
+                                                                                                                "Mask": 0,
                                                                                                                 "Components": [
                                                                                                                     {
                                                                                                                         "Type": "Transform",
@@ -872,10 +1034,10 @@
                                                                                                                             -0.6005681753158569
                                                                                                                         ],
                                                                                                                         "Rotation": [
-                                                                                                                            -0.35756000876426699,
-                                                                                                                            0.6100417375564575,
-                                                                                                                            0.35756003856658938,
-                                                                                                                            0.6100417375564575
+                                                                                                                            -0.3575599789619446,
+                                                                                                                            0.6100416779518127,
+                                                                                                                            0.35756000876426699,
+                                                                                                                            0.6100416779518127
                                                                                                                         ],
                                                                                                                         "Scale": [
                                                                                                                             1.0,
@@ -883,9 +1045,9 @@
                                                                                                                             1.0
                                                                                                                         ],
                                                                                                                         "LocalEulerAngles": [
-                                                                                                                            -90.00001525878906,
-                                                                                                                            29.24883460998535,
-                                                                                                                            90.00001525878906
+                                                                                                                            -90.0,
+                                                                                                                            29.24882698059082,
+                                                                                                                            90.0
                                                                                                                         ]
                                                                                                                     }
                                                                                                                 ],
@@ -899,6 +1061,7 @@
                                                                                                 "Name": "LeftThumbBase",
                                                                                                 "Active": true,
                                                                                                 "RootBoneName": "",
+                                                                                                "Mask": 0,
                                                                                                 "Components": [
                                                                                                     {
                                                                                                         "Type": "Transform",
@@ -906,12 +1069,12 @@
                                                                                                         "Position": [
                                                                                                             -2.0431690216064455,
                                                                                                             1.928656816482544,
-                                                                                                            0.04097441956400871
+                                                                                                            0.04097442328929901
                                                                                                         ],
                                                                                                         "Rotation": [
-                                                                                                            0.4990638494491577,
-                                                                                                            0.07347231358289719,
-                                                                                                            0.09069826453924179,
+                                                                                                            0.4990638792514801,
+                                                                                                            0.07347230613231659,
+                                                                                                            0.09069828689098358,
                                                                                                             0.8586681485176086
                                                                                                         ],
                                                                                                         "Scale": [
@@ -920,9 +1083,9 @@
                                                                                                             0.9999999403953552
                                                                                                         ],
                                                                                                         "LocalEulerAngles": [
-                                                                                                            59.799495697021487,
-                                                                                                            12.515581130981446,
-                                                                                                            4.843306064605713
+                                                                                                            59.799503326416019,
+                                                                                                            12.515583992004395,
+                                                                                                            4.843307971954346
                                                                                                         ]
                                                                                                     }
                                                                                                 ],
@@ -931,6 +1094,7 @@
                                                                                                         "Name": "LeftThumb1",
                                                                                                         "Active": true,
                                                                                                         "RootBoneName": "",
+                                                                                                        "Mask": 0,
                                                                                                         "Components": [
                                                                                                             {
                                                                                                                 "Type": "Transform",
@@ -941,8 +1105,8 @@
                                                                                                                     0.39589181542396548
                                                                                                                 ],
                                                                                                                 "Rotation": [
-                                                                                                                    -0.15572533011436463,
-                                                                                                                    -0.24974502623081208,
+                                                                                                                    -0.15572531521320344,
+                                                                                                                    -0.24974501132965089,
                                                                                                                     0.28524649143218996,
                                                                                                                     0.9121466279029846
                                                                                                                 ],
@@ -952,9 +1116,9 @@
                                                                                                                     1.0
                                                                                                                 ],
                                                                                                                 "LocalEulerAngles": [
-                                                                                                                    -9.719608306884766,
-                                                                                                                    -32.986976623535159,
-                                                                                                                    31.84682273864746
+                                                                                                                    -9.71960735321045,
+                                                                                                                    -32.98697280883789,
+                                                                                                                    31.846826553344728
                                                                                                                 ]
                                                                                                             }
                                                                                                         ],
@@ -963,6 +1127,7 @@
                                                                                                                 "Name": "LeftThumb2",
                                                                                                                 "Active": true,
                                                                                                                 "RootBoneName": "",
+                                                                                                                "Mask": 0,
                                                                                                                 "Components": [
                                                                                                                     {
                                                                                                                         "Type": "Transform",
@@ -975,7 +1140,7 @@
                                                                                                                         "Rotation": [
                                                                                                                             0.0,
                                                                                                                             0.0,
-                                                                                                                            0.03186514228582382,
+                                                                                                                            0.031865138560533527,
                                                                                                                             0.9994922280311585
                                                                                                                         ],
                                                                                                                         "Scale": [
@@ -986,7 +1151,7 @@
                                                                                                                         "LocalEulerAngles": [
                                                                                                                             -0.0,
                                                                                                                             0.0,
-                                                                                                                            3.652094841003418
+                                                                                                                            3.652094602584839
                                                                                                                         ]
                                                                                                                     }
                                                                                                                 ],
@@ -995,6 +1160,7 @@
                                                                                                                         "Name": "LeftThumb3",
                                                                                                                         "Active": true,
                                                                                                                         "RootBoneName": "",
+                                                                                                                        "Mask": 0,
                                                                                                                         "Components": [
                                                                                                                             {
                                                                                                                                 "Type": "Transform",
@@ -1005,9 +1171,9 @@
                                                                                                                                     -3.552713678800501e-14
                                                                                                                                 ],
                                                                                                                                 "Rotation": [
-                                                                                                                                    -0.21374158561229707,
+                                                                                                                                    -0.21374160051345826,
                                                                                                                                     0.6740285754203796,
-                                                                                                                                    0.21374158561229707,
+                                                                                                                                    0.21374160051345826,
                                                                                                                                     0.6740285754203796
                                                                                                                                 ],
                                                                                                                                 "Scale": [
@@ -1034,6 +1200,7 @@
                                                                                                 "Name": "LeftGun",
                                                                                                 "Active": true,
                                                                                                 "RootBoneName": "",
+                                                                                                "Mask": 0,
                                                                                                 "Components": [
                                                                                                     {
                                                                                                         "Type": "Transform",
@@ -1045,8 +1212,8 @@
                                                                                                         ],
                                                                                                         "Rotation": [
                                                                                                             -0.5452136397361755,
-                                                                                                            0.44805389642715456,
-                                                                                                            0.48747286200523379,
+                                                                                                            0.4480540156364441,
+                                                                                                            0.48747295141220095,
                                                                                                             0.5141595005989075
                                                                                                         ],
                                                                                                         "Scale": [
@@ -1055,13 +1222,134 @@
                                                                                                             1.0
                                                                                                         ],
                                                                                                         "LocalEulerAngles": [
-                                                                                                            -89.77140808105469,
+                                                                                                            -89.77142333984375,
                                                                                                             -4.060590744018555,
-                                                                                                            82.90320587158203
+                                                                                                            82.90322875976563
                                                                                                         ]
                                                                                                     }
                                                                                                 ],
-                                                                                                "Children": null
+                                                                                                "Children": [
+                                                                                                    {
+                                                                                                        "Name": "ParticleSystem",
+                                                                                                        "Active": true,
+                                                                                                        "RootBoneName": "",
+                                                                                                        "Mask": 0,
+                                                                                                        "Components": [
+                                                                                                            {
+                                                                                                                "Type": "Transform",
+                                                                                                                "Active": true,
+                                                                                                                "Position": [
+                                                                                                                    0.0,
+                                                                                                                    0.0,
+                                                                                                                    0.0
+                                                                                                                ],
+                                                                                                                "Rotation": [
+                                                                                                                    1.0,
+                                                                                                                    0.0,
+                                                                                                                    0.0,
+                                                                                                                    -4.371138828673793e-8
+                                                                                                                ],
+                                                                                                                "Scale": [
+                                                                                                                    1.0,
+                                                                                                                    1.0,
+                                                                                                                    1.0
+                                                                                                                ],
+                                                                                                                "LocalEulerAngles": [
+                                                                                                                    180.0,
+                                                                                                                    0.0,
+                                                                                                                    -0.0
+                                                                                                                ]
+                                                                                                            },
+                                                                                                            {
+                                                                                                                "Type": "Particle",
+                                                                                                                "Active": true,
+                                                                                                                "DrawGizmo": false,
+                                                                                                                "Duration": 0.0,
+                                                                                                                "Looping": false,
+                                                                                                                "StartDelay": [
+                                                                                                                    0.0,
+                                                                                                                    0.0
+                                                                                                                ],
+                                                                                                                "LifeRM": 0,
+                                                                                                                "Life": [
+                                                                                                                    0.0,
+                                                                                                                    0.0
+                                                                                                                ],
+                                                                                                                "SpeedRM": 0,
+                                                                                                                "Speed": [
+                                                                                                                    0.0,
+                                                                                                                    0.0
+                                                                                                                ],
+                                                                                                                "RotationRM": 0,
+                                                                                                                "Rotation": [
+                                                                                                                    0.0,
+                                                                                                                    0.0
+                                                                                                                ],
+                                                                                                                "ScaleRM": 0,
+                                                                                                                "Scale": [
+                                                                                                                    0.0,
+                                                                                                                    0.0
+                                                                                                                ],
+                                                                                                                "ReverseEffect": false,
+                                                                                                                "ReverseDistanceRM": 0,
+                                                                                                                "ReverseDistance": [
+                                                                                                                    0.0,
+                                                                                                                    0.0
+                                                                                                                ],
+                                                                                                                "MaxParticle": 1,
+                                                                                                                "AttachEmitter": false,
+                                                                                                                "ParticlesPerSecondRM": 0,
+                                                                                                                "ParticlesPerSecond": [
+                                                                                                                    0.0,
+                                                                                                                    0.0
+                                                                                                                ],
+                                                                                                                "GravityEffect": false,
+                                                                                                                "GravityFactorRM": 0,
+                                                                                                                "GravityFactor": [
+                                                                                                                    0.0,
+                                                                                                                    0.0
+                                                                                                                ],
+                                                                                                                "ParticleEmitterType": 0,
+                                                                                                                "ConeRadiusUp": 0.0,
+                                                                                                                "ConeRadiusDown": 0.0,
+                                                                                                                "RandomConeRadiusUp": false,
+                                                                                                                "RandomConeRadiusDown": false,
+                                                                                                                "RotationOverLifetime": false,
+                                                                                                                "RotationFactorRM": 0,
+                                                                                                                "RotationFactor": [
+                                                                                                                    0.0,
+                                                                                                                    0.0
+                                                                                                                ],
+                                                                                                                "SizeOverLifetime": false,
+                                                                                                                "ScaleFactorRM": 0,
+                                                                                                                "ScaleFactor": [
+                                                                                                                    0.0,
+                                                                                                                    0.0
+                                                                                                                ],
+                                                                                                                "ColorOverLifetime": false,
+                                                                                                                "GradientColors": null,
+                                                                                                                "NumberColors": 0,
+                                                                                                                "Ytiles": 1,
+                                                                                                                "Xtiles": 1,
+                                                                                                                "AnimationSpeed": 0.0,
+                                                                                                                "IsRandomFrame": false,
+                                                                                                                "LoopAnimation": false,
+                                                                                                                "NCycles": 0.0,
+                                                                                                                "TextureId": 12530008367011440877,
+                                                                                                                "BillboardType": 0,
+                                                                                                                "ParticleRenderMode": 0,
+                                                                                                                "ParticleRenderAlignment": 0,
+                                                                                                                "FlipTexture": [
+                                                                                                                    false,
+                                                                                                                    false
+                                                                                                                ],
+                                                                                                                "HasCollision": false,
+                                                                                                                "LayerIndex": 0
+                                                                                                            }
+                                                                                                        ],
+                                                                                                        "Children": null
+                                                                                                    }
+                                                                                                ]
                                                                                             }
                                                                                         ]
                                                                                     }
@@ -1077,6 +1365,7 @@
                                                         "Name": "RightCollar",
                                                         "Active": true,
                                                         "RootBoneName": "",
+                                                        "Mask": 0,
                                                         "Components": [
                                                             {
                                                                 "Type": "Transform",
@@ -1109,6 +1398,7 @@
                                                                 "Name": "RightShoulder",
                                                                 "Active": true,
                                                                 "RootBoneName": "",
+                                                                "Mask": 0,
                                                                 "Components": [
                                                                     {
                                                                         "Type": "Transform",
@@ -1119,10 +1409,10 @@
                                                                             -0.00007124341937014833
                                                                         ],
                                                                         "Rotation": [
-                                                                            -0.08169104903936386,
-                                                                            -0.5813468098640442,
-                                                                            0.19084937870502473,
-                                                                            0.7867267727851868
+                                                                            0.4323364198207855,
+                                                                            -0.6623517274856567,
+                                                                            0.4262789785861969,
+                                                                            0.4389325678348541
                                                                         ],
                                                                         "Scale": [
                                                                             1.0000001192092896,
@@ -1130,9 +1420,9 @@
                                                                             0.9999999403953552
                                                                         ],
                                                                         "LocalEulerAngles": [
-                                                                            16.723739624023439,
-                                                                            -71.06787872314453,
-                                                                            39.2570686340332
+                                                                            104.90056610107422,
+                                                                            -12.290221214294434,
+                                                                            104.2702865600586
                                                                         ]
                                                                     }
                                                                 ],
@@ -1141,6 +1431,7 @@
                                                                         "Name": "RightElbow",
                                                                         "Active": true,
                                                                         "RootBoneName": "",
+                                                                        "Mask": 0,
                                                                         "Components": [
                                                                             {
                                                                                 "Type": "Transform",
@@ -1151,10 +1442,10 @@
                                                                                     1.347904920578003
                                                                                 ],
                                                                                 "Rotation": [
-                                                                                    0.0023079400416463615,
-                                                                                    0.014741934835910797,
-                                                                                    -0.026194168254733087,
-                                                                                    0.9995455145835877
+                                                                                    0.002874049823731184,
+                                                                                    0.01667965017259121,
+                                                                                    -0.041522182524204257,
+                                                                                    0.9989942312240601
                                                                                 ],
                                                                                 "Scale": [
                                                                                     1.0,
@@ -1162,9 +1453,9 @@
                                                                                     1.0
                                                                                 ],
                                                                                 "LocalEulerAngles": [
-                                                                                    0.30873459577560427,
-                                                                                    1.6818474531173707,
-                                                                                    -3.0068399906158449
+                                                                                    0.4086011052131653,
+                                                                                    1.8960959911346436,
+                                                                                    -4.766903877258301
                                                                                 ]
                                                                             }
                                                                         ],
@@ -1173,12 +1464,13 @@
                                                                                 "Name": "RightHand",
                                                                                 "Active": true,
                                                                                 "RootBoneName": "",
+                                                                                "Mask": 0,
                                                                                 "Components": [
                                                                                     {
                                                                                         "Type": "Transform",
                                                                                         "Active": true,
                                                                                         "Position": [
-                                                                                            -21.812856674194337,
+                                                                                            -21.81285858154297,
                                                                                             0.8447195887565613,
                                                                                             -0.2587166726589203
                                                                                         ],
@@ -1205,20 +1497,21 @@
                                                                                         "Name": "RightFingersBase",
                                                                                         "Active": true,
                                                                                         "RootBoneName": "",
+                                                                                        "Mask": 0,
                                                                                         "Components": [
                                                                                             {
                                                                                                 "Type": "Transform",
                                                                                                 "Active": true,
                                                                                                 "Position": [
-                                                                                                    -4.4433722496032719,
-                                                                                                    0.08887270092964173,
-                                                                                                    0.38578349351882937
+                                                                                                    -4.270374298095703,
+                                                                                                    1.0545343160629273,
+                                                                                                    0.743413507938385
                                                                                                 ],
                                                                                                 "Rotation": [
-                                                                                                    0.25042232871055605,
-                                                                                                    0.06597235053777695,
-                                                                                                    -0.11537615209817887,
-                                                                                                    0.9589706063270569
+                                                                                                    -0.40872660279273989,
+                                                                                                    0.08690323680639267,
+                                                                                                    -0.16502375900745393,
+                                                                                                    0.8933966159820557
                                                                                                 ],
                                                                                                 "Scale": [
                                                                                                     1.0,
@@ -1226,9 +1519,9 @@
                                                                                                     1.0
                                                                                                 ],
                                                                                                 "LocalEulerAngles": [
-                                                                                                    29.781492233276368,
-                                                                                                    3.9419400691986086,
-                                                                                                    -14.769418716430664
+                                                                                                    -47.15315246582031,
+                                                                                                    16.868572235107423,
+                                                                                                    -13.526055335998536
                                                                                                 ]
                                                                                             }
                                                                                         ],
@@ -1237,6 +1530,7 @@
                                                                                                 "Name": "RightFingers1",
                                                                                                 "Active": true,
                                                                                                 "RootBoneName": "",
+                                                                                                "Mask": 0,
                                                                                                 "Components": [
                                                                                                     {
                                                                                                         "Type": "Transform",
@@ -1248,8 +1542,8 @@
                                                                                                         ],
                                                                                                         "Rotation": [
                                                                                                             -0.02009439654648304,
-                                                                                                            -0.3017313480377197,
-                                                                                                            0.0772186741232872,
+                                                                                                            -0.3017313778400421,
+                                                                                                            0.0772186815738678,
                                                                                                             0.9500482678413391
                                                                                                         ],
                                                                                                         "Scale": [
@@ -1258,8 +1552,8 @@
                                                                                                             1.0
                                                                                                         ],
                                                                                                         "LocalEulerAngles": [
-                                                                                                            0.5902011394500732,
-                                                                                                            -35.199275970458987,
+                                                                                                            0.590201735496521,
+                                                                                                            -35.19927978515625,
                                                                                                             9.480643272399903
                                                                                                         ]
                                                                                                     }
@@ -1269,20 +1563,21 @@
                                                                                                         "Name": "RightFingers2",
                                                                                                         "Active": true,
                                                                                                         "RootBoneName": "",
+                                                                                                        "Mask": 0,
                                                                                                         "Components": [
                                                                                                             {
                                                                                                                 "Type": "Transform",
                                                                                                                 "Active": true,
                                                                                                                 "Position": [
-                                                                                                                    -1.946393370628357,
+                                                                                                                    -1.9463932514190674,
                                                                                                                     0.13930533826351167,
                                                                                                                     -1.252781629562378
                                                                                                                 ],
                                                                                                                 "Rotation": [
-                                                                                                                    -0.12036985158920288,
-                                                                                                                    -0.41743144392967226,
-                                                                                                                    -0.004229564219713211,
-                                                                                                                    0.9006909728050232
+                                                                                                                    -0.12036987394094467,
+                                                                                                                    -0.417431503534317,
+                                                                                                                    -0.004229564685374498,
+                                                                                                                    0.900691032409668
                                                                                                                 ],
                                                                                                                 "Scale": [
                                                                                                                     1.0,
@@ -1290,9 +1585,9 @@
                                                                                                                     1.0
                                                                                                                 ],
                                                                                                                 "LocalEulerAngles": [
-                                                                                                                    -19.49311637878418,
-                                                                                                                    -48.67145919799805,
-                                                                                                                    -9.42241382598877
+                                                                                                                    -19.493122100830079,
+                                                                                                                    -48.67146682739258,
+                                                                                                                    -9.422417640686036
                                                                                                                 ]
                                                                                                             }
                                                                                                         ],
@@ -1301,6 +1596,7 @@
                                                                                                                 "Name": "RightFingers3",
                                                                                                                 "Active": true,
                                                                                                                 "RootBoneName": "",
+                                                                                                                "Mask": 0,
                                                                                                                 "Components": [
                                                                                                                     {
                                                                                                                         "Type": "Transform",
@@ -1338,6 +1634,7 @@
                                                                                                 "Name": "RightIndex1",
                                                                                                 "Active": true,
                                                                                                 "RootBoneName": "",
+                                                                                                "Mask": 0,
                                                                                                 "Components": [
                                                                                                     {
                                                                                                         "Type": "Transform",
@@ -1350,7 +1647,7 @@
                                                                                                         "Rotation": [
                                                                                                             -0.09597808867692948,
                                                                                                             -0.40001973509788515,
-                                                                                                            0.08084879070520401,
+                                                                                                            0.08084879815578461,
                                                                                                             0.9078744053840637
                                                                                                         ],
                                                                                                         "Scale": [
@@ -1361,7 +1658,7 @@
                                                                                                         "LocalEulerAngles": [
                                                                                                             -9.40605640411377,
                                                                                                             -47.88965606689453,
-                                                                                                            5.993313312530518
+                                                                                                            5.993314743041992
                                                                                                         ]
                                                                                                     }
                                                                                                 ],
@@ -1370,6 +1667,7 @@
                                                                                                         "Name": "RightIndex2",
                                                                                                         "Active": true,
                                                                                                         "RootBoneName": "",
+                                                                                                        "Mask": 0,
                                                                                                         "Components": [
                                                                                                             {
                                                                                                                 "Type": "Transform",
@@ -1377,13 +1675,13 @@
                                                                                                                 "Position": [
                                                                                                                     -2.0502984523773195,
                                                                                                                     0.2570015788078308,
-                                                                                                                    0.6919426321983337
+                                                                                                                    0.6919426918029785
                                                                                                                 ],
                                                                                                                 "Rotation": [
                                                                                                                     -0.036359887570142749,
-                                                                                                                    -0.24663090705871583,
-                                                                                                                    -0.1155126765370369,
-                                                                                                                    0.9615134000778198
+                                                                                                                    -0.24663089215755464,
+                                                                                                                    -0.11551268398761749,
+                                                                                                                    0.9615134596824646
                                                                                                                 ],
                                                                                                                 "Scale": [
                                                                                                                     1.0,
@@ -1393,7 +1691,7 @@
                                                                                                                 "LocalEulerAngles": [
                                                                                                                     -8.245402336120606,
                                                                                                                     -27.767045974731447,
-                                                                                                                    -15.742269515991211
+                                                                                                                    -15.742271423339844
                                                                                                                 ]
                                                                                                             }
                                                                                                         ],
@@ -1402,20 +1700,21 @@
                                                                                                                 "Name": "RightIndex3",
                                                                                                                 "Active": true,
                                                                                                                 "RootBoneName": "",
+                                                                                                                "Mask": 0,
                                                                                                                 "Components": [
                                                                                                                     {
                                                                                                                         "Type": "Transform",
                                                                                                                         "Active": true,
                                                                                                                         "Position": [
                                                                                                                             -2.5443453788757326,
-                                                                                                                            0.1617756336927414,
+                                                                                                                            0.1617756485939026,
                                                                                                                             0.5788745284080505
                                                                                                                         ],
                                                                                                                         "Rotation": [
-                                                                                                                            -0.35756000876426699,
-                                                                                                                            0.6100417375564575,
-                                                                                                                            0.35756003856658938,
-                                                                                                                            0.6100417375564575
+                                                                                                                            -0.3575599789619446,
+                                                                                                                            0.6100416779518127,
+                                                                                                                            0.35756000876426699,
+                                                                                                                            0.6100416779518127
                                                                                                                         ],
                                                                                                                         "Scale": [
                                                                                                                             1.0,
@@ -1423,9 +1722,9 @@
                                                                                                                             1.0
                                                                                                                         ],
                                                                                                                         "LocalEulerAngles": [
-                                                                                                                            -90.00001525878906,
-                                                                                                                            29.24883460998535,
-                                                                                                                            90.00001525878906
+                                                                                                                            -90.0,
+                                                                                                                            29.24882698059082,
+                                                                                                                            90.0
                                                                                                                         ]
                                                                                                                     }
                                                                                                                 ],
@@ -1439,6 +1738,7 @@
                                                                                                 "Name": "RightThumbBase",
                                                                                                 "Active": true,
                                                                                                 "RootBoneName": "",
+                                                                                                "Mask": 0,
                                                                                                 "Components": [
                                                                                                     {
                                                                                                         "Type": "Transform",
@@ -1446,12 +1746,12 @@
                                                                                                         "Position": [
                                                                                                             2.043112277984619,
                                                                                                             -1.9286389350891114,
-                                                                                                            -0.0409003309905529
+                                                                                                            -0.0409003347158432
                                                                                                         ],
                                                                                                         "Rotation": [
-                                                                                                            0.5079730153083801,
+                                                                                                            0.5079729557037354,
                                                                                                             -0.08702397346496582,
-                                                                                                            0.24226237833499909,
+                                                                                                            0.24226239323616029,
                                                                                                             0.822009265422821
                                                                                                         ],
                                                                                                         "Scale": [
@@ -1460,9 +1760,9 @@
                                                                                                             0.9999999403953552
                                                                                                         ],
                                                                                                         "LocalEulerAngles": [
-                                                                                                            61.8819465637207,
-                                                                                                            5.91520357131958,
-                                                                                                            29.294633865356447
+                                                                                                            61.88193130493164,
+                                                                                                            5.915202617645264,
+                                                                                                            29.29463768005371
                                                                                                         ]
                                                                                                     }
                                                                                                 ],
@@ -1471,6 +1771,7 @@
                                                                                                         "Name": "RightThumb1",
                                                                                                         "Active": true,
                                                                                                         "RootBoneName": "",
+                                                                                                        "Mask": 0,
                                                                                                         "Components": [
                                                                                                             {
                                                                                                                 "Type": "Transform",
@@ -1481,9 +1782,9 @@
                                                                                                                     -0.3959597945213318
                                                                                                                 ],
                                                                                                                 "Rotation": [
-                                                                                                                    0.024426765739917756,
-                                                                                                                    -0.22067506611347199,
-                                                                                                                    -0.1017163023352623,
+                                                                                                                    0.02442675083875656,
+                                                                                                                    -0.2206750512123108,
+                                                                                                                    -0.10171625018119812,
                                                                                                                     0.9697214365005493
                                                                                                                 ],
                                                                                                                 "Scale": [
@@ -1493,8 +1794,8 @@
                                                                                                                 ],
                                                                                                                 "LocalEulerAngles": [
                                                                                                                     0.15774914622306825,
-                                                                                                                    -25.655296325683595,
-                                                                                                                    -11.940058708190918
+                                                                                                                    -25.65529441833496,
+                                                                                                                    -11.940052032470704
                                                                                                                 ]
                                                                                                             }
                                                                                                         ],
@@ -1503,19 +1804,20 @@
                                                                                                                 "Name": "RightThumb2",
                                                                                                                 "Active": true,
                                                                                                                 "RootBoneName": "",
+                                                                                                                "Mask": 0,
                                                                                                                 "Components": [
                                                                                                                     {
                                                                                                                         "Type": "Transform",
                                                                                                                         "Active": true,
                                                                                                                         "Position": [
                                                                                                                             -1.8630341291427613,
-                                                                                                                            -0.000024196202502935195,
+                                                                                                                            -0.00002419620068394579,
                                                                                                                             -7.105427357601002e-15
                                                                                                                         ],
                                                                                                                         "Rotation": [
                                                                                                                             0.0,
                                                                                                                             0.0,
-                                                                                                                            0.03186514228582382,
+                                                                                                                            0.031865138560533527,
                                                                                                                             0.9994922280311585
                                                                                                                         ],
                                                                                                                         "Scale": [
@@ -1526,7 +1828,7 @@
                                                                                                                         "LocalEulerAngles": [
                                                                                                                             -0.0,
                                                                                                                             0.0,
-                                                                                                                            3.652094841003418
+                                                                                                                            3.652094602584839
                                                                                                                         ]
                                                                                                                     }
                                                                                                                 ],
@@ -1535,6 +1837,7 @@
                                                                                                                         "Name": "RightThumb3",
                                                                                                                         "Active": true,
                                                                                                                         "RootBoneName": "",
+                                                                                                                        "Mask": 0,
                                                                                                                         "Components": [
                                                                                                                             {
                                                                                                                                 "Type": "Transform",
@@ -1545,9 +1848,9 @@
                                                                                                                                     7.105427357601002e-15
                                                                                                                                 ],
                                                                                                                                 "Rotation": [
-                                                                                                                                    -0.21374158561229707,
+                                                                                                                                    -0.21374160051345826,
                                                                                                                                     0.6740285754203796,
-                                                                                                                                    0.21374158561229707,
+                                                                                                                                    0.21374160051345826,
                                                                                                                                     0.6740285754203796
                                                                                                                                 ],
                                                                                                                                 "Scale": [
@@ -1574,6 +1877,7 @@
                                                                                                 "Name": "RightGun",
                                                                                                 "Active": true,
                                                                                                 "RootBoneName": "",
+                                                                                                "Mask": 0,
                                                                                                 "Components": [
                                                                                                     {
                                                                                                         "Type": "Transform",
@@ -1586,8 +1890,8 @@
                                                                                                         "Rotation": [
                                                                                                             0.47316327691078188,
                                                                                                             -0.46204447746276858,
-                                                                                                            0.5835356712341309,
-                                                                                                            0.4712936580181122
+                                                                                                            0.5835355520248413,
+                                                                                                            0.4712935984134674
                                                                                                         ],
                                                                                                         "Scale": [
                                                                                                             1.0,
@@ -1595,13 +1899,134 @@
                                                                                                             1.0
                                                                                                         ],
                                                                                                         "LocalEulerAngles": [
-                                                                                                            82.75430297851563,
-                                                                                                            6.701574325561523,
-                                                                                                            96.24273681640625
+                                                                                                            82.7542953491211,
+                                                                                                            6.701569080352783,
+                                                                                                            96.24272918701172
                                                                                                         ]
                                                                                                     }
                                                                                                 ],
-                                                                                                "Children": null
+                                                                                                "Children": [
+                                                                                                    {
+                                                                                                        "Name": "ParticleSystem",
+                                                                                                        "Active": true,
+                                                                                                        "RootBoneName": "",
+                                                                                                        "Mask": 0,
+                                                                                                        "Components": [
+                                                                                                            {
+                                                                                                                "Type": "Transform",
+                                                                                                                "Active": true,
+                                                                                                                "Position": [
+                                                                                                                    0.0,
+                                                                                                                    0.0,
+                                                                                                                    0.0
+                                                                                                                ],
+                                                                                                                "Rotation": [
+                                                                                                                    0.0,
+                                                                                                                    0.0,
+                                                                                                                    0.0,
+                                                                                                                    1.0
+                                                                                                                ],
+                                                                                                                "Scale": [
+                                                                                                                    1.0,
+                                                                                                                    1.0,
+                                                                                                                    1.0
+                                                                                                                ],
+                                                                                                                "LocalEulerAngles": [
+                                                                                                                    -0.0,
+                                                                                                                    0.0,
+                                                                                                                    -0.0
+                                                                                                                ]
+                                                                                                            },
+                                                                                                            {
+                                                                                                                "Type": "Particle",
+                                                                                                                "Active": true,
+                                                                                                                "DrawGizmo": false,
+                                                                                                                "Duration": 0.0,
+                                                                                                                "Looping": false,
+                                                                                                                "StartDelay": [
+                                                                                                                    0.0,
+                                                                                                                    0.0
+                                                                                                                ],
+                                                                                                                "LifeRM": 0,
+                                                                                                                "Life": [
+                                                                                                                    0.0,
+                                                                                                                    0.0
+                                                                                                                ],
+                                                                                                                "SpeedRM": 0,
+                                                                                                                "Speed": [
+                                                                                                                    0.0,
+                                                                                                                    0.0
+                                                                                                                ],
+                                                                                                                "RotationRM": 0,
+                                                                                                                "Rotation": [
+                                                                                                                    0.0,
+                                                                                                                    0.0
+                                                                                                                ],
+                                                                                                                "ScaleRM": 0,
+                                                                                                                "Scale": [
+                                                                                                                    0.0,
+                                                                                                                    0.0
+                                                                                                                ],
+                                                                                                                "ReverseEffect": false,
+                                                                                                                "ReverseDistanceRM": 0,
+                                                                                                                "ReverseDistance": [
+                                                                                                                    0.0,
+                                                                                                                    0.0
+                                                                                                                ],
+                                                                                                                "MaxParticle": 100,
+                                                                                                                "AttachEmitter": false,
+                                                                                                                "ParticlesPerSecondRM": 0,
+                                                                                                                "ParticlesPerSecond": [
+                                                                                                                    0.0,
+                                                                                                                    0.0
+                                                                                                                ],
+                                                                                                                "GravityEffect": false,
+                                                                                                                "GravityFactorRM": 0,
+                                                                                                                "GravityFactor": [
+                                                                                                                    0.0,
+                                                                                                                    0.0
+                                                                                                                ],
+                                                                                                                "ParticleEmitterType": 0,
+                                                                                                                "ConeRadiusUp": 0.0,
+                                                                                                                "ConeRadiusDown": 0.0,
+                                                                                                                "RandomConeRadiusUp": false,
+                                                                                                                "RandomConeRadiusDown": false,
+                                                                                                                "RotationOverLifetime": false,
+                                                                                                                "RotationFactorRM": 0,
+                                                                                                                "RotationFactor": [
+                                                                                                                    0.0,
+                                                                                                                    0.0
+                                                                                                                ],
+                                                                                                                "SizeOverLifetime": false,
+                                                                                                                "ScaleFactorRM": 0,
+                                                                                                                "ScaleFactor": [
+                                                                                                                    0.0,
+                                                                                                                    0.0
+                                                                                                                ],
+                                                                                                                "ColorOverLifetime": false,
+                                                                                                                "GradientColors": null,
+                                                                                                                "NumberColors": 0,
+                                                                                                                "Ytiles": 1,
+                                                                                                                "Xtiles": 1,
+                                                                                                                "AnimationSpeed": 0.0,
+                                                                                                                "IsRandomFrame": false,
+                                                                                                                "LoopAnimation": false,
+                                                                                                                "NCycles": 0.0,
+                                                                                                                "TextureId": 12530008367011440877,
+                                                                                                                "BillboardType": 0,
+                                                                                                                "ParticleRenderMode": 0,
+                                                                                                                "ParticleRenderAlignment": 0,
+                                                                                                                "FlipTexture": [
+                                                                                                                    false,
+                                                                                                                    false
+                                                                                                                ],
+                                                                                                                "HasCollision": false,
+                                                                                                                "LayerIndex": 0
+                                                                                                            }
+                                                                                                        ],
+                                                                                                        "Children": null
+                                                                                                    }
+                                                                                                ]
                                                                                             }
                                                                                         ]
                                                                                     }
@@ -1623,20 +2048,21 @@
                                 "Name": "LeftHip",
                                 "Active": true,
                                 "RootBoneName": "",
+                                "Mask": 0,
                                 "Components": [
                                     {
                                         "Type": "Transform",
                                         "Active": true,
                                         "Position": [
                                             -5.548285484313965,
-                                            0.2455003410577774,
+                                            0.2455003559589386,
                                             8.284310340881348
                                         ],
                                         "Rotation": [
-                                            -0.17716369032859803,
-                                            -0.44138532876968386,
-                                            0.8645074963569641,
-                                            -0.16253869235515595
+                                            0.09169209003448487,
+                                            0.012660592794418335,
+                                            0.9796485304832459,
+                                            0.17810414731502534
                                         ],
                                         "Scale": [
                                             1.0,
@@ -1644,9 +2070,9 @@
                                             1.0
                                         ],
                                         "LocalEulerAngles": [
-                                            56.289886474609378,
-                                            -9.37144660949707,
-                                            -153.6825714111328
+                                            0.45793116092681887,
+                                            10.61227035522461,
+                                            159.34933471679688
                                         ]
                                     }
                                 ],
@@ -1655,6 +2081,7 @@
                                         "Name": "LeftKnee",
                                         "Active": true,
                                         "RootBoneName": "",
+                                        "Mask": 0,
                                         "Components": [
                                             {
                                                 "Type": "Transform",
@@ -1665,10 +2092,10 @@
                                                     0.4073977768421173
                                                 ],
                                                 "Rotation": [
-                                                    -0.0568363182246685,
-                                                    0.06293952465057373,
-                                                    0.5862836837768555,
-                                                    0.8056548833847046
+                                                    -0.012851793318986893,
+                                                    0.0377972386777401,
+                                                    0.22167064249515534,
+                                                    0.9743040800094605
                                                 ],
                                                 "Scale": [
                                                     0.9999999403953552,
@@ -1676,9 +2103,9 @@
                                                     1.0
                                                 ],
                                                 "LocalEulerAngles": [
-                                                    -9.525224685668946,
-                                                    1.9926133155822755,
-                                                    72.25360870361328
+                                                    -2.401226043701172,
+                                                    3.896496295928955,
+                                                    25.716833114624025
                                                 ]
                                             }
                                         ],
@@ -1687,6 +2114,7 @@
                                                 "Name": "LeftFoot",
                                                 "Active": true,
                                                 "RootBoneName": "",
+                                                "Mask": 0,
                                                 "Components": [
                                                     {
                                                         "Type": "Transform",
@@ -1697,10 +2125,10 @@
                                                             0.015026338398456574
                                                         ],
                                                         "Rotation": [
-                                                            0.0872780978679657,
-                                                            0.0781838521361351,
-                                                            -0.7780908942222595,
-                                                            0.617125928401947
+                                                            0.024355759844183923,
+                                                            0.08642948418855667,
+                                                            -0.6087698936462402,
+                                                            0.7882487177848816
                                                         ],
                                                         "Scale": [
                                                             0.9999999403953552,
@@ -1708,9 +2136,9 @@
                                                             0.9999999403953552
                                                         ],
                                                         "LocalEulerAngles": [
-                                                            13.271697998046875,
-                                                            -2.2535667419433595,
-                                                            -102.89993286132813
+                                                            8.305502891540528,
+                                                            6.119458198547363,
+                                                            -75.80304718017578
                                                         ]
                                                     }
                                                 ],
@@ -1719,6 +2147,7 @@
                                                         "Name": "LeftToe",
                                                         "Active": true,
                                                         "RootBoneName": "",
+                                                        "Mask": 0,
                                                         "Components": [
                                                             {
                                                                 "Type": "Transform",
@@ -1731,7 +2160,7 @@
                                                                 "Rotation": [
                                                                     0.000025410266971448438,
                                                                     -1.4818932747573399e-8,
-                                                                    3.765530367984965e-13,
+                                                                    3.765530096934422e-13,
                                                                     1.0
                                                                 ],
                                                                 "Scale": [
@@ -1742,7 +2171,7 @@
                                                                 "LocalEulerAngles": [
                                                                     0.0029118021484464409,
                                                                     -0.000001698124606264173,
-                                                                    8.629959941108823e-11
+                                                                    8.629959247219432e-11
                                                                 ]
                                                             }
                                                         ],
@@ -1758,20 +2187,21 @@
                                 "Name": "RightHip",
                                 "Active": true,
                                 "RootBoneName": "",
+                                "Mask": 0,
                                 "Components": [
                                     {
                                         "Type": "Transform",
                                         "Active": true,
                                         "Position": [
                                             -5.5482563972473148,
-                                            0.24550531804561616,
+                                            0.24550530314445496,
                                             -8.284311294555664
                                         ],
                                         "Rotation": [
-                                            0.5366343259811401,
-                                            0.09586292505264282,
-                                            -0.520083487033844,
-                                            0.6575311422348023
+                                            -0.028977692127227784,
+                                            -0.07498924434185028,
+                                            0.15802164375782014,
+                                            0.9841575026512146
                                         ],
                                         "Scale": [
                                             0.9999999403953552,
@@ -1779,9 +2209,9 @@
                                             1.0
                                         ],
                                         "LocalEulerAngles": [
-                                            63.26689529418945,
-                                            -25.602405548095704,
-                                            -60.749908447265628
+                                            -1.9343690872192383,
+                                            -9.01892375946045,
+                                            18.09114646911621
                                         ]
                                     }
                                 ],
@@ -1790,6 +2220,7 @@
                                         "Name": "RightKnee",
                                         "Active": true,
                                         "RootBoneName": "",
+                                        "Mask": 0,
                                         "Components": [
                                             {
                                                 "Type": "Transform",
@@ -1800,10 +2231,10 @@
                                                     -0.40739765763282778
                                                 ],
                                                 "Rotation": [
-                                                    -0.029249267652630807,
-                                                    0.052375685423612598,
-                                                    0.39297839999198916,
-                                                    0.9175889492034912
+                                                    -0.006399214733392,
+                                                    0.02788569964468479,
+                                                    0.12159997224807739,
+                                                    0.9921667575836182
                                                 ],
                                                 "Scale": [
                                                     1.0,
@@ -1811,9 +2242,9 @@
                                                     0.9999999403953552
                                                 ],
                                                 "LocalEulerAngles": [
-                                                    -5.456918716430664,
-                                                    4.19378662109375,
-                                                    46.56822967529297
+                                                    -1.1178088188171387,
+                                                    3.0827531814575197,
+                                                    14.004731178283692
                                                 ]
                                             }
                                         ],
@@ -1822,6 +2253,7 @@
                                                 "Name": "RightFoot",
                                                 "Active": true,
                                                 "RootBoneName": "",
+                                                "Mask": 0,
                                                 "Components": [
                                                     {
                                                         "Type": "Transform",
@@ -1832,10 +2264,10 @@
                                                             -0.015020983293652535
                                                         ],
                                                         "Rotation": [
-                                                            0.031197791919112207,
-                                                            0.09108421206474304,
-                                                            -0.46986109018325808,
-                                                            0.8774741888046265
+                                                            0.06485000252723694,
+                                                            0.08843106776475907,
+                                                            -0.7741650342941284,
+                                                            0.6234124302864075
                                                         ],
                                                         "Scale": [
                                                             1.0,
@@ -1843,9 +2275,9 @@
                                                             0.9999999403953552
                                                         ],
                                                         "LocalEulerAngles": [
-                                                            8.13786506652832,
-                                                            7.500268459320068,
-                                                            -56.869728088378909
+                                                            12.579122543334961,
+                                                            0.5643061399459839,
+                                                            -102.37525177001953
                                                         ]
                                                     }
                                                 ],
@@ -1854,6 +2286,7 @@
                                                         "Name": "RightToe",
                                                         "Active": true,
                                                         "RootBoneName": "",
+                                                        "Mask": 0,
                                                         "Components": [
                                                             {
                                                                 "Type": "Transform",
@@ -1893,6 +2326,7 @@
                                 "Name": "BackRIghtCloth1",
                                 "Active": true,
                                 "RootBoneName": "",
+                                "Mask": 0,
                                 "Components": [
                                     {
                                         "Type": "Transform",
@@ -1925,6 +2359,7 @@
                                         "Name": "BackRightCloth2",
                                         "Active": true,
                                         "RootBoneName": "",
+                                        "Mask": 0,
                                         "Components": [
                                             {
                                                 "Type": "Transform",
@@ -1957,6 +2392,7 @@
                                                 "Name": "BackRightCloth3",
                                                 "Active": true,
                                                 "RootBoneName": "",
+                                                "Mask": 0,
                                                 "Components": [
                                                     {
                                                         "Type": "Transform",
@@ -1989,6 +2425,7 @@
                                                         "Name": "BackRightCloth4",
                                                         "Active": true,
                                                         "RootBoneName": "",
+                                                        "Mask": 0,
                                                         "Components": [
                                                             {
                                                                 "Type": "Transform",
@@ -2028,6 +2465,7 @@
                                 "Name": "BackLeftCloth1",
                                 "Active": true,
                                 "RootBoneName": "",
+                                "Mask": 0,
                                 "Components": [
                                     {
                                         "Type": "Transform",
@@ -2060,6 +2498,7 @@
                                         "Name": "BackLeftCloth2",
                                         "Active": true,
                                         "RootBoneName": "",
+                                        "Mask": 0,
                                         "Components": [
                                             {
                                                 "Type": "Transform",
@@ -2092,6 +2531,7 @@
                                                 "Name": "BackLeftCloth3",
                                                 "Active": true,
                                                 "RootBoneName": "",
+                                                "Mask": 0,
                                                 "Components": [
                                                     {
                                                         "Type": "Transform",
@@ -2124,6 +2564,7 @@
                                                         "Name": "BackLeftCloth4",
                                                         "Active": true,
                                                         "RootBoneName": "",
+                                                        "Mask": 0,
                                                         "Components": [
                                                             {
                                                                 "Type": "Transform",
@@ -2163,6 +2604,7 @@
                                 "Name": "FrontLeftCloth1",
                                 "Active": true,
                                 "RootBoneName": "",
+                                "Mask": 0,
                                 "Components": [
                                     {
                                         "Type": "Transform",
@@ -2195,6 +2637,7 @@
                                         "Name": "FrontLeftCloth2",
                                         "Active": true,
                                         "RootBoneName": "",
+                                        "Mask": 0,
                                         "Components": [
                                             {
                                                 "Type": "Transform",
@@ -2227,6 +2670,7 @@
                                                 "Name": "FrontLeftCloth3",
                                                 "Active": true,
                                                 "RootBoneName": "",
+                                                "Mask": 0,
                                                 "Components": [
                                                     {
                                                         "Type": "Transform",
@@ -2259,6 +2703,7 @@
                                                         "Name": "FrontLeftCloth4",
                                                         "Active": true,
                                                         "RootBoneName": "",
+                                                        "Mask": 0,
                                                         "Components": [
                                                             {
                                                                 "Type": "Transform",
@@ -2298,6 +2743,7 @@
                                 "Name": "FrontRightCloth1",
                                 "Active": true,
                                 "RootBoneName": "",
+                                "Mask": 0,
                                 "Components": [
                                     {
                                         "Type": "Transform",
@@ -2330,6 +2776,7 @@
                                         "Name": "FrontRightCloth2",
                                         "Active": true,
                                         "RootBoneName": "",
+                                        "Mask": 0,
                                         "Components": [
                                             {
                                                 "Type": "Transform",
@@ -2362,6 +2809,7 @@
                                                 "Name": "FrontRightCloth3",
                                                 "Active": true,
                                                 "RootBoneName": "",
+                                                "Mask": 0,
                                                 "Components": [
                                                     {
                                                         "Type": "Transform",
@@ -2394,6 +2842,7 @@
                                                         "Name": "FrontRightCloth4",
                                                         "Active": true,
                                                         "RootBoneName": "",
+                                                        "Mask": 0,
                                                         "Components": [
                                                             {
                                                                 "Type": "Transform",
@@ -2437,6 +2886,7 @@
                 "Name": "Fang_LowPoly",
                 "Active": true,
                 "RootBoneName": "",
+                "Mask": 12,
                 "Components": [
                     {
                         "Type": "Transform",
@@ -2447,10 +2897,10 @@
                             0.0
                         ],
                         "Rotation": [
-                            -4.371138473402425e-8,
-                            4.371139183945161e-8,
-                            -4.371138473402425e-8,
-                            -1.0
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
                         ],
                         "Scale": [
                             1.0,
@@ -2458,16 +2908,16 @@
                             1.0
                         ],
                         "LocalEulerAngles": [
-                            180.0,
-                            180.0,
-                            180.0
+                            -0.0,
+                            0.0,
+                            -0.0
                         ]
                     },
                     {
                         "Type": "MeshRenderer",
                         "Active": true,
-                        "MeshID": 1171942669522114197,
-                        "MaterialID": 6439142228759721830
+                        "MeshID": 2189013232190304895,
+                        "MaterialID": 18194656836501409170
                     },
                     {
                         "Type": "BoundingBox",
@@ -2488,6 +2938,7 @@
                 "Name": "LeftGun001",
                 "Active": true,
                 "RootBoneName": "",
+                "Mask": 0,
                 "Components": [
                     {
                         "Type": "Transform",
@@ -2517,8 +2968,8 @@
                     {
                         "Type": "MeshRenderer",
                         "Active": true,
-                        "MeshID": 5438982474585746644,
-                        "MaterialID": 13842414113168871690
+                        "MeshID": 12590898990382936860,
+                        "MaterialID": 13304272538700696122
                     },
                     {
                         "Type": "BoundingBox",
@@ -2539,6 +2990,7 @@
                 "Name": "RightGun001",
                 "Active": true,
                 "RootBoneName": "",
+                "Mask": 0,
                 "Components": [
                     {
                         "Type": "Transform",
@@ -2568,8 +3020,8 @@
                     {
                         "Type": "MeshRenderer",
                         "Active": true,
-                        "MeshID": 1928080280321553153,
-                        "MaterialID": 13842414113168871690
+                        "MeshID": 1964919734606963520,
+                        "MaterialID": 13304272538700696122
                     },
                     {
                         "Type": "BoundingBox",
@@ -2582,6 +3034,54 @@
                             77.07676696777344,
                             4.9822540283203129
                         ]
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "EMP",
+                "Active": false,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": false,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "SphereCollider",
+                        "Active": false,
+                        "colliderType": 2,
+                        "layerType": 4,
+                        "mass": 1.0,
+                        "radius": 5.0,
+                        "centerOffset": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "freezeRotation": false
                     }
                 ],
                 "Children": null
