@@ -35,7 +35,7 @@ public:
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
-
+	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
 public:
 
 	UID playerUID = 0;
@@ -81,4 +81,5 @@ private:
 	ComponentMeshRenderer* componentMeshRenderer = nullptr;
 
 	float timeSinceLastHurt = 0.5f;
+	GameObject* punch = nullptr;
 };

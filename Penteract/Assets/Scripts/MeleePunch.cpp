@@ -13,16 +13,10 @@ void MeleePunch::Start() {
 }
 
 void MeleePunch::Update() {
-	if (life >= 0) {
-		life -= Time::GetDeltaTime();
-	}
-	else {
-		GameplaySystems::DestroyGameObject(&GetOwner());
-	}
 }
 
 void MeleePunch::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
-	if (collidedWith.name == "Onimaru" || collidedWith.name == "Fang" || collidedWith.name == "Shield") {
+	if (collidedWith.name == "Shield" || collidedWith.name == "Onimaru" || collidedWith.name == "Fang" ) {
 		GameplaySystems::DestroyGameObject(&GetOwner());
 	}
 }

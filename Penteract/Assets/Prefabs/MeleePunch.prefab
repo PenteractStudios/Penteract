@@ -37,22 +37,6 @@
                 "Values": null
             },
             {
-                "Type": "CapsuleCollider",
-                "Active": true,
-                "colliderType": 2,
-                "layerType": 4,
-                "mass": 1.0,
-                "radius": 1.0,
-                "height": 1.0,
-                "capsuleType": 2,
-                "centerOffset": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "freezeRotation": false
-            },
-            {
                 "Type": "BoxCollider",
                 "Active": true,
                 "colliderType": 2,

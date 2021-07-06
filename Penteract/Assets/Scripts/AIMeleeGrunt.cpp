@@ -149,9 +149,6 @@ void AIMeleeGrunt::Update() {
 		movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), gruntCharacter.movementSpeed, true);
 		if (movementScript->CharacterInAttackRange(player, gruntCharacter.attackRange)) {
 			animation->SendTriggerSecondary("RunAttack");
-			ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(animation->GetCurrentStateSecondary()->clipUid);
-			//clip->duration = 5.0f;
-			if(clip) attackRemaining = clip->duration;
 			agent->SetMaxSpeed(0);
 			if (agent) agent->SetMaxSpeed(gruntCharacter.movementSpeed);
 			if (audios[static_cast<int>(AudioType::ATTACK)]) audios[static_cast<int>(AudioType::ATTACK)]->Play();
@@ -160,12 +157,6 @@ void AIMeleeGrunt::Update() {
 		break;
 	case AIState::ATTACK:
 		movementScript->Stop();
-		attackRemaining -= Time::GetDeltaTime();
-		if (attackRemaining < 0.2f) {
-			float3 aux = ownerTransform->GetGlobalPosition() + ownerTransform->GetGlobalRotation().Transform(float3(0, 0, 1)) * 2 + float3(0, 2, 0);
-			if (meleePunch) GameplaySystems::Instantiate(meleePunch, aux, ownerTransform->GetGlobalRotation());
-			// generate collider code
-		}
 		break;
 	case AIState::DEATH:
 		break;
@@ -274,5 +265,25 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 			agent->RemoveAgentFromCrowd();
 			state = AIState::DEATH;
 		}
+	}
+}
+
+void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
+	switch (stateMachineEnum)
+	{
+	case PRINCIPAL:
+		break;
+	case SECONDARY:
+		if (eventName == "EnablePunch") {
+			float3 aux = ownerTransform->GetGlobalPosition() + ownerTransform->GetGlobalRotation().Transform(float3(0, 0, 1)) * 2.5f + float3(0, 2, 0);
+			if (meleePunch) punch = GameplaySystems::Instantiate(meleePunch, aux, ownerTransform->GetGlobalRotation());
+		}
+		if (eventName == "DisablePunch") {
+			GameplaySystems::DestroyGameObject(punch);
+			punch = nullptr;
+		}
+		break;
+	default:
+		break;
 	}
 }
