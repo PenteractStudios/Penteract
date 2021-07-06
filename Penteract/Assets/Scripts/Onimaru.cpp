@@ -396,8 +396,7 @@ void Onimaru::FadeShield() {
 	shieldGO->Disable();
 }
 
-
-void Onimaru::Update(bool lockMovement, bool lockOrientation) {
+void Onimaru::Update(bool lockMovement, bool lockRotation) {
 	if (shield == nullptr || shieldGO == nullptr) return;
 	if (isAlive) {
 		Player::Update(ultimateInUse, false);

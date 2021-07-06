@@ -94,6 +94,7 @@ public:
 	float attackSpeed = 0.5f;			//Shots per second
 	float actualShotMaxTime = 0.3f;		//Internal variable used to match the shooting animation and the projectile creation
 	float timeSinceLastHurt = 0.5f;		//Timer to keep track of how long it's been since AI was hurt, if higher than hurtFeedbackTimeDuration, this tries to make AI turn red with DamagedMaterial
+	float stunDuration = 3.f;			//Max time the enemy will be stunned
 
 private:
 
@@ -106,6 +107,10 @@ private:
 	WinLose* winLoseScript = nullptr;
 
 	bool shot = false;					//Bool used to make sure shooting event happens only once whenever attackTimePool is low enough
+
+	float stunTimeRemaining = 0.f;			//Time remaining stunned
+
+	bool EMPUpgraded = false;			//Flag to control if the ability is uprgraded
 
 	ComponentAnimation* animation = nullptr;		//Refernece to  animatino component
 	ComponentTransform* ownerTransform = nullptr;	//Reference to owner transform componenet

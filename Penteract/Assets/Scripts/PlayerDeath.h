@@ -3,6 +3,7 @@
 #include "Scripting/Script.h"
 
 class PlayerController;
+class SceneTransition;
 
 class PlayerDeath : public Script
 {
@@ -20,11 +21,16 @@ public:
 
 	UID playerUID = 0;
 	UID sceneUID = 0;
+	UID transitionUID = 0;
 
 	GameObject* player = nullptr;
 	PlayerController* playerController = nullptr;
 
 	bool dead = false;
+
+private:
+	GameObject* transitionGO = nullptr;
+	SceneTransition* sceneTransition = nullptr;
 
 };
 
