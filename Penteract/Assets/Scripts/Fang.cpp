@@ -75,7 +75,6 @@ bool Fang::CanSwitch() const {
 void Fang::IncreaseUltimateCounter()
 {
 	ultimateCooldownRemaining++;
-	Debug::Log(std::to_string((int)ultimateCooldownRemaining).c_str());
 }
 
 void Fang::GetHit(float damage_) {
@@ -310,7 +309,7 @@ void Fang::ActiveUltimate()
 		ultimateCooldownRemaining = 0;
 		ultimateOn = true;
 		ultimateInCooldown = true;
-		ultimateScript->StartUltiamte();
+		ultimateScript->StartUltimate();
 
 		oldMovementSpeed = movementSpeed;
 		movementSpeed = ultimateMovementSpeed;

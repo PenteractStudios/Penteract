@@ -65,16 +65,15 @@ void UltimateFang::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 	if (tickOn) {
 		if (collidedWith.name == "MeleeGruntWeaponized" || collidedWith.name == "RangedGrunt") {
 			collisionedGameObject.push_back(collidedWith);
-			Debug::Log(collidedWith.name.c_str());
 		}
 	}
 }
 
-void UltimateFang::StartUltiamte()
+void UltimateFang::StartUltimate()
 {
 	ComponentSphereCollider* sphereCollider = GetOwner().GetComponent<ComponentSphereCollider>();
 	sphereCollider->radius = radius;
-	//App->physics->UpdateSphereRigidbody(sphereCollider); //TODO We need this function to be exposed, then we can use it
+	App->physics->UpdateSphereRigidbody(sphereCollider);
 
 	GetOwner().Enable();
 	tickCurrent = tickDuration;
