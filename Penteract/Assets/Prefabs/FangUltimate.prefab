@@ -1,7 +1,7 @@
 {
     "Root": {
         "Name": "FangUltimate",
-        "Active": false,
+        "Active": true,
         "RootBoneName": "",
         "Mask": 0,
         "Components": [
@@ -32,7 +32,7 @@
             },
             {
                 "Type": "SphereCollider",
-                "Active": false,
+                "Active": true,
                 "colliderType": 2,
                 "layerType": 5,
                 "mass": 1.0,
@@ -46,7 +46,7 @@
             },
             {
                 "Type": "Script",
-                "Active": false,
+                "Active": true,
                 "Script": 9240105700021193804,
                 "Values": [
                     {

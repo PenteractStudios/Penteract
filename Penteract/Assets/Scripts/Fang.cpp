@@ -68,7 +68,8 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 }
 
 bool Fang::CanSwitch() const {
-	return true;
+	if (!EMP) return false;
+	return !EMP->IsActive() && !ultimateOn;
 }
 
 void Fang::IncreaseUltimateCounter()
