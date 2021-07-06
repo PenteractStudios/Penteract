@@ -156,7 +156,7 @@ void Player::Update(bool lockMovement) {
 		LookAtMouse();
 	}
 	else {
-		agent->SetMoveTarget(playerMainTransform->GetGlobalPosition(), false);
+		if(agent) agent->SetMoveTarget(playerMainTransform->GetGlobalPosition(), false);
 	}
 }
 

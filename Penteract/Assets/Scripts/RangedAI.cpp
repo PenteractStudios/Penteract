@@ -130,6 +130,7 @@ void RangedAI::Start() {
 
 void RangedAI::OnAnimationFinished() {
 	if (animation == nullptr) return;
+	if (agent == nullptr) return;
 
 	if (state == AIState::SPAWN) {
 		animation->SendTrigger("SpawnIdle");
@@ -195,7 +196,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 				timeSinceLastHurt = 0.0f;
 			}
 			if (collidedWith.name == "EMP") {
-				agent->RemoveAgentFromCrowd();
+				if (agent) agent->RemoveAgentFromCrowd();
 				stunRemaining = stunDuration;
 				ChangeState(AIState::STUNNED);
 			}
@@ -245,6 +246,9 @@ void RangedAI::Update() {
 }
 
 void RangedAI::EnterState(AIState newState) {
+	if (!agent) return;
+	if (!animation) return;
+	
 	switch (newState) {
 	case AIState::START:
 		break;
@@ -252,33 +256,27 @@ void RangedAI::EnterState(AIState newState) {
 		PlayAudio(AudioType::SPAWN);
 		break;
 	case AIState::IDLE:
-		if (animation) {
-			if (state == AIState::FLEE) {
-				animation->SendTrigger("RunBackwardIdle");
-			} else if (state == AIState::RUN) {
-				animation->SendTrigger("RunForwardIdle");
-			}
+		if (state == AIState::FLEE) {
+			animation->SendTrigger("RunBackwardIdle");
+		} else if (state == AIState::RUN) {
+			animation->SendTrigger("RunForwardIdle");
 		}
-
+		
 		if (aiMovement) aiMovement->Stop();
 		break;
 	case AIState::RUN:
-		if (animation) {
-			if (state == AIState::IDLE) {
-				animation->SendTrigger("IdleRunForward");
-			} else if (state == AIState::FLEE) {
-				animation->SendTrigger("RunBackwardRunForward");
-			}
-		}
+		if (state == AIState::IDLE) {
+			animation->SendTrigger("IdleRunForward");
+		} else if (state == AIState::FLEE) {
+			animation->SendTrigger("RunBackwardRunForward");
+		}		
 		break;
 	case AIState::FLEE:
-		if (animation) {
-			if (state == AIState::RUN) {
-				animation->SendTrigger("RunForwardRunBackward");
-			} else if (state == AIState::IDLE) {
-				animation->SendTrigger("IdleRunBackward");
-			}
-		}
+		if (state == AIState::RUN) {
+			animation->SendTrigger("RunForwardRunBackward");
+		} else if (state == AIState::IDLE) {
+			animation->SendTrigger("IdleRunBackward");
+		}		
 		break;
 	case AIState::STUNNED:
 		if (shot) {
@@ -316,6 +314,7 @@ void RangedAI::EnterState(AIState newState) {
 }
 
 void RangedAI::UpdateState() {
+	if (!animation) return;
 	switch (state) {
 	case AIState::START:
 		if (aiMovement) aiMovement->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), rangerGruntCharacter.fallingSpeed, true);

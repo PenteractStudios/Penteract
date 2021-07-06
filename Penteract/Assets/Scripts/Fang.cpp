@@ -173,10 +173,12 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 }
 
 void Fang::OnAnimationFinished() {
-	if (compAnimation->GetCurrentState()) {
-		if (compAnimation->GetCurrentState()->name == "EMP") {
-			compAnimation->SendTrigger(states[21] + states[0]);
-			EMP->Disable();
+	if (compAnimation) {
+		if (compAnimation->GetCurrentState()) {
+			if (compAnimation->GetCurrentState()->name == "EMP") {
+				compAnimation->SendTrigger(states[21] + states[0]);
+				EMP->Disable();
+			}
 		}
 	}
 }
@@ -262,18 +264,19 @@ void Fang::PlayAnimation() {
 
 void Fang::Update(bool lockMovement) {
 	if (isAlive) {
-		Player::Update(dashing || EMP->IsActive());
-		if (Input::GetMouseButtonDown(2)) {
-			InitDash();
-		}
-		if (!dashing && !EMP->IsActive()) {
-			if (Input::GetMouseButtonDown(0)) Shoot();
-		}
-		Dash();
-		if (Input::GetKeyCodeDown(Input::KEY_Q)) {
-			ActivateEMP();
-		}
-		
+		if (EMP) {
+			Player::Update(dashing || EMP->IsActive());
+			if (Input::GetMouseButtonDown(2)) {
+				InitDash();
+			}
+			if (!dashing && !EMP->IsActive()) {
+				if (Input::GetMouseButtonDown(0)) Shoot();
+			}
+			Dash();
+			if (Input::GetKeyCodeDown(Input::KEY_Q)) {
+				ActivateEMP();
+			}
+		}		
 	} 
 	else {
 		if (agent) agent->RemoveAgentFromCrowd();
