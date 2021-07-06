@@ -140,8 +140,8 @@ void Fang::ActivateEMP() {
 		EMPCooldownRemaining = EMPCooldown;
 		EMPInCooldown = true;
 
-		if (playerAudios[static_cast<int>(AudioPlayer::SECOND_ABILITY)]) {
-			playerAudios[static_cast<int>(AudioPlayer::SECOND_ABILITY)]->Play();
+		if (fangAudios[static_cast<int>(FANG_AUDIOS::EMP)]) {
+			fangAudios[static_cast<int>(FANG_AUDIOS::EMP)]->Play();
 		}
 		if (hudControllerScript) {
 			hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_2);
@@ -338,8 +338,8 @@ void Fang::ActiveUltimate()
 		oldMovementSpeed = movementSpeed;
 		movementSpeed = ultimateMovementSpeed;
 
-		if (playerAudios[static_cast<int>(AudioPlayer::THIRD_ABILITY)]) {
-			playerAudios[static_cast<int>(AudioPlayer::THIRD_ABILITY)]->Play();
+		if (fangAudios[static_cast<int>(FANG_AUDIOS::ULTIMATE)]) {
+			fangAudios[static_cast<int>(FANG_AUDIOS::ULTIMATE)]->Play();
 		}
 
 		if (hudControllerScript) {
