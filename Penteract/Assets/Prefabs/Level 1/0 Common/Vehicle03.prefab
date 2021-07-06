@@ -1,6 +1,6 @@
 {
     "Root": {
-        "Name": "Vehicle3",
+        "Name": "Vehicle03",
         "Active": true,
         "RootBoneName": "",
         "Mask": 0,
@@ -66,8 +66,8 @@
                     {
                         "Type": "MeshRenderer",
                         "Active": true,
-                        "MeshID": 1355127623321005472,
-                        "MaterialID": 9461708675193161353
+                        "MeshID": 10480244146643212886,
+                        "MaterialID": 4050855235329184705
                     },
                     {
                         "Type": "BoundingBox",

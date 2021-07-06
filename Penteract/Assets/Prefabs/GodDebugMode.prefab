@@ -46,11 +46,6 @@
                         "Value": 12467949130155930994
                     },
                     {
-                        "Name": "enemiesUID",
-                        "Type": "GameObjectUID",
-                        "Value": 9424093591244721738
-                    },
-                    {
                         "Name": "spawnRangedUID",
                         "Type": "GameObjectUID",
                         "Value": 17732647909550886280
@@ -61,19 +56,24 @@
                         "Value": 9424093591244721738
                     },
                     {
-                        "Name": "playerControllerUID",
+                        "Name": "enemiesUID",
                         "Type": "GameObjectUID",
-                        "Value": 189561909595027362
-                    },
-                    {
-                        "Name": "gameCameraUID",
-                        "Type": "GameObjectUID",
-                        "Value": 680618938873982628
+                        "Value": 9424093591244721738
                     },
                     {
                         "Name": "debugEnemiesUID",
                         "Type": "GameObjectUID",
                         "Value": 8956077401393633822
+                    },
+                    {
+                        "Name": "playerControllerUID",
+                        "Type": "GameObjectUID",
+                        "Value": 403437826872113792
+                    },
+                    {
+                        "Name": "gameCameraUID",
+                        "Type": "GameObjectUID",
+                        "Value": 680618938873982628
                     },
                     {
                         "Name": "godCameraUID",
@@ -141,14 +141,14 @@
                                 "Value": 11128356192968719727
                             },
                             {
+                                "Name": "prefabUID",
+                                "Type": "PrefabResourceUID",
+                                "Value": 6161494011548713161
+                            },
+                            {
                                 "Name": "enemiesUID",
                                 "Type": "GameObjectUID",
                                 "Value": 8956077401393633822
-                            },
-                            {
-                                "Name": "prefabUID",
-                                "Type": "PrefabResourceUID",
-                                "Value": 9998956702901793097
                             }
                         ]
                     }
@@ -3162,49 +3162,15 @@
                                 "Value": 564339191826698320
                             },
                             {
+                                "Name": "prefabUID",
+                                "Type": "PrefabResourceUID",
+                                "Value": 12995336514148150898
+                            },
+                            {
                                 "Name": "enemiesUID",
                                 "Type": "GameObjectUID",
                                 "Value": 8956077401393633822
-                            },
-                            {
-                                "Name": "prefabUID",
-                                "Type": "PrefabResourceUID",
-                                "Value": 9998956702901793097
                             }
-                        ]
-                    }
-                ],
-                "Children": null
-            },
-            {
-                "Name": "TBD",
-                "Active": false,
-                "RootBoneName": "",
-                "Mask": 0,
-                "Components": [
-                    {
-                        "Type": "Transform",
-                        "Active": false,
-                        "Position": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ],
-                        "Rotation": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            1.0
-                        ],
-                        "Scale": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ],
-                        "LocalEulerAngles": [
-                            -0.0,
-                            0.0,
-                            -0.0
                         ]
                     }
                 ],

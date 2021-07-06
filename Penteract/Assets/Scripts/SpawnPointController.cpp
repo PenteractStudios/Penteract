@@ -5,8 +5,8 @@
 
 EXPOSE_MEMBERS(SpawnPointController) {
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, meleeEnemyPrefabUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, rangeEnemyPrefabUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, doorUID),
+		MEMBER(MemberType::PREFAB_RESOURCE_UID, rangeEnemyPrefabUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, doorUID),
 };
 
 GENERATE_BODY_IMPL(SpawnPointController);
@@ -24,6 +24,7 @@ void SpawnPointController::Start() {
 void SpawnPointController::Update() {}
 
 void SpawnPointController::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+	if (!gameObject) return;
 	for (GameObject* child : gameObject->GetChildren()) {
 		if (!child->IsActive()) child->Enable();
 	}

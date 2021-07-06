@@ -52,7 +52,7 @@ public:
 	// ------- Contructors ------- //
 	Onimaru() {};
 	void Init(UID onimaruUID = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0, UID shieldUID = 0, UID onimaruTransformForUltimateProjectileOriginUID = 0, UID cameraUID = 0, UID canvasUID = 0, float maxSpread = 5.0f);
-	void Update(bool lockMovement = false, bool lockOrientation = false) override;
+	void Update(bool lockMovement = false, bool lockRotation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	bool CanSwitch() const override;
 	void OnAnimationFinished() override;
