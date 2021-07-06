@@ -73,7 +73,6 @@ void UltimateFang::StartUltimate()
 {
 	ComponentSphereCollider* sphereCollider = GetOwner().GetComponent<ComponentSphereCollider>();
 	sphereCollider->radius = radius;
-	App->physics->UpdateSphereRigidbody(sphereCollider);
 
 	GetOwner().Enable();
 	tickCurrent = tickDuration;
