@@ -34,7 +34,7 @@
                 "Type": "SphereCollider",
                 "Active": true,
                 "colliderType": 2,
-                "layerType": 4,
+                "layerType": 6,
                 "mass": 1.0,
                 "radius": 1.0,
                 "centerOffset": [

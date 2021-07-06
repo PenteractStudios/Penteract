@@ -2,6 +2,7 @@
 
 #include "Resources/ResourcePrefab.h"
 #include "GameObject.h"
+#include "PlayerController.h"
 #include "GameplaySystems.h"
 
 #include "Geometry/LineSegment.h"
@@ -10,7 +11,8 @@
 EXPOSE_MEMBERS(SpawnOnClick) {
 	MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, enemiesUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, prefabUID)
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, prefabUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, playerUID)
 };
 
 GENERATE_BODY_IMPL(SpawnOnClick);
@@ -20,6 +22,10 @@ void SpawnOnClick::Start() {
 	camera = GameplaySystems::GetGameObject(cameraUID);
 	enemies = GameplaySystems::GetGameObject(enemiesUID);
 	prefab = GameplaySystems::GetResource<ResourcePrefab>(prefabUID);
+
+	GameObject* playerController = GameplaySystems::GetGameObject(playerUID);
+
+	if (playerController) playerScript = GET_SCRIPT(playerController, PlayerController);
 }
 
 void SpawnOnClick::Update() {
@@ -28,6 +34,8 @@ void SpawnOnClick::Update() {
 			UID prefabId = prefab->BuildPrefab(enemies);
 			GameObject* go = GameplaySystems::GetGameObject(prefabId);
 			go->GetComponent<ComponentTransform>()->SetPosition(DetectMouseLocation());
+
+			if (playerScript) playerScript->AddEnemyInMap(go);
 		}
 	}
 }

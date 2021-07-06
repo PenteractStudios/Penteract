@@ -6,6 +6,7 @@
 #include "RangerProjectileScript.h"
 #include "EnemySpawnPoint.h"
 #include "WinLose.h"
+#include "Onimaru.h"
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
@@ -143,8 +144,10 @@ void RangedAI::OnAnimationSecondaryFinished() {
 	std::string currentStateString = "";
 	if (!animation) return;
 	if (shot) {
-		animation->SendTriggerSecondary("Shoot" + animation->GetCurrentState()->name);
-		shot = false;
+		if (animation->GetCurrentState()) {
+			animation->SendTriggerSecondary("Shoot" + animation->GetCurrentState()->name);
+			shot = false;
+		}
 	}
 }
 
@@ -173,9 +176,9 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 		if (!rangerGruntCharacter.isAlive) {
 			ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
 			if (collider) collider->Disable();
+			if (rangerGruntCharacter.beingPushed) DisableBlastPushBack();
 			ChangeState(AIState::DEATH);
-			if (winLoseScript) winLoseScript->IncrementDeadEnemies();
-			if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
+			if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
 		}
 	}
 }
@@ -248,6 +251,15 @@ void RangedAI::EnterState(AIState newState) {
 		}
 		break;
 	case AIState::DEATH:
+
+		if (winLoseScript) winLoseScript->IncrementDeadEnemies();
+		if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
+		if (playerController) {
+			if (playerController->playerOnimaru.characterGameObject->IsActive()) {
+				playerController->playerOnimaru.IncreaseUltimateCounter();
+			}
+		}
+
 		if (state == AIState::IDLE) {
 			animation->SendTrigger("IdleDeath");
 		} else if (state == AIState::RUN) {
@@ -271,6 +283,7 @@ void RangedAI::UpdateState() {
 	case AIState::START:
 		if (aiMovement) aiMovement->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), rangerGruntCharacter.fallingSpeed, true);
 		if (ownerTransform->GetGlobalPosition().y < 3.5f + 0e-5f) {
+			ownerTransform->SetGlobalPosition(float3(ownerTransform->GetGlobalPosition().x, 3.0f, ownerTransform->GetGlobalPosition().z));
 			animation->SendTrigger("StartSpawn");
 			ChangeState(AIState::SPAWN);
 		}
@@ -338,6 +351,9 @@ void RangedAI::UpdateState() {
 			}
 		}
 
+		break;
+	case AIState::PUSHED:
+		UpdatePushBackPosition();
 		break;
 	default:
 		break;
@@ -435,6 +451,24 @@ void RangedAI::PlayAudio(AudioType audioType) {
 	if (audios[static_cast<int>(audioType)]) audios[static_cast<int>(audioType)]->Play();
 }
 
+void RangedAI::EnableBlastPushBack() {
+	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
+		ChangeState(AIState::PUSHED);
+		rangerGruntCharacter.beingPushed = true;
+	}
+}
+
+void RangedAI::DisableBlastPushBack() {
+	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
+		ChangeState(AIState::IDLE);
+		rangerGruntCharacter.beingPushed = false;
+	}
+}
+
+bool RangedAI::IsBeingPushed() const {
+	return rangerGruntCharacter.beingPushed;
+}
+
 void RangedAI::ShootPlayerInRange() {
 	if (!player) return;
 	if (!playerController) return;
@@ -444,9 +478,29 @@ void RangedAI::ShootPlayerInRange() {
 		shot = true;
 
 		if (animation) {
-			animation->SendTriggerSecondary(animation->GetCurrentState()->name + "Shoot");
+			if(animation->GetCurrentState()) animation->SendTriggerSecondary(animation->GetCurrentState()->name + "Shoot");
 		}
 
 		actualShotTimer = actualShotMaxTime;
+	}
+}
+
+void RangedAI::UpdatePushBackPosition() {
+	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
+	float3 initialPos = enemyPos;
+
+	float3 direction = (enemyPos - playerPos).Normalized();
+
+	if (agent) {
+		enemyPos += direction * rangerGruntCharacter.pushBackSpeed * Time::GetDeltaTime();
+		agent->SetMoveTarget(enemyPos, false);
+		float distance = enemyPos.Distance(initialPos);
+		currentPushBackDistance += distance;
+
+		if (currentPushBackDistance >= rangerGruntCharacter.pushBackDistance) {
+			DisableBlastPushBack();
+			currentPushBackDistance = 0.f;
+		}
 	}
 }
