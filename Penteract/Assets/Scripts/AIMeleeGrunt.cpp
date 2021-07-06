@@ -150,7 +150,7 @@ void AIMeleeGrunt::Update() {
 		if (movementScript->CharacterInAttackRange(player, gruntCharacter.attackRange)) {
 			animation->SendTriggerSecondary("RunAttack");
 			ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(animation->GetCurrentStateSecondary()->clipUid);
-			clip->duration = 5.0f;
+			//clip->duration = 5.0f;
 			if(clip) attackRemaining = clip->duration;
 			agent->SetMaxSpeed(0);
 			if (agent) agent->SetMaxSpeed(gruntCharacter.movementSpeed);
@@ -161,7 +161,7 @@ void AIMeleeGrunt::Update() {
 	case AIState::ATTACK:
 		movementScript->Stop();
 		attackRemaining -= Time::GetDeltaTime();
-		if (attackRemaining < 0.5f) {
+		if (attackRemaining < 0.2f) {
 			float3 aux = ownerTransform->GetGlobalPosition() + ownerTransform->GetGlobalRotation().Transform(float3(0, 0, 1)) * 2 + float3(0, 2, 0);
 			if (meleePunch) GameplaySystems::Instantiate(meleePunch, aux, ownerTransform->GetGlobalRotation());
 			// generate collider code
