@@ -9,11 +9,12 @@ public:
 
 	// ------- Contructors ------- //
 	Fang() {};
-	void Update(bool lockMovement = false) override;
+	void Update(bool lockMovement = false, bool lockOrientation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
 	void GetHit(float damage_) override;
+	bool CanSwitch() const override;
 
 	float GetRealDashCooldown();
 	float GetRealEMPCooldown();

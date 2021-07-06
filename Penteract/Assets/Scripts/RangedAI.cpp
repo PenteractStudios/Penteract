@@ -6,6 +6,7 @@
 #include "RangerProjectileScript.h"
 #include "EnemySpawnPoint.h"
 #include "WinLose.h"
+#include "Onimaru.h"
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
@@ -207,8 +208,6 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 			if (collider) collider->Disable();
 			if (rangerGruntCharacter.beingPushed) DisableBlastPushBack();
 			ChangeState(AIState::DEATH);
-			if (winLoseScript) winLoseScript->IncrementDeadEnemies();
-			if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
 			if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
 		}
 	}
@@ -293,6 +292,15 @@ void RangedAI::EnterState(AIState newState) {
 		}
 		break;
 	case AIState::DEATH:
+
+		if (winLoseScript) winLoseScript->IncrementDeadEnemies();
+		if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
+		if (playerController) {
+			if (playerController->playerOnimaru.characterGameObject->IsActive()) {
+				playerController->playerOnimaru.IncreaseUltimateCounter();
+			}
+		}
+
 		if (state == AIState::IDLE) {
 			animation->SendTrigger("IdleDeath");
 		} else if (state == AIState::RUN) {
@@ -319,6 +327,7 @@ void RangedAI::UpdateState() {
 	case AIState::START:
 		if (aiMovement) aiMovement->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), rangerGruntCharacter.fallingSpeed, true);
 		if (ownerTransform->GetGlobalPosition().y < 3.5f + 0e-5f) {
+			ownerTransform->SetGlobalPosition(float3(ownerTransform->GetGlobalPosition().x, 3.0f, ownerTransform->GetGlobalPosition().z));
 			animation->SendTrigger("StartSpawn");
 			ChangeState(AIState::SPAWN);
 		}

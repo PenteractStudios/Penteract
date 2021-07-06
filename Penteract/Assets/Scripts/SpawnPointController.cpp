@@ -32,5 +32,13 @@ void SpawnPointController::OnCollision(GameObject& collidedWith, float3 collisio
 }
 
 void SpawnPointController::OpenDoor() {
-	if (doorObstacle && doorObstacle->IsActive()) doorObstacle->Disable();
+	if (doorObstacle && doorObstacle->IsActive()) {
+		Debug::Log("Open door");
+		doorObstacle->Disable();
+	}
+	else {
+		if (!doorObstacle) {
+			Debug::Log("Door obstacle null");
+		}
+	}
 }
