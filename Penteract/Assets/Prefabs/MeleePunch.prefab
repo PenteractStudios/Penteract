@@ -40,7 +40,7 @@
                 "Type": "BoxCollider",
                 "Active": true,
                 "colliderType": 2,
-                "layerType": 4,
+                "layerType": 6,
                 "mass": 1.0,
                 "size": [
                     1.0,

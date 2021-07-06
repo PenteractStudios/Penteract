@@ -37,6 +37,10 @@ public:
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override; //This is commented until merge with collisions
 	void ShootPlayerInRange(); //Sets in motion the shooting at the player, if found and close enough
 
+	void EnableBlastPushBack();
+	void DisableBlastPushBack();
+	bool IsBeingPushed() const;
+
 private:
 	//State machine handling
 	void EnterState(AIState newState);
@@ -49,8 +53,10 @@ private:
 	void ActualShot();																//Generates projectile prefab instance
 	void PlayAudio(AudioType audioType);											//Plays audio (if not null)
 
+	void UpdatePushBackPosition();
+
 public:
-	Enemy rangerGruntCharacter = Enemy(5, 8.0f, 1, 30, 40.f, 5.f, 5.f); //Enemy class instance (for shared values)
+	Enemy rangerGruntCharacter = Enemy(5, 8.0f, 1, 30, 40.f, 5.f, 5.f, 5.f, 5.f); //Enemy class instance (for shared values)
 	UID playerUID = 0;				//Reference to player main Gameobject UID, used to check distances
 	UID playerMeshUIDFang = 0;		//Reference to player Fang mesh holding Gameobject UID, used for raycasting if fang is active
 	UID playerMeshUIDOnimaru = 0;	//Reference to player Fang mesh holding Gameobject UID, used for raycasting if onimaru is active
@@ -85,6 +91,7 @@ public:
 	float attackSpeed = 0.5f;			//Shots per second
 	float actualShotMaxTime = 0.3f;		//Internal variable used to match the shooting animation and the projectile creation
 	float timeSinceLastHurt = 0.5f;		//Timer to keep track of how long it's been since AI was hurt, if higher than hurtFeedbackTimeDuration, this tries to make AI turn red with DamagedMaterial
+	float stunDuration = 3.f;			//Max time the enemy will be stunned
 
 private:
 
@@ -98,6 +105,10 @@ private:
 
 	bool shot = false;					//Bool used to make sure shooting event happens only once whenever attackTimePool is low enough
 
+	float stunTimeRemaining = 0.f;			//Time remaining stunned
+
+	bool EMPUpgraded = false;			//Flag to control if the ability is uprgraded
+
 	ComponentAnimation* animation = nullptr;		//Refernece to  animatino component
 	ComponentTransform* ownerTransform = nullptr;	//Reference to owner transform componenet
 
@@ -108,4 +119,6 @@ private:
 	ComponentMeshRenderer* meshRenderer = nullptr;	//Reference to a meshRendererComponent, used for material setting on hurt
 
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr }; //Array of ints used to play audios
+
+	float currentPushBackDistance = 0.f;
 };
