@@ -3,7 +3,8 @@
     "AnimationUID": 4855359609359038063,
     "BeginIndex": 151,
     "EndIndex": 170,
-    "Loop": false,
+    "Loop": true,
     "Speed": 1.0,
-    "FrameRate": 0.0332355797290802
+    "FrameRate": 0.0332355797290802,
+    "KeyEventClip": null
 }

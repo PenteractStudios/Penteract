@@ -167,7 +167,7 @@ float Shadow(vec4 lightPos, vec3 normal, vec3 lightDirection, sampler2D shadowMa
 	for(int x = -1; x <= 1; ++x){
 		for(int y = -1; y <= 1; ++y){
 			float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x,y) * texelSize).r;
-			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+			shadow += currentDepth > pcfDepth ? 1.0 : 0.0;
 		}
 	}
 
@@ -193,7 +193,7 @@ uniform int hasSpecularMap;
 
 float GGXNormalDistribution(float NH, float roughness)
 {
-	return roughness * roughness / (PI * Pow2(NH * NH * (roughness * roughness - 1) + 1));
+	return roughness * roughness / max(PI * Pow2(NH * NH * (roughness * roughness - 1) + 1), EPSILON);
 }
 
 vec3 SchlickFresnel(vec3 F0, float cosTheta)
