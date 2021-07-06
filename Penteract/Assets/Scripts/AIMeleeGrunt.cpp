@@ -328,7 +328,7 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 				}
 			}
 			else if (state == AIState::PUSHED) {
-				if (deadType) {
+				if (deathType) {
 					animation->SendTrigger("HurtDeath1");
 				}
 				else {
