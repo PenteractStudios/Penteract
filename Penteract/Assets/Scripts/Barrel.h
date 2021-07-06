@@ -3,8 +3,11 @@
 #include "Scripting/Script.h"
 
 class ComponentSphereCollider;
-class CameraController;
+class ComponentParticleSystem;
+class ComponentAudioSource;
 
+class CameraController;
+class ResourcePrefab;
 class Barrel : public Script
 {
 	GENERATE_BODY(Barrel);
@@ -19,6 +22,14 @@ public:
 public:
 	UID barrelUID = 0;
 	UID cameraUID = 0;
+	UID particlesUID = 0;
+
 	ComponentSphereCollider* barrelCollider = nullptr;
 	CameraController* cameraController = nullptr;
+	ComponentParticleSystem* particles = nullptr;
+	GameObject* barrel = nullptr;
+	ComponentAudioSource* audio = nullptr ;
+	bool isHit = false;
+	bool destroy = false;
+	float timeToDestroy = 1.0f;
 };
