@@ -1,6 +1,6 @@
 {
     "Root": {
-        "Name": "Vehicle5",
+        "Name": "Vehicle05",
         "Active": true,
         "RootBoneName": "",
         "Mask": 0,
@@ -42,9 +42,9 @@
                         "Type": "Transform",
                         "Active": true,
                         "Position": [
-                            0.36219024658203127,
-                            -2.0565292835235597,
-                            0.6370440721511841
+                            0.0,
+                            0.0,
+                            0.0
                         ],
                         "Rotation": [
                             -0.7071068286895752,
@@ -66,8 +66,8 @@
                     {
                         "Type": "MeshRenderer",
                         "Active": true,
-                        "MeshID": 3443981441533243442,
-                        "MaterialID": 1502172714138635710
+                        "MeshID": 7828512166382560049,
+                        "MaterialID": 16013720053952078208
                     },
                     {
                         "Type": "BoundingBox",
