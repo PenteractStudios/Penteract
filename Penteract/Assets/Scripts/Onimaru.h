@@ -42,7 +42,7 @@ public:
 	float ultimateTimeRemaining = 0.0f;
 	float ultimateTotalTime = 3.0f;
 	float ultimateRotationSpeed = 2.0f;
-	float maxBulletSpread = 5.0f;
+
 	// Blast ability
 	float blastCooldown = 7.f;
 	float blastDistance = 15.f;
@@ -77,7 +77,7 @@ private:
 
 	ResourcePrefab* trail = nullptr;
 	ComponentParticleSystem* bullet = nullptr;
-	ResourcePrefab* ultimateBullet = nullptr;
+	ComponentParticleSystem* ultimateBullet = nullptr;
 	ComponentParticleSystem* ultimateSystem = nullptr;
 	ComponentTransform* gunTransform = nullptr;
 

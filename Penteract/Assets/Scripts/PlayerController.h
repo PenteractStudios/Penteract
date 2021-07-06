@@ -77,7 +77,7 @@ public:
 	UID onimaruUltimateProjectileOriginUID = 0;
 	UID onimaruRightHandUID = 0;
 	UID onimaruShieldUID = 0;
-
+	UID onimaruUltimateBulletUID = 0;
 	//HUD
 	UID canvasUID = 0;
 	float fangRecoveryRate = 1.0f;
@@ -93,16 +93,12 @@ public:
 	float cameraOffsetX = 0.f;
 	bool useSmoothCamera = true;
 	float smoothCameraSpeed = 5.0f;
-	//float maxOnimaruBulletSpread = 5.0f;
 
 	//Switch
 	UID switchParticlesUID = 0;
 	float switchCooldown = 5.f;
 	bool switchInProgress = false;
 	float switchDelay = 0.37f;
-
-
-
 
 private:
 	void CheckCoolDowns();

@@ -31,8 +31,8 @@ void Onimaru::Shoot() {
 		}
 
 		ComponentAudioSource* audioSourceToPlay = !ultimateInUse ? playerAudios[static_cast<int>(AudioPlayer::SHOOT)] : playerAudios[static_cast<int>(AudioPlayer::SPECIAL_SHOOT)];
-		ResourcePrefab* bulletToInstantiate = !ultimateInUse ? bullet : ultimateBullet;
-		float3 projectilePos = ultimateInUse ? transformForUltimateProjectileOrigin->GetGlobalPosition() : gunTransform->GetGlobalPosition();
+		ComponentParticleSystem* bulletToInstantiate = !ultimateInUse ? bullet : ultimateBullet;
+		/*float3 projectilePos = ultimateInUse ? transformForUltimateProjectileOrigin->GetGlobalPosition() : gunTransform->GetGlobalPosition();*/
 
 		if (audioSourceToPlay) {
 			audioSourceToPlay->Play();
@@ -45,13 +45,13 @@ void Onimaru::Shoot() {
 		}
 
 		if (bulletToInstantiate) {
-			GameObject* bulletInstance = GameplaySystems::Instantiate(bulletToInstantiate, projectilePos, Quat(0.0f, 0.0f, 0.0f, 0.0f));
-			if (bulletInstance) {
+			//GameObject* bulletInstance = GameplaySystems::Instantiate(bulletToInstantiate, projectilePos, Quat(0.0f, 0.0f, 0.0f, 0.0f));
+			/*if (bulletInstance) {
 				OnimaruBullet* onimaruBulletScript = GET_SCRIPT(bulletInstance, OnimaruBullet);
 				if (onimaruBulletScript) {
 					onimaruBulletScript->SetOnimaruDirection(GetSlightRandomSpread(0, maxBulletSpread) * gunTransform->GetGlobalRotation());
 				}
-			}
+			}*/
 		}
 	}
 }
@@ -78,21 +78,24 @@ void Onimaru::Blast() {
 							Debug::Log("Hit. Angle: %s", std::to_string(angle));
 							if (meleeScript) meleeScript->EnableBlastPushBack();
 							else if (rangedScript) rangedScript->EnableBlastPushBack();
-						} else {
+						}
+						else {
 							Debug::Log("Miss. Angle: %s", std::to_string(angle));
 						}
-					} else {
+					}
+					else {
 						if (meleeScript) {
 							if (!meleeScript->IsBeingPushed()) meleeScript->DisableBlastPushBack();
-						} else if (rangedScript) {
+						}
+						else if (rangedScript) {
 							if (!rangedScript->IsBeingPushed()) rangedScript->DisableBlastPushBack();
 						}
-
 					}
 				}
 			}
 		}
-	} else {
+	}
+	else {
 		currentBlastDuration += Time::GetDeltaTime();
 		if (currentBlastDuration >= 1.8f) OnAnimationSecondaryFinished(); // Temporary hack
 	}
@@ -108,7 +111,8 @@ void Onimaru::PlayAnimation() {
 			if (compAnimation->GetCurrentState()->name != states[static_cast<int>(IDLE)]) {
 				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(IDLE)]);
 			}
-		} else {
+		}
+		else {
 			//If Movement is found, Primary state machine will be in charge of getting movement animations
 			if (compAnimation->GetCurrentState()->name != (states[GetMouseDirectionState()])) {
 				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState()]);
@@ -160,7 +164,8 @@ float Onimaru::GetRealShieldCooldown() {
 	float chargesWasted = (float)(shield->max_charges - shield->GetNumCharges()) / (float)shield->max_charges;
 	if (shield->GetIsActive()) {
 		realShieldCooldown = chargesWasted;
-	} else if (shield->GetCoolDown() > 0) {
+	}
+	else if (shield->GetCoolDown() > 0) {
 		realShieldCooldown = 1.0f - (shieldCooldownRemaining / (shield->GetCoolDown() / (1.0f - chargesWasted)));
 	}
 
@@ -184,14 +189,16 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 	if (noCooldownMode || blastCooldownRemaining <= 0.f) {
 		blastCooldownRemaining = 0.f;
 		blastInCooldown = false;
-	} else {
+	}
+	else {
 		if (!blastInUse) blastCooldownRemaining -= Time::GetDeltaTime();
 	}
 	//ShieldCooldown
 	if (noCooldownMode || shieldCooldownRemaining <= 0.f) {
 		shieldCooldownRemaining = 0.f;
 		shieldInCooldown = false;
-	} else {
+	}
+	else {
 		shieldCooldownRemaining -= Time::GetDeltaTime();
 	}
 }
@@ -228,7 +235,6 @@ void Onimaru::OnAnimationSecondaryFinished() {
 			}
 		}
 	}
-
 }
 
 void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID onimaruRightHandUID, UID shieldUID, UID onimaruTransformForUltimateProjectileOriginUID, UID cameraUID, UID canvasUID, float maxSpread_) {
@@ -258,7 +264,6 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 	}
 
 	originalAttackSpeed = attackSpeed;
-
 
 	GameObject* onimaruGun = GameplaySystems::GetGameObject(onimaruGunUID);
 	if (onimaruGun) {
@@ -322,7 +327,6 @@ void Onimaru::InitShield() {
 	if (shield == nullptr || shieldGO == nullptr) return;
 
 	if (CanShield()) {
-
 		shield->InitShield();
 		if (shieldParticles) {
 			shieldParticles->Play();
@@ -336,7 +340,8 @@ void Onimaru::InitShield() {
 			if (compAnimation->GetCurrentState()) {
 				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHIELD)]);
 			}
-		} else {
+		}
+		else {
 			if (compAnimation->GetCurrentStateSecondary()) {
 				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHOOTSHIELD)]);
 			}
@@ -359,7 +364,8 @@ void Onimaru::FadeShield() {
 		if (compAnimation->GetCurrentStateSecondary() && compAnimation->GetCurrentState()) {
 			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 		}
-	} else {
+	}
+	else {
 		if (compAnimation->GetCurrentStateSecondary()) {
 			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHOOTING)]);
 		}
@@ -369,7 +375,6 @@ void Onimaru::FadeShield() {
 	}
 	shieldGO->Disable();
 }
-
 
 void Onimaru::Update(bool lockMovement, bool lockOrientation) {
 	if (shield == nullptr || shieldGO == nullptr) return;
@@ -382,7 +387,8 @@ void Onimaru::Update(bool lockMovement, bool lockOrientation) {
 					StartUltimate();
 				}
 			}
-		} else {
+		}
+		else {
 			//Ultimate execution
 			if (ultimateTimeRemaining > 0) {
 				ultimateTimeRemaining -= Time::GetDeltaTime();
@@ -411,13 +417,15 @@ void Onimaru::Update(bool lockMovement, bool lockOrientation) {
 							if (compAnimation->GetCurrentState()) {
 								compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHOOTING)]);
 							}
-						} else {
+						}
+						else {
 							if (compAnimation->GetCurrentStateSecondary()) {
 								compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHOOTSHIELD)]);
 							}
 						}
 					}
-				} else {
+				}
+				else {
 					Shoot();
 				}
 				shooting = true;
@@ -430,7 +438,8 @@ void Onimaru::Update(bool lockMovement, bool lockOrientation) {
 					if (compAnimation->GetCurrentState() && compAnimation->GetCurrentStateSecondary()) {
 						compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHIELD)]);
 					}
-				} else {
+				}
+				else {
 					if (compAnimation->GetCurrentStateSecondary() && compAnimation->GetCurrentState()) {
 						compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 					}
@@ -460,12 +469,11 @@ void Onimaru::Update(bool lockMovement, bool lockOrientation) {
 				Blast();
 			}
 		}
-	} else {
+	}
+	else {
 		if (agent) agent->RemoveAgentFromCrowd();
 		movementInputDirection = MovementDirection::NONE;
 	}
-
-
 
 	if (blastInUse) {
 		Blast();
@@ -500,7 +508,6 @@ void Onimaru::AddEnemy(GameObject* enemy) {
 }
 
 void Onimaru::RemoveEnemy(GameObject* enemy) {
-
 	std::vector<GameObject*>::iterator enemyToRemove;
 	enemyToRemove = std::find(enemiesInMap.begin(), enemiesInMap.end(), enemy);
 

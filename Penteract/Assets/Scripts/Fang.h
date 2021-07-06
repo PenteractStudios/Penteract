@@ -2,7 +2,6 @@
 
 #include "Player.h"
 
-
 class HUDController;
 class Fang : public Player {
 public:
@@ -17,7 +16,10 @@ public:
 	bool CanSwitch() const override;
 
 	float GetRealDashCooldown();
-	void Init(UID fangUID = 0, UID trailGunUID = 0, UID trailDashUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID cameraUID = 0, UID canvasUID = 0,UID EMPUID = 0);
+	float GetRealEMPCooldown();
+	float GetRealUltimateCooldown();
+	void IncreaseUltimateCounter();
+	void Init(UID fangUID = 0, UID trailGunUID = 0, UID trailDashUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID cameraUID = 0, UID canvasUID = 0, UID EMPUID = 0);
 
 public:
 	std::vector<std::string> states{ "Idle" ,
@@ -30,7 +32,6 @@ public:
 	};
 
 	bool rightShot = true;
-
 
 	//Dash
 	float dashCooldown = 5.f;
@@ -57,7 +58,7 @@ private:
 
 	//EMP
 	float EMPCooldownRemaining = 0.f;
-	bool EMPInCooldown = false;	
+	bool EMPInCooldown = false;
 
 	//Shoot
 	ComponentTransform* rightGunTransform = nullptr;
@@ -72,6 +73,12 @@ private:
 
 	//HUD
 	HUDController* hudControllerScript = nullptr;
+
+	//Ultimate
+	int ultimateCooldownRemaining = 2;
+	bool ultimateInCooldown = false;
+	float oldMovementSpeed = 1.0f;
+	UltimateFang* ultimateScript = nullptr;
 
 private:
 	void InitDash();
