@@ -12,15 +12,21 @@
 
 #define HIERARCHY_INDEX_MAIN_HEALTH 1
 
-
-#define HIERARCHY_INDEX_MAIN_ABILITY_FILL 2
-#define HIERARCHY_INDEX_SECONDARY_ABILITY_FILL 1
+/* Current skill index in hierarchy */
 #define HIERARCHY_INDEX_MAIN_ABILITY_EFFECT 0
+#define HIERARCHY_INDEX_MAIN_ABILITY_FILL 2
+#define HIERARCHY_INDEX_MAIN_ABILITY_IMAGE 4
 #define HIERARCHY_INDEX_MAIN_BUTTON_UP 5
 #define HIERARCHY_INDEX_MAIN_BUTTON_DOWN 6  
 
+/* Alternative skill index in hierarchy */
+#define HIERARCHY_INDEX_SECONDARY_ABILITY_FILL 1
+
+/* Swap chararcters index in hierarchy */
 #define HIERARCHY_INDEX_SWAP_ABILITY_EFFECT 2
 #define HIERARCHY_INDEX_SWAP_ABILITY_FILL 3
+#define HIERARCHY_INDEX_SWAP_ABILITY_IMAGE 4
+
 
 EXPOSE_MEMBERS(HUDController) {
 	// Add members here to expose them to the engine. Example:
@@ -153,7 +159,8 @@ void HUDController::LoadCooldownFeedbackStates(GameObject* canvas, int startingI
 	int skill = startingIndex;
 	for (std::vector<GameObject*>::iterator it = skills.begin(); it != skills.end(); ++it) {
 
-		ComponentImage* image = nullptr;
+		ComponentImage* fillColor = nullptr;
+		ComponentImage* imageColor = nullptr;
 		if ((*it)->GetChildren().size() > HIERARCHY_INDEX_MAIN_BUTTON_UP) {
 			//Cooldown does not return 1, meaning that it is ON Cooldown
 			if (cooldowns[skill] < 1) {
@@ -167,17 +174,20 @@ void HUDController::LoadCooldownFeedbackStates(GameObject* canvas, int startingI
 				(*it)->GetChild(HIERARCHY_INDEX_MAIN_BUTTON_DOWN)->Disable();
 			}
 
-			image = (*it)->GetChildren()[HIERARCHY_INDEX_MAIN_ABILITY_FILL]->GetComponent<ComponentImage>();
-			if (image) {
+			fillColor = (*it)->GetChildren()[HIERARCHY_INDEX_MAIN_ABILITY_FILL]->GetComponent<ComponentImage>();
+			imageColor = (*it)->GetChildren()[HIERARCHY_INDEX_MAIN_ABILITY_IMAGE]->GetComponent<ComponentImage>();
+			if (fillColor && imageColor) {
 
 				if (cooldowns[skill] < 1) {
-					image->SetColor(float4(colorBlueForCD, 0.3f + cooldowns[skill]));
+					fillColor->SetColor(float4(colorBlueForCD, 0.3f + cooldowns[skill]));
+					imageColor->SetColor(colorWhite);
 				} else {
-					image->SetColor(colorMagenta);
+					fillColor->SetColor(colorWhite);
+					imageColor->SetColor(colorBlueBackground);
 				}
 
-				if (image->IsFill()) {
-					image->SetFillValue(cooldowns[skill]);
+				if (fillColor->IsFill()) {
+					fillColor->SetFillValue(cooldowns[skill]);
 				}
 			}
 		}
@@ -414,7 +424,6 @@ void HUDController::UpdateDurableHPLoss(GameObject* targetCanvas) {
 	}
 }
 
-
 void HUDController::UpdateComponents() {
 
 	if (!fang || !onimaru) return;
@@ -456,10 +465,12 @@ void HUDController::UpdateCommonSkill() {
 	std::vector<GameObject*> children = swapingSkillCanvas->GetChildren();
 	if (children.size() > HIERARCHY_INDEX_SWAP_ABILITY_FILL - 1) {
 		//Hardcoded value in hierarchy, changing the hierarchy without changing the index or the other way around will result in this not working properly
-		ComponentImage* image = children[HIERARCHY_INDEX_SWAP_ABILITY_FILL]->GetComponent<ComponentImage>();
-		if (image) {
-			image->SetFillValue(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
-			image->SetColor(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1 ? float4(colorBlueForCD, 1.0f) : colorMagenta);
+		ComponentImage* fillColor = children[HIERARCHY_INDEX_SWAP_ABILITY_FILL]->GetComponent<ComponentImage>();
+		ComponentImage* image = children[HIERARCHY_INDEX_SWAP_ABILITY_IMAGE]->GetComponent<ComponentImage>();
+		if (fillColor && image) {
+			fillColor->SetFillValue(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
+			fillColor->SetColor(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1 ? float4(colorBlueForCD, 1.0f) : colorWhite);
+			image->SetColor(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1 ? colorWhite : colorBlueBackground);
 
 			AbilityCoolDownEffectCheck(Cooldowns::SWITCH_SKILL, swapingSkillCanvas);
 		}
@@ -565,7 +576,8 @@ void HUDController::UpdateVisualCooldowns(GameObject* canvas, bool isMain, int s
 	int skill = startingIt;
 	for (std::vector<GameObject*>::iterator it = skills.begin(); it != skills.end(); ++it) {
 
-		ComponentImage* image = nullptr;
+		ComponentImage* fillColor = nullptr;
+		ComponentImage* imageColor = nullptr;
 		if (isMain) {
 			if ((*it)->GetChildren().size() > HIERARCHY_INDEX_MAIN_BUTTON_UP) {
 
@@ -576,26 +588,29 @@ void HUDController::UpdateVisualCooldowns(GameObject* canvas, bool isMain, int s
 					}
 				}
 
-				image = (*it)->GetChildren()[HIERARCHY_INDEX_MAIN_ABILITY_FILL]->GetComponent<ComponentImage>();
-				if (image) {
+				fillColor = (*it)->GetChildren()[HIERARCHY_INDEX_MAIN_ABILITY_FILL]->GetComponent<ComponentImage>();
+				imageColor = (*it)->GetChildren()[HIERARCHY_INDEX_MAIN_ABILITY_IMAGE]->GetComponent<ComponentImage>();
+				if (fillColor && imageColor) {
 
 					if (cooldowns[skill] < 1) {
-						image->SetColor(float4(colorBlueForCD, 0.3f + cooldowns[skill]));
+						fillColor->SetColor(float4(colorBlueForCD, 0.3f + cooldowns[skill]));
+						imageColor->SetColor(colorWhite);
 					} else {
-						image->SetColor(colorMagenta);
+						fillColor->SetColor(colorWhite);
+						imageColor->SetColor(colorBlueBackground);
 					}
 
-					if (image->IsFill()) {
-						image->SetFillValue(cooldowns[skill]);
+					if (fillColor->IsFill()) {
+						fillColor->SetFillValue(cooldowns[skill]);
 					}
 				}
 			}
 		} else {
 			if ((*it)->GetChildren().size() > 0) {
-				image = (*it)->GetChildren()[HIERARCHY_INDEX_SECONDARY_ABILITY_FILL]->GetComponent<ComponentImage>();
-				if (image) {
-					if (image->IsFill()) {
-						image->SetFillValue(cooldowns[skill]);
+				fillColor = (*it)->GetChildren()[HIERARCHY_INDEX_SECONDARY_ABILITY_FILL]->GetComponent<ComponentImage>();
+				if (fillColor) {
+					if (fillColor->IsFill()) {
+						fillColor->SetFillValue(cooldowns[skill]);
 					}
 				}
 			}
