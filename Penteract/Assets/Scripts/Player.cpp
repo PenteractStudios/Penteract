@@ -174,16 +174,16 @@ void Player::LookAtMouse() {
 	}
 }
 
-void Player::Update(bool lockMovement, bool lockOrientation) {
+void Player::Update(bool lockMovement, bool lockRotation) {
 	if (!lockMovement) {
 		movementInputDirection = GetInputMovementDirection();
-		MoveTo();
-	}
-	if (!lockOrientation) {
-		LookAtMouse();
+		MoveTo();		
 	}
 	else {
-		if(agent) agent->SetMoveTarget(playerMainTransform->GetGlobalPosition(), false);
+		if (agent) agent->SetMoveTarget(playerMainTransform->GetGlobalPosition(), false);
+	}
+	if (!lockRotation) {
+		LookAtMouse();
 	}
 }
 

@@ -1,9 +1,10 @@
 #include "Fang.h"
 #include "GameplaySystems.h"
 #include "HUDController.h"
+#include "UltimateFang.h"
 #include "CameraController.h"
 
-void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID, UID canvasUID, UID EMPUID)
+void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID bulletUID, UID cameraUID, UID canvasUID, UID EMPUID, UID fangUltimateUID)
 {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(fangUID);
@@ -58,10 +59,22 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 		ComponentSphereCollider* sCollider = EMP->GetComponent<ComponentSphereCollider>();
 		if (sCollider) sCollider->radius = EMPRadius;
 	}
+
+	GameObject* fangUltimateGameObject = GameplaySystems::GetGameObject(fangUltimateUID);
+	if (fangUltimateGameObject) {
+		ultimateScript = GET_SCRIPT(fangUltimateGameObject, UltimateFang);
+		ultimateCooldownRemaining = ultimateCooldown;
+	}
 }
 
 bool Fang::CanSwitch() const {
-	return true;
+	if (!EMP) return false;
+	return !EMP->IsActive() && !ultimateOn;
+}
+
+void Fang::IncreaseUltimateCounter()
+{
+	ultimateCooldownRemaining++;
 }
 
 void Fang::GetHit(float damage_) {
@@ -108,7 +121,7 @@ void Fang::Dash() {
 }
 
 bool Fang::CanDash() {
-	return !dashing && !dashInCooldown && !EMP->IsActive();
+	return !dashing && !dashInCooldown && !EMP->IsActive() && !ultimateOn;
 }
 
 void Fang::ActivateEMP() {
@@ -174,6 +187,14 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 			EMPCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
+
+	//Ultimate Cooldown
+	if (ultimateInCooldown) {
+		if (noCooldownMode || ultimateCooldownRemaining >= ultimateCooldown) {
+			ultimateCooldownRemaining = ultimateCooldown;
+			ultimateInCooldown = false;
+		}
+	}
 }
 
 void Fang::OnAnimationFinished() {
@@ -182,6 +203,11 @@ void Fang::OnAnimationFinished() {
 			if (compAnimation->GetCurrentState()->name == "EMP") {
 				compAnimation->SendTrigger(states[21] + states[0]);
 				EMP->Disable();
+			} else if (compAnimation->GetCurrentState()->name == "Ultimate") {
+				compAnimation->SendTrigger(states[22] + states[0]);
+				ultimateOn = false;
+				movementSpeed = oldMovementSpeed;
+				ultimateScript->EndUltimate();
 			}
 		}
 	}
@@ -199,8 +225,13 @@ float Fang::GetRealEMPCooldown()
 	return 1.0f - (EMPCooldownRemaining / EMPCooldown);
 }
 
+float Fang::GetRealUltimateCooldown()
+{
+	return (ultimateCooldownRemaining / (float)ultimateCooldown);
+}
+
 bool Fang::CanShoot() {
-	return !shootingOnCooldown;
+	return !shootingOnCooldown  && !ultimateOn;
 }
 
 void Fang::Shoot() {
@@ -228,6 +259,7 @@ void Fang::Shoot() {
 
 void Fang::PlayAnimation() {
 	if (!compAnimation) return;
+	if (!EMP) return;
 
 	int dashAnimation = 0;
 	if (dashing) {
@@ -237,7 +269,12 @@ void Fang::PlayAnimation() {
 	if (EMP->IsActive()) movementInputDirection = MovementDirection::NONE;
 
 	if (compAnimation->GetCurrentState()) {
-		if (movementInputDirection == MovementDirection::NONE) {
+		if (ultimateOn || compAnimation->GetCurrentState()->name == states[22]) {
+			if (compAnimation->GetCurrentState()->name != states[22]) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[22]);
+			}
+		}
+		else if (movementInputDirection == MovementDirection::NONE) {
 			if (!isAlive) {
 				if (compAnimation->GetCurrentState()->name != states[9]) {
 					compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[9]);
@@ -266,10 +303,36 @@ void Fang::PlayAnimation() {
 	} 
 }
 
-void Fang::Update(bool lockMovement, bool lockOrientation) {
+void Fang::ActiveUltimate()
+{
+	if (CanUltimate()) {
+		ultimateCooldownRemaining = 0;
+		ultimateOn = true;
+		ultimateInCooldown = true;
+		ultimateScript->StartUltimate();
+
+		oldMovementSpeed = movementSpeed;
+		movementSpeed = ultimateMovementSpeed;
+
+		if (playerAudios[static_cast<int>(AudioPlayer::THIRD_ABILITY)]) {
+			playerAudios[static_cast<int>(AudioPlayer::THIRD_ABILITY)]->Play();
+		}
+
+		if (hudControllerScript) {
+			hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_3);
+		}
+	}
+}
+
+bool Fang::CanUltimate()
+{
+	return ultimateCooldownRemaining >= ultimateCooldown && !ultimateOn;
+}
+
+void Fang::Update(bool lockMovement, bool lockRotation) {
 	if (isAlive) {
 		if (EMP) {
-			Player::Update(dashing || EMP->IsActive(), dashing || EMP->IsActive());
+			Player::Update(dashing || EMP->IsActive(), dashing || EMP->IsActive() || ultimateOn);
 			if (Input::GetMouseButtonDown(2) && !EMP->IsActive()) {
 				InitDash();
 			}
@@ -279,6 +342,9 @@ void Fang::Update(bool lockMovement, bool lockOrientation) {
 			Dash();
 			if (Input::GetKeyCodeDown(Input::KEY_Q)) {
 				ActivateEMP();
+			}
+			if (Input::GetKeyCodeUp(Input::KEYCODE::KEY_E)) {
+				ActiveUltimate();
 			}
 		}		
 	} 

@@ -298,6 +298,8 @@ void RangedAI::EnterState(AIState newState) {
 		if (playerController) {
 			if (playerController->playerOnimaru.characterGameObject->IsActive()) {
 				playerController->playerOnimaru.IncreaseUltimateCounter();
+			} else if (playerController->playerFang.characterGameObject->IsActive()) {
+				playerController->playerFang.IncreaseUltimateCounter();
 			}
 		}
 

@@ -37,7 +37,10 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruShieldUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangUltimateUID),
 	MEMBER(MemberType::FLOAT, switchCooldown),
+	MEMBER(MemberType::INT, playerFang.ultimateCooldown),
+	MEMBER(MemberType::FLOAT, playerFang.ultimateMovementSpeed),
 	MEMBER(MemberType::FLOAT, playerFang.lifePoints),
 	MEMBER(MemberType::FLOAT, playerFang.movementSpeed),
 	MEMBER(MemberType::FLOAT, playerFang.damageHit),
@@ -74,7 +77,7 @@ EXPOSE_MEMBERS(PlayerController) {
 GENERATE_BODY_IMPL(PlayerController);
 
 void PlayerController::Start() {
-	playerFang.Init(fangUID, fangTrailUID, fangLeftGunUID, fangRightGunUID, fangBulletUID, cameraUID, canvasUID, EMPUID);
+	playerFang.Init(fangUID, fangTrailUID, fangLeftGunUID, fangRightGunUID, fangBulletUID, cameraUID, canvasUID, EMPUID, fangUltimateUID);
 	playerOnimaru.Init(onimaruUID, onimaruBulletUID, onimaruGunUID, onimaruRightHandUID, onimaruShieldUID,onimaruUltimateProjectileOriginUID, cameraUID, canvasUID, playerOnimaru.maxBulletSpread);
 
 	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
@@ -127,7 +130,7 @@ void PlayerController::SetNoCooldown(bool status) {
 bool PlayerController::CanSwitch() {
 
 	if (playerFang.characterGameObject->IsActive()) {
-		return !switchInCooldown && playerFang.CanSwitch();
+		return !switchInCooldown && playerFang.CanSwitch() && !playerFang.ultimateOn;
 	} else {
 		return !switchInCooldown && playerOnimaru.CanSwitch();
 	}
@@ -251,7 +254,7 @@ void PlayerController::UpdatePlayerStats() {
 		}
 
 		float realSwitchCooldown = 1.0f - (switchCooldownRemaining / switchCooldown);
-		hudControllerScript->UpdateCooldowns(playerOnimaru.GetRealShieldCooldown(), playerOnimaru.GetRealBlastCooldown(), playerOnimaru.GetRealUltimateCooldown(), playerFang.GetRealDashCooldown(), playerFang.GetRealEMPCooldown(), 0.0f, realSwitchCooldown);
+		hudControllerScript->UpdateCooldowns(playerOnimaru.GetRealShieldCooldown(), playerOnimaru.GetRealBlastCooldown(), playerOnimaru.GetRealUltimateCooldown(), playerFang.GetRealDashCooldown(), playerFang.GetRealEMPCooldown(), playerFang.GetRealUltimateCooldown(), realSwitchCooldown);
 	}
 }
 

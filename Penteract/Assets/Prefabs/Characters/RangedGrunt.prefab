@@ -102,6 +102,11 @@
                         "Value": 20.0
                     },
                     {
+                        "Name": "attackSpeed",
+                        "Type": "Float",
+                        "Value": 1.0
+                    },
+                    {
                         "Name": "winConditionUID",
                         "Type": "GameObjectUID",
                         "Value": 16579210181260590797
