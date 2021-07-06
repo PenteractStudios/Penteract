@@ -347,8 +347,6 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 				ActiveUltimate();
 			}
 
-
-
 		}
 	} else {
 		if (agent) agent->RemoveAgentFromCrowd();

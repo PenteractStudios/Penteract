@@ -318,7 +318,7 @@ bool Onimaru::CanShield() {
 }
 
 bool Onimaru::CanUltimate() {
-	return !blastInUse && !IsShielding() && ultimateChargePoints >= ultimateChargePointsTotal;
+	return !ultimateInUse && blastInUse && !IsShielding() && ultimateChargePoints >= ultimateChargePointsTotal;
 }
 
 void Onimaru::InitShield() {

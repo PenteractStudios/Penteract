@@ -8,9 +8,6 @@
 #include "Geometry/frustum.h"
 
 EXPOSE_MEMBERS(GameController) {
-	// Add members here to expose them to the engine. Example:
-	// MEMBER(MemberType::BOOL, exampleMember1),
-	// MEMBER(MemberType::PREFAB_RESOURCE_UID, exampleMember2),
 	MEMBER(MemberType::GAME_OBJECT_UID, gameCameraUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, godCameraUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, staticCamera1UID),

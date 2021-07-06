@@ -101,12 +101,7 @@ void Player::LookAtFacePointTarget(bool useGamepad) {
 			multiplier = -1;
 		}
 
-
 		if (Abs(angle) > DEGTORAD * orientationThreshold) {
-
-			std::string message = std::to_string(Abs(angle)) + " > " + std::to_string(DEGTORAD * orientationThreshold);
-			Debug::Log(message.c_str());
-
 			Quat rotationToAdd;
 			rotationToAdd.SetFromAxisAngle(float3(0, 1, 0), multiplier * Time::GetDeltaTime() * orientationSpeed);
 			playerMainTransform->SetGlobalRotation(rotationToAdd * quat);
