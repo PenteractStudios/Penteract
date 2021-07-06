@@ -16,6 +16,7 @@ public:
 		ENERGY_BLAST,
 		ULTIMATE,
 		SHOOT,
+		SPECIAL_SHOOT,
 		HIT,
 		DEATH,
 		TOTAL

@@ -39,14 +39,14 @@ void Onimaru::Shoot() {
 		attackCooldownRemaining = 1.f / attackSpeed;
 
 		//NullRef on ultimate values
-		if (playerAudios[static_cast<int>(AudioPlayer::SPECIAL_SHOOT)] == nullptr) {
-			playerAudios[static_cast<int>(AudioPlayer::SPECIAL_SHOOT)] = playerAudios[static_cast<int>(AudioPlayer::SHOOT)];
+		if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SPECIAL_SHOOT)] == nullptr) {
+			onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SPECIAL_SHOOT)] = onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHOOT)];
 		}
 		if (ultimateBullet == nullptr) {
 			ultimateBullet = bullet;
 		}
 
-		ComponentAudioSource* audioSourceToPlay = !ultimateInUse ? playerAudios[static_cast<int>(AudioPlayer::SHOOT)] : playerAudios[static_cast<int>(AudioPlayer::SPECIAL_SHOOT)];
+		ComponentAudioSource* audioSourceToPlay = !ultimateInUse ? onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHOOT)] : onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SPECIAL_SHOOT)];
 		ResourcePrefab* bulletToInstantiate = !ultimateInUse ? bullet : ultimateBullet;
 		float3 projectilePos = ultimateInUse ? transformForUltimateProjectileOrigin->GetGlobalPosition() : gunTransform->GetGlobalPosition();
 
@@ -144,9 +144,9 @@ void Onimaru::StartUltimate() {
 		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(ULTI_INTRO)]);
 	}
 
-	if (playerAudios[static_cast<int>(AudioPlayer::THIRD_ABILITY)] == nullptr) {
-		if (!playerAudios[static_cast<int>(AudioPlayer::THIRD_ABILITY)]->IsPlaying()) {
-			playerAudios[static_cast<int>(AudioPlayer::THIRD_ABILITY)]->Play();
+	if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::ULTIMATE)] == nullptr) {
+		if (!onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::ULTIMATE)]->IsPlaying()) {
+			onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::ULTIMATE)]->Play();
 		}
 	}
 
