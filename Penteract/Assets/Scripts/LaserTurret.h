@@ -27,6 +27,10 @@ public:
 
 private:
 
+	// Tiempo de animacion
+	// Cooldown --> Tiempo inactivo + factor
+	// Factor random --> +/- z tiempo
+
 	ComponentAnimation* animationComp = nullptr;
 	TurretState currentState = TurretState::START;
 	
