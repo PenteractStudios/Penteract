@@ -108,10 +108,11 @@ void ModulePrograms::LoadShaders() {
 
 	// Depth Prepass Shaders
 	depthPrepass = new ProgramDepthPrepass(CreateProgram(filePath, "vertVarCommon vertMainCommon", "fragDepthPrepass"));
+	depthPrepassConvertTextures = new ProgramDepthPrepassConvertTextures(CreateProgram(filePath, "vertScreen", "fragDepthPrepassConvertTextures"));
 
 	// SSAO Shaders
 	ssao = new ProgramSSAO(CreateProgram(filePath, "vertScreen", "fragSSAO"));
-	ssaoBlur = new ProgramSSAOBlur(CreateProgram(filePath, "vertScreen", "fragGaussianBlur"));
+	blur = new ProgramBlur(CreateProgram(filePath, "vertScreen", "fragGaussianBlur"));
 
 	// Post-processing Shaders
 	postprocess = new ProgramPostprocess(CreateProgram(filePath, "vertScreen", "fragPostprocess"));
@@ -154,7 +155,7 @@ void ModulePrograms::UnloadShaders() {
 	RELEASE(depthPrepass);
 
 	RELEASE(ssao);
-	RELEASE(ssaoBlur);
+	RELEASE(blur);
 
 	RELEASE(colorCorrection);
 
