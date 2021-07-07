@@ -1,17 +1,76 @@
 {
-    "InitialState": 4730572649535276022,
+    "InitialState": 211985313757955714,
     "Clips": [
+        14028520256532297426,
+        12304351074862493806,
         5422970764507468936
     ],
     "States": [
         {
-            "Id": 4730572649535276022,
-            "Name": "Idle",
+            "Id": 211985313757955714,
+            "Name": "End",
+            "ClipId": 14028520256532297426
+        },
+        {
+            "Id": 13957126586642417640,
+            "Name": "Shoot",
+            "ClipId": 12304351074862493806
+        },
+        {
+            "Id": 15106296074458095015,
+            "Name": "Startup",
             "ClipId": 5422970764507468936
         }
     ],
-    "Transitions": null,
+    "Transitions": [
+        {
+            "Trigger": "EndStartup",
+            "Id": 2276612063749667624,
+            "Source": 211985313757955714,
+            "Target": 15106296074458095015,
+            "Interpolation": 0.3
+        },
+        {
+            "Trigger": "EndShoot",
+            "Id": 1517925781134843741,
+            "Source": 211985313757955714,
+            "Target": 13957126586642417640,
+            "Interpolation": 0.3
+        },
+        {
+            "Trigger": "StartupEnd",
+            "Id": 5854981915915063771,
+            "Source": 15106296074458095015,
+            "Target": 211985313757955714,
+            "Interpolation": 0.3
+        },
+        {
+            "Trigger": "StartupShoot",
+            "Id": 8134605260540352474,
+            "Source": 15106296074458095015,
+            "Target": 13957126586642417640,
+            "Interpolation": 0.3
+        },
+        {
+            "Trigger": "ShootEnd",
+            "Id": 6816310462552021939,
+            "Source": 13957126586642417640,
+            "Target": 211985313757955714,
+            "Interpolation": 0.3
+        },
+        {
+            "Trigger": "ShootStartup",
+            "Id": 12756263136178136387,
+            "Source": 13957126586642417640,
+            "Target": 15106296074458095015,
+            "Interpolation": 0.3
+        }
+    ],
     "Bones": [
-        "FEED_ME_WITH_BONES_IAM_STARVING"
+        "LaserTurret0",
+		"LaserTurret1",
+		"LaserTurret2",
+		"LaserTurret3",
+		"LaserTurret4"
     ]
 }
