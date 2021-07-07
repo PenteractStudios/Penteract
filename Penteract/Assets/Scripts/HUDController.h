@@ -71,7 +71,6 @@ public:
 
 	UID swapingSkillCanvasUID = 0;
 
-
 	UID scoreTextUID = 0;
 
 	UID canvasHUDUID = 0;
@@ -124,7 +123,7 @@ private:
 	const float4 colorWhite = float4(255, 255, 255, 255) / 255;
 
 	const float3 colorBlueForCD = float3(47.0f, 187.0f, 200.0f) / 255.0f;
-
+	const float4 colorBlueBackground = float4(0.0f, 81.0f, 127.0f, 255.0f) / 255.0f;
 
 	int prevLivesFang = MAX_HEALTH;
 	int prevLivesOni = MAX_HEALTH;
@@ -135,10 +134,7 @@ private:
 
 	float remainingDurableHealthTimesFang[MAX_HEALTH] = { 0,0,0,0,0,0,0,0,0,0 };
 	float remainingDurableHealthTimesOni[MAX_HEALTH] = { 0,0,0,0,0,0,0,0,0,0 };
-	bool abilityCoolDownsRetreived[static_cast<int>(Cooldowns::TOTAL)] = { true,true,true,true,true,true,true };
-
-	//std::vector<int>remainingTimeActiveIndexesFang;
-	//std::vector<int>remainingTimeActiveIndexesOni;
+	bool abilityCoolDownsRetreived[static_cast<int>(Cooldowns::TOTAL)] = { false,false,false,false,false,false,false };
 
 
 	ComponentText* scoreText = nullptr;
