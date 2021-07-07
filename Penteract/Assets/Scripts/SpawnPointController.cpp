@@ -34,3 +34,4 @@ void SpawnPointController::OnCollision(GameObject& collidedWith, float3 collisio
 
 void SpawnPointController::OpenDoor() {
 	if (doorObstacle && doorObstacle->IsActive()) doorObstacle->Disable();
+}
