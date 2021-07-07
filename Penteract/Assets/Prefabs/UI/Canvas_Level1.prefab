@@ -83,14 +83,14 @@
                 "Script": 11734875514518295508,
                 "Values": [
                     {
-                        "Name": "onimaruHealthSecondCanvasUID",
-                        "Type": "GameObjectUID",
-                        "Value": 6033506057788695624
-                    },
-                    {
                         "Name": "fangMainCanvasUID",
                         "Type": "GameObjectUID",
                         "Value": 8673884255751552455
+                    },
+                    {
+                        "Name": "onimaruHealthSecondCanvasUID",
+                        "Type": "GameObjectUID",
+                        "Value": 6033506057788695624
                     },
                     {
                         "Name": "onimaruMainCanvasUID",
@@ -123,14 +123,14 @@
                         "Value": 9452445869438148160
                     },
                     {
-                        "Name": "swapingSkillCanvasUID",
-                        "Type": "GameObjectUID",
-                        "Value": 6813812700907944331
-                    },
-                    {
                         "Name": "onimaruHealthMainCanvasUID",
                         "Type": "GameObjectUID",
                         "Value": 2505109139217801301
+                    },
+                    {
+                        "Name": "swapingSkillCanvasUID",
+                        "Type": "GameObjectUID",
+                        "Value": 6813812700907944331
                     },
                     {
                         "Name": "fangHealthSecondCanvasUID",
@@ -3692,14 +3692,14 @@
                         "Script": 2817041366689585174,
                         "Values": [
                             {
-                                "Name": "firstBarEffectUID",
-                                "Type": "GameObjectUID",
-                                "Value": 10102349772890770442
-                            },
-                            {
                                 "Name": "fangMainDisplayerUID",
                                 "Type": "GameObjectUID",
                                 "Value": 8673884255751552455
+                            },
+                            {
+                                "Name": "firstBarEffectUID",
+                                "Type": "GameObjectUID",
+                                "Value": 10102349772890770442
                             },
                             {
                                 "Name": "fangPrimaryUID",
@@ -3741,14 +3741,14 @@
                                 "Value": 0.5
                             },
                             {
-                                "Name": "fangAlternativeUID",
-                                "Type": "GameObjectUID",
-                                "Value": 15817475784441264431
-                            },
-                            {
                                 "Name": "onimaruMainDisplayerUID",
                                 "Type": "GameObjectUID",
                                 "Value": 15454915625292238557
+                            },
+                            {
+                                "Name": "fangAlternativeUID",
+                                "Type": "GameObjectUID",
+                                "Value": 15817475784441264431
                             },
                             {
                                 "Name": "onimaruPrimaryUID",
@@ -4727,9 +4727,9 @@
                                                                 "Script": 2365800644043909262,
                                                                 "Values": [
                                                                     {
-                                                                        "Name": "totalEffectTime",
-                                                                        "Type": "Float",
-                                                                        "Value": 0.30000001192092898
+                                                                        "Name": "skillParentObjectUID",
+                                                                        "Type": "GameObjectUID",
+                                                                        "Value": 798543100552288232
                                                                     },
                                                                     {
                                                                         "Name": "effectMember1UID",
@@ -4737,9 +4737,9 @@
                                                                         "Value": 15883592568867340109
                                                                     },
                                                                     {
-                                                                        "Name": "skillParentObjectUID",
-                                                                        "Type": "GameObjectUID",
-                                                                        "Value": 798543100552288232
+                                                                        "Name": "totalEffectTime",
+                                                                        "Type": "Float",
+                                                                        "Value": 0.30000001192092898
                                                                     },
                                                                     {
                                                                         "Name": "effectScale",
@@ -5859,9 +5859,9 @@
                                                                 "Script": 2365800644043909262,
                                                                 "Values": [
                                                                     {
-                                                                        "Name": "totalEffectTime",
-                                                                        "Type": "Float",
-                                                                        "Value": 0.30000001192092898
+                                                                        "Name": "effectMember1UID",
+                                                                        "Type": "GameObjectUID",
+                                                                        "Value": 9864750351798226571
                                                                     },
                                                                     {
                                                                         "Name": "skillParentObjectUID",
@@ -5869,9 +5869,9 @@
                                                                         "Value": 15205787348875484565
                                                                     },
                                                                     {
-                                                                        "Name": "effectMember1UID",
-                                                                        "Type": "GameObjectUID",
-                                                                        "Value": 9864750351798226571
+                                                                        "Name": "totalEffectTime",
+                                                                        "Type": "Float",
+                                                                        "Value": 0.30000001192092898
                                                                     },
                                                                     {
                                                                         "Name": "effectScale",
@@ -6946,9 +6946,9 @@
                                                                 "Script": 2365800644043909262,
                                                                 "Values": [
                                                                     {
-                                                                        "Name": "totalEffectTime",
-                                                                        "Type": "Float",
-                                                                        "Value": 0.30000001192092898
+                                                                        "Name": "effectMember1UID",
+                                                                        "Type": "GameObjectUID",
+                                                                        "Value": 5437062166387272075
                                                                     },
                                                                     {
                                                                         "Name": "skillParentObjectUID",
@@ -6956,9 +6956,9 @@
                                                                         "Value": 9689911803530019722
                                                                     },
                                                                     {
-                                                                        "Name": "effectMember1UID",
-                                                                        "Type": "GameObjectUID",
-                                                                        "Value": 5437062166387272075
+                                                                        "Name": "totalEffectTime",
+                                                                        "Type": "Float",
+                                                                        "Value": 0.30000001192092898
                                                                     },
                                                                     {
                                                                         "Name": "effectScale",
@@ -15956,9 +15956,9 @@
                                                                         "Value": 1.2999999523162842
                                                                     },
                                                                     {
-                                                                        "Name": "totalEffectTime",
-                                                                        "Type": "Float",
-                                                                        "Value": 0.30000001192092898
+                                                                        "Name": "effectMember1UID",
+                                                                        "Type": "GameObjectUID",
+                                                                        "Value": 9610141349852582707
                                                                     },
                                                                     {
                                                                         "Name": "skillParentObjectUID",
@@ -15966,9 +15966,9 @@
                                                                         "Value": 143186190469617065
                                                                     },
                                                                     {
-                                                                        "Name": "effectMember1UID",
-                                                                        "Type": "GameObjectUID",
-                                                                        "Value": 9610141349852582707
+                                                                        "Name": "totalEffectTime",
+                                                                        "Type": "Float",
+                                                                        "Value": 0.30000001192092898
                                                                     }
                                                                 ]
                                                             }
@@ -17083,9 +17083,9 @@
                                                                 "Script": 2365800644043909262,
                                                                 "Values": [
                                                                     {
-                                                                        "Name": "effectMember1UID",
-                                                                        "Type": "GameObjectUID",
-                                                                        "Value": 3963219241677085978
+                                                                        "Name": "totalEffectTime",
+                                                                        "Type": "Float",
+                                                                        "Value": 0.30000001192092898
                                                                     },
                                                                     {
                                                                         "Name": "skillParentObjectUID",
@@ -17093,9 +17093,9 @@
                                                                         "Value": 5555055677615523580
                                                                     },
                                                                     {
-                                                                        "Name": "totalEffectTime",
-                                                                        "Type": "Float",
-                                                                        "Value": 0.30000001192092898
+                                                                        "Name": "effectMember1UID",
+                                                                        "Type": "GameObjectUID",
+                                                                        "Value": 3963219241677085978
                                                                     },
                                                                     {
                                                                         "Name": "effectScale",
@@ -18170,9 +18170,9 @@
                                                                 "Script": 2365800644043909262,
                                                                 "Values": [
                                                                     {
-                                                                        "Name": "totalEffectTime",
-                                                                        "Type": "Float",
-                                                                        "Value": 0.30000001192092898
+                                                                        "Name": "skillParentObjectUID",
+                                                                        "Type": "GameObjectUID",
+                                                                        "Value": 6048103750015944221
                                                                     },
                                                                     {
                                                                         "Name": "effectMember1UID",
@@ -18180,9 +18180,9 @@
                                                                         "Value": 17350250101785716049
                                                                     },
                                                                     {
-                                                                        "Name": "skillParentObjectUID",
-                                                                        "Type": "GameObjectUID",
-                                                                        "Value": 6048103750015944221
+                                                                        "Name": "totalEffectTime",
+                                                                        "Type": "Float",
+                                                                        "Value": 0.30000001192092898
                                                                     },
                                                                     {
                                                                         "Name": "effectScale",
@@ -27644,9 +27644,9 @@
                                                 "Script": 2365800644043909262,
                                                 "Values": [
                                                     {
-                                                        "Name": "totalEffectTime",
-                                                        "Type": "Float",
-                                                        "Value": 0.30000001192092898
+                                                        "Name": "skillParentObjectUID",
+                                                        "Type": "GameObjectUID",
+                                                        "Value": 6813812700907944331
                                                     },
                                                     {
                                                         "Name": "effectMember1UID",
@@ -27654,9 +27654,9 @@
                                                         "Value": 142237690565832989
                                                     },
                                                     {
-                                                        "Name": "skillParentObjectUID",
-                                                        "Type": "GameObjectUID",
-                                                        "Value": 6813812700907944331
+                                                        "Name": "totalEffectTime",
+                                                        "Type": "Float",
+                                                        "Value": 0.30000001192092898
                                                     },
                                                     {
                                                         "Name": "effectScale",
@@ -27671,19 +27671,14 @@
                                                 "Script": 3614289951989680438,
                                                 "Values": [
                                                     {
-                                                        "Name": "progressBarUID",
-                                                        "Type": "GameObjectUID",
-                                                        "Value": 12115954895025687452
-                                                    },
-                                                    {
                                                         "Name": "secondBarEffectUID",
                                                         "Type": "GameObjectUID",
                                                         "Value": 2828224992148791890
                                                     },
                                                     {
-                                                        "Name": "firstBarEffectUID",
+                                                        "Name": "progressBarUID",
                                                         "Type": "GameObjectUID",
-                                                        "Value": 2046319754565682242
+                                                        "Value": 12115954895025687452
                                                     },
                                                     {
                                                         "Name": "minScale",
@@ -27693,6 +27688,11 @@
                                                             1.0,
                                                             1.0
                                                         ]
+                                                    },
+                                                    {
+                                                        "Name": "firstBarEffectUID",
+                                                        "Type": "GameObjectUID",
+                                                        "Value": 2046319754565682242
                                                     },
                                                     {
                                                         "Name": "thirdBarEffectUID",
@@ -29092,7 +29092,7 @@
                                                     1.0,
                                                     1.0,
                                                     1.0,
-                                                    0.800000011920929
+                                                    1.0
                                                 ],
                                                 "AlphaTransparency": true,
                                                 "IsFill": false,
@@ -34271,7 +34271,7 @@
                                                     1.0,
                                                     1.0,
                                                     1.0,
-                                                    0.800000011920929
+                                                    1.0
                                                 ],
                                                 "AlphaTransparency": true,
                                                 "IsFill": false,
@@ -40194,7 +40194,7 @@
                                                     1.0,
                                                     1.0,
                                                     1.0,
-                                                    0.800000011920929
+                                                    1.0
                                                 ],
                                                 "AlphaTransparency": true,
                                                 "IsFill": false,
