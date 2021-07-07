@@ -7,15 +7,13 @@
 
 EXPOSE_MEMBERS(UltimateFang) {
 	MEMBER(MemberType::FLOAT, radius),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangBulletUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID)
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangBulletUID)
 };
 
 GENERATE_BODY_IMPL(UltimateFang);
 
 void UltimateFang::Start() {
 
-	trail = GameplaySystems::GetResource<ResourcePrefab>(fangTrailUID);
 	bullet = GameplaySystems::GetResource<ResourcePrefab>(fangBulletUID);
 
 	GetOwner().Disable();
@@ -44,9 +42,12 @@ void UltimateFang::Update() {
 
 			float3 posFang = transformOwner->GetGlobalPosition();
 			float3 posTarget = transformTarget->GetGlobalPosition();
-			float3 dir = float3(posTarget.x - posFang.x, posTarget.y - posFang.y, posTarget.z - posFang.z).Normalized();
-			GameplaySystems::Instantiate(bullet, transformOwner->GetGlobalPosition() + float3(0, midHeight, 0), DirectionToQuat(dir));
-			GameplaySystems::Instantiate(trail,  transformOwner->GetGlobalPosition() + float3(0, midHeight, 0), DirectionToQuat(dir));
+			float3 dir = (posTarget - posFang).Normalized();
+			
+			GameObject* auxBullet =  GameplaySystems::Instantiate(bullet, transformOwner->GetGlobalPosition() + float3(0.0f, midHeight, 0.0f), (DirectionToQuat(dir) * float3x3::FromEulerXYZ(pi / 2, 0.0f, 0.0f)).ToQuat());
+			if (auxBullet->GetComponent<ComponentParticleSystem>()) {
+				auxBullet->GetComponent<ComponentParticleSystem>()->Play();
+			}
 		}
 	}
 	collisionedGameObject.clear();
