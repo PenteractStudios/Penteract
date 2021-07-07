@@ -6,10 +6,9 @@
 #include "Components/UI/ComponentText.h"
 
 // TODO:
-// Collisions with everything?
-// F outside dialoges should do nothing
 // IsBlocking to "pause" the gameplay
 // Transition effect between dialogue boxes
+// Dialog as struct
 
 EXPOSE_MEMBERS(DialogueManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fangTextObjectUID),
@@ -46,24 +45,24 @@ void DialogueManager::Start() {
 	}
 
 	// UPGRADES
-	dialoguesArray[0] = Dialogue(2, "Hey Fang, look at this.", &dialoguesArray[1]);
-	dialoguesArray[1] = Dialogue(1, "Hmm...\nIt looks like Milibot has been\nresearching in some\nnew technologies...", &dialoguesArray[2]);
-	dialoguesArray[2] = Dialogue(1, "I might be able to\nseize its power for ourselves\nif we find a couple more.", &dialoguesArray[3]);
-	dialoguesArray[3] = Dialogue(8, "", nullptr);
+	dialoguesArray[0] = Dialogue(ONIMARU, "Hey Fang, look at this.", &dialoguesArray[1]);
+	dialoguesArray[1] = Dialogue(FANG, "Hmm...\nIt looks like Milibot has been\nresearching in some\nnew technologies...", &dialoguesArray[2]);
+	dialoguesArray[2] = Dialogue(FANG, "I might be able to\nseize its power for ourselves\nif we find a couple more.", &dialoguesArray[3]);
+	dialoguesArray[3] = Dialogue(UPGRADES1, "", nullptr);
 
-	dialoguesArray[4] = Dialogue(9, "", nullptr);
+	dialoguesArray[4] = Dialogue(UPGRADES2, "", nullptr);
 
 	
-	dialoguesArray[5] = Dialogue(1, "I think I got it...\nYou can power it up this way,\nthen connect this here...\nand that there...", &dialoguesArray[6]);
-	dialoguesArray[6] = Dialogue(1, "Plug it in our core and...\nWHOAH! Oni, try this!", &dialoguesArray[7]);
-	dialoguesArray[7] = Dialogue(2, "I am not sure about this Fang...\nBut OK, I trust you.", &dialoguesArray[8]);
-	dialoguesArray[8] = Dialogue(10, "", nullptr);
+	dialoguesArray[5] = Dialogue(FANG, "I think I got it...\nYou can power it up this way,\nthen connect this here...\nand that there...", &dialoguesArray[6]);
+	dialoguesArray[6] = Dialogue(FANG, "Plug it in our core and...\nWHOAH! Oni, try this!", &dialoguesArray[7]);
+	dialoguesArray[7] = Dialogue(ONIMARU, "I am not sure about this Fang...\nBut OK, I trust you.", &dialoguesArray[8]);
+	dialoguesArray[8] = Dialogue(UPGRADES3, "", nullptr);
 
 	// SWAP DIALOGUE + ONIMARU TUTORIAL
-	dialoguesArray[9] = Dialogue(1, "Oni, you perform better\nin closed spaces.\nTake the lead here!", &dialoguesArray[10]);
-	dialoguesArray[10] = Dialogue(7, "", &dialoguesArray[11]);
-	dialoguesArray[11] = Dialogue(2, "OK Fang.\nWatch how it is done.", &dialoguesArray[12]);
-	dialoguesArray[12] = Dialogue(6, "", nullptr);
+	dialoguesArray[9] = Dialogue(FANG, "Oni, you perform better\nin closed spaces.\nTake the lead here!", &dialoguesArray[10]);
+	dialoguesArray[10] = Dialogue(TUTO_SWAP, "", &dialoguesArray[11]);
+	dialoguesArray[11] = Dialogue(ONIMARU, "OK Fang.\nWatch how it is done.", &dialoguesArray[12]);
+	dialoguesArray[12] = Dialogue(TUTO_ONIMARU, "", nullptr);
 
 }
 
@@ -288,21 +287,4 @@ void DialogueManager::RetrieveUIComponents(GameObject* current)
 	for (GameObject* child : current->GetChildren()) {
 		RetrieveUIComponents(child);
 	}
-}
-
-
-// ------------------------------------------ DIALOGUE
-DialogueManager::Dialogue::Dialogue()
-{
-}
-
-DialogueManager::Dialogue::Dialogue(int character_, const char* text_, Dialogue* nextDialogue_)
-{
-	character = character_;
-	text = text_;
-	nextDialogue = nextDialogue_;
-}
-
-DialogueManager::Dialogue::~Dialogue()
-{
 }

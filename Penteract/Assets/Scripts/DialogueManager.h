@@ -7,13 +7,26 @@ class DialogueManager : public Script
 {
 	GENERATE_BODY(DialogueManager);
 
-	class Dialogue {
-	public:
-		Dialogue();
-		Dialogue(int character, const char* text, Dialogue* nextDialogue);
-		~Dialogue();
-	public:
-		int character = 0; // 1 = Fang, 2 = Onimaru, 3 = Duke, 4 = Rosamonde, 5 = Tutorial Fang, 6 = Tutorial Oni, 7 = Tutorial Swap, 8 = Upgrades 1/3, 9 = Upgrades 2/3, 10 = Upgrades 3/3
+public:
+	enum DialogueWindow {
+		NONE = 0,
+		FANG = 1,
+		ONIMARU = 2,
+		DUKE = 3,
+		ROSAMONDE = 4,
+		TUTO_FANG = 5,
+		TUTO_ONIMARU = 6,
+		TUTO_SWAP = 7,
+		UPGRADES1 = 8,
+		UPGRADES2 = 9,
+		UPGRADES3 = 10
+	};
+
+	struct Dialogue {
+		Dialogue() {};
+		Dialogue(DialogueWindow character_, const char* text_, Dialogue* nextDialogue_) : character(character_), text(text_), nextDialogue(nextDialogue_) {};
+
+		DialogueWindow character = NONE; // 1 = Fang, 2 = Onimaru, 3 = Duke, 4 = Rosamonde, 5 = Tutorial Fang, 6 = Tutorial Oni, 7 = Tutorial Swap, 8 = Upgrades 1/3, 9 = Upgrades 2/3, 10 = Upgrades 3/3
 		const char* text = nullptr;
 		Dialogue* nextDialogue = nullptr;
 	};
