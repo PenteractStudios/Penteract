@@ -190,7 +190,7 @@ void Fang::trailDelay() {
 }
 
 bool Fang::CanDash() {
-	return isAlive && !dashing && !dashInCooldown;
+	return isAlive && !dashing && !dashInCooldown && !EMP->IsActive() && !ultimateOn;
 }
 
 void Fang::ActivateEMP() {
@@ -317,7 +317,7 @@ float Fang::GetRealUltimateCooldown()
 }
 
 bool Fang::CanShoot() {
-	return !shootingOnCooldown;
+	return !shootingOnCooldown && !ultimateOn;
 }
 
 void Fang::Shoot() {
