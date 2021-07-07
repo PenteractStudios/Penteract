@@ -10,20 +10,20 @@
 EXPOSE_MEMBERS(GodModeController) {
 	/* UI toggles*/
 	MEMBER(MemberType::GAME_OBJECT_UID, uiCanvasUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, spawnMeleeUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, spawnRangedUID),
-		/* Enemy groups*/
-		MEMBER(MemberType::GAME_OBJECT_UID, enemiesUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, debugEnemiesUID),
-		/* Cameras */
-		MEMBER(MemberType::GAME_OBJECT_UID, godCameraUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, gameCameraUID),
-		/* Player controller */
-		MEMBER(MemberType::GAME_OBJECT_UID, playerControllerUID),
-		/* Level Doors */
-		MEMBER(MemberType::GAME_OBJECT_UID, plazaDoorUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, cafeteriaDoorUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, bridgeDoorUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, spawnMeleeUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, spawnRangedUID),
+	/* Enemy groups*/
+	MEMBER(MemberType::GAME_OBJECT_UID, enemiesUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, debugEnemiesUID),
+	/* Cameras */
+	MEMBER(MemberType::GAME_OBJECT_UID, godCameraUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, gameCameraUID),
+	/* Player controller */
+	MEMBER(MemberType::GAME_OBJECT_UID, playerControllerUID),
+	/* Level Doors */
+	MEMBER(MemberType::GAME_OBJECT_UID, plazaDoorUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, cafeteriaDoorUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, bridgeDoorUID)
 };
 
 GENERATE_BODY_IMPL(GodModeController);
