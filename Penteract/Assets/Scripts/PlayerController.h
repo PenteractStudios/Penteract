@@ -22,10 +22,8 @@ struct TesseractEvent;
 
 // We should get these two values from the Character class
 
-#define ONIMARU_MAX_HEALTH 10.0f 
+#define ONIMARU_MAX_HEALTH 10.0f
 #define FANG_MAX_HEALTH 10.0f
-
-
 
 class PlayerController : public Script {
 	GENERATE_BODY(PlayerController);
@@ -45,7 +43,7 @@ public:
 	void SetNoCooldown(bool status);
 	int GetOverPowerMode();
 	bool IsPlayerDead() { return !playerFang.isAlive || !playerOnimaru.isAlive; }
-	void TakeDamage(bool ranged = false);
+	void TakeDamage(float damage);
 
 	void AddEnemyInMap(GameObject* enemy);
 	void RemoveEnemyFromMap(GameObject* enemy);
@@ -64,10 +62,12 @@ public:
 
 	//Fang
 	UID fangUID = 0;
-	UID fangTrailUID = 0;
+	UID fangTrailDashUID = 0;
+	UID fangTrailGunUID = 0;
 	UID fangLeftGunUID = 0;
 	UID fangRightGunUID = 0;
-	UID fangBulletUID = 0;
+	UID fangLeftBulletUID = 0;
+	UID fangRightBulletUID = 0;
 	UID EMPUID = 0;
 	UID fangUltimateUID = 0;
 
@@ -76,10 +76,9 @@ public:
 	UID onimaruParticleUID = 0;
 	UID onimaruBulletUID = 0;
 	UID onimaruGunUID = 0;
-	UID onimaruUltimateProjectileOriginUID = 0;
 	UID onimaruRightHandUID = 0;
 	UID onimaruShieldUID = 0;
-
+	UID onimaruUltimateBulletUID = 0;
 	//HUD
 	UID canvasUID = 0;
 	float fangRecoveryRate = 1.0f;
@@ -95,19 +94,12 @@ public:
 	float cameraOffsetX = 0.f;
 	bool useSmoothCamera = true;
 	float smoothCameraSpeed = 5.0f;
-	//float maxOnimaruBulletSpread = 5.0f;
 
 	//Switch
 	UID switchParticlesUID = 0;
 	float switchCooldown = 5.f;
 	bool switchInProgress = false;
 	float switchDelay = 0.37f;
-
-	/* Fang & onimaru damage */
-	//split
-	float rangedDamageTaken = 1.0f;
-	float meleeDamageTaken = 1.0f;
-
 
 private:
 	void CheckCoolDowns();
