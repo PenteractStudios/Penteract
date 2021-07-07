@@ -79,6 +79,7 @@ public:
 	UID onimaruUltimateProjectileOriginUID = 0;
 	UID onimaruRightHandUID = 0;
 	UID onimaruShieldUID = 0;
+	UID onimaruBlastEffectsUID = 0;
 
 	//HUD
 	UID canvasUID = 0;

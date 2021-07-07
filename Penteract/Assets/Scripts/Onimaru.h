@@ -62,11 +62,12 @@ public:
 	float blastCooldown = 7.f;
 	float blastDistance = 15.f;
 	float blastAngle = 50.f;
+	float blastDelay = 0.6;
 
 public:
 	// ------- Contructors ------- //
 	Onimaru() {};
-	void Init(UID onimaruUID = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0, UID shieldUID = 0, UID onimaruTransformForUltimateProjectileOriginUID = 0, UID cameraUID = 0, UID canvasUID = 0, float maxSpread = 5.0f);
+	void Init(UID onimaruUID = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0, UID shieldUID = 0, UID onimaruTransformForUltimateProjectileOriginUID = 0, UID onimaruBlastEffectsUID = 0, UID cameraUID = 0, UID canvasUID = 0, float maxSpread = 5.0f);
 	void Update(bool lockMovement = false, bool lockRotation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	bool CanSwitch() const override;
@@ -117,7 +118,6 @@ private:
 
 
 	// Blast ability
-	float blastDuration = 1.5f;
 	float currentBlastDuration = 0.f;
 	float blastCooldownRemaining = 0.f;
 	float blastRemaining = 0.f;

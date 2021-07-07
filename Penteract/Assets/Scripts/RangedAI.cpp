@@ -30,6 +30,8 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.timeToDie),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackDistance),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackSpeed),
 	MEMBER(MemberType::FLOAT, attackSpeed),
 	MEMBER(MemberType::FLOAT, fleeingRange),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, trailPrefabUID),
@@ -561,10 +563,12 @@ void RangedAI::UpdatePushBackPosition() {
 	if (agent) {
 		enemyPos += direction * rangerGruntCharacter.pushBackSpeed * Time::GetDeltaTime();
 		agent->SetMoveTarget(enemyPos, false);
+		agent->SetMaxSpeed(rangerGruntCharacter.pushBackSpeed);
 		float distance = enemyPos.Distance(initialPos);
 		currentPushBackDistance += distance;
 
 		if (currentPushBackDistance >= rangerGruntCharacter.pushBackDistance) {
+			agent->SetMaxSpeed(rangerGruntCharacter.movementSpeed);
 			DisableBlastPushBack();
 			currentPushBackDistance = 0.f;
 		}
