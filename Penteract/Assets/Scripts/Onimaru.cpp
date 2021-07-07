@@ -20,6 +20,7 @@ void Onimaru::Shoot() {
 	if (!gunTransform || !transformForUltimateProjectileOrigin) return;
 	if (CanShoot()) {
 		shootingOnCooldown = true;
+	//	shooting = true;
 		attackCooldownRemaining = 1.f / attackSpeed;
 
 		//NullRef on ultimate values
@@ -237,7 +238,7 @@ void Onimaru::OnAnimationSecondaryFinished() {
 	}
 }
 
-void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID onimaruRightHandUID, UID shieldUID, UID onimaruTransformForUltimateProjectileOriginUID, UID cameraUID, UID canvasUID, float maxSpread_) {
+void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID onimaruRightHandUID, UID shieldUID, UID onimaruUltimateBulletUID, UID cameraUID, UID canvasUID, float maxSpread_) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(onimaruUID);
 	if (characterGameObject && characterGameObject->GetParent()) {
@@ -263,6 +264,13 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 				bullet->Play();
 			}
 		}
+		GameObject* ultimateBulletAux = GameplaySystems::GetGameObject(onimaruUltimateBulletUID);
+		if (bulletAux) {
+			ultimateBullet = ultimateBulletAux->GetComponent<ComponentParticleSystem>();
+			if (ultimateBullet) {
+				//ultimateBullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
+			}
+		}
 	}
 
 	originalAttackSpeed = attackSpeed;
@@ -282,14 +290,14 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 		shieldGO->Disable();
 	}
 
-	GameObject* onimaruObjForUltProj = GameplaySystems::GetGameObject(onimaruTransformForUltimateProjectileOriginUID);
+	/*GameObject* onimaruObjForUltProj = GameplaySystems::GetGameObject(onimaruTransformForUltimateProjectileOriginUID);
 	if (onimaruObjForUltProj) {
 		transformForUltimateProjectileOrigin = onimaruObjForUltProj->GetComponent<ComponentTransform>();
 	}
 
 	if (transformForUltimateProjectileOrigin == nullptr) {
 		transformForUltimateProjectileOrigin = gunTransform;
-	}
+	}*/
 
 	if (characterGameObject) {
 		//Get audio sources
@@ -395,8 +403,13 @@ void Onimaru::Update(bool lockMovement, bool lockRotation) {
 			if (ultimateTimeRemaining > 0) {
 				ultimateTimeRemaining -= Time::GetDeltaTime();
 				Shoot();
+				shooting = true;
+				ultimateBullet->PlayChildParticles();
+				bullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
+				
 				if (ultimateTimeRemaining <= 0) {
 					FinishUltimate();
+					ultimateBullet->StopChildParticles();
 				}
 			}
 		}
@@ -410,10 +423,12 @@ void Onimaru::Update(bool lockMovement, bool lockRotation) {
 					FadeShield();
 				}
 			}
-			if (Input::GetMouseButtonRepeat(0) || Input::GetMouseButtonDown(0)) {
-				//7bullet->Play();
-					//bullet->SetParticlesPerSecond(float2(attackSpeed, attackSpeed));
+
+			if (Input::GetMouseButtonDown(0)) {
 				if (!shooting) {
+					shooting = true;
+					bullet->Play();
+					bullet->SetParticlesPerSecond(float2(attackSpeed, attackSpeed));
 					if (compAnimation) {
 						if (!shield->GetIsActive()) {
 							if (compAnimation->GetCurrentState()) {
@@ -430,11 +445,12 @@ void Onimaru::Update(bool lockMovement, bool lockRotation) {
 				else {
 					Shoot();
 				}
-				shooting = true;
+				//shooting = true;
 			}
 		}
 
 		if (Input::GetMouseButtonUp(0)) {
+			shooting = false;
 			if (compAnimation) {
 				if (shield->GetIsActive()) {
 					if (compAnimation->GetCurrentState() && compAnimation->GetCurrentStateSecondary()) {
@@ -448,15 +464,15 @@ void Onimaru::Update(bool lockMovement, bool lockRotation) {
 				}
 				bullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
 			}
-			shooting = false;
 		}
 		if (CanBlast()) {
 			if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_Q)) {
 				blastInUse = true;
 				if (shooting) {
-					shooting = false;
 					if (compAnimation) {
-						compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+						if (compAnimation->GetCurrentState() && compAnimation->GetCurrentStateSecondary()) {
+							compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+						}
 					}
 				}
 				if (hudControllerScript) {

@@ -63,7 +63,6 @@ public:
 
 	Quat GetSlightRandomSpread(float minValue, float maxValue) const;
 
-
 	// Abilities' cooldowns
 	float GetRealBlastCooldown();
 	float GetRealShieldCooldown();
@@ -97,7 +96,7 @@ private:
 
 	bool blastInUse = false;
 	bool ultimateInUse = false;
-
+	bool shooting = false;
 
 	// Blast ability
 	float blastDuration = 1.5f;
@@ -109,7 +108,6 @@ private:
 
 	// HUD
 	HUDController* hudControllerScript = nullptr;
-
 
 	std::vector<GameObject*> enemiesInMap;
 private:
