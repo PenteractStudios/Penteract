@@ -801,7 +801,7 @@
                         "Pitch": 1.0,
                         "Gain": 0.30000001192092898,
                         "Mute": false,
-                        "Looping": true,
+                        "Looping": false,
                         "AudioClipId": 8882859392463384799,
                         "SpatialBlend": 0,
                         "SourceType": 0,
