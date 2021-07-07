@@ -16,6 +16,22 @@ bool Onimaru::CanBlast() {
 	return !blastInCooldown && !IsShielding() && !ultimateInUse;
 }
 
+void Onimaru::GetHit(float damage_) {
+	//We assume that the player is always alive when this method gets called, so no need to check if character was alive before taking lives
+	if (cameraController) {
+		cameraController->StartShake();
+	}
+
+	lifePoints -= damage_;
+	if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::HIT)]) onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::HIT)]->Play();
+	isAlive = lifePoints > 0.0f;
+
+	if (!isAlive) {
+		if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::DEATH)]) onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::DEATH)]->Play();
+		OnDeath();
+	}
+}
+
 void Onimaru::Shoot() {
 	if (!gunTransform || !transformForUltimateProjectileOrigin) return;
 	if (CanShoot()) {
@@ -23,14 +39,14 @@ void Onimaru::Shoot() {
 		attackCooldownRemaining = 1.f / attackSpeed;
 
 		//NullRef on ultimate values
-		if (playerAudios[static_cast<int>(AudioPlayer::SPECIAL_SHOOT)] == nullptr) {
-			playerAudios[static_cast<int>(AudioPlayer::SPECIAL_SHOOT)] = playerAudios[static_cast<int>(AudioPlayer::SHOOT)];
+		if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SPECIAL_SHOOT)] == nullptr) {
+			onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SPECIAL_SHOOT)] = onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHOOT)];
 		}
 		if (ultimateBullet == nullptr) {
 			ultimateBullet = bullet;
 		}
 
-		ComponentAudioSource* audioSourceToPlay = !ultimateInUse ? playerAudios[static_cast<int>(AudioPlayer::SHOOT)] : playerAudios[static_cast<int>(AudioPlayer::SPECIAL_SHOOT)];
+		ComponentAudioSource* audioSourceToPlay = !ultimateInUse ? onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHOOT)] : onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SPECIAL_SHOOT)];
 		ResourcePrefab* bulletToInstantiate = !ultimateInUse ? bullet : ultimateBullet;
 		float3 projectilePos = ultimateInUse ? transformForUltimateProjectileOrigin->GetGlobalPosition() : gunTransform->GetGlobalPosition();
 
@@ -128,9 +144,9 @@ void Onimaru::StartUltimate() {
 		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(ULTI_INTRO)]);
 	}
 
-	if (playerAudios[static_cast<int>(AudioPlayer::THIRD_ABILITY)] == nullptr) {
-		if (!playerAudios[static_cast<int>(AudioPlayer::THIRD_ABILITY)]->IsPlaying()) {
-			playerAudios[static_cast<int>(AudioPlayer::THIRD_ABILITY)]->Play();
+	if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::ULTIMATE)] == nullptr) {
+		if (!onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::ULTIMATE)]->IsPlaying()) {
+			onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::ULTIMATE)]->Play();
 		}
 	}
 
@@ -227,7 +243,21 @@ void Onimaru::OnAnimationSecondaryFinished() {
 			}
 		}
 	}
+}
 
+void Onimaru::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
+	if (stateMachineEnum == StateMachineEnum::PRINCIPAL) {
+		if (std::strcmp(eventName, "FootstepRight")) {
+			if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_RIGHT)]) {
+				onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_RIGHT)]->Play();
+			}
+		}
+		else if (std::strcmp(eventName, "FootstepLeft")) {
+			if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_LEFT)]) {
+				onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_LEFT)]->Play();
+			}
+		}
+	}
 }
 
 void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID onimaruRightHandUID, UID shieldUID, UID onimaruTransformForUltimateProjectileOriginUID, UID cameraUID, UID canvasUID, float maxSpread_) {
@@ -284,7 +314,7 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 		int i = 0;
 
 		for (ComponentAudioSource& src : characterGameObject->GetComponents<ComponentAudioSource>()) {
-			if (i < static_cast<int>(AudioPlayer::TOTAL)) playerAudios[i] = &src;
+			if (i < static_cast<int>(ONIMARU_AUDIOS::TOTAL)) onimaruAudios[i] = &src;
 			i++;
 		}
 
@@ -337,8 +367,8 @@ void Onimaru::InitShield() {
 				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHOOTSHIELD)]);
 			}
 		}
-		if (playerAudios[static_cast<int>(AudioPlayer::FIRST_ABILITY)]) {
-			playerAudios[static_cast<int>(AudioPlayer::FIRST_ABILITY)]->Play();
+		if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHIELD_ON)]) {
+			onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHIELD_ON)]->Play();
 		}
 		shieldGO->Enable();
 	}
@@ -360,14 +390,13 @@ void Onimaru::FadeShield() {
 			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHOOTING)]);
 		}
 	}
-	if (playerAudios[static_cast<int>(AudioPlayer::DEATH)]) {
-		playerAudios[static_cast<int>(AudioPlayer::DEATH)]->Play();
+	if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHIELD_OFF)]) {
+		onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHIELD_OFF)]->Play();
 	}
 	shieldGO->Disable();
 }
 
-
-void Onimaru::Update(bool lockMovement, bool lockOrientation) {
+void Onimaru::Update(bool lockMovement, bool lockRotation) {
 	if (shield == nullptr || shieldGO == nullptr) return;
 	if (isAlive) {
 		Player::Update(ultimateInUse, false);

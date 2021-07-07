@@ -9,6 +9,21 @@ class Shield;
 class Onimaru : public Player {
 public:
 
+	enum class ONIMARU_AUDIOS {
+		SHIELD_ON,
+		SHIELD_BLOCK,
+		SHIELD_OFF,
+		ENERGY_BLAST,
+		ULTIMATE,
+		SHOOT,
+		SPECIAL_SHOOT,
+		FOOTSTEP_RIGHT,
+		FOOTSTEP_LEFT,
+		HIT,
+		DEATH,
+		TOTAL
+	};
+
 	enum ONIMARU_STATES {
 		IDLE,
 		RUN_BACKWARD,
@@ -52,12 +67,14 @@ public:
 	// ------- Contructors ------- //
 	Onimaru() {};
 	void Init(UID onimaruUID = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0, UID shieldUID = 0, UID onimaruTransformForUltimateProjectileOriginUID = 0, UID cameraUID = 0, UID canvasUID = 0, float maxSpread = 5.0f);
-	void Update(bool lockMovement = false, bool lockOrientation = false) override;
+	void Update(bool lockMovement = false, bool lockRotation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	bool CanSwitch() const override;
 	void OnAnimationFinished() override;
+	void GetHit(float damage_) override;
 	void OnDeath() override;
 	void OnAnimationSecondaryFinished() override;
+	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
 
 	float GetRealUltimateCooldown();
 
@@ -109,6 +126,9 @@ private:
 
 	// HUD
 	HUDController* hudControllerScript = nullptr;
+
+	//Audio
+	ComponentAudioSource* onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::TOTAL)] = { nullptr };
 
 
 	std::vector<GameObject*> enemiesInMap;

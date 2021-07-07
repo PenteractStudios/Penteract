@@ -17,17 +17,6 @@ enum class MovementDirection {
 	UP_RIGHT = 8
 };
 
-enum class AudioPlayer {
-	FIRST_ABILITY, //dash, shield
-	SECOND_ABILITY, //EMP Field , Energy Blast
-	THIRD_ABILITY, // Ultimate
-	SHOOT,
-	HIT,
-	DEATH,
-	SPECIAL_SHOOT,
-	TOTAL
-};
-
 class Player : public Character {
 public:
 	// ------- Contructors ------- //
@@ -50,7 +39,7 @@ public:
 	MovementDirection GetInputMovementDirection() const;
 	float3 GetDirection() const;
 	virtual void Shoot() {}
-	virtual void Update(bool lockMovement = false, bool lockOrientation = false);
+	virtual void Update(bool lockMovement = false, bool lockRotation = false);
 	virtual void CheckCoolDowns(bool noCooldownMode = false) {}
 	virtual bool CanSwitch() const = 0;
 	
@@ -75,7 +64,6 @@ public:
 	float3 lookAtMousePlanePosition = float3(0, 0, 0);
 	ComponentCamera* lookAtMouseCameraComp = nullptr;
 	CameraController* cameraController = nullptr;
-	ComponentAudioSource* playerAudios[static_cast<int>(AudioPlayer::TOTAL)] = { nullptr };
 	float3 facePointDir = float3(0, 0, 0);
 	MovementDirection movementInputDirection = MovementDirection::NONE;
 	ComponentTransform* playerMainTransform = nullptr;

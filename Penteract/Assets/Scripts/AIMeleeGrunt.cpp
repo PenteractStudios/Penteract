@@ -188,6 +188,8 @@ void AIMeleeGrunt::Update() {
 			if (playerController) {
 				if (playerController->playerOnimaru.characterGameObject->IsActive()) {
 					playerController->playerOnimaru.IncreaseUltimateCounter();
+				} else if (playerController->playerFang.characterGameObject->IsActive()) {
+					playerController->playerFang.IncreaseUltimateCounter();
 				}
 			}
 
@@ -237,6 +239,17 @@ void AIMeleeGrunt::OnAnimationSecondaryFinished() {
 			}
 		}
 		state = AIState::IDLE;
+	}
+}
+
+void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
+	if (stateMachineEnum == StateMachineEnum::PRINCIPAL) {
+		if (eventName == "FootstepRight") {
+			if (audios[static_cast<int>(AudioType::FOOTSTEP_RIGHT)]) audios[static_cast<int>(AudioType::FOOTSTEP_RIGHT)]->Play();
+		}
+		else if (eventName == "FootstepLeft") {
+			if (audios[static_cast<int>(AudioType::FOOTSTEP_LEFT)]) audios[static_cast<int>(AudioType::FOOTSTEP_LEFT)]->Play();
+		}
 	}
 }
 

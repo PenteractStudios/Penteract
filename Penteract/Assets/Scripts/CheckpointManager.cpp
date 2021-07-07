@@ -19,6 +19,16 @@ EXPOSE_MEMBERS(CheckpointManager) {
 GENERATE_BODY_IMPL(CheckpointManager);
 
 void CheckpointManager::Start() {
+
+	/* Audio */
+	selectable = GetOwner().GetComponent<ComponentSelectable>();
+
+	int i = 0;
+	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
+		if (i < static_cast<int>(UIAudio::TOTAL)) audios[i] = &src;
+		++i;
+	}
+
 	//Error prevention
 	if (checkpoint < 0 || checkpoint > N_CHECKPOINTS) {
 		checkpoint = 0;
@@ -41,6 +51,8 @@ void CheckpointManager::Start() {
 	if (!transform) return;
 
 	transform->SetGlobalPosition(runtimeCheckpointPositions[checkpoint]);
+
+
 }
 
 void CheckpointManager::CheckDistanceWithCheckpoints() {
@@ -91,5 +103,36 @@ void CheckpointManager::Update() {
 	/////////////////////////////////////Debug function (GODMODE?)/////////////////////////////////////////
 
 	timeBetweenChecksCounter += Time::GetDeltaTime();
+
+	/* Audio sounds */
+	if (selectable) {
+		ComponentEventSystem* eventSystem = UserInterface::GetCurrentEventSystem();
+		if (eventSystem) {
+			ComponentSelectable* hoveredComponent = eventSystem->GetCurrentlyHovered();
+			if (hoveredComponent) {
+				bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
+				if (hovered) {
+					if (playHoveredAudio) {
+						PlayAudio(UIAudio::HOVERED);
+						playHoveredAudio = false;
+					}
+				}
+				else {
+					playHoveredAudio = true;
+				}
+			}
+			else {
+				playHoveredAudio = true;
+			}
+		}
+	}
+}
+
+void CheckpointManager::OnButtonClick() {
+	PlayAudio(UIAudio::CLICKED);
+}
+
+void CheckpointManager::PlayAudio(UIAudio type) {
+	if (audios[static_cast<int>(type)]) audios[static_cast<int>(type)]->Play();
 }
 

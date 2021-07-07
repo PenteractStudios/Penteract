@@ -73,6 +73,16 @@ void PlayerDeath::OnAnimationSecondaryFinished() {
 	}
 }
 
+void PlayerDeath::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
+	if (playerController) {
+		if (playerController->playerFang.IsActive()) {
+			playerController->playerFang.OnAnimationEvent(stateMachineEnum, eventName);
+		} else {
+			playerController->playerOnimaru.OnAnimationEvent(stateMachineEnum, eventName);
+		}
+	}
+}
+
 void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 
 	if (collidedWith.name == "RangerProjectile") {

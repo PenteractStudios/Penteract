@@ -69,6 +69,8 @@ public:
 	UID fangRightGunUID = 0;
 	UID fangBulletUID = 0;
 	UID EMPUID = 0;
+	UID fangUltimateUID = 0;
+
 	//Onimaru
 	UID onimaruUID = 0;
 	UID onimaruParticleUID = 0;
@@ -134,5 +136,5 @@ private:
 	ComponentTransform* cameraTransform = nullptr;
 
 	//Audio
-	ComponentAudioSource* audios[static_cast<int>(AudioPlayer::TOTAL)] = { nullptr };
+	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
 };
