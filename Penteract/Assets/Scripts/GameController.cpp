@@ -21,6 +21,7 @@ EXPOSE_MEMBERS(GameController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, pauseUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, hudUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, settingsPlusUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dialoguesUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, godModeControllerUID),
 	MEMBER(MemberType::FLOAT, speed),
 	MEMBER(MemberType::FLOAT, rotationSpeedX),
@@ -49,6 +50,7 @@ void GameController::Start() {
 	pauseCanvas = GameplaySystems::GetGameObject(pauseUID);
 	hudCanvas = GameplaySystems::GetGameObject(hudUID);
 	settingsCanvas = GameplaySystems::GetGameObject(settingsPlusUID);
+	dialogueCanvas = GameplaySystems::GetGameObject(dialoguesUID);
 
 	if (gameCamera) {
 		camera = gameCamera->GetComponent<ComponentCamera>();
@@ -262,6 +264,10 @@ void GameController::ClearPauseMenus() {
 		settingsCanvas->Disable();
 	}
 
+	if (dialogueCanvas) {
+		dialogueCanvas->Enable();
+	}
+
 	if (hudCanvas) {
 		hudCanvas->Enable();
 	}
@@ -271,6 +277,10 @@ void GameController::EnablePauseMenus()
 {
 	if (hudCanvas) {
 		hudCanvas->Disable();
+	}
+
+	if (dialogueCanvas) {
+		dialogueCanvas->Disable();
 	}
 
 	if (pauseCanvas) {

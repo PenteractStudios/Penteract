@@ -29,9 +29,12 @@ public:
 	UID staticCamera3UID = 0;
 	UID staticCamera4UID = 0;
 	UID playerUID = 0;
+
 	UID pauseUID = 0;
 	UID hudUID = 0;
 	UID settingsPlusUID = 0;
+	UID dialoguesUID = 0;
+
 	UID godModeControllerUID = 0;
 
 	float speed = 50.f;
@@ -59,6 +62,7 @@ private:
 	GameObject* pauseCanvas = nullptr;
 	GameObject* hudCanvas = nullptr;
 	GameObject* settingsCanvas = nullptr;
+	GameObject* dialogueCanvas = nullptr;
 
 	GameObject* godModeController = nullptr;
 
