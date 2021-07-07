@@ -77,12 +77,8 @@ void Onimaru::Blast() {
 						float angle = 0.f;
 						angle = RadToDeg(playerMainTransform->GetFront().AngleBetweenNorm(direction));
 						if (angle <= blastAngle / 2.0f) {
-							Debug::Log("Hit. Angle: %s", std::to_string(angle));
 							if (meleeScript) meleeScript->EnableBlastPushBack();
 							else if (rangedScript) rangedScript->EnableBlastPushBack();
-						}
-						else {
-							Debug::Log("Miss. Angle: %s", std::to_string(angle));
 						}
 					}
 					else {
@@ -225,7 +221,6 @@ bool Onimaru::CanSwitch() const {
 void Onimaru::OnAnimationSecondaryFinished() {
 	if (compAnimation) {
 		if (blastInUse) {
-			Debug::Log("Finish blast");
 			blastInUse = false;
 			blastInCooldown = true;
 			currentBlastDuration = 0.f;
