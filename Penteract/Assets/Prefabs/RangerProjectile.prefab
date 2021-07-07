@@ -38,7 +38,7 @@
                     {
                         "Name": "speed",
                         "Type": "Int",
-                        "Value": 40
+                        "Value": 20
                     },
                     {
                         "Name": "life",

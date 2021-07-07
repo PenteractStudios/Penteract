@@ -101,8 +101,8 @@ void SwapCharacterDisplayerAnimation::Update() {
 		// Swaps second character
 		else if(currentTime > durationAndBreakTimes && currentTime <= (durationAndBreakTimes + swappingDuration)) {
 			GameObject* target = isFang ? fangPrimary : onimaruPrimary;
-			SwapAnimation(target, true, true, currentTime, durationAndBreakTimes + swappingDuration);
-			SwapAnimation(target == fangPrimary ? onimaruAlternative : fangAlternative, false, true, currentTime, durationAndBreakTimes + swappingDuration);
+			SwapAnimation(target, true, true, currentTime - durationAndBreakTimes, swappingDuration);
+			SwapAnimation(target == fangPrimary ? onimaruAlternative : fangAlternative, false, true, currentTime - durationAndBreakTimes, swappingDuration);
 		}
 		else if(currentTime > (durationAndBreakTimes + swappingDuration)) {
 			animationSwapFinished = true;
@@ -144,7 +144,7 @@ void SwapCharacterDisplayerAnimation::SwapAnimation(GameObject* targetCanvas, bo
 	}
 	else {
 		transform->SetScale(float3::Lerp(initialScaleCanvas, float3(initialScaleCanvas.x, 0, initialScaleCanvas.z), currentTime / maxTime));
-		transform->SetPosition(float3::Lerp(transform->GetPosition(), float3(transform->GetPosition().x, isMain ? positionToLerpSwapMain : positionToLerpSwapAlternative, transform->GetPosition().z), currentTime / maxTime));
+		transform->SetPosition(float3::Lerp(isMain ? initialPositionMainCanvas : initialPositionAlternativeCanvas, float3(transform->GetPosition().x, isMain ? positionToLerpSwapMain : positionToLerpSwapAlternative, transform->GetPosition().z), currentTime / maxTime));
 	}
 }
 

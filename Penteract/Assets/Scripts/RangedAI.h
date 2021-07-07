@@ -25,6 +25,8 @@ public:
 	enum class AudioType {
 		SPAWN,
 		SHOOT,
+		FOOTSTEP_RIGHT,
+		FOOTSTEP_LEFT,
 		HIT,
 		DEATH,
 		TOTAL
@@ -34,6 +36,7 @@ public:
 	void Update() override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
+	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override; //This is commented until merge with collisions
 	void ShootPlayerInRange(); //Sets in motion the shooting at the player, if found and close enough
 
