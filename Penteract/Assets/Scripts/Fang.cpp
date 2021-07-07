@@ -69,7 +69,7 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 	GameObject* fangUltimateGameObject = GameplaySystems::GetGameObject(fangUltimateUID);
 	if (fangUltimateGameObject) {
 		ultimateScript = GET_SCRIPT(fangUltimateGameObject, UltimateFang);
-		ultimateCooldownRemaining = ultimateCooldown;
+		ultimateCooldownRemaining = 0;
 	}
 }
 
