@@ -131,6 +131,7 @@ struct ProgramStandard : public Program {
 	int depthMapTextureLocation = -1;
 
 	int ssaoTextureLocation = -1;
+	int ssaoDirectLightingStrengthLocation = -1;
 
 	int tilingLocation = -1;
 	int offsetLocation = -1;
@@ -200,6 +201,8 @@ struct ProgramSSAO : Program {
 	ProgramSSAO(unsigned program);
 
 	int projLocation = -1;
+
+	int samplesNumberLocation = -1;
 
 	int positionsLocation = -1;
 	int normalsLocation = -1;
