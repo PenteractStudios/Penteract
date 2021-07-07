@@ -4,7 +4,8 @@
 #include "GameplaySystems.h"
 EXPOSE_MEMBERS(TrailScript) {
 	MEMBER(MemberType::INT, speed),
-		MEMBER(MemberType::FLOAT, life)
+		MEMBER(MemberType::FLOAT, life),
+		MEMBER(MemberType::FLOAT, offsetPosition)
 };
 
 GENERATE_BODY_IMPL(TrailScript);
@@ -13,6 +14,8 @@ void TrailScript::Start() {
 }
 
 void TrailScript::Update() {
+
+
 	if (life >= 0) {
 		life -= Time::GetDeltaTime();
 		ComponentTransform* transform = GetOwner().GetComponent<ComponentTransform>();

@@ -32,15 +32,15 @@ void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, 
 		}
 		trailGun = GameplaySystems::GetResource<ResourcePrefab>(trailGunUID);
 
-		GameObject* rightBulletAux = GameplaySystems::GetGameObject(rightBulletUID);
+		rightBulletAux = GameplaySystems::GetGameObject(rightBulletUID);
 		if (rightBulletAux) {
 			rightBullet = rightBulletAux->GetComponent<ComponentParticleSystem>();
-			rightBullet->Stop();
+
 		}
-		GameObject* leftBulletAux = GameplaySystems::GetGameObject(leftBulletUID);
+		leftBulletAux = GameplaySystems::GetGameObject(leftBulletUID);
 		if (leftBulletAux) {
 			leftBullet = leftBulletAux->GetComponent<ComponentParticleSystem>();
-			leftBullet->Stop();
+
 		}
 		if (compAnimation) {
 			currentState = compAnimation->GetCurrentState();
@@ -185,7 +185,7 @@ void Fang::trailDelay() {
 	}
 	else {
 		hasDashed = false;
-		if(trailDash)trailDash->Stop();
+		if (trailDash)trailDash->Stop();
 	}
 }
 

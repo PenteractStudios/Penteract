@@ -34,11 +34,11 @@
                 "Type": "Particle",
                 "Active": true,
                 "DrawGizmo": true,
-                "Duration": 1.0,
+                "Duration": 50.0,
                 "Looping": false,
                 "StartDelay": [
                     0.0,
-                    0.0
+                    0.5
                 ],
                 "LifeRM": 0,
                 "Life": [
@@ -139,12 +139,22 @@
                     {
                         "Name": "speed",
                         "Type": "Int",
-                        "Value": 50
+                        "Value": 20
                     },
                     {
                         "Name": "life",
                         "Type": "Float",
-                        "Value": 0.5
+                        "Value": 2.0
+                    },
+                    {
+                        "Name": "offsetTime",
+                        "Type": "Float",
+                        "Value": 0.0
+                    },
+                    {
+                        "Name": "offsetPosition",
+                        "Type": "Float",
+                        "Value": 0.0
                     }
                 ]
             }

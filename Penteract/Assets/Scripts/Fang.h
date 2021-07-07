@@ -87,7 +87,8 @@ private:
 	ResourcePrefab* trailGun = nullptr;
 	ComponentParticleSystem* rightBullet = nullptr;
 	ComponentParticleSystem* leftBullet = nullptr;
-
+	GameObject* rightBulletAux = nullptr;
+	GameObject* leftBulletAux = nullptr;
 	//Movement
 	MovementDirection dashMovementDirection = MovementDirection::NONE;
 

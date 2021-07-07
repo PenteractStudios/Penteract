@@ -43,8 +43,8 @@
                         "Active": true,
                         "Position": [
                             0.01788330078125,
-                            -1.8374433517456055,
-                            0.004547119140625
+                            -1.8325550556182862,
+                            0.004546642303466797
                         ],
                         "Rotation": [
                             -0.37990131974220278,
@@ -83,11 +83,11 @@
                     },
                     {
                         "Type": "SphereCollider",
-                        "Active": false,
+                        "Active": true,
                         "colliderType": 2,
                         "layerType": 2,
                         "mass": 1.0,
-                        "radius": 6.178999900817871,
+                        "radius": 6.214000225067139,
                         "centerOffset": [
                             0.0,
                             0.0,
@@ -107,9 +107,9 @@
                                 "Type": "Transform",
                                 "Active": true,
                                 "Position": [
-                                    0.008026123046875,
-                                    0.007080078125,
-                                    24.275758743286134
+                                    0.013153076171875,
+                                    0.00836181640625,
+                                    18.020292282104493
                                 ],
                                 "Rotation": [
                                     0.0,
@@ -134,7 +134,7 @@
                                 "colliderType": 2,
                                 "layerType": 2,
                                 "mass": 1.0,
-                                "radius": 1.4800000190734864,
+                                "radius": 2.2300000190734865,
                                 "centerOffset": [
                                     0.0,
                                     0.0,
@@ -148,14 +148,14 @@
                                 "Script": 8700738987126077181,
                                 "Values": [
                                     {
-                                        "Name": "barrelUID",
-                                        "Type": "GameObjectUID",
-                                        "Value": 18337460025082955316
-                                    },
-                                    {
                                         "Name": "BarrelUID",
                                         "Type": "GameObjectUID",
                                         "Value": 525968066063556863
+                                    },
+                                    {
+                                        "Name": "barrelUID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 103221065364286827
                                     },
                                     {
                                         "Name": "cameraUID",
@@ -165,7 +165,7 @@
                                     {
                                         "Name": "particlesUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 15521854794254235727
+                                        "Value": 7704110058935641183
                                     },
                                     {
                                         "Name": "timeToDestroy",
