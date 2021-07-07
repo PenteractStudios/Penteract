@@ -85,14 +85,10 @@ void GameController::Update() {
 
 	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE)) {
 		if (isPaused) {
-			Time::ResumeGame();
-			ClearPauseMenus();
-			isPaused = false;
+			ResumeGame();
 		}
 		else {
-			Time::PauseGame();
-			EnablePauseMenus();
-			isPaused = true;
+			PauseGame();
 		}
 	}
 
@@ -230,6 +226,18 @@ void GameController::Rotate(float2 mouseMotion, Frustum* frustum, ComponentTrans
 	Quat yIncrement = Quat::RotateY(-mouseMotion.x * rotationSpeedY * DEGTORAD * Time::GetDeltaTime());
 	Quat xIncrement = Quat::RotateAxisAngle(frustum->WorldRight().Normalized(), -mouseMotion.y * rotationSpeedX * DEGTORAD * Time::GetDeltaTime());
 	transform->SetRotation(yIncrement * xIncrement * transform->GetRotation());
+}
+
+void GameController::PauseGame() {
+	Time::PauseGame();
+	EnablePauseMenus();
+	isPaused = true;
+}
+
+void GameController::ResumeGame() {
+	Time::ResumeGame();
+	ClearPauseMenus();
+	isPaused = false;
 }
 
 void GameController::DoTransition() {

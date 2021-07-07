@@ -20,6 +20,8 @@ public:
 	void ReceiveEvent(TesseractEvent& e) override;
 
 	void Rotate(float2 mouseMotion, Frustum* frustum, ComponentTransform* transform);
+	void PauseGame();
+	void ResumeGame();
 
 public:
 	UID gameCameraUID = 0;
@@ -71,6 +73,7 @@ private:
 	bool showWireframe = false;
 	bool godModeAvailable = false;
 	bool transitionFinished = false;
+
 	bool isPaused = false;
 };
 
