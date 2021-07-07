@@ -25,6 +25,8 @@ public:
 	enum class AudioType {
 		SPAWN,
 		ATTACK,
+		FOOTSTEP_RIGHT,
+		FOOTSTEP_LEFT,
 		HIT,
 		DEATH,
 		TOTAL
@@ -34,7 +36,12 @@ public:
 	void Update() override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
+	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
+
+	void EnableBlastPushBack();
+	void DisableBlastPushBack();
+	bool IsBeingPushed() const;
 
 public:
 
@@ -55,10 +62,12 @@ public:
 	ResourcePrefab* meleePunch = nullptr;
 	WinLose* winLoseScript = nullptr;
 
-	Enemy gruntCharacter = Enemy(5, 8.0f, 1, 30, 40.f, 5.f, 5.f);
+	Enemy gruntCharacter = Enemy(5, 8.0f, 1, 30, 40.f, 5.f, 5.f, 5.f, 5.f);
 	bool killSent = false;
 
 	float hurtFeedbackTimeDuration = 0.5f;
+
+	float stunDuration = 3.f;
 
 private:
 
@@ -69,7 +78,10 @@ private:
 	ComponentTransform* ownerTransform = nullptr;
 	int damageRecieved = 0;
 
-	bool deadType = false;
+	float stunTimeRemaining = 0.f;
+
+	bool EMPUpgraded = false;
+	int deathType = 0;
 
 	HUDController* hudControllerScript = nullptr;
 	PlayerController* playerController = nullptr;
@@ -80,4 +92,9 @@ private:
 	ComponentMeshRenderer* componentMeshRenderer = nullptr;
 
 	float timeSinceLastHurt = 0.5f;
+
+	float currentPushBackDistance = 0.f;
+
+private:
+	void UpdatePushBackPosition();
 };

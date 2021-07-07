@@ -22,7 +22,7 @@
     "EmissiveMap": 0,
     "AmbientOcclusionMap": 10428530722235832723,
     "Smoothness": 0.0,
-    "HasSmoothnessInAlphaChannel": false,
+    "HasSmoothnessInAlphaChannel": true,
     "Tiling": [
         1.0,
         1.0

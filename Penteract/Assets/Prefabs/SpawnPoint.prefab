@@ -1,17 +1,17 @@
 {
     "Root": {
-        "Name": "Spawn_",
-        "Active": true,
+        "Name": "SpawnPoint",
+        "Active": false,
         "RootBoneName": "",
         "Mask": 0,
         "Components": [
             {
                 "Type": "Transform",
-                "Active": true,
+                "Active": false,
                 "Position": [
-                    -129.45314025878907,
-                    10.093485832214356,
-                    11.274106979370118
+                    0.0,
+                    0.0,
+                    0.0
                 ],
                 "Rotation": [
                     0.0,
@@ -20,19 +20,19 @@
                     1.0
                 ],
                 "Scale": [
+                    1.0000001192092896,
                     1.0,
-                    1.0,
-                    1.0
+                    1.0000001192092896
                 ],
                 "LocalEulerAngles": [
-                    -0.0,
                     0.0,
-                    -0.0
+                    0.0,
+                    0.0
                 ]
             },
             {
                 "Type": "Script",
-                "Active": true,
+                "Active": false,
                 "Script": 14237604830987124740,
                 "Values": [
                     {
@@ -46,6 +46,11 @@
                         "Value": 1
                     },
                     {
+                        "Name": "secondWaveMeleeAmount",
+                        "Type": "Int",
+                        "Value": 0
+                    },
+                    {
                         "Name": "offset",
                         "Type": "Int",
                         "Value": 0
@@ -54,6 +59,46 @@
                         "Name": "winUID",
                         "Type": "GameObjectUID",
                         "Value": 16579210181260590797
+                    },
+                    {
+                        "Name": "prefabUID",
+                        "Type": "PrefabResourceUID",
+                        "Value": 9998956702901793097
+                    },
+                    {
+                        "Name": "firstWaveMeleeAmount",
+                        "Type": "Int",
+                        "Value": 0
+                    },
+                    {
+                        "Name": "thirdWaveMeleeAmount",
+                        "Type": "Int",
+                        "Value": 0
+                    },
+                    {
+                        "Name": "thirdWaveRangeAmount",
+                        "Type": "Int",
+                        "Value": 0
+                    },
+                    {
+                        "Name": "fourthWaveMeleeAmount",
+                        "Type": "Int",
+                        "Value": 0
+                    },
+                    {
+                        "Name": "fourthWaveRangeAmount",
+                        "Type": "Int",
+                        "Value": 0
+                    },
+                    {
+                        "Name": "fifthWaveMeleeAmount",
+                        "Type": "Int",
+                        "Value": 0
+                    },
+                    {
+                        "Name": "fifthWaveRangeAmount",
+                        "Type": "Int",
+                        "Value": 0
                     }
                 ]
             }
