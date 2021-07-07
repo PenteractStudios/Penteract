@@ -37,6 +37,7 @@ void Barrel::Update() {
 		isHit = false;
 		particles->PlayChildParticles();
 		audio->Play();
+		barrel->GetComponent<ComponentMeshRenderer>()->Disable();
 	}
 	else {
 		//barrelCollider->Disable();
@@ -47,21 +48,31 @@ void Barrel::Update() {
 		}
 		else {
 			destroy = false;
-			GameplaySystems::DestroyGameObject(barrel);
+			GameplaySystems::DestroyGameObject(barrel->GetParent());
 		}
 	}
 }
 
 void Barrel::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle)
 {
-	if (!particle) return;
-	Debug::Log("Agh");
-	ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
-	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
-	if (pSystem) pSystem->KillParticle(p);
-	isHit = true;
-	destroy = true;
-	if (cameraController) {
-		cameraController->StartShake();
+	if (particle) {
+		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+		if (pSystem) pSystem->KillParticle(p);
+		isHit = true;
+		destroy = true;
+		if (cameraController) {
+			cameraController->StartShake();
+		}
+		if (collidedWith.name == "FangBullet") {
+			GameplaySystems::DestroyGameObject(&collidedWith);
+			isHit = true;
+			destroy = true;
+			if (cameraController) {
+				cameraController->StartShake();
+			}
+		}
 	}
+	
+	
 }

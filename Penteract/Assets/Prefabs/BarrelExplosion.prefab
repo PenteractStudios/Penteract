@@ -9,9 +9,9 @@
                 "Type": "Transform",
                 "Active": true,
                 "Position": [
-                    -135.07379150390626,
+                    -124.29244995117188,
                     4.956016540527344,
-                    6.521068572998047
+                    -3.114854335784912
                 ],
                 "Rotation": [
                     0.0,
@@ -43,8 +43,8 @@
                         "Active": true,
                         "Position": [
                             0.01788330078125,
-                            -1.8325550556182862,
-                            0.004546642303466797
+                            -1.8374433517456055,
+                            0.004547119140625
                         ],
                         "Rotation": [
                             -0.37990131974220278,
@@ -87,7 +87,7 @@
                         "colliderType": 2,
                         "layerType": 2,
                         "mass": 1.0,
-                        "radius": 6.214000225067139,
+                        "radius": 6.178999900817871,
                         "centerOffset": [
                             0.0,
                             0.0,
@@ -107,9 +107,9 @@
                                 "Type": "Transform",
                                 "Active": true,
                                 "Position": [
-                                    0.013153076171875,
-                                    0.00836181640625,
-                                    18.020292282104493
+                                    0.00823974609375,
+                                    0.00701904296875,
+                                    18.767881393432618
                                 ],
                                 "Rotation": [
                                     0.0,
@@ -134,7 +134,7 @@
                                 "colliderType": 2,
                                 "layerType": 2,
                                 "mass": 1.0,
-                                "radius": 2.2300000190734865,
+                                "radius": 1.4800000190734864,
                                 "centerOffset": [
                                     0.0,
                                     0.0,
@@ -148,14 +148,14 @@
                                 "Script": 8700738987126077181,
                                 "Values": [
                                     {
+                                        "Name": "barrelUID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 5007558575434341943
+                                    },
+                                    {
                                         "Name": "BarrelUID",
                                         "Type": "GameObjectUID",
                                         "Value": 525968066063556863
-                                    },
-                                    {
-                                        "Name": "barrelUID",
-                                        "Type": "GameObjectUID",
-                                        "Value": 103221065364286827
                                     },
                                     {
                                         "Name": "cameraUID",
@@ -165,12 +165,12 @@
                                     {
                                         "Name": "particlesUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 7704110058935641183
+                                        "Value": 1913025036473900336
                                     },
                                     {
                                         "Name": "timeToDestroy",
                                         "Type": "Float",
-                                        "Value": 0.10000000149011612
+                                        "Value": 0.5
                                     }
                                 ]
                             }

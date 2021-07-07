@@ -129,7 +129,7 @@
                     false
                 ],
                 "HasCollision": true,
-                "LayerIndex": 5
+                "LayerIndex": 2
             },
             {
                 "Type": "Script",

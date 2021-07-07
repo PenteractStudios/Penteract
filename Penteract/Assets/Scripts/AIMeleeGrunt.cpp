@@ -268,6 +268,11 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 		if (gruntCharacter.isAlive && playerController) {
 			bool hitTaken = false;
 			if (collidedWith.name == "FangBullet") {
+				if (!particle) return;
+				ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+				ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+				GameplaySystems::DestroyGameObject(&collidedWith);
+				if (pSystem) pSystem->KillParticle(p);
 				hitTaken = true;
 				if(state == AIState::STUNNED && EMPUpgraded){
 					gruntCharacter.GetHit(99);
@@ -276,6 +281,10 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 					gruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
 				}
 			} else if (collidedWith.name == "OnimaruBullet") {
+				if (!particle) return;
+				ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+				ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+				if (pSystem) pSystem->KillParticle(p);
 				hitTaken = true;
 				if (state == AIState::STUNNED && EMPUpgraded) {
 					gruntCharacter.GetHit(99);
