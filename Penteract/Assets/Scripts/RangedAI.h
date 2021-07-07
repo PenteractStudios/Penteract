@@ -14,6 +14,7 @@ class ComponentTransform;
 class ResourcePrefab;
 class HUDController;
 class PlayerController;
+class PlayerDeath;
 class AIMovement;
 class WinLose;
 class EnemySpawnPoint;
@@ -67,14 +68,18 @@ public:
 	UID meshUID2 = 0;				//Third mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID trailPrefabUID = 0;			//Reference to projectile prefab UID , for shooting
 	UID hudControllerObjUID = 0;	//Reference to Hud UID , for incrementing score
+	UID fangUID = 0;
 
 	UID winConditionUID = 0;
 
 	ResourcePrefab* shootTrailPrefab = nullptr; //Reference to projectile prefab , for shooting
 	GameObject* player = nullptr;				//Reference to player main Gameobject, used to check distances
+	GameObject* fang = nullptr;
 
 	HUDController* hudControllerScript = nullptr; //Reference to Hud , for incrementing score
 	PlayerController* playerController = nullptr; //Reference to player script, used to check distances
+
+	PlayerDeath* playerDeath = nullptr;
 
 	GameObject* fangMeshObj = nullptr;		//Reference to player Fang mesh holding Gameobject, used for raycasting if fang is active
 	GameObject* onimaruMeshObj = nullptr;	//Reference to player Fang mesh holding Gameobject, used for raycasting if onimaru is active
