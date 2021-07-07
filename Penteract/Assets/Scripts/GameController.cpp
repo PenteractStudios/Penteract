@@ -36,7 +36,6 @@ void GameController::Start() {
 
 	showWireframe = false;
 	transitionFinished = false;
-	Debug::Log("SCRIPT STARTED");
 
 	gameCamera = GameplaySystems::GetGameObject(gameCameraUID);
 	godCamera = GameplaySystems::GetGameObject(godCameraUID);

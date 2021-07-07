@@ -27,6 +27,9 @@ public:
 	PlayerController* playerController = nullptr;
 
 	bool dead = false;
+	float rangedDamageTaken = 1.0f;
+	float meleeDamageTaken = 1.0f;
+	float barrelDamageTaken = 1.0f;
 
 private:
 	GameObject* transitionGO = nullptr;

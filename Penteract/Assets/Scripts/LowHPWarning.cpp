@@ -1,13 +1,15 @@
 #include "LowHPWarning.h"
 #include "GameObject.h"
 #include "Components/UI/ComponentImage.h"
+#include "Components/ComponentAudioSource.h"
 
 #include "GameplaySystems.h"
 
 EXPOSE_MEMBERS(LowHPWarning) {
     MEMBER(MemberType::FLOAT, effectTime),
     MEMBER(MemberType::FLOAT, fadeOutTime),
-    MEMBER(MemberType::GAME_OBJECT_UID, effectUID)
+    MEMBER(MemberType::GAME_OBJECT_UID, effectUID),
+    MEMBER(MemberType::GAME_OBJECT_UID, audioUID)
 };
 
 GENERATE_BODY_IMPL(LowHPWarning);
@@ -21,6 +23,9 @@ void LowHPWarning::Start() {
         }
         effect->Disable();
     }
+    
+    GameObject* audioGO = GameplaySystems::GetGameObject(audioUID);
+    if (audioGO) audio = audioGO->GetComponent<ComponentAudioSource>();
 }
 
 void LowHPWarning::Update() {
@@ -50,6 +55,7 @@ void LowHPWarning::Play() {
     if (!effect || !vignette) return;
     playing = true;
     effect->Enable();
+    if (audio) audio->Play();
 }
 
 void LowHPWarning::Stop() {
@@ -58,4 +64,5 @@ void LowHPWarning::Stop() {
     effectCurrentTime = 0.0f;
     fadeOutCurrentTime = 0.0f;
     effect->Disable();
+    if (audio) audio->Stop();
 }
