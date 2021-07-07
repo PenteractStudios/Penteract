@@ -139,22 +139,12 @@
                     {
                         "Name": "speed",
                         "Type": "Int",
-                        "Value": 20
+                        "Value": 50
                     },
                     {
                         "Name": "life",
                         "Type": "Float",
-                        "Value": 2.0
-                    },
-                    {
-                        "Name": "offsetTime",
-                        "Type": "Float",
-                        "Value": 0.0
-                    },
-                    {
-                        "Name": "offsetPosition",
-                        "Type": "Float",
-                        "Value": 0.0
+                        "Value": 1.0
                     }
                 ]
             }

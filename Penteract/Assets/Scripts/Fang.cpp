@@ -21,8 +21,8 @@ void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, 
 		GameObject* gunAux = GameplaySystems::GetGameObject(rightGunUID);
 		if (gunAux) rightGunTransform = gunAux->GetComponent<ComponentTransform>();
 		//left gun
-		gunAux = GameplaySystems::GetGameObject(leftGunUID);
-		if (gunAux) leftGunTransform = gunAux->GetComponent<ComponentTransform>();
+		GameObject* gunAux1 = GameplaySystems::GetGameObject(leftGunUID);
+		if (gunAux1) leftGunTransform = gunAux1->GetComponent<ComponentTransform>();
 		lookAtMousePlanePosition = leftGunTransform->GetGlobalPosition();
 
 		GameObject* trailAux = GameplaySystems::GetGameObject(trailDashUID);
