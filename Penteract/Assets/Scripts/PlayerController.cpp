@@ -26,9 +26,12 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, mainNodeUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangBulletUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, onimaruBulletUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangRightBulletUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangLeftBulletUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangTrailDashUID),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailGunUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruBulletUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruUltimateBulletUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangLeftGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangRightGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, EMPUID),
@@ -48,6 +51,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, playerFang.dashCooldown),
 	MEMBER(MemberType::FLOAT, playerFang.dashSpeed),
 	MEMBER(MemberType::FLOAT, playerFang.dashDuration),
+	MEMBER(MemberType::FLOAT, playerFang.trailDashOffsetDuration),
 	MEMBER(MemberType::FLOAT, playerFang.EMPRadius),
 	MEMBER(MemberType::FLOAT, playerFang.EMPCooldown),
 	MEMBER(MemberType::FLOAT, playerOnimaru.lifePoints),
@@ -57,8 +61,6 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, playerOnimaru.blastCooldown),
 	MEMBER(MemberType::FLOAT, playerOnimaru.blastDistance),
 	MEMBER(MemberType::FLOAT, playerOnimaru.blastAngle),
-	MEMBER(MemberType::FLOAT, rangedDamageTaken),
-	MEMBER(MemberType::FLOAT, meleeDamageTaken),
 	MEMBER(MemberType::BOOL, useSmoothCamera),
 	MEMBER(MemberType::FLOAT, smoothCameraSpeed),
 	MEMBER(MemberType::FLOAT, onimaruRecoveryRate),
@@ -71,16 +73,14 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, playerOnimaru.ultimateTotalTime),
 	MEMBER(MemberType::FLOAT, playerOnimaru.ultimateOrientationSpeed),
 	MEMBER(MemberType::INT, playerOnimaru.ultimateChargePoints),
-	MEMBER(MemberType::INT, playerOnimaru.ultimateChargePointsTotal),
-	MEMBER(MemberType::FLOAT, playerOnimaru.maxBulletSpread),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruUltimateProjectileOriginUID)
+	MEMBER(MemberType::INT, playerOnimaru.ultimateChargePointsTotal)
 };
 
 GENERATE_BODY_IMPL(PlayerController);
 
 void PlayerController::Start() {
-	playerFang.Init(fangUID, fangTrailUID, fangLeftGunUID, fangRightGunUID, fangBulletUID, cameraUID, canvasUID, EMPUID, fangUltimateUID);
-	playerOnimaru.Init(onimaruUID, onimaruBulletUID, onimaruGunUID, onimaruRightHandUID, onimaruShieldUID,onimaruUltimateProjectileOriginUID, cameraUID, canvasUID, playerOnimaru.maxBulletSpread);
+	playerFang.Init(fangUID, fangTrailGunUID, fangTrailDashUID, fangLeftGunUID, fangRightGunUID, fangRightBulletUID, fangLeftBulletUID, cameraUID, canvasUID, EMPUID, fangUltimateUID);
+	playerOnimaru.Init(onimaruUID, onimaruBulletUID, onimaruGunUID, onimaruRightHandUID, onimaruShieldUID, onimaruUltimateBulletUID, cameraUID, canvasUID);
 
 	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
 	if (canvasGO) {
@@ -97,7 +97,6 @@ void PlayerController::Start() {
 		cameraTransform = camera->GetComponent<ComponentTransform>();
 	}
 
-
 	switchEffects = GameplaySystems::GetGameObject(switchParticlesUID);
 
 	firstTime = true;
@@ -109,7 +108,6 @@ void PlayerController::Start() {
 		i++;
 	}
 }
-
 
 //Debug
 void PlayerController::SetInvincible(bool status) {
@@ -130,13 +128,12 @@ void PlayerController::SetNoCooldown(bool status) {
 }
 //Switch
 bool PlayerController::CanSwitch() {
-
 	if (playerFang.characterGameObject->IsActive()) {
 		return !switchInCooldown && playerFang.CanSwitch() && !playerFang.ultimateOn;
-	} else {
+	}
+	else {
 		return !switchInCooldown && playerOnimaru.CanSwitch();
 	}
-
 }
 
 void PlayerController::ResetSwitchStatus() {
@@ -163,7 +160,8 @@ void PlayerController::SwitchCharacter() {
 			}
 
 			fangRecovering = 0.0f;
-		} else {
+		}
+		else {
 			playerOnimaru.characterGameObject->Disable();
 			playerFang.characterGameObject->Enable();
 
@@ -182,7 +180,8 @@ void PlayerController::SwitchCharacter() {
 		playSwitchParticles = true;
 		switchInCooldown = true;
 		if (noCooldownMode) switchInProgress = false;
-	} else {
+	}
+	else {
 		if (playSwitchParticles) {
 			if (switchEffects) {
 				SwitchParticles* script = GET_SCRIPT(switchEffects, SwitchParticles);
@@ -198,14 +197,14 @@ void PlayerController::SwitchCharacter() {
 }
 //Timers
 void PlayerController::CheckCoolDowns() {
-
 	playerFang.CheckCoolDowns(noCooldownMode);
 	playerOnimaru.CheckCoolDowns(noCooldownMode);
 	if (noCooldownMode || switchCooldownRemaining <= 0.f) {
 		switchCooldownRemaining = 0.f;
 		switchInCooldown = false;
 		if (!noCooldownMode) switchInProgress = false;
-	} else {
+	}
+	else {
 		switchCooldownRemaining -= Time::GetDeltaTime();
 	}
 
@@ -213,7 +212,8 @@ void PlayerController::CheckCoolDowns() {
 		if (fangRecovering >= fangRecoveryRate) {
 			playerFang.Recover(1);
 			fangRecovering = 0.0f;
-		} else {
+		}
+		else {
 			fangRecovering += Time::GetDeltaTime();
 		}
 	}
@@ -222,7 +222,8 @@ void PlayerController::CheckCoolDowns() {
 		if (onimaruRecovering >= onimaruRecoveryRate) {
 			playerOnimaru.Recover(1);
 			onimaruRecovering = 0.0f;
-		} else {
+		}
+		else {
 			onimaruRecovering += Time::GetDeltaTime();
 		}
 	}
@@ -238,7 +239,8 @@ void PlayerController::UpdatePlayerStats() {
 		if (hitTaken && playerFang.IsActive() && playerFang.lifePoints >= 0) {
 			hudControllerScript->UpdateHP(playerFang.lifePoints, playerOnimaru.lifePoints);
 			hitTaken = false;
-		} else if (hitTaken && playerOnimaru.IsActive() && playerOnimaru.lifePoints >= 0) {
+		}
+		else if (hitTaken && playerOnimaru.IsActive() && playerOnimaru.lifePoints >= 0) {
 			hudControllerScript->UpdateHP(playerOnimaru.lifePoints, playerFang.lifePoints);
 			hitTaken = false;
 		}
@@ -248,7 +250,8 @@ void PlayerController::UpdatePlayerStats() {
 			if (hudControllerScript) {
 				hudControllerScript->HealthRegeneration(playerOnimaru.lifePoints, healthRecovered);
 			}
-		} else if (playerOnimaru.IsActive() && playerFang.lifePoints != FANG_MAX_HEALTH) {
+		}
+		else if (playerOnimaru.IsActive() && playerFang.lifePoints != FANG_MAX_HEALTH) {
 			float healthRecovered = (fangRecovering / fangRecoveryRate);
 			if (hudControllerScript) {
 				hudControllerScript->HealthRegeneration(playerFang.lifePoints, healthRecovered);
@@ -260,12 +263,12 @@ void PlayerController::UpdatePlayerStats() {
 	}
 }
 
-void PlayerController::TakeDamage(bool ranged) {
+void PlayerController::TakeDamage(float damage) {
 	if (!invincibleMode) {
-		float damage = (ranged) ? rangedDamageTaken : meleeDamageTaken;
 		if (playerFang.IsActive()) {
 			playerFang.GetHit(damage);
-		} else {
+		}
+		else {
 			playerOnimaru.GetHit(damage);
 		}
 		hitTaken = true;
@@ -306,7 +309,8 @@ void PlayerController::Update() {
 		if (firstTime) {
 			if (playerFang.characterGameObject->IsActive()) {
 				hudControllerScript->UpdateHP(playerFang.lifePoints, playerOnimaru.lifePoints);
-			} else {
+			}
+			else {
 				hudControllerScript->UpdateHP(playerOnimaru.lifePoints, playerFang.lifePoints);
 			}
 			firstTime = false;
