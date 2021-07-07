@@ -7,6 +7,17 @@ class UltimateFang;
 class Fang : public Player {
 public:
 
+	enum class FANG_AUDIOS {
+		DASH,
+		EMP,
+		ULTIMATE,
+		SHOOT,
+		FOOTSTEP_RIGHT,
+		FOOTSTEP_LEFT,
+		HIT,
+		DEATH,
+		TOTAL
+	};
 
 	// ------- Contructors ------- //
 	Fang() {};
@@ -14,6 +25,7 @@ public:
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
+	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
 	void GetHit(float damage_) override;
 	bool CanSwitch() const override;
 	bool IsInstantOrientation(bool useGamepad) const override;
@@ -82,6 +94,9 @@ private:
 	bool ultimateInCooldown = false;
 	float oldMovementSpeed = 1.0f;
 	UltimateFang* ultimateScript = nullptr;
+
+	//Audios
+	ComponentAudioSource* fangAudios[static_cast<int>(FANG_AUDIOS::TOTAL)] = { nullptr };
 
 private:
 	void InitDash();

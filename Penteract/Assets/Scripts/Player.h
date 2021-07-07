@@ -17,17 +17,6 @@ enum class MovementDirection {
 	UP_RIGHT = 8
 };
 
-enum class AudioPlayer {
-	FIRST_ABILITY, //dash, shield
-	SECOND_ABILITY, //EMP Field , Energy Blast
-	THIRD_ABILITY, // Ultimate
-	SHOOT,
-	HIT,
-	DEATH,
-	SPECIAL_SHOOT,
-	TOTAL
-};
-
 enum class InputActions {
 	MOVEMENT,
 	ORIENTATION,
@@ -90,7 +79,6 @@ public:
 	float3 lookAtMousePlanePosition = float3(0, 0, 0);
 	ComponentCamera* lookAtMouseCameraComp = nullptr;
 	CameraController* cameraController = nullptr;
-	ComponentAudioSource* playerAudios[static_cast<int>(AudioPlayer::TOTAL)] = { nullptr };
 	float3 facePointDir = float3(0, 0, 0);
 	MovementDirection movementInputDirection = MovementDirection::NONE;
 	ComponentTransform* playerMainTransform = nullptr;

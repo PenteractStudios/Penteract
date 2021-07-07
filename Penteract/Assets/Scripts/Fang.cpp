@@ -48,7 +48,7 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 		int i = 0;
 
 		for (ComponentAudioSource& src : characterGameObject->GetComponents<ComponentAudioSource>()) {
-			if (i < static_cast<int>(AudioPlayer::TOTAL)) playerAudios[i] = &src;
+			if (i < static_cast<int>(FANG_AUDIOS::TOTAL)) fangAudios[i] = &src;
 			i++;
 		}
 
@@ -71,8 +71,9 @@ bool Fang::CanSwitch() const {
 	return !EMP->IsActive() && !ultimateOn;
 }
 
-void Fang::IncreaseUltimateCounter() {
-	ultimateCooldownRemaining++;
+void Fang::IncreaseUltimateCounter()
+{
+	if(!ultimateOn) ultimateCooldownRemaining++;
 }
 
 bool Fang::IsInstantOrientation(bool useGamepad) const {
@@ -82,9 +83,19 @@ bool Fang::IsInstantOrientation(bool useGamepad) const {
 void Fang::GetHit(float damage_) {
 
 	if (!dashing) {
-		Player::GetHit(damage_);
-	}
+		if (cameraController) {
+			cameraController->StartShake();
+		}
 
+		lifePoints -= damage_;
+		if (fangAudios[static_cast<int>(FANG_AUDIOS::HIT)]) fangAudios[static_cast<int>(FANG_AUDIOS::HIT)]->Play();
+		isAlive = lifePoints > 0.0f;
+
+		if (!isAlive) {
+			if (fangAudios[static_cast<int>(FANG_AUDIOS::DEATH)]) fangAudios[static_cast<int>(FANG_AUDIOS::DEATH)]->Play();
+			OnDeath();
+		}
+	}
 }
 
 void Fang::InitDash() {
@@ -104,8 +115,8 @@ void Fang::InitDash() {
 			agent->SetMaxSpeed(dashSpeed);
 		}
 
-		if (playerAudios[static_cast<int>(AudioPlayer::FIRST_ABILITY)]) {
-			playerAudios[static_cast<int>(AudioPlayer::FIRST_ABILITY)]->Play();
+		if (fangAudios[static_cast<int>(FANG_AUDIOS::DASH)]) {
+			fangAudios[static_cast<int>(FANG_AUDIOS::DASH)]->Play();
 		}
 	}
 
@@ -132,8 +143,8 @@ void Fang::ActivateEMP() {
 		EMPCooldownRemaining = EMPCooldown;
 		EMPInCooldown = true;
 
-		if (playerAudios[static_cast<int>(AudioPlayer::SECOND_ABILITY)]) {
-			playerAudios[static_cast<int>(AudioPlayer::SECOND_ABILITY)]->Play();
+		if (fangAudios[static_cast<int>(FANG_AUDIOS::EMP)]) {
+			fangAudios[static_cast<int>(FANG_AUDIOS::EMP)]->Play();
 		}
 		if (hudControllerScript) {
 			hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_2);
@@ -217,6 +228,21 @@ void Fang::OnAnimationFinished() {
 void Fang::OnAnimationSecondaryFinished() {
 }
 
+void Fang::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
+	if (stateMachineEnum == StateMachineEnum::PRINCIPAL) {
+		if (std::strcmp(eventName, "FootstepRight")) {
+			if (fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_RIGHT)]) {
+				fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_RIGHT)]->Play();
+			}
+		}
+		else if (std::strcmp(eventName, "FootstepLeft")) {
+			if (fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_LEFT)]) {
+				fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_LEFT)]->Play();
+			}
+		}
+	}
+}
+
 float Fang::GetRealDashCooldown() {
 	return 1.0f - (dashCooldownRemaining / dashCooldown);
 }
@@ -237,8 +263,8 @@ void Fang::Shoot() {
 	if (CanShoot()) {
 		shootingOnCooldown = true;
 		attackCooldownRemaining = 1.f / attackSpeed;
-		if (playerAudios[static_cast<int>(AudioPlayer::SHOOT)]) {
-			playerAudios[static_cast<int>(AudioPlayer::SHOOT)]->Play();
+		if (fangAudios[static_cast<int>(FANG_AUDIOS::SHOOT)]) {
+			fangAudios[static_cast<int>(FANG_AUDIOS::SHOOT)]->Play();
 		}
 
 		ComponentTransform* shootingGunTransform = nullptr;
@@ -310,8 +336,8 @@ void Fang::ActiveUltimate() {
 		oldMovementSpeed = movementSpeed;
 		movementSpeed = ultimateMovementSpeed;
 
-		if (playerAudios[static_cast<int>(AudioPlayer::THIRD_ABILITY)]) {
-			playerAudios[static_cast<int>(AudioPlayer::THIRD_ABILITY)]->Play();
+		if (fangAudios[static_cast<int>(FANG_AUDIOS::ULTIMATE)]) {
+			fangAudios[static_cast<int>(FANG_AUDIOS::ULTIMATE)]->Play();
 		}
 
 		if (hudControllerScript) {
