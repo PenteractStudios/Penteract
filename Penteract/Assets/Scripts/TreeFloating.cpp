@@ -13,7 +13,6 @@ GENERATE_BODY_IMPL(TreeFloating);
 
 void TreeFloating::Start() {
 	offset = rand() % 200;
-	Debug::Log("%f", offset);
 	trees = GameplaySystems::GetGameObject(treesUID);
 	if (trees) transform = trees->GetComponent<ComponentTransform>();
 	if (transform) initialPosition = transform->GetPosition();
