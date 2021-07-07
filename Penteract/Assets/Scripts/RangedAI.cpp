@@ -190,10 +190,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 			bool hitTaken = false;
 			if (collidedWith.name == "FangBullet") {
 				if (!particle) return;
-				/*ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
-				ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();*/
 				GameplaySystems::DestroyGameObject(&collidedWith);
-				//if (pSystem) pSystem->KillParticle(p);
 				hitTaken = true;
 				if (state == AIState::STUNNED && EMPUpgraded) {
 					rangerGruntCharacter.GetHit(99);
