@@ -3,7 +3,6 @@
 #include "GameObject.h"
 
 EXPOSE_MEMBERS(MeleePunch) {
-	MEMBER(MemberType::FLOAT, life)
 };
 
 GENERATE_BODY_IMPL(MeleePunch);

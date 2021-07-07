@@ -38,7 +38,8 @@ public:
 	void OnAnimationSecondaryFinished() override;
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
-	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
+	//void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
+	void DeleteAttackCollider();
 
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
@@ -71,8 +72,9 @@ public:
 	float stunDuration = 3.f;
 
 private:
-
+	float attackDuration = 2.2f;
 	float attackRemaining = 0.0f;
+	bool attackColliderOn = false;
 	float3 velocity = float3(0, 0, 0);
 	AIState state = AIState::START;
 	bool hitTaken = false;
