@@ -7,8 +7,6 @@
 
 // TODO:
 // IsBlocking to "pause" the gameplay
-// Transition effect between dialogue boxes
-// Dialog as struct
 
 EXPOSE_MEMBERS(DialogueManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fangTextObjectUID),
@@ -155,7 +153,11 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation)
 		}
 
 		runOpenAnimation = runAnimation;
+		uiComponents.clear();
+		uiColors.clear();
 		RetrieveUIComponents(activeDialogueObject);
+		std::string a = std::string("%d", uiComponents.size());
+		Debug::Log(a.c_str());
 	}
 	else {
 		activeDialogueObject = nullptr;
@@ -270,9 +272,6 @@ void DialogueManager::TransitionUIElementsColor(bool appearing, bool mustLerp)
 void DialogueManager::RetrieveUIComponents(GameObject* current)
 {
 	if (!current) return;
-
-	uiComponents.clear();
-	uiColors.clear();
 
 	ComponentImage* image = current->GetComponent<ComponentImage>();
 	ComponentText* text = current->GetComponent<ComponentText>();
