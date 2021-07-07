@@ -57,7 +57,13 @@ void Fang::Init(UID fangUID, UID trailUID, UID leftGunUID, UID rightGunUID, UID 
 	EMP = GameplaySystems::GetGameObject(EMPUID);
 	if (EMP) {
 		ComponentSphereCollider* sCollider = EMP->GetComponent<ComponentSphereCollider>();
-		if (sCollider) sCollider->radius = EMPRadius;
+		if (sCollider) {
+			sCollider->radius = EMPRadius;
+			sCollider->Disable();
+			sCollider->Enable();
+		}
+		EMP->Enable();
+		EMP->Disable();
 	}
 
 	GameObject* fangUltimateGameObject = GameplaySystems::GetGameObject(fangUltimateUID);
