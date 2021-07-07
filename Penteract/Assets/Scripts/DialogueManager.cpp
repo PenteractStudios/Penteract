@@ -43,24 +43,24 @@ void DialogueManager::Start() {
 	}
 
 	// UPGRADES
-	dialoguesArray[0] = Dialogue(ONIMARU, "Hey Fang, look at this.", &dialoguesArray[1]);
-	dialoguesArray[1] = Dialogue(FANG, "Hmm...\nIt looks like Milibot has been\nresearching in some\nnew technologies...", &dialoguesArray[2]);
-	dialoguesArray[2] = Dialogue(FANG, "I might be able to\nseize its power for ourselves\nif we find a couple more.", &dialoguesArray[3]);
-	dialoguesArray[3] = Dialogue(UPGRADES1, "", nullptr);
+	dialoguesArray[0] = Dialogue(DialogueWindow::ONIMARU, "Hey Fang, look at this.", &dialoguesArray[1]);
+	dialoguesArray[1] = Dialogue(DialogueWindow::FANG, "Hmm...\nIt looks like Milibot has been\nresearching in some\nnew technologies...", &dialoguesArray[2]);
+	dialoguesArray[2] = Dialogue(DialogueWindow::FANG, "I might be able to\nseize its power for ourselves\nif we find a couple more.", &dialoguesArray[3]);
+	dialoguesArray[3] = Dialogue(DialogueWindow::UPGRADES1, "", nullptr);
 
-	dialoguesArray[4] = Dialogue(UPGRADES2, "", nullptr);
+	dialoguesArray[4] = Dialogue(DialogueWindow::UPGRADES2, "", nullptr);
 
 	
-	dialoguesArray[5] = Dialogue(FANG, "I think I got it...\nYou can power it up this way,\nthen connect this here...\nand that there...", &dialoguesArray[6]);
-	dialoguesArray[6] = Dialogue(FANG, "Plug it in our core and...\nWHOAH! Oni, try this!", &dialoguesArray[7]);
-	dialoguesArray[7] = Dialogue(ONIMARU, "I am not sure about this Fang...\nBut OK, I trust you.", &dialoguesArray[8]);
-	dialoguesArray[8] = Dialogue(UPGRADES3, "", nullptr);
+	dialoguesArray[5] = Dialogue(DialogueWindow::FANG, "I think I got it...\nYou can power it up this way,\nthen connect this here...\nand that there...", &dialoguesArray[6]);
+	dialoguesArray[6] = Dialogue(DialogueWindow::FANG, "Plug it in our core and...\nWHOAH! Oni, try this!", &dialoguesArray[7]);
+	dialoguesArray[7] = Dialogue(DialogueWindow::ONIMARU, "I am not sure about this Fang...\nBut OK, I trust you.", &dialoguesArray[8]);
+	dialoguesArray[8] = Dialogue(DialogueWindow::UPGRADES3, "", nullptr);
 
 	// SWAP DIALOGUE + ONIMARU TUTORIAL
-	dialoguesArray[9] = Dialogue(FANG, "Oni, you perform better\nin closed spaces.\nTake the lead here!", &dialoguesArray[10]);
-	dialoguesArray[10] = Dialogue(TUTO_SWAP, "", &dialoguesArray[11]);
-	dialoguesArray[11] = Dialogue(ONIMARU, "OK Fang.\nWatch how it is done.", &dialoguesArray[12]);
-	dialoguesArray[12] = Dialogue(TUTO_ONIMARU, "", nullptr);
+	dialoguesArray[9] = Dialogue(DialogueWindow::FANG, "Oni, you perform better\nin closed spaces.\nTake the lead here!", &dialoguesArray[10]);
+	dialoguesArray[10] = Dialogue(DialogueWindow::TUTO_SWAP, "", &dialoguesArray[11]);
+	dialoguesArray[11] = Dialogue(DialogueWindow::ONIMARU, "OK Fang.\nWatch how it is done.", &dialoguesArray[12]);
+	dialoguesArray[12] = Dialogue(DialogueWindow::TUTO_ONIMARU, "", nullptr);
 
 }
 
@@ -80,8 +80,8 @@ void DialogueManager::Update() {
 		if (Input::GetKeyCodeDown(Input::KEY_F) && !(runOpenAnimation || runChangeAnimation || runCloseAnimation) && activeDialogueObject) {
 			if (activeDialogue->nextDialogue) {
 				runChangeAnimation = true;
-				if ((activeDialogue->character < 5 && activeDialogue->nextDialogue->character >= 5) ||
-					(activeDialogue->character >= 5 && activeDialogue->nextDialogue->character < 5)) {
+				if ((static_cast<int>(activeDialogue->character) < 5 && static_cast<int>(activeDialogue->nextDialogue->character) >= 5) ||
+					(static_cast<int>(activeDialogue->character) >= 5 && static_cast<int>(activeDialogue->nextDialogue->character) < 5)) {
 					runCloseAnimation = true;
 					runSecondaryOpen = true;
 				}
@@ -106,7 +106,7 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation)
 	}
 
 	if (dialogue) {
-		if (dialogue->character >= 5) {
+		if (static_cast<int>(dialogue->character) >= 5) {
 			currentStartPosition = tutorialStartPosition;
 			currentEndPosition = tutorialEndPosition;
 		}
@@ -118,34 +118,34 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation)
 		activeDialogue = dialogue;
 		switch (dialogue->character)
 		{
-		case FANG:
+		case DialogueWindow::FANG:
 			activeDialogueObject = fangTextComponent->GetOwner().GetParent();
 			fangTextComponent->SetText(dialogue->text);
 			break;
-		case ONIMARU:
+		case DialogueWindow::ONIMARU:
 			activeDialogueObject = onimaruTextComponent->GetOwner().GetParent();
 			onimaruTextComponent->SetText(dialogue->text);
 			break;
-		case DUKE:
+		case DialogueWindow::DUKE:
 			break;
-		case ROSAMONDE:
+		case DialogueWindow::ROSAMONDE:
 			break;
-		case TUTO_FANG:
+		case DialogueWindow::TUTO_FANG:
 			activeDialogueObject = tutorialFang;
 			break;
-		case TUTO_ONIMARU:
+		case DialogueWindow::TUTO_ONIMARU:
 			activeDialogueObject = tutorialOnimaru;
 			break;
-		case TUTO_SWAP:
+		case DialogueWindow::TUTO_SWAP:
 			activeDialogueObject = tutorialSwap;
 			break;
-		case UPGRADES1:
+		case DialogueWindow::UPGRADES1:
 			activeDialogueObject = tutorialUpgrades1;
 			break;
-		case UPGRADES2:
+		case DialogueWindow::UPGRADES2:
 			activeDialogueObject = tutorialUpgrades2;
 			break;
-		case UPGRADES3:
+		case DialogueWindow::UPGRADES3:
 			activeDialogueObject = tutorialUpgrades3;
 			break;
 		default:
@@ -156,8 +156,6 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation)
 		uiComponents.clear();
 		uiColors.clear();
 		RetrieveUIComponents(activeDialogueObject);
-		std::string a = std::string("%d", uiComponents.size());
-		Debug::Log(a.c_str());
 	}
 	else {
 		activeDialogueObject = nullptr;
