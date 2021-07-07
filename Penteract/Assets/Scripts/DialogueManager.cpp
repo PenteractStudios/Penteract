@@ -118,34 +118,34 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation)
 		activeDialogue = dialogue;
 		switch (dialogue->character)
 		{
-		case 1:			// FANG
+		case FANG:
 			activeDialogueObject = fangTextComponent->GetOwner().GetParent();
 			fangTextComponent->SetText(dialogue->text);
 			break;
-		case 2:			// ONIMARU
+		case ONIMARU:
 			activeDialogueObject = onimaruTextComponent->GetOwner().GetParent();
 			onimaruTextComponent->SetText(dialogue->text);
 			break;
-		case 3:			// DUKE
+		case DUKE:
 			break;
-		case 4:			// ROSAMONDE
+		case ROSAMONDE:
 			break;
-		case 5:			// TUTORIAL Fang
+		case TUTO_FANG:
 			activeDialogueObject = tutorialFang;
 			break;
-		case 6:			// TUTORIAL Oni
+		case TUTO_ONIMARU:
 			activeDialogueObject = tutorialOnimaru;
 			break;
-		case 7:			// TUTORIAL Swap
+		case TUTO_SWAP:
 			activeDialogueObject = tutorialSwap;
 			break;
-		case 8:			// UPGRADES 1/3
+		case UPGRADES1:
 			activeDialogueObject = tutorialUpgrades1;
 			break;
-		case 9:			// UPGRADES 2/3
+		case UPGRADES2:
 			activeDialogueObject = tutorialUpgrades2;
 			break;
-		case 10:			// UPGRADES 3/3
+		case UPGRADES3:
 			activeDialogueObject = tutorialUpgrades3;
 			break;
 		default:
