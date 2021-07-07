@@ -10,16 +10,20 @@
 EXPOSE_MEMBERS(GodModeController) {
 	/* UI toggles*/
 	MEMBER(MemberType::GAME_OBJECT_UID, uiCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, spawnMeleeUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, spawnRangedUID),
-	/* Enemy groups*/
-	MEMBER(MemberType::GAME_OBJECT_UID, enemiesUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, debugEnemiesUID),
-	/* Cameras */
-	MEMBER(MemberType::GAME_OBJECT_UID, godCameraUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, gameCameraUID),
-	/* Player controller */
-	MEMBER(MemberType::GAME_OBJECT_UID, playerControllerUID)
+		MEMBER(MemberType::GAME_OBJECT_UID, spawnMeleeUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, spawnRangedUID),
+		/* Enemy groups*/
+		MEMBER(MemberType::GAME_OBJECT_UID, enemiesUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, debugEnemiesUID),
+		/* Cameras */
+		MEMBER(MemberType::GAME_OBJECT_UID, godCameraUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, gameCameraUID),
+		/* Player controller */
+		MEMBER(MemberType::GAME_OBJECT_UID, playerControllerUID),
+		/* Level Doors */
+		MEMBER(MemberType::GAME_OBJECT_UID, plazaDoorUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, cafeteriaDoorUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, bridgeDoorUID)
 };
 
 GENERATE_BODY_IMPL(GodModeController);
@@ -40,6 +44,14 @@ void GodModeController::Start() {
 	/* Player controller */
 	playerController = GameplaySystems::GetGameObject(playerControllerUID);
 	if (playerController) playerControllerScript = GET_SCRIPT(playerController, PlayerController);
+	/* Level doors */
+	plazaDoor = GameplaySystems::GetGameObject(plazaDoorUID);
+	cafeteriaDoor = GameplaySystems::GetGameObject(cafeteriaDoorUID);
+	bridgeDoor = GameplaySystems::GetGameObject(bridgeDoorUID);
+
+	doorPreviousStates.emplace_back(plazaDoor, plazaDoor ? plazaDoor->IsActive() : false);
+	doorPreviousStates.emplace_back(cafeteriaDoor, cafeteriaDoor ? cafeteriaDoor->IsActive() : false);
+	doorPreviousStates.emplace_back(bridgeDoor, bridgeDoor ? bridgeDoor->IsActive() : false);
 
 	for (GameObject* child : uiCanvas->GetChildren()) {
 		if (child->HasComponent<ComponentToggle>()) {
@@ -79,10 +91,16 @@ void GodModeController::OnChildToggle(unsigned int index, bool isChecked) {
 		if (isChecked) {
 			if (enemies) enemies->Enable();
 			if (debugEnemies) debugEnemies->Enable();
+			for (std::vector <std::pair<GameObject*, bool>>::iterator it = doorPreviousStates.begin(), end = doorPreviousStates.end(); it != end; ++it) {
+				if (it->first && it->second) it->first->Enable();
+			}
 		}
 		else {
 			if (enemies) enemies->Disable();
 			if (debugEnemies) debugEnemies->Disable();
+			for (std::vector <std::pair<GameObject*, bool>>::iterator it = doorPreviousStates.begin(), end = doorPreviousStates.end(); it != end; ++it) {
+				if (it->first && it->second) it->first->Disable();
+			}
 		}
 		break;
 	case 3:
