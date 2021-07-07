@@ -4,8 +4,6 @@
 
 class ComponentAnimation;
 
-static const char* states[] = { "Start", "Shoot", "End" };
-
 class LaserTurret : public Script
 {
 	GENERATE_BODY(LaserTurret);
@@ -33,6 +31,8 @@ private:
 	TurretState currentState = TurretState::START;
 	
 	GameObject* laserObject = nullptr;
+
+	const char* states[3] = { "Startup", "Shoot", "End" };
 
 };
 

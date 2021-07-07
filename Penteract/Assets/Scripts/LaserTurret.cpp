@@ -30,7 +30,7 @@ void LaserTurret::Update() {
         if (laserObject && laserObject->IsActive()) laserObject->Disable();
     }
     else {
-        if (laserObject && laserObject->IsActive()) laserObject->Enable();
+        if (laserObject && !laserObject->IsActive()) laserObject->Enable();
     }
 	
 }
