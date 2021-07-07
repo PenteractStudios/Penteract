@@ -14,6 +14,7 @@ class ComponentMeshRenderer;
 class ResourcePrefab;
 class HUDController;
 class PlayerController;
+class PlayerDeath;
 class AIMovement;
 class WinLose;
 class EnemySpawnPoint;
@@ -49,7 +50,7 @@ public:
 	UID canvasUID = 0;
 	UID winConditionUID = 0;
 	UID meleePunchUID = 0;
-
+	UID fangUID = 0;
 	// Hit feedback
 	UID defaultMaterialPlaceHolderUID = 0;
 	UID damageMaterialPlaceHolderUID = 0;
@@ -57,6 +58,7 @@ public:
 	UID damageMaterialID = 0;
 
 	GameObject* player = nullptr;
+	GameObject* fang = nullptr;
 	GameObject* spawn = nullptr;
 	ComponentAgent* agent = nullptr;
 	ResourcePrefab* meleePunch = nullptr;
@@ -85,6 +87,7 @@ private:
 
 	HUDController* hudControllerScript = nullptr;
 	PlayerController* playerController = nullptr;
+	PlayerDeath* playerDeath = nullptr;
 	AIMovement* movementScript = nullptr;
 	EnemySpawnPoint* enemySpawnPointScript = nullptr;
 

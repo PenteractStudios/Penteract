@@ -27,6 +27,11 @@ public:
 	/* Player controller */
 	UID playerControllerUID = 0;
 
+	/* Level Doors */
+	UID plazaDoorUID = 0;
+	UID cafeteriaDoorUID = 0;
+	UID bridgeDoorUID = 0;
+
 public:
 	void Start() override;
 	void Update() override;
@@ -53,4 +58,12 @@ private:
 	/* Player controller */
 	GameObject* playerController = nullptr;
 	PlayerController* playerControllerScript = nullptr;
+
+	/* Level Doors */
+	GameObject* plazaDoor = nullptr;
+	GameObject* cafeteriaDoor = nullptr;
+	GameObject* bridgeDoor = nullptr;
+
+	/* Door array to keep previous state */
+	std::vector <std::pair<GameObject*, bool>> doorPreviousStates;
 };
