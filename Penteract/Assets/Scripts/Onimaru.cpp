@@ -36,7 +36,7 @@ void Onimaru::Shoot() {
 	if (!gunTransform || !transformForUltimateProjectileOrigin) return;
 	if (CanShoot()) {
 		shootingOnCooldown = true;
-	//	shooting = true;
+		//	shooting = true;
 		attackCooldownRemaining = 1.f / attackSpeed;
 
 		//NullRef on ultimate values
@@ -48,7 +48,7 @@ void Onimaru::Shoot() {
 		}
 
 		ComponentAudioSource* audioSourceToPlay = !ultimateInUse ? onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHOOT)] : onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SPECIAL_SHOOT)];
-		ResourcePrefab* bulletToInstantiate = !ultimateInUse ? bullet : ultimateBullet;
+		ComponentParticleSystem* bulletToInstantiate = !ultimateInUse ? bullet : ultimateBullet;
 		//float3 projectilePos = ultimateInUse ? transformForUltimateProjectileOrigin->GetGlobalPosition() : gunTransform->GetGlobalPosition();
 
 		if (audioSourceToPlay) {
@@ -437,7 +437,7 @@ void Onimaru::Update(bool lockMovement, bool lockRotation) {
 				shooting = true;
 				ultimateBullet->PlayChildParticles();
 				bullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
-				
+
 				if (ultimateTimeRemaining <= 0) {
 					FinishUltimate();
 					ultimateBullet->StopChildParticles();

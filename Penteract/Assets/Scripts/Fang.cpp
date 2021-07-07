@@ -61,7 +61,7 @@ void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, 
 			int i = 0;
 
 			for (ComponentAudioSource& src : characterGameObject->GetComponents<ComponentAudioSource>()) {
-				if (i < static_cast<int>(AudioPlayer::TOTAL)) playerAudios[i] = &src;
+				if (i < static_cast<int>(FANG_AUDIOS::TOTAL)) fangAudios[i] = &src;
 				i++;
 			}
 		}
@@ -91,7 +91,6 @@ void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, 
 			if (i < static_cast<int>(FANG_AUDIOS::TOTAL)) fangAudios[i] = &src;
 			i++;
 		}
-
 	}
 	EMP = GameplaySystems::GetGameObject(EMPUID);
 	if (EMP) {
@@ -118,7 +117,7 @@ bool Fang::CanSwitch() const {
 
 void Fang::IncreaseUltimateCounter()
 {
-	if(!ultimateOn) ultimateCooldownRemaining++;
+	if (!ultimateOn) ultimateCooldownRemaining++;
 }
 
 void Fang::GetHit(float damage_) {
@@ -141,7 +140,7 @@ void Fang::GetHit(float damage_) {
 void Fang::InitDash() {
 	if (CanDash()) {
 		hasDashed = true;
-		trailDash->Play();
+		if (trailDash) trailDash->Play();
 		trailDuration = dashDuration + trailDashOffsetDuration;
 		if (movementInputDirection != MovementDirection::NONE) {
 			dashDirection = GetDirection();
@@ -186,7 +185,7 @@ void Fang::trailDelay() {
 	}
 	else {
 		hasDashed = false;
-		trailDash->Stop();
+		if(trailDash)trailDash->Stop();
 	}
 }
 
@@ -246,6 +245,24 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 		}
 		else {
 			attackCooldownRemaining -= Time::GetDeltaTime();
+		}
+	}
+	//EMP Cooldown
+	if (EMPInCooldown) {
+		if (noCooldownMode || EMPCooldownRemaining <= 0.f) {
+			EMPCooldownRemaining = 0.f;
+			EMPInCooldown = false;
+		}
+		else {
+			EMPCooldownRemaining -= Time::GetDeltaTime();
+		}
+	}
+
+	//Ultimate Cooldown
+	if (ultimateInCooldown) {
+		if (noCooldownMode || ultimateCooldownRemaining >= ultimateCooldown) {
+			ultimateCooldownRemaining = ultimateCooldown;
+			ultimateInCooldown = false;
 		}
 	}
 }
@@ -353,7 +370,8 @@ void Fang::PlayAnimation() {
 					if (compAnimation->GetCurrentStateSecondary()) {
 						if (compAnimation->GetCurrentStateSecondary()->name == "RightShot") {
 							compAnimation->SendTriggerSecondary("RightShotDeath");
-						} else if (compAnimation->GetCurrentStateSecondary()->name == "LeftShot") {
+						}
+						else if (compAnimation->GetCurrentStateSecondary()->name == "LeftShot") {
 							compAnimation->SendTriggerSecondary("LeftShotDeath");
 						}
 					}
