@@ -287,15 +287,22 @@ void Fang::Shoot() {
 
 void Fang::PlayAnimation() {
 	if (!compAnimation) return;
+	if (!EMP) return;
 
 	int dashAnimation = 0;
 	if (dashing) {
 		dashAnimation = 4;
 		movementInputDirection = dashMovementDirection;
 	}
+	if (EMP->IsActive()) movementInputDirection = MovementDirection::NONE;
 
 	if (compAnimation->GetCurrentState()) {
-		if (movementInputDirection == MovementDirection::NONE) {
+		if (ultimateOn || compAnimation->GetCurrentState()->name == states[22]) {
+			if (compAnimation->GetCurrentState()->name != states[22]) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[22]);
+			}
+		}
+		else if (movementInputDirection == MovementDirection::NONE) {
 			if (!isAlive) {
 				if (compAnimation->GetCurrentState()->name != states[9]) {
 					compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[9]);
@@ -310,8 +317,11 @@ void Fang::PlayAnimation() {
 				}
 			}
 			else {
-				if (compAnimation->GetCurrentState()->name != states[0]) {
+				if (compAnimation->GetCurrentState()->name != states[0] && compAnimation->GetCurrentState()->name != states[21]) {
 					compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[0]);
+				}
+				if (compAnimation->GetCurrentState()->name == states[0] && EMP->IsActive()) {
+					compAnimation->SendTrigger(states[0] + states[21]);
 				}
 			}
 		}
