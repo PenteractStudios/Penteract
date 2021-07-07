@@ -19,9 +19,6 @@ void ScreenResolutionConfirmer::Start() {
 }
 
 void ScreenResolutionConfirmer::Update() {
-    
-    screenResolutionChangeConfirmationWasRequested = true;
-
     /* Audio */
     if (selectable) {
         ComponentEventSystem* eventSystem = UserInterface::GetCurrentEventSystem();
