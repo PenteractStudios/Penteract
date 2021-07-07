@@ -96,7 +96,7 @@ private:
 	HUDController* hudControllerScript = nullptr;
 
 	//Ultimate
-	int ultimateCooldownRemaining = 2;
+	int ultimateCooldownRemaining = 0;	
 	bool ultimateInCooldown = false;
 	float oldMovementSpeed = 1.0f;
 	UltimateFang* ultimateScript = nullptr;

@@ -107,7 +107,7 @@ void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, 
 	GameObject* fangUltimateGameObject = GameplaySystems::GetGameObject(fangUltimateUID);
 	if (fangUltimateGameObject) {
 		ultimateScript = GET_SCRIPT(fangUltimateGameObject, UltimateFang);
-		ultimateCooldownRemaining = ultimateCooldown;
+		ultimateCooldownRemaining = 0;
 	}
 }
 bool Fang::CanSwitch() const {
