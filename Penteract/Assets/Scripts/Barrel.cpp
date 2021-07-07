@@ -32,12 +32,13 @@ void Barrel::Start() {
 }
 
 void Barrel::Update() {
+
 	if (isHit) {
-		barrelCollider->Enable();
+		if(barrelCollider) barrelCollider->Enable();
 		isHit = false;
-		particles->PlayChildParticles();
-		audio->Play();
-		barrel->GetComponent<ComponentMeshRenderer>()->Disable();
+		if(particles) particles->PlayChildParticles();
+		if(audio) audio->Play();
+		if(barrel) barrel->GetComponent<ComponentMeshRenderer>()->Disable();
 	}
 	else {
 		//barrelCollider->Disable();
@@ -48,7 +49,7 @@ void Barrel::Update() {
 		}
 		else {
 			destroy = false;
-			GameplaySystems::DestroyGameObject(barrel->GetParent());
+			if(barrel) GameplaySystems::DestroyGameObject(barrel->GetParent());
 		}
 	}
 }

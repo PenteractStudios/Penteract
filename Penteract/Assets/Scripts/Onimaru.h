@@ -78,8 +78,6 @@ public:
 
 	float GetRealUltimateCooldown();
 
-	Quat GetSlightRandomSpread(float minValue, float maxValue) const;
-
 	// Abilities' cooldowns
 	float GetRealBlastCooldown();
 	float GetRealShieldCooldown();
@@ -93,12 +91,11 @@ private:
 
 	ResourcePrefab* trail = nullptr;
 	ComponentParticleSystem* bullet = nullptr;
+	
 	ComponentParticleSystem* ultimateBullet = nullptr;
-	ComponentParticleSystem* ultimateSystem = nullptr;
+
 	ComponentTransform* gunTransform = nullptr;
 
-	ComponentParticleSystem* ultimateParticles = nullptr;
-	ComponentTransform* transformForUltimateProjectileOrigin = nullptr;
 
 	ComponentTransform* rightHand = nullptr;
 	ComponentParticleSystem* blastParticles = nullptr;
@@ -131,6 +128,7 @@ private:
 
 
 	std::vector<GameObject*> enemiesInMap;
+
 private:
 
 	bool CanShoot() override;

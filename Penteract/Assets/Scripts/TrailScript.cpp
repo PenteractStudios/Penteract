@@ -4,8 +4,8 @@
 #include "GameplaySystems.h"
 EXPOSE_MEMBERS(TrailScript) {
 	MEMBER(MemberType::INT, speed),
-		MEMBER(MemberType::FLOAT, life),
-		MEMBER(MemberType::FLOAT, offsetPosition)
+	MEMBER(MemberType::FLOAT, life),
+	MEMBER(MemberType::FLOAT, offsetPosition)
 };
 
 GENERATE_BODY_IMPL(TrailScript);

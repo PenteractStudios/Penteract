@@ -28,7 +28,7 @@ void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, 
 		GameObject* trailAux = GameplaySystems::GetGameObject(trailDashUID);
 		if (trailAux) {
 			trailDash = trailAux->GetComponent<ComponentTrail>();
-			trailDash->Stop();
+			if(trailDash) trailDash->Stop();
 		}
 		trailGun = GameplaySystems::GetResource<ResourcePrefab>(trailGunUID);
 
@@ -185,7 +185,7 @@ void Fang::trailDelay() {
 	}
 	else {
 		hasDashed = false;
-		if (trailDash)trailDash->Stop();
+		if (trailDash) trailDash->Stop();
 	}
 }
 

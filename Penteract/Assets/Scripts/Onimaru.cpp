@@ -33,7 +33,9 @@ void Onimaru::GetHit(float damage_) {
 }
 
 void Onimaru::Shoot() {
-	if (!gunTransform || !transformForUltimateProjectileOrigin) return;
+
+	if (!gunTransform) return;
+
 	if (CanShoot()) {
 		shootingOnCooldown = true;
 		//	shooting = true;
@@ -48,28 +50,11 @@ void Onimaru::Shoot() {
 		}
 
 		ComponentAudioSource* audioSourceToPlay = !ultimateInUse ? onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHOOT)] : onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SPECIAL_SHOOT)];
-		ComponentParticleSystem* bulletToInstantiate = !ultimateInUse ? bullet : ultimateBullet;
-		//float3 projectilePos = ultimateInUse ? transformForUltimateProjectileOrigin->GetGlobalPosition() : gunTransform->GetGlobalPosition();
 
 		if (audioSourceToPlay) {
 			audioSourceToPlay->Play();
 		}
 
-		if (ultimateInUse) {
-			if (ultimateParticles) {
-				ultimateParticles->Play();
-			}
-		}
-
-		if (bulletToInstantiate) {
-			//GameObject* bulletInstance = GameplaySystems::Instantiate(bulletToInstantiate, projectilePos, Quat(0.0f, 0.0f, 0.0f, 0.0f));
-			/*if (bulletInstance) {
-				OnimaruBullet* onimaruBulletScript = GET_SCRIPT(bulletInstance, OnimaruBullet);
-				if (onimaruBulletScript) {
-					onimaruBulletScript->SetOnimaruDirection(GetSlightRandomSpread(0, maxBulletSpread) * gunTransform->GetGlobalRotation());
-				}
-			}*/
-		}
 	}
 }
 
@@ -287,6 +272,7 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 			agent->SetMaxSpeed(movementSpeed);
 			agent->SetMaxAcceleration(MAX_ACCELERATION);
 		}
+
 		GameObject* bulletAux = GameplaySystems::GetGameObject(onimaruBulletUID);
 		if (bulletAux) {
 			bullet = bulletAux->GetComponent<ComponentParticleSystem>();
@@ -295,12 +281,10 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 				bullet->Play();
 			}
 		}
+
 		GameObject* ultimateBulletAux = GameplaySystems::GetGameObject(onimaruUltimateBulletUID);
 		if (bulletAux) {
 			ultimateBullet = ultimateBulletAux->GetComponent<ComponentParticleSystem>();
-			if (ultimateBullet) {
-				//ultimateBullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
-			}
 		}
 	}
 
@@ -311,24 +295,17 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 		gunTransform = onimaruGun->GetComponent<ComponentTransform>();
 		lookAtMousePlanePosition = gunTransform->GetGlobalPosition();
 	}
+
 	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
 	if (canvasGO) {
 		hudControllerScript = GET_SCRIPT(canvasGO, HUDController);
 	}
+
 	shieldGO = GameplaySystems::GetGameObject(shieldUID);
 	if (shieldGO) {
 		shield = GET_SCRIPT(shieldGO, Shield);
 		shieldGO->Disable();
 	}
-
-	/*GameObject* onimaruObjForUltProj = GameplaySystems::GetGameObject(onimaruTransformForUltimateProjectileOriginUID);
-	if (onimaruObjForUltProj) {
-		transformForUltimateProjectileOrigin = onimaruObjForUltProj->GetComponent<ComponentTransform>();
-	}
-
-	if (transformForUltimateProjectileOrigin == nullptr) {
-		transformForUltimateProjectileOrigin = gunTransform;
-	}*/
 
 	if (characterGameObject) {
 		//Get audio sources
@@ -430,6 +407,7 @@ void Onimaru::Update(bool lockMovement, bool lockRotation) {
 			}
 		}
 		else {
+
 			//Ultimate execution
 			if (ultimateTimeRemaining > 0) {
 				ultimateTimeRemaining -= Time::GetDeltaTime();
@@ -458,8 +436,10 @@ void Onimaru::Update(bool lockMovement, bool lockRotation) {
 			if (Input::GetMouseButtonDown(0)) {
 				if (!shooting) {
 					shooting = true;
-					bullet->Play();
-					bullet->SetParticlesPerSecond(float2(attackSpeed, attackSpeed));
+					if (bullet) {
+						bullet->Play();
+						bullet->SetParticlesPerSecond(float2(attackSpeed, attackSpeed));
+					}
 					if (compAnimation) {
 						if (!shield->GetIsActive()) {
 							if (compAnimation->GetCurrentState()) {
@@ -476,7 +456,6 @@ void Onimaru::Update(bool lockMovement, bool lockRotation) {
 				else {
 					Shoot();
 				}
-				//shooting = true;
 			}
 		}
 
@@ -493,9 +472,10 @@ void Onimaru::Update(bool lockMovement, bool lockRotation) {
 						compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 					}
 				}
-				bullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
+				if(bullet) bullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
 			}
 		}
+
 		if (CanBlast()) {
 			if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_Q)) {
 				blastInUse = true;
@@ -528,20 +508,6 @@ void Onimaru::Update(bool lockMovement, bool lockRotation) {
 		Blast();
 	}
 	PlayAnimation();
-}
-
-Quat Onimaru::GetSlightRandomSpread(float minValue, float maxValue) const {
-	float sign = rand() % 2 < 1 ? 1.0f : -1.0f;
-
-	float4 axis = float4(gunTransform->GetUp(), 1);
-
-	float randomAngle = static_cast<float>((rand() % static_cast<int>(maxValue * 100))) / 100 + minValue;
-
-	Quat result = Quat(0, 0, 0, 1);
-
-	result.SetFromAxisAngle(axis, DEGTORAD * randomAngle * sign);
-
-	return result;
 }
 
 float Onimaru::GetRealUltimateCooldown() {

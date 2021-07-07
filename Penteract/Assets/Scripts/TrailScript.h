@@ -15,7 +15,7 @@ public:
 public:
 	int speed = 200;
 	float life = 0.2f;
-	int offsetPosition = 2.0f;
+	float offsetPosition = 2.0f;
 private:
 	float restLife = 0.0f;
 	bool itsVertical = false;

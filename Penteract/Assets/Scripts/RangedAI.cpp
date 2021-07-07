@@ -21,25 +21,25 @@
 //clang-format off
 EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
-		MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
-		MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
-		MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),
-		MEMBER(MemberType::INT, rangerGruntCharacter.lifePoints),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.timeToDie),
-		MEMBER(MemberType::FLOAT, attackSpeed),
-		MEMBER(MemberType::FLOAT, fleeingRange),
-		MEMBER(MemberType::PREFAB_RESOURCE_UID, trailPrefabUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
-		MEMBER(MemberType::GAME_OBJECT_UID, hudControllerObjUID),
-		MEMBER(MemberType::FLOAT, timeSinceLastHurt),
-		MEMBER(MemberType::FLOAT, approachOffset), //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
-		MEMBER(MemberType::FLOAT, stunDuration)
+	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
+	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
+	MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
+	MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),
+	MEMBER(MemberType::INT, rangerGruntCharacter.lifePoints),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.timeToDie),
+	MEMBER(MemberType::FLOAT, attackSpeed),
+	MEMBER(MemberType::FLOAT, fleeingRange),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, trailPrefabUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
+	MEMBER(MemberType::GAME_OBJECT_UID, hudControllerObjUID),
+	MEMBER(MemberType::FLOAT, timeSinceLastHurt),
+	MEMBER(MemberType::FLOAT, approachOffset), //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
+	MEMBER(MemberType::FLOAT, stunDuration)
 };//clang-format on
 
 GENERATE_BODY_IMPL(RangedAI);
@@ -200,6 +200,12 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 				}
 			}
 			else if (collidedWith.name == "OnimaruBullet") {
+
+				if (!particle) return;
+				ComponentParticleSystem::Particle* p = static_cast<ComponentParticleSystem::Particle*>(particle);
+				ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+				if (pSystem && p) pSystem->KillParticle(p);
+
 				hitTaken = true;
 				if (state == AIState::STUNNED && EMPUpgraded) {
 					rangerGruntCharacter.GetHit(99);
@@ -209,10 +215,12 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 				}
 			}
 			else if (collidedWith.name == "OnimaruBulletUltimate") {
+				
 				if (!particle) return;
-				ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+				ComponentParticleSystem::Particle* p = static_cast<ComponentParticleSystem::Particle*>(particle);
 				ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
-				if (pSystem) pSystem->KillParticle(p);
+				if (pSystem && p) pSystem->KillParticle(p);
+				
 				hitTaken = true;
 				if (state == AIState::STUNNED && EMPUpgraded) {
 					rangerGruntCharacter.GetHit(99);
@@ -225,6 +233,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 				rangerGruntCharacter.GetHit(playerDeath->barrelDamageTaken);
 				hitTaken = true;
 			}
+
 			if (hitTaken) {
 				PlayAudio(AudioType::HIT);
 				if (meshRenderer) {
@@ -234,6 +243,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 				}
 				timeSinceLastHurt = 0.0f;
 			}
+
 			if (collidedWith.name == "EMP") {
 				if (agent) agent->RemoveAgentFromCrowd();
 				stunTimeRemaining = stunDuration;
