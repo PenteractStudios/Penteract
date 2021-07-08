@@ -80,8 +80,8 @@ void VehicleLine::UpdateVehicles()
 
 bool VehicleLine::VehicleOutsideMap(const float3 posVehicle)
 {
-    if (posVehicle.x < -300 || posVehicle.x > 300) return true;
-    if (posVehicle.y < -300 || posVehicle.y > 300) return true;
-    if (posVehicle.z < -300 || posVehicle.z > 300) return true;
+    if (posVehicle.x < -600 || posVehicle.x > 600) return true;
+    if (posVehicle.y < -600 || posVehicle.y > 600) return true;
+    if (posVehicle.z < -600 || posVehicle.z > 600) return true;
     return false;
 }

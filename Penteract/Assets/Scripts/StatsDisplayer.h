@@ -13,13 +13,16 @@ public:
 
 	void Start() override;
 	void Update() override;
+	void SetPanelActive(bool value);
 
 public:
-	UID fangUID;
-	UID canvasUID;
+	UID fangUID = 0;
+	UID canvasUID = 0;
+	UID canvasTextsUID = 0;
 
 private:
 	GameObject* canvas = nullptr;
+	GameObject* canvasTexts = nullptr;
 	GameObject* player = nullptr;
 
 	ComponentText* fpsText = nullptr;

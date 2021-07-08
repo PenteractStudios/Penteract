@@ -57,7 +57,7 @@ public:
 	float ultimateTimeRemaining = 0.0f;
 	float ultimateTotalTime = 3.0f;
 	float ultimateRotationSpeed = 2.0f;
-	float maxBulletSpread = 5.0f;
+
 	// Blast ability
 	float blastCooldown = 7.f;
 	float blastDistance = 15.f;
@@ -79,9 +79,6 @@ public:
 
 	float GetRealUltimateCooldown();
 
-	Quat GetSlightRandomSpread(float minValue, float maxValue) const;
-
-
 	// Abilities' cooldowns
 	float GetRealBlastCooldown();
 	float GetRealShieldCooldown();
@@ -94,13 +91,12 @@ public:
 private:
 
 	ResourcePrefab* trail = nullptr;
-	ResourcePrefab* bullet = nullptr;
-	ResourcePrefab* ultimateBullet = nullptr;
-	ComponentParticleSystem* ultimateSystem = nullptr;
+	ComponentParticleSystem* bullet = nullptr;
+	
+	ComponentParticleSystem* ultimateBullet = nullptr;
+
 	ComponentTransform* gunTransform = nullptr;
 
-	ComponentParticleSystem* ultimateParticles = nullptr;
-	ComponentTransform* transformForUltimateProjectileOrigin = nullptr;
 
 	ComponentTransform* rightHand = nullptr;
 	ComponentParticleSystem* blastParticles = nullptr;
@@ -115,7 +111,7 @@ private:
 
 	bool blastInUse = false;
 	bool ultimateInUse = false;
-
+	bool shooting = false;
 
 	// Blast ability
 	float currentBlastDuration = 0.f;
@@ -132,6 +128,7 @@ private:
 
 
 	std::vector<GameObject*> enemiesInMap;
+
 private:
 
 	bool CanShoot() override;

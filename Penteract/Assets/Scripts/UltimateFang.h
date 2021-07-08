@@ -23,10 +23,9 @@ private:
 public:
 	float radius = 5.0f;
 	UID fangBulletUID = 0;
-	UID fangTrailUID = 0;
 
 private:
-	ResourcePrefab* trail = nullptr;
+
 	ResourcePrefab* bullet = nullptr;
 
 	bool tickOn = false;

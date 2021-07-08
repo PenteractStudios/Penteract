@@ -65,12 +65,15 @@ void AIMovement::Seek(AIState state, const float3& newPosition, int speed, bool 
 			velocity = agent->GetVelocity();
 		}
 	}
-
 	if (state != AIState::START && orientateToDir) {
-		targetRotation = Quat::LookAt(float3(0, 0, 1), velocity.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
+		Orientate(velocity);
+	}
+
+}
+void AIMovement::Orientate(const float3& direction) {
+		targetRotation = Quat::LookAt(float3(0, 0, 1), direction.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
 		Quat rotation = Quat::Slerp(ownerTransform->GetGlobalRotation(), targetRotation, Min(Time::GetDeltaTime() / Max(rotationSmoothness, 0.000001f), 1.0f));
 		ownerTransform->SetGlobalRotation(rotation);
-	}
 }
 
 bool AIMovement::CharacterInSight(const GameObject* character, const float searchRadius) {

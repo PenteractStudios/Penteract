@@ -4,15 +4,16 @@
 #include "GameplaySystems.h"
 
 EXPOSE_MEMBERS(Resume) {
-	MEMBER(MemberType::GAME_OBJECT_UID, hudUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, pauseUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, gameControllerUID)
 };
 
 GENERATE_BODY_IMPL(Resume);
 
 void Resume::Start() {
-	pauseCanvas = GameplaySystems::GetGameObject(pauseUID);
-	hudCanvas = GameplaySystems::GetGameObject(hudUID);
+	GameObject* gameControllerGameObject = GameplaySystems::GetGameObject(gameControllerUID);
+	if (gameControllerGameObject) {
+		gameController = GET_SCRIPT(gameControllerGameObject, GameController);
+	}
 
 	/* Audio */
 	selectable = GetOwner().GetComponent<ComponentSelectable>();
@@ -51,12 +52,8 @@ void Resume::Update() {
 
 void Resume::OnButtonClick() {
 	PlayAudio(UIAudio::CLICKED);
-	if (!pauseCanvas) return;
-
-	if (pauseCanvas->IsActive()) {
-		pauseCanvas->Disable();
-		if (hudCanvas) hudCanvas->Enable();
-		Time::ResumeGame();
+	if (gameController) {
+		gameController->ResumeGame();
 	}
 }
 
