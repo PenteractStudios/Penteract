@@ -37,98 +37,6 @@
                 "StateMachineSecondaryId": 11325116874157791137
             },
             {
-                "Type": "Script",
-                "Active": true,
-                "Script": 5891617165801964658,
-                "Values": [
-                    {
-                        "Name": "playerUID",
-                        "Type": "GameObjectUID",
-                        "Value": 9349791306028942696
-                    },
-                    {
-                        "Name": "playerMeshUIDFang",
-                        "Type": "GameObjectUID",
-                        "Value": 8818586851523472818
-                    },
-                    {
-                        "Name": "fleeingRange",
-                        "Type": "Float",
-                        "Value": 7.0
-                    },
-                    {
-                        "Name": "playerMeshUIDOnimaru",
-                        "Type": "GameObjectUID",
-                        "Value": 9731621354327714566
-                    },
-                    {
-                        "Name": "meshUID2",
-                        "Type": "GameObjectUID",
-                        "Value": 7691413884628165645
-                    },
-                    {
-                        "Name": "approachOffset",
-                        "Type": "Float",
-                        "Value": 5.0
-                    },
-                    {
-                        "Name": "meshUID",
-                        "Type": "GameObjectUID",
-                        "Value": 7691413884628165645
-                    },
-                    {
-                        "Name": "trailPrefabUID",
-                        "Type": "PrefabResourceUID",
-                        "Value": 4959781306678769485
-                    },
-                    {
-                        "Name": "meshUID1",
-                        "Type": "GameObjectUID",
-                        "Value": 7691413884628165645
-                    },
-                    {
-                        "Name": "dmgMaterialObj",
-                        "Type": "GameObjectUID",
-                        "Value": 5104266340542563287
-                    },
-                    {
-                        "Name": "hudControllerObjUID",
-                        "Type": "GameObjectUID",
-                        "Value": 14868147654044498958
-                    },
-                    {
-                        "Name": "rangerGruntCharacter.attackRange",
-                        "Type": "Float",
-                        "Value": 20.0
-                    },
-                    {
-                        "Name": "attackSpeed",
-                        "Type": "Float",
-                        "Value": 0.5
-                    },
-                    {
-                        "Name": "winConditionUID",
-                        "Type": "GameObjectUID",
-                        "Value": 16579210181260590797
-                    },
-                    {
-                        "Name": "fangUID",
-                        "Type": "GameObjectUID",
-                        "Value": 5514062913432514002
-                    },
-                    {
-                        "Name": "hurtFeedbackTimeDuration",
-                        "Type": "Float",
-                        "Value": 0.10000000149011612
-                    },
-                    {
-                        "Name": "rangerGruntCharacter.lifePoints",
-                        "Type": "Int",
-                        "Value": 5
-                    }
-                ]
-            },
-            {
                 "Type": "Agent",
                 "Active": true,
                 "MaxSpeed": 8.0,
@@ -220,12 +128,6 @@
                 "freezeRotation": false
             },
             {
-                "Type": "Script",
-                "Active": true,
-                "Script": 6803541990823883369,
-                "Values": null
-            },
-            {
                 "Type": "AudioSource",
                 "Active": true,
                 "Pitch": 1.0,
@@ -258,6 +160,18 @@
                 "RolloffFactor": 1.0,
                 "ReferenceDistance": 10.0,
                 "MaxDistance": 30.0
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 6803541990823883369,
+                "Values": null
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 5891617165801964658,
+                "Values": null
             }
         ],
         "Children": [
