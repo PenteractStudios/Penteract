@@ -52,6 +52,11 @@
                         "Value": 15039598287603546886
                     },
                     {
+                        "Name": "meshUID2",
+                        "Type": "GameObjectUID",
+                        "Value": 7691413884628165645
+                    },
+                    {
                         "Name": "fleeingRange",
                         "Type": "Float",
                         "Value": 7.0
@@ -60,11 +65,6 @@
                         "Name": "playerMeshUIDOnimaru",
                         "Type": "GameObjectUID",
                         "Value": 18322483683245720617
-                    },
-                    {
-                        "Name": "meshUID2",
-                        "Type": "GameObjectUID",
-                        "Value": 7691413884628165645
                     },
                     {
                         "Name": "approachOffset",
@@ -102,14 +102,14 @@
                         "Value": 20.0
                     },
                     {
-                        "Name": "winConditionUID",
-                        "Type": "GameObjectUID",
-                        "Value": 5515770555020674411
-                    },
-                    {
                         "Name": "attackSpeed",
                         "Type": "Float",
                         "Value": 1.0
+                    },
+                    {
+                        "Name": "winConditionUID",
+                        "Type": "GameObjectUID",
+                        "Value": 5515770555020674411
                     }
                 ]
             },
@@ -124,69 +124,69 @@
                 "Type": "AudioSource",
                 "Active": true,
                 "Pitch": 1.0,
-                "Gain": 1.0,
+                "Gain": 0.10000000149011612,
                 "Mute": false,
                 "Looping": false,
-                "AudioClipId": 17218961838489523187,
-                "SpatialBlend": 1,
+                "AudioClipId": 3408669197192801730,
+                "SpatialBlend": 0,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
                 "OuterGain": 0.0,
-                "RolloffFactor": 0.0,
-                "ReferenceDistance": 0.0,
-                "MaxDistance": 0.0
+                "RolloffFactor": 1.0,
+                "ReferenceDistance": 10.0,
+                "MaxDistance": 30.0
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 1.0,
+                "Gain": 0.25,
+                "Mute": false,
+                "Looping": false,
+                "AudioClipId": 11505540831480452867,
+                "SpatialBlend": 0,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0,
+                "RolloffFactor": 1.0,
+                "ReferenceDistance": 10.0,
+                "MaxDistance": 30.0
             },
             {
                 "Type": "AudioSource",
                 "Active": true,
                 "Pitch": 1.0,
                 "Gain": 1.0,
-                "Mute": false,
+                "Mute": true,
                 "Looping": false,
-                "AudioClipId": 4379174790856300983,
-                "SpatialBlend": 1,
+                "AudioClipId": 5583254593256726173,
+                "SpatialBlend": 0,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
                 "OuterGain": 0.0,
-                "RolloffFactor": 0.0,
-                "ReferenceDistance": 0.0,
-                "MaxDistance": 0.0
+                "RolloffFactor": 1.0,
+                "ReferenceDistance": 10.0,
+                "MaxDistance": 30.0
             },
             {
                 "Type": "AudioSource",
                 "Active": true,
                 "Pitch": 1.0,
                 "Gain": 1.0,
-                "Mute": false,
+                "Mute": true,
                 "Looping": false,
-                "AudioClipId": 8126213543823355106,
-                "SpatialBlend": 1,
+                "AudioClipId": 16630848835753496155,
+                "SpatialBlend": 0,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
                 "OuterGain": 0.0,
-                "RolloffFactor": 0.0,
-                "ReferenceDistance": 0.0,
-                "MaxDistance": 0.0
-            },
-            {
-                "Type": "AudioSource",
-                "Active": true,
-                "Pitch": 1.0,
-                "Gain": 1.0,
-                "Mute": false,
-                "Looping": false,
-                "AudioClipId": 6444016666284500200,
-                "SpatialBlend": 1,
-                "SourceType": 0,
-                "InnerAngle": 90.0,
-                "OuterAngle": 180.0,
-                "OuterGain": 0.0,
-                "RolloffFactor": 0.0,
-                "ReferenceDistance": 0.0,
-                "MaxDistance": 0.0
+                "RolloffFactor": 1.0,
+                "ReferenceDistance": 10.0,
+                "MaxDistance": 30.0
             },
             {
                 "Type": "CapsuleCollider",
@@ -209,6 +209,40 @@
                 "Active": true,
                 "Script": 6803541990823883369,
                 "Values": null
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 1.0,
+                "Gain": 0.3499999940395355,
+                "Mute": false,
+                "Looping": false,
+                "AudioClipId": 7710092202102288136,
+                "SpatialBlend": 0,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0,
+                "RolloffFactor": 1.0,
+                "ReferenceDistance": 10.0,
+                "MaxDistance": 30.0
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 1.0,
+                "Gain": 0.44999998807907107,
+                "Mute": false,
+                "Looping": false,
+                "AudioClipId": 158916888946945514,
+                "SpatialBlend": 0,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0,
+                "RolloffFactor": 1.0,
+                "ReferenceDistance": 10.0,
+                "MaxDistance": 30.0
             }
         ],
         "Children": [
