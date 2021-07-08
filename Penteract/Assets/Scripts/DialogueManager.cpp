@@ -215,7 +215,7 @@ void DialogueManager::CloseDialogue(Dialogue* dialogue)
 			runCloseAnimation = false;
 			animationLerpTime = 0;
 			activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(currentStartPosition);
-			TransitionUIElementsColor(false, false);
+			TransitionUIElementsColor(true, false);
 
 			if (activeDialogueObject) {
 				if (activeDialogueObject->IsActive()) {
