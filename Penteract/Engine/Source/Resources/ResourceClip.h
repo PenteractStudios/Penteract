@@ -9,7 +9,6 @@
 #include "Utils/UID.h"
 #include <string>
 
-
 struct EventClip  {
 	bool sent = false;
 	std::string name = "";	
