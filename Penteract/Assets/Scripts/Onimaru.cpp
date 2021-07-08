@@ -37,9 +37,6 @@ void Onimaru::IncreaseUltimateCounter() {
 }
 
 void Onimaru::Shoot() {
-
-	if (!gunTransform) return;
-
 	if (CanShoot()) {
 		shootingOnCooldown = true;
 		//	shooting = true;
@@ -436,7 +433,7 @@ void Onimaru::Update(bool lockMovement, bool lockRotation) {
 				}
 			}
 
-			if (Input::GetMouseButtonDown(0)) {
+			if (Input::GetMouseButtonDown(0) || Input::GetMouseButtonRepeat(0)) {
 				if (!shooting) {
 					shooting = true;
 					if (bullet) {
