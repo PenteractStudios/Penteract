@@ -73,6 +73,8 @@ public:
 
 	float stunDuration = 3.f;
 
+	float groundPosition = 3.0f;
+
 private:
 	float attackDuration = 2.2f;
 	float attackRemaining = 0.0f;
