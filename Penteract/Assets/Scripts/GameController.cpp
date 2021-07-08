@@ -17,6 +17,8 @@ EXPOSE_MEMBERS(GameController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, pauseUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, hudUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, settingsPlusUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dialoguesUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, godModeControllerUID),
 	MEMBER(MemberType::FLOAT, speed),
 	MEMBER(MemberType::FLOAT, rotationSpeedX),
@@ -43,6 +45,8 @@ void GameController::Start() {
 
 	pauseCanvas = GameplaySystems::GetGameObject(pauseUID);
 	hudCanvas = GameplaySystems::GetGameObject(hudUID);
+	settingsCanvas = GameplaySystems::GetGameObject(settingsPlusUID);
+	dialogueCanvas = GameplaySystems::GetGameObject(dialoguesUID);
 
 	if (gameCamera) {
 		camera = gameCamera->GetComponent<ComponentCamera>();
@@ -75,25 +79,17 @@ void GameController::Update() {
 			}
 		}
 	}
-	if (pauseCanvas) {
-		if (pauseCanvas->IsActive()) {
-			isPaused = true;
-		} else {
-			isPaused = false;
-		}
-	}
 
 	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)) {
-		if (pauseCanvas) {
-			if (!isPaused) {
-				Time::PauseGame();
-				if (hudCanvas) hudCanvas->Disable();
-				pauseCanvas->Enable();
-			} else {
-				Time::ResumeGame();
-				if (hudCanvas) hudCanvas->Enable();
-				pauseCanvas->Disable();
-			}
+		if (isPaused) {
+			Time::ResumeGame();
+			ClearPauseMenus();
+			isPaused = false;
+		}
+		else {
+			Time::PauseGame();
+			EnablePauseMenus();
+			isPaused = true;
 		}
 	}
 
@@ -245,5 +241,45 @@ void GameController::DoTransition() {
 			transitionFinished = true;
 			gameCamera->GetComponent<ComponentTransform>()->SetPosition(finalPosition);
 		}
+	}
+}
+
+void GameController::ClearPauseMenus() {
+	if (pauseCanvas) {
+		pauseCanvas->Disable();
+	}
+
+	if (settingsCanvas) {
+		std::vector<GameObject*> settingsChildren = settingsCanvas->GetChildren();
+		if (settingsChildren.size() > 0) {
+			settingsChildren[0]->Enable();		// Enables first screen of CanvasSettingsPlus
+			for (int i = 1; i < settingsChildren.size(); ++i) {
+				settingsChildren[i]->Disable();
+			}
+		}
+		settingsCanvas->Disable();
+	}
+
+	if (dialogueCanvas) {
+		dialogueCanvas->Enable();
+	}
+
+	if (hudCanvas) {
+		hudCanvas->Enable();
+	}
+}
+
+void GameController::EnablePauseMenus()
+{
+	if (hudCanvas) {
+		hudCanvas->Disable();
+	}
+
+	if (dialogueCanvas) {
+		dialogueCanvas->Disable();
+	}
+
+	if (pauseCanvas) {
+		pauseCanvas->Enable();
 	}
 }

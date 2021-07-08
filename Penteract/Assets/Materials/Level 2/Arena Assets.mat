@@ -20,6 +20,7 @@
     "NormalMap": 14196553855910878838,
     "NormalStrength": 1.0,
     "EmissiveMap": 7341825671824714218,
+    "Emissive": 2.0,
     "AmbientOcclusionMap": 364452535964820024,
     "Smoothness": 1.0,
     "HasSmoothnessInAlphaChannel": true,
