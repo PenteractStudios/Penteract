@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Modules/ModuleCamera.h"
 #include "GameplaySystems.h"
+#include "StatsDisplayer.h"
 
 #include "Math/float3x3.h"
 #include "Geometry/frustum.h"
@@ -22,6 +23,7 @@ EXPOSE_MEMBERS(GameController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, hudUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, settingsPlusUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, dialoguesUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, statsUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, godModeControllerUID),
 	MEMBER(MemberType::FLOAT, speed),
 	MEMBER(MemberType::FLOAT, rotationSpeedX),
@@ -50,6 +52,10 @@ void GameController::Start() {
 	hudCanvas = GameplaySystems::GetGameObject(hudUID);
 	settingsCanvas = GameplaySystems::GetGameObject(settingsPlusUID);
 	dialogueCanvas = GameplaySystems::GetGameObject(dialoguesUID);
+	GameObject* statsGameObject = GameplaySystems::GetGameObject(statsUID);
+	if (statsGameObject) {
+		statsController = GET_SCRIPT(statsGameObject, StatsDisplayer);
+	}
 
 	if (gameCamera) {
 		camera = gameCamera->GetComponent<ComponentCamera>();
@@ -292,5 +298,9 @@ void GameController::EnablePauseMenus()
 
 	if (pauseCanvas) {
 		pauseCanvas->Enable();
+	}
+
+	if (statsController) {
+		statsController->SetPanelActive(false);
 	}
 }

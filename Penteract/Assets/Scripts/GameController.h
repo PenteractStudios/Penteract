@@ -7,6 +7,7 @@
 class GameObject;
 class ComponentCamera;
 class ComponentTransform;
+class StatsDisplayer;
 
 struct TesseractEvent;
 
@@ -36,6 +37,7 @@ public:
 	UID hudUID = 0;
 	UID settingsPlusUID = 0;
 	UID dialoguesUID = 0;
+	UID statsUID = 0;
 
 	UID godModeControllerUID = 0;
 
@@ -65,6 +67,7 @@ private:
 	GameObject* hudCanvas = nullptr;
 	GameObject* settingsCanvas = nullptr;
 	GameObject* dialogueCanvas = nullptr;
+	StatsDisplayer* statsController = nullptr;
 
 	GameObject* godModeController = nullptr;
 
