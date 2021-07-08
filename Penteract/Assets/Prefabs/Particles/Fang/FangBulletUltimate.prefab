@@ -1,6 +1,6 @@
 {
     "Root": {
-        "Name": "FangBulletUlti",
+        "Name": "FangBullet",
         "Active": true,
         "RootBoneName": "",
         "Mask": 0,
@@ -130,7 +130,7 @@
                 ],
                 "HasCollision": true,
                 "LayerIndex": 5,
-                "CollRadius": 0.699999988079071
+                "CollRadius": 1.5
             },
             {
                 "Type": "Script",
@@ -140,7 +140,7 @@
                     {
                         "Name": "speed",
                         "Type": "Int",
-                        "Value": 50
+                        "Value": 20
                     },
                     {
                         "Name": "life",
