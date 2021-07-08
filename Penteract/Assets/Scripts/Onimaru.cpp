@@ -226,6 +226,11 @@ void Onimaru::OnAnimationSecondaryFinished() {
 	}
 }
 
+bool Onimaru::IsInstantOrientation(bool useGamepad) const {
+	//This must return true only when ultimate not in use and Gamepad is either not used or not connected
+	return !ultimateInUse && (!useGamepad || !Input::IsGamepadConnected(0));
+}
+
 void Onimaru::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
 	if (stateMachineEnum == StateMachineEnum::PRINCIPAL) {
 		if (std::strcmp(eventName, "FootstepRight")) {
