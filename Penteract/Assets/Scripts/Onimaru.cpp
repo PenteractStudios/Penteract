@@ -13,7 +13,7 @@ bool Onimaru::CanShoot() {
 }
 
 bool Onimaru::CanBlast() {
-	return !blastInCooldown && !IsShielding() && !ultimateInUse;
+	return !blastInCooldown && !IsShielding() && !ultimateInUse && !blastInUse;
 }
 
 void Onimaru::GetHit(float damage_) {
