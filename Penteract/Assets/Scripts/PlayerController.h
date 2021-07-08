@@ -44,7 +44,7 @@ public:
 	int GetOverPowerMode();
 	bool IsPlayerDead() { return !playerFang.isAlive || !playerOnimaru.isAlive; }
 	void TakeDamage(float damage);
-	void SetUseGamepad(bool useGamepad_);
+	static void SetUseGamepad(bool useGamepad_);
 
 	void AddEnemyInMap(GameObject* enemy);
 	void RemoveEnemyFromMap(GameObject* enemy);
@@ -55,7 +55,7 @@ public:
 	bool noCooldownMode = false;
 	bool debugGetHit = false;
 
-	bool useGamepad = false;
+	static bool useGamepad;
 
 	Onimaru playerOnimaru = Onimaru();
 	Fang playerFang = Fang();
@@ -85,7 +85,7 @@ public:
 	UID onimaruShieldUID = 0;
 	UID onimaruBlastEffectsUID = 0;
 	UID onimaruUltimateBulletUID = 0;
-	
+
 	//HUD
 	UID canvasUID = 0;
 	float fangRecoveryRate = 1.0f;

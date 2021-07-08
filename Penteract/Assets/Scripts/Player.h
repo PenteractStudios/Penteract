@@ -24,7 +24,8 @@ enum class InputActions {
 	SHOOT,
 	ABILITY_1,
 	ABILITY_2,
-	ABILITY_3
+	ABILITY_3,
+	INTERACT,
 };
 
 class Player : public Character {
@@ -70,12 +71,12 @@ public:
 	float attackSpeed = 1.0f;
 	float attackCooldownRemaining = 0.f;
 	bool shooting = false;
-	float orientationSpeed = 5.0f;
+	float orientationSpeed = 7.5;
 	float orientationThreshold = 5.0f;
 	int ultimateChargePoints = 0;
 	const int ultimateChargePointsTotal = 10;
 	bool shootingOnCooldown = false;
-	float normalOrientationSpeed = 5.0f;
+	float normalOrientationSpeed = 7.5f;
 
 	float3 lookAtMousePlanePosition = float3(0, 0, 0);
 	ComponentCamera* lookAtMouseCameraComp = nullptr;

@@ -78,7 +78,7 @@ void Player::LookAtFacePointTarget(bool useGamepad) {
 		aux2.y = 0;
 
 		facePointDir.Normalize();
-		
+
 		angle = facePointDir.AngleBetween(aux2);
 		float3 cross = Cross(aux2, facePointDir.Normalized());
 		float dot = Dot(cross, float3(0, 1, 0));
@@ -181,6 +181,13 @@ bool Player::GetInputBool(InputActions action, bool useGamepad) {
 			return Input::GetControllerButton(Input::SDL_CONTROLLER_BUTTON_RIGHTSHOULDER, 0);
 		} else {
 			return Input::GetKeyCodeDown(Input::KEYCODE::KEY_E);
+		}
+		break;
+	case InputActions::INTERACT:
+		if (useGamepad && Input::IsGamepadConnected(0)) {
+			return Input::GetControllerButton(Input::SDL_CONTROLLER_BUTTON_A, 0);
+		} else {
+			return Input::GetKeyCodeDown(Input::KEYCODE::KEY_F);
 		}
 		break;
 	default:

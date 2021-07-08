@@ -106,7 +106,7 @@ private:
 
 	//Audios
 	ComponentAudioSource* fangAudios[static_cast<int>(FANG_AUDIOS::TOTAL)] = { nullptr };
-
+	bool shootingWasPressed = false; //Small hack for this alpha to prevent full auto Fang 
 private:
 	void InitDash();
 	void Dash();
