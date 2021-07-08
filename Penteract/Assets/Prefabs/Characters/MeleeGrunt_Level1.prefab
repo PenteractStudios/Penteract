@@ -1,6 +1,6 @@
 {
     "Root": {
-        "Name": "MeleeGruntWeaponized",
+        "Name": "MeleeGrunt",
         "Active": true,
         "RootBoneName": "CenterHip",
         "Mask": 0,
@@ -55,14 +55,14 @@
                 "Script": 1991507863247597087,
                 "Values": [
                     {
-                        "Name": "playerUID",
-                        "Type": "GameObjectUID",
-                        "Value": 9349791306028942696
-                    },
-                    {
                         "Name": "defaultMaterialPlaceHolderUID",
                         "Type": "GameObjectUID",
                         "Value": 9837534394034980895
+                    },
+                    {
+                        "Name": "playerUID",
+                        "Type": "GameObjectUID",
+                        "Value": 9349791306028942696
                     },
                     {
                         "Name": "canvasUID",
