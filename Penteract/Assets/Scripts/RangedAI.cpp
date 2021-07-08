@@ -28,7 +28,7 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),
-	MEMBER(MemberType::INT, rangerGruntCharacter.lifePoints),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.lifePoints),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.timeToDie),
