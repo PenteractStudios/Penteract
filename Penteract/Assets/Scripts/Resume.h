@@ -2,6 +2,7 @@
 
 #include "Scripting/Script.h"
 #include "UIAudioType.h"
+#include "GameController.h"
 
 class ComponentAudioSource;
 class ComponentSelectable;
@@ -18,12 +19,10 @@ public:
 	void PlayAudio(UIAudio type);
 
 public:
-	UID pauseUID;
-	UID hudUID;
+	UID gameControllerUID;
 
 private:
-	GameObject* pauseCanvas = nullptr;
-	GameObject* hudCanvas = nullptr;
+	GameController* gameController = nullptr;
 
 	bool playHoveredAudio = true;
 	ComponentSelectable* selectable = nullptr;

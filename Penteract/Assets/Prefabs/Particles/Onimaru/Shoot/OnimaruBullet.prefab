@@ -7,7 +7,7 @@
         "Components": [
             {
                 "Type": "Transform",
-                "Active": false,
+                "Active": true,
                 "Position": [
                     82.6279296875,
                     106.59019470214844,
@@ -32,7 +32,7 @@
             },
             {
                 "Type": "Particle",
-                "Active": false,
+                "Active": true,
                 "DrawGizmo": true,
                 "Duration": 5.0,
                 "Looping": true,
@@ -47,8 +47,8 @@
                 ],
                 "SpeedRM": 0,
                 "Speed": [
-                    10.0,
-                    50.0
+                    70.0,
+                    70.0
                 ],
                 "RotationRM": 0,
                 "Rotation": [
@@ -129,7 +129,8 @@
                     false
                 ],
                 "HasCollision": true,
-                "LayerIndex": 5
+                "LayerIndex": 5,
+                "CollRadius": 1.0
             }
         ],
         "Children": null

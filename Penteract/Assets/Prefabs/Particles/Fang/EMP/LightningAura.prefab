@@ -9,9 +9,9 @@
                 "Type": "Transform",
                 "Active": true,
                 "Position": [
-                    -163.69329833984376,
-                    4.987459182739258,
-                    -34.2918586730957
+                    0.00032806396484375,
+                    12.53240966796875,
+                    -0.111328125
                 ],
                 "Rotation": [
                     0.0,
@@ -134,7 +134,7 @@
                 "IsRandomFrame": false,
                 "LoopAnimation": false,
                 "NCycles": 1.0,
-                "TextureId": 14863131994281073897,
+                "TextureId": 1939035675828465771,
                 "BillboardType": 0,
                 "ParticleRenderMode": 0,
                 "ParticleRenderAlignment": 0,
@@ -157,9 +157,9 @@
                         "Type": "Transform",
                         "Active": true,
                         "Position": [
-                            0.0,
-                            -0.8694033622741699,
-                            0.0
+                            0.00020599365234375,
+                            61.317596435546878,
+                            -0.0703125
                         ],
                         "Rotation": [
                             0.0,
@@ -282,7 +282,7 @@
                         "IsRandomFrame": false,
                         "LoopAnimation": false,
                         "NCycles": 1.0,
-                        "TextureId": 14863131994281073897,
+                        "TextureId": 1939035675828465771,
                         "BillboardType": 0,
                         "ParticleRenderMode": 0,
                         "ParticleRenderAlignment": 0,
@@ -306,9 +306,9 @@
                         "Type": "Transform",
                         "Active": true,
                         "Position": [
-                            0.0,
-                            1.0712909698486329,
-                            0.0
+                            0.0003814697265625,
+                            98.66976928710938,
+                            -0.12451171875
                         ],
                         "Rotation": [
                             0.0,
@@ -431,7 +431,7 @@
                         "IsRandomFrame": false,
                         "LoopAnimation": false,
                         "NCycles": 1.0,
-                        "TextureId": 14863131994281073897,
+                        "TextureId": 1939035675828465771,
                         "BillboardType": 0,
                         "ParticleRenderMode": 0,
                         "ParticleRenderAlignment": 0,
@@ -625,7 +625,7 @@
                         "Duration": 0.30000001192092898,
                         "Looping": false,
                         "StartDelay": [
-                            0.699999988079071,
+                            0.5,
                             0.699999988079071
                         ],
                         "LifeRM": 0,
@@ -715,7 +715,7 @@
                         "IsRandomFrame": false,
                         "LoopAnimation": false,
                         "NCycles": 1.0,
-                        "TextureId": 4389759815527656306,
+                        "TextureId": 16431456370975824094,
                         "BillboardType": 3,
                         "ParticleRenderMode": 0,
                         "ParticleRenderAlignment": 0,
@@ -767,7 +767,7 @@
                         "Duration": 0.20000000298023225,
                         "Looping": false,
                         "StartDelay": [
-                            0.75,
+                            0.41999998688697817,
                             0.75
                         ],
                         "LifeRM": 0,
@@ -787,8 +787,8 @@
                         ],
                         "ScaleRM": 0,
                         "Scale": [
-                            50.0,
-                            50.0
+                            160.0,
+                            160.0
                         ],
                         "ReverseEffect": false,
                         "ReverseDistanceRM": 0,
@@ -916,7 +916,7 @@
                         "Duration": 0.20000000298023225,
                         "Looping": false,
                         "StartDelay": [
-                            0.75,
+                            0.5,
                             0.75
                         ],
                         "LifeRM": 0,
@@ -1058,7 +1058,7 @@
                         "Duration": 0.15000000596046449,
                         "Looping": false,
                         "StartDelay": [
-                            0.800000011920929,
+                            0.5,
                             0.800000011920929
                         ],
                         "LifeRM": 1,
@@ -1068,8 +1068,8 @@
                         ],
                         "SpeedRM": 0,
                         "Speed": [
-                            0.0,
-                            6.0
+                            -10.0,
+                            10.0
                         ],
                         "RotationRM": 0,
                         "Rotation": [
@@ -1078,8 +1078,8 @@
                         ],
                         "ScaleRM": 0,
                         "Scale": [
-                            30.0,
-                            35.0
+                            55.0,
+                            70.0
                         ],
                         "ReverseEffect": true,
                         "ReverseDistanceRM": 0,
@@ -1087,7 +1087,7 @@
                             2.0,
                             5.0
                         ],
-                        "MaxParticle": 10,
+                        "MaxParticle": 15,
                         "AttachEmitter": true,
                         "ParticlesPerSecondRM": 0,
                         "ParticlesPerSecond": [
@@ -1155,7 +1155,7 @@
                         "IsRandomFrame": false,
                         "LoopAnimation": false,
                         "NCycles": 0.800000011920929,
-                        "TextureId": 14863131994281073897,
+                        "TextureId": 1939035675828465771,
                         "BillboardType": 1,
                         "ParticleRenderMode": 0,
                         "ParticleRenderAlignment": 0,
@@ -1207,7 +1207,7 @@
                         "Duration": 0.15000000596046449,
                         "Looping": false,
                         "StartDelay": [
-                            0.800000011920929,
+                            0.5,
                             0.800000011920929
                         ],
                         "LifeRM": 1,
@@ -1363,7 +1363,7 @@
                         "Duration": 0.20000000298023225,
                         "Looping": false,
                         "StartDelay": [
-                            0.75,
+                            0.47999998927116396,
                             0.75
                         ],
                         "LifeRM": 0,
@@ -1453,7 +1453,7 @@
                         "IsRandomFrame": true,
                         "LoopAnimation": false,
                         "NCycles": 1.0,
-                        "TextureId": 3861972816686270095,
+                        "TextureId": 762287842822865303,
                         "BillboardType": 2,
                         "ParticleRenderMode": 0,
                         "ParticleRenderAlignment": 0,
@@ -1505,7 +1505,7 @@
                         "Duration": 0.20000000298023225,
                         "Looping": false,
                         "StartDelay": [
-                            0.75,
+                            0.47999998927116396,
                             0.75
                         ],
                         "LifeRM": 0,
@@ -1595,7 +1595,7 @@
                         "IsRandomFrame": true,
                         "LoopAnimation": false,
                         "NCycles": 1.0,
-                        "TextureId": 3861972816686270095,
+                        "TextureId": 762287842822865303,
                         "BillboardType": 2,
                         "ParticleRenderMode": 0,
                         "ParticleRenderAlignment": 0,

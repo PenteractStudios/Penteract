@@ -100,6 +100,7 @@ public:
 	float actualShotMaxTime = 0.3f;		//Internal variable used to match the shooting animation and the projectile creation
 	float timeSinceLastHurt = 0.5f;		//Timer to keep track of how long it's been since AI was hurt, if higher than hurtFeedbackTimeDuration, this tries to make AI turn red with DamagedMaterial
 	float stunDuration = 3.f;			//Max time the enemy will be stunned
+	float hurtFeedbackTimeDuration = 0.5f;	//Time that damaged material will be shown whenever AI is hit
 
 private:
 
@@ -122,7 +123,6 @@ private:
 
 	float attackTimePool = 2.0f;			//Pool that counts down to 0 to make AI shoot a projectile
 	float actualShotTimer = -1.0f;			//Timer that counts down the seconds to match shooting animation with projectile creation
-	float hurtFeedbackTimeDuration = 0.5f;	//Time that damaged material will be shown whenever AI is hit
 
 	ComponentMeshRenderer* meshRenderer = nullptr;	//Reference to a meshRendererComponent, used for material setting on hurt
 
