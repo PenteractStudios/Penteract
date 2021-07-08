@@ -421,12 +421,7 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 			}
 			if (!dashing && !EMP->IsActive()) {
 				if (GetInputBool(InputActions::SHOOT, useGamepad)) {
-					if (!shootingWasPressed) {
-						Shoot();
-						shootingWasPressed = true;
-					}
-				} else {
-					shootingWasPressed = false;
+					Shoot();
 				}
 			}
 
