@@ -42,7 +42,8 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::FLOAT, timeSinceLastHurt),
 	MEMBER(MemberType::FLOAT, approachOffset), //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
 	MEMBER(MemberType::FLOAT, stunDuration),
-	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration)
+	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
+	MEMBER(MemberType::FLOAT, groundPosition)
 };//clang-format on
 
 GENERATE_BODY_IMPL(RangedAI);
@@ -387,7 +388,7 @@ void RangedAI::UpdateState() {
 	case AIState::START:
 		if (aiMovement) aiMovement->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), rangerGruntCharacter.fallingSpeed, true);
 		if (ownerTransform->GetGlobalPosition().y < 3.5f + 0e-5f) {
-			ownerTransform->SetGlobalPosition(float3(ownerTransform->GetGlobalPosition().x, 3.0f, ownerTransform->GetGlobalPosition().z));
+			ownerTransform->SetGlobalPosition(float3(ownerTransform->GetGlobalPosition().x, groundPosition, ownerTransform->GetGlobalPosition().z));
 			animation->SendTrigger("StartSpawn");
 			ChangeState(AIState::SPAWN);
 		}

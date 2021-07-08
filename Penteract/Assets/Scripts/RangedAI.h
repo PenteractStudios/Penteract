@@ -101,6 +101,7 @@ public:
 	float timeSinceLastHurt = 0.5f;		//Timer to keep track of how long it's been since AI was hurt, if higher than hurtFeedbackTimeDuration, this tries to make AI turn red with DamagedMaterial
 	float stunDuration = 3.f;			//Max time the enemy will be stunned
 	float hurtFeedbackTimeDuration = 0.5f;	//Time that damaged material will be shown whenever AI is hit
+	float groundPosition = 3.0f;
 
 private:
 
