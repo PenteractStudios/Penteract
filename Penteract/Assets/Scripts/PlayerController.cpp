@@ -77,7 +77,9 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, playerOnimaru.ultimateTotalTime),
 	MEMBER(MemberType::FLOAT, playerOnimaru.ultimateOrientationSpeed),
 	MEMBER(MemberType::INT, playerOnimaru.ultimateChargePoints),
-	MEMBER(MemberType::INT, playerOnimaru.ultimateChargePointsTotal)
+	MEMBER(MemberType::INT, playerOnimaru.ultimateChargePointsTotal),
+	MEMBER(MemberType::FLOAT, playerOnimaru.orientationThreshold),
+	MEMBER(MemberType::INT, playerFang.orientationThreshold)
 };
 
 GENERATE_BODY_IMPL(PlayerController);
