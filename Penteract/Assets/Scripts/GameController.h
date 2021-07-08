@@ -37,7 +37,7 @@ public:
 	UID hudUID = 0;
 	UID settingsPlusUID = 0;
 	UID dialoguesUID = 0;
-	UID statsUID = 0;
+	UID statsDisplayerUID = 0;
 
 	UID godModeControllerUID = 0;
 

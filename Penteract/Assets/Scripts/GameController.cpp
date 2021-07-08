@@ -23,7 +23,7 @@ EXPOSE_MEMBERS(GameController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, hudUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, settingsPlusUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, dialoguesUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, statsUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, statsDisplayerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, godModeControllerUID),
 	MEMBER(MemberType::FLOAT, speed),
 	MEMBER(MemberType::FLOAT, rotationSpeedX),
@@ -52,7 +52,7 @@ void GameController::Start() {
 	hudCanvas = GameplaySystems::GetGameObject(hudUID);
 	settingsCanvas = GameplaySystems::GetGameObject(settingsPlusUID);
 	dialogueCanvas = GameplaySystems::GetGameObject(dialoguesUID);
-	GameObject* statsGameObject = GameplaySystems::GetGameObject(statsUID);
+	GameObject* statsGameObject = GameplaySystems::GetGameObject(statsDisplayerUID);
 	if (statsGameObject) {
 		statsController = GET_SCRIPT(statsGameObject, StatsDisplayer);
 	}
