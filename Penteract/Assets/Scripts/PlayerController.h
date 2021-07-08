@@ -50,7 +50,7 @@ public:
 public:
 	//Debug
 	bool invincibleMode = false;
-	int overpowerMode = 1;
+	int overpowerMode = 0;
 	bool noCooldownMode = false;
 	bool debugGetHit = false;
 

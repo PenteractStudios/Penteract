@@ -7,7 +7,7 @@ public:
 	// ------- Contructors ------- //
 	Enemy() {};
 
-	Enemy(int lifePoints_, float movementSpeed_, int damageHit_, int fallingSpeed_, float searchRadius_, float attackRange_, float timeToDie_, float pushBackDistance_, float pushBackSpeed_)
+	Enemy(float lifePoints_, float movementSpeed_, float damageHit_, int fallingSpeed_, float searchRadius_, float attackRange_, float timeToDie_, float pushBackDistance_, float pushBackSpeed_)
 		: fallingSpeed(fallingSpeed_)
 		, searchRadius(searchRadius_) 
 		, attackRange(attackRange_)

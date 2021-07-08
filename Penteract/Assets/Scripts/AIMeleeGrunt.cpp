@@ -22,9 +22,9 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 		MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, damageMaterialPlaceHolderUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, defaultMaterialPlaceHolderUID),
-		MEMBER(MemberType::INT, gruntCharacter.lifePoints),
+		MEMBER(MemberType::FLOAT, gruntCharacter.lifePoints),
 		MEMBER(MemberType::FLOAT, gruntCharacter.movementSpeed),
-		MEMBER(MemberType::INT, gruntCharacter.damageHit),
+		MEMBER(MemberType::FLOAT, gruntCharacter.damageHit),
 		MEMBER(MemberType::INT, gruntCharacter.fallingSpeed),
 		MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
 		MEMBER(MemberType::FLOAT, gruntCharacter.attackRange),
@@ -142,7 +142,6 @@ void AIMeleeGrunt::Update() {
 			componentMeshRenderer->materialId = defaultMaterialID;
 		}
 	}
-
 	switch (state) {
 	case AIState::START:
 		movementScript->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), gruntCharacter.fallingSpeed, true);
