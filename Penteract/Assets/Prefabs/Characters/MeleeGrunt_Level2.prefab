@@ -55,11 +55,6 @@
                 "Script": 1991507863247597087,
                 "Values": [
                     {
-                        "Name": "hurtFeedbackTimeDuration",
-                        "Type": "Float",
-                        "Value": 0.10000000149011612
-                    },
-                    {
                         "Name": "gruntCharacter.pushBackDistance",
                         "Type": "Float",
                         "Value": 10.0
@@ -73,6 +68,11 @@
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
                         "Value": 17022400611641520942
+                    },
+                    {
+                        "Name": "hurtFeedbackTimeDuration",
+                        "Type": "Float",
+                        "Value": 0.10000000149011612
                     },
                     {
                         "Name": "canvasUID",
@@ -102,7 +102,7 @@
                     {
                         "Name": "gruntCharacter.pushBackSpeed",
                         "Type": "Float",
-                        "Value": 20.0
+                        "Value": 40.0
                     },
                     {
                         "Name": "groundPosition",

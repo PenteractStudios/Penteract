@@ -60,6 +60,11 @@
                         "Value": 0.10000000149011612
                     },
                     {
+                        "Name": "gruntCharacter.pushBackDistance",
+                        "Type": "Float",
+                        "Value": 10.0
+                    },
+                    {
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
                         "Value": 9349791306028942696
@@ -93,6 +98,11 @@
                         "Name": "fangUID",
                         "Type": "GameObjectUID",
                         "Value": 5514062913432514002
+                    },
+                    {
+                        "Name": "gruntCharacter.pushBackSpeed",
+                        "Type": "Float",
+                        "Value": 40.0
                     }
                 ]
             },

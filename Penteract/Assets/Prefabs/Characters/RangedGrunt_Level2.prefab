@@ -178,24 +178,24 @@
                         "Value": 17022400611641520942
                     },
                     {
-                        "Name": "fangUID",
-                        "Type": "GameObjectUID",
-                        "Value": 12436231335275064284
-                    },
-                    {
                         "Name": "dmgMaterialObj",
                         "Type": "GameObjectUID",
                         "Value": 12892112899398464731
                     },
                     {
-                        "Name": "playerMeshUIDFang",
+                        "Name": "fangUID",
                         "Type": "GameObjectUID",
-                        "Value": 15039598287603546886
+                        "Value": 12436231335275064284
                     },
                     {
                         "Name": "hudControllerObjUID",
                         "Type": "GameObjectUID",
                         "Value": 12906212173904593955
+                    },
+                    {
+                        "Name": "playerMeshUIDFang",
+                        "Type": "GameObjectUID",
+                        "Value": 15039598287603546886
                     },
                     {
                         "Name": "playerMeshUIDOnimaru",
@@ -230,7 +230,7 @@
                     {
                         "Name": "rangerGruntCharacter.pushBackSpeed",
                         "Type": "Float",
-                        "Value": 20.0
+                        "Value": 40.0
                     },
                     {
                         "Name": "groundPosition",
