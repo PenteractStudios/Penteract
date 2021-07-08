@@ -72,7 +72,7 @@ public:
 	float attackCooldownRemaining = 0.f;
 	bool shooting = false;
 	float orientationSpeed = 7.5;
-	float orientationThreshold = 5.0f;
+	float orientationThreshold = 1.0f;
 	int ultimateChargePoints = 0;
 	const int ultimateChargePointsTotal = 10;
 	bool shootingOnCooldown = false;

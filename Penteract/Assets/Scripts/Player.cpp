@@ -91,9 +91,9 @@ void Player::LookAtFacePointTarget(bool useGamepad) {
 		}
 
 		if (Abs(angle) > DEGTORAD * orientationThreshold) {
-			Quat rotationToAdd;
-			rotationToAdd.SetFromAxisAngle(float3(0, 1, 0), multiplier * Time::GetDeltaTime() * orientationSpeed);
-			playerMainTransform->SetGlobalRotation(rotationToAdd * quat);
+			Quat rotationToAdd = Quat::Lerp(quat, rotation, Time::GetDeltaTime() * orientationSpeed);
+			playerMainTransform->SetGlobalRotation(rotationToAdd);
+
 		} else {
 			playerMainTransform->SetGlobalRotation(rotation);
 		}
