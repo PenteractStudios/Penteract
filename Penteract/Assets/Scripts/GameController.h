@@ -29,8 +29,12 @@ public:
 	UID staticCamera3UID = 0;
 	UID staticCamera4UID = 0;
 	UID playerUID = 0;
+
 	UID pauseUID = 0;
 	UID hudUID = 0;
+	UID settingsPlusUID = 0;
+	UID dialoguesUID = 0;
+
 	UID godModeControllerUID = 0;
 
 	float speed = 50.f;
@@ -42,6 +46,8 @@ public:
 private:
 	void DoTransition();
 	void SpawnEnemies();
+	void ClearPauseMenus();
+	void EnablePauseMenus();
 
 private:
 	GameObject* gameCamera = nullptr;
@@ -52,8 +58,12 @@ private:
 	ComponentCamera* staticCamera3 = nullptr;
 	ComponentCamera* staticCamera4 = nullptr;
 	GameObject* player = nullptr;
+
 	GameObject* pauseCanvas = nullptr;
 	GameObject* hudCanvas = nullptr;
+	GameObject* settingsCanvas = nullptr;
+	GameObject* dialogueCanvas = nullptr;
+
 	GameObject* godModeController = nullptr;
 
 	float yaw = 0.f;

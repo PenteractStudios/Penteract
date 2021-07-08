@@ -129,7 +129,8 @@
                     false
                 ],
                 "HasCollision": true,
-                "LayerIndex": 5
+                "LayerIndex": 5,
+                "CollRadius": 0.699999988079071
             },
             {
                 "Type": "Script",
