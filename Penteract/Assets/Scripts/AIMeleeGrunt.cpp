@@ -337,7 +337,7 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 
 			if (collidedWith.name == "EMP") {
 				if (state == AIState::ATTACK) {
-					animation->SendTrigger("RunBeginStun");
+					animation->SendTrigger("IdleBeginStun");
 					animation->SendTriggerSecondary("AttackBeginStun");
 				}
 				else if (state == AIState::IDLE) {
