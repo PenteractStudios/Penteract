@@ -21,8 +21,8 @@ public:
 	void SetDamageHit(float damageHit_);
 public:
 	bool isAlive = true;
-	float lifePoints = 1;
-	float damageHit = 1;
+	float lifePoints = 1.0f;
+	float damageHit = 1.0f;
 	float movementSpeed = 1.0f;
 	ComponentAgent* agent = nullptr;
 	ComponentAnimation* compAnimation = nullptr;

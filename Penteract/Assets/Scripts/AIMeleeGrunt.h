@@ -14,6 +14,7 @@ class ComponentMeshRenderer;
 class ResourcePrefab;
 class HUDController;
 class PlayerController;
+class PlayerDeath;
 class AIMovement;
 class WinLose;
 class EnemySpawnPoint;
@@ -38,6 +39,8 @@ public:
 	void OnAnimationSecondaryFinished() override;
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
+	//void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
+	void DeleteAttackCollider();
 
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
@@ -49,7 +52,7 @@ public:
 	UID canvasUID = 0;
 	UID winConditionUID = 0;
 	UID meleePunchUID = 0;
-
+	UID fangUID = 0;
 	// Hit feedback
 	UID defaultMaterialPlaceHolderUID = 0;
 	UID damageMaterialPlaceHolderUID = 0;
@@ -57,12 +60,13 @@ public:
 	UID damageMaterialID = 0;
 
 	GameObject* player = nullptr;
+	GameObject* fang = nullptr;
 	GameObject* spawn = nullptr;
 	ComponentAgent* agent = nullptr;
 	ResourcePrefab* meleePunch = nullptr;
 	WinLose* winLoseScript = nullptr;
 
-	Enemy gruntCharacter = Enemy(5, 8.0f, 1, 30, 40.f, 5.f, 5.f, 5.f, 5.f);
+	Enemy gruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 5.f, 5.f);
 	bool killSent = false;
 
 	float hurtFeedbackTimeDuration = 0.5f;
@@ -70,7 +74,9 @@ public:
 	float stunDuration = 3.f;
 
 private:
-
+	float attackDuration = 2.2f;
+	float attackRemaining = 0.0f;
+	bool attackColliderOn = false;
 	float3 velocity = float3(0, 0, 0);
 	AIState state = AIState::START;
 	bool hitTaken = false;
@@ -85,6 +91,7 @@ private:
 
 	HUDController* hudControllerScript = nullptr;
 	PlayerController* playerController = nullptr;
+	PlayerDeath* playerDeath = nullptr;
 	AIMovement* movementScript = nullptr;
 	EnemySpawnPoint* enemySpawnPointScript = nullptr;
 
@@ -92,6 +99,7 @@ private:
 	ComponentMeshRenderer* componentMeshRenderer = nullptr;
 
 	float timeSinceLastHurt = 0.5f;
+	GameObject* punch = nullptr;
 
 	float currentPushBackDistance = 0.f;
 

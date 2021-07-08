@@ -3,6 +3,7 @@
 #include "Scripting/Script.h"
 
 class ComponentImage;
+class ComponentAudioSource;
 class GameObject;
 
 class LowHPWarning : public Script {
@@ -11,6 +12,7 @@ class LowHPWarning : public Script {
 public:
 
 	UID effectUID = 0;
+	UID audioUID = 0;
 	float effectTime = 2.0f; // In seconds
 	float fadeOutTime = 1.0f;
 
@@ -30,5 +32,6 @@ private:
 
 	GameObject* effect = nullptr;
 	ComponentImage* vignette = nullptr;
+	ComponentAudioSource* audio = nullptr;
 };
 

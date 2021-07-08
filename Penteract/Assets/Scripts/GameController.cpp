@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Modules/ModuleCamera.h"
 #include "GameplaySystems.h"
+#include "StatsDisplayer.h"
 
 #include "Math/float3x3.h"
 #include "Geometry/frustum.h"
@@ -20,6 +21,9 @@ EXPOSE_MEMBERS(GameController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, pauseUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, hudUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, settingsPlusUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dialoguesUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, statsDisplayerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, godModeControllerUID),
 	MEMBER(MemberType::FLOAT, speed),
 	MEMBER(MemberType::FLOAT, rotationSpeedX),
@@ -34,7 +38,6 @@ void GameController::Start() {
 
 	showWireframe = false;
 	transitionFinished = false;
-	Debug::Log("SCRIPT STARTED");
 
 	gameCamera = GameplaySystems::GetGameObject(gameCameraUID);
 	godCamera = GameplaySystems::GetGameObject(godCameraUID);
@@ -47,6 +50,12 @@ void GameController::Start() {
 
 	pauseCanvas = GameplaySystems::GetGameObject(pauseUID);
 	hudCanvas = GameplaySystems::GetGameObject(hudUID);
+	settingsCanvas = GameplaySystems::GetGameObject(settingsPlusUID);
+	dialogueCanvas = GameplaySystems::GetGameObject(dialoguesUID);
+	GameObject* statsGameObject = GameplaySystems::GetGameObject(statsDisplayerUID);
+	if (statsGameObject) {
+		statsController = GET_SCRIPT(statsGameObject, StatsDisplayer);
+	}
 
 	if (gameCamera) {
 		camera = gameCamera->GetComponent<ComponentCamera>();
@@ -79,25 +88,13 @@ void GameController::Update() {
 			}
 		}
 	}
-	if (pauseCanvas) {
-		if (pauseCanvas->IsActive()) {
-			isPaused = true;
-		} else {
-			isPaused = false;
-		}
-	}
 
 	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE)) {
-		if (pauseCanvas) {
-			if (!isPaused) {
-				Time::PauseGame();
-				if (hudCanvas) hudCanvas->Disable();
-				pauseCanvas->Enable();
-			} else {
-				Time::ResumeGame();
-				if (hudCanvas) hudCanvas->Enable();
-				pauseCanvas->Disable();
-			}
+		if (isPaused) {
+			ResumeGame();
+		}
+		else {
+			PauseGame();
 		}
 	}
 
@@ -237,6 +234,18 @@ void GameController::Rotate(float2 mouseMotion, Frustum* frustum, ComponentTrans
 	transform->SetRotation(yIncrement * xIncrement * transform->GetRotation());
 }
 
+void GameController::PauseGame() {
+	Time::PauseGame();
+	EnablePauseMenus();
+	isPaused = true;
+}
+
+void GameController::ResumeGame() {
+	Time::ResumeGame();
+	ClearPauseMenus();
+	isPaused = false;
+}
+
 void GameController::DoTransition() {
 	if (player != nullptr) {
 		float3 finalPosition = float3(-164, 478, 449);
@@ -249,5 +258,49 @@ void GameController::DoTransition() {
 			transitionFinished = true;
 			gameCamera->GetComponent<ComponentTransform>()->SetPosition(finalPosition);
 		}
+	}
+}
+
+void GameController::ClearPauseMenus() {
+	if (pauseCanvas) {
+		pauseCanvas->Disable();
+	}
+
+	if (settingsCanvas) {
+		std::vector<GameObject*> settingsChildren = settingsCanvas->GetChildren();
+		if (settingsChildren.size() > 0) {
+			settingsChildren[0]->Enable();		// Enables first screen of CanvasSettingsPlus
+			for (int i = 1; i < settingsChildren.size(); ++i) {
+				settingsChildren[i]->Disable();
+			}
+		}
+		settingsCanvas->Disable();
+	}
+
+	if (dialogueCanvas) {
+		dialogueCanvas->Enable();
+	}
+
+	if (hudCanvas) {
+		hudCanvas->Enable();
+	}
+}
+
+void GameController::EnablePauseMenus()
+{
+	if (hudCanvas) {
+		hudCanvas->Disable();
+	}
+
+	if (dialogueCanvas) {
+		dialogueCanvas->Disable();
+	}
+
+	if (pauseCanvas) {
+		pauseCanvas->Enable();
+	}
+
+	if (statsController) {
+		statsController->SetPanelActive(false);
 	}
 }

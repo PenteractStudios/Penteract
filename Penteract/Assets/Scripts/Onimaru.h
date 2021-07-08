@@ -57,29 +57,28 @@ public:
 	float ultimateTimeRemaining = 0.0f;
 	float ultimateTotalTime = 3.0f;
 	float ultimateRotationSpeed = 2.0f;
-	float maxBulletSpread = 5.0f;
+
 	// Blast ability
 	float blastCooldown = 7.f;
 	float blastDistance = 15.f;
 	float blastAngle = 50.f;
+	float blastDelay = 0.6;
 
 public:
 	// ------- Contructors ------- //
 	Onimaru() {};
-	void Init(UID onimaruUID = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0, UID shieldUID = 0, UID onimaruTransformForUltimateProjectileOriginUID = 0, UID cameraUID = 0, UID canvasUID = 0, float maxSpread = 5.0f);
+	void Init(UID onimaruUID = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0, UID shieldUID = 0, UID onimaruTransformForUltimateProjectileOriginUID = 0, UID onimaruBlastEffectsUID = 0, UID cameraUID = 0, UID canvasUID = 0, float maxSpread = 5.0f);
 	void Update(bool lockMovement = false, bool lockRotation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	bool CanSwitch() const override;
 	void OnAnimationFinished() override;
 	void GetHit(float damage_) override;
+	void IncreaseUltimateCounter() override;
 	void OnDeath() override;
 	void OnAnimationSecondaryFinished() override;
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
 
 	float GetRealUltimateCooldown();
-
-	Quat GetSlightRandomSpread(float minValue, float maxValue) const;
-
 
 	// Abilities' cooldowns
 	float GetRealBlastCooldown();
@@ -93,13 +92,12 @@ public:
 private:
 
 	ResourcePrefab* trail = nullptr;
-	ResourcePrefab* bullet = nullptr;
-	ResourcePrefab* ultimateBullet = nullptr;
-	ComponentParticleSystem* ultimateSystem = nullptr;
+	ComponentParticleSystem* bullet = nullptr;
+	
+	ComponentParticleSystem* ultimateBullet = nullptr;
+
 	ComponentTransform* gunTransform = nullptr;
 
-	ComponentParticleSystem* ultimateParticles = nullptr;
-	ComponentTransform* transformForUltimateProjectileOrigin = nullptr;
 
 	ComponentTransform* rightHand = nullptr;
 	ComponentParticleSystem* blastParticles = nullptr;
@@ -114,10 +112,9 @@ private:
 
 	bool blastInUse = false;
 	bool ultimateInUse = false;
-
+	bool shooting = false;
 
 	// Blast ability
-	float blastDuration = 1.5f;
 	float currentBlastDuration = 0.f;
 	float blastCooldownRemaining = 0.f;
 	float blastRemaining = 0.f;
@@ -132,6 +129,7 @@ private:
 
 
 	std::vector<GameObject*> enemiesInMap;
+
 private:
 
 	bool CanShoot() override;

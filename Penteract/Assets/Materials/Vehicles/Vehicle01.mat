@@ -18,11 +18,12 @@
     "Metalness": 0.0,
     "MetallicMap": 16961800148061492182,
     "NormalMap": 13326274517982986976,
-    "NormalStrength": 0.0,
+    "NormalStrength": 1.0,
     "EmissiveMap": 991487605720256854,
+    "Emissive": 3.0,
     "AmbientOcclusionMap": 17789465233569370749,
-    "Smoothness": 0.0,
-    "HasSmoothnessInAlphaChannel": false,
+    "Smoothness": 1.0,
+    "HasSmoothnessInAlphaChannel": true,
     "Tiling": [
         1.0,
         1.0
