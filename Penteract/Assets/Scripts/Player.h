@@ -59,10 +59,11 @@ public:
 
 	int GetMouseDirectionState();
 	bool IsActive();
-	void IncreaseUltimateCounter();
 	static bool GetInputBool(InputActions action, bool useGamepad = false);
 	float2 GetInputFloat2(InputActions action, bool useGamepad = false) const;
 	void UpdateFacePointDir(bool useGamepad);
+	virtual void IncreaseUltimateCounter();
+
 public:
 	float rangedDamageTaken = 1.0f;
 	float meleeDamageTaken = 1.0f;

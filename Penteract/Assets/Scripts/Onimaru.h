@@ -72,6 +72,7 @@ public:
 	bool CanSwitch() const override;
 	void OnAnimationFinished() override;
 	void GetHit(float damage_) override;
+	void IncreaseUltimateCounter() override;
 	void OnDeath() override;
 	void OnAnimationSecondaryFinished() override;
 	bool IsInstantOrientation(bool useGampead) const override;
