@@ -171,7 +171,58 @@
                 "Type": "Script",
                 "Active": true,
                 "Script": 5891617165801964658,
-                "Values": null
+                "Values": [
+                    {
+                        "Name": "playerUID",
+                        "Type": "GameObjectUID",
+                        "Value": 9349791306028942696
+                    },
+                    {
+                        "Name": "fangUID",
+                        "Type": "GameObjectUID",
+                        "Value": 5514062913432514002
+                    },
+                    {
+                        "Name": "dmgMaterialObj",
+                        "Type": "GameObjectUID",
+                        "Value": 5104266340542563287
+                    },
+                    {
+                        "Name": "playerMeshUIDFang",
+                        "Type": "GameObjectUID",
+                        "Value": 8818586851523472818
+                    },
+                    {
+                        "Name": "hudControllerObjUID",
+                        "Type": "GameObjectUID",
+                        "Value": 826311568033082909
+                    },
+                    {
+                        "Name": "playerMeshUIDOnimaru",
+                        "Type": "GameObjectUID",
+                        "Value": 9731621354327714566
+                    },
+                    {
+                        "Name": "winConditionUID",
+                        "Type": "GameObjectUID",
+                        "Value": 16579210181260590797
+                    },
+                    {
+                        "Name": "trailPrefabUID",
+                        "Type": "PrefabResourceUID",
+                        "Value": 4959781306678769485
+                    },
+                    {
+                        "Name": "hurtFeedbackTimeDuration",
+                        "Type": "Float",
+                        "Value": 0.10000000149011612
+                    },
+                    {
+                        "Name": "rangerGruntCharacter.attackRange",
+                        "Type": "Float",
+                        "Value": 20.0
+                    }
+                ]
             }
         ],
         "Children": [
