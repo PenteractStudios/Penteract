@@ -142,7 +142,7 @@ void Onimaru::StartUltimate() {
 
 void Onimaru::FinishUltimate() {
 	ultimateTimeRemaining = 0;
-	orientationSpeed = -1;
+	orientationSpeed = normalOrientationSpeed;
 	attackSpeed = originalAttackSpeed;
 	ultimateInUse = false;
 	compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(IDLE)]);
@@ -386,7 +386,7 @@ void Onimaru::FadeShield() {
 void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 	if (shield == nullptr || shieldGO == nullptr) return;
 	if (isAlive) {
-		Player::Update(ultimateInUse, false);
+		Player::Update(useGamepad, ultimateInUse, false);
 
 		if (!ultimateInUse) {
 			if (GetInputBool(InputActions::ABILITY_3, useGamepad)) {
