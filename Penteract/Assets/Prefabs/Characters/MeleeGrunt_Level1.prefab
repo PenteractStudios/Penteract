@@ -1,6 +1,6 @@
 {
     "Root": {
-        "Name": "MeleeGruntWeaponized",
+        "Name": "MeleeGrunt",
         "Active": true,
         "RootBoneName": "CenterHip",
         "Mask": 0,
@@ -54,6 +54,11 @@
                 "Active": true,
                 "Script": 1991507863247597087,
                 "Values": [
+                    {
+                        "Name": "hurtFeedbackTimeDuration",
+                        "Type": "Float",
+                        "Value": 0.10000000149011612
+                    },
                     {
                         "Name": "playerUID",
                         "Type": "GameObjectUID",

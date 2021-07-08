@@ -7,11 +7,11 @@
         "Components": [
             {
                 "Type": "Transform",
-                "Active": false,
+                "Active": true,
                 "Position": [
-                    82.01302337646485,
-                    104.72673797607422,
-                    129.541015625
+                    48.34502410888672,
+                    83.7900619506836,
+                    205.0576171875
                 ],
                 "Rotation": [
                     0.7071068286895752,
@@ -32,7 +32,7 @@
             },
             {
                 "Type": "Particle",
-                "Active": false,
+                "Active": true,
                 "DrawGizmo": true,
                 "Duration": 5.0,
                 "Looping": true,
@@ -47,8 +47,8 @@
                 ],
                 "SpeedRM": 0,
                 "Speed": [
-                    10.0,
-                    50.0
+                    70.0,
+                    70.0
                 ],
                 "RotationRM": 0,
                 "Rotation": [
@@ -57,7 +57,7 @@
                 ],
                 "ScaleRM": 0,
                 "Scale": [
-                    50.0,
+                    40.0,
                     50.0
                 ],
                 "ReverseEffect": false,
@@ -70,7 +70,7 @@
                 "AttachEmitter": false,
                 "ParticlesPerSecondRM": 0,
                 "ParticlesPerSecond": [
-                    5.400000095367432,
+                    10.0,
                     10.0
                 ],
                 "GravityEffect": false,
@@ -136,7 +136,8 @@
                     false
                 ],
                 "HasCollision": true,
-                "LayerIndex": 5
+                "LayerIndex": 5,
+                "CollRadius": 0.0
             }
         ],
         "Children": [
@@ -148,7 +149,7 @@
                 "Components": [
                     {
                         "Type": "Transform",
-                        "Active": false,
+                        "Active": true,
                         "Position": [
                             0.0,
                             0.0,
@@ -173,7 +174,7 @@
                     },
                     {
                         "Type": "Particle",
-                        "Active": false,
+                        "Active": true,
                         "DrawGizmo": true,
                         "Duration": 0.30000001192092898,
                         "Looping": true,
@@ -291,7 +292,8 @@
                             false
                         ],
                         "HasCollision": false,
-                        "LayerIndex": 5
+                        "LayerIndex": 5,
+                        "CollRadius": 0.0
                     }
                 ],
                 "Children": null
@@ -304,7 +306,7 @@
                 "Components": [
                     {
                         "Type": "Transform",
-                        "Active": false,
+                        "Active": true,
                         "Position": [
                             0.0,
                             0.0,
@@ -329,7 +331,7 @@
                     },
                     {
                         "Type": "Particle",
-                        "Active": false,
+                        "Active": true,
                         "DrawGizmo": true,
                         "Duration": 5.050000190734863,
                         "Looping": true,
@@ -440,7 +442,8 @@
                             false
                         ],
                         "HasCollision": false,
-                        "LayerIndex": 5
+                        "LayerIndex": 5,
+                        "CollRadius": 0.0
                     }
                 ],
                 "Children": null
@@ -453,7 +456,7 @@
                 "Components": [
                     {
                         "Type": "Transform",
-                        "Active": false,
+                        "Active": true,
                         "Position": [
                             0.0,
                             0.0,
@@ -478,7 +481,7 @@
                     },
                     {
                         "Type": "Particle",
-                        "Active": false,
+                        "Active": true,
                         "DrawGizmo": true,
                         "Duration": 5.050000190734863,
                         "Looping": true,
@@ -589,7 +592,8 @@
                             false
                         ],
                         "HasCollision": false,
-                        "LayerIndex": 5
+                        "LayerIndex": 5,
+                        "CollRadius": 0.0
                     }
                 ],
                 "Children": null

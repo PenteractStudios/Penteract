@@ -7,7 +7,8 @@
 EXPOSE_MEMBERS(StatsDisplayer) {
 	// Add members here to expose them to the engine. Example:
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasTextsUID)
 };
 
 GENERATE_BODY_IMPL(StatsDisplayer);
@@ -15,9 +16,10 @@ GENERATE_BODY_IMPL(StatsDisplayer);
 void StatsDisplayer::Start() {
 	player = GameplaySystems::GetGameObject(fangUID);
 	canvas = GameplaySystems::GetGameObject(canvasUID);
-
-	if (canvas != nullptr) {
-		for (GameObject* child : canvas->GetChildren()) {
+	canvasTexts = GameplaySystems::GetGameObject(canvasTextsUID);
+	
+	if (canvasTexts != nullptr) {
+		for (GameObject* child : canvasTexts->GetChildren()) {
 			if (child->name == "FPSText") {
 				fpsText = child->GetComponent<ComponentText>();
 			}
@@ -50,7 +52,7 @@ void StatsDisplayer::Update() {
 
 		if (trigText != nullptr) {
 			char title[80];
-			sprintf_s(title, 80, "Total triangles: %i. Culled Triangles: %i", Debug::GetTotalTriangles(), Debug::GetCulledTriangles());
+			sprintf_s(title, 80, "Total tris: %i. Culled Tris: %i", Debug::GetTotalTriangles(), Debug::GetCulledTriangles());
 			trigText->SetText(title);
 		}
 
@@ -71,4 +73,9 @@ void StatsDisplayer::Update() {
 	else {
 		canvas->Disable();
 	}
+}
+
+void StatsDisplayer::SetPanelActive(bool value)
+{
+	panelActive = value;
 }

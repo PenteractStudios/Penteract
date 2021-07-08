@@ -4,7 +4,7 @@
 #include "CameraController.h"
 #include "UltimateFang.h"
 
-void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, UID rightBulletUID, UID leftBulletUID, UID cameraUID, UID canvasUID, UID EMPUID, UID fangUltimateUID) {
+void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, UID rightBulletUID, UID leftBulletUID, UID cameraUID, UID canvasUID, UID EMPUID, UID EMPEffectsUID, UID fangUltimateUID, UID ultimateVFXUID) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(fangUID);
 
@@ -103,12 +103,17 @@ void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, 
 		EMP->Enable();
 		EMP->Disable();
 	}
+	GameObject* EMPEffectsGO = GameplaySystems::GetGameObject(EMPEffectsUID);
+	if (EMPEffectsGO) EMPEffects = EMPEffectsGO->GetComponent<ComponentParticleSystem>();
 
 	GameObject* fangUltimateGameObject = GameplaySystems::GetGameObject(fangUltimateUID);
 	if (fangUltimateGameObject) {
 		ultimateScript = GET_SCRIPT(fangUltimateGameObject, UltimateFang);
 		ultimateCooldownRemaining = 0;
 	}
+
+	GameObject* ultimateVFXGO = GameplaySystems::GetGameObject(ultimateVFXUID);
+	if (ultimateVFXGO) ultimateVFX = ultimateVFXGO->GetComponent<ComponentParticleSystem>();
 }
 bool Fang::CanSwitch() const {
 	if (!EMP) return false;
@@ -199,6 +204,7 @@ bool Fang::CanDash() {
 
 void Fang::ActivateEMP() {
 	if (EMP && CanEMP()) {
+		if (EMPEffects) EMPEffects->PlayChildParticles();
 		EMP->Enable();
 		EMPCooldownRemaining = EMPCooldown;
 		EMPInCooldown = true;
@@ -399,6 +405,7 @@ void Fang::ActiveUltimate() {
 		ultimateCooldownRemaining = 0;
 		ultimateOn = true;
 		ultimateInCooldown = true;
+		if (ultimateVFX) ultimateVFX->PlayChildParticles();
 		ultimateScript->StartUltimate();
 
 		oldMovementSpeed = movementSpeed;

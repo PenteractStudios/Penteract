@@ -35,12 +35,14 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fangLeftGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangRightGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, EMPUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, EMPEffectsUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruRightHandUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruShieldUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUltimateUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangUltimateVFXUID),
 	MEMBER(MemberType::FLOAT, switchCooldown),
 	MEMBER(MemberType::INT, playerFang.ultimateCooldown),
 	MEMBER(MemberType::FLOAT, playerFang.ultimateMovementSpeed),
@@ -79,7 +81,7 @@ EXPOSE_MEMBERS(PlayerController) {
 GENERATE_BODY_IMPL(PlayerController);
 
 void PlayerController::Start() {
-	playerFang.Init(fangUID, fangTrailGunUID, fangTrailDashUID, fangLeftGunUID, fangRightGunUID, fangRightBulletUID, fangLeftBulletUID, cameraUID, canvasUID, EMPUID, fangUltimateUID);
+	playerFang.Init(fangUID, fangTrailGunUID, fangTrailDashUID, fangLeftGunUID, fangRightGunUID, fangRightBulletUID, fangLeftBulletUID, cameraUID, canvasUID, EMPUID, EMPEffectsUID, fangUltimateUID, fangUltimateVFXUID);
 	playerOnimaru.Init(onimaruUID, onimaruBulletUID, onimaruGunUID, onimaruRightHandUID, onimaruShieldUID, onimaruUltimateBulletUID, cameraUID, canvasUID);
 
 	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
@@ -115,7 +117,7 @@ void PlayerController::SetInvincible(bool status) {
 }
 
 void PlayerController::SetOverpower(bool status) {
-	overpowerMode = status ? 999 : 1;
+	overpowerMode = status ? 999 : 0;
 }
 
 int PlayerController::GetOverPowerMode() {
