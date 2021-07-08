@@ -37,9 +37,6 @@ void Onimaru::IncreaseUltimateCounter() {
 }
 
 void Onimaru::Shoot() {
-
-	if (!gunTransform) return;
-
 	if (CanShoot()) {
 		shootingOnCooldown = true;
 		//	shooting = true;
