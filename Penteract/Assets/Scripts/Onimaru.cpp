@@ -59,8 +59,9 @@ void Onimaru::Shoot() {
 }
 
 void Onimaru::Blast() {
-	bool releaseBlast = currentBlastDuration <= blastDuration / 2.0f ? false : true;
+	bool releaseBlast = currentBlastDuration <= blastDelay ? false : true;
 	if (releaseBlast && calculateEnemiesInRange) {
+		if (blastParticles) blastParticles->PlayChildParticles();
 		calculateEnemiesInRange = false;
 		for (GameObject* enemy : enemiesInMap) {
 			AIMeleeGrunt* meleeScript = GET_SCRIPT(enemy, AIMeleeGrunt);
@@ -249,7 +250,7 @@ void Onimaru::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* ev
 	}
 }
 
-void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID onimaruRightHandUID, UID shieldUID, UID onimaruUltimateBulletUID, UID cameraUID, UID canvasUID, float maxSpread_) {
+void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID onimaruRightHandUID, UID shieldUID, UID onimaruUltimateBulletUID, UID onimaruBlastEffectsUID, UID cameraUID, UID canvasUID, float maxSpread_) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(onimaruUID);
 	if (characterGameObject && characterGameObject->GetParent()) {
@@ -314,6 +315,9 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 
 	GameObject* rightHandGO = GameplaySystems::GetGameObject(onimaruRightHandUID);
 	if (rightHandGO) rightHand = rightHandGO->GetComponent<ComponentTransform>();
+
+	GameObject* blastParticlesGO = GameplaySystems::GetGameObject(onimaruBlastEffectsUID);
+	if (blastParticlesGO) blastParticles = blastParticlesGO->GetComponent<ComponentParticleSystem>();
 }
 
 void Onimaru::OnAnimationFinished() {

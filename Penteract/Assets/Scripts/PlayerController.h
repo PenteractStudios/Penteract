@@ -80,7 +80,9 @@ public:
 	UID onimaruGunUID = 0;
 	UID onimaruRightHandUID = 0;
 	UID onimaruShieldUID = 0;
+	UID onimaruBlastEffectsUID = 0;
 	UID onimaruUltimateBulletUID = 0;
+	
 	//HUD
 	UID canvasUID = 0;
 	float fangRecoveryRate = 1.0f;
