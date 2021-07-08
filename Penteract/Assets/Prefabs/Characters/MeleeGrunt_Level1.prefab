@@ -55,14 +55,19 @@
                 "Script": 1991507863247597087,
                 "Values": [
                     {
-                        "Name": "defaultMaterialPlaceHolderUID",
-                        "Type": "GameObjectUID",
-                        "Value": 9837534394034980895
+                        "Name": "hurtFeedbackTimeDuration",
+                        "Type": "Float",
+                        "Value": 0.10000000149011612
                     },
                     {
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
                         "Value": 9349791306028942696
+                    },
+                    {
+                        "Name": "defaultMaterialPlaceHolderUID",
+                        "Type": "GameObjectUID",
+                        "Value": 9837534394034980895
                     },
                     {
                         "Name": "canvasUID",

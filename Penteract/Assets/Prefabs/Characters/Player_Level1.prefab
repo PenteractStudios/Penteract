@@ -288,7 +288,7 @@
                     {
                         "Name": "onimaruUltimateBulletUID",
                         "Type": "GameObjectUID",
-                        "Value": 13560155102185381730
+                        "Value": 14366896897990182701
                     },
                     {
                         "Name": "fangUltimateVFXUID",
@@ -4025,9 +4025,9 @@
                                 "Type": "Transform",
                                 "Active": false,
                                 "Position": [
-                                    0.0078125,
-                                    0.0,
-                                    -0.1363525390625
+                                    -19.29599952697754,
+                                    10.060999870300293,
+                                    -0.1809999942779541
                                 ],
                                 "Rotation": [
                                     -1.6543612251060555e-24,
@@ -4287,9 +4287,9 @@
                                 "Type": "Transform",
                                 "Active": false,
                                 "Position": [
-                                    82.01302337646485,
-                                    104.72673797607422,
-                                    129.541015625
+                                    48.34502410888672,
+                                    83.7900619506836,
+                                    205.0576171875
                                 ],
                                 "Rotation": [
                                     0.7071068286895752,
@@ -4325,8 +4325,8 @@
                                 ],
                                 "SpeedRM": 0,
                                 "Speed": [
-                                    10.0,
-                                    50.0
+                                    70.0,
+                                    70.0
                                 ],
                                 "RotationRM": 0,
                                 "Rotation": [
@@ -4335,7 +4335,7 @@
                                 ],
                                 "ScaleRM": 0,
                                 "Scale": [
-                                    50.0,
+                                    40.0,
                                     50.0
                                 ],
                                 "ReverseEffect": false,
@@ -4348,7 +4348,7 @@
                                 "AttachEmitter": false,
                                 "ParticlesPerSecondRM": 0,
                                 "ParticlesPerSecond": [
-                                    5.400000095367432,
+                                    10.0,
                                     10.0
                                 ],
                                 "GravityEffect": false,
@@ -9083,7 +9083,7 @@
                                 "Type": "SphereCollider",
                                 "Active": false,
                                 "colliderType": 2,
-                                "layerType": 7,
+                                "layerType": 5,
                                 "mass": 1.0,
                                 "radius": 5.0,
                                 "centerOffset": [
