@@ -21,7 +21,7 @@ public:
 
 	// ------- Contructors ------- //
 	Fang() {};
-	void Update(bool lockMovement = false, bool lockRotation = false) override;
+	void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockOrientation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
@@ -29,6 +29,7 @@ public:
 	void GetHit(float damage_) override;
 	void trailDelay();
 	bool CanSwitch() const override;
+	bool IsInstantOrientation(bool useGamepad) const override;
 
 	float GetRealDashCooldown();
 	float GetRealEMPCooldown();
@@ -105,7 +106,6 @@ private:
 
 	//Audios
 	ComponentAudioSource* fangAudios[static_cast<int>(FANG_AUDIOS::TOTAL)] = { nullptr };
-
 private:
 	void InitDash();
 	void Dash();

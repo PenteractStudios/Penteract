@@ -2,6 +2,8 @@
 #include "DialogueManager.h"
 
 #include "GameplaySystems.h"
+#include "Player.h"
+#include "PlayerController.h"
 #include "GameObject.h"
 #include "Components/UI/ComponentText.h"
 
@@ -50,7 +52,7 @@ void DialogueManager::Start() {
 
 	dialoguesArray[4] = Dialogue(DialogueWindow::UPGRADES2, "", nullptr);
 
-	
+
 	dialoguesArray[5] = Dialogue(DialogueWindow::FANG, "I think I got it...\nYou can power it up this way,\nthen connect this here...\nand that there...", &dialoguesArray[6]);
 	dialoguesArray[6] = Dialogue(DialogueWindow::FANG, "Plug it in our core and...\nWHOAH! Oni, try this!", &dialoguesArray[7]);
 	dialoguesArray[7] = Dialogue(DialogueWindow::ONIMARU, "I am not sure about this Fang...\nBut OK, I trust you.", &dialoguesArray[8]);
@@ -77,7 +79,7 @@ void DialogueManager::Update() {
 	if (activeDialogue) {
 		if (runOpenAnimation) ActivateDialogue(activeDialogue);
 
-		if (Input::GetKeyCodeDown(Input::KEY_F) && !(runOpenAnimation || runChangeAnimation || runCloseAnimation) && activeDialogueObject) {
+		if (Player::GetInputBool(InputActions::INTERACT, PlayerController::useGamepad) && !(runOpenAnimation || runChangeAnimation || runCloseAnimation) && activeDialogueObject) {
 			if (activeDialogue->nextDialogue) {
 				runChangeAnimation = true;
 				if ((static_cast<int>(activeDialogue->character) < 5 && static_cast<int>(activeDialogue->nextDialogue->character) >= 5) ||
@@ -85,8 +87,7 @@ void DialogueManager::Update() {
 					runCloseAnimation = true;
 					runSecondaryOpen = true;
 				}
-			}
-			else runCloseAnimation = true;
+			} else runCloseAnimation = true;
 		}
 
 		if (runChangeAnimation && !runCloseAnimation) {
@@ -97,8 +98,7 @@ void DialogueManager::Update() {
 	}
 }
 
-void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation)
-{
+void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 	if (activeDialogueObject) {
 		if (activeDialogueObject->IsActive()) {
 			activeDialogueObject->Disable();
@@ -109,15 +109,13 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation)
 		if (static_cast<int>(dialogue->character) >= 5) {
 			currentStartPosition = tutorialStartPosition;
 			currentEndPosition = tutorialEndPosition;
-		}
-		else {
+		} else {
 			currentStartPosition = dialogueStartPosition;
 			currentEndPosition = dialogueEndPosition;
 		}
 
 		activeDialogue = dialogue;
-		switch (dialogue->character)
-		{
+		switch (dialogue->character) {
 		case DialogueWindow::FANG:
 			activeDialogueObject = fangTextComponent->GetOwner().GetParent();
 			fangTextComponent->SetText(dialogue->text);
@@ -156,8 +154,7 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation)
 		uiComponents.clear();
 		uiColors.clear();
 		RetrieveUIComponents(activeDialogueObject);
-	}
-	else {
+	} else {
 		activeDialogueObject = nullptr;
 	}
 }
@@ -177,8 +174,7 @@ void DialogueManager::ActivateDialogue(Dialogue* dialogue) {
 		if (animationLerpTime < appearAnimationTime) {
 			activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(float3::Lerp(currentStartPosition, currentEndPosition, animationLerpTime / appearAnimationTime));
 			TransitionUIElementsColor(true);
-		}
-		else {
+		} else {
 			runOpenAnimation = false;
 			animationLerpTime = 0;
 			activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(currentEndPosition);
@@ -187,8 +183,7 @@ void DialogueManager::ActivateDialogue(Dialogue* dialogue) {
 	}
 }
 
-void DialogueManager::ActivateNextDialogue(Dialogue* dialogue)
-{
+void DialogueManager::ActivateNextDialogue(Dialogue* dialogue) {
 	activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(currentStartPosition);
 	activeDialogueObject->Disable();
 	// here should go the transition animations
@@ -196,22 +191,19 @@ void DialogueManager::ActivateNextDialogue(Dialogue* dialogue)
 	activeDialogueObject->Enable();
 	if (runSecondaryOpen) {
 		runOpenAnimation = true;
-	}
-	else {
+	} else {
 		activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(currentEndPosition);
 	}
 	runChangeAnimation = false;
 }
 
-void DialogueManager::CloseDialogue(Dialogue* dialogue)
-{
+void DialogueManager::CloseDialogue(Dialogue* dialogue) {
 	animationLerpTime += Time::GetDeltaTime();
 	if (runCloseAnimation) {
 		if (animationLerpTime < appearAnimationTime) {
 			activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(float3::Lerp(currentEndPosition, currentStartPosition, animationLerpTime / appearAnimationTime));
 			TransitionUIElementsColor(false);
-		}
-		else {
+		} else {
 			runCloseAnimation = false;
 			animationLerpTime = 0;
 			activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(currentStartPosition);
@@ -227,12 +219,10 @@ void DialogueManager::CloseDialogue(Dialogue* dialogue)
 	}
 }
 
-void DialogueManager::ActivatePowerUpDialogue()
-{
+void DialogueManager::ActivatePowerUpDialogue() {
 	obtainedPowerUps += 1;
 	int nextDialogue;
-	switch (obtainedPowerUps)
-	{
+	switch (obtainedPowerUps) {
 	case 1:
 		nextDialogue = 0;
 		break;
@@ -246,11 +236,10 @@ void DialogueManager::ActivatePowerUpDialogue()
 		break;
 	}
 	SetActiveDialogue(&dialoguesArray[nextDialogue]);
-	
+
 }
 
-void DialogueManager::TransitionUIElementsColor(bool appearing, bool mustLerp)
-{
+void DialogueManager::TransitionUIElementsColor(bool appearing, bool mustLerp) {
 	int i = 0;
 	float maximumTime = appearing ? appearAnimationTime : disappearAnimationTime;
 
@@ -259,16 +248,14 @@ void DialogueManager::TransitionUIElementsColor(bool appearing, bool mustLerp)
 		float4 targetColor = appearing ? uiColors[i] : float4(uiColors[i].x, uiColors[i].y, uiColors[i].z, 0.0f);
 		if (component->GetType() == ComponentType::IMAGE) {
 			static_cast<ComponentImage*>(component)->SetColor(float4::Lerp(originColor, targetColor, mustLerp ? (animationLerpTime / maximumTime) : 1.0f));
-		}
-		else {
+		} else {
 			static_cast<ComponentText*>(component)->SetFontColor(float4::Lerp(originColor, targetColor, mustLerp ? (animationLerpTime / maximumTime) : 1.0f));
 		}
 		i++;
 	}
 }
 
-void DialogueManager::RetrieveUIComponents(GameObject* current)
-{
+void DialogueManager::RetrieveUIComponents(GameObject* current) {
 	if (!current) return;
 
 	ComponentImage* image = current->GetComponent<ComponentImage>();
@@ -276,8 +263,7 @@ void DialogueManager::RetrieveUIComponents(GameObject* current)
 	if (image) {
 		uiComponents.push_back(static_cast<Component*>(image));
 		uiColors.push_back(image->GetMainColor());
-	}
-	else if (text) {
+	} else if (text) {
 		uiComponents.push_back(static_cast<Component*>(text));
 		uiColors.push_back(text->GetFontColor());
 	}
