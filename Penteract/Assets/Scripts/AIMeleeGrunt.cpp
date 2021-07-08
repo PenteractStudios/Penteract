@@ -441,10 +441,12 @@ void AIMeleeGrunt::UpdatePushBackPosition() {
 	if (agent) {
 		enemyPos += direction * gruntCharacter.pushBackSpeed * Time::GetDeltaTime();
 		agent->SetMoveTarget(enemyPos, false);
+		agent->SetMaxSpeed(gruntCharacter.pushBackSpeed);
 		float distance = enemyPos.Distance(initialPos);
 		currentPushBackDistance += distance;
 
 		if (currentPushBackDistance >= gruntCharacter.pushBackDistance) {
+			agent->SetMaxSpeed(gruntCharacter.movementSpeed);
 			DisableBlastPushBack();
 			currentPushBackDistance = 0.f;
 		}
