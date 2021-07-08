@@ -73,6 +73,7 @@ public:
 	bool CanSwitch() const override;
 	void OnAnimationFinished() override;
 	void GetHit(float damage_) override;
+	void IncreaseUltimateCounter() override;
 	void OnDeath() override;
 	void OnAnimationSecondaryFinished() override;
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);

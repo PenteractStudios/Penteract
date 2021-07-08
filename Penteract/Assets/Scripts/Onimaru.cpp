@@ -32,6 +32,10 @@ void Onimaru::GetHit(float damage_) {
 	}
 }
 
+void Onimaru::IncreaseUltimateCounter() {
+	if (!ultimateInUse) ++ultimateChargePoints;
+}
+
 void Onimaru::Shoot() {
 
 	if (!gunTransform) return;

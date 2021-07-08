@@ -48,7 +48,8 @@ public:
 	
 	int GetMouseDirectionState();
 	bool IsActive();
-	void IncreaseUltimateCounter();
+	virtual void IncreaseUltimateCounter();
+
 public:
 	float rangedDamageTaken = 1.0f;
 	float meleeDamageTaken = 1.0f;
