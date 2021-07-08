@@ -7,6 +7,7 @@
 class GameObject;
 class ComponentCamera;
 class ComponentTransform;
+class StatsDisplayer;
 
 struct TesseractEvent;
 
@@ -20,6 +21,8 @@ public:
 	void ReceiveEvent(TesseractEvent& e) override;
 
 	void Rotate(float2 mouseMotion, Frustum* frustum, ComponentTransform* transform);
+	void PauseGame();
+	void ResumeGame();
 
 public:
 	UID gameCameraUID = 0;
@@ -34,6 +37,7 @@ public:
 	UID hudUID = 0;
 	UID settingsPlusUID = 0;
 	UID dialoguesUID = 0;
+	UID statsDisplayerUID = 0;
 
 	UID godModeControllerUID = 0;
 
@@ -63,6 +67,7 @@ private:
 	GameObject* hudCanvas = nullptr;
 	GameObject* settingsCanvas = nullptr;
 	GameObject* dialogueCanvas = nullptr;
+	StatsDisplayer* statsController = nullptr;
 
 	GameObject* godModeController = nullptr;
 
@@ -71,6 +76,7 @@ private:
 	bool showWireframe = false;
 	bool godModeAvailable = false;
 	bool transitionFinished = false;
+
 	bool isPaused = false;
 };
 
