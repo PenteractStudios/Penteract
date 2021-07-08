@@ -9,25 +9,25 @@
                 "Type": "Transform",
                 "Active": true,
                 "Position": [
-                    -163.6098175048828,
-                    5.694741249084473,
-                    -34.28564453125
+                    0.0,
+                    104.32502746582031,
+                    0.0
                 ],
                 "Rotation": [
                     0.0,
+                    0.712986946105957,
                     0.0,
-                    0.0,
-                    1.0
+                    0.7011772990226746
                 ],
                 "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
+                    39.21568298339844,
+                    39.21569061279297,
+                    39.21568298339844
                 ],
                 "LocalEulerAngles": [
-                    -0.0,
-                    0.0,
-                    -0.0
+                    -180.0,
+                    89.04304504394531,
+                    -180.0
                 ]
             },
             {
@@ -141,7 +141,7 @@
                 "IsRandomFrame": false,
                 "LoopAnimation": false,
                 "NCycles": 1.0,
-                "TextureId": 2168309505567137157,
+                "TextureId": 15036306069100918142,
                 "BillboardType": 1,
                 "ParticleRenderMode": 0,
                 "ParticleRenderAlignment": 0,
@@ -289,7 +289,7 @@
                         "IsRandomFrame": false,
                         "LoopAnimation": true,
                         "NCycles": 1.0,
-                        "TextureId": 17570319679758767041,
+                        "TextureId": 11206482742703356727,
                         "BillboardType": 2,
                         "ParticleRenderMode": 0,
                         "ParticleRenderAlignment": 0,
@@ -438,7 +438,7 @@
                         "IsRandomFrame": false,
                         "LoopAnimation": true,
                         "NCycles": 1.0,
-                        "TextureId": 17570319679758767041,
+                        "TextureId": 11206482742703356727,
                         "BillboardType": 2,
                         "ParticleRenderMode": 0,
                         "ParticleRenderAlignment": 0,
@@ -510,7 +510,7 @@
                         ],
                         "ScaleRM": 0,
                         "Scale": [
-                            202.0,
+                            250.0,
                             2020.0
                         ],
                         "ReverseEffect": false,
@@ -559,17 +559,17 @@
                                 0.0
                             ],
                             [
-                                0.03989957273006439,
-                                0.03989941254258156,
-                                0.03989917412400246,
-                                1.0,
+                                0.03921568766236305,
+                                0.03921568766236305,
+                                0.03921568766236305,
+                                0.7058823704719544,
                                 0.05326875299215317
                             ],
                             [
-                                0.01869400590658188,
-                                0.01869390904903412,
-                                0.018693817779421808,
-                                1.0,
+                                0.019607843831181527,
+                                0.019607843831181527,
+                                0.019607843831181527,
+                                0.7058823704719544,
                                 0.9418888092041016
                             ],
                             [
@@ -587,7 +587,7 @@
                         "IsRandomFrame": false,
                         "LoopAnimation": true,
                         "NCycles": 1.0,
-                        "TextureId": 17696668776997996318,
+                        "TextureId": 11251334445267388412,
                         "BillboardType": 2,
                         "ParticleRenderMode": 1,
                         "ParticleRenderAlignment": 0,
@@ -659,8 +659,8 @@
                         ],
                         "ScaleRM": 0,
                         "Scale": [
-                            214.0,
-                            220.0
+                            268.0,
+                            270.0
                         ],
                         "ReverseEffect": false,
                         "ReverseDistanceRM": 0,
@@ -708,16 +708,16 @@
                                 0.007263922598212957
                             ],
                             [
-                                1.0,
-                                0.8867360353469849,
-                                0.42996740341186526,
+                                0.6540084481239319,
+                                0.5799862742424011,
+                                0.28147199749946597,
                                 1.0,
                                 0.03874092176556587
                             ],
                             [
-                                0.4104234576225281,
-                                0.2789119780063629,
-                                0.14304661750793458,
+                                0.3206751346588135,
+                                0.21818599104881288,
+                                0.1123039498925209,
                                 1.0,
                                 0.845035970211029
                             ],
@@ -736,7 +736,7 @@
                         "IsRandomFrame": false,
                         "LoopAnimation": true,
                         "NCycles": 1.0,
-                        "TextureId": 11414288199972047272,
+                        "TextureId": 3950195899821114799,
                         "BillboardType": 2,
                         "ParticleRenderMode": 0,
                         "ParticleRenderAlignment": 0,
@@ -752,13 +752,13 @@
             },
             {
                 "Name": "GroundFire2",
-                "Active": true,
+                "Active": false,
                 "RootBoneName": "",
                 "Mask": 0,
                 "Components": [
                     {
                         "Type": "Transform",
-                        "Active": true,
+                        "Active": false,
                         "Position": [
                             0.0,
                             -2.4999592304229738,
@@ -783,7 +783,7 @@
                     },
                     {
                         "Type": "Particle",
-                        "Active": true,
+                        "Active": false,
                         "DrawGizmo": true,
                         "Duration": 4.0,
                         "Looping": false,
@@ -808,8 +808,8 @@
                         ],
                         "ScaleRM": 0,
                         "Scale": [
-                            214.0,
-                            220.0
+                            268.0,
+                            268.0
                         ],
                         "ReverseEffect": false,
                         "ReverseDistanceRM": 0,
@@ -857,9 +857,9 @@
                                 0.004842615220695734
                             ],
                             [
-                                0.7589576244354248,
-                                0.46233636140823367,
-                                0.10383132100105286,
+                                0.5696202516555786,
+                                0.3476245403289795,
+                                0.0793142095208168,
                                 1.0,
                                 0.04358352720737457
                             ],
@@ -885,7 +885,7 @@
                         "IsRandomFrame": false,
                         "LoopAnimation": true,
                         "NCycles": 1.0,
-                        "TextureId": 11414288199972047272,
+                        "TextureId": 3950195899821114799,
                         "BillboardType": 2,
                         "ParticleRenderMode": 0,
                         "ParticleRenderAlignment": 0,
@@ -1106,7 +1106,7 @@
                         ],
                         "ScaleRM": 0,
                         "Scale": [
-                            540.0,
+                            620.0,
                             2020.0
                         ],
                         "ReverseEffect": false,
@@ -1155,16 +1155,16 @@
                                 0.0
                             ],
                             [
-                                0.25882354378700259,
-                                0.11764705926179886,
-                                0.0941176488995552,
+                                0.3629032373428345,
+                                0.16096505522727967,
+                                0.12730880081653596,
                                 1.0,
                                 0.12590797245502473
                             ],
                             [
-                                0.26058632135391238,
-                                0.11886559426784516,
-                                0.09421849995851517,
+                                0.364705890417099,
+                                0.16078431904315949,
+                                0.125490203499794,
                                 1.0,
                                 0.8789346218109131
                             ],
@@ -1332,7 +1332,7 @@
                         "IsRandomFrame": false,
                         "LoopAnimation": true,
                         "NCycles": 1.0,
-                        "TextureId": 10491644038975224738,
+                        "TextureId": 15730731409512593016,
                         "BillboardType": 2,
                         "ParticleRenderMode": 0,
                         "ParticleRenderAlignment": 0,
@@ -1481,7 +1481,7 @@
                         "IsRandomFrame": false,
                         "LoopAnimation": true,
                         "NCycles": 1.0,
-                        "TextureId": 10491644038975224738,
+                        "TextureId": 15730731409512593016,
                         "BillboardType": 2,
                         "ParticleRenderMode": 0,
                         "ParticleRenderAlignment": 0,
@@ -1630,7 +1630,7 @@
                         "IsRandomFrame": false,
                         "LoopAnimation": true,
                         "NCycles": 1.0,
-                        "TextureId": 5085859645009352351,
+                        "TextureId": 14833856789335581370,
                         "BillboardType": 1,
                         "ParticleRenderMode": 0,
                         "ParticleRenderAlignment": 0,

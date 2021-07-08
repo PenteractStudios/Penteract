@@ -57,8 +57,8 @@
                 ],
                 "ScaleRM": 0,
                 "Scale": [
-                    50.0,
-                    50.0
+                    65.0,
+                    65.0
                 ],
                 "ReverseEffect": false,
                 "ReverseDistanceRM": 0,
@@ -120,7 +120,7 @@
                 "IsRandomFrame": false,
                 "LoopAnimation": true,
                 "NCycles": 1.0,
-                "TextureId": 465905571273810051,
+                "TextureId": 14833856789335581370,
                 "BillboardType": 1,
                 "ParticleRenderMode": 0,
                 "ParticleRenderAlignment": 0,
@@ -129,7 +129,8 @@
                     false
                 ],
                 "HasCollision": true,
-                "LayerIndex": 2
+                "LayerIndex": 5,
+                "CollRadius": 1.5
             },
             {
                 "Type": "Script",
@@ -147,32 +148,18 @@
                         "Value": 1.0
                     }
                 ]
-            },
-            {
-                "Type": "SphereCollider",
-                "Active": true,
-                "colliderType": 2,
-                "layerType": 4,
-                "mass": 1.0,
-                "radius": 0.20000000298023225,
-                "centerOffset": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "freezeRotation": false
             }
         ],
         "Children": [
             {
                 "Name": "BasicTrail",
-                "Active": true,
+                "Active": false,
                 "RootBoneName": "",
                 "Mask": 0,
                 "Components": [
                     {
                         "Type": "Transform",
-                        "Active": true,
+                        "Active": false,
                         "Position": [
                             0.0,
                             0.0,
@@ -197,7 +184,7 @@
                     },
                     {
                         "Type": "Trail",
-                        "Active": true,
+                        "Active": false,
                         "TextureId": 6070033773294191873,
                         "MaxVertices": 1500,
                         "TrailQuads": 50,
@@ -236,13 +223,13 @@
             },
             {
                 "Name": "BasicTrail",
-                "Active": true,
+                "Active": false,
                 "RootBoneName": "",
                 "Mask": 0,
                 "Components": [
                     {
                         "Type": "Transform",
-                        "Active": true,
+                        "Active": false,
                         "Position": [
                             0.0,
                             0.0,
@@ -267,7 +254,7 @@
                     },
                     {
                         "Type": "Trail",
-                        "Active": true,
+                        "Active": false,
                         "TextureId": 6070033773294191873,
                         "MaxVertices": 1500,
                         "TrailQuads": 50,

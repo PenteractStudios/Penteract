@@ -34,7 +34,7 @@ public:
 	float GetRealEMPCooldown();
 	float GetRealUltimateCooldown();
 	void IncreaseUltimateCounter();
-	void Init(UID fangUID = 0, UID trailGunUID = 0, UID trailDashUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID cameraUID = 0, UID canvasUID = 0, UID EMPUID = 0, UID fangUltimateUID = 0);
+	void Init(UID fangUID = 0, UID trailGunUID = 0, UID trailDashUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID cameraUID = 0, UID canvasUID = 0, UID EMPUID = 0, UID EMPEffectsUID = 0, UID fangUltimateUID = 0, UID ultimateVFXUID = 0);
 
 public:
 	std::vector<std::string> states{ "Idle" ,
@@ -79,6 +79,7 @@ private:
 	//EMP
 	float EMPCooldownRemaining = 0.f;
 	bool EMPInCooldown = false;
+	ComponentParticleSystem* EMPEffects = nullptr;
 
 	//Shoot
 	ComponentTransform* rightGunTransform = nullptr;
@@ -96,10 +97,11 @@ private:
 	HUDController* hudControllerScript = nullptr;
 
 	//Ultimate
-	int ultimateCooldownRemaining = 0;	
+	int ultimateCooldownRemaining = 0;
 	bool ultimateInCooldown = false;
 	float oldMovementSpeed = 1.0f;
 	UltimateFang* ultimateScript = nullptr;
+	ComponentParticleSystem* ultimateVFX = nullptr;
 
 	//Audios
 	ComponentAudioSource* fangAudios[static_cast<int>(FANG_AUDIOS::TOTAL)] = { nullptr };
