@@ -37,83 +37,6 @@
                 "StateMachineSecondaryId": 11325116874157791137
             },
             {
-                "Type": "Script",
-                "Active": true,
-                "Script": 5891617165801964658,
-                "Values": [
-                    {
-                        "Name": "playerUID",
-                        "Type": "GameObjectUID",
-                        "Value": 17022400611641520942
-                    },
-                    {
-                        "Name": "playerMeshUIDFang",
-                        "Type": "GameObjectUID",
-                        "Value": 15039598287603546886
-                    },
-                    {
-                        "Name": "meshUID2",
-                        "Type": "GameObjectUID",
-                        "Value": 7691413884628165645
-                    },
-                    {
-                        "Name": "fleeingRange",
-                        "Type": "Float",
-                        "Value": 7.0
-                    },
-                    {
-                        "Name": "playerMeshUIDOnimaru",
-                        "Type": "GameObjectUID",
-                        "Value": 18322483683245720617
-                    },
-                    {
-                        "Name": "approachOffset",
-                        "Type": "Float",
-                        "Value": 5.0
-                    },
-                    {
-                        "Name": "meshUID",
-                        "Type": "GameObjectUID",
-                        "Value": 7691413884628165645
-                    },
-                    {
-                        "Name": "trailPrefabUID",
-                        "Type": "PrefabResourceUID",
-                        "Value": 4959781306678769485
-                    },
-                    {
-                        "Name": "meshUID1",
-                        "Type": "GameObjectUID",
-                        "Value": 7691413884628165645
-                    },
-                    {
-                        "Name": "dmgMaterialObj",
-                        "Type": "GameObjectUID",
-                        "Value": 12892112899398464731
-                    },
-                    {
-                        "Name": "hudControllerObjUID",
-                        "Type": "GameObjectUID",
-                        "Value": 12906212173904593955
-                    },
-                    {
-                        "Name": "rangerGruntCharacter.attackRange",
-                        "Type": "Float",
-                        "Value": 20.0
-                    },
-                    {
-                        "Name": "attackSpeed",
-                        "Type": "Float",
-                        "Value": 1.0
-                    },
-                    {
-                        "Name": "winConditionUID",
-                        "Type": "GameObjectUID",
-                        "Value": 5515770555020674411
-                    }
-                ]
-            },
-            {
                 "Type": "Agent",
                 "Active": true,
                 "MaxSpeed": 8.0,
@@ -195,7 +118,7 @@
                 "layerType": 4,
                 "mass": 1.0,
                 "radius": 1.0,
-                "height": 1.8300000429153443,
+                "height": 3.0,
                 "capsuleType": 1,
                 "centerOffset": [
                     0.0,
@@ -203,12 +126,6 @@
                     0.0
                 ],
                 "freezeRotation": false
-            },
-            {
-                "Type": "Script",
-                "Active": true,
-                "Script": 6803541990823883369,
-                "Values": null
             },
             {
                 "Type": "AudioSource",
@@ -243,6 +160,84 @@
                 "RolloffFactor": 1.0,
                 "ReferenceDistance": 10.0,
                 "MaxDistance": 30.0
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 6803541990823883369,
+                "Values": null
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 5891617165801964658,
+                "Values": [
+                    {
+                        "Name": "playerUID",
+                        "Type": "GameObjectUID",
+                        "Value": 17022400611641520942
+                    },
+                    {
+                        "Name": "fangUID",
+                        "Type": "GameObjectUID",
+                        "Value": 12436231335275064284
+                    },
+                    {
+                        "Name": "dmgMaterialObj",
+                        "Type": "GameObjectUID",
+                        "Value": 12892112899398464731
+                    },
+                    {
+                        "Name": "playerMeshUIDFang",
+                        "Type": "GameObjectUID",
+                        "Value": 15039598287603546886
+                    },
+                    {
+                        "Name": "hudControllerObjUID",
+                        "Type": "GameObjectUID",
+                        "Value": 12906212173904593955
+                    },
+                    {
+                        "Name": "playerMeshUIDOnimaru",
+                        "Type": "GameObjectUID",
+                        "Value": 18322483683245720617
+                    },
+                    {
+                        "Name": "winConditionUID",
+                        "Type": "GameObjectUID",
+                        "Value": 5515770555020674411
+                    },
+                    {
+                        "Name": "trailPrefabUID",
+                        "Type": "PrefabResourceUID",
+                        "Value": 4959781306678769485
+                    },
+                    {
+                        "Name": "hurtFeedbackTimeDuration",
+                        "Type": "Float",
+                        "Value": 0.10000000149011612
+                    },
+                    {
+                        "Name": "rangerGruntCharacter.attackRange",
+                        "Type": "Float",
+                        "Value": 20.0
+                    },
+                    {
+                        "Name": "rangerGruntCharacter.pushBackDistance",
+                        "Type": "Float",
+                        "Value": 10.0
+                    },
+                    {
+                        "Name": "rangerGruntCharacter.pushBackSpeed",
+                        "Type": "Float",
+                        "Value": 20.0
+                    },
+                    {
+                        "Name": "groundPosition",
+                        "Type": "Float",
+                        "Value": 0.0
+                    }
+                ]
             }
         ],
         "Children": [
