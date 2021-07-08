@@ -17,6 +17,17 @@ enum class MovementDirection {
 	UP_RIGHT = 8
 };
 
+enum class InputActions {
+	MOVEMENT,
+	ORIENTATION,
+	SWITCH,
+	SHOOT,
+	ABILITY_1,
+	ABILITY_2,
+	ABILITY_3,
+	INTERACT,
+};
+
 class Player : public Character {
 public:
 	// ------- Contructors ------- //
@@ -36,18 +47,22 @@ public:
 	virtual void GetHit(float damage_) override;
 
 	void LookAtMouse();
-	MovementDirection GetInputMovementDirection() const;
+	MovementDirection GetInputMovementDirection(bool useGamepad) const;
 	float3 GetDirection() const;
 	virtual void Shoot() {}
-	virtual void Update(bool lockMovement = false, bool lockRotation = false);
+	virtual void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockRotation = false);
 	virtual void CheckCoolDowns(bool noCooldownMode = false) {}
 	virtual bool CanSwitch() const = 0;
-	
+
 	virtual void OnAnimationFinished() = 0;
 	virtual void OnAnimationSecondaryFinished() = 0;
-	
+	virtual bool IsInstantOrientation(bool useGamepad) const = 0;
+
 	int GetMouseDirectionState();
 	bool IsActive();
+	static bool GetInputBool(InputActions action, bool useGamepad = false);
+	float2 GetInputFloat2(InputActions action, bool useGamepad = false) const;
+	void UpdateFacePointDir(bool useGamepad);
 	virtual void IncreaseUltimateCounter();
 
 public:
@@ -56,11 +71,12 @@ public:
 	float attackSpeed = 1.0f;
 	float attackCooldownRemaining = 0.f;
 	bool shooting = false;
-	float orientationSpeed = -1;
-	float orientationThreshold = 5.0f;
+	float orientationSpeed = 6.0f;
+	float orientationThreshold = 1.0f;
 	int ultimateChargePoints = 0;
 	const int ultimateChargePointsTotal = 10;
 	bool shootingOnCooldown = false;
+	float normalOrientationSpeed = 7.5f;
 
 	float3 lookAtMousePlanePosition = float3(0, 0, 0);
 	ComponentCamera* lookAtMouseCameraComp = nullptr;
@@ -75,11 +91,13 @@ protected:
 private:
 	virtual bool CanShoot();
 	void ResetSwitchStatus();
-
+	MovementDirection GetControllerMovementDirection(bool useGamepad = false) const;
+	float2 GetControllerOrientationDirection() const;
+	void LookAtGamepadDir();
+	void LookAtFacePointTarget(bool useGamepad);
 private:
 	float currentSwitchDelay = 0.f;
 	bool playSwitchParticles = true;
 	bool switchInProgress = false;
 	float switchDelay = 0.37f;
-
 };

@@ -13,7 +13,7 @@ bool Onimaru::CanShoot() {
 }
 
 bool Onimaru::CanBlast() {
-	return !blastInCooldown && !IsShielding() && !ultimateInUse;
+	return !blastInCooldown && !IsShielding() && !ultimateInUse && !blastInUse;
 }
 
 void Onimaru::GetHit(float damage_) {
@@ -139,7 +139,7 @@ void Onimaru::StartUltimate() {
 	}
 
 	ultimateChargePoints = 0;
-	orientationSpeed = ultimateRotationSpeed;
+	orientationSpeed = ultimateOrientationSpeed;
 	attackSpeed = ultimateAttackSpeed;
 	movementInputDirection = MovementDirection::NONE;
 	Player::MoveTo();
@@ -148,7 +148,7 @@ void Onimaru::StartUltimate() {
 
 void Onimaru::FinishUltimate() {
 	ultimateTimeRemaining = 0;
-	orientationSpeed = -1;
+	orientationSpeed = normalOrientationSpeed;
 	attackSpeed = originalAttackSpeed;
 	ultimateInUse = false;
 	compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(IDLE)]);
@@ -234,6 +234,11 @@ void Onimaru::OnAnimationSecondaryFinished() {
 			}
 		}
 	}
+}
+
+bool Onimaru::IsInstantOrientation(bool useGamepad) const {
+	//This must return true only when ultimate not in use and Gamepad is either not used or not connected
+	return !ultimateInUse && (!useGamepad || !Input::IsGamepadConnected(0));
 }
 
 void Onimaru::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
@@ -394,13 +399,13 @@ void Onimaru::FadeShield() {
 	shieldGO->Disable();
 }
 
-void Onimaru::Update(bool lockMovement, bool lockRotation) {
+void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 	if (shield == nullptr || shieldGO == nullptr) return;
 	if (isAlive) {
-		Player::Update(ultimateInUse, false);
+		Player::Update(useGamepad, ultimateInUse, false);
 
 		if (!ultimateInUse) {
-			if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_E)) {
+			if (GetInputBool(InputActions::ABILITY_3, useGamepad)) {
 				if (CanUltimate()) {
 					StartUltimate();
 				}
@@ -424,16 +429,18 @@ void Onimaru::Update(bool lockMovement, bool lockRotation) {
 		}
 
 		if (!ultimateInUse && !blastInUse) {
-			if (Input::GetMouseButtonDown(2)) {
-				InitShield();
-			}
-			if (shield->GetIsActive()) {
-				if (Input::GetMouseButtonUp(2) || shield->GetNumCharges() == shield->max_charges) {
+
+			if (!shield->GetIsActive()) {
+				if (GetInputBool(InputActions::ABILITY_1, useGamepad)) {
+					InitShield();
+				}
+			}else{
+					if (!GetInputBool(InputActions::ABILITY_1, useGamepad) || shield->GetNumCharges() == shield->max_charges) {
 					FadeShield();
 				}
 			}
 
-			if (Input::GetMouseButtonDown(0) || Input::GetMouseButtonRepeat(0)) {
+			if (GetInputBool(InputActions::SHOOT, useGamepad)) {
 				if (!shooting) {
 					shooting = true;
 					if (bullet) {
@@ -459,25 +466,26 @@ void Onimaru::Update(bool lockMovement, bool lockRotation) {
 			}
 		}
 
-		if (Input::GetMouseButtonUp(0)) {
-			shooting = false;
-			if (compAnimation) {
-				if (shield->GetIsActive()) {
-					if (compAnimation->GetCurrentState() && compAnimation->GetCurrentStateSecondary()) {
-						compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHIELD)]);
+		if (shooting) {
+			if (!GetInputBool(InputActions::SHOOT, useGamepad)) {
+				shooting = false;
+				if (compAnimation) {
+					if (shield->GetIsActive()) {
+						if (compAnimation->GetCurrentState() && compAnimation->GetCurrentStateSecondary()) {
+							compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHIELD)]);
+						}
+					} else {
+						if (compAnimation->GetCurrentStateSecondary() && compAnimation->GetCurrentState()) {
+							compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+						}
 					}
+					if (bullet) bullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
 				}
-				else {
-					if (compAnimation->GetCurrentStateSecondary() && compAnimation->GetCurrentState()) {
-						compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
-					}
-				}
-				if(bullet) bullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
 			}
 		}
 
 		if (CanBlast()) {
-			if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_Q)) {
+			if (GetInputBool(InputActions::ABILITY_2, useGamepad)) {
 				blastInUse = true;
 				if (shooting) {
 					if (compAnimation) {
