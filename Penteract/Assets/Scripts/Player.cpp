@@ -66,6 +66,7 @@ void Player::LookAtGamepadDir() {
 void Player::LookAtFacePointTarget(bool useGamepad) {
 	if (facePointDir.x == 0 && facePointDir.z == 0)return;
 	Quat quat = playerMainTransform->GetGlobalRotation();
+
 	float angle = Atan2(facePointDir.x, facePointDir.z);
 	Quat rotation = quat.RotateAxisAngle(float3(0, 1, 0), angle);
 
@@ -112,8 +113,11 @@ MovementDirection Player::GetInputMovementDirection(bool useGamepad) const {
 
 int Player::GetMouseDirectionState() {
 	float3 inputDirection = GetDirection();
-	float dot = Dot(inputDirection.Normalized(), facePointDir.Normalized());
-	float3 cross = Cross(inputDirection.Normalized(), facePointDir.Normalized());
+
+	if (!playerMainTransform) return 0;
+
+	float dot = Dot(inputDirection.Normalized(), playerMainTransform->GetFront());
+	float3 cross = Cross(inputDirection.Normalized(), playerMainTransform->GetFront());
 
 	// 45� for all animations (Magic numbers 0.923 , 0.383)
 	// 60� for axis and 30 for diagonals animations (Magic numbers 0.866 , 0.5)
@@ -240,6 +244,7 @@ float2 Player::GetInputFloat2(InputActions action, bool useGamepad) const {
 void Player::UpdateFacePointDir(bool useGamepad) {
 	if (useGamepad) {
 		float2 inputFloat2 = GetInputFloat2(InputActions::ORIENTATION, useGamepad);
+
 		facePointDir.x = inputFloat2.x;
 		facePointDir.z = inputFloat2.y;
 
