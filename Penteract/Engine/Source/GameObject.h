@@ -64,7 +64,8 @@ private:
 
 class TESSERACT_ENGINE_API GameObject {
 public:
-	void InitComponents();
+	void Init();
+	void Start();
 	void Update();
 	void DrawGizmos();
 
@@ -100,6 +101,8 @@ public:
 	void AddChild(GameObject* gameObject);
 	void RemoveChild(GameObject* gameObject);
 	const std::vector<GameObject*>& GetChildren() const;
+	GameObject* GetChild(unsigned index) const;
+	GameObject* GetChild(const char* name) const;
 	bool IsDescendantOf(GameObject* gameObject);
 	GameObject* FindDescendant(const std::string& name) const;
 	bool HasChildren() const;
@@ -134,7 +137,6 @@ private:
 	GameObject* parent = nullptr;
 	GameObject* rootBoneHierarchy = nullptr;
 	std::vector<GameObject*> children;
-
 };
 
 template<class T>

@@ -35,6 +35,7 @@
 #define JSON_TAG_NORMAL_MAP "NormalMap"
 #define JSON_TAG_NORMAL_STRENGTH "NormalStrength"
 #define JSON_TAG_EMISSIVE_MAP "EmissiveMap"
+#define JSON_TAG_EMISSIVE_INTENSITY "Emissive"
 #define JSON_TAG_AMBIENT_OCCLUSION_MAP "AmbientOcclusionMap"
 #define JSON_TAG_SMOOTHNESS "Smoothness"
 #define JSON_TAG_HAS_SMOOTHNESS_IN_ALPHA_CHANNEL "HasSmoothnessInAlphaChannel"
@@ -81,6 +82,8 @@ void ResourceMaterial::Load() {
 
 	emissiveMapId = jMaterial[JSON_TAG_EMISSIVE_MAP];
 	App->resources->IncreaseReferenceCount(emissiveMapId);
+
+	emissiveIntensity = jMaterial[JSON_TAG_EMISSIVE_INTENSITY];
 
 	ambientOcclusionMapId = jMaterial[JSON_TAG_AMBIENT_OCCLUSION_MAP];
 	App->resources->IncreaseReferenceCount(ambientOcclusionMapId);
@@ -138,6 +141,7 @@ void ResourceMaterial::SaveToFile(const char* filePath) {
 	jMaterial[JSON_TAG_NORMAL_MAP] = normalMapId;
 	jMaterial[JSON_TAG_NORMAL_STRENGTH] = normalStrength;
 	jMaterial[JSON_TAG_EMISSIVE_MAP] = emissiveMapId;
+	jMaterial[JSON_TAG_EMISSIVE_INTENSITY] = emissiveIntensity;
 	jMaterial[JSON_TAG_AMBIENT_OCCLUSION_MAP] = ambientOcclusionMapId;
 
 	jMaterial[JSON_TAG_SMOOTHNESS] = smoothness;
@@ -189,7 +193,7 @@ void ResourceMaterial::OnEditorUpdate() {
 
 	// Shader types
 	ImGui::TextColored(App->editor->titleColor, "Shader");
-	const char* shaderTypes[] = {"[Legacy] Phong", "Standard (specular settings)", "Standard"};
+	const char* shaderTypes[] = {"[Legacy] Phong", "Standard (specular settings)", "Standard", "Unlit"};
 	const char* shaderTypesCurrent = shaderTypes[(int) shaderType];
 	if (ImGui::BeginCombo("Shader Type", shaderTypesCurrent)) {
 		for (int n = 0; n < IM_ARRAYSIZE(shaderTypes); ++n) {
@@ -283,7 +287,7 @@ void ResourceMaterial::OnEditorUpdate() {
 		ImGui::EndColumns();
 		ImGui::NewLine();
 
-	} else {
+	} else if (shaderType != MaterialShader::UNLIT) {
 		const char* smoothnessItems[] = {"Diffuse Alpha", "Specular Alpha"};
 
 		if (shaderType == MaterialShader::STANDARD_SPECULAR) {
@@ -345,28 +349,41 @@ void ResourceMaterial::OnEditorUpdate() {
 		ImGui::NewLine();
 	}
 
-	// Normal Options
-	ImGui::BeginColumns("##normal_material", 2, ImGuiColumnsFlags_NoResize | ImGuiColumnsFlags_NoBorder);
+	if (shaderType != MaterialShader::UNLIT) {
+		// Normal Options
+		ImGui::BeginColumns("##normal_material", 2, ImGuiColumnsFlags_NoResize | ImGuiColumnsFlags_NoBorder);
+		{
+			ImGui::ResourceSlot<ResourceTexture>("Normal Map", &normalMapId);
+		}
+		ImGui::NextColumn();
+		{
+			ImGui::NewLine();
+			if (normalMapId != 0) {
+				ImGui::SliderFloat("##strength", &normalStrength, 0.0, 10.0);
+			}
+		}
+		ImGui::EndColumns();
+		ImGui::NewLine();
+
+		// Ambient Occlusion Options
+		ImGui::ResourceSlot<ResourceTexture>("Occlusion Map", &ambientOcclusionMapId);
+
+		ImGui::NewLine();
+	}
+
+	// Emissive Options
+	ImGui::BeginColumns("##emissive_map", 2, ImGuiColumnsFlags_NoResize | ImGuiColumnsFlags_NoBorder);
 	{
-		ImGui::ResourceSlot<ResourceTexture>("Normal Map", &normalMapId);
+		ImGui::ResourceSlot<ResourceTexture>("Emissive Map", &emissiveMapId);
 	}
 	ImGui::NextColumn();
 	{
 		ImGui::NewLine();
-		if (normalMapId != 0) {
-			ImGui::SliderFloat("##strength", &normalStrength, 0.0, 10.0);
+		if (emissiveMapId != 0) {
+			ImGui::SliderFloat("##emissiveStrength", &emissiveIntensity, 0.0, 100.0);
 		}
 	}
 	ImGui::EndColumns();
-	ImGui::NewLine();
-
-	// Ambient Occlusion Options
-	ImGui::ResourceSlot<ResourceTexture>("Occlusion Map", &ambientOcclusionMapId);
-
-	ImGui::NewLine();
-
-	// Emissive Options
-	ImGui::ResourceSlot<ResourceTexture>("Emissive Map", &emissiveMapId);
 
 	ImGui::NewLine();
 	ImGui::NewLine();

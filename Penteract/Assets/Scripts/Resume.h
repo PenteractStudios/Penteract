@@ -1,6 +1,11 @@
 #pragma once
 
 #include "Scripting/Script.h"
+#include "UIAudioType.h"
+#include "GameController.h"
+
+class ComponentAudioSource;
+class ComponentSelectable;
 
 class Resume : public Script
 {
@@ -11,13 +16,16 @@ public:
 	void Start() override;
 	void Update() override;
 	void OnButtonClick() override;
+	void PlayAudio(UIAudio type);
 
 public:
-	UID pauseUID;
-	UID hudUID;
+	UID gameControllerUID;
 
 private:
-	GameObject* pauseCanvas = nullptr;
-	GameObject* hudCanvas = nullptr;
+	GameController* gameController = nullptr;
+
+	bool playHoveredAudio = true;
+	ComponentSelectable* selectable = nullptr;
+	ComponentAudioSource* audios[static_cast<int>(UIAudio::TOTAL)] = { nullptr };
 };
 

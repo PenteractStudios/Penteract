@@ -24,12 +24,11 @@ void WinLose::Start() {
 			if (spawn->IsActive()) {
 				EnemySpawnPoint* enemySpawnPointScript = GET_SCRIPT(spawn, EnemySpawnPoint);
 				if (enemySpawnPointScript != nullptr) {
-					totalEnemies += enemySpawnPointScript->amountOfEnemies;
+					totalEnemies += enemySpawnPointScript->GetAmountofEnemies();
 				}
 			}
 		}
 	}
-
 }
 
 void WinLose::Update() {
@@ -49,7 +48,7 @@ void WinLose::Update() {
 		// TODO: Commented for Pablo
 		//&& deadEnemies >= totalEnemies
 		) {
-		if(sceneUID != 0) SceneManager::ChangeScene(sceneUID);
+		if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 	}
 }
 

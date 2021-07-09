@@ -49,7 +49,7 @@ void PanelScene::Update() {
 
 		if (ImGui::BeginMenuBar()) {
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(5, 5));
-			const char* shadingMode[3] = {"Shaded", "Wireframe", "Depth"};
+			const char* shadingMode[4] = {"Shaded", "Wireframe", "Depth", "Ambient Occlusion"};
 			if (ImGui::Button(currentShadingMode)) {
 				ImGui::OpenPopup("DrawMode");
 			}
@@ -176,13 +176,15 @@ void PanelScene::Update() {
 				size.x,
 				size.y,
 			};
+			windowsPos.x = ImGui::GetWindowPos().x;
+			windowsPos.y = ImGui::GetWindowPos().y;
 		}
 
 		ImVec2 framebufferPosition = ImGui::GetWindowPos();
 		framebufferPosition.y += (ImGui::GetWindowHeight() - size.y);
 
 		// Draw
-		ImGui::Image((void*) App->renderer->renderTexture, size, ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::Image((void*) App->renderer->outputTexture, size, ImVec2(0, 1), ImVec2(1, 0));
 
 		if (App->camera->IsEngineCameraActive()) {
 			// Drag and drop
@@ -192,7 +194,8 @@ void PanelScene::Update() {
 					UID prefabId = *(UID*) payload->Data;
 					ResourcePrefab* prefab = App->resources->GetResource<ResourcePrefab>(prefabId);
 					if (prefab != nullptr) {
-						prefab->BuildPrefab(App->scene->scene->root);
+						UID gameObjectId = prefab->BuildPrefab(App->scene->scene->root);
+						App->editor->selectedGameObject = App->scene->scene->GetGameObject(gameObjectId);
 					}
 				}
 
@@ -287,6 +290,10 @@ void PanelScene::Update() {
 		ImGui::End();
 		ImGui::PopStyleVar();
 	}
+}
+
+const float2& PanelScene::GetWindowsPos() const {
+	return windowsPos;
 }
 
 const float2& PanelScene::GetMousePosOnScene() const {

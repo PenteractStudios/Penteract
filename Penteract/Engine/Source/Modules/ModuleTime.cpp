@@ -9,6 +9,7 @@
 #include "Modules/ModuleFiles.h"
 #include "Modules/ModuleEvents.h"
 #include "Modules/ModuleAudio.h"
+#include "Modules/ModuleRender.h"
 #include "Scene.h"
 #include "Modules/ModulePhysics.h"
 #include "SDL_timer.h"
@@ -101,6 +102,11 @@ UpdateStatus ModuleTime::ExitGame() {
 	return UpdateStatus::STOP;
 }
 
+void ModuleTime::SetVSync(bool value) {
+	vsync = value;
+	App->renderer->SetVSync(value);
+}
+
 bool ModuleTime::HasGameStarted() const {
 	return gameStarted;
 }
@@ -139,6 +145,14 @@ long long ModuleTime::GetCurrentTimestamp() const {
 
 unsigned int ModuleTime::GetFrameCount() const {
 	return frameCount;
+}
+
+float ModuleTime::GetDeltaTimeOrRealDeltaTime() const {
+	if (HasGameStarted()) {
+		return GetDeltaTime();
+	} else {
+		return GetRealTimeDeltaTime();
+	}
 }
 
 void ModuleTime::StartGame() {

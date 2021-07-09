@@ -32,7 +32,7 @@ void ComponentEventSystem::Init() {
 }
 
 void ComponentEventSystem::Update() {
-	if (App->time->IsGameRunning()) {
+	if (App->time->HasGameStarted()) {
 		if (!started) {
 			started = true;
 			GameObject* objectToSelect = App->scene->scene->GetGameObject(firstSelectedId);
@@ -187,7 +187,10 @@ ComponentSelectable* ComponentEventSystem::GetCurrentSelected() const {
 
 ComponentSelectable* ComponentEventSystem::GetCurrentlyHovered() const {
 	if (hoveredSelectableID == 0) return nullptr;
-	return GetOwner().scene->GetComponent<ComponentSelectable>(hoveredSelectableID);
+
+	ComponentSelectable* sel = GetOwner().scene->GetComponent<ComponentSelectable>(hoveredSelectableID);
+	if (sel == nullptr) return nullptr;
+	return sel->IsActive() ? sel : nullptr;
 }
 
 void ComponentEventSystem::SetClickedGameObject(GameObject* clickedObj_) {

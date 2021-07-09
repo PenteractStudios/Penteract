@@ -43,6 +43,7 @@ Scene::Scene(unsigned numGameObjects) {
 	boxColliderComponents.Allocate(numGameObjects);
 	capsuleColliderComponents.Allocate(numGameObjects);
 	agentComponents.Allocate(numGameObjects);
+	obstacleComponents.Allocate(numGameObjects);
 }
 
 void Scene::ClearScene() {
@@ -59,10 +60,12 @@ void Scene::RebuildQuadtree() {
 	quadtree.Initialize(quadtreeBounds, quadtreeMaxDepth, quadtreeElementsPerNode);
 	for (ComponentBoundingBox& boundingBox : boundingBoxComponents) {
 		GameObject& gameObject = boundingBox.GetOwner();
-		boundingBox.CalculateWorldBoundingBox();
-		const AABB& worldAABB = boundingBox.GetWorldAABB();
-		quadtree.Add(&gameObject, AABB2D(worldAABB.minPoint.xz(), worldAABB.maxPoint.xz()));
-		gameObject.isInQuadtree = true;
+		if (gameObject.IsStatic()) {
+			boundingBox.CalculateWorldBoundingBox();
+			const AABB& worldAABB = boundingBox.GetWorldAABB();
+			quadtree.Add(&gameObject, AABB2D(worldAABB.minPoint.xz(), worldAABB.maxPoint.xz()));
+			gameObject.isInQuadtree = true;
+		}
 	}
 	quadtree.Optimize();
 }
@@ -87,6 +90,9 @@ GameObject* Scene::CreateGameObject(GameObject* parent, UID id, const char* name
 void Scene::DestroyGameObject(GameObject* gameObject) {
 	if (gameObject == nullptr) return;
 
+	// If the removed GameObject is the directionalLight of the scene, set it to nullptr
+	if (gameObject == directionalLight) directionalLight = nullptr;
+
 	// We need a copy because we are invalidating the iterator by removing GameObjects
 	std::vector<GameObject*> children = gameObject->GetChildren();
 	for (GameObject* child : children) {
@@ -96,7 +102,7 @@ void Scene::DestroyGameObject(GameObject* gameObject) {
 	if (gameObject->isInQuadtree) {
 		quadtree.Remove(gameObject);
 	}
-
+	
 	bool selected = App->editor->selectedGameObject == gameObject;
 	if (selected) App->editor->selectedGameObject = nullptr;
 
@@ -169,6 +175,8 @@ Component* Scene::GetComponentByTypeAndId(ComponentType type, UID componentId) {
 		return capsuleColliderComponents.Find(componentId);
 	case ComponentType::AGENT:
 		return agentComponents.Find(componentId);
+	case ComponentType::OBSTACLE:
+		return obstacleComponents.Find(componentId);
 	default:
 		LOG("Component of type %i hasn't been registered in Scene::GetComponentByTypeAndId.", (unsigned) type);
 		assert(false);
@@ -236,6 +244,8 @@ Component* Scene::CreateComponentByTypeAndId(GameObject* owner, ComponentType ty
 		return capsuleColliderComponents.Obtain(componentId, owner, componentId, owner->IsActive());
 	case ComponentType::AGENT:
 		return agentComponents.Obtain(componentId, owner, componentId, owner->IsActive());
+	case ComponentType::OBSTACLE:
+		return obstacleComponents.Obtain(componentId, owner, componentId, owner->IsActive());
 	default:
 		LOG("Component of type %i hasn't been registered in Scene::CreateComponentByTypeAndId.", (unsigned) type);
 		assert(false);
@@ -303,6 +313,9 @@ void Scene::RemoveComponentByTypeAndId(ComponentType type, UID componentId) {
 		scriptComponents.Release(componentId);
 		break;
 	case ComponentType::PARTICLE:
+		for (ComponentParticleSystem& ps : particleComponents) {
+			ps.DestroyParticlesColliders();
+		}
 		particleComponents.Release(componentId);
 		break;
 	case ComponentType::TRAIL:
@@ -334,6 +347,9 @@ void Scene::RemoveComponentByTypeAndId(ComponentType type, UID componentId) {
 		break;
 	case ComponentType::AGENT:
 		agentComponents.Release(componentId);
+		break;
+	case ComponentType::OBSTACLE:
+		obstacleComponents.Release(componentId);
 		break;
 	default:
 		LOG("Component of type %i hasn't been registered in Scene::RemoveComponentByTypeAndId.", (unsigned) type);
@@ -400,6 +416,25 @@ std::vector<int> Scene::GetTriangles() {
 				currentGlobalTri += 3;
 			}
 			i++;
+		}
+	}
+
+	return result;
+}
+
+std::vector<float> Scene::GetNormals() {
+	std::vector<float> result;
+
+	for (ComponentMeshRenderer& meshRenderer : meshRendererComponents) {
+		ResourceMesh* mesh = App->resources->GetResource<ResourceMesh>(meshRenderer.meshId);
+		ComponentTransform* transform = meshRenderer.GetOwner().GetComponent<ComponentTransform>();
+		if (mesh != nullptr && transform->GetOwner().IsStatic()) {
+			for (size_t i = 0; i < mesh->meshNormals.size(); i += 3) {
+				float4 transformedVertex = transform->GetGlobalMatrix() * float4(mesh->meshNormals[i], mesh->meshNormals[i + 1], mesh->meshNormals[i + 2], 1);
+				result.push_back(transformedVertex.x);
+				result.push_back(transformedVertex.y);
+				result.push_back(transformedVertex.z);
+			}
 		}
 	}
 

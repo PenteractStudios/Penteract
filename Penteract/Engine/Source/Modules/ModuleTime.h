@@ -31,6 +31,8 @@ public:
 	long long GetCurrentTimestamp() const;
 	unsigned int GetFrameCount() const;
 
+	float GetDeltaTimeOrRealDeltaTime() const;
+
 	// --- Game Time Controllers --- //
 	// This functions control the flow of the time in-game by setting the Game Time Flags (see below).
 	// They are also in charge to serialise and load the scene on play, pause and stops.
@@ -40,6 +42,7 @@ public:
 	TESSERACT_ENGINE_API void ResumeGame();
 	void StepGame();
 	UpdateStatus ExitGame();
+	void SetVSync(bool value);
 
 public:
 	int maxFps = 60;			// Maximum FPS when the framerate is limited.

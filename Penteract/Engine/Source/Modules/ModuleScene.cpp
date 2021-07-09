@@ -100,7 +100,8 @@ bool ModuleScene::Start() {
 	if (App->scene->scene->root == nullptr) {
 		App->scene->CreateEmptyScene();
 	}
-	App->renderer->SetVSync(false);
+
+	App->time->SetVSync(true);
 	App->time->limitFramerate = false;
 #else
 	CreateEmptyScene();
@@ -169,7 +170,7 @@ void ModuleScene::CreateEmptyScene() {
 	GameObject* root = scene->CreateGameObject(nullptr, GenerateUID(), "Scene");
 	scene->root = root;
 	ComponentTransform* sceneTransform = root->CreateComponent<ComponentTransform>();
-	root->InitComponents();
+	root->Init();
 
 	// Create Directional Light
 	GameObject* dirLight = scene->CreateGameObject(root, GenerateUID(), "Directional Light");
@@ -179,7 +180,7 @@ void ModuleScene::CreateEmptyScene() {
 	dirLightTransform->SetRotation(Quat::FromEulerXYZ(pi / 2, 0.0f, 0.0));
 	dirLightTransform->SetScale(float3(1, 1, 1));
 	ComponentLight* dirLightLight = dirLight->CreateComponent<ComponentLight>();
-	dirLight->InitComponents();
+	dirLight->Init();
 
 	// Create Game Camera
 	GameObject* gameCamera = scene->CreateGameObject(root, GenerateUID(), "Game Camera");
@@ -190,7 +191,9 @@ void ModuleScene::CreateEmptyScene() {
 	ComponentCamera* gameCameraCamera = gameCamera->CreateComponent<ComponentCamera>();
 	ComponentSkyBox* gameCameraSkybox = gameCamera->CreateComponent<ComponentSkyBox>();
 	ComponentAudioListener* audioListener = gameCamera->CreateComponent<ComponentAudioListener>();
-	gameCamera->InitComponents();
+	gameCamera->Init();
+
+	root->Start();
 }
 
 void ModuleScene::DestroyGameObjectDeferred(GameObject* gameObject) {
