@@ -149,7 +149,7 @@ void PlayerController::ResetSwitchStatus() {
 	currentSwitchDelay = 0.f;
 }
 
-bool PlayerController::IsVulnerable() {
+bool PlayerController::IsVulnerable() const {
 	return !invincibleMode;
 }
 

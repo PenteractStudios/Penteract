@@ -115,7 +115,7 @@ void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, 
 	GameObject* ultimateVFXGO = GameplaySystems::GetGameObject(ultimateVFXUID);
 	if (ultimateVFXGO) ultimateVFX = ultimateVFXGO->GetComponent<ComponentParticleSystem>();
 }
-bool Fang::IsVulnerable() {
+bool Fang::IsVulnerable() const {
 	return !ultimateOn;
 }
 bool Fang::CanSwitch() const {

@@ -114,7 +114,7 @@ private:
 	void UpdatePlayerStats();
 	bool CanSwitch();
 	void ResetSwitchStatus();
-	bool IsVulnerable();
+	bool IsVulnerable() const;
 private:
 
 	//Switch

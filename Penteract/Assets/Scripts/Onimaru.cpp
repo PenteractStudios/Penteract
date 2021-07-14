@@ -157,7 +157,7 @@ bool Onimaru::IsShielding() const {
 	return shield->GetIsActive();
 }
 
-bool Onimaru::IsVulnerable() {
+bool Onimaru::IsVulnerable() const {
 	return !ultimateOn;
 }
 

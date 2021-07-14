@@ -88,13 +88,13 @@ public:
 	void AddEnemy(GameObject* enemy);
 	void RemoveEnemy(GameObject* enemy);
 	bool IsShielding() const;
-	bool IsVulnerable() override;
+	bool IsVulnerable() const override;
 
 private:
 
 	ResourcePrefab* trail = nullptr;
 	ComponentParticleSystem* bullet = nullptr;
-	
+
 	ComponentParticleSystem* ultimateBullet = nullptr;
 
 	ComponentTransform* gunTransform = nullptr;

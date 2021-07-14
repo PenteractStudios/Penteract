@@ -85,7 +85,7 @@ public:
 	float3 facePointDir = float3(0, 0, 0);
 	MovementDirection movementInputDirection = MovementDirection::NONE;
 	ComponentTransform* playerMainTransform = nullptr;
-	virtual bool IsVulnerable() = 0;
+	virtual bool IsVulnerable() const = 0;
 
 protected:
 	void MoveTo();
