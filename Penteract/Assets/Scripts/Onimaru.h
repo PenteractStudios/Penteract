@@ -31,7 +31,7 @@ public:
 		RUN_LEFT,
 		RUN_RIGHT,
 		BLAST,
-		NONE1,
+		ULTI_LOOP_WALKING,
 		ULTI_INTRO,
 		ULTI_LOOP,
 		DEATH,
@@ -41,12 +41,13 @@ public:
 		RUNFORWARDLEFT,
 		RUNFORWARDRIGHT,
 		RUNBACKWARDLEFT,
-		RUNBACKWARDRIGHT
+		RUNBACKWARDRIGHT,
+
 	};
 
 	std::vector<std::string> states{ "Idle" ,
 					"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
-					"EnergyBlast", "" , "UltiIntro" , "UltiLoop" ,
+					"EnergyBlast", "UltiLoopWalking" , "UltiIntro" , "UltiLoop" ,
 					"Death" , "Shooting", "Shield","ShootingShield" ,
 					"RunForwardLeft","RunForwardRight", "RunBackwardLeft", "RunBackwardRight"
 	};
@@ -62,7 +63,7 @@ public:
 	float blastDistance = 15.f;
 	float blastAngle = 50.f;
 	float blastDelay = 0.6;
-
+	float shieldingMaxSpeed = 2.0f;
 public:
 	// ------- Contructors ------- //
 	Onimaru() {};
@@ -93,7 +94,7 @@ private:
 
 	ResourcePrefab* trail = nullptr;
 	ComponentParticleSystem* bullet = nullptr;
-	
+
 	ComponentParticleSystem* ultimateBullet = nullptr;
 
 	ComponentTransform* gunTransform = nullptr;
@@ -133,7 +134,7 @@ private:
 private:
 
 	bool CanShoot() override;
-	bool CanBlast();
+	bool CanBlast() const;
 	void Shoot() override;
 	void Blast();
 	void PlayAnimation();
@@ -142,6 +143,7 @@ private:
 	void FinishUltimate();
 	void InitShield();
 	void FadeShield();
-	bool CanShield();
-	bool CanUltimate();
+	bool CanShield() const;
+	bool CanUltimate() const;
+	bool UltimateStarted() const;
 };

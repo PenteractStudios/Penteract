@@ -77,6 +77,8 @@ public:
 	const int ultimateChargePointsTotal = 10;
 	bool shootingOnCooldown = false;
 	float normalOrientationSpeed = 7.5f;
+	float normalMovementSpeed = 4.0f;
+	float ultimateMovementSpeed = 4.0f;
 
 	float3 lookAtMousePlanePosition = float3(0, 0, 0);
 	ComponentCamera* lookAtMouseCameraComp = nullptr;

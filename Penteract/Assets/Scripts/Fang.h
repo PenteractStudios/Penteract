@@ -63,7 +63,6 @@ public:
 	//Ultimate
 	int ultimateCooldown = 2;
 	bool ultimateOn = false;
-	float ultimateMovementSpeed = 4.0f;
 
 private:
 	//Dash
