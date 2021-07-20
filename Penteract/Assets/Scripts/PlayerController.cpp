@@ -29,6 +29,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fangRightBulletUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangLeftBulletUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangTrailDashUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangDashDamageUID),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, fangTrailGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruBulletUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruUltimateBulletUID),
@@ -54,6 +55,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, playerFang.dashCooldown),
 	MEMBER(MemberType::FLOAT, playerFang.dashSpeed),
 	MEMBER(MemberType::FLOAT, playerFang.dashDuration),
+	MEMBER(MemberType::FLOAT, playerFang.dashDamage),
 	MEMBER(MemberType::FLOAT, playerFang.trailDashOffsetDuration),
 	MEMBER(MemberType::FLOAT, playerFang.EMPRadius),
 	MEMBER(MemberType::FLOAT, playerFang.EMPCooldown),
@@ -65,6 +67,8 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, playerOnimaru.blastDistance),
 	MEMBER(MemberType::FLOAT, playerOnimaru.blastAngle),
 	MEMBER(MemberType::FLOAT, playerOnimaru.blastDelay),
+	MEMBER(MemberType::FLOAT, playerOnimaru.blastDamage),
+	MEMBER(MemberType::FLOAT, playerOnimaru.shieldReboundedDamage),
 	MEMBER(MemberType::BOOL, useSmoothCamera),
 	MEMBER(MemberType::FLOAT, smoothCameraSpeed),
 	MEMBER(MemberType::FLOAT, onimaruRecoveryRate),
@@ -85,7 +89,7 @@ EXPOSE_MEMBERS(PlayerController) {
 GENERATE_BODY_IMPL(PlayerController);
 
 void PlayerController::Start() {
-	playerFang.Init(fangUID, fangTrailGunUID, fangTrailDashUID, fangLeftGunUID, fangRightGunUID, fangRightBulletUID, fangLeftBulletUID, cameraUID, canvasUID, EMPUID, EMPEffectsUID, fangUltimateUID, fangUltimateVFXUID);
+	playerFang.Init(fangUID, fangTrailGunUID, fangTrailDashUID, fangLeftGunUID, fangRightGunUID, fangRightBulletUID, fangLeftBulletUID, cameraUID, canvasUID, fangDashDamageUID, EMPUID, EMPEffectsUID, fangUltimateUID, fangUltimateVFXUID);
 	playerOnimaru.Init(onimaruUID, onimaruBulletUID, onimaruGunUID, onimaruRightHandUID, onimaruShieldUID, onimaruUltimateBulletUID, onimaruBlastEffectsUID, cameraUID, canvasUID);
 
 	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
@@ -113,6 +117,8 @@ void PlayerController::Start() {
 		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
 		i++;
 	}
+
+	obtainedUpgradeCells = 0;
 }
 
 bool PlayerController::useGamepad = false;
@@ -284,6 +290,19 @@ void PlayerController::AddEnemyInMap(GameObject* enemy) {
 
 void PlayerController::RemoveEnemyFromMap(GameObject* enemy) {
 	playerOnimaru.RemoveEnemy(enemy);
+}
+
+void PlayerController::ObtainUpgradeCell()
+{
+	obtainedUpgradeCells = 2; // Remove this
+	if (++obtainedUpgradeCells == 3) {
+		// TODO: Check whether in level1 or level2
+		playerFang.level1Upgrade = true;
+		playerOnimaru.level1Upgrade = true;
+		playerFang.level2Upgrade = true;
+		playerOnimaru.level2Upgrade = true;
+		// TODO: Maybe insert animation or effect
+	}
 }
 
 void PlayerController::Update() {

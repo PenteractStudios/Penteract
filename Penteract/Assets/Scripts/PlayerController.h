@@ -48,6 +48,9 @@ public:
 
 	void AddEnemyInMap(GameObject* enemy);
 	void RemoveEnemyFromMap(GameObject* enemy);
+
+	void ObtainUpgradeCell();
+
 public:
 	//Debug
 	bool invincibleMode = false;
@@ -66,6 +69,7 @@ public:
 	//Fang
 	UID fangUID = 0;
 	UID fangTrailDashUID = 0;
+	UID fangDashDamageUID = 0;
 	UID fangTrailGunUID = 0;
 	UID fangLeftGunUID = 0;
 	UID fangRightGunUID = 0;
@@ -107,6 +111,9 @@ public:
 	float switchCooldown = 5.f;
 	bool switchInProgress = false;
 	float switchDelay = 0.37f;
+
+	//Upgrades
+	int obtainedUpgradeCells = 0;
 
 private:
 	void CheckCoolDowns();

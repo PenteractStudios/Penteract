@@ -196,7 +196,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 				if (!particle) return;
 				GameplaySystems::DestroyGameObject(&collidedWith);
 				hitTaken = true;
-				if (state == AIState::STUNNED && EMPUpgraded) {
+				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
 					rangerGruntCharacter.GetHit(99);
 				}
 				else {
@@ -211,7 +211,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 				if (pSystem && p) pSystem->KillParticle(p);
 
 				hitTaken = true;
-				if (state == AIState::STUNNED && EMPUpgraded) {
+				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
 					rangerGruntCharacter.GetHit(99);
 				}
 				else {
@@ -219,14 +219,14 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 				}
 			}
 			else if (collidedWith.name == "OnimaruBulletUltimate") {
-				
+
 				if (!particle) return;
 				ComponentParticleSystem::Particle* p = static_cast<ComponentParticleSystem::Particle*>(particle);
 				ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 				if (pSystem && p) pSystem->KillParticle(p);
-				
+
 				hitTaken = true;
-				if (state == AIState::STUNNED && EMPUpgraded) {
+				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
 					rangerGruntCharacter.GetHit(99);
 				}
 				else {
@@ -236,6 +236,15 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 			else if (collidedWith.name == "Barrel") {
 				rangerGruntCharacter.GetHit(playerDeath->barrelDamageTaken);
 				hitTaken = true;
+			}
+			else if (collidedWith.name == "DashDamage" && playerController->playerFang.level1Upgrade) {
+				hitTaken = true;
+				rangerGruntCharacter.GetHit(playerController->playerFang.dashDamage + playerController->GetOverPowerMode());
+			}
+			else if (collidedWith.name == "RangerProjectile" && playerController->playerOnimaru.level1Upgrade) {
+				hitTaken = true;
+				rangerGruntCharacter.GetHit(playerController->playerOnimaru.shieldReboundedDamage + playerController->GetOverPowerMode());
+				GameplaySystems::DestroyGameObject(&collidedWith);
 			}
 
 			if (hitTaken) {
@@ -574,6 +583,26 @@ void RangedAI::EnableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		ChangeState(AIState::PUSHED);
 		rangerGruntCharacter.beingPushed = true;
+		// Damage
+		if (playerController->playerOnimaru.level2Upgrade) {
+			rangerGruntCharacter.GetHit(playerController->playerOnimaru.blastDamage + playerController->GetOverPowerMode());
+
+			PlayAudio(AudioType::HIT);
+			if (meshRenderer) {
+				if (damagedMaterialID != 0) {
+					meshRenderer->materialId = damagedMaterialID;
+				}
+			}
+			timeSinceLastHurt = 0.0f;
+
+			if (!rangerGruntCharacter.isAlive) {
+				ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
+				if (collider) collider->Disable();
+				if (rangerGruntCharacter.beingPushed) DisableBlastPushBack();
+				ChangeState(AIState::DEATH);
+				if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
+			}
+		}
 	}
 }
 
