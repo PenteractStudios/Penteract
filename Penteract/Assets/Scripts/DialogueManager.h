@@ -13,7 +13,7 @@ public:
 		FANG = 1,
 		ONIMARU = 2,
 		DUKE = 3,
-		ROSAMONDE = 4,
+		DOOR = 4,
 		TUTO_FANG = 5,
 		TUTO_ONIMARU = 6,
 		TUTO_SWAP = 7,
@@ -26,7 +26,7 @@ public:
 		Dialogue() {};
 		Dialogue(DialogueWindow character_, const char* text_, Dialogue* nextDialogue_) : character(character_), text(text_), nextDialogue(nextDialogue_) {};
 
-		DialogueWindow character = DialogueWindow::NONE; // 1 = Fang, 2 = Onimaru, 3 = Duke, 4 = Rosamonde, 5 = Tutorial Fang, 6 = Tutorial Oni, 7 = Tutorial Swap, 8 = Upgrades 1/3, 9 = Upgrades 2/3, 10 = Upgrades 3/3
+		DialogueWindow character = DialogueWindow::NONE; // 1 = Fang, 2 = Onimaru, 3 = Duke, 4 = DOOR, 5 = Tutorial Fang, 6 = Tutorial Oni, 7 = Tutorial Swap, 8 = Upgrades 1/3, 9 = Upgrades 2/3, 10 = Upgrades 3/3
 		const char* text = nullptr;
 		Dialogue* nextDialogue = nullptr;
 	};
@@ -46,7 +46,7 @@ public:
 	void RetrieveUIComponents(GameObject* current);
 
 public:
-	Dialogue dialoguesArray[13];
+	Dialogue dialoguesArray[100];
 	Dialogue* activeDialogue = nullptr;			// Pointer to the Dialogue Tree
 	GameObject* activeDialogueObject = nullptr; // Pointer to the Dialogue GameObject in the scene (DialogueFang, DialogueOnimaru or DialogueDuke)
 
