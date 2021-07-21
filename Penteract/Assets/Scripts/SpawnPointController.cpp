@@ -7,6 +7,7 @@
 EXPOSE_MEMBERS(SpawnPointController) {
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, meleeEnemyPrefabUID),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, rangeEnemyPrefabUID),
+	MEMBER(MemberType::BOOL, unlocksInitialDoor),
 	MEMBER(MemberType::GAME_OBJECT_UID, initialDoorUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, finalDoorUID),
 };
@@ -49,7 +50,7 @@ void SpawnPointController::OnCollision(GameObject& collidedWith, float3 collisio
 void SpawnPointController::OpenDoor() {
 	if (CheckSpawnPointStatus()) {
 		if (finalDoor && finalDoor->IsActive()) finalDoor->Disable();
-		if (initialDoor && initialDoor->IsActive()) initialDoor->Disable();
+		if (unlocksInitialDoor && initialDoor && initialDoor->IsActive()) initialDoor->Disable();
 		gameObject->Disable();
 	}
 }

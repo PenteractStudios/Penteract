@@ -19,6 +19,8 @@ public:
 	UID initialDoorUID = 0;
 	UID finalDoorUID = 0;
 
+	bool unlocksInitialDoor = true;
+
 public:
 	void Start() override;
 	void Update() override;
