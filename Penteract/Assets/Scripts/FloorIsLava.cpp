@@ -67,100 +67,110 @@ void FloorIsLava::Update() {
 	}
 	
 	if (warningActive) {
-		//corridor
-		for (int i = 0; i < CORRIDOR_ROWS; ++i) {
-			for (int j = 0; j < CORRIDOR_COLS; ++j) {
-				if (currentCorridorPattern[i][j]) {
-					if (corridorTiles[i][j]) {
-						//corridorTiles[i][j].activate warning particles
-					}					
-				}
-			}
-		}
-
-		//arena
-		for (int i = 0; i < ARENA_ROWS; ++i) {
-			for (int j = 0; j < ARENA_COLS; ++j) {
-				if (currentArenaPattern[i][j]) {
-					if (arenaTiles[i][j]) {
-						//arenaTiles[i][j].activate warning particles
-					}
-				}
-			}
+		if (firstTimeWarning) {
+			UpdateWarningMatrices(true);
+			firstTimeWarning = false;
 		}
 
 		if (timeRemainingWarning > 0.f) {
 			timeRemainingWarning -= Time::GetDeltaTime();
 		}
 		else {
+			UpdateWarningMatrices(false);
 			warningActive = false;
 			fireActive = true;
 			timeRemainingTilesActive = timeTilesActive;
+			firstTimeFireActive = true;
 		}
 	}
 
 	if (fireActive) {
-		//corridor
-		for (int i = 0; i < CORRIDOR_ROWS; ++i) {
-			for (int j = 0; j < CORRIDOR_COLS; ++j) {
-				if (currentCorridorPattern[i][j]) {
-					if (corridorTiles[i][j]) {
-						ComponentBoxCollider* boxCollider = corridorTiles[i][j]->GetComponent<ComponentBoxCollider>();
-						if (boxCollider && !boxCollider->IsActive()) {
-							boxCollider->Enable();
-						}
-					}
-				}
-			}
-		}
-
-		//arena
-		for (int i = 0; i < ARENA_ROWS; ++i) {
-			for (int j = 0; j < ARENA_COLS; ++j) {
-				if (currentArenaPattern[i][j]) {
-					if (arenaTiles[i][j]) {
-						ComponentBoxCollider* boxCollider = arenaTiles[i][j]->GetComponent<ComponentBoxCollider>();
-						if (boxCollider && !boxCollider->IsActive()) {
-							boxCollider->Enable();
-						}
-					}
-				}
-			}
+		if (firstTimeFireActive) {
+			UpdateFireActiveMatrices(true);
+			firstTimeFireActive = false;
 		}
 
 		if (timeRemainingTilesActive > 0.f) {
 			timeRemainingTilesActive -= Time::GetDeltaTime();
 		}
 		else {
-			//corridor
-			for (int i = 0; i < CORRIDOR_ROWS; ++i) {
-				for (int j = 0; j < CORRIDOR_COLS; ++j) {
-					if (currentCorridorPattern[i][j]) {
-						if (corridorTiles[i][j]) {
-							ComponentBoxCollider* boxCollider = corridorTiles[i][j]->GetComponent<ComponentBoxCollider>();
-							if (boxCollider && !boxCollider->IsActive()) {
-								boxCollider->Disable();
-							}
-						}
-					}
-				}
-			}
-
-			//arena
-			for (int i = 0; i < ARENA_ROWS; ++i) {
-				for (int j = 0; j < ARENA_COLS; ++j) {
-					if (currentArenaPattern[i][j]) {
-						if (arenaTiles[i][j]) {
-							ComponentBoxCollider* boxCollider = arenaTiles[i][j]->GetComponent<ComponentBoxCollider>();
-							if (boxCollider && !boxCollider->IsActive()) {
-								boxCollider->Disable();
-							}
-						}
-					}
-				}
-			}
+			UpdateFireActiveMatrices(false);
+			warningActive = true;
+			fireActive = false;
+			patternFinished = true;
+			previousPattern = currentPattern;
+			timeRemainingWarning = timeWarning;
+			firstTimeWarning = true;
 		}
 
 	}
 
+}
+
+void FloorIsLava::UpdateWarningMatrices(bool activate)
+{
+	//corridor
+	for (int i = 0; i < CORRIDOR_ROWS; ++i) {
+		for (int j = 0; j < CORRIDOR_COLS; ++j) {
+			if (currentCorridorPattern[i][j]) {
+				if (corridorTiles[i][j]) {
+					if (activate) {
+						//corridorTiles[i][j].activate warning particles
+					}
+					else {
+						//corridorTiles[i][j].deactivate warning particles
+					}
+				}
+			}
+		}
+	}
+
+	//arena
+	for (int i = 0; i < ARENA_ROWS; ++i) {
+		for (int j = 0; j < ARENA_COLS; ++j) {
+			if (currentArenaPattern[i][j]) {
+				if (arenaTiles[i][j]) {
+					if (activate) {
+						//arenaTiles[i][j].activate warning particles
+					}
+					else {
+						//arenaTiles[i][j].deactivate warning particles
+					}
+				}
+			}
+		}
+	}
+}
+
+void FloorIsLava::UpdateFireActiveMatrices(bool activate)
+{
+	//corridor
+	for (int i = 0; i < CORRIDOR_ROWS; ++i) {
+		for (int j = 0; j < CORRIDOR_COLS; ++j) {
+			if (currentCorridorPattern[i][j]) {
+				if (corridorTiles[i][j]) {
+					ComponentBoxCollider* boxCollider = corridorTiles[i][j]->GetComponent<ComponentBoxCollider>();
+					if (boxCollider) {
+						if (activate) boxCollider->Enable();
+						else boxCollider->Disable();
+					}
+				}
+			}
+		}
+	}
+
+	//arena
+	for (int i = 0; i < ARENA_ROWS; ++i) {
+		for (int j = 0; j < ARENA_COLS; ++j) {
+			if (currentArenaPattern[i][j]) {
+				if (arenaTiles[i][j]) {
+					ComponentBoxCollider* boxCollider = arenaTiles[i][j]->GetComponent<ComponentBoxCollider>();
+					if (boxCollider) {
+						if (activate) boxCollider->Enable();
+						else boxCollider->Disable();
+					}
+				}
+			}
+		}
+	}
 }

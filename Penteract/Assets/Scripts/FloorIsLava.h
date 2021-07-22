@@ -51,5 +51,12 @@ private:
 	bool fireActive = false;
 	bool patternFinished = true;
 
+	bool firstTimeWarning = true;
+	bool firstTimeFireActive = true;
+
+private:
+	void UpdateWarningMatrices(bool activate);
+	void UpdateFireActiveMatrices(bool activate);
+
 };
 
