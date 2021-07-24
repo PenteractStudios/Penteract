@@ -102,10 +102,6 @@
                         ],
                         "AnchorSelected": 5,
                         "IsCustomAnchor": false
-                    },
-                    {
-                        "Type": "CanvasRenderer",
-                        "Active": true
                     }
                 ],
                 "Children": [
@@ -157,24 +153,6 @@
                                 ],
                                 "AnchorSelected": 5,
                                 "IsCustomAnchor": false
-                            },
-                            {
-                                "Type": "CanvasRenderer",
-                                "Active": true
-                            },
-                            {
-                                "Type": "Image",
-                                "Active": true,
-                                "TextureId": 0,
-                                "Color": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                ],
-                                "AlphaTransparency": false,
-                                "IsFill": false,
-                                "FillValue": 1.0
                             }
                         ],
                         "Children": null
@@ -227,24 +205,6 @@
                                 ],
                                 "AnchorSelected": 5,
                                 "IsCustomAnchor": false
-                            },
-                            {
-                                "Type": "CanvasRenderer",
-                                "Active": true
-                            },
-                            {
-                                "Type": "Image",
-                                "Active": true,
-                                "TextureId": 0,
-                                "Color": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                ],
-                                "AlphaTransparency": false,
-                                "IsFill": false,
-                                "FillValue": 1.0
                             }
                         ],
                         "Children": null
@@ -299,24 +259,6 @@
                         ],
                         "AnchorSelected": 5,
                         "IsCustomAnchor": false
-                    },
-                    {
-                        "Type": "CanvasRenderer",
-                        "Active": true
-                    },
-                    {
-                        "Type": "Image",
-                        "Active": true,
-                        "TextureId": 0,
-                        "Color": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ],
-                        "AlphaTransparency": false,
-                        "IsFill": false,
-                        "FillValue": 1.0
                     }
                 ],
                 "Children": [
@@ -368,10 +310,6 @@
                                 ],
                                 "AnchorSelected": 5,
                                 "IsCustomAnchor": false
-                            },
-                            {
-                                "Type": "CanvasRenderer",
-                                "Active": true
                             }
                         ],
                         "Children": null
@@ -424,10 +362,6 @@
                                 ],
                                 "AnchorSelected": 5,
                                 "IsCustomAnchor": false
-                            },
-                            {
-                                "Type": "CanvasRenderer",
-                                "Active": true
                             }
                         ],
                         "Children": [
@@ -479,10 +413,6 @@
                                         ],
                                         "AnchorSelected": 5,
                                         "IsCustomAnchor": false
-                                    },
-                                    {
-                                        "Type": "CanvasRenderer",
-                                        "Active": true
                                     }
                                 ],
                                 "Children": null
@@ -535,10 +465,6 @@
                                         ],
                                         "AnchorSelected": 5,
                                         "IsCustomAnchor": false
-                                    },
-                                    {
-                                        "Type": "CanvasRenderer",
-                                        "Active": true
                                     }
                                 ],
                                 "Children": null
@@ -591,10 +517,6 @@
                                         ],
                                         "AnchorSelected": 5,
                                         "IsCustomAnchor": false
-                                    },
-                                    {
-                                        "Type": "CanvasRenderer",
-                                        "Active": true
                                     }
                                 ],
                                 "Children": null
@@ -649,10 +571,6 @@
                                 ],
                                 "AnchorSelected": 5,
                                 "IsCustomAnchor": false
-                            },
-                            {
-                                "Type": "CanvasRenderer",
-                                "Active": true
                             }
                         ],
                         "Children": [
@@ -704,10 +622,6 @@
                                         ],
                                         "AnchorSelected": 5,
                                         "IsCustomAnchor": false
-                                    },
-                                    {
-                                        "Type": "CanvasRenderer",
-                                        "Active": true
                                     }
                                 ],
                                 "Children": null
@@ -760,10 +674,6 @@
                                         ],
                                         "AnchorSelected": 5,
                                         "IsCustomAnchor": false
-                                    },
-                                    {
-                                        "Type": "CanvasRenderer",
-                                        "Active": true
                                     }
                                 ],
                                 "Children": null
@@ -816,10 +726,6 @@
                                         ],
                                         "AnchorSelected": 5,
                                         "IsCustomAnchor": false
-                                    },
-                                    {
-                                        "Type": "CanvasRenderer",
-                                        "Active": true
                                     }
                                 ],
                                 "Children": null
