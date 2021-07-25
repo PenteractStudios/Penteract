@@ -1,0 +1,19 @@
+{
+    "Name": "Attack2",
+    "AnimationUID": 2498343829188391327,
+    "BeginIndex": 402,
+    "EndIndex": 465,
+    "Loop": false,
+    "Speed": 1.0,
+    "FrameRate": 0.033272840082645419,
+    "KeyEventClip": [
+        {
+            "KeyFrame": 174,
+            "Name": "EnablePunch"
+        },
+        {
+            "KeyFrame": 181,
+            "Name": "DisablePunch"
+        }
+    ]
+}

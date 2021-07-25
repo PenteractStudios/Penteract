@@ -1,0 +1,10 @@
+{
+    "Name": "WalkForward",
+    "AnimationUID": 2498343829188391327,
+    "BeginIndex": 102,
+    "EndIndex": 132,
+    "Loop": true,
+    "Speed": 1.0,
+    "FrameRate": 0.033272840082645419,
+    "KeyEventClip": null
+}
