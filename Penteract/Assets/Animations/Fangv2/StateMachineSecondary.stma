@@ -3687,6 +3687,14 @@
         }
     ],
     "Bones": [
-        "FEED_ME_WITH_BONES_IAM_STARVING"
+        "LeftFingersBase",
+        "LeftGun",
+        "RightElbow",
+        "LeftHand1",
+        "RightHand",
+        "LeftElbow",
+        "LeftShoulder",
+        "RightGun",
+        "RightShoulder"
     ]
 }
