@@ -15,13 +15,14 @@
 #include <math.h>
 
 EXPOSE_MEMBERS(AIMeleeGrunt) {
-	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
-		MEMBER(MemberType::PREFAB_RESOURCE_UID, meleePunchUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, damageMaterialPlaceHolderUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, defaultMaterialPlaceHolderUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, rightBladeColliderUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, leftBladeColliderUID),
 		MEMBER(MemberType::FLOAT, gruntCharacter.lifePoints),
 		MEMBER(MemberType::FLOAT, gruntCharacter.movementSpeed),
 		MEMBER(MemberType::FLOAT, gruntCharacter.damageHit),
@@ -57,7 +58,8 @@ void AIMeleeGrunt::Start() {
 		playerDeath = GET_SCRIPT(fang, PlayerDeath);
 	}
 
-	meleePunch = GameplaySystems::GetResource<ResourcePrefab>(meleePunchUID);
+	rightBladeCollider = GameplaySystems::GetGameObject(rightBladeColliderUID);
+	leftBladeCollider = GameplaySystems::GetGameObject(leftBladeColliderUID);
 
 	GameObject* winLose = GameplaySystems::GetGameObject(winConditionUID);
 
@@ -118,13 +120,6 @@ void AIMeleeGrunt::Start() {
 		}
 	}
 }
-void AIMeleeGrunt::DeleteAttackCollider() {
-	if (attackColliderOn) {
-		GameplaySystems::DestroyGameObject(punch);
-		punch = nullptr;
-		attackRemaining = 0.0f;
-	}
-}
 
 void AIMeleeGrunt::Update() {
 	if (!GetOwner().IsActive()) return;
@@ -167,28 +162,37 @@ void AIMeleeGrunt::Update() {
 	case AIState::RUN:
 		movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), gruntCharacter.movementSpeed, true);
 		if (movementScript->CharacterInAttackRange(player, gruntCharacter.attackRange)) {
-			animation->SendTriggerSecondary("RunAttack");
-			attackRemaining = attackDuration;
 			if (agent) agent->SetMaxSpeed(0);
-			animation->SendTrigger("RunIdle");
+			int random = 1 + std::rand() / RAND_MAX / 100;
+			attackNumber = 3;
+			if (random < 33) attackNumber = 1;
+			else if (random < 66) attackNumber = 2;
+			movementScript->Stop();
+			animation->SendTrigger("RunAttack" + std::to_string(attackNumber));
 			if (audios[static_cast<int>(AudioType::ATTACK)]) audios[static_cast<int>(AudioType::ATTACK)]->Play();
 			state = AIState::ATTACK;
 		}
 		break;
 	case AIState::ATTACK:
-		attackRemaining -= Time::GetDeltaTime();
-		if (attackRemaining < 1.3f) { //frame 160
-			movementScript->Stop(); // stop seek
+		if(track) movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
+		if (attackRightColliderOn) {
+			if(!rightBladeCollider->IsActive()) rightBladeCollider->Enable();
+		}
+		else if (rightBladeCollider->IsActive()) {
+			rightBladeCollider->Disable();
+		}
+		if (attackLeftColliderOn) {
+			if (!leftBladeCollider->IsActive()) leftBladeCollider->Enable();
+		}
+		else if (leftBladeCollider->IsActive()) {
+			leftBladeCollider->Disable();
+		}
+		if (attackStep) {
+			movementScript->Seek(state, GetOwner().GetComponent<ComponentTransform>()->GetFront()*10, gruntCharacter.movementSpeed, true);
 		}
 		else {
-			movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
+			movementScript->Stop();
 		}
-		if (!attackColliderOn && attackRemaining < 0.9f) { // frame 174 
-			float3 aux = ownerTransform->GetGlobalPosition() + ownerTransform->GetGlobalRotation().Transform(float3(0, 0, 1)) * 2.5f + float3(0, 2, 0);
-			if (meleePunch) punch = GameplaySystems::Instantiate(meleePunch, aux, ownerTransform->GetGlobalRotation());
-			attackColliderOn = true;
-		}
-		if (attackRemaining < 0.65f) DeleteAttackCollider(); //frame 181
 		break;
 	case AIState::STUNNED:
 		if (stunTimeRemaining <= 0.f) {
@@ -264,8 +268,7 @@ void AIMeleeGrunt::OnAnimationSecondaryFinished() {
 				animation->SendTriggerSecondary("Attack" + animation->GetCurrentState()->name);
 			}
 		}
-		DeleteAttackCollider();
-		attackColliderOn = false;
+		attackRightColliderOn = false;
 		state = AIState::IDLE;
 	}
 }
@@ -453,23 +456,53 @@ void AIMeleeGrunt::UpdatePushBackPosition() {
 		}
 	}
 }
-//Implement melee attack with this when frame events work
-//void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
-//	/*switch (stateMachineEnum)
-//	{
-//	case PRINCIPAL:
-//		break;
-//	case SECONDARY:
-//		if (eventName == "EnablePunch") {
-//			float3 aux = ownerTransform->GetGlobalPosition() + ownerTransform->GetGlobalRotation().Transform(float3(0, 0, 1)) * 2.5f + float3(0, 2, 0);
-//			if (meleePunch) punch = GameplaySystems::Instantiate(meleePunch, aux, ownerTransform->GetGlobalRotation());
-//		}
-//		if (eventName == "DisablePunch") {
-//			GameplaySystems::DestroyGameObject(punch);
-//			punch = nullptr;
-//		}
-//		break;
-//	default:
-//		break;
-//	}*/
-//}
+
+void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
+
+	switch (stateMachineEnum)
+	{
+	case PRINCIPAL:
+		if(attackNumber == 1 || attackNumber == 2){
+			if (eventName == "StopTrack") {
+				track = false;
+			}
+			if (eventName == "BladeDamageOn") {
+				if (attackNumber == 1) attackStep = true;
+				attackRightColliderOn = true;
+				attackLeftColliderOn = true;
+			}
+			if (eventName == "BladeDamageOff") {
+				attackRightColliderOn = false;
+				attackLeftColliderOn = false;
+			}
+			if (eventName == "StopStep") {
+				attackStep = false;
+			}
+		}
+		else if (attackNumber == 3) {
+			if (eventName == "RightBladeDamageOn") {
+				track = false;
+				attackStep = true;
+				attackRightColliderOn = true;
+			}
+			if (eventName == "RightBladeDamageOff") {
+				track = true;
+				attackStep = false;
+				attackRightColliderOn = false;
+			}
+			if (eventName == "LeftBladeDamageOn") {
+				track = false;
+				attackStep = true;
+				attackLeftColliderOn = true;
+			}
+			if (eventName == "LeftBladeDamageOff") {
+				track = true;
+				attackStep = false;
+				attackLeftColliderOn = false;
+			}
+		}
+		break;
+	default:
+		break;
+	}
+}

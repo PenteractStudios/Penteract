@@ -40,7 +40,6 @@ public:
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
 	//void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
-	void DeleteAttackCollider();
 
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
@@ -59,11 +58,14 @@ public:
 	UID defaultMaterialID = 0;
 	UID damageMaterialID = 0;
 
+	UID rightBladeColliderUID = 0;
+	UID leftBladeColliderUID = 0;
+	
+
 	GameObject* player = nullptr;
 	GameObject* fang = nullptr;
 	GameObject* spawn = nullptr;
 	ComponentAgent* agent = nullptr;
-	ResourcePrefab* meleePunch = nullptr;
 	WinLose* winLoseScript = nullptr;
 
 	Enemy gruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 5.f, 5.f);
@@ -76,9 +78,15 @@ public:
 	float groundPosition = 3.0f;
 
 private:
+
 	float attackDuration = 2.2f;
 	float attackRemaining = 0.0f;
-	bool attackColliderOn = false;
+	bool attackRightColliderOn = false;
+	bool attackLeftColliderOn = false;
+	bool track = true;
+	bool attackStep = false;
+	int attackNumber = 3;
+
 	float3 velocity = float3(0, 0, 0);
 	AIState state = AIState::START;
 	bool hitTaken = false;
@@ -101,7 +109,8 @@ private:
 	ComponentMeshRenderer* componentMeshRenderer = nullptr;
 
 	float timeSinceLastHurt = 0.5f;
-	GameObject* punch = nullptr;
+	GameObject* rightBladeCollider = nullptr;
+	GameObject* leftBladeCollider = nullptr;
 
 	float currentPushBackDistance = 0.f;
 
