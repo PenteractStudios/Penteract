@@ -36,10 +36,8 @@ public:
 	void Start() override;
 	void Update() override;
 	void OnAnimationFinished() override;
-	void OnAnimationSecondaryFinished() override;
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
-	//void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
 
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
@@ -109,8 +107,8 @@ private:
 	ComponentMeshRenderer* componentMeshRenderer = nullptr;
 
 	float timeSinceLastHurt = 0.5f;
-	GameObject* rightBladeCollider = nullptr;
-	GameObject* leftBladeCollider = nullptr;
+	ComponentBoxCollider* rightBladeCollider = nullptr;
+	ComponentBoxCollider* leftBladeCollider = nullptr;
 
 	float currentPushBackDistance = 0.f;
 

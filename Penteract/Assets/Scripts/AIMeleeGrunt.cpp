@@ -58,8 +58,10 @@ void AIMeleeGrunt::Start() {
 		playerDeath = GET_SCRIPT(fang, PlayerDeath);
 	}
 
-	rightBladeCollider = GameplaySystems::GetGameObject(rightBladeColliderUID);
-	leftBladeCollider = GameplaySystems::GetGameObject(leftBladeColliderUID);
+	GameObject* rightBlade = GameplaySystems::GetGameObject(rightBladeColliderUID);
+	if (rightBlade) rightBladeCollider = rightBlade->GetComponent<ComponentBoxCollider>();
+	GameObject* leftBlade = GameplaySystems::GetGameObject(leftBladeColliderUID);
+	if (leftBlade) leftBladeCollider = leftBlade->GetComponent<ComponentBoxCollider>();
 
 	GameObject* winLose = GameplaySystems::GetGameObject(winConditionUID);
 
@@ -132,6 +134,7 @@ void AIMeleeGrunt::Update() {
 	if (!animation) return;
 	if (!componentMeshRenderer) return;
 	if (!playerDeath) return;
+	if (!rightBladeCollider || !leftBladeCollider) return;
 	if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
 		timeSinceLastHurt += Time::GetDeltaTime();
 		if (timeSinceLastHurt > hurtFeedbackTimeDuration) {
@@ -153,7 +156,7 @@ void AIMeleeGrunt::Update() {
 	case AIState::IDLE:
 		if (!playerController->IsPlayerDead()) {
 			if (movementScript->CharacterInSight(player, gruntCharacter.searchRadius)) {
-				animation->SendTrigger("IdleRun");
+				animation->SendTrigger("IdleWalkForward");
 				if (agent) agent->SetMaxSpeed(gruntCharacter.movementSpeed);
 				state = AIState::RUN;
 			}
@@ -162,19 +165,17 @@ void AIMeleeGrunt::Update() {
 	case AIState::RUN:
 		movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), gruntCharacter.movementSpeed, true);
 		if (movementScript->CharacterInAttackRange(player, gruntCharacter.attackRange)) {
-			if (agent) agent->SetMaxSpeed(0);
-			int random = 1 + std::rand() / RAND_MAX / 100;
+			int random = std::rand() % 100;
 			attackNumber = 3;
 			if (random < 33) attackNumber = 1;
 			else if (random < 66) attackNumber = 2;
-			movementScript->Stop();
-			animation->SendTrigger("RunAttack" + std::to_string(attackNumber));
+			animation->SendTrigger("WalkForwardAttack" + std::to_string(attackNumber));
 			if (audios[static_cast<int>(AudioType::ATTACK)]) audios[static_cast<int>(AudioType::ATTACK)]->Play();
 			state = AIState::ATTACK;
 		}
 		break;
 	case AIState::ATTACK:
-		if(track) movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
+		if (track) movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
 		if (attackRightColliderOn) {
 			if(!rightBladeCollider->IsActive()) rightBladeCollider->Enable();
 		}
@@ -246,11 +247,11 @@ void AIMeleeGrunt::OnAnimationFinished() {
 	}
 	else if (state == AIState::STUNNED) {
 		State* current = animation->GetCurrentState();
-		if (current->name == "BeginStun") {
-			animation->SendTrigger("BeginStunStunned");
+		if (current->name == "StunStart") {
+			animation->SendTrigger("StunStartStun");
 		}
-		else if (current->name == "EndStun") {
-			animation->SendTrigger("EndStunIdle");
+		else if (current->name == "StunEnd") {
+			animation->SendTrigger("StunEndIdle");
 			agent->AddAgentToCrowd();
 			state = AIState::IDLE;
 		}
@@ -259,28 +260,9 @@ void AIMeleeGrunt::OnAnimationFinished() {
 	else if (state == AIState::DEATH) {
 		gruntCharacter.destroying = true;
 	}
-}
-
-void AIMeleeGrunt::OnAnimationSecondaryFinished() {
-	if (state == AIState::ATTACK) {
-		if (animation) {
-			if (animation->GetCurrentState()) {
-				animation->SendTriggerSecondary("Attack" + animation->GetCurrentState()->name);
-			}
-		}
-		attackRightColliderOn = false;
+	else if (state == AIState::ATTACK) {
+		animation->SendTrigger("Attack"+ std::to_string(attackNumber) + "Idle");
 		state = AIState::IDLE;
-	}
-}
-
-void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
-	if (stateMachineEnum == StateMachineEnum::PRINCIPAL) {
-		if (eventName == "FootstepRight") {
-			if (audios[static_cast<int>(AudioType::FOOTSTEP_RIGHT)]) audios[static_cast<int>(AudioType::FOOTSTEP_RIGHT)]->Play();
-		}
-		else if (eventName == "FootstepLeft") {
-			if (audios[static_cast<int>(AudioType::FOOTSTEP_LEFT)]) audios[static_cast<int>(AudioType::FOOTSTEP_LEFT)]->Play();
-		}
 	}
 }
 
@@ -341,14 +323,13 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 
 			if (collidedWith.name == "EMP") {
 				if (state == AIState::ATTACK) {
-					animation->SendTrigger("IdleBeginStun");
-					animation->SendTriggerSecondary("AttackBeginStun");
+					animation->SendTrigger("IdleStunStart");
 				}
 				else if (state == AIState::IDLE) {
-					animation->SendTrigger("IdleBeginStun");
+					animation->SendTrigger("IdleStunStart");
 				}
 				else if (state == AIState::RUN) {
-					animation->SendTrigger("RunBeginStun");
+					animation->SendTrigger("WalkForwardStunStart");
 				}
 				agent->RemoveAgentFromCrowd();
 				stunTimeRemaining = stunDuration;
@@ -357,18 +338,15 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 		}
 
 		if (!gruntCharacter.isAlive) {
-			std::string curState = "Run";
+			std::string curState = "WalkForward";
 			if (animation->GetCurrentState()->name == "Idle") curState = "Idle";
-			DeleteAttackCollider();
 			deathType = (rand() % 2 == 0) ? true : false;
 			if (state == AIState::ATTACK) {
 				if (deathType) {
 					animation->SendTrigger(curState + "Death1");
-					animation->SendTriggerSecondary("AttackDeath1");
 				}
 				else {
 					animation->SendTrigger(curState + "Death2");
-					animation->SendTriggerSecondary("AttackDeath2");
 				}
 			}
 			else if (state == AIState::IDLE) {
@@ -376,15 +354,15 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 					animation->SendTrigger("IdleDeath1");
 				}
 				else {
-					animation->SendTrigger("IdleDeath1");
+					animation->SendTrigger("IdleDeath2");
 				}
 			}
 			else if (state == AIState::RUN) {
 				if (deathType) {
-					animation->SendTrigger("RunDeath1");
+					animation->SendTrigger("WalkForwardDeath1");
 				}
 				else {
-					animation->SendTrigger("RunDeath2");
+					animation->SendTrigger("WalkForwardDeath2");
 				}
 			}
 			else if (state == AIState::STUNNED) {
@@ -458,44 +436,49 @@ void AIMeleeGrunt::UpdatePushBackPosition() {
 }
 
 void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
-
 	switch (stateMachineEnum)
 	{
 	case PRINCIPAL:
+		if (strcmp(eventName,"FootstepRight") == 0) {
+			if (audios[static_cast<int>(AudioType::FOOTSTEP_RIGHT)]) audios[static_cast<int>(AudioType::FOOTSTEP_RIGHT)]->Play();
+		}
+		else if (strcmp(eventName, "FootstepLeft") == 0) {
+			if (audios[static_cast<int>(AudioType::FOOTSTEP_LEFT)]) audios[static_cast<int>(AudioType::FOOTSTEP_LEFT)]->Play();
+		}
 		if(attackNumber == 1 || attackNumber == 2){
-			if (eventName == "StopTrack") {
+			if (strcmp(eventName, "StopTrack") == 0) {
 				track = false;
 			}
-			if (eventName == "BladeDamageOn") {
+			if (strcmp(eventName, "BladeDamageOn") == 0) {
 				if (attackNumber == 1) attackStep = true;
 				attackRightColliderOn = true;
 				attackLeftColliderOn = true;
 			}
-			if (eventName == "BladeDamageOff") {
+			if (strcmp(eventName, "BladeDamageOff") == 0) {
 				attackRightColliderOn = false;
 				attackLeftColliderOn = false;
 			}
-			if (eventName == "StopStep") {
+			if (strcmp(eventName, "StopStep") == 0) {
 				attackStep = false;
 			}
 		}
 		else if (attackNumber == 3) {
-			if (eventName == "RightBladeDamageOn") {
+			if (strcmp(eventName, "RightBladeDamageOn") == 0) {
 				track = false;
 				attackStep = true;
 				attackRightColliderOn = true;
 			}
-			if (eventName == "RightBladeDamageOff") {
+			if (strcmp(eventName, "RightBladeDamageOff") == 0) {
 				track = true;
 				attackStep = false;
 				attackRightColliderOn = false;
 			}
-			if (eventName == "LeftBladeDamageOn") {
+			if (strcmp(eventName, "LeftBladeDamageOn") == 0) {
 				track = false;
 				attackStep = true;
 				attackLeftColliderOn = true;
 			}
-			if (eventName == "LeftBladeDamageOff") {
+			if (strcmp(eventName, "LeftBladeDamageOff") == 0) {
 				track = true;
 				attackStep = false;
 				attackLeftColliderOn = false;
