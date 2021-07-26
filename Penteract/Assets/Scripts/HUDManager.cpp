@@ -4,8 +4,12 @@
 #define HIERARCHY_INDEX_ABILITY_FILL 1
 #define HIERARCHY_INDEX_ABILITY_PICTO_SHADE 3
 #define HIERARCHY_INDEX_ABILITY_KEY_TEXT 6
+#define HIERARCHY_INDEX_ABILITY_KEY_FILL 4
+
 #define HIERARCHY_INDEX_SWITCH_ABILITY_FILL 1
 #define HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE 3
+#define HIERARCHY_INDEX_SWITCH_ABILITY_KEY_TEXT 6
+#define HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL 4
 
 EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerObjectUID),
@@ -97,10 +101,12 @@ void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 
 			ComponentImage* fillImage = nullptr;
 			ComponentImage* pictogramImage = nullptr;
-
+			ComponentText* text = nullptr;
+			ComponentImage* textFill = nullptr;
 			fillImage = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_FILL]->GetComponent<ComponentImage>();
 			pictogramImage = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_PICTO_SHADE]->GetComponent<ComponentImage>();
-
+			text = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_KEY_TEXT]->GetComponent<ComponentText>();
+			textFill = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_KEY_FILL]->GetComponent<ComponentImage>();
 			if (fillImage && pictogramImage) {
 
 				if (cooldowns[skill] < 1) {
@@ -115,6 +121,15 @@ void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 					fillImage->SetFillValue(cooldowns[skill]);
 				}
 			}
+
+			if (text) {
+				text->SetFontColor(cooldowns[skill] < 1 ? buttonTextColorNotAvailable : buttonTextColorAvailable);
+			}
+
+			if (textFill) {
+				textFill->SetColor(cooldowns[skill] < 1 ? buttonColorNotAvailable : buttonColorAvailable);
+			}
+
 			++skill;
 		}
 
@@ -134,6 +149,10 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 
 	ComponentImage* fillColor = children[HIERARCHY_INDEX_SWITCH_ABILITY_FILL]->GetComponent<ComponentImage>();
 	ComponentImage* image = children[HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE]->GetComponent<ComponentImage>();
+
+	ComponentText* text = children[HIERARCHY_INDEX_ABILITY_KEY_TEXT]->GetComponent<ComponentText>();
+	ComponentImage* textFill = children[HIERARCHY_INDEX_ABILITY_KEY_FILL]->GetComponent<ComponentImage>();
+
 	if (fillColor && image) {
 		fillColor->SetFillValue(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
 
@@ -141,6 +160,17 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 
 		//AbilityCoolDownEffectCheck(Cooldowns::SWITCH_SKILL, swapingSkillCanvas);
 	}
+
+
+	if (text) {
+		text->SetFontColor(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1 ? buttonTextColorNotAvailable : buttonTextColorAvailable);
+	}
+
+	if (textFill) {
+		textFill->SetColor(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1 ? buttonColorNotAvailable : buttonColorAvailable);
+	}
+
+
 }
 
 void HUDManager::ManageSwitch() {

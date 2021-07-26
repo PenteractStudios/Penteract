@@ -35,10 +35,14 @@ public:
 	UID playerObjectUID = 0;
 
 	//Skill HUD
+	
+	//Texts
 	float4 buttonColorNotAvailable = float4(0.f / 255.f, 40.f / 255.f, 60.f / 255.f, 255.f / 255.f);
 	float4 buttonColorAvailable = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 255.f / 255.f);
-	float4 buttonTextColorNotAvailable = float4(0.f / 255.f, 0.f / 255.f, 0.f / 255.f, 255.f / 255.f);
-	float4 buttonTextColorAvailable = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 255.f / 255.f);
+	float4 buttonTextColorNotAvailable = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 255.f / 255.f);
+	float4 buttonTextColorAvailable = float4(0.f / 255.f, 40.f / 255.f, 60.f / 255.f, 255.f / 255.f);
+	
+	//Skills
 	float4 skillColorNotAvailable = float4(0.f / 255.f, 93.f / 255.f, 145.f / 255.f, 255.f / 255.f);
 	float4 skillColorAvailable = float4(0.f / 255.f, 177.f / 255.f, 227.f / 255.f, 255.f / 255.f);
 	float4 switchSkillColorNotAvailable = float4(133.f / 255.f, 243.f / 255.f, 196.f / 255.f, 150.f / 255.f);
