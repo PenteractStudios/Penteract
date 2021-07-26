@@ -53,7 +53,11 @@ void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, 
 		GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
 		if (canvasGO) {
 			hudControllerScript = GET_SCRIPT(canvasGO, HUDController);
+			
 		}
+
+
+
 		if (characterGameObject) {
 			characterGameObject->GetComponent<ComponentCapsuleCollider>()->Enable();
 

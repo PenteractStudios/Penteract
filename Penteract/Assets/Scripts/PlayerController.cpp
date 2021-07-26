@@ -6,6 +6,7 @@
 #include "AIMeleeGrunt.h"
 #include "RangedAI.h"
 #include "HUDController.h"
+#include "HUDManager.h"
 #include "OnimaruBullet.h"
 #include "SwitchParticles.h"
 #include "Math/Quat.h"
@@ -91,6 +92,7 @@ void PlayerController::Start() {
 	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
 	if (canvasGO) {
 		hudControllerScript = GET_SCRIPT(canvasGO, HUDController);
+		hudManagerScript = GET_SCRIPT(canvasGO, HUDManager);
 	}
 
 	camera = GameplaySystems::GetGameObject(cameraUID);
@@ -169,6 +171,10 @@ void PlayerController::SwitchCharacter() {
 				hudControllerScript->UpdateHP(playerOnimaru.lifePoints, playerFang.lifePoints);
 				hudControllerScript->ResetHealthRegenerationEffects(playerFang.lifePoints);
 			}
+			if (hudManagerScript) {
+				hudManagerScript->StartCharacterSwitch();
+			}
+
 
 			fangRecovering = 0.0f;
 		} else {
@@ -178,6 +184,10 @@ void PlayerController::SwitchCharacter() {
 			if (hudControllerScript) {
 				hudControllerScript->UpdateHP(playerFang.lifePoints, playerOnimaru.lifePoints);
 				hudControllerScript->ResetHealthRegenerationEffects(playerOnimaru.lifePoints);
+			}
+
+			if (hudManagerScript) {
+				hudManagerScript->StartCharacterSwitch();
 			}
 
 			onimaruRecovering = 0.0f;
@@ -236,6 +246,8 @@ void PlayerController::CheckCoolDowns() {
 }
 //HUD
 void PlayerController::UpdatePlayerStats() {
+	float realSwitchCooldown = 1.0f - (switchCooldownRemaining / switchCooldown);
+
 	if (hudControllerScript) {
 		if (firstTime) {
 			hudControllerScript->UpdateHP(playerFang.lifePoints, playerOnimaru.lifePoints);
@@ -262,8 +274,10 @@ void PlayerController::UpdatePlayerStats() {
 			}
 		}
 
-		float realSwitchCooldown = 1.0f - (switchCooldownRemaining / switchCooldown);
 		hudControllerScript->UpdateCooldowns(playerOnimaru.GetRealShieldCooldown(), playerOnimaru.GetRealBlastCooldown(), playerOnimaru.GetRealUltimateCooldown(), playerFang.GetRealDashCooldown(), playerFang.GetRealEMPCooldown(), playerFang.GetRealUltimateCooldown(), realSwitchCooldown);
+	}
+	if (hudManagerScript) {
+		hudManagerScript->UpdateCooldowns(playerOnimaru.GetRealShieldCooldown(), playerOnimaru.GetRealBlastCooldown(), playerOnimaru.GetRealUltimateCooldown(), playerFang.GetRealDashCooldown(), playerFang.GetRealEMPCooldown(), playerFang.GetRealUltimateCooldown(), realSwitchCooldown);
 	}
 }
 
@@ -315,9 +329,13 @@ void PlayerController::Update() {
 
 		if (firstTime) {
 			if (playerFang.characterGameObject->IsActive()) {
-				hudControllerScript->UpdateHP(playerFang.lifePoints, playerOnimaru.lifePoints);
+				if (hudControllerScript) {
+					hudControllerScript->UpdateHP(playerFang.lifePoints, playerOnimaru.lifePoints);
+				}
 			} else {
-				hudControllerScript->UpdateHP(playerOnimaru.lifePoints, playerFang.lifePoints);
+				if (hudControllerScript) {
+					hudControllerScript->UpdateHP(playerOnimaru.lifePoints, playerFang.lifePoints);
+				}
 			}
 			firstTime = false;
 		}

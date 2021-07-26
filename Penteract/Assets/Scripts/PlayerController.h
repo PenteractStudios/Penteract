@@ -13,6 +13,7 @@ class ComponentCamera;
 class ComponentAudioSource;
 class ComponentParticleSystem;
 class HUDController;
+class HUDManager;
 class OnimaruBullet;
 class ComponentAgent;
 class ComponentAnimation;
@@ -125,6 +126,7 @@ private:
 	float fangRecovering = 0.f;
 	float onimaruRecovering = 0.f;
 	HUDController* hudControllerScript = nullptr;
+	HUDManager* hudManagerScript = nullptr;
 
 	//Switch
 	float currentSwitchDelay = 0.f;

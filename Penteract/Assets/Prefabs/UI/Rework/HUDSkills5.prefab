@@ -51,6 +51,12 @@
             {
                 "Type": "Canvas",
                 "Active": true
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 4866153281218083198,
+                "Values": null
             }
         ],
         "Children": [
@@ -4243,7 +4249,7 @@
                                             1.0
                                         ],
                                         "AlphaTransparency": true,
-                                        "IsFill": false,
+                                        "IsFill": true,
                                         "FillValue": 1.0
                                     }
                                 ],
