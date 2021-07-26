@@ -2,7 +2,9 @@
 
 #include "Scripting/Script.h"
 
+
 class PlayerController;
+class ComponentTransform2D;
 
 class HUDManager : public Script {
 	GENERATE_BODY(HUDManager);
@@ -35,13 +37,13 @@ public:
 	UID playerObjectUID = 0;
 
 	//Skill HUD
-	
+
 	//Texts
 	float4 buttonColorNotAvailable = float4(0.f / 255.f, 40.f / 255.f, 60.f / 255.f, 255.f / 255.f);
 	float4 buttonColorAvailable = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 255.f / 255.f);
 	float4 buttonTextColorNotAvailable = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 255.f / 255.f);
 	float4 buttonTextColorAvailable = float4(0.f / 255.f, 40.f / 255.f, 60.f / 255.f, 255.f / 255.f);
-	
+
 	//Skills
 	float4 skillColorNotAvailable = float4(0.f / 255.f, 93.f / 255.f, 145.f / 255.f, 255.f / 255.f);
 	float4 skillColorAvailable = float4(0.f / 255.f, 177.f / 255.f, 227.f / 255.f, 255.f / 255.f);
@@ -66,24 +68,31 @@ public:
 	float switchExtraOffset = 20.0f;
 	SwitchState switchState = SwitchState::IDLE;
 
+	float switchColorTimer = 0.0f;
+	float switchColorTotalTime = 2.0f;
+	bool switchColorIncreasing = true;
+
+	float switchSymbolRotationTime = 6.0f;
 public:
 	void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown);
 	void StartCharacterSwitch();
 private:
-	void UpdateVisualCooldowns(GameObject* canvas, int startingIt);
-	void UpdateCommonSkillVisualCooldown();
-	void ManageSwitch();
+	void UpdateVisualCooldowns(GameObject* canvas, int startingIt); //Update visual cooldown on all abilities of a given character
+	void UpdateCommonSkillVisualCooldown(); //Update visual cooldown on switch ability
+	void ManageSwitch();	//This method manages visual effects regarding the Switching of characters (UI WISE) as well 
+							//as the color changin and rotation of the picto for the switch icon
+
 private:
+	
 	PlayerController* playerController = nullptr;
 	GameObject* fangObj = nullptr;
 	GameObject* onimaruObj = nullptr;
-
 
 	//Skill HUD
 	GameObject* fangSkillParent = nullptr;
 	GameObject* onimaruSkillParent = nullptr;
 	GameObject* switchSkillParent = nullptr;
-
+	ComponentTransform2D* switchShadeTransform = nullptr;
 	float switchTimer = 0.0f;
 
 };

@@ -1,5 +1,6 @@
 #include "HUDManager.h"
 #include "PlayerController.h";
+#include "Components/UI/ComponentTransform2D.h"
 
 #define HIERARCHY_INDEX_ABILITY_FILL 1
 #define HIERARCHY_INDEX_ABILITY_PICTO_SHADE 3
@@ -32,7 +33,7 @@ void HUDManager::Start() {
 	onimaruSkillParent = GameplaySystems::GetGameObject(onimaruSkillParentUID);
 	switchSkillParent = GameplaySystems::GetGameObject(switchSkillParentUID);
 
-	if (fangSkillParent && onimaruSkillParent) {
+	if (fangSkillParent && onimaruSkillParent && switchSkillParent) {
 		skillsFang = fangSkillParent->GetChildren();
 		skillsOni = onimaruSkillParent->GetChildren();
 
@@ -54,6 +55,13 @@ void HUDManager::Start() {
 			}
 
 		}
+
+		GameObject* pictoShadeObj = switchSkillParent->GetChild("PictoShade");
+
+		if (pictoShadeObj) {
+			switchShadeTransform = pictoShadeObj->GetComponent<ComponentTransform2D>();
+		}
+
 	}
 
 }
@@ -93,7 +101,7 @@ void HUDManager::StartCharacterSwitch() {
 void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 
 	std::vector<GameObject*> skills = canvas->GetChildren();
-
+	//Skills size is supposed to be 3, for each character has 3 skills
 	if (skills.size() == 3) {
 
 		int skill = startingIt;
@@ -180,10 +188,36 @@ void HUDManager::ManageSwitch() {
 
 	switch (switchState) {
 	case SwitchState::IDLE:
-		//TODO switch icon rotates over time, reset timer when rotation reaches 360º
 
-		if (switchTimer > 2.0f) {
-			switchTimer = 0;
+		//TODO switch icon rotates over time, reset timer when rotation reaches 360º
+		//REQUIRED TO expose rotation on Tesseract
+		/*if (switchShadeTransform) {
+			Quat rotToAdd;
+			rotToAdd.SetFromAxisAngle(float4(0, 0, 1, 1), 1 / switchSymbolRotationTime),
+			switchShadeTransform->SetRotation(rotToAdd * switchShadeTransform->GetGlobalRotation().ToQuat());
+		}*/
+
+		//This code handles the color grading progressively increasing and decreasing alpha
+		if (switchSkillParent) {
+			std::vector<GameObject*> children = switchSkillParent->GetChildren();
+			ComponentImage* fillImage = children[HIERARCHY_INDEX_SWITCH_ABILITY_FILL]->GetComponent<ComponentImage>();
+			if (fillImage) {
+
+				float delta = switchColorTimer / switchColorTotalTime;
+
+				if (switchColorIncreasing) {
+					fillImage->SetColor(float4(fillImage->GetColor().xyz(), Lerp(0.3f, 1, delta)));
+				} else {
+					fillImage->SetColor(float4(fillImage->GetColor().xyz(), Lerp(1, 0.3f, delta)));
+				}
+				switchColorTimer += Time::GetDeltaTime();
+			}
+		}
+
+		//Reset color timer and invert the toggle for increasing/decreasing
+		if (switchColorTimer >= switchColorTotalTime) {
+			switchColorTimer = 0;
+			switchColorIncreasing = !switchColorIncreasing;
 		}
 
 		break;
