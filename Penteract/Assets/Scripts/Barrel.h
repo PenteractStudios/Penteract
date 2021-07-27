@@ -32,4 +32,8 @@ public:
 	bool isHit = false;
 	bool destroy = false;
 	float timeToDestroy = 1.0f;
+
+	float timerToDestroy = 3.0f;
+	float currentTimerToDestroy = 0.0f;
+	bool startTimerToDestroy = false;
 };
