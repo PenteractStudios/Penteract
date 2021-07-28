@@ -13,6 +13,7 @@
 #define HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL 4
 
 #define HIERARCHY_INDEX_HEALTH_FILL 2
+#define HIERARCHY_INDEX_HEALTH_TEXT 4
 
 #define FANG_MAX_HEALTH 10.f
 #define ONIMARU_MAX_HEALTH 10.f
@@ -114,6 +115,12 @@ void HUDManager::UpdateHealth(float fangHealth, float onimaruHealth) {
 				healthFill->SetFillValue(health / maxHealth);
 			}
 		}
+
+		ComponentText* healthText = nullptr;
+		healthText = fangObj->IsActive() ? fangHealthParent->GetChildren()[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>() : onimaruHealthParent->GetChildren()[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
+		if (healthText) {
+			healthText->SetText(std::to_string((int)health));
+		}
 	}
 }
 
@@ -127,6 +134,12 @@ void HUDManager::HealthRegeneration(float health, float healthRecovered) {
 			if (healthFill->IsFill()) {
 				healthFill->SetFillValue((health + healthRecovered) / maxHealth);
 			}
+		}
+
+		ComponentText* healthText = nullptr;
+		healthText = fangObj->IsActive() ? onimaruHealthParent->GetChildren()[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>() : fangHealthParent->GetChildren()[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
+		if (healthText) {
+			healthText->SetText(std::to_string((int)health));
 		}
 	}
 }
