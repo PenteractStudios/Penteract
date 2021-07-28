@@ -56,10 +56,16 @@ void FloorIsLava::Update() {
 		switch (currentPattern)
 		{
 		case 1:
+			SetCurrentCorridorPattern(corridorPattern1);
+			SetCurrentArenaPattern(arenaPattern1);
 			break;
 		case 2:
+			SetCurrentCorridorPattern(corridorPattern2);
+			SetCurrentArenaPattern(arenaPattern2);
 			break;
 		case 3:
+			SetCurrentCorridorPattern(corridorPattern3);
+			SetCurrentArenaPattern(arenaPattern3);
 			break;
 		default:
 			break;
@@ -174,3 +180,24 @@ void FloorIsLava::UpdateFireActiveMatrices(bool activate)
 		}
 	}
 }
+
+void FloorIsLava::SetCurrentCorridorPattern(bool pattern[CORRIDOR_ROWS][CORRIDOR_COLS])
+{
+	for (int i = 0; i < CORRIDOR_ROWS; ++i) {
+		for (int j = 0; j < CORRIDOR_COLS; ++j) {
+			currentCorridorPattern[i][j] = pattern[i][j];
+		}
+	}
+
+}
+
+void FloorIsLava::SetCurrentArenaPattern(bool pattern[ARENA_ROWS][ARENA_COLS])
+{
+	for (int i = 0; i < ARENA_ROWS; ++i) {
+		for (int j = 0; j < ARENA_COLS; ++j) {
+			currentArenaPattern[i][j] = pattern[i][j];
+		}
+	}
+}
+
+

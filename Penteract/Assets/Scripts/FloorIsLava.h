@@ -57,6 +57,7 @@ private:
 private:
 	void UpdateWarningMatrices(bool activate);
 	void UpdateFireActiveMatrices(bool activate);
-
+	void SetCurrentCorridorPattern(bool pattern[CORRIDOR_ROWS][CORRIDOR_COLS]);
+	void SetCurrentArenaPattern(bool pattern[ARENA_ROWS][ARENA_COLS]);
 };
 
