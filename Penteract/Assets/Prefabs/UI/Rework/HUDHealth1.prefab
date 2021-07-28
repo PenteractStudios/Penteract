@@ -10,7 +10,7 @@
                 "Active": true,
                 "Position": [
                     0.0,
-                    0.0,
+                    -300.0,
                     0.0
                 ],
                 "Rotation": [
@@ -236,7 +236,7 @@
                                 ],
                                 "AlphaTransparency": true,
                                 "IsFill": true,
-                                "FillValue": 0.8999999761581421
+                                "FillValue": 1.0
                             }
                         ],
                         "Children": null
@@ -306,7 +306,7 @@
                                 ],
                                 "AlphaTransparency": true,
                                 "IsFill": true,
-                                "FillValue": 0.550000011920929
+                                "FillValue": 1.0
                             }
                         ],
                         "Children": null
@@ -498,8 +498,8 @@
                                     0.800000011920929
                                 ],
                                 "AlphaTransparency": true,
-                                "IsFill": true,
-                                "FillValue": 0.0
+                                "IsFill": false,
+                                "FillValue": 1.0
                             }
                         ],
                         "Children": null
@@ -569,7 +569,7 @@
                                 ],
                                 "AlphaTransparency": true,
                                 "IsFill": true,
-                                "FillValue": 0.800000011920929
+                                "FillValue": 1.0
                             }
                         ],
                         "Children": null
@@ -639,7 +639,7 @@
                                 ],
                                 "AlphaTransparency": true,
                                 "IsFill": true,
-                                "FillValue": 0.75
+                                "FillValue": 1.0
                             }
                         ],
                         "Children": null

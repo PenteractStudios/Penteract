@@ -247,7 +247,7 @@ void PlayerController::CheckCoolDowns() {
 //HUD
 void PlayerController::UpdatePlayerStats() {
 	float realSwitchCooldown = 1.0f - (switchCooldownRemaining / switchCooldown);
-
+	/*
 	if (hudControllerScript) {
 		if (firstTime) {
 			hudControllerScript->UpdateHP(playerFang.lifePoints, playerOnimaru.lifePoints);
@@ -276,7 +276,13 @@ void PlayerController::UpdatePlayerStats() {
 
 		hudControllerScript->UpdateCooldowns(playerOnimaru.GetRealShieldCooldown(), playerOnimaru.GetRealBlastCooldown(), playerOnimaru.GetRealUltimateCooldown(), playerFang.GetRealDashCooldown(), playerFang.GetRealEMPCooldown(), playerFang.GetRealUltimateCooldown(), realSwitchCooldown);
 	}
+	*/
 	if (hudManagerScript) {
+		if (hitTaken) {
+			hudManagerScript->UpdateHealth(playerFang.lifePoints, playerOnimaru.lifePoints);
+			hitTaken = false;
+		}
+
 		hudManagerScript->UpdateCooldowns(playerOnimaru.GetRealShieldCooldown(), playerOnimaru.GetRealBlastCooldown(), playerOnimaru.GetRealUltimateCooldown(), playerFang.GetRealDashCooldown(), playerFang.GetRealEMPCooldown(), playerFang.GetRealUltimateCooldown(), realSwitchCooldown);
 	}
 }

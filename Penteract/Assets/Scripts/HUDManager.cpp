@@ -12,11 +12,18 @@
 #define HIERARCHY_INDEX_SWITCH_ABILITY_KEY_TEXT 6
 #define HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL 4
 
+#define HIERARCHY_INDEX_HEALTH_FILL 2
+
+#define FANG_MAX_HEALTH 10.f
+#define ONIMARU_MAX_HEALTH 10.f
+
 EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerObjectUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangSkillParentUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillParentUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, switchSkillParentUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, switchSkillParentUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangHealthParentUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthParentUID)
 };
 
 GENERATE_BODY_IMPL(HUDManager);
@@ -64,6 +71,9 @@ void HUDManager::Start() {
 
 	}
 
+	fangHealthParent = GameplaySystems::GetGameObject(fangHealthParentUID);
+	onimaruHealthParent = GameplaySystems::GetGameObject(onimaruHealthParentUID);
+
 }
 
 void HUDManager::Update() {
@@ -90,6 +100,21 @@ void HUDManager::UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2,
 		}
 	}
 	UpdateCommonSkillVisualCooldown();
+}
+
+void HUDManager::UpdateHealth(float fangHealth, float onimaruHealth) {
+	if (fangObj && onimaruObj) {
+		float health = fangObj->IsActive() ? fangHealth : onimaruHealth;
+		float maxHealth = fangObj->IsActive() ? FANG_MAX_HEALTH : ONIMARU_MAX_HEALTH;
+
+		ComponentImage* healthFill = nullptr;
+		healthFill = fangObj->IsActive() ? fangHealthParent->GetChildren()[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>() : onimaruHealthParent->GetChildren()[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
+		if (healthFill) {
+			if (healthFill->IsFill()) {
+				healthFill->SetFillValue(health / maxHealth);
+			}
+		}
+	}
 }
 
 void HUDManager::StartCharacterSwitch() {

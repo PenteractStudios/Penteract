@@ -73,8 +73,14 @@ public:
 	bool switchColorIncreasing = true;
 
 	float switchSymbolRotationTime = 6.0f;
+
+	// Health HUD
+	UID fangHealthParentUID = 0;
+	UID onimaruHealthParentUID = 0;
+
 public:
 	void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown);
+	void UpdateHealth(float fangHealth, float onimaruHealth);
 	void StartCharacterSwitch();
 private:
 	void UpdateVisualCooldowns(GameObject* canvas, int startingIt); //Update visual cooldown on all abilities of a given character
@@ -94,6 +100,10 @@ private:
 	GameObject* switchSkillParent = nullptr;
 	ComponentTransform2D* switchShadeTransform = nullptr;
 	float switchTimer = 0.0f;
+
+	// Health HUD
+	GameObject* fangHealthParent = nullptr;
+	GameObject* onimaruHealthParent = nullptr;
 
 };
 
