@@ -59,6 +59,7 @@ public:
 	bool debugGetHit = false;
 
 	static bool useGamepad;
+	static int currentLevel;
 
 	Onimaru playerOnimaru = Onimaru();
 	Fang playerFang = Fang();

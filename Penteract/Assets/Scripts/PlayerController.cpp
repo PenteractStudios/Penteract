@@ -20,6 +20,8 @@
 #define PI 3.14159
 #define AUDIOSOURCE_NULL_MSG "shootAudioSource is NULL"
 
+int PlayerController::currentLevel = 1;
+
 EXPOSE_MEMBERS(PlayerController) {
 	// Add members here to expose them to the engine. Example:
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
@@ -294,14 +296,10 @@ void PlayerController::RemoveEnemyFromMap(GameObject* enemy) {
 
 void PlayerController::ObtainUpgradeCell()
 {
-	obtainedUpgradeCells = 2; // Remove this
 	if (++obtainedUpgradeCells == 3) {
 		// TODO: Check whether in level1 or level2
-		playerFang.level1Upgrade = true;
-		playerOnimaru.level1Upgrade = true;
-		playerFang.level2Upgrade = true;
-		playerOnimaru.level2Upgrade = true;
-		// TODO: Maybe insert animation or effect
+		if (currentLevel == 1) Player::level1Upgrade = true;
+		else if (currentLevel == 2) Player::level2Upgrade = true;
 	}
 }
 

@@ -6,6 +6,9 @@
 
 #define PRESSED_TRIGGER_THRESHOLD 0.3f
 
+bool Player::level1Upgrade = false;
+bool Player::level2Upgrade = false;
+
 void Player::SetAttackSpeed(float attackSpeed_) {
 	attackSpeed = attackSpeed_;
 }

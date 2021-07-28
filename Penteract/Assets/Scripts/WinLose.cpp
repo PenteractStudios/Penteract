@@ -1,5 +1,7 @@
 #include "WinLose.h"
 
+#include "PlayerController.h"
+
 #include "GameObject.h"
 #include "GameplaySystems.h"
 #include "EnemySpawnPoint.h"
@@ -49,6 +51,7 @@ void WinLose::Update() {
 		//&& deadEnemies >= totalEnemies
 		) {
 		if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
+		PlayerController::currentLevel = 2;
 	}
 }
 
