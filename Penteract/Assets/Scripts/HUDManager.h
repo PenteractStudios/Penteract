@@ -2,7 +2,6 @@
 
 #include "Scripting/Script.h"
 
-
 class PlayerController;
 class ComponentTransform2D;
 

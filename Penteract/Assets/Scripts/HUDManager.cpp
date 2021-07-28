@@ -3,14 +3,12 @@
 #include "Components/UI/ComponentTransform2D.h"
 
 #define HIERARCHY_INDEX_ABILITY_FILL 1
-#define HIERARCHY_INDEX_ABILITY_PICTO_SHADE 3
-#define HIERARCHY_INDEX_ABILITY_KEY_TEXT 6
-#define HIERARCHY_INDEX_ABILITY_KEY_FILL 4
+#define HIERARCHY_INDEX_ABILITY_PICTO_SHADE 4
+#define HIERARCHY_INDEX_ABILITY_KEY_FILL 5
 
 #define HIERARCHY_INDEX_SWITCH_ABILITY_FILL 1
-#define HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE 3
-#define HIERARCHY_INDEX_SWITCH_ABILITY_KEY_TEXT 6
-#define HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL 4
+#define HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE 4
+#define HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL 5
 
 #define HIERARCHY_INDEX_HEALTH_FILL 2
 #define HIERARCHY_INDEX_HEALTH_TEXT 4
@@ -165,7 +163,13 @@ void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 			ComponentImage* textFill = nullptr;
 			fillImage = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_FILL]->GetComponent<ComponentImage>();
 			pictogramImage = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_PICTO_SHADE]->GetComponent<ComponentImage>();
-			text = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_KEY_TEXT]->GetComponent<ComponentText>();
+
+			GameObject* textParent = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_KEY_FILL];
+
+			if (textParent) {
+				ComponentText* text = textParent->GetChild(1)->GetComponent<ComponentText>();
+			}
+
 			textFill = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_KEY_FILL]->GetComponent<ComponentImage>();
 			if (fillImage && pictogramImage) {
 
@@ -210,7 +214,13 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 	ComponentImage* fillColor = children[HIERARCHY_INDEX_SWITCH_ABILITY_FILL]->GetComponent<ComponentImage>();
 	ComponentImage* image = children[HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE]->GetComponent<ComponentImage>();
 
-	ComponentText* text = children[HIERARCHY_INDEX_ABILITY_KEY_TEXT]->GetComponent<ComponentText>();
+	GameObject* textParent = children[HIERARCHY_INDEX_ABILITY_KEY_FILL];
+	ComponentText* text = nullptr;
+
+	if (textParent) {
+		text = textParent->GetChild(1)->GetComponent<ComponentText>();
+	}
+
 	ComponentImage* textFill = children[HIERARCHY_INDEX_ABILITY_KEY_FILL]->GetComponent<ComponentImage>();
 
 	if (fillColor && image) {
