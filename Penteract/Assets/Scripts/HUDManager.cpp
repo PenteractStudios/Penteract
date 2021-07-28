@@ -4,9 +4,10 @@
 #include "AbilityRefeshFX.h"
 
 #define HIERARCHY_INDEX_ABILITY_FILL 1
-#define HIERARCHY_INDEX_ABILITY_EFFECT 2
-#define HIERARCHY_INDEX_ABILITY_PICTO_SHADE 4
-#define HIERARCHY_INDEX_ABILITY_KEY_FILL 5
+#define HIERARCHY_INDEX_ABILITY_DURATION_FILL 2
+#define HIERARCHY_INDEX_ABILITY_EFFECT 3
+#define HIERARCHY_INDEX_ABILITY_PICTO_SHADE 5
+#define HIERARCHY_INDEX_ABILITY_KEY_FILL 6
 
 #define HIERARCHY_INDEX_SWITCH_ABILITY_FILL 1
 #define HIERARCHY_INDEX_SWITCH_ABILITY_EFFECT 2
@@ -82,7 +83,7 @@ void HUDManager::Update() {
 	ManageSwitch();
 }
 
-void HUDManager::UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown) {
+void HUDManager::UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown, float fangUltimateRemainingNormalizedValue, float oniUltimateRemainingNormalizedValue) {
 	cooldowns[static_cast<int>(Cooldowns::FANG_SKILL_1)] = fangCooldown1;
 	cooldowns[static_cast<int>(Cooldowns::FANG_SKILL_2)] = fangCooldown2;
 	cooldowns[static_cast<int>(Cooldowns::FANG_SKILL_3)] = fangCooldown3;
@@ -95,10 +96,10 @@ void HUDManager::UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2,
 
 		if (fangObj->IsActive()) {
 			UpdateVisualCooldowns(fangSkillParent, static_cast<int>(Cooldowns::FANG_SKILL_1));
-
+			SetRemainingDurationNormalizedValue(fangSkillParent, static_cast<int>(Cooldowns::FANG_SKILL_3), fangUltimateRemainingNormalizedValue);
 		} else {
 			UpdateVisualCooldowns(onimaruSkillParent, static_cast<int>(Cooldowns::ONIMARU_SKILL_1));
-
+			SetRemainingDurationNormalizedValue(onimaruSkillParent, static_cast<int>(Cooldowns::ONIMARU_SKILL_3) - 3, oniUltimateRemainingNormalizedValue);
 		}
 	}
 	UpdateCommonSkillVisualCooldown();
@@ -156,6 +157,7 @@ void HUDManager::SetCooldownRetreival(Cooldowns cooldown) {
 	abilityCoolDownsRetreived[static_cast<int>(cooldown)] = false;
 }
 
+
 void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 
 	std::vector<GameObject*> skills = canvas->GetChildren();
@@ -208,6 +210,21 @@ void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 
 
 
+	}
+}
+
+
+void HUDManager::SetRemainingDurationNormalizedValue(GameObject* canvas, int index, float normalizedValue) {
+	if (!canvas)return;
+	std::vector<GameObject*> children = canvas->GetChildren();
+	if (children.size() <= index)return;
+
+	GameObject* fillHolder = children[index]->GetChild(HIERARCHY_INDEX_ABILITY_DURATION_FILL);
+	if (fillHolder) {
+		ComponentImage* fill = fillHolder->GetComponent<ComponentImage>();
+		if (fill) {
+			fill->SetFillValue(normalizedValue);
+		}
 	}
 }
 

@@ -170,6 +170,20 @@ bool Onimaru::IsVulnerable() const {
 	return !ultimateOn;
 }
 
+float Onimaru::GetNormalizedRemainingUltimateTime() const {
+
+	if (ultimateOn) {
+		if (ultimateTimeRemaining == 0.0f) {
+			return 1.0f;
+		} else {
+			return ultimateTimeRemaining / ultimateTotalTime;
+		}
+	}
+
+
+	return 0.0f;
+}
+
 float Onimaru::GetRealShieldCooldown() {
 	if (shield == nullptr || shieldGO == nullptr) return 0.0f;
 	float realShieldCooldown = 1.0f;

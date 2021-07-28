@@ -90,7 +90,7 @@ public:
 	void RemoveEnemy(GameObject* enemy);
 	bool IsShielding() const;
 	bool IsVulnerable() const override;
-
+	float GetNormalizedRemainingUltimateTime()const;
 private:
 
 	ResourcePrefab* trail = nullptr;

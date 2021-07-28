@@ -79,7 +79,7 @@ public:
 	UID onimaruHealthParentUID = 0;
 
 public:
-	void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown);
+	void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown, float fangUltimateRemainingNormalizedValue, float oniUltimateRemainingNormalizedValue);
 	void UpdateHealth(float fangHealth, float onimaruHealth);
 	void HealthRegeneration(float health, float healthRecovered);
 	void StartCharacterSwitch();
@@ -88,6 +88,8 @@ public:
 private:
 	void AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canvas);
 	void UpdateVisualCooldowns(GameObject* canvas, int startingIt); //Update visual cooldown on all abilities of a given character
+	void SetRemainingDurationNormalizedValue(GameObject* canvas, int index, float normalizedValue);
+
 	void UpdateCommonSkillVisualCooldown(); //Update visual cooldown on switch ability
 	void ManageSwitch();	//This method manages visual effects regarding the Switching of characters (UI WISE) as well 
 							//as the color changin and rotation of the picto for the switch icon
