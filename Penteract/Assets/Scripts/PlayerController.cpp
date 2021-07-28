@@ -286,13 +286,12 @@ void PlayerController::UpdatePlayerStats() {
 		if (playerFang.IsActive() && playerOnimaru.lifePoints != ONIMARU_MAX_HEALTH) {
 			float healthRecovered = (onimaruRecovering / onimaruRecoveryRate);
 			hudManagerScript->HealthRegeneration(playerOnimaru.lifePoints, healthRecovered);
-		}
-		else if (playerOnimaru.IsActive() && playerFang.lifePoints != FANG_MAX_HEALTH) {
+		} else if (playerOnimaru.IsActive() && playerFang.lifePoints != FANG_MAX_HEALTH) {
 			float healthRecovered = (fangRecovering / fangRecoveryRate);
 			hudManagerScript->HealthRegeneration(playerFang.lifePoints, healthRecovered);
 		}
 
-		hudManagerScript->UpdateCooldowns(playerOnimaru.GetRealShieldCooldown(), playerOnimaru.GetRealBlastCooldown(), playerOnimaru.GetRealUltimateCooldown(), playerFang.GetRealDashCooldown(), playerFang.GetRealEMPCooldown(), playerFang.GetRealUltimateCooldown(), realSwitchCooldown,0,playerOnimaru.GetNormalizedRemainingUltimateTime());
+		hudManagerScript->UpdateCooldowns(playerOnimaru.GetRealShieldCooldown(), playerOnimaru.GetRealBlastCooldown(), playerOnimaru.GetRealUltimateCooldown(), playerFang.GetRealDashCooldown(), playerFang.GetRealEMPCooldown(), playerFang.GetRealUltimateCooldown(), realSwitchCooldown, playerFang.ultimateTimeRemaining / playerFang.ultimateTotalTime, playerOnimaru.GetNormalizedRemainingUltimateTime());
 	}
 }
 

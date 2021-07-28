@@ -8,7 +8,7 @@
 void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, UID rightBulletUID, UID leftBulletUID, UID cameraUID, UID canvasUID, UID EMPUID, UID EMPEffectsUID, UID fangUltimateUID, UID ultimateVFXUID) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(fangUID);
-
+	ultimateTotalTime = 4.6f;
 	if (characterGameObject && characterGameObject->GetParent()) {
 		playerMainTransform = characterGameObject->GetParent()->GetComponent<ComponentTransform>();
 		agent = characterGameObject->GetParent()->GetComponent<ComponentAgent>();
@@ -407,6 +407,7 @@ void Fang::PlayAnimation() {
 
 void Fang::ActiveUltimate() {
 	if (CanUltimate()) {
+		ultimateTimeRemaining = ultimateTotalTime;
 		ultimateCooldownRemaining = 0;
 		ultimateOn = true;
 		ultimateInCooldown = true;
@@ -438,6 +439,11 @@ bool Fang::CanUltimate() {
 
 void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 	if (isAlive) {
+
+		if (ultimateOn) {
+			ultimateTimeRemaining -= Time::GetDeltaTime();
+		}
+
 		if (EMP) {
 			Player::Update(useGamepad, dashing || EMP->IsActive(), dashing || EMP->IsActive() || ultimateOn);
 			if (GetInputBool(InputActions::ABILITY_1, useGamepad) && !EMP->IsActive()) {

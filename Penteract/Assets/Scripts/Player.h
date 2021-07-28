@@ -85,6 +85,8 @@ public:
 	float3 facePointDir = float3(0, 0, 0);
 	MovementDirection movementInputDirection = MovementDirection::NONE;
 	ComponentTransform* playerMainTransform = nullptr;
+	float ultimateTimeRemaining = 0.0f;
+	float ultimateTotalTime = 3.0f;
 	virtual bool IsVulnerable() const = 0;
 
 protected:

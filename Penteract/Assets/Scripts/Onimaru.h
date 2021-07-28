@@ -55,8 +55,7 @@ public:
 	//Onimaru ultimate related
 	float originalAttackSpeed = 0.0f;
 	float ultimateAttackSpeed = 20.0f;
-	float ultimateTimeRemaining = 0.0f;
-	float ultimateTotalTime = 3.0f;
+
 	float ultimateOrientationSpeed = 2.0f;
 	// Blast ability
 	float blastCooldown = 7.f;
