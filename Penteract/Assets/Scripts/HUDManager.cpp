@@ -117,6 +117,20 @@ void HUDManager::UpdateHealth(float fangHealth, float onimaruHealth) {
 	}
 }
 
+void HUDManager::HealthRegeneration(float health, float healthRecovered) {
+	if (fangObj && onimaruObj) {
+		float maxHealth = fangObj->IsActive() ? ONIMARU_MAX_HEALTH : FANG_MAX_HEALTH;
+
+		ComponentImage* healthFill = nullptr;
+		healthFill = fangObj->IsActive() ? onimaruHealthParent->GetChildren()[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>() : fangHealthParent->GetChildren()[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
+		if (healthFill) {
+			if (healthFill->IsFill()) {
+				healthFill->SetFillValue((health + healthRecovered) / maxHealth);
+			}
+		}
+	}
+}
+
 void HUDManager::StartCharacterSwitch() {
 	//TODO initialization
 	switchTimer = 0;

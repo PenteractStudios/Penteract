@@ -81,6 +81,7 @@ public:
 public:
 	void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown);
 	void UpdateHealth(float fangHealth, float onimaruHealth);
+	void HealthRegeneration(float health, float healthRecovered);
 	void StartCharacterSwitch();
 private:
 	void UpdateVisualCooldowns(GameObject* canvas, int startingIt); //Update visual cooldown on all abilities of a given character
