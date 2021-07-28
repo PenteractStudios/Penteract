@@ -1,6 +1,7 @@
 #include "Fang.h"
 #include "GameplaySystems.h"
 #include "HUDController.h"
+#include "HUDManager.h"
 #include "CameraController.h"
 #include "UltimateFang.h"
 
@@ -53,7 +54,7 @@ void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, 
 		GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
 		if (canvasGO) {
 			hudControllerScript = GET_SCRIPT(canvasGO, HUDController);
-			
+			hudManagerScript = GET_SCRIPT(canvasGO, HUDManager);
 		}
 
 
@@ -84,6 +85,7 @@ void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, 
 	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
 	if (canvasGO) {
 		hudControllerScript = GET_SCRIPT(canvasGO, HUDController);
+		hudManagerScript = GET_SCRIPT(canvasGO, HUDManager);
 	}
 	if (characterGameObject) {
 		characterGameObject->GetComponent<ComponentCapsuleCollider>()->Enable();
@@ -180,6 +182,11 @@ void Fang::InitDash() {
 	if (hudControllerScript) {
 		hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_1);
 	}
+
+	if (hudManagerScript) {
+		hudManagerScript->SetCooldownRetreival(HUDManager::Cooldowns::FANG_SKILL_1);
+	}
+
 }
 
 void Fang::Dash() {
@@ -218,6 +225,10 @@ void Fang::ActivateEMP() {
 		if (hudControllerScript) {
 			hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_2);
 		}
+		if (hudManagerScript) {
+			hudManagerScript->SetCooldownRetreival(HUDManager::Cooldowns::FANG_SKILL_2);
+		}
+
 	}
 }
 
@@ -412,6 +423,12 @@ void Fang::ActiveUltimate() {
 		if (hudControllerScript) {
 			hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_3);
 		}
+
+		if (hudManagerScript) {
+			hudManagerScript->SetCooldownRetreival(HUDManager::Cooldowns::FANG_SKILL_3);
+		}
+
+
 	}
 }
 

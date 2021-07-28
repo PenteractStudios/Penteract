@@ -3,6 +3,7 @@
 #include "Player.h"
 
 class HUDController;
+class HUDManager;
 class UltimateFang;
 class Fang : public Player {
 public:
@@ -96,7 +97,7 @@ private:
 
 	//HUD
 	HUDController* hudControllerScript = nullptr;
-
+	HUDManager* hudManagerScript = nullptr;
 	//Ultimate
 	int ultimateCooldownRemaining = 0;
 	bool ultimateInCooldown = false;

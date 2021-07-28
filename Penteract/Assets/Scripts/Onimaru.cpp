@@ -5,6 +5,7 @@
 #include "AIMeleeGrunt.h"
 #include "RangedAI.h"
 #include "HUDController.h"
+#include "HUDManager.h"
 #include "Shield.h"
 #include "CameraController.h"
 
@@ -129,6 +130,14 @@ void Onimaru::StartUltimate() {
 			}
 		}
 		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(ULTI_INTRO)]);
+	}
+
+	if (hudControllerScript) {
+		hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::ONIMARU_SKILL_3);
+	}
+
+	if (hudManagerScript) {
+		hudManagerScript->SetCooldownRetreival(HUDManager::Cooldowns::ONIMARU_SKILL_3);
 	}
 
 	if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::ULTIMATE)] == nullptr) {
@@ -490,6 +499,12 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 				if (hudControllerScript) {
 					hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::ONIMARU_SKILL_2);
 				}
+
+				if (hudManagerScript) {
+					hudManagerScript->SetCooldownRetreival(HUDManager::Cooldowns::ONIMARU_SKILL_2);
+				}
+
+
 				blastCooldownRemaining = blastCooldown;
 				if (compAnimation) {
 					if (compAnimation->GetCurrentState()) {

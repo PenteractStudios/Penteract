@@ -4,6 +4,7 @@
 
 class PlayerController;
 class ComponentTransform2D;
+class AbilityRefeshFX;
 
 class HUDManager : public Script {
 	GENERATE_BODY(HUDManager);
@@ -82,14 +83,19 @@ public:
 	void UpdateHealth(float fangHealth, float onimaruHealth);
 	void HealthRegeneration(float health, float healthRecovered);
 	void StartCharacterSwitch();
+	void SetCooldownRetreival(Cooldowns cooldown);
+
 private:
+	void AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canvas);
 	void UpdateVisualCooldowns(GameObject* canvas, int startingIt); //Update visual cooldown on all abilities of a given character
 	void UpdateCommonSkillVisualCooldown(); //Update visual cooldown on switch ability
 	void ManageSwitch();	//This method manages visual effects regarding the Switching of characters (UI WISE) as well 
 							//as the color changin and rotation of the picto for the switch icon
+	void PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns cooldown);
+
 
 private:
-	
+
 	PlayerController* playerController = nullptr;
 	GameObject* fangObj = nullptr;
 	GameObject* onimaruObj = nullptr;
@@ -104,6 +110,7 @@ private:
 	// Health HUD
 	GameObject* fangHealthParent = nullptr;
 	GameObject* onimaruHealthParent = nullptr;
+	bool abilityCoolDownsRetreived[static_cast<int>(Cooldowns::TOTAL)] = { false,false,false,false,false,false,false };
 
 };
 

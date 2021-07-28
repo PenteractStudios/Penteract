@@ -4,6 +4,7 @@
 
 class OnimaruBullet;
 class HUDController;
+class HUDManager;
 class Shield;
 
 class Onimaru : public Player {
@@ -123,6 +124,7 @@ private:
 
 	// HUD
 	HUDController* hudControllerScript = nullptr;
+	HUDManager* hudManagerScript = nullptr;
 
 	//Audio
 	ComponentAudioSource* onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::TOTAL)] = { nullptr };

@@ -1,12 +1,15 @@
 #include "HUDManager.h"
 #include "PlayerController.h";
 #include "Components/UI/ComponentTransform2D.h"
+#include "AbilityRefeshFX.h"
 
 #define HIERARCHY_INDEX_ABILITY_FILL 1
+#define HIERARCHY_INDEX_ABILITY_EFFECT 2
 #define HIERARCHY_INDEX_ABILITY_PICTO_SHADE 4
 #define HIERARCHY_INDEX_ABILITY_KEY_FILL 5
 
 #define HIERARCHY_INDEX_SWITCH_ABILITY_FILL 1
+#define HIERARCHY_INDEX_SWITCH_ABILITY_EFFECT 2
 #define HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE 4
 #define HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL 5
 
@@ -18,11 +21,11 @@
 
 EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerObjectUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangSkillParentUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillParentUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, switchSkillParentUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangHealthParentUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthParentUID)
+		MEMBER(MemberType::GAME_OBJECT_UID, fangSkillParentUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillParentUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, switchSkillParentUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, fangHealthParentUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthParentUID)
 };
 
 GENERATE_BODY_IMPL(HUDManager);
@@ -146,6 +149,11 @@ void HUDManager::StartCharacterSwitch() {
 	//TODO initialization
 	switchTimer = 0;
 	switchState = SwitchState::PRE_COLLAPSE;
+	SetCooldownRetreival(Cooldowns::SWITCH_SKILL);
+}
+
+void HUDManager::SetCooldownRetreival(Cooldowns cooldown) {
+	abilityCoolDownsRetreived[static_cast<int>(cooldown)] = false;
 }
 
 void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
@@ -164,12 +172,6 @@ void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 			fillImage = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_FILL]->GetComponent<ComponentImage>();
 			pictogramImage = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_PICTO_SHADE]->GetComponent<ComponentImage>();
 
-			GameObject* textParent = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_KEY_FILL];
-
-			if (textParent) {
-				ComponentText* text = textParent->GetChild(1)->GetComponent<ComponentText>();
-			}
-
 			textFill = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_KEY_FILL]->GetComponent<ComponentImage>();
 			if (fillImage && pictogramImage) {
 
@@ -186,20 +188,73 @@ void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 				}
 			}
 
-			if (text) {
-				text->SetFontColor(cooldowns[skill] < 1 ? buttonTextColorNotAvailable : buttonTextColorAvailable);
+			GameObject* textParent = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_KEY_FILL];
+
+			if (textParent) {
+				text = textParent->GetChild(1)->GetComponent<ComponentText>();
+				if (text) {
+					text->SetFontColor(cooldowns[skill] < 1 ? buttonTextColorNotAvailable : buttonTextColorAvailable);
+				}
 			}
 
 			if (textFill) {
 				textFill->SetColor(cooldowns[skill] < 1 ? buttonColorNotAvailable : buttonColorAvailable);
 			}
 
+			AbilityCoolDownEffectCheck(static_cast<Cooldowns>(skill), canvas);
+
 			++skill;
 		}
 
-		//AbilityCoolDownEffectCheck(static_cast<Cooldowns>(skill), isMain ? canvas : nullptr);
 
 
+	}
+}
+
+
+//Hierarchy sensitive method
+void HUDManager::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canvas) {
+
+	if (!abilityCoolDownsRetreived[static_cast<int>(cooldown)]) {
+		if (cooldowns[static_cast<int>(cooldown)] == 1.0f) {
+			if (canvas) {
+				AbilityRefeshFX* ef = nullptr;
+				//AbilityRefreshEffectProgressBar* pef = nullptr;
+
+				if (cooldown < Cooldowns::ONIMARU_SKILL_1) {
+					//Fang skill
+					if (canvas->GetChildren().size() > 0) {
+						//if (canvas->GetChildren()[static_cast<int>(cooldown)]->GetChildren().size() > HIERARCHY_INDEX_MAIN_BUTTON_UP) {
+						ef = GET_SCRIPT(canvas->GetChildren()[static_cast<int>(cooldown)]->GetChildren()[HIERARCHY_INDEX_ABILITY_EFFECT], AbilityRefeshFX);
+						//}
+					}
+				} else if (cooldown < Cooldowns::SWITCH_SKILL) {
+					//Onimaru skill
+					if (canvas->GetChildren().size() > 0) {
+						//if (canvas->GetChildren()[static_cast<int>(cooldown) - 3]->GetChildren().size() > HIERARCHY_INDEX_MAIN_BUTTON_UP) {
+						ef = GET_SCRIPT(canvas->GetChild(static_cast<int>(cooldown) - 3)->GetChildren()[HIERARCHY_INDEX_ABILITY_EFFECT], AbilityRefeshFX);
+
+						//}
+					}
+				} else {
+					if (canvas->GetChildren().size() > 0) {
+						ef = GET_SCRIPT(canvas->GetChild(HIERARCHY_INDEX_SWITCH_ABILITY_EFFECT), AbilityRefeshFX);
+						//pef = GET_SCRIPT(canvas->GetChild(HIERARCHY_INDEX_SWAP_ABILITY_EFFECT), AbilityRefreshEffectProgressBar);
+
+
+					}
+				}
+
+				if (ef) {
+					PlayCoolDownEffect(ef, cooldown);
+					//PlayProgressBarEffect(pef, cooldown);
+					abilityCoolDownsRetreived[static_cast<int>(cooldown)] = true;
+				}
+			} else {
+				//Canvas was passed as nullptr, which means that no effect must be played, only that the bool must be set
+				abilityCoolDownsRetreived[static_cast<int>(cooldown)] = true;
+			}
+		}
 	}
 }
 
@@ -225,12 +280,10 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 
 	if (fillColor && image) {
 		fillColor->SetFillValue(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
-
 		fillColor->SetColor(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1 ? float4(switchSkillColorNotAvailable.xyz(), 0.3f + cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]) : switchSkillColorAvailable);
-
-		//AbilityCoolDownEffectCheck(Cooldowns::SWITCH_SKILL, swapingSkillCanvas);
 	}
 
+	AbilityCoolDownEffectCheck(Cooldowns::SWITCH_SKILL, switchSkillParent);
 
 	if (text) {
 		text->SetFontColor(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1 ? buttonTextColorNotAvailable : buttonTextColorAvailable);
@@ -410,4 +463,10 @@ void HUDManager::ManageSwitch() {
 
 	}
 	switchTimer += Time::GetDeltaTime();
+}
+
+void HUDManager::PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns cooldown) {
+	if (effect != nullptr) {
+		effect->PlayEffect();
+	}
 }
