@@ -102,7 +102,7 @@
                 ],
                 "Children": [
                     {
-                        "Name": "Stroke",
+                        "Name": "StrokeUP",
                         "Active": true,
                         "RootBoneName": "",
                         "Mask": 0,
@@ -111,8 +111,8 @@
                                 "Type": "Transform2D",
                                 "Active": true,
                                 "Position": [
-                                    -440.0,
-                                    0.0,
+                                    -431.0,
+                                    112.5,
                                     0.0
                                 ],
                                 "Rotation": [
@@ -132,8 +132,8 @@
                                     0.0
                                 ],
                                 "Pivot": [
-                                    0.5,
-                                    0.5
+                                    1.0,
+                                    1.0
                                 ],
                                 "Size": [
                                     18.0,
@@ -162,6 +162,76 @@
                                     0.028354493901133539,
                                     0.5784313678741455,
                                     0.46518000960350039,
+                                    1.0
+                                ],
+                                "AlphaTransparency": true,
+                                "IsFill": false,
+                                "FillValue": 1.0
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Name": "StrokeDown",
+                        "Active": false,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform2D",
+                                "Active": false,
+                                "Position": [
+                                    -449.0,
+                                    -325.6000061035156,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Pivot": [
+                                    0.0,
+                                    0.0
+                                ],
+                                "Size": [
+                                    18.0,
+                                    225.0
+                                ],
+                                "AnchorMin": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorMax": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorSelected": 5,
+                                "IsCustomAnchor": false
+                            },
+                            {
+                                "Type": "CanvasRenderer",
+                                "Active": false
+                            },
+                            {
+                                "Type": "Image",
+                                "Active": false,
+                                "TextureId": 11948372448367117637,
+                                "Color": [
+                                    0.027450980618596078,
+                                    0.5803921818733215,
+                                    0.46666666865348818,
                                     1.0
                                 ],
                                 "AlphaTransparency": true,

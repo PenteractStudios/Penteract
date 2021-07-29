@@ -30,6 +30,7 @@ public:
 		IDLE,
 		PRE_COLLAPSE,
 		COLLAPSE,
+		PRE_DEPLOY,
 		DEPLOY,
 		POST_DEPLOY
 	};
@@ -77,12 +78,17 @@ public:
 	// Health HUD
 	UID fangHealthParentUID = 0;
 	UID onimaruHealthParentUID = 0;
+	UID switchHealthParentUID = 0;
 
 	float4 healthBarBackgroundColorInBackground = float4(0.f / 255.f, 40.f / 255.f, 60.f / 255.f, 255.f / 255.f);
 	float4 healthFillBarColorInBackground = float4(255.f / 255.f, 0.f / 255.f, 0.f / 255.f, 30.f / 255.f);
 	float4 healthBarBackgroundColor = float4(0.f / 255.f, 40.f / 255.f, 60.f / 255.f, 220.f / 255.f);
 	float4 healthFillBarColor = float4(255.f / 255.f, 0.f / 255.f, 0.f / 255.f, 255.f / 255.f);
 	float4 healthLostFillBarColor = float4(0.f / 255.f, 177.f / 255.f, 227.f / 255.f, 80.f / 255.f);
+	float4 healthSwitchStrokeInitialColor = float4(7.f / 255.f, 148.f / 255.f, 119.f / 255.f, 80.f / 255.f);
+	float4 healthSwitchStrokeChangingColor = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 255.f / 255.f);
+
+	float switchBarGrowShrinkTime = 0.2f;
 
 public:
 	void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown, float fangUltimateRemainingNormalizedValue, float oniUltimateRemainingNormalizedValue);
@@ -114,16 +120,19 @@ private:
 	GameObject* switchSkillParent = nullptr;
 	ComponentTransform2D* switchShadeTransform = nullptr;
 	float switchTimer = 0.0f;
+	bool abilityCoolDownsRetreived[static_cast<int>(Cooldowns::TOTAL)] = { false,false,false,false,false,false,false };
 
 	// Health HUD
 	GameObject* fangHealthParent = nullptr;
 	GameObject* onimaruHealthParent = nullptr;
-	bool abilityCoolDownsRetreived[static_cast<int>(Cooldowns::TOTAL)] = { false,false,false,false,false,false,false };
+	GameObject* switchHealthParent = nullptr;
 
 	float3 originalFangHealthPosition = { 0,0,0 };
 	float3 originalOnimaruHealthPosition = { 0,0,0 };
+	float2 originalStrokeSize = { 0,0 };
 
 	float healthOffset = 50;
-
+	bool switchHealthStrokeGrowing = true;
+	bool switchHealthStrokeShrinking = false;
 };
 
