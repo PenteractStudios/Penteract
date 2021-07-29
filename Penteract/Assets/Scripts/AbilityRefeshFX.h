@@ -4,6 +4,7 @@
 
 class ComponentImage;
 class ComponentTransform2D;
+class ComponentAudioSource;
 
 class AbilityRefeshFX : public Script {
 	GENERATE_BODY(AbilityRefeshFX);
@@ -33,7 +34,7 @@ private:
 	ComponentImage* effectMember1 = nullptr;
 	ComponentTransform2D* pictoTransform2D = nullptr;
 	ComponentTransform2D* keyTransform2D = nullptr;
-
+	ComponentAudioSource* effectAudio = nullptr;
 
 };
 

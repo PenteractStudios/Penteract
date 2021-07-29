@@ -11,15 +11,18 @@ public:
 
 	void Start() override;
 	void Update() override;
-
+	void Play();
+	void Stop();
 public:
 
 	float secondsPerFrame = 0.1f;
-
+	bool loops = false;
+	bool playOnAwake = false;
 private:
 	float animationTimer = 0.0f;
 	std::vector<GameObject*>frames;
 	int currentFrame = 0;
 	GameObject* currentFrameObj = nullptr;
+	bool playing = false;
 };
 

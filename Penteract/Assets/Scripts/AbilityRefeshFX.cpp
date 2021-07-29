@@ -3,14 +3,16 @@
 #include "GameplaySystems.h"
 #include "Components/UI/ComponentImage.h"
 #include "Components/UI/ComponentTransform2D.h"
+#include "Components/ComponentAudioSource.h"
+#include "UISpriteSheetPlayer.h"
 #include "HUDManager.h"
 
 EXPOSE_MEMBERS(AbilityRefeshFX) {
 	MEMBER(MemberType::FLOAT, totalEffectTime),
-		MEMBER(MemberType::FLOAT, effectScale),
-		MEMBER(MemberType::GAME_OBJECT_UID, pictoObjectUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, keyObjectUID),
-		MEMBER(MemberType::BOOL, debugPlay)
+	MEMBER(MemberType::FLOAT, effectScale),
+	MEMBER(MemberType::GAME_OBJECT_UID, pictoObjectUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, keyObjectUID),
+	MEMBER(MemberType::BOOL, debugPlay)
 };
 
 GENERATE_BODY_IMPL(AbilityRefeshFX);
@@ -37,6 +39,8 @@ void AbilityRefeshFX::Start() {
 			pictoTransform2D->GetScale();
 		}
 	}
+
+	effectAudio = GetOwner().GetComponent<ComponentAudioSource>();
 
 }
 
@@ -73,6 +77,20 @@ void AbilityRefeshFX::PlayEffect() {
 		//RESET COLOR TO ORIGINAL
 		effectMember1->SetColor(float4(effectMember1->GetColor().xyz(), 1.0f));
 	}
+
+	if (effectAudio) {
+		effectAudio->Play();
+	}
+
+	std::vector<GameObject*>children = GetOwner().GetChildren();
+
+	for (size_t i = 0; i < children.size(); i++) {
+		UISpriteSheetPlayer* player = GET_SCRIPT(children[i], UISpriteSheetPlayer);
+		if (player) {
+			player->Play();
+		}
+	}
+
 	originalScaleVector = pictoTransform2D->GetScale();
 
 	effectScaleVector = float3(effectScale);
