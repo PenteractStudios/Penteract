@@ -77,6 +77,15 @@ void HUDManager::Start() {
 	fangHealthParent = GameplaySystems::GetGameObject(fangHealthParentUID);
 	onimaruHealthParent = GameplaySystems::GetGameObject(onimaruHealthParentUID);
 
+	if (fangHealthParent && onimaruHealthParent) {
+		ComponentTransform2D* pos = nullptr;
+		pos = fangHealthParent->GetComponent<ComponentTransform2D>();
+		if (pos) originalFangHealthPosition = pos->GetPosition();
+		pos = nullptr;
+		pos = onimaruHealthParent->GetComponent<ComponentTransform2D>();
+		if (pos) originalOnimaruHealthPosition = pos->GetPosition();
+	}
+
 }
 
 void HUDManager::Update() {
@@ -314,9 +323,11 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 }
 
 void HUDManager::ManageSwitch() {
-	if (!fangSkillParent || !onimaruSkillParent)return;
+	if (!fangSkillParent || !onimaruSkillParent || !fangHealthParent || !onimaruHealthParent || !fangObj || !onimaruObj)return;
 	if (skillsFang.size() != 3 || skillsOni.size() != 3)return;
 	ComponentTransform2D* transform2D = nullptr;
+	ComponentTransform2D* fangHealth = nullptr;
+	ComponentTransform2D* onimaruHealth = nullptr;
 
 	switch (switchState) {
 	case SwitchState::IDLE:
@@ -402,6 +413,27 @@ void HUDManager::ManageSwitch() {
 				if (transform2D) {
 					transform2D->SetPosition(float3::Lerp(cooldownTransformOriginalPositions[i + 3] + float3(switchExtraOffset + i * 10.0f, 0, 0), cooldownTransformOriginalPositions[static_cast<int>(Cooldowns::SWITCH_SKILL)], switchTimer / switchCollapseMovementTime));
 				}
+			}
+		}
+
+		//Health handleing
+
+		if (fangObj->IsActive()) {
+			fangHealth = fangHealthParent->GetComponent<ComponentTransform2D>();
+			onimaruHealth = onimaruHealthParent->GetComponent<ComponentTransform2D>();
+
+			if (fangHealth && onimaruHealth) {
+				fangHealth->SetPosition(float3::Lerp(fangHealth->GetPosition(), originalFangHealthPosition, switchTimer / switchCollapseMovementTime));
+				onimaruHealth->SetPosition(float3::Lerp(onimaruHealth->GetPosition(), originalOnimaruHealthPosition, switchTimer / switchCollapseMovementTime));
+			}
+		}
+		else {
+			fangHealth = fangHealthParent->GetComponent<ComponentTransform2D>();
+			onimaruHealth = onimaruHealthParent->GetComponent<ComponentTransform2D>();
+
+			if (fangHealth && onimaruHealth) {
+				fangHealth->SetPosition(float3::Lerp(originalFangHealthPosition, originalFangHealthPosition - float3(healthOffset, 0, 0), switchTimer / switchCollapseMovementTime));
+				onimaruHealth->SetPosition(float3::Lerp(originalOnimaruHealthPosition, originalOnimaruHealthPosition + float3(healthOffset, 0, 0), switchTimer / switchCollapseMovementTime));
 			}
 		}
 

@@ -114,5 +114,10 @@ private:
 	GameObject* onimaruHealthParent = nullptr;
 	bool abilityCoolDownsRetreived[static_cast<int>(Cooldowns::TOTAL)] = { false,false,false,false,false,false,false };
 
+	float3 originalFangHealthPosition = { 0,0,0 };
+	float3 originalOnimaruHealthPosition = { 0,0,0 };
+
+	float healthOffset = 50;
+
 };
 
