@@ -429,7 +429,7 @@
                                 ],
                                 "AlphaTransparency": true,
                                 "IsFill": true,
-                                "FillValue": 0.75
+                                "FillValue": 0.0
                             }
                         ],
                         "Children": null

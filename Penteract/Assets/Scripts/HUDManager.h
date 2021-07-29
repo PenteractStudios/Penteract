@@ -78,6 +78,12 @@ public:
 	UID fangHealthParentUID = 0;
 	UID onimaruHealthParentUID = 0;
 
+	float4 healthBarBackgroundColorInBackground = float4(0.f / 255.f, 40.f / 255.f, 60.f / 255.f, 255.f / 255.f);
+	float4 healthFillBarColorInBackground = float4(255.f / 255.f, 0.f / 255.f, 0.f / 255.f, 30.f / 255.f);
+	float4 healthBarBackgroundColor = float4(0.f / 255.f, 40.f / 255.f, 60.f / 255.f, 220.f / 255.f);
+	float4 healthFillBarColor = float4(255.f / 255.f, 0.f / 255.f, 0.f / 255.f, 255.f / 255.f);
+	float4 healthLostFillBarColor = float4(0.f / 255.f, 177.f / 255.f, 227.f / 255.f, 80.f / 255.f);
+
 public:
 	void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown, float fangUltimateRemainingNormalizedValue, float oniUltimateRemainingNormalizedValue);
 	void UpdateHealth(float fangHealth, float onimaruHealth);
