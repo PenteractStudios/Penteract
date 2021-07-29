@@ -130,6 +130,7 @@ private:
 	float3 originalFangHealthPosition = { 0,0,0 };
 	float3 originalOnimaruHealthPosition = { 0,0,0 };
 	float2 originalStrokeSize = { 0,0 };
+	float3 originalFillPos = { 0,0,0 };
 
 	float healthOffset = 50;
 	bool switchHealthStrokeGrowing = true;

@@ -95,6 +95,7 @@ void HUDManager::Start() {
 
 	if (switchHealthParent) {
 		originalStrokeSize = switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentTransform2D>()->GetSize();
+		originalFillPos = switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_FILL]->GetComponent<ComponentTransform2D>()->GetPosition();
 	}
 
 }
@@ -345,6 +346,7 @@ void HUDManager::ManageSwitch() {
 	ComponentImage* switchBarFillImage = nullptr;
 	ComponentImage* switchHealthStroke = nullptr;
 	ComponentTransform2D* switchHealthStrokeTransform2D = nullptr;
+	ComponentTransform2D* switchHealthFillTransform2D = nullptr;
 
 	switch (switchState) {
 	case SwitchState::IDLE:
@@ -481,6 +483,11 @@ void HUDManager::ManageSwitch() {
 			}
 		}
 
+		switchHealthFillTransform2D = switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_FILL]->GetComponent<ComponentTransform2D>();
+		if (switchHealthFillTransform2D) {
+			switchHealthFillTransform2D->SetScale(float3::Lerp(float3(1, 1, 1), float3(0, 1, 1), switchTimer / switchCollapseMovementTime));
+		}
+
 		if (switchTimer == switchCollapseMovementTime) {
 			switchState = SwitchState::PRE_DEPLOY;//SwitchState::DEPLOY;
 
@@ -491,7 +498,13 @@ void HUDManager::ManageSwitch() {
 				fangSkillParent->Enable();
 				onimaruSkillParent->Disable();
 			}
-
+			if (switchHealthFillTransform2D) {
+				switchHealthStrokeTransform2D = fangObj->IsActive() ? switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentTransform2D>() : switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->GetComponent<ComponentTransform2D>();
+				if (switchHealthStrokeTransform2D) {
+					if (!fangObj->IsActive()) switchHealthFillTransform2D->SetPosition(switchHealthStrokeTransform2D->GetPosition());
+					else switchHealthFillTransform2D->SetPosition(originalFillPos);
+				}
+			}
 			switchTimer = 0;
 		}
 
@@ -613,6 +626,11 @@ void HUDManager::ManageSwitch() {
 			if (switchHealthStroke) {
 				switchHealthStroke->SetColor(float4::Lerp(healthSwitchStrokeChangingColor, healthSwitchStrokeInitialColor, switchTimer / switchCollapseMovementTime));
 			}
+		}
+
+		switchHealthFillTransform2D = switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_FILL]->GetComponent<ComponentTransform2D>();
+		if (switchHealthFillTransform2D) {
+			switchHealthFillTransform2D->SetScale(float3::Lerp(float3(0, 1, 1), float3(1, 1, 1), switchTimer / switchCollapseMovementTime));
 		}
 
 		if (switchTimer == switchDeployMovementTime) {
