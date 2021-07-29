@@ -35,6 +35,7 @@ private:
 	ComponentTransform2D* pictoTransform2D = nullptr;
 	ComponentTransform2D* keyTransform2D = nullptr;
 	ComponentAudioSource* effectAudio = nullptr;
-
+	std::vector<GameObject*>children;
+	ComponentImage* glowImage = nullptr;
 };
 

@@ -2374,6 +2374,76 @@
                                                         "Children": null
                                                     }
                                                 ]
+                                            },
+                                            {
+                                                "Name": "Glow",
+                                                "Active": true,
+                                                "RootBoneName": "",
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform2D",
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Pivot": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "Size": [
+                                                            455.0,
+                                                            571.0
+                                                        ],
+                                                        "AnchorMin": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorMax": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorSelected": 5,
+                                                        "IsCustomAnchor": false
+                                                    },
+                                                    {
+                                                        "Type": "CanvasRenderer",
+                                                        "Active": true
+                                                    },
+                                                    {
+                                                        "Type": "Image",
+                                                        "Active": true,
+                                                        "TextureId": 6682471783101200554,
+                                                        "Color": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "AlphaTransparency": true,
+                                                        "IsFill": false,
+                                                        "FillValue": 1.0
+                                                    }
+                                                ],
+                                                "Children": null
                                             }
                                         ]
                                     },
@@ -4973,6 +5043,76 @@
                                                         "Children": null
                                                     }
                                                 ]
+                                            },
+                                            {
+                                                "Name": "Glow",
+                                                "Active": true,
+                                                "RootBoneName": "",
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform2D",
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Pivot": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "Size": [
+                                                            455.0,
+                                                            571.0
+                                                        ],
+                                                        "AnchorMin": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorMax": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorSelected": 5,
+                                                        "IsCustomAnchor": false
+                                                    },
+                                                    {
+                                                        "Type": "CanvasRenderer",
+                                                        "Active": true
+                                                    },
+                                                    {
+                                                        "Type": "Image",
+                                                        "Active": true,
+                                                        "TextureId": 6682471783101200554,
+                                                        "Color": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "AlphaTransparency": true,
+                                                        "IsFill": false,
+                                                        "FillValue": 1.0
+                                                    }
+                                                ],
+                                                "Children": null
                                             }
                                         ]
                                     },
@@ -7572,6 +7712,76 @@
                                                         "Children": null
                                                     }
                                                 ]
+                                            },
+                                            {
+                                                "Name": "Glow",
+                                                "Active": true,
+                                                "RootBoneName": "",
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform2D",
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Pivot": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "Size": [
+                                                            455.0,
+                                                            571.0
+                                                        ],
+                                                        "AnchorMin": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorMax": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorSelected": 5,
+                                                        "IsCustomAnchor": false
+                                                    },
+                                                    {
+                                                        "Type": "CanvasRenderer",
+                                                        "Active": true
+                                                    },
+                                                    {
+                                                        "Type": "Image",
+                                                        "Active": true,
+                                                        "TextureId": 6682471783101200554,
+                                                        "Color": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "AlphaTransparency": true,
+                                                        "IsFill": false,
+                                                        "FillValue": 1.0
+                                                    }
+                                                ],
+                                                "Children": null
                                             }
                                         ]
                                     },
@@ -10224,6 +10434,76 @@
                                                         "Children": null
                                                     }
                                                 ]
+                                            },
+                                            {
+                                                "Name": "Glow",
+                                                "Active": true,
+                                                "RootBoneName": "",
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform2D",
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Pivot": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "Size": [
+                                                            455.0,
+                                                            571.0
+                                                        ],
+                                                        "AnchorMin": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorMax": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorSelected": 5,
+                                                        "IsCustomAnchor": false
+                                                    },
+                                                    {
+                                                        "Type": "CanvasRenderer",
+                                                        "Active": true
+                                                    },
+                                                    {
+                                                        "Type": "Image",
+                                                        "Active": true,
+                                                        "TextureId": 6682471783101200554,
+                                                        "Color": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "AlphaTransparency": true,
+                                                        "IsFill": false,
+                                                        "FillValue": 1.0
+                                                    }
+                                                ],
+                                                "Children": null
                                             }
                                         ]
                                     },
@@ -12823,6 +13103,76 @@
                                                         "Children": null
                                                     }
                                                 ]
+                                            },
+                                            {
+                                                "Name": "Glow",
+                                                "Active": true,
+                                                "RootBoneName": "",
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform2D",
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Pivot": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "Size": [
+                                                            455.0,
+                                                            571.0
+                                                        ],
+                                                        "AnchorMin": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorMax": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorSelected": 5,
+                                                        "IsCustomAnchor": false
+                                                    },
+                                                    {
+                                                        "Type": "CanvasRenderer",
+                                                        "Active": true
+                                                    },
+                                                    {
+                                                        "Type": "Image",
+                                                        "Active": true,
+                                                        "TextureId": 6682471783101200554,
+                                                        "Color": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "AlphaTransparency": true,
+                                                        "IsFill": false,
+                                                        "FillValue": 1.0
+                                                    }
+                                                ],
+                                                "Children": null
                                             }
                                         ]
                                     },
@@ -13607,7 +13957,1893 @@
                                                 ]
                                             }
                                         ],
-                                        "Children": null
+                                        "Children": [
+                                            {
+                                                "Name": "CDEffect1",
+                                                "Active": true,
+                                                "RootBoneName": "",
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform2D",
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            425.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Pivot": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "Size": [
+                                                            200.0,
+                                                            200.0
+                                                        ],
+                                                        "AnchorMin": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorMax": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorSelected": 5,
+                                                        "IsCustomAnchor": false
+                                                    },
+                                                    {
+                                                        "Type": "Script",
+                                                        "Active": true,
+                                                        "Script": 15815488295708913647,
+                                                        "Values": [
+                                                            {
+                                                                "Name": "secondsPerFrame",
+                                                                "Type": "Float",
+                                                                "Value": 0.02500000037252903
+                                                            },
+                                                            {
+                                                                "Name": "playOnAwake",
+                                                                "Type": "Bool",
+                                                                "Value": false
+                                                            }
+                                                        ]
+                                                    }
+                                                ],
+                                                "Children": [
+                                                    {
+                                                        "Name": "0",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 7977605097127663459,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    },
+                                                    {
+                                                        "Name": "1",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 2348961218396336409,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    },
+                                                    {
+                                                        "Name": "2",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 5717912141191382184,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    },
+                                                    {
+                                                        "Name": "3",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 8418911827134468678,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    },
+                                                    {
+                                                        "Name": "4",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 12485670449616232476,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    },
+                                                    {
+                                                        "Name": "5",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 3558823821094765038,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    },
+                                                    {
+                                                        "Name": "6",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 10135704451015540189,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    },
+                                                    {
+                                                        "Name": "7",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 12491527872175520742,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    },
+                                                    {
+                                                        "Name": "8",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 5800754628439408460,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    },
+                                                    {
+                                                        "Name": "9",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 12338188963394037903,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    },
+                                                    {
+                                                        "Name": "10",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 1369438350233211233,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    },
+                                                    {
+                                                        "Name": "11",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 9365442880625063813,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "Name": "CDEffect2",
+                                                "Active": true,
+                                                "RootBoneName": "",
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform2D",
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            -425.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            1.0,
+                                                            -4.371138828673793e-8
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            0.0,
+                                                            0.0,
+                                                            180.0
+                                                        ],
+                                                        "Pivot": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "Size": [
+                                                            200.0,
+                                                            200.0
+                                                        ],
+                                                        "AnchorMin": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorMax": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorSelected": 5,
+                                                        "IsCustomAnchor": false
+                                                    },
+                                                    {
+                                                        "Type": "Script",
+                                                        "Active": true,
+                                                        "Script": 15815488295708913647,
+                                                        "Values": [
+                                                            {
+                                                                "Name": "secondsPerFrame",
+                                                                "Type": "Float",
+                                                                "Value": 0.02500000037252903
+                                                            }
+                                                        ]
+                                                    }
+                                                ],
+                                                "Children": [
+                                                    {
+                                                        "Name": "0",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 7977605097127663459,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    },
+                                                    {
+                                                        "Name": "1",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 2348961218396336409,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    },
+                                                    {
+                                                        "Name": "2",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 5717912141191382184,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    },
+                                                    {
+                                                        "Name": "3",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 8418911827134468678,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    },
+                                                    {
+                                                        "Name": "4",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 12485670449616232476,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    },
+                                                    {
+                                                        "Name": "5",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 3558823821094765038,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    },
+                                                    {
+                                                        "Name": "6",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 10135704451015540189,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    },
+                                                    {
+                                                        "Name": "7",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 12491527872175520742,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    },
+                                                    {
+                                                        "Name": "8",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 5800754628439408460,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    },
+                                                    {
+                                                        "Name": "9",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 12338188963394037903,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    },
+                                                    {
+                                                        "Name": "10",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 1369438350233211233,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    },
+                                                    {
+                                                        "Name": "11",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform2D",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0
+                                                                ],
+                                                                "Pivot": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "Size": [
+                                                                    300.0,
+                                                                    672.0
+                                                                ],
+                                                                "AnchorMin": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorMax": [
+                                                                    0.5,
+                                                                    0.5
+                                                                ],
+                                                                "AnchorSelected": 5,
+                                                                "IsCustomAnchor": false
+                                                            },
+                                                            {
+                                                                "Type": "CanvasRenderer",
+                                                                "Active": true
+                                                            },
+                                                            {
+                                                                "Type": "Image",
+                                                                "Active": true,
+                                                                "TextureId": 9365442880625063813,
+                                                                "Color": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "AlphaTransparency": true,
+                                                                "IsFill": false,
+                                                                "FillValue": 1.0
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "Name": "Glow",
+                                                "Active": true,
+                                                "RootBoneName": "",
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform2D",
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Pivot": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "Size": [
+                                                            455.0,
+                                                            571.0
+                                                        ],
+                                                        "AnchorMin": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorMax": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorSelected": 5,
+                                                        "IsCustomAnchor": false
+                                                    },
+                                                    {
+                                                        "Type": "CanvasRenderer",
+                                                        "Active": true
+                                                    },
+                                                    {
+                                                        "Type": "Image",
+                                                        "Active": true,
+                                                        "TextureId": 6682471783101200554,
+                                                        "Color": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "AlphaTransparency": true,
+                                                        "IsFill": false,
+                                                        "FillValue": 1.0
+                                                    }
+                                                ],
+                                                "Children": null
+                                            }
+                                        ]
                                     },
                                     {
                                         "Name": "Stroke",
@@ -16207,6 +18443,76 @@
                                                 "Children": null
                                             }
                                         ]
+                                    },
+                                    {
+                                        "Name": "Glow",
+                                        "Active": true,
+                                        "RootBoneName": "",
+                                        "Mask": 0,
+                                        "Components": [
+                                            {
+                                                "Type": "Transform2D",
+                                                "Active": true,
+                                                "Position": [
+                                                    0.0,
+                                                    0.0,
+                                                    0.0
+                                                ],
+                                                "Rotation": [
+                                                    0.0,
+                                                    0.0,
+                                                    0.0,
+                                                    1.0
+                                                ],
+                                                "Scale": [
+                                                    1.0,
+                                                    1.0,
+                                                    1.0
+                                                ],
+                                                "LocalEulerAngles": [
+                                                    0.0,
+                                                    0.0,
+                                                    0.0
+                                                ],
+                                                "Pivot": [
+                                                    0.5,
+                                                    0.5
+                                                ],
+                                                "Size": [
+                                                    455.0,
+                                                    571.0
+                                                ],
+                                                "AnchorMin": [
+                                                    0.5,
+                                                    0.5
+                                                ],
+                                                "AnchorMax": [
+                                                    0.5,
+                                                    0.5
+                                                ],
+                                                "AnchorSelected": 5,
+                                                "IsCustomAnchor": false
+                                            },
+                                            {
+                                                "Type": "CanvasRenderer",
+                                                "Active": true
+                                            },
+                                            {
+                                                "Type": "Image",
+                                                "Active": true,
+                                                "TextureId": 6682471783101200554,
+                                                "Color": [
+                                                    1.0,
+                                                    1.0,
+                                                    1.0,
+                                                    1.0
+                                                ],
+                                                "AlphaTransparency": true,
+                                                "IsFill": false,
+                                                "FillValue": 1.0
+                                            }
+                                        ],
+                                        "Children": null
                                     }
                                 ]
                             },

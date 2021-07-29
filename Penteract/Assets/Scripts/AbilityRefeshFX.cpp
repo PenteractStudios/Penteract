@@ -7,12 +7,15 @@
 #include "UISpriteSheetPlayer.h"
 #include "HUDManager.h"
 
+#define ANIMATION_COUNT 2
+#define HIERARCHY_INDEX_GLOW_EFFECT 2
+
 EXPOSE_MEMBERS(AbilityRefeshFX) {
 	MEMBER(MemberType::FLOAT, totalEffectTime),
-	MEMBER(MemberType::FLOAT, effectScale),
-	MEMBER(MemberType::GAME_OBJECT_UID, pictoObjectUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, keyObjectUID),
-	MEMBER(MemberType::BOOL, debugPlay)
+		MEMBER(MemberType::FLOAT, effectScale),
+		MEMBER(MemberType::GAME_OBJECT_UID, pictoObjectUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, keyObjectUID),
+		MEMBER(MemberType::BOOL, debugPlay)
 };
 
 GENERATE_BODY_IMPL(AbilityRefeshFX);
@@ -41,6 +44,14 @@ void AbilityRefeshFX::Start() {
 	}
 
 	effectAudio = GetOwner().GetComponent<ComponentAudioSource>();
+	children = GetOwner().GetChildren();
+
+	if (children.size() > 2) {
+		glowImage = children[HIERARCHY_INDEX_GLOW_EFFECT]->GetComponent<ComponentImage>();
+		if (glowImage) {
+			glowImage->SetColor(float4(glowImage->GetColor().xyz(), 0));
+		}
+	}
 
 }
 
@@ -61,13 +72,22 @@ void AbilityRefeshFX::Update() {
 	//DO EFFECT
 	pictoTransform2D->SetScale(float3::Lerp(effectScaleVector, originalScaleVector, deltaA));
 	keyTransform2D->SetScale(float3::Lerp(effectScaleVector, originalScaleVector, deltaA));
+
+
 	effectMember1->SetColor(float4(effectMember1->GetColor().xyz(), 1 - deltaA));
+
+
+	if (glowImage) {
+		glowImage->SetColor(float4(glowImage->GetColor().xyz(), Clamp01(1 - deltaA * 2)));
+	}
+
 
 
 	if (effectTimer == totalEffectTime) {
 		isPlaying = false;
 		effectMember1->Disable();
 	}
+
 }
 
 void AbilityRefeshFX::PlayEffect() {
@@ -82,14 +102,14 @@ void AbilityRefeshFX::PlayEffect() {
 		effectAudio->Play();
 	}
 
-	std::vector<GameObject*>children = GetOwner().GetChildren();
 
-	for (size_t i = 0; i < children.size(); i++) {
+	for (size_t i = 0; i < 2; i++) {
 		UISpriteSheetPlayer* player = GET_SCRIPT(children[i], UISpriteSheetPlayer);
 		if (player) {
 			player->Play();
 		}
 	}
+
 
 	originalScaleVector = pictoTransform2D->GetScale();
 
