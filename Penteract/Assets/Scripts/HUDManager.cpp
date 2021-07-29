@@ -10,9 +10,9 @@
 #define HIERARCHY_INDEX_ABILITY_KEY_FILL 6
 
 #define HIERARCHY_INDEX_SWITCH_ABILITY_FILL 1
-#define HIERARCHY_INDEX_SWITCH_ABILITY_EFFECT 2
-#define HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE 4
-#define HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL 5
+#define HIERARCHY_INDEX_SWITCH_ABILITY_EFFECT 3
+#define HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE 5
+#define HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL 6
 
 #define HIERARCHY_INDEX_HEALTH_BACKGROUND 0
 #define HIERARCHY_INDEX_HEALTH_FILL 2
@@ -27,12 +27,12 @@
 
 EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerObjectUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangSkillParentUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillParentUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, switchSkillParentUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangHealthParentUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthParentUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, switchHealthParentUID)
+		MEMBER(MemberType::GAME_OBJECT_UID, fangSkillParentUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillParentUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, switchSkillParentUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, fangHealthParentUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthParentUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, switchHealthParentUID)
 };
 
 GENERATE_BODY_IMPL(HUDManager);
@@ -53,6 +53,9 @@ void HUDManager::Start() {
 		skillsFang = fangSkillParent->GetChildren();
 		skillsOni = onimaruSkillParent->GetChildren();
 
+		//Vector used later to avoid a flicker on first swtich
+		std::vector<ComponentTransform2D*>oniTransforms;
+
 		for (int i = 0; i < static_cast<int>(Cooldowns::TOTAL); i++) {
 			ComponentTransform2D* transform2D = nullptr;
 			if (i < static_cast<int>(Cooldowns::ONIMARU_SKILL_1)) {
@@ -62,6 +65,9 @@ void HUDManager::Start() {
 			} else if (i != static_cast<int>(Cooldowns::SWITCH_SKILL)) {
 				//Onimaru skill
 				transform2D = skillsOni[i - 3]->GetComponent<ComponentTransform2D>();
+				if (transform2D) {
+					oniTransforms.push_back(transform2D);
+				}
 			} else {
 				transform2D = switchSkillParent->GetComponent<ComponentTransform2D>();
 			}
@@ -69,7 +75,11 @@ void HUDManager::Start() {
 			if (transform2D) {
 				cooldownTransformOriginalPositions[i] = transform2D->GetPosition();
 			}
+		}
 
+		//Set onimaru abilities position to the collapsed position so as to avoid a flicker on first swtich
+		for (int i = 0; i < oniTransforms.size(); i++) {
+			oniTransforms[i]->SetPosition(cooldownTransformOriginalPositions[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
 		}
 
 		GameObject* pictoShadeObj = switchSkillParent->GetChild("PictoShade");
@@ -171,7 +181,6 @@ void HUDManager::StartCharacterSwitch() {
 	//TODO initialization
 	switchTimer = 0;
 	switchState = SwitchState::PRE_COLLAPSE;
-	SetCooldownRetreival(Cooldowns::SWITCH_SKILL);
 }
 
 void HUDManager::SetCooldownRetreival(Cooldowns cooldown) {
@@ -413,6 +422,7 @@ void HUDManager::ManageSwitch() {
 
 		break;
 	case SwitchState::COLLAPSE:
+		SetCooldownRetreival(Cooldowns::SWITCH_SKILL);
 
 		if (switchTimer > switchCollapseMovementTime) {
 			switchTimer = switchCollapseMovementTime;
@@ -459,8 +469,7 @@ void HUDManager::ManageSwitch() {
 			if (switchHealthStroke) {
 				switchHealthStroke->SetColor(float4::Lerp(healthSwitchStrokeInitialColor, healthSwitchStrokeChangingColor, switchTimer / switchCollapseMovementTime));
 			}
-		}
-		else {
+		} else {
 			fangHealth = fangHealthParent->GetComponent<ComponentTransform2D>();
 			backgroundImage = fangHealthParent->GetChildren()[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
 			fillImage = fangHealthParent->GetChildren()[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
@@ -518,10 +527,9 @@ void HUDManager::ManageSwitch() {
 			float scale = Lerp(1, 2, delta);
 			switchHealthStrokeTransform2D = fangObj->IsActive() ? switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->GetComponent<ComponentTransform2D>() : switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentTransform2D>();
 			if (switchHealthStrokeTransform2D) {
-				switchHealthStrokeTransform2D->SetScale(float3(1,scale,1));
+				switchHealthStrokeTransform2D->SetScale(float3(1, scale, 1));
 			}
-		}
-		else if (switchHealthStrokeShrinking) {
+		} else if (switchHealthStrokeShrinking) {
 			float delta = switchTimer / switchBarGrowShrinkTime;
 			float scale = Lerp(2, 1, delta);
 			switchHealthStrokeTransform2D = fangObj->IsActive() ? switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentTransform2D>() : switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->GetComponent<ComponentTransform2D>();
@@ -538,20 +546,18 @@ void HUDManager::ManageSwitch() {
 					switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->Enable();
 					switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentTransform2D>()->SetScale(float3(1, 2, 1));
 					if (switchHealthStroke) switchHealthStroke->SetColor(healthSwitchStrokeChangingColor);
-					switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->GetComponent<ComponentTransform2D>()->SetScale(float3(1,1,1));
+					switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->GetComponent<ComponentTransform2D>()->SetScale(float3(1, 1, 1));
 					switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->Disable();
-				}
-				else {
+				} else {
 					switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->Enable();
-					switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->GetComponent<ComponentTransform2D>()->SetScale(float3(1,2,1));
+					switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->GetComponent<ComponentTransform2D>()->SetScale(float3(1, 2, 1));
 					if (switchHealthStroke) switchHealthStroke->SetColor(healthSwitchStrokeChangingColor);
-					switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentTransform2D>()->SetScale(float3(1,1,1));
+					switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentTransform2D>()->SetScale(float3(1, 1, 1));
 					switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->Disable();
 				}
 				//switchHealthStrokeTransform2D->SetPivot(float2(0, 0)); Need to expose function in engine
 
-			}
-			else if (switchHealthStrokeShrinking) {
+			} else if (switchHealthStrokeShrinking) {
 				switchHealthStrokeGrowing = true;
 				switchHealthStrokeShrinking = false;
 				//switchHealthStrokeTransform2D->SetPivot(float2(1, 1));
@@ -604,8 +610,7 @@ void HUDManager::ManageSwitch() {
 			if (switchHealthStroke) {
 				switchHealthStroke->SetColor(float4::Lerp(healthSwitchStrokeChangingColor, healthSwitchStrokeInitialColor, switchTimer / switchCollapseMovementTime));
 			}
-		}
-		else {
+		} else {
 			onimaruHealth = onimaruHealthParent->GetComponent<ComponentTransform2D>();
 			backgroundImage = onimaruHealthParent->GetChildren()[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
 			fillImage = onimaruHealthParent->GetChildren()[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
