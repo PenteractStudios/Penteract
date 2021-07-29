@@ -91,6 +91,7 @@ public:
 	void AddEnemy(GameObject* enemy);
 	void RemoveEnemy(GameObject* enemy);
 	bool IsShielding() const;
+	bool IsVulnerable() const override;
 
 private:
 
@@ -114,7 +115,6 @@ private:
 	float shieldCooldownRemaining = 0.f;
 
 	bool blastInUse = false;
-	bool ultimateInUse = false;
 	bool shooting = false;
 
 	// Blast ability

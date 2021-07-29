@@ -75,6 +75,7 @@ public:
 	float orientationThreshold = 1.0f;
 	int ultimateChargePoints = 0;
 	const int ultimateChargePointsTotal = 10;
+	bool ultimateOn = false;
 	bool shootingOnCooldown = false;
 	float normalOrientationSpeed = 7.5f;
 	static bool level1Upgrade;
@@ -86,10 +87,10 @@ public:
 	float3 facePointDir = float3(0, 0, 0);
 	MovementDirection movementInputDirection = MovementDirection::NONE;
 	ComponentTransform* playerMainTransform = nullptr;
+	virtual bool IsVulnerable() const = 0;
 
 protected:
 	void MoveTo();
-
 private:
 	virtual bool CanShoot();
 	void ResetSwitchStatus();
