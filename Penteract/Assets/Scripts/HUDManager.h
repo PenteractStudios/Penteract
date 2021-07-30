@@ -35,6 +35,12 @@ public:
 		POST_DEPLOY
 	};
 
+	enum class PictoState {
+		AVAILABLE,
+		UNAVAILABLE,
+		IN_USE
+	};
+
 	UID playerObjectUID = 0;
 
 	//Skill HUD
@@ -48,10 +54,15 @@ public:
 	//Skills
 	float4 skillColorNotAvailable = float4(0.f / 255.f, 93.f / 255.f, 145.f / 255.f, 255.f / 255.f);
 	float4 skillColorAvailable = float4(0.f / 255.f, 177.f / 255.f, 227.f / 255.f, 255.f / 255.f);
+	float4 skillPictoColorAvailable = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 255.f / 255.f);
+	float4 skillPictoColorNotAvailable = float4(0.f / 255.f, 177.f / 255.f, 227.f / 255.f, 255.f / 255.f);
+	float4 skillPictoColorInUse = float4(0.f / 255.f, 40.f / 255.f, 60.f / 255.f, 255.f / 255.f);
+
 	float4 switchSkillColorNotAvailable = float4(133.f / 255.f, 243.f / 255.f, 196.f / 255.f, 150.f / 255.f);
 	float4 switchSkillColorAvailable = float4(133.f / 255.f, 243.f / 255.f, 196.f / 255.f, 255.f / 255.f);
 	float4 switchPictoColorNotInUse = float4(133.f / 255.f, 243.f / 255.f, 196.f / 255.f, 255.f / 255.f);
 	float4 switchPictoColorInUse = float4(0.f / 255.f, 0.f / 255.f, 0.f / 255.f, 255.f / 255.f);
+
 	UID fangSkillParentUID = 0;
 	UID onimaruSkillParentUID = 0;
 	UID switchSkillParentUID = 0;
@@ -68,6 +79,7 @@ public:
 	float switchPostDeployMovementTime = 0.2f;
 	float switchExtraOffset = 20.0f;
 	SwitchState switchState = SwitchState::IDLE;
+	PictoState pictoStates[static_cast<int>(Cooldowns::TOTAL)];
 
 	float switchColorTimer = 0.0f;
 	float switchColorTotalTime = 2.0f;
@@ -102,19 +114,8 @@ public:
 	void HealthRegeneration(float health, float healthRecovered);
 	void StartCharacterSwitch();
 	void SetCooldownRetreival(Cooldowns cooldown);
-
-private:
-	void AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canvas);
-	void UpdateVisualCooldowns(GameObject* canvas, int startingIt); //Update visual cooldown on all abilities of a given character
-	void SetRemainingDurationNormalizedValue(GameObject* canvas, int index, float normalizedValue);
-
-	void UpdateCommonSkillVisualCooldown(); //Update visual cooldown on switch ability
-	void ManageSwitch();	//This method manages visual effects regarding the Switching of characters (UI WISE) as well 
-							//as the color changin and rotation of the picto for the switch icon
-	void PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns cooldown);
-	void PlayLostHealthFeedback();
-
-
+	void StartUsingSkill(Cooldowns cooldown);
+	void StopUsingSkill(Cooldowns cooldown);
 private:
 
 	PlayerController* playerController = nullptr;
@@ -150,5 +151,19 @@ private:
 
 	float lostHealthTimer = 0.0f;
 	float lostHealthFeedbackTotalTime = 1.0f;
+
+private:
+	void AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canvas);
+	void UpdateVisualCooldowns(GameObject* canvas, int startingIt); //Update visual cooldown on all abilities of a given character
+	void SetRemainingDurationNormalizedValue(GameObject* canvas, int index, float normalizedValue);
+
+	void UpdateCommonSkillVisualCooldown(); //Update visual cooldown on switch ability
+	void ManageSwitch();	//This method manages visual effects regarding the Switching of characters (UI WISE) as well 
+							//as the color changin and rotation of the picto for the switch icon
+	void PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns cooldown);
+	void PlayLostHealthFeedback();
+	void SetPictoState(Cooldowns cooldown, PictoState newState);
+
+
 };
 

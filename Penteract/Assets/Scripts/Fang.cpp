@@ -298,6 +298,11 @@ void Fang::OnAnimationFinished() {
 				ultimateOn = false;
 				movementSpeed = oldMovementSpeed;
 				ultimateScript->EndUltimate();
+
+				if (hudManagerScript) {
+					hudManagerScript->StopUsingSkill(HUDManager::Cooldowns::FANG_SKILL_3);
+				}
+
 			}
 		}
 	}
@@ -414,6 +419,10 @@ void Fang::ActiveUltimate() {
 		if (ultimateVFX) ultimateVFX->PlayChildParticles();
 		ultimateScript->StartUltimate();
 
+		if (hudManagerScript) {
+			hudManagerScript->StartUsingSkill(HUDManager::Cooldowns::FANG_SKILL_3);
+		}
+
 		oldMovementSpeed = movementSpeed;
 		movementSpeed = ultimateMovementSpeed;
 
@@ -442,6 +451,9 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 
 		if (ultimateOn) {
 			ultimateTimeRemaining -= Time::GetDeltaTime();
+			if (ultimateTimeRemaining <= 0) {
+				ultimateTimeRemaining = 0;
+			}
 		}
 
 		if (EMP) {

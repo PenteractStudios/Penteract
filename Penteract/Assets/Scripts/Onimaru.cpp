@@ -138,6 +138,7 @@ void Onimaru::StartUltimate() {
 
 	if (hudManagerScript) {
 		hudManagerScript->SetCooldownRetreival(HUDManager::Cooldowns::ONIMARU_SKILL_3);
+		hudManagerScript->StartUsingSkill(HUDManager::Cooldowns::ONIMARU_SKILL_3);
 	}
 
 	if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::ULTIMATE)] == nullptr) {
@@ -159,6 +160,11 @@ void Onimaru::FinishUltimate() {
 	orientationSpeed = normalOrientationSpeed;
 	attackSpeed = originalAttackSpeed;
 	ultimateOn = false;
+
+	if (hudManagerScript) {
+		hudManagerScript->StopUsingSkill(HUDManager::Cooldowns::ONIMARU_SKILL_3);
+	}
+
 	compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(IDLE)]);
 }
 
@@ -322,6 +328,7 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
 	if (canvasGO) {
 		hudControllerScript = GET_SCRIPT(canvasGO, HUDController);
+		hudManagerScript = GET_SCRIPT(canvasGO, HUDManager);
 	}
 
 	shieldGO = GameplaySystems::GetGameObject(shieldUID);
@@ -392,6 +399,11 @@ void Onimaru::InitShield() {
 		if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHIELD_ON)]) {
 			onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHIELD_ON)]->Play();
 		}
+
+		if (hudManagerScript) {
+			hudManagerScript->StartUsingSkill(HUDManager::Cooldowns::ONIMARU_SKILL_1);
+		}
+
 		shieldGO->Enable();
 	}
 }
@@ -415,6 +427,11 @@ void Onimaru::FadeShield() {
 	if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHIELD_OFF)]) {
 		onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHIELD_OFF)]->Play();
 	}
+
+	if (hudManagerScript) {
+		hudManagerScript->StopUsingSkill(HUDManager::Cooldowns::ONIMARU_SKILL_1);
+	}
+
 	shieldGO->Disable();
 }
 

@@ -12,10 +12,10 @@
 
 EXPOSE_MEMBERS(AbilityRefeshFX) {
 	MEMBER(MemberType::FLOAT, totalEffectTime),
-		MEMBER(MemberType::FLOAT, effectScale),
-		MEMBER(MemberType::GAME_OBJECT_UID, pictoObjectUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, keyObjectUID),
-		MEMBER(MemberType::BOOL, debugPlay)
+	MEMBER(MemberType::FLOAT, effectScale),
+	MEMBER(MemberType::GAME_OBJECT_UID, pictoObjectUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, keyObjectUID),
+	MEMBER(MemberType::BOOL, debugPlay)
 };
 
 GENERATE_BODY_IMPL(AbilityRefeshFX);
