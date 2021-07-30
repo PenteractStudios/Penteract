@@ -88,7 +88,11 @@ public:
 	float4 healthSwitchStrokeInitialColor = float4(7.f / 255.f, 148.f / 255.f, 119.f / 255.f, 80.f / 255.f);
 	float4 healthSwitchStrokeChangingColor = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 255.f / 255.f);
 
-	float switchBarGrowShrinkTime = 0.2f;
+	float switchBarGrowShrinkTime = 0.05f;
+
+	std::vector<GameObject*> fangHealthChildren;
+	std::vector<GameObject*> onimaruHealthChildren;
+	std::vector<GameObject*> switchHealthChildren;
 
 public:
 	void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown, float fangUltimateRemainingNormalizedValue, float oniUltimateRemainingNormalizedValue);
