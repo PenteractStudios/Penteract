@@ -15,6 +15,7 @@
 #define HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL 6
 
 #define HIERARCHY_INDEX_HEALTH_BACKGROUND 0
+#define HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK 1
 #define HIERARCHY_INDEX_HEALTH_FILL 2
 #define HIERARCHY_INDEX_HEALTH_TEXT 4
 
@@ -115,10 +116,13 @@ void HUDManager::Start() {
 		}
 	}
 
+	fangPreviousHealth = FANG_MAX_HEALTH;
+	onimaruPreviousHealth = ONIMARU_MAX_HEALTH;
 }
 
 void HUDManager::Update() {
 	ManageSwitch();
+	PlayLostHealthFeedback();
 }
 
 void HUDManager::UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown, float fangUltimateRemainingNormalizedValue, float oniUltimateRemainingNormalizedValue) {
@@ -162,6 +166,18 @@ void HUDManager::UpdateHealth(float fangHealth, float onimaruHealth) {
 	healthText = fangObj->IsActive() ? fangHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>() : onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
 	if (healthText) {
 		healthText->SetText(std::to_string((int)health));
+	}
+
+	playingLostHealthFeedback = true;
+	lostHealthTimer = 0.f;
+
+	ComponentImage* lostHealthFill = nullptr;
+	lostHealthFill = fangObj->IsActive() ? fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>() : onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
+	if (lostHealthFill) {
+		float oldHealth = fangObj->IsActive() ? fangPreviousHealth : onimaruPreviousHealth;
+		lostHealthFill->SetFillValue(oldHealth / maxHealth);
+		if (fangObj->IsActive()) fangPreviousHealth = health;
+		else if (onimaruObj->IsActive()) onimaruPreviousHealth = health;
 	}
 }
 
@@ -698,4 +714,22 @@ void HUDManager::PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns cooldown)
 	if (effect != nullptr) {
 		effect->PlayEffect();
 	}
+}
+
+void HUDManager::PlayLostHealthFeedback() {
+	if (!fangObj || !onimaruObj) return;
+	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
+
+	if (playingLostHealthFeedback) {
+		ComponentImage* healthLostFeedback = fangObj->IsActive() ? fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>() : onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
+		if (healthLostFeedback) {
+			healthLostFeedback->SetColor(float4::Lerp(healthLostFeedbackFillBarInitialColor, healthLostFeedbackFillBarFinalColor, lostHealthTimer / lostHealthFeedbackTotalTime));
+		}
+	}
+
+	if (lostHealthTimer >= lostHealthFeedbackTotalTime) {
+		lostHealthTimer = 0.f;
+		playingLostHealthFeedback = false;
+	}
+	lostHealthTimer += Time::GetDeltaTime();
 }

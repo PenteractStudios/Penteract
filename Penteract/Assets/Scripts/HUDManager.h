@@ -87,6 +87,8 @@ public:
 	float4 healthLostFillBarColor = float4(0.f / 255.f, 177.f / 255.f, 227.f / 255.f, 80.f / 255.f);
 	float4 healthSwitchStrokeInitialColor = float4(7.f / 255.f, 148.f / 255.f, 119.f / 255.f, 80.f / 255.f);
 	float4 healthSwitchStrokeChangingColor = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 255.f / 255.f);
+	float4 healthLostFeedbackFillBarInitialColor = float4(0.f / 255.f, 177.f / 255.f, 227.f / 255.f, 204.f / 255.f);
+	float4 healthLostFeedbackFillBarFinalColor = float4(0.f / 255.f, 177.f / 255.f, 227.f / 255.f, 0.f / 255.f);
 
 	float switchBarGrowShrinkTime = 0.05f;
 
@@ -110,6 +112,7 @@ private:
 	void ManageSwitch();	//This method manages visual effects regarding the Switching of characters (UI WISE) as well 
 							//as the color changin and rotation of the picto for the switch icon
 	void PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns cooldown);
+	void PlayLostHealthFeedback();
 
 
 private:
@@ -139,5 +142,13 @@ private:
 	float healthOffset = 50;
 	bool switchHealthStrokeGrowing = true;
 	bool switchHealthStrokeShrinking = false;
+
+	float fangPreviousHealth = 0.f;
+	float onimaruPreviousHealth = 0.f;
+
+	bool playingLostHealthFeedback = false;
+
+	float lostHealthTimer = 0.0f;
+	float lostHealthFeedbackTotalTime = 1.0f;
 };
 
