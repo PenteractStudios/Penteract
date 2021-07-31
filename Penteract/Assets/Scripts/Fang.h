@@ -21,7 +21,7 @@ public:
 
 	// ------- Contructors ------- //
 	Fang() {};
-	void Update(bool lockMovement = false, bool lockRotation = false) override;
+	void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockOrientation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
@@ -29,13 +29,14 @@ public:
 	void GetHit(float damage_) override;
 	void trailDelay();
 	bool CanSwitch() const override;
+	bool IsInstantOrientation(bool useGamepad) const override;
 
 	float GetRealDashCooldown();
 	float GetRealEMPCooldown();
 	float GetRealUltimateCooldown();
 	void IncreaseUltimateCounter();
 	void Init(UID fangUID = 0, UID trailGunUID = 0, UID trailDashUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID cameraUID = 0, UID canvasUID = 0, UID EMPUID = 0, UID EMPEffectsUID = 0, UID fangUltimateUID = 0, UID ultimateVFXUID = 0);
-
+	bool IsVulnerable() const override;
 public:
 	std::vector<std::string> states{ "Idle" ,
 						"RunBackward" , "RunForward" , "RunLeft" , "RunRight" , //1 - 4
@@ -61,8 +62,8 @@ public:
 
 	//Ultimate
 	int ultimateCooldown = 2;
-	bool ultimateOn = false;
 	float ultimateMovementSpeed = 4.0f;
+
 
 private:
 	//Dash
@@ -105,7 +106,6 @@ private:
 
 	//Audios
 	ComponentAudioSource* fangAudios[static_cast<int>(FANG_AUDIOS::TOTAL)] = { nullptr };
-
 private:
 	void InitDash();
 	void Dash();

@@ -94,6 +94,17 @@
                             2.0
                         ],
                         "freezeRotation": false
+                    },
+                    {
+                        "Type": "Obstacle",
+                        "Active": true,
+                        "Size": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "ObstacleType": 0,
+                        "DrawGizmo": true
                     }
                 ],
                 "Children": [
@@ -148,14 +159,14 @@
                                 "Script": 8700738987126077181,
                                 "Values": [
                                     {
-                                        "Name": "barrelUID",
-                                        "Type": "GameObjectUID",
-                                        "Value": 103221065364286827
-                                    },
-                                    {
                                         "Name": "BarrelUID",
                                         "Type": "GameObjectUID",
                                         "Value": 525968066063556863
+                                    },
+                                    {
+                                        "Name": "barrelUID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 10474189611153692321
                                     },
                                     {
                                         "Name": "cameraUID",
@@ -165,7 +176,7 @@
                                     {
                                         "Name": "particlesUID",
                                         "Type": "GameObjectUID",
-                                        "Value": 7704110058935641183
+                                        "Value": 4626971974727697029
                                     },
                                     {
                                         "Name": "timeToDestroy",
@@ -309,7 +320,8 @@
                             false
                         ],
                         "HasCollision": false,
-                        "LayerIndex": 5
+                        "LayerIndex": 5,
+                        "CollRadius": 0.0
                     },
                     {
                         "Type": "AudioSource",
@@ -474,7 +486,8 @@
                                     false
                                 ],
                                 "HasCollision": false,
-                                "LayerIndex": 5
+                                "LayerIndex": 5,
+                                "CollRadius": 0.0
                             }
                         ],
                         "Children": null
@@ -630,7 +643,8 @@
                                     false
                                 ],
                                 "HasCollision": false,
-                                "LayerIndex": 5
+                                "LayerIndex": 5,
+                                "CollRadius": 0.0
                             }
                         ],
                         "Children": null
@@ -765,7 +779,8 @@
                                     false
                                 ],
                                 "HasCollision": false,
-                                "LayerIndex": 5
+                                "LayerIndex": 5,
+                                "CollRadius": 0.0
                             }
                         ],
                         "Children": null
@@ -900,7 +915,8 @@
                                     false
                                 ],
                                 "HasCollision": false,
-                                "LayerIndex": 5
+                                "LayerIndex": 5,
+                                "CollRadius": 0.0
                             }
                         ],
                         "Children": null
@@ -1035,7 +1051,8 @@
                                     false
                                 ],
                                 "HasCollision": false,
-                                "LayerIndex": 5
+                                "LayerIndex": 5,
+                                "CollRadius": 0.0
                             }
                         ],
                         "Children": null
@@ -1170,7 +1187,8 @@
                                     false
                                 ],
                                 "HasCollision": false,
-                                "LayerIndex": 5
+                                "LayerIndex": 5,
+                                "CollRadius": 0.0
                             }
                         ],
                         "Children": null
@@ -1326,7 +1344,8 @@
                                     false
                                 ],
                                 "HasCollision": false,
-                                "LayerIndex": 5
+                                "LayerIndex": 5,
+                                "CollRadius": 0.0
                             }
                         ],
                         "Children": null

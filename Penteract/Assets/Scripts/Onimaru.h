@@ -56,8 +56,7 @@ public:
 	float ultimateAttackSpeed = 20.0f;
 	float ultimateTimeRemaining = 0.0f;
 	float ultimateTotalTime = 3.0f;
-	float ultimateRotationSpeed = 2.0f;
-
+	float ultimateOrientationSpeed = 2.0f;
 	// Blast ability
 	float blastCooldown = 7.f;
 	float blastDistance = 15.f;
@@ -68,7 +67,7 @@ public:
 	// ------- Contructors ------- //
 	Onimaru() {};
 	void Init(UID onimaruUID = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0, UID shieldUID = 0, UID onimaruTransformForUltimateProjectileOriginUID = 0, UID onimaruBlastEffectsUID = 0, UID cameraUID = 0, UID canvasUID = 0, float maxSpread = 5.0f);
-	void Update(bool lockMovement = false, bool lockRotation = false) override;
+	void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockRotation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	bool CanSwitch() const override;
 	void OnAnimationFinished() override;
@@ -76,6 +75,7 @@ public:
 	void IncreaseUltimateCounter() override;
 	void OnDeath() override;
 	void OnAnimationSecondaryFinished() override;
+	bool IsInstantOrientation(bool useGampead) const override;
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
 
 	float GetRealUltimateCooldown();
@@ -88,12 +88,13 @@ public:
 	void AddEnemy(GameObject* enemy);
 	void RemoveEnemy(GameObject* enemy);
 	bool IsShielding() const;
+	bool IsVulnerable() const override;
 
 private:
 
 	ResourcePrefab* trail = nullptr;
 	ComponentParticleSystem* bullet = nullptr;
-	
+
 	ComponentParticleSystem* ultimateBullet = nullptr;
 
 	ComponentTransform* gunTransform = nullptr;
@@ -111,7 +112,6 @@ private:
 	float shieldCooldownRemaining = 0.f;
 
 	bool blastInUse = false;
-	bool ultimateInUse = false;
 	bool shooting = false;
 
 	// Blast ability

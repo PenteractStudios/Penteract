@@ -57,7 +57,7 @@
                 ],
                 "ScaleRM": 0,
                 "Scale": [
-                    50.0,
+                    28.0,
                     50.0
                 ],
                 "ReverseEffect": false,
@@ -120,7 +120,7 @@
                 "IsRandomFrame": false,
                 "LoopAnimation": true,
                 "NCycles": 1.0,
-                "TextureId": 465905571273810051,
+                "TextureId": 8882227544559227560,
                 "BillboardType": 1,
                 "ParticleRenderMode": 0,
                 "ParticleRenderAlignment": 0,
@@ -130,7 +130,7 @@
                 ],
                 "HasCollision": true,
                 "LayerIndex": 5,
-                "CollRadius": 0.699999988079071
+                "CollRadius": 1.0
             },
             {
                 "Type": "Script",

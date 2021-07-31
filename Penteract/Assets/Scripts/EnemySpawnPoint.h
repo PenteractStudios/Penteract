@@ -21,6 +21,8 @@ public:
 	void UpdateRemainingEnemies();
 	int GetAmountofEnemies() { return amountOfEnemies; };
 
+	void SetIndex(unsigned int _index) { index = _index; };
+
 public:
 	/* Wave configuration */
 	unsigned int firstWaveMeleeAmount = 0;
@@ -47,7 +49,6 @@ public:
 
 	/* Player */
 	UID playerUID = 0;
-
 
 private:
 	/* Owner */
@@ -79,6 +80,9 @@ private:
 
 	/* Parent script */
 	SpawnPointController* spawnPointControllerScript = nullptr;
+
+	/* Index to update the spawn controller */
+	unsigned int index = 0;
 
 private:
 	void RenderEnemy(EnemyType type, unsigned int amount);
