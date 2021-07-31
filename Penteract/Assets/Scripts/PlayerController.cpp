@@ -291,7 +291,7 @@ void PlayerController::UpdatePlayerStats() {
 			hudManagerScript->HealthRegeneration(playerFang.lifePoints, healthRecovered);
 		}
 
-		hudManagerScript->UpdateCooldowns(playerOnimaru.GetRealShieldCooldown(), playerOnimaru.GetRealBlastCooldown(), playerOnimaru.GetRealUltimateCooldown(), playerFang.GetRealDashCooldown(), playerFang.GetRealEMPCooldown(), playerFang.GetRealUltimateCooldown(), switchInProgress ? 1.0f : realSwitchCooldown, playerFang.ultimateTimeRemaining / playerFang.ultimateTotalTime, playerOnimaru.GetNormalizedRemainingUltimateTime());
+		hudManagerScript->UpdateCooldowns(playerOnimaru.GetRealShieldCooldown(), playerOnimaru.GetRealBlastCooldown(), playerOnimaru.GetRealUltimateCooldown(), playerFang.GetRealDashCooldown(), playerFang.GetRealEMPCooldown(), playerFang.GetRealUltimateCooldown(), realSwitchCooldown, playerFang.ultimateTimeRemaining / playerFang.ultimateTotalTime, playerOnimaru.GetNormalizedRemainingUltimateTime());
 	}
 }
 

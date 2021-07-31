@@ -184,11 +184,8 @@ void HUDManager::StartCharacterSwitch() {
 }
 
 void HUDManager::SetCooldownRetreival(Cooldowns cooldown) {
-	bool prev = abilityCoolDownsRetreived[static_cast<int>(cooldown)];
 	abilityCoolDownsRetreived[static_cast<int>(cooldown)] = false;
-
-	if (prev != abilityCoolDownsRetreived[static_cast<int>(cooldown)])
-		SetPictoState(cooldown, PictoState::UNAVAILABLE);
+	SetPictoState(cooldown, PictoState::UNAVAILABLE);
 }
 
 void HUDManager::StartUsingSkill(Cooldowns cooldown) {
@@ -367,10 +364,6 @@ void HUDManager::ManageSwitch() {
 	ComponentTransform2D* switchHealthStrokeTransform2D = nullptr;
 	ComponentTransform2D* switchHealthFillTransform2D = nullptr;
 
-	if (switchState != SwitchState::IDLE) {
-		SetPictoState(HUDManager::Cooldowns::SWITCH_SKILL, HUDManager::PictoState::IN_USE);
-	}
-
 	switch (switchState) {
 	case SwitchState::IDLE:
 
@@ -521,7 +514,6 @@ void HUDManager::ManageSwitch() {
 				fangSkillParent->Enable();
 				onimaruSkillParent->Disable();
 			}
-
 			if (switchHealthFillTransform2D) {
 				switchHealthStrokeTransform2D = fangObj->IsActive() ? switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentTransform2D>() : switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->GetComponent<ComponentTransform2D>();
 				if (switchHealthStrokeTransform2D) {
@@ -683,7 +675,6 @@ void HUDManager::ManageSwitch() {
 
 		if (switchTimer == switchPostDeployMovementTime) {
 			switchState = SwitchState::IDLE;
-			SetPictoState(HUDManager::Cooldowns::SWITCH_SKILL, HUDManager::PictoState::UNAVAILABLE);
 			switchTimer = 0;
 		}
 
@@ -702,15 +693,13 @@ void HUDManager::PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns cooldown)
 void HUDManager::SetPictoState(Cooldowns cooldown, PictoState newState) {
 	if (pictoStates[static_cast<int>(cooldown)] == newState)return;
 
-	float4 colorToUse = float4(0, 0, 0, 1.0f);
+	float4 colorToUse = float4(0, 0, 0, 0);
 	switch (newState) {
 	case PictoState::AVAILABLE:
 		colorToUse = cooldown == Cooldowns::SWITCH_SKILL ? switchPictoColorNotInUse : skillPictoColorAvailable;
 		break;
 	case PictoState::UNAVAILABLE:
-		if (cooldown != Cooldowns::SWITCH_SKILL) {
-			colorToUse = cooldown == Cooldowns::SWITCH_SKILL ? switchSkillColorNotAvailable : skillPictoColorNotAvailable;
-		}
+		colorToUse = cooldown == Cooldowns::SWITCH_SKILL ? switchPictoColorNotInUse : skillPictoColorNotAvailable;
 		break;
 	case PictoState::IN_USE:
 		colorToUse = cooldown == Cooldowns::SWITCH_SKILL ? switchPictoColorInUse : skillPictoColorInUse;
@@ -742,16 +731,24 @@ void HUDManager::SetPictoState(Cooldowns cooldown, PictoState newState) {
 			}
 
 		}
+
+
 	} else {
-		GameObject* pictoShade = children[HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE];
-		if (pictoShade->HasChildren()) {
-			GameObject* pictoFillObj = pictoShade->GetChild(static_cast<unsigned int>(0));
-			if (pictoFillObj) {
-				ComponentImage* pictoFill = pictoFillObj->GetComponent<ComponentImage>();
-				if (pictoFill) {
-					pictoFill->SetColor(colorToUse);
+		if (children[0]->HasChildren()) {
+			GameObject* pictoShade = children[0]->GetChild(HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE);
+
+			if (pictoShade->HasChildren()) {
+				GameObject* pictoFillObj = pictoShade->GetChild(static_cast<unsigned int>(0));
+				if (pictoFillObj) {
+					ComponentImage* pictoFill = pictoFillObj->GetComponent<ComponentImage>();
+					if (pictoFill) {
+						pictoFill->SetColor(colorToUse);
+					}
 				}
 			}
+
 		}
 	}
+
+
 }

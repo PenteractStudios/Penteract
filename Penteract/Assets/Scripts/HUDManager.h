@@ -54,16 +54,13 @@ public:
 	//Skills
 	float4 skillColorNotAvailable = float4(0.f / 255.f, 93.f / 255.f, 145.f / 255.f, 255.f / 255.f);
 	float4 skillColorAvailable = float4(0.f / 255.f, 177.f / 255.f, 227.f / 255.f, 255.f / 255.f);
-
 	float4 skillPictoColorAvailable = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 255.f / 255.f);
 	float4 skillPictoColorNotAvailable = float4(0.f / 255.f, 177.f / 255.f, 227.f / 255.f, 255.f / 255.f);
 	float4 skillPictoColorInUse = float4(0.f / 255.f, 40.f / 255.f, 60.f / 255.f, 255.f / 255.f);
 
 	float4 switchSkillColorNotAvailable = float4(133.f / 255.f, 243.f / 255.f, 196.f / 255.f, 150.f / 255.f);
 	float4 switchSkillColorAvailable = float4(133.f / 255.f, 243.f / 255.f, 196.f / 255.f, 255.f / 255.f);
-
-	//float4 switchPictoColorNotInUse = float4(133.f / 255.f, 243.f / 255.f, 196.f / 255.f, 255.f / 255.f);
-	float4 switchPictoColorNotInUse = float4(92.f / 255.f, 210.f / 255.f, 159.f / 255.f, 255.f / 255.f);
+	float4 switchPictoColorNotInUse = float4(133.f / 255.f, 243.f / 255.f, 196.f / 255.f, 255.f / 255.f);
 	float4 switchPictoColorInUse = float4(0.f / 255.f, 0.f / 255.f, 0.f / 255.f, 255.f / 255.f);
 
 	UID fangSkillParentUID = 0;
