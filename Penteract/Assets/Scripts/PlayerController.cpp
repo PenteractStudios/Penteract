@@ -149,6 +149,10 @@ void PlayerController::ResetSwitchStatus() {
 	currentSwitchDelay = 0.f;
 }
 
+bool PlayerController::IsVulnerable() const {
+	return !invincibleMode;
+}
+
 void PlayerController::SwitchCharacter() {
 	if (!playerFang.characterGameObject) return;
 	if (!playerOnimaru.characterGameObject) return;
@@ -264,11 +268,15 @@ void PlayerController::UpdatePlayerStats() {
 }
 
 void PlayerController::TakeDamage(float damage) {
-	if (!invincibleMode) {
+	if (IsVulnerable()) {
 		if (playerFang.IsActive()) {
-			playerFang.GetHit(damage);
+			if (playerFang.IsVulnerable()) {
+				playerFang.GetHit(damage);
+			}
 		} else {
-			playerOnimaru.GetHit(damage);
+			if (playerOnimaru.IsVulnerable()) {
+				playerOnimaru.GetHit(damage);
+			}
 		}
 		hitTaken = true;
 	}
