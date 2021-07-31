@@ -60,7 +60,8 @@ public:
 
 	float4 switchSkillColorNotAvailable = float4(133.f / 255.f, 243.f / 255.f, 196.f / 255.f, 150.f / 255.f);
 	float4 switchSkillColorAvailable = float4(133.f / 255.f, 243.f / 255.f, 196.f / 255.f, 255.f / 255.f);
-	float4 switchPictoColorNotInUse = float4(133.f / 255.f, 243.f / 255.f, 196.f / 255.f, 255.f / 255.f);
+
+	float4 switchPictoColorNotInUse = float4(92.f / 255.f, 210.f / 255.f, 159.f / 255.f, 255.f / 255.f);
 	float4 switchPictoColorInUse = float4(0.f / 255.f, 0.f / 255.f, 0.f / 255.f, 255.f / 255.f);
 
 	UID fangSkillParentUID = 0;

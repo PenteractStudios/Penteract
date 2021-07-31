@@ -185,7 +185,8 @@ void HUDManager::StartCharacterSwitch() {
 
 void HUDManager::SetCooldownRetreival(Cooldowns cooldown) {
 	abilityCoolDownsRetreived[static_cast<int>(cooldown)] = false;
-	SetPictoState(cooldown, PictoState::UNAVAILABLE);
+	if (cooldown != Cooldowns::SWITCH_SKILL)
+		SetPictoState(cooldown, PictoState::UNAVAILABLE);
 }
 
 void HUDManager::StartUsingSkill(Cooldowns cooldown) {
@@ -193,7 +194,8 @@ void HUDManager::StartUsingSkill(Cooldowns cooldown) {
 }
 
 void HUDManager::StopUsingSkill(Cooldowns cooldown) {
-	SetPictoState(cooldown, cooldowns[static_cast<int>(cooldown)] < 1.0f ? PictoState::UNAVAILABLE : PictoState::AVAILABLE);
+	if (cooldown != Cooldowns::SWITCH_SKILL)
+		SetPictoState(cooldown, cooldowns[static_cast<int>(cooldown)] < 1.0f ? PictoState::UNAVAILABLE : PictoState::AVAILABLE);
 }
 
 void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
@@ -675,6 +677,7 @@ void HUDManager::ManageSwitch() {
 
 		if (switchTimer == switchPostDeployMovementTime) {
 			switchState = SwitchState::IDLE;
+			SetPictoState(Cooldowns::SWITCH_SKILL, PictoState::UNAVAILABLE);
 			switchTimer = 0;
 		}
 
@@ -734,19 +737,17 @@ void HUDManager::SetPictoState(Cooldowns cooldown, PictoState newState) {
 
 
 	} else {
-		if (children[0]->HasChildren()) {
-			GameObject* pictoShade = children[0]->GetChild(HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE);
-
+		GameObject* pictoShade = children[HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE];
+		if (pictoShade) {
 			if (pictoShade->HasChildren()) {
-				GameObject* pictoFillObj = pictoShade->GetChild(static_cast<unsigned int>(0));
-				if (pictoFillObj) {
-					ComponentImage* pictoFill = pictoFillObj->GetComponent<ComponentImage>();
-					if (pictoFill) {
-						pictoFill->SetColor(colorToUse);
+				GameObject* pictoFill = pictoShade->GetChild(static_cast<unsigned int>(0));
+				if (pictoFill) {
+					ComponentImage* pictoFillImage = pictoFill->GetComponent<ComponentImage>();
+					if (pictoFillImage) {
+						pictoFillImage->SetColor(colorToUse);
 					}
 				}
 			}
-
 		}
 	}
 

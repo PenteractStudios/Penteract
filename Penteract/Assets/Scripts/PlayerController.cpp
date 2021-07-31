@@ -196,6 +196,11 @@ void PlayerController::SwitchCharacter() {
 			hudControllerScript->ChangePlayerHUD(playerFang.lifePoints, playerOnimaru.lifePoints);
 			hudControllerScript->ResetCooldownProgressBar();
 		}
+
+		if (hudManagerScript) {
+			hudManagerScript->StartUsingSkill(HUDManager::Cooldowns::SWITCH_SKILL);
+		}
+
 		currentSwitchDelay = 0.f;
 		playSwitchParticles = true;
 		switchInCooldown = true;
