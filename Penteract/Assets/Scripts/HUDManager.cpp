@@ -1,6 +1,7 @@
 #include "HUDManager.h"
 #include "PlayerController.h";
 #include "Components/UI/ComponentTransform2D.h"
+#include "Components/UI/ComponentImage.h"
 #include "AbilityRefeshFX.h"
 
 #define HIERARCHY_INDEX_ABILITY_FILL 1
@@ -10,9 +11,12 @@
 #define HIERARCHY_INDEX_ABILITY_KEY_FILL 6
 
 #define HIERARCHY_INDEX_SWITCH_ABILITY_FILL 1
-#define HIERARCHY_INDEX_SWITCH_ABILITY_EFFECT 3
-#define HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE 5
-#define HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL 6
+#define HIERARCHY_INDEX_SWITCH_ABILITY_DURATION_FILL 2
+#define HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_WHITE 3
+#define HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_GLOW 4
+#define HIERARCHY_INDEX_SWITCH_ABILITY_EFFECT 5
+#define HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE 7
+#define HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL 8
 
 #define HIERARCHY_INDEX_HEALTH_BACKGROUND 0
 #define HIERARCHY_INDEX_HEALTH_FILL 2
@@ -27,12 +31,12 @@
 
 EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerObjectUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangSkillParentUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillParentUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, switchSkillParentUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangHealthParentUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthParentUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, switchHealthParentUID)
+		MEMBER(MemberType::GAME_OBJECT_UID, fangSkillParentUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillParentUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, switchSkillParentUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, fangHealthParentUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthParentUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, switchHealthParentUID)
 };
 
 GENERATE_BODY_IMPL(HUDManager);
@@ -86,6 +90,19 @@ void HUDManager::Start() {
 
 		if (pictoShadeObj) {
 			switchShadeTransform = pictoShadeObj->GetComponent<ComponentTransform2D>();
+		}
+
+
+		if (switchSkillParent) {
+			std::vector<GameObject*> switchChildren = switchSkillParent->GetChildren();
+			if (switchChildren.size() > HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL - 1) {
+				switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_WHITE]->Disable();
+				switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_GLOW]->Enable();
+				switchGlowImage = switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_GLOW]->GetComponent<ComponentImage>();
+				if (switchGlowImage) {
+					switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 0.0f));
+				}
+			}
 		}
 
 	}
@@ -181,6 +198,18 @@ void HUDManager::StartCharacterSwitch() {
 	//TODO initialization
 	switchTimer = 0;
 	switchState = SwitchState::PRE_COLLAPSE;
+	if (switchSkillParent) {
+		std::vector<GameObject*> switchChildren = switchSkillParent->GetChildren();
+		if (switchChildren.size() > HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL - 1) {
+			switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_WHITE]->Enable();
+
+			switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_GLOW]->Enable();
+
+			if (switchGlowImage) {
+				switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 1.0f));
+			}
+		}
+	}
 }
 
 void HUDManager::SetCooldownRetreival(Cooldowns cooldown) {
@@ -325,14 +354,15 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 	ComponentImage* fillColor = children[HIERARCHY_INDEX_SWITCH_ABILITY_FILL]->GetComponent<ComponentImage>();
 	ComponentImage* image = children[HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE]->GetComponent<ComponentImage>();
 
-	GameObject* textParent = children[HIERARCHY_INDEX_ABILITY_KEY_FILL];
+	GameObject* textParent = children[HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL];
 	ComponentText* text = nullptr;
 
 	if (textParent) {
-		text = textParent->GetChild(1)->GetComponent<ComponentText>();
+		if (textParent->GetChildren().size() > 1)
+			text = textParent->GetChild(1)->GetComponent<ComponentText>();
 	}
 
-	ComponentImage* textFill = children[HIERARCHY_INDEX_ABILITY_KEY_FILL]->GetComponent<ComponentImage>();
+	ComponentImage* textFill = children[HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL]->GetComponent<ComponentImage>();
 
 	if (fillColor && image) {
 		fillColor->SetFillValue(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
@@ -403,8 +433,15 @@ void HUDManager::ManageSwitch() {
 		break;
 	case SwitchState::PRE_COLLAPSE:
 
+		//TODO make glow happen
+		//TODO activate white effect under picto 
+
 		if (switchTimer > switchPreCollapseMovementTime) {
 			switchTimer = switchPreCollapseMovementTime;
+		}
+
+		if (switchGlowImage) {
+			switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 1 - Clamp(switchTimer / switchPreCollapseMovementTime, 0.0f, 0.7f)));
 		}
 
 		if (fangSkillParent->IsActive()) {
@@ -425,6 +462,9 @@ void HUDManager::ManageSwitch() {
 		}
 
 		if (switchTimer == switchPreCollapseMovementTime) {
+			if (switchGlowImage) {
+				switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 0));
+			}
 			switchState = SwitchState::COLLAPSE;
 			switchTimer = 0;
 		}
@@ -435,6 +475,10 @@ void HUDManager::ManageSwitch() {
 
 		if (switchTimer > switchCollapseMovementTime) {
 			switchTimer = switchCollapseMovementTime;
+		}
+
+		if (switchGlowImage) {
+			switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 1 - Clamp01(0.7f + switchTimer / switchPreCollapseMovementTime)));
 		}
 
 		if (fangSkillParent->IsActive()) {
@@ -677,6 +721,12 @@ void HUDManager::ManageSwitch() {
 
 		if (switchTimer == switchPostDeployMovementTime) {
 			switchState = SwitchState::IDLE;
+
+			std::vector<GameObject*> switchChildren = switchSkillParent->GetChildren();
+			if (switchChildren.size() > HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL - 1) {
+				switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_WHITE]->Enable();
+			}
+
 			SetPictoState(Cooldowns::SWITCH_SKILL, PictoState::UNAVAILABLE);
 			switchTimer = 0;
 		}

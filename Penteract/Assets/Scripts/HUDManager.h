@@ -4,6 +4,7 @@
 
 class PlayerController;
 class ComponentTransform2D;
+class ComponentImage;
 class AbilityRefeshFX;
 
 class HUDManager : public Script {
@@ -128,6 +129,7 @@ private:
 	GameObject* onimaruSkillParent = nullptr;
 	GameObject* switchSkillParent = nullptr;
 	ComponentTransform2D* switchShadeTransform = nullptr;
+	ComponentImage* switchGlowImage = nullptr;
 	float switchTimer = 0.0f;
 	bool abilityCoolDownsRetreived[static_cast<int>(Cooldowns::TOTAL)] = { false,false,false,false,false,false,false };
 
