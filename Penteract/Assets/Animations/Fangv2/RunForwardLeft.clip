@@ -1,8 +1,8 @@
 {
     "Name": "RunForwardLeft",
     "AnimationUID": 5614041873872763134,
-    "BeginIndex": 522,
-    "EndIndex": 542,
+    "BeginIndex": 521,
+    "EndIndex": 541,
     "Loop": true,
     "Speed": 1.0,
     "FrameRate": 0.03329545259475708,

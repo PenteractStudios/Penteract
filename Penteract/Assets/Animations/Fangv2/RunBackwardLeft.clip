@@ -1,8 +1,8 @@
 {
     "Name": "RunBackwardLeft",
     "AnimationUID": 5614041873872763134,
-    "BeginIndex": 567,
-    "EndIndex": 587,
+    "BeginIndex": 566,
+    "EndIndex": 586,
     "Loop": true,
     "Speed": 1.0,
     "FrameRate": 0.03329545259475708,

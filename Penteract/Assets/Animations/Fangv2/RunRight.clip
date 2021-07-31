@@ -1,8 +1,8 @@
 {
     "Name": "RunRight",
     "AnimationUID": 5614041873872763134,
-    "BeginIndex": 128,
-    "EndIndex": 148,
+    "BeginIndex": 127,
+    "EndIndex": 147,
     "Loop": true,
     "Speed": 1.0,
     "FrameRate": 0.03329545259475708,
