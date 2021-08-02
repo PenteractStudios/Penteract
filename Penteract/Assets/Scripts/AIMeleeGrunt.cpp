@@ -167,15 +167,17 @@ void AIMeleeGrunt::Update() {
 		if (movementScript->CharacterInAttackRange(player, gruntCharacter.attackRange)) {
 			int random = std::rand() % 100;
 			attackNumber = 3;
-			if (random < 33) attackNumber = 1;
-			else if (random < 66) attackNumber = 2;
+			if (random < 0) attackNumber = 1;
+			else if (random < 0) attackNumber = 2;
 			animation->SendTrigger("WalkForwardAttack" + std::to_string(attackNumber));
 			if (audios[static_cast<int>(AudioType::ATTACK)]) audios[static_cast<int>(AudioType::ATTACK)]->Play();
 			state = AIState::ATTACK;
 		}
 		break;
 	case AIState::ATTACK:
-		if (track) movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
+		if (track) { 
+			movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition()); 
+		}
 		if (attackRightColliderOn) {
 			if(!rightBladeCollider->IsActive()) rightBladeCollider->Enable();
 		}
@@ -189,7 +191,7 @@ void AIMeleeGrunt::Update() {
 			leftBladeCollider->Disable();
 		}
 		if (attackStep) {
-			movementScript->Seek(state, GetOwner().GetComponent<ComponentTransform>()->GetFront()*10, gruntCharacter.movementSpeed, true);
+			movementScript->Seek(state, ownerTransform->GetGlobalPosition() + ownerTransform->GetFront()*10, gruntCharacter.movementSpeed, false);
 		}
 		else {
 			movementScript->Stop();
@@ -460,6 +462,7 @@ void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const cha
 			}
 			if (strcmp(eventName, "StopStep") == 0) {
 				attackStep = false;
+				agent->SetMaxSpeed(gruntCharacter.movementSpeed);
 			}
 		}
 		else if (attackNumber == 3) {
@@ -467,21 +470,25 @@ void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const cha
 				track = false;
 				attackStep = true;
 				attackRightColliderOn = true;
+				agent->SetMaxSpeed(gruntCharacter.movementSpeed + 3);
 			}
 			if (strcmp(eventName, "RightBladeDamageOff") == 0) {
 				track = true;
 				attackStep = false;
 				attackRightColliderOn = false;
+				agent->SetMaxSpeed(gruntCharacter.movementSpeed);
 			}
 			if (strcmp(eventName, "LeftBladeDamageOn") == 0) {
 				track = false;
 				attackStep = true;
 				attackLeftColliderOn = true;
+				agent->SetMaxSpeed(gruntCharacter.movementSpeed + 3);
 			}
 			if (strcmp(eventName, "LeftBladeDamageOff") == 0) {
 				track = true;
 				attackStep = false;
 				attackLeftColliderOn = false;
+				agent->SetMaxSpeed(gruntCharacter.movementSpeed);
 			}
 		}
 		break;
