@@ -35,6 +35,19 @@ void Barrel::Start() {
 
 void Barrel::Update() {
 
+	if (startTimerToDestroy) {
+		if (particles) particles->PlayChildParticles();
+		currentTimerToDestroy += Time::GetDeltaTime();
+		if (currentTimerToDestroy >= timerToDestroy) {
+			destroy = true;
+			startTimerToDestroy = false;
+			if (cameraController) {
+				cameraController->StartShake();
+			}
+		}
+
+	}
+
 	if (isHit) {
 		if(barrelCollider) barrelCollider->Enable();
 		isHit = false;
@@ -51,17 +64,6 @@ void Barrel::Update() {
 			destroy = false;
 			if(barrel) GameplaySystems::DestroyGameObject(barrel->GetParent());
 		}
-	}
-
-	if (startTimerToDestroy) {
-		currentTimerToDestroy += Time::GetDeltaTime();
-		if (currentTimerToDestroy >= timerToDestroy) {
-			destroy = true;
-			if (cameraController) {
-				cameraController->StartShake();
-			}
-		}
-
 	}
 
 }
@@ -85,15 +87,12 @@ void Barrel::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 				cameraController->StartShake();
 			}
 		}
-		std::string aux = collidedWith.name + " coll";
-		Debug::Log(aux.c_str());
-		if ( collidedWith.name == "Fang" || collidedWith.name == "Onimaru") {
-			GameplaySystems::DestroyGameObject(&collidedWith);
-			isHit = true;
-			startTimerToDestroy = true;
-			
-		}
+		
 	}
-	
+	std::string aux = collidedWith.name + " coll";
+	Debug::Log(aux.c_str());
+	if (collidedWith.name == "Fang" || collidedWith.name == "Onimaru") {
+		startTimerToDestroy = true;
+	}
 	
 }
