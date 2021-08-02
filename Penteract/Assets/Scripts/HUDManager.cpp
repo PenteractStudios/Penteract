@@ -506,16 +506,16 @@ void HUDManager::ManageSwitch() {
 			fillImage = onimaruHealthParent->GetChildren()[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
 
 			if (onimaruHealth) {
-				onimaruHealth->SetPosition(float3::Lerp(onimaruHealth->GetPosition(), originalOnimaruHealthPosition, switchTimer / switchCollapseMovementTime));
+				onimaruHealth->SetPosition(float3::Lerp(originalOnimaruHealthPosition + float3(healthOffset, 0, 0), originalOnimaruHealthPosition, switchTimer / switchCollapseMovementTime));
 			}
 
 
 			if (backgroundImage) {
-				backgroundImage->SetColor(float4::Lerp(backgroundImage->GetColor(), healthBarBackgroundColor, switchTimer / switchCollapseMovementTime));
+				backgroundImage->SetColor(float4::Lerp(healthBarBackgroundColorInBackground, healthBarBackgroundColor, switchTimer / switchCollapseMovementTime));
 			}
 
 			if (fillImage) {
-				fillImage->SetColor(float4::Lerp(fillImage->GetColor(), healthFillBarColorInBackground, switchTimer / switchCollapseMovementTime));
+				fillImage->SetColor(float4::Lerp(healthFillBarColor, healthFillBarColorInBackground, switchTimer / switchCollapseMovementTime));
 			}
 
 			switchHealthStroke = switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->GetComponent<ComponentImage>();
@@ -532,11 +532,11 @@ void HUDManager::ManageSwitch() {
 			}
 
 			if (backgroundImage) {
-				backgroundImage->SetColor(float4::Lerp(backgroundImage->GetColor(), healthBarBackgroundColorInBackground, switchTimer / switchCollapseMovementTime));
+				backgroundImage->SetColor(float4::Lerp(healthBarBackgroundColor, healthBarBackgroundColorInBackground, switchTimer / switchCollapseMovementTime));
 			}
 
 			if (fillImage) {
-				fillImage->SetColor(float4::Lerp(fillImage->GetColor(), healthFillBarColorInBackground, switchTimer / switchCollapseMovementTime));
+				fillImage->SetColor(float4::Lerp(healthFillBarColor, healthFillBarColorInBackground, switchTimer / switchCollapseMovementTime));
 			}
 
 			switchHealthStroke = switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentImage>();
@@ -648,15 +648,15 @@ void HUDManager::ManageSwitch() {
 			fillImage = fangHealthParent->GetChildren()[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
 
 			if (fangHealth) {
-				fangHealth->SetPosition(float3::Lerp(fangHealth->GetPosition(), originalFangHealthPosition, switchTimer / switchCollapseMovementTime));
+				fangHealth->SetPosition(float3::Lerp(originalFangHealthPosition - float3(healthOffset, 0, 0), originalFangHealthPosition, switchTimer / switchCollapseMovementTime));
 			}
 
 			if (backgroundImage) {
-				backgroundImage->SetColor(float4::Lerp(backgroundImage->GetColor(), healthBarBackgroundColor, switchTimer / switchCollapseMovementTime));
+				backgroundImage->SetColor(float4::Lerp(healthBarBackgroundColorInBackground, healthBarBackgroundColor, switchTimer / switchCollapseMovementTime));
 			}
 
 			if (fillImage) {
-				fillImage->SetColor(float4::Lerp(fillImage->GetColor(), healthFillBarColor, switchTimer / switchCollapseMovementTime));
+				fillImage->SetColor(float4::Lerp(healthFillBarColorInBackground, healthFillBarColor, switchTimer / switchCollapseMovementTime));
 			}
 
 			switchHealthStroke = switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentImage>();
@@ -673,11 +673,11 @@ void HUDManager::ManageSwitch() {
 			}
 
 			if (backgroundImage) {
-				backgroundImage->SetColor(float4::Lerp(backgroundImage->GetColor(), healthBarBackgroundColor, switchTimer / switchCollapseMovementTime));
+				backgroundImage->SetColor(float4::Lerp(healthBarBackgroundColorInBackground, healthBarBackgroundColor, switchTimer / switchCollapseMovementTime));
 			}
 
 			if (fillImage) {
-				fillImage->SetColor(float4::Lerp(fillImage->GetColor(), healthFillBarColor, switchTimer / switchCollapseMovementTime));
+				fillImage->SetColor(float4::Lerp(healthFillBarColorInBackground, healthFillBarColor, switchTimer / switchCollapseMovementTime));
 			}
 
 			switchHealthStroke = switchHealthParent->GetChildren()[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->GetComponent<ComponentImage>();
