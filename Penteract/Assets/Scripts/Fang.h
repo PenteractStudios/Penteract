@@ -92,6 +92,7 @@ private:
 	ComponentParticleSystem* leftBullet = nullptr;
 	GameObject* rightBulletAux = nullptr;
 	GameObject* leftBulletAux = nullptr;
+	bool shooting = false;
 	//Movement
 	MovementDirection dashMovementDirection = MovementDirection::NONE;
 

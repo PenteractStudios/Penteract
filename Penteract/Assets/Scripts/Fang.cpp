@@ -328,15 +328,16 @@ float Fang::GetRealUltimateCooldown() {
 }
 
 bool Fang::CanShoot() {
-	return !shootingOnCooldown && !ultimateOn && !compAnimation->GetCurrentStateSecondary();
+	return !shooting && !ultimateOn && !compAnimation->GetCurrentStateSecondary();
 }
 
 void Fang::Shoot() {
 	if (CanShoot()) {
 		//shootingOnCooldown = true;
+		shooting = true;
 		attackCooldownRemaining = 1.f / attackSpeed;
 		//setear la velocidad de animacion
-		compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[10]);
+		if(compAnimation->GetCurrentState()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[10]);
 	}
 }
 
@@ -421,7 +422,12 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 			}
 
 			Dash();
-
+			if (!GetInputBool(InputActions::SHOOT, useGamepad)) {
+				if (shooting) {
+					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+					shooting = false;
+				}
+			}
 			if (GetInputBool(InputActions::ABILITY_2, useGamepad)) {
 				ActivateEMP();
 			}
