@@ -24,27 +24,27 @@ public:
 	void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockOrientation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	void OnAnimationFinished() override;
-	void OnAnimationSecondaryFinished() override;
+	void OnAnimationSecondaryFinished() override {};
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
 	void GetHit(float damage_) override;
 	void trailDelay();
 	bool CanSwitch() const override;
 	bool IsInstantOrientation(bool useGamepad) const override;
-
 	float GetRealDashCooldown();
 	float GetRealEMPCooldown();
 	float GetRealUltimateCooldown();
 	void IncreaseUltimateCounter();
 	void Init(UID fangUID = 0, UID trailGunUID = 0, UID trailDashUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID cameraUID = 0, UID canvasUID = 0, UID EMPUID = 0, UID EMPEffectsUID = 0, UID fangUltimateUID = 0, UID ultimateVFXUID = 0);
 	bool IsVulnerable() const override;
+
 public:
 	std::vector<std::string> states{ "Idle" ,
 						"RunBackward" , "RunForward" , "RunLeft" , "RunRight" , //1 - 4
 						"DashBackward", "DashForward" , "DashLeft" , "DashRight" , //5 - 8
-						"Death" , "LeftShot" , "RightShot", "", //9 - 12
+						"Death" , "Shooting" , "Drift", "Dash", //9 - 12
 						"RunForwardLeft", "RunForwardRight", "RunBackwardLeft", "RunBackwardRight", // 13 - 16
 						"DashBackward", "DashForward" , "DashLeft" , "DashRight", //17 - 20
-						"EMP", "Ultimate" //21 - 22
+						"EMP", "Ultimate","IdleAim","FootSwitch" //21 - 24
 	};
 
 	bool rightShot = true;
@@ -85,6 +85,7 @@ private:
 	//Shoot
 	ComponentTransform* rightGunTransform = nullptr;
 	ComponentTransform* leftGunTransform = nullptr;
+	ComponentTransform* shootingGunTransform = nullptr;
 	ComponentTrail* trailDash = nullptr;
 	ResourcePrefab* trailGun = nullptr;
 	ComponentParticleSystem* rightBullet = nullptr;
@@ -106,6 +107,7 @@ private:
 
 	//Audios
 	ComponentAudioSource* fangAudios[static_cast<int>(FANG_AUDIOS::TOTAL)] = { nullptr };
+
 private:
 	void InitDash();
 	void Dash();

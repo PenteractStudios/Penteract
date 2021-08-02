@@ -244,15 +244,6 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 		}
 	}
 
-	//Attack Cooldown
-	if (shootingOnCooldown) {
-		if (attackCooldownRemaining <= 0.f) {
-			attackCooldownRemaining = 0.f;
-			shootingOnCooldown = false;
-		} else {
-			attackCooldownRemaining -= Time::GetDeltaTime();
-		}
-	}
 	//EMP Cooldown
 	if (EMPInCooldown) {
 		if (noCooldownMode || EMPCooldownRemaining <= 0.f) {
@@ -288,19 +279,38 @@ void Fang::OnAnimationFinished() {
 	}
 }
 
-void Fang::OnAnimationSecondaryFinished() {
-}
-
 void Fang::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
-	if (stateMachineEnum == StateMachineEnum::PRINCIPAL) {
+	switch (stateMachineEnum)
+	{
+	case StateMachineEnum::PRINCIPAL:
 		if (std::strcmp(eventName, "FootstepRight")) {
 			if (fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_RIGHT)]) {
 				fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_RIGHT)]->Play();
 			}
-		} else if (std::strcmp(eventName, "FootstepLeft")) {
+		}
+		else if (std::strcmp(eventName, "FootstepLeft")) {
 			if (fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_LEFT)]) {
 				fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_LEFT)]->Play();
 			}
+		}
+		break;
+	case StateMachineEnum::SECONDARY:
+		shootingGunTransform = nullptr;
+		if (std::strcmp(eventName, "LeftShot")) {
+			shootingGunTransform = leftGunTransform;
+		}
+		else if (std::strcmp(eventName, "RightShot")) {
+			shootingGunTransform = rightGunTransform;
+		}
+		break;
+	}
+	if (shootingGunTransform && trailGun) {
+		if (fangAudios[static_cast<int>(FANG_AUDIOS::SHOOT)]) {
+			fangAudios[static_cast<int>(FANG_AUDIOS::SHOOT)]->Play();
+		}
+		GameObject* bullet = GameplaySystems::Instantiate(trailGun, shootingGunTransform->GetGlobalPosition(), (playerMainTransform->GetGlobalMatrix().RotatePart() * float3x3::FromEulerXYZ(pi / 2, 0.0f, 0.0f)).ToQuat());
+		if (bullet->GetComponent<ComponentParticleSystem>()) {
+			bullet->GetComponent<ComponentParticleSystem>()->Play();
 		}
 	}
 }
@@ -318,31 +328,15 @@ float Fang::GetRealUltimateCooldown() {
 }
 
 bool Fang::CanShoot() {
-	return !shootingOnCooldown && !ultimateOn;
+	return !shootingOnCooldown && !ultimateOn && !compAnimation->GetCurrentStateSecondary();
 }
 
 void Fang::Shoot() {
 	if (CanShoot()) {
-		shootingOnCooldown = true;
+		//shootingOnCooldown = true;
 		attackCooldownRemaining = 1.f / attackSpeed;
-		if (fangAudios[static_cast<int>(FANG_AUDIOS::SHOOT)]) {
-			fangAudios[static_cast<int>(FANG_AUDIOS::SHOOT)]->Play();
-		}
-
-		ComponentTransform* shootingGunTransform = nullptr;
-		if (rightShot) {
-			if (compAnimation->GetCurrentState()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[11]);
-			shootingGunTransform = rightGunTransform;
-		} else {
-			if (compAnimation->GetCurrentState()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[10]);
-			shootingGunTransform = leftGunTransform;
-		}
-		if (trailGun && rightBullet && leftBullet && shootingGunTransform) {
-			GameObject* bullet = GameplaySystems::Instantiate(trailGun, shootingGunTransform->GetGlobalPosition(), (playerMainTransform->GetGlobalMatrix().RotatePart() * float3x3::FromEulerXYZ(pi / 2, 0.0f, 0.0f)).ToQuat());
-			if (bullet->GetComponent<ComponentParticleSystem>()) {
-				bullet->GetComponent<ComponentParticleSystem>()->Play();
-			}
-		}
+		//setear la velocidad de animacion
+		compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[10]);
 	}
 }
 
@@ -367,10 +361,8 @@ void Fang::PlayAnimation() {
 				if (compAnimation->GetCurrentState()->name != states[9]) {
 					compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[9]);
 					if (compAnimation->GetCurrentStateSecondary()) {
-						if (compAnimation->GetCurrentStateSecondary()->name == "RightShot") {
-							compAnimation->SendTriggerSecondary("RightShotDeath");
-						} else if (compAnimation->GetCurrentStateSecondary()->name == "LeftShot") {
-							compAnimation->SendTriggerSecondary("LeftShotDeath");
+						if (compAnimation->GetCurrentStateSecondary()->name == "Shooting") {
+							compAnimation->SendTriggerSecondary("ShootingDeath");
 						}
 					}
 				}
