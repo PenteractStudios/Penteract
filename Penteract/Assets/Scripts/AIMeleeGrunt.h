@@ -45,6 +45,7 @@ public:
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
+	void PlayHit();
 
 public:
 

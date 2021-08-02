@@ -44,6 +44,7 @@ public:
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
+	void PlayHit();
 
 private:
 	//State machine handling

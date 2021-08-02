@@ -219,11 +219,17 @@ void PlayerController::SwitchCharacter() {
 				if (rangedScript || meleeScript) {
 					if (meleeScript) {
 						meleeScript->EnableBlastPushBack();
-						if(switchFirstHit) meleeScript->gruntCharacter.GetHit(switchDamage);
+						if (switchFirstHit) {
+							meleeScript->gruntCharacter.GetHit(switchDamage);
+							meleeScript->PlayHit();
+						}
 					}
 					else if (rangedScript) {
 						rangedScript->EnableBlastPushBack();
-						if (switchFirstHit) rangedScript->rangerGruntCharacter.GetHit(switchDamage);
+						if (switchFirstHit) {
+							rangedScript->rangerGruntCharacter.GetHit(switchDamage);
+							rangedScript->PlayHit();
+						}
 					}
 				}
 			}

@@ -239,13 +239,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 			}
 
 			if (hitTaken) {
-				PlayAudio(AudioType::HIT);
-				if (meshRenderer) {
-					if (damagedMaterialID != 0) {
-						meshRenderer->materialId = damagedMaterialID;
-					}
-				}
-				timeSinceLastHurt = 0.0f;
+				PlayHit();
 			}
 
 			if (collidedWith.name == "EMP") {
@@ -599,6 +593,17 @@ void RangedAI::DisableBlastPushBack() {
 
 bool RangedAI::IsBeingPushed() const {
 	return rangerGruntCharacter.beingPushed;
+}
+
+void RangedAI::PlayHit()
+{
+	PlayAudio(AudioType::HIT);
+	if (meshRenderer) {
+		if (damagedMaterialID != 0) {
+			meshRenderer->materialId = damagedMaterialID;
+		}
+	}
+	timeSinceLastHurt = 0.0f;
 }
 
 void RangedAI::ShootPlayerInRange() {
