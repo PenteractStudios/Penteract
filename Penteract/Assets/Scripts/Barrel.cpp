@@ -9,6 +9,7 @@ EXPOSE_MEMBERS(Barrel) {
 	MEMBER(MemberType::GAME_OBJECT_UID, barrelUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, particlesUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, particlesForTimerUID),
 		MEMBER(MemberType::FLOAT, timeToDestroy),
 		MEMBER(MemberType::FLOAT, timerToDestroy)
 
@@ -31,16 +32,25 @@ void Barrel::Start() {
 		particles = particleAux->GetComponent<ComponentParticleSystem>();
 		audio = particleAux->GetComponent<ComponentAudioSource>();
 	}
+
+	GameObject* particleForTimerAux = GameplaySystems::GetGameObject(particlesForTimerUID);
+	if (particleForTimerAux) {
+		particlesForTimer = particleForTimerAux->GetComponent<ComponentParticleSystem>();
+		audioForTimer = particleForTimerAux->GetComponent<ComponentAudioSource>();
+	}
 }
 
 void Barrel::Update() {
 
 	if (startTimerToDestroy) {
-		if (particles) particles->PlayChildParticles();
+		if (particlesForTimer) particlesForTimer->PlayChildParticles();
+		if (audioForTimer) audioForTimer->Play();
+
 		currentTimerToDestroy += Time::GetDeltaTime();
 		if (currentTimerToDestroy >= timerToDestroy) {
 			destroy = true;
 			startTimerToDestroy = false;
+			if (barrelCollider) barrelCollider->Enable();
 			if (cameraController) {
 				cameraController->StartShake();
 			}
@@ -89,8 +99,7 @@ void Barrel::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 		}
 		
 	}
-	std::string aux = collidedWith.name + " coll";
-	Debug::Log(aux.c_str());
+	
 	if (collidedWith.name == "Fang" || collidedWith.name == "Onimaru") {
 		startTimerToDestroy = true;
 	}

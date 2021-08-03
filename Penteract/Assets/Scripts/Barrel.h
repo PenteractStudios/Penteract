@@ -23,12 +23,15 @@ public:
 	UID barrelUID = 0;
 	UID cameraUID = 0;
 	UID particlesUID = 0;
+	UID particlesForTimerUID = 0;
 
 	ComponentSphereCollider* barrelCollider = nullptr;
 	CameraController* cameraController = nullptr;
 	ComponentParticleSystem* particles = nullptr;
+	ComponentParticleSystem* particlesForTimer = nullptr;
 	GameObject* barrel = nullptr;
-	ComponentAudioSource* audio = nullptr ;
+	ComponentAudioSource* audio = nullptr;
+	ComponentAudioSource* audioForTimer = nullptr;
 	bool isHit = false;
 	bool destroy = false;
 	float timeToDestroy = 1.0f;
