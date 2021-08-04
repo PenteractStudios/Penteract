@@ -525,8 +525,7 @@ void HUDManager::ManageSwitch() {
 			if (health) {
 				health->SetPosition(float3::Lerp(originalOnimaruHealthPosition + float3(healthOffset, 0, 0), originalOnimaruHealthPosition, switchTimer / switchCollapseMovementTime));
 			}
-		}
-		else {
+		} else {
 			health = fangHealthParent->GetComponent<ComponentTransform2D>();
 			backgroundImage = fangHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
 			fillImage = fangHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
@@ -676,8 +675,7 @@ void HUDManager::ManageSwitch() {
 			if (health) {
 				health->SetPosition(float3::Lerp(originalFangHealthPosition - float3(healthOffset, 0, 0), originalFangHealthPosition, switchTimer / switchCollapseMovementTime));
 			}
-		}
-		else {
+		} else {
 			health = onimaruHealthParent->GetComponent<ComponentTransform2D>();
 			backgroundImage = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
 			fillImage = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
@@ -749,7 +747,7 @@ void HUDManager::ManageSwitch() {
 
 			std::vector<GameObject*> switchChildren = switchSkillParent->GetChildren();
 			if (switchChildren.size() > HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL - 1) {
-				switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_WHITE]->Enable();
+				switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_WHITE]->Disable();
 			}
 
 			SetPictoState(Cooldowns::SWITCH_SKILL, PictoState::UNAVAILABLE);
