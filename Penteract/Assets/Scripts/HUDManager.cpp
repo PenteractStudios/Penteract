@@ -28,9 +28,6 @@
 #define HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN 1
 #define HIERARCHY_INDEX_SWITCH_HEALTH_FILL 2
 
-#define FANG_MAX_HEALTH 10.f
-#define ONIMARU_MAX_HEALTH 10.f
-
 EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerObjectUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, fangSkillParentUID),
@@ -122,6 +119,8 @@ void HUDManager::Start() {
 		if (pos) originalOnimaruHealthPosition = pos->GetPosition();
 		fangHealthChildren = fangHealthParent->GetChildren();
 		onimaruHealthChildren = onimaruHealthParent->GetChildren();
+
+		InitializeHealth();
 	}
 
 	if (switchHealthParent) {
@@ -164,11 +163,11 @@ void HUDManager::UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2,
 }
 
 void HUDManager::UpdateHealth(float fangHealth, float onimaruHealth) {
-	if (!fangObj || !onimaruObj) return;
+	if (!fangObj || !onimaruObj || !playerController) return;
 	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
 
 	float health = fangObj->IsActive() ? fangHealth : onimaruHealth;
-	float maxHealth = fangObj->IsActive() ? FANG_MAX_HEALTH : ONIMARU_MAX_HEALTH;
+	float maxHealth = fangObj->IsActive() ? playerController->GetFangMaxHealth() : playerController->GetOnimaruMaxHealth();
 
 	ComponentImage* healthFill = nullptr;
 	healthFill = fangObj->IsActive() ? fangHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>() : onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
@@ -186,17 +185,17 @@ void HUDManager::UpdateHealth(float fangHealth, float onimaruHealth) {
 
 }
 
-void HUDManager::HealthRegeneration(float health, float healthRecovered) {
-	if (!fangObj || !onimaruObj) return;
+void HUDManager::HealthRegeneration(float health) {
+	if (!fangObj || !onimaruObj || !playerController) return;
 	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
 
-	float maxHealth = fangObj->IsActive() ? ONIMARU_MAX_HEALTH : FANG_MAX_HEALTH;
+	float maxHealth = fangObj->IsActive() ? playerController->GetOnimaruMaxHealth() : playerController->GetFangMaxHealth();
 
 	ComponentImage* healthFill = nullptr;
 	healthFill = fangObj->IsActive() ? onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>() : fangHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
 	if (healthFill) {
 		if (healthFill->IsFill()) {
-			healthFill->SetFillValue((health + healthRecovered) / maxHealth);
+			healthFill->SetFillValue(health / maxHealth);
 		}
 	}
 
@@ -406,7 +405,6 @@ void HUDManager::ManageSwitch() {
 	ComponentImage* fillImage = nullptr;
 	ComponentImage* overlayImage = nullptr;
 	ComponentText* healthText = nullptr;
-	ComponentImage* switchBarStrikeImage = nullptr;
 	ComponentImage* switchBarFillImage = nullptr;
 	ComponentImage* switchHealthStroke = nullptr;
 	ComponentTransform2D* switchHealthStrokeTransform2D = nullptr;
@@ -828,5 +826,58 @@ void HUDManager::SetPictoState(Cooldowns cooldown, PictoState newState) {
 		}
 	}
 
+
+}
+
+void HUDManager::InitializeHealth() {
+	if (!playerController) return;
+
+	ComponentImage* health = fangHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
+	float healthValue = 1.f;
+	if (health) {
+		if (health->IsFill()) {
+			healthValue = playerController->GetFangMaxHealth();
+			health->SetFillValue(healthValue / healthValue);
+		}
+	}
+
+	health = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
+	healthValue = 1.f;
+	if (health) {
+		if (health->IsFill()) {
+			healthValue = playerController->GetOnimaruMaxHealth();
+			health->SetFillValue(healthValue / healthValue);
+		}
+	}
+
+	ComponentImage* healthLost = fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
+	healthValue = 1.f;
+	if (health) {
+		if (health->IsFill()) {
+			healthValue = playerController->GetFangMaxHealth();
+			health->SetFillValue(healthValue / healthValue);
+		}
+	}
+
+	healthLost = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
+	healthValue = 1.f;
+	if (health) {
+		if (health->IsFill()) {
+			healthValue = playerController->GetOnimaruMaxHealth();
+			health->SetFillValue(healthValue / healthValue);
+		}
+	}
+
+	ComponentText* healthText = fangHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
+	healthValue = playerController->GetFangMaxHealth();
+	if (health) {
+		healthText->SetText(std::to_string((int)healthValue));
+	}
+
+	healthText = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
+	healthValue = playerController->GetOnimaruMaxHealth();
+	if (health) {
+		healthText->SetText(std::to_string((int)healthValue));
+	}
 
 }

@@ -23,8 +23,6 @@ struct TesseractEvent;
 
 // We should get these two values from the Character class
 
-#define ONIMARU_MAX_HEALTH 10.0f
-#define FANG_MAX_HEALTH 10.0f
 
 class PlayerController : public Script {
 	GENERATE_BODY(PlayerController);
@@ -43,6 +41,8 @@ public:
 	void SetOverpower(bool status);
 	void SetNoCooldown(bool status);
 	int GetOverPowerMode();
+	float GetOnimaruMaxHealth() const;
+	float GetFangMaxHealth() const;
 	bool IsPlayerDead() { return !playerFang.isAlive || !playerOnimaru.isAlive; }
 	void TakeDamage(float damage);
 	static void SetUseGamepad(bool useGamepad_);

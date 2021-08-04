@@ -121,7 +121,7 @@ public:
 public:
 	void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown, float fangUltimateRemainingNormalizedValue, float oniUltimateRemainingNormalizedValue);
 	void UpdateHealth(float fangHealth, float onimaruHealth);
-	void HealthRegeneration(float health, float healthRecovered);
+	void HealthRegeneration(float health);
 	void StartCharacterSwitch();
 	void SetCooldownRetreival(Cooldowns cooldown);
 	void StartUsingSkill(Cooldowns cooldown);
@@ -174,6 +174,8 @@ private:
 	void PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns cooldown);
 	void PlayLostHealthFeedback();
 	void SetPictoState(Cooldowns cooldown, PictoState newState);
+
+	void InitializeHealth();
 
 
 };
