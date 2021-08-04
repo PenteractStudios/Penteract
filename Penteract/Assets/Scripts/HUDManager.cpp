@@ -401,8 +401,7 @@ void HUDManager::ManageSwitch() {
 	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
 
 	ComponentTransform2D* transform2D = nullptr;
-	ComponentTransform2D* fangHealth = nullptr;
-	ComponentTransform2D* onimaruHealth = nullptr;
+	ComponentTransform2D* health = nullptr;
 	ComponentImage* backgroundImage = nullptr;
 	ComponentImage* fillImage = nullptr;
 	ComponentImage* overlayImage = nullptr;
@@ -518,68 +517,49 @@ void HUDManager::ManageSwitch() {
 		//Health handling
 
 		if (fangObj->IsActive()) {
-			onimaruHealth = onimaruHealthParent->GetComponent<ComponentTransform2D>();
+			health = onimaruHealthParent->GetComponent<ComponentTransform2D>();
 			backgroundImage = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
 			fillImage = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
 			overlayImage = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
 			healthText = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
 			switchHealthStroke = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->GetComponent<ComponentImage>();
 
-			if (onimaruHealth) {
-				onimaruHealth->SetPosition(float3::Lerp(originalOnimaruHealthPosition + float3(healthOffset, 0, 0), originalOnimaruHealthPosition, switchTimer / switchCollapseMovementTime));
+			if (health) {
+				health->SetPosition(float3::Lerp(originalOnimaruHealthPosition + float3(healthOffset, 0, 0), originalOnimaruHealthPosition, switchTimer / switchCollapseMovementTime));
 			}
-
-
-			if (backgroundImage) {
-				backgroundImage->SetColor(float4::Lerp(healthBarBackgroundColor, healthBarBackgroundColorInBackground, switchTimer / switchCollapseMovementTime));
-			}
-
-			if (fillImage) {
-				fillImage->SetColor(float4::Lerp(healthFillBarColor, healthFillBarColorInBackground, switchTimer / switchCollapseMovementTime));
-			}
-
-			if (overlayImage) {
-				overlayImage->SetColor(float4::Lerp(healthOverlayColor, healthOverlayColorInBackground, switchTimer / switchCollapseMovementTime));
-			}
-
-			if (healthText) {
-				healthText->SetFontColor(float4::Lerp(healthTextColor, healthTextColorInBackground, switchTimer / switchCollapseMovementTime));
-			}
-
-			if (switchHealthStroke) {
-				switchHealthStroke->SetColor(float4::Lerp(healthSwitchStrokeInitialColor, healthSwitchStrokeChangingColor, switchTimer / switchCollapseMovementTime));
-			}
-		} else {
-			fangHealth = fangHealthParent->GetComponent<ComponentTransform2D>();
+		}
+		else {
+			health = fangHealthParent->GetComponent<ComponentTransform2D>();
 			backgroundImage = fangHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
 			fillImage = fangHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
 			overlayImage = fangHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
 			healthText = fangHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
 			switchHealthStroke = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentImage>();
 
-			if (fangHealth) {
-				fangHealth->SetPosition(float3::Lerp(originalFangHealthPosition, originalFangHealthPosition - float3(healthOffset, 0, 0), switchTimer / switchCollapseMovementTime));
+			if (health) {
+				health->SetPosition(float3::Lerp(originalFangHealthPosition, originalFangHealthPosition - float3(healthOffset, 0, 0), switchTimer / switchCollapseMovementTime));
 			}
+		}
 
-			if (backgroundImage) {
-				backgroundImage->SetColor(float4::Lerp(healthBarBackgroundColor, healthBarBackgroundColorInBackground, switchTimer / switchCollapseMovementTime));
-			}
 
-			if (fillImage) {
-				fillImage->SetColor(float4::Lerp(healthFillBarColor, healthFillBarColorInBackground, switchTimer / switchCollapseMovementTime));
-			}
+		if (backgroundImage) {
+			backgroundImage->SetColor(float4::Lerp(healthBarBackgroundColor, healthBarBackgroundColorInBackground, switchTimer / switchCollapseMovementTime));
+		}
 
-			if (overlayImage) {
-				overlayImage->SetColor(float4::Lerp(healthOverlayColor, healthOverlayColorInBackground, switchTimer / switchCollapseMovementTime));
-			}
+		if (fillImage) {
+			fillImage->SetColor(float4::Lerp(healthFillBarColor, healthFillBarColorInBackground, switchTimer / switchCollapseMovementTime));
+		}
 
-			if (healthText) {
-				healthText->SetFontColor(float4::Lerp(healthTextColor, healthTextColorInBackground, switchTimer / switchCollapseMovementTime));
-			}
-			
-			if (switchHealthStroke) {
-				switchHealthStroke->SetColor(float4::Lerp(healthSwitchStrokeInitialColor, healthSwitchStrokeChangingColor, switchTimer / switchCollapseMovementTime));
-			}
+		if (overlayImage) {
+			overlayImage->SetColor(float4::Lerp(healthOverlayColor, healthOverlayColorInBackground, switchTimer / switchCollapseMovementTime));
+		}
+
+		if (healthText) {
+			healthText->SetFontColor(float4::Lerp(healthTextColor, healthTextColorInBackground, switchTimer / switchCollapseMovementTime));
+		}
+
+		if (switchHealthStroke) {
+			switchHealthStroke->SetColor(float4::Lerp(healthSwitchStrokeInitialColor, healthSwitchStrokeChangingColor, switchTimer / switchCollapseMovementTime));
 		}
 
 		switchHealthFillTransform2D = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_FILL]->GetComponent<ComponentTransform2D>();
@@ -688,70 +668,52 @@ void HUDManager::ManageSwitch() {
 		}
 
 		if (fangObj->IsActive()) {
-			fangHealth = fangHealthParent->GetComponent<ComponentTransform2D>();
+			health = fangHealthParent->GetComponent<ComponentTransform2D>();
 			backgroundImage = fangHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
 			fillImage = fangHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
 			overlayImage = fangHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
 			healthText = fangHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
 			switchHealthStroke = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentImage>();
 
-			if (fangHealth) {
-				fangHealth->SetPosition(float3::Lerp(originalFangHealthPosition - float3(healthOffset, 0, 0), originalFangHealthPosition, switchTimer / switchCollapseMovementTime));
+			if (health) {
+				health->SetPosition(float3::Lerp(originalFangHealthPosition - float3(healthOffset, 0, 0), originalFangHealthPosition, switchTimer / switchCollapseMovementTime));
 			}
-
-			if (backgroundImage) {
-				backgroundImage->SetColor(float4::Lerp(healthBarBackgroundColorInBackground, healthBarBackgroundColor, switchTimer / switchCollapseMovementTime));
-			}
-
-			if (fillImage) {
-				fillImage->SetColor(float4::Lerp(healthFillBarColorInBackground, healthFillBarColor, switchTimer / switchCollapseMovementTime));
-			}
-
-			if (overlayImage) {
-				overlayImage->SetColor(float4::Lerp(healthOverlayColorInBackground, healthOverlayColor, switchTimer / switchCollapseMovementTime));
-			}
-
-			if (healthText) {
-				healthText->SetFontColor(float4::Lerp(healthTextColorInBackground, healthTextColor, switchTimer / switchCollapseMovementTime));
-			}
-
-			if (switchHealthStroke) {
-				switchHealthStroke->SetColor(float4::Lerp(healthSwitchStrokeChangingColor, healthSwitchStrokeInitialColor, switchTimer / switchCollapseMovementTime));
-			}
-		} else {
-			onimaruHealth = onimaruHealthParent->GetComponent<ComponentTransform2D>();
+		}
+		else {
+			health = onimaruHealthParent->GetComponent<ComponentTransform2D>();
 			backgroundImage = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
 			fillImage = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
 			overlayImage = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
 			healthText = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
 			switchHealthStroke = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->GetComponent<ComponentImage>();
 
-			if (onimaruHealth) {
-				onimaruHealth->SetPosition(float3::Lerp(originalOnimaruHealthPosition, originalOnimaruHealthPosition + float3(healthOffset, 0, 0), switchTimer / switchCollapseMovementTime));
-			}
-
-			if (backgroundImage) {
-				backgroundImage->SetColor(float4::Lerp(healthBarBackgroundColorInBackground, healthBarBackgroundColor, switchTimer / switchCollapseMovementTime));
-			}
-
-			if (fillImage) {
-				fillImage->SetColor(float4::Lerp(healthFillBarColorInBackground, healthFillBarColor, switchTimer / switchCollapseMovementTime));
-			}
-
-			if (overlayImage) {
-				overlayImage->SetColor(float4::Lerp(healthOverlayColorInBackground, healthOverlayColor, switchTimer / switchCollapseMovementTime));
-			}
-
-			if (healthText) {
-				healthText->SetFontColor(float4::Lerp(healthTextColorInBackground, healthTextColor, switchTimer / switchCollapseMovementTime));
-			}
-
-			if (switchHealthStroke) {
-				switchHealthStroke->SetColor(float4::Lerp(healthSwitchStrokeChangingColor, healthSwitchStrokeInitialColor, switchTimer / switchCollapseMovementTime));
+			if (health) {
+				health->SetPosition(float3::Lerp(originalOnimaruHealthPosition, originalOnimaruHealthPosition + float3(healthOffset, 0, 0), switchTimer / switchCollapseMovementTime));
 			}
 		}
 
+		if (backgroundImage) {
+			backgroundImage->SetColor(float4::Lerp(healthBarBackgroundColorInBackground, healthBarBackgroundColor, switchTimer / switchCollapseMovementTime));
+		}
+
+		if (fillImage) {
+			fillImage->SetColor(float4::Lerp(healthFillBarColorInBackground, healthFillBarColor, switchTimer / switchCollapseMovementTime));
+		}
+
+		if (overlayImage) {
+			overlayImage->SetColor(float4::Lerp(healthOverlayColorInBackground, healthOverlayColor, switchTimer / switchCollapseMovementTime));
+		}
+
+		if (healthText) {
+			healthText->SetFontColor(float4::Lerp(healthTextColorInBackground, healthTextColor, switchTimer / switchCollapseMovementTime));
+		}
+
+		if (switchHealthStroke) {
+			switchHealthStroke->SetColor(float4::Lerp(healthSwitchStrokeChangingColor, healthSwitchStrokeInitialColor, switchTimer / switchCollapseMovementTime));
+		}
+
 		switchHealthFillTransform2D = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_FILL]->GetComponent<ComponentTransform2D>();
+
 		if (switchHealthFillTransform2D) {
 			switchHealthFillTransform2D->SetScale(float3::Lerp(float3(0, 1, 1), float3(1, 1, 1), switchTimer / switchCollapseMovementTime));
 		}
