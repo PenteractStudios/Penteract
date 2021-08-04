@@ -11,7 +11,9 @@ class LaserTurret : public Script
 	enum class TurretState {
 		START = 0,
 		SHOOT,
-		END
+		END,
+		IDLE_START,
+		IDLE_END
 	};
 
 public:
@@ -25,18 +27,21 @@ public:
 
 	UID laserTargetUID = 0;
 
+	float coolDownOnTimer = 0.0f;
+	float coolDownOn = 0.05;
+
+	float coolDownOffTimer = 0.0f;
+	float coolDownOff = 0.05;
+
 private:
 
-	// Tiempo de animacion
-	// Cooldown --> Tiempo inactivo + factor
-	// Factor random --> +/- z tiempo
 
 	ComponentAnimation* animationComp = nullptr;
 	TurretState currentState = TurretState::START;
 	
 	GameObject* laserObject = nullptr;
 
-	const char* states[3] = { "Startup", "Shoot", "End" };
+	const std::string states[5] = { "Startup", "Shoot", "End", "IdleStart", "IdleEnd"};
 
 };
 
