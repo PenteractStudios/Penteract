@@ -620,6 +620,17 @@ void HUDManager::ManageSwitch() {
 		}
 
 		if (fangSkillParent->IsActive()) {
+
+			if (switchTimer > switchCollapseMovementTime / 1.5f) {
+				float delta = (switchTimer - (switchCollapseMovementTime / 1.5f)) / (switchCollapseMovementTime / 1.5f);
+				for (int i = 0; i < skillsFang.size(); ++i) {
+					transform2D = skillsFang[i]->GetComponent<ComponentTransform2D>();
+					if (transform2D) {
+						transform2D->SetScale(float3::Lerp(float3(1, 1, 1), float3(0, 0, 0), delta));
+					}
+				}
+			}
+
 			for (int i = 0; i < skillsFang.size(); ++i) {
 				transform2D = skillsFang[i]->GetComponent<ComponentTransform2D>();
 				if (transform2D) {
@@ -628,6 +639,17 @@ void HUDManager::ManageSwitch() {
 
 			}
 		} else {
+
+			if (switchTimer > switchCollapseMovementTime / 1.5f) {
+				float delta = (switchTimer - (switchCollapseMovementTime / 1.5f)) / (switchCollapseMovementTime / 1.5f);
+				for (int i = 0; i < skillsOni.size(); ++i) {
+					transform2D = skillsOni[i]->GetComponent<ComponentTransform2D>();
+					if (transform2D) {
+						transform2D->SetScale(float3::Lerp(float3(1, 1, 1), float3(0, 0, 0), delta));
+					}
+				}
+			}
+
 			for (int i = 0; i < skillsOni.size(); ++i) {
 				transform2D = skillsOni[i]->GetComponent<ComponentTransform2D>();
 				if (transform2D) {
@@ -635,6 +657,8 @@ void HUDManager::ManageSwitch() {
 				}
 			}
 		}
+
+
 
 		//Health handling
 
@@ -730,6 +754,7 @@ void HUDManager::ManageSwitch() {
 				switchHealthStrokeTransform2D->SetScale(float3(1, scale, 1));
 			}
 		}
+
 		if (switchTimer == switchBarGrowShrinkTime) {
 			if (switchHealthStrokeGrowing) {
 				switchHealthStrokeGrowing = false;
@@ -772,18 +797,56 @@ void HUDManager::ManageSwitch() {
 		}
 
 		if (fangSkillParent->IsActive()) {
+
+
+			if (switchTimer < switchDeployMovementTime / 3) {
+				float delta = (switchTimer / (switchDeployMovementTime / 3));
+				for (int i = 0; i < skillsFang.size(); ++i) {
+					transform2D = skillsFang[i]->GetComponent<ComponentTransform2D>();
+					if (transform2D) {
+						transform2D->SetScale(float3::Lerp(float3(0, 0, 0), float3(1, 1, 1), delta));
+					}
+				}
+			} else {
+				for (int i = 0; i < skillsFang.size(); ++i) {
+					transform2D = skillsFang[i]->GetComponent<ComponentTransform2D>();
+					if (transform2D) {
+						transform2D->SetScale(float3(1, 1, 1));
+					}
+				}
+			}
+
 			for (int i = 0; i < skillsFang.size(); ++i) {
 				transform2D = skillsFang[i]->GetComponent<ComponentTransform2D>();
+
 				if (transform2D) {
-					transform2D->SetPosition(float3::Lerp(cooldownTransformOriginalPositions[static_cast<int>(Cooldowns::SWITCH_SKILL)], cooldownTransformOriginalPositions[i] + float3(switchExtraOffset + i * 10.0f, 0, 0), switchTimer / switchCollapseMovementTime));
+					transform2D->SetPosition(float3::Lerp(cooldownTransformOriginalPositions[static_cast<int>(Cooldowns::SWITCH_SKILL)], cooldownTransformOriginalPositions[i] + float3(switchExtraOffset + i * 10.0f, 0, 0), switchTimer / switchDeployMovementTime));
 				}
 
 			}
 		} else {
+
+			if (switchTimer < switchDeployMovementTime / 3) {
+				float delta = (switchTimer / (switchDeployMovementTime / 3));
+				for (int i = 0; i < skillsOni.size(); ++i) {
+					transform2D = skillsOni[i]->GetComponent<ComponentTransform2D>();
+					if (transform2D) {
+						transform2D->SetScale(float3::Lerp(float3(0, 0, 0), float3(1, 1, 1), delta));
+					}
+				}
+			} else {
+				for (int i = 0; i < skillsOni.size(); ++i) {
+					transform2D = skillsOni[i]->GetComponent<ComponentTransform2D>();
+					if (transform2D) {
+						transform2D->SetScale(float3(1, 1, 1));
+					}
+				}
+			}
+
 			for (int i = 0; i < skillsOni.size(); ++i) {
 				transform2D = skillsOni[i]->GetComponent<ComponentTransform2D>();
 				if (transform2D) {
-					transform2D->SetPosition(float3::Lerp(cooldownTransformOriginalPositions[static_cast<int>(Cooldowns::SWITCH_SKILL)], cooldownTransformOriginalPositions[i + 3] + float3(switchExtraOffset + i * 10.0f, 0, 0), switchTimer / switchCollapseMovementTime));
+					transform2D->SetPosition(float3::Lerp(cooldownTransformOriginalPositions[static_cast<int>(Cooldowns::SWITCH_SKILL)], cooldownTransformOriginalPositions[i + 3] + float3(switchExtraOffset + i * 10.0f, 0, 0), switchTimer / switchDeployMovementTime));
 				}
 			}
 		}
