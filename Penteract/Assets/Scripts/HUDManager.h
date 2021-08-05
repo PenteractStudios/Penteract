@@ -118,6 +118,14 @@ public:
 	std::vector<GameObject*> onimaruHealthChildren;
 	std::vector<GameObject*> switchHealthChildren;
 
+	// Sides
+	UID sidesHUDParentUID = 0;
+
+	std::vector<GameObject*> sidesHUDChildren;
+
+	float4 normalSideColor = float4(103.f / 255.f, 180.f / 255.f, 169.f / 255.f, 30.f / 255.f);
+	float4 hitSideColor = float4(248.f / 255.f, 47.f / 255.f, 47.f / 255.f, 30.f / 255.f);
+
 public:
 	void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown, float fangUltimateRemainingNormalizedValue, float oniUltimateRemainingNormalizedValue);
 	void UpdateHealth(float fangHealth, float onimaruHealth);
@@ -162,6 +170,9 @@ private:
 
 	float lostHealthTimer = 0.0f;
 	float lostHealthFeedbackTotalTime = 1.0f;
+
+	// HUD sides
+	GameObject* sidesHUDParent = nullptr;
 
 private:
 	void AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canvas);

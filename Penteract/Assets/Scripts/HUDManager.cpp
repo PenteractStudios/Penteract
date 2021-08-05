@@ -30,14 +30,16 @@
 
 EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerObjectUID),
-	MEMBER_SEPARATOR("Abilities"),
+	MEMBER_SEPARATOR("HUD Abilities"),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangSkillParentUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillParentUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, switchSkillParentUID),
-	MEMBER_SEPARATOR("Health"),
+	MEMBER_SEPARATOR("HUD Health"),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangHealthParentUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthParentUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, switchHealthParentUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, switchHealthParentUID),
+	MEMBER_SEPARATOR("HUD Sides"),
+	MEMBER(MemberType::GAME_OBJECT_UID, sidesHUDParentUID)
 };
 
 GENERATE_BODY_IMPL(HUDManager);
@@ -136,6 +138,11 @@ void HUDManager::Start() {
 		}
 	}
 
+	sidesHUDParent = GameplaySystems::GetGameObject(sidesHUDParentUID);
+
+	if (sidesHUDParent) {
+		sidesHUDChildren = sidesHUDParent->GetChildren();
+	}
 }
 
 void HUDManager::Update() {
