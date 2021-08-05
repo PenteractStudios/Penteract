@@ -167,6 +167,12 @@ void PlayerController::SwitchCharacter() {
 	if (!playerFang.characterGameObject) return;
 	if (!playerOnimaru.characterGameObject) return;
 	bool doVisualSwitch = currentSwitchDelay < switchDelay ? false : true;
+
+	if (hudManagerScript) {
+		hudManagerScript->StartCharacterSwitch();
+		hudManagerScript->StartUsingSkill(HUDManager::Cooldowns::SWITCH_SKILL);
+	}
+
 	if (doVisualSwitch) {
 		if (audios[static_cast<int>(AudioType::SWITCH)]) {
 			audios[static_cast<int>(AudioType::SWITCH)]->Play();
@@ -179,10 +185,6 @@ void PlayerController::SwitchCharacter() {
 				hudControllerScript->UpdateHP(playerOnimaru.lifePoints, playerFang.lifePoints);
 				hudControllerScript->ResetHealthRegenerationEffects(playerFang.lifePoints);
 			}
-			if (hudManagerScript) {
-				hudManagerScript->StartCharacterSwitch();
-			}
-
 
 			fangRecovering = 0.0f;
 		} else {
@@ -193,20 +195,11 @@ void PlayerController::SwitchCharacter() {
 				hudControllerScript->UpdateHP(playerFang.lifePoints, playerOnimaru.lifePoints);
 				hudControllerScript->ResetHealthRegenerationEffects(playerOnimaru.lifePoints);
 			}
-
-			if (hudManagerScript) {
-				hudManagerScript->StartCharacterSwitch();
-			}
-
 			onimaruRecovering = 0.0f;
 		}
 		if (hudControllerScript) {
 			hudControllerScript->ChangePlayerHUD(playerFang.lifePoints, playerOnimaru.lifePoints);
 			hudControllerScript->ResetCooldownProgressBar();
-		}
-
-		if (hudManagerScript) {
-			hudManagerScript->StartUsingSkill(HUDManager::Cooldowns::SWITCH_SKILL);
 		}
 
 		currentSwitchDelay = 0.f;
@@ -245,7 +238,7 @@ void PlayerController::CheckCoolDowns() {
 			playerFang.Recover(1.f);
 		} else {
 			fangRecovering += Time::GetDeltaTime();
-			
+
 		}
 	}
 

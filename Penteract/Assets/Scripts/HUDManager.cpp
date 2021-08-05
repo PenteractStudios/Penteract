@@ -254,7 +254,6 @@ void HUDManager::HealthRegeneration(float health) {
 }
 
 void HUDManager::StartCharacterSwitch() {
-	//TODO initialization
 	switchTimer = 0;
 	switchState = SwitchState::PRE_COLLAPSE;
 	if (switchSkillParent) {
@@ -534,17 +533,21 @@ void HUDManager::ManageSwitch() {
 	ComponentTransform2D* switchHealthStrokeTransform2D = nullptr;
 	ComponentTransform2D* switchHealthFillTransform2D = nullptr;
 
+	if (switchShadeTransform) {
+		if (switchState != SwitchState::IDLE) {
+			Debug::Log("ShouldRotate");
+		}
+
+
+		if (switchState != SwitchState::IDLE || cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] >= 1.0f) {
+			Quat rotToAdd;
+			rotToAdd.SetFromAxisAngle(float4(0, 0, 1, 1), Time::GetDeltaTime() * rotationSpeed);
+			switchShadeTransform->SetRotation(rotToAdd * switchShadeTransform->GetGlobalRotation());
+		}
+	}
+
 	switch (switchState) {
 	case SwitchState::IDLE:
-
-		//TODO switch icon rotates over time, reset timer when rotation reaches 360º
-		//REQUIRED TO expose rotation on Tesseract
-		/*if (switchShadeTransform) {
-			Quat rotToAdd;
-			rotToAdd.SetFromAxisAngle(float4(0, 0, 1, 1), 1 / switchSymbolRotationTime),
-			switchShadeTransform->SetRotation(rotToAdd * switchShadeTransform->GetGlobalRotation().ToQuat());
-		}*/
-
 		//This code handles the color grading progressively increasing and decreasing alpha
 		if (switchSkillParent) {
 			std::vector<GameObject*> children = switchSkillParent->GetChildren();
@@ -903,6 +906,7 @@ void HUDManager::ManageSwitch() {
 
 		if (switchTimer == switchDeployMovementTime) {
 			switchState = SwitchState::POST_DEPLOY;
+			switchTimer = 0;
 		}
 
 		break;

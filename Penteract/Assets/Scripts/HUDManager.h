@@ -87,7 +87,7 @@ public:
 	float switchColorTotalTime = 1.25f;
 	bool switchColorIncreasing = true;
 
-	float switchSymbolRotationTime = 6.0f;
+	float rotationSpeed = 3.1416 / 4.0f;
 
 	// Health HUD
 	UID fangHealthParentUID = 0;
