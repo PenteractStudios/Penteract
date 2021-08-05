@@ -2,6 +2,7 @@
 #include "PlayerController.h";
 #include "Components/UI/ComponentTransform2D.h"
 #include "Components/UI/ComponentImage.h"
+#include "ImageColorFader.h"
 #include "AbilityRefeshFX.h"
 
 #define HIERARCHY_INDEX_ABILITY_FILL 1
@@ -9,6 +10,7 @@
 #define HIERARCHY_INDEX_ABILITY_EFFECT 3
 #define HIERARCHY_INDEX_ABILITY_PICTO_SHADE 5
 #define HIERARCHY_INDEX_ABILITY_KEY_FILL 6
+#define HIERARCHY_INDEX_ULTIMATE_ABILITY_DECOR_FILL 7
 
 #define HIERARCHY_INDEX_SWITCH_ABILITY_FILL 1
 #define HIERARCHY_INDEX_SWITCH_ABILITY_DURATION_FILL 2
@@ -322,6 +324,16 @@ void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 
 			++skill;
 		}
+
+		if (skills[2]) {
+			if (cooldowns[startingIt + 2] != 1.0f) {
+				GameObject* decorFill = skills[2]->GetChildren()[HIERARCHY_INDEX_ULTIMATE_ABILITY_DECOR_FILL];
+				if (decorFill) {
+					decorFill->Disable();
+				}
+			}
+		}
+
 	}
 }
 
@@ -376,6 +388,27 @@ void HUDManager::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canv
 
 				if (ef) {
 					PlayCoolDownEffect(ef, cooldown);
+
+					if (cooldown == Cooldowns::FANG_SKILL_3 || cooldown == Cooldowns::ONIMARU_SKILL_3) {
+
+						GameObject* ultiDecoFill = nullptr;
+
+						if (cooldown == Cooldowns::FANG_SKILL_3) {
+							ultiDecoFill = canvas->GetChildren()[static_cast<int>(cooldown)]->GetChildren()[HIERARCHY_INDEX_ULTIMATE_ABILITY_DECOR_FILL];
+						} else {
+							ultiDecoFill = canvas->GetChild(static_cast<int>(cooldown) - 3)->GetChildren()[HIERARCHY_INDEX_ULTIMATE_ABILITY_DECOR_FILL];
+						}
+
+
+						if (ultiDecoFill) {
+							//TODO use image color fader script to be found on this gameobject
+							ImageColorFader* colorFader = GET_SCRIPT(ultiDecoFill, ImageColorFader);
+							if (colorFader) {
+								colorFader->Play();
+							}
+						}
+					}
+
 					//PlayProgressBarEffect(pef, cooldown);
 					abilityCoolDownsRetreived[static_cast<int>(cooldown)] = true;
 					SetPictoState(cooldown, PictoState::AVAILABLE);
@@ -818,8 +851,7 @@ void HUDManager::PlayLostHealthFeedback() {
 		lostHealthTimer = 0.f;
 		playingLostHealthFeedback = false;
 		ResetLostHealthFeedback();
-	}
-	else {
+	} else {
 		lostHealthTimer += Time::GetDeltaTime();
 	}
 }
@@ -837,8 +869,7 @@ void HUDManager::StartLostHealthFeedback() {
 		if (lostHealth) {
 			lostHealth->SetColor(healthLostFeedbackFillBarInitialColor);
 		}
-	}
-	else {
+	} else {
 		ResetLostHealthFeedback();
 	}
 }
