@@ -38,6 +38,7 @@ EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fangHealthParentUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthParentUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, switchHealthParentUID),
+	MEMBER(MemberType::FLOAT, lostHealthFeedbackAlpha),
 	MEMBER_SEPARATOR("HUD Sides"),
 	MEMBER(MemberType::GAME_OBJECT_UID, sidesHUDParentUID)
 };
@@ -124,6 +125,7 @@ void HUDManager::Start() {
 		fangHealthChildren = fangHealthParent->GetChildren();
 		onimaruHealthChildren = onimaruHealthParent->GetChildren();
 
+		GetAllHealthColors();
 		InitializeHealth();
 	}
 
@@ -941,6 +943,53 @@ void HUDManager::SetPictoState(Cooldowns cooldown, PictoState newState) {
 	}
 
 
+}
+
+void HUDManager::GetAllHealthColors() {
+	if (!fangHealthParent || !onimaruHealthParent) return;
+	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
+
+	// Get background color in background
+	ComponentImage* image = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
+	if (image) healthBarBackgroundColorInBackground = image->GetColor();
+
+	// Get fill color in background
+	image = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
+	if (image) healthFillBarColorInBackground = image->GetColor();
+
+	// Get overlay color in background
+	image = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
+	if (image) healthOverlayColorInBackground = image->GetColor();
+
+	// Get health text color in background
+	ComponentText* healthText = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
+	if (healthText) healthTextColorInBackground = healthText->GetFontColor();
+
+	// Get main background color
+	image = fangHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
+	if (image) healthBarBackgroundColor = image->GetColor();
+
+	// Get main fill color
+	image = fangHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
+	if (image) healthFillBarColor = image->GetColor();
+
+	// Get main overlay color
+	image = fangHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
+	if (image) healthOverlayColor = image->GetColor();
+
+	// Get main health text color
+	healthText = fangHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
+	if (healthText) healthTextColor = healthText->GetFontColor();
+
+
+	// Get lost feedback colors
+	image = fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
+	if (image) {
+		Debug::Log("Hiiiiii");
+		healthLostFeedbackFillBarFinalColor = image->GetColor();
+	}
+
+	healthLostFeedbackFillBarInitialColor = float4(healthLostFeedbackFillBarFinalColor.xyz(), lostHealthFeedbackAlpha);
 }
 
 void HUDManager::InitializeHealth() {
