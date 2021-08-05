@@ -30,12 +30,14 @@
 
 EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerObjectUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangSkillParentUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillParentUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, switchSkillParentUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangHealthParentUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthParentUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, switchHealthParentUID)
+	MEMBER_SEPARATOR("Abilities"),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangSkillParentUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillParentUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, switchSkillParentUID),
+	MEMBER_SEPARATOR("Health"),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangHealthParentUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthParentUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, switchHealthParentUID)
 };
 
 GENERATE_BODY_IMPL(HUDManager);
@@ -830,6 +832,7 @@ void HUDManager::SetPictoState(Cooldowns cooldown, PictoState newState) {
 void HUDManager::InitializeHealth() {
 	if (!playerController) return;
 
+	// Set initial health values
 	ComponentImage* health = fangHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
 	float healthValue = 1.f;
 	if (health) {
@@ -838,6 +841,8 @@ void HUDManager::InitializeHealth() {
 			health->SetFillValue(healthValue / healthValue);
 		}
 	}
+
+	fangPreviousHealth = healthValue;
 
 	health = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
 	healthValue = 1.f;
@@ -848,34 +853,36 @@ void HUDManager::InitializeHealth() {
 		}
 	}
 
-	ComponentImage* healthLost = fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
-	healthValue = 1.f;
-	if (health) {
-		if (health->IsFill()) {
-			healthValue = playerController->GetFangMaxHealth();
-			health->SetFillValue(healthValue / healthValue);
-		}
-	}
-
-	healthLost = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
-	healthValue = 1.f;
-	if (health) {
-		if (health->IsFill()) {
-			healthValue = playerController->GetOnimaruMaxHealth();
-			health->SetFillValue(healthValue / healthValue);
-		}
-	}
+	onimaruPreviousHealth = healthValue;
 
 	ComponentText* healthText = fangHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
 	healthValue = playerController->GetFangMaxHealth();
-	if (health) {
+	if (healthText) {
 		healthText->SetText(std::to_string((int)healthValue));
 	}
 
 	healthText = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
 	healthValue = playerController->GetOnimaruMaxHealth();
-	if (health) {
+	if (healthText) {
 		healthText->SetText(std::to_string((int)healthValue));
 	}
 
+	// Set initial lost health bar
+	ComponentImage* healthLost = fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
+	healthValue = 1.f;
+	if (healthLost) {
+		if (healthLost->IsFill()) {
+			healthValue = playerController->GetFangMaxHealth();
+			healthLost->SetFillValue(healthValue / healthValue);
+		}
+	}
+
+	healthLost = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
+	healthValue = 1.f;
+	if (healthLost) {
+		if (healthLost->IsFill()) {
+			healthValue = playerController->GetOnimaruMaxHealth();
+			healthLost->SetFillValue(healthValue / healthValue);
+		}
+	}
 }
