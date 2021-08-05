@@ -48,12 +48,10 @@ void Barrel::Update() {
 
 		currentTimerToDestroy += Time::GetDeltaTime();
 		if (currentTimerToDestroy >= timerToDestroy) {
-			destroy = true;
+			if (particlesForTimer) particlesForTimer->StopChildParticles();
+			if (audioForTimer) audioForTimer->Stop();
+			isHit = true;
 			startTimerToDestroy = false;
-			if (barrelCollider) barrelCollider->Enable();
-			if (cameraController) {
-				cameraController->StartShake();
-			}
 		}
 
 	}
@@ -84,24 +82,12 @@ void Barrel::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 		if (pSystem) pSystem->KillParticle(p);
-		isHit = true;
-		destroy = true;
-		if (cameraController) {
-			cameraController->StartShake();
-		}
-		if (collidedWith.name == "FangBullet") {
-			GameplaySystems::DestroyGameObject(&collidedWith);
-			isHit = true;
-			destroy = true;
-			if (cameraController) {
-				cameraController->StartShake();
-			}
-		}
 		
-	}
-	
-	if (collidedWith.name == "Fang" || collidedWith.name == "Onimaru") {
-		startTimerToDestroy = true;
+		if (collidedWith.name == "FangBullet") {
+			startTimerToDestroy = true;
+			GameplaySystems::DestroyGameObject(&collidedWith);
+		}
+
 	}
 	
 }
