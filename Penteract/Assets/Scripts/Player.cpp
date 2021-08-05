@@ -64,7 +64,7 @@ void Player::LookAtGamepadDir() {
 }
 
 void Player::LookAtFacePointTarget(bool useGamepad) {
-	if (facePointDir.x == 0 && facePointDir.z == 0)return;
+	if (facePointDir.x == 0 && facePointDir.z == 0) return;
 	Quat quat = playerMainTransform->GetGlobalRotation();
 
 	float angle = Atan2(facePointDir.x, facePointDir.z);
@@ -241,17 +241,22 @@ float2 Player::GetInputFloat2(InputActions action, bool useGamepad) const {
 	return result;
 }
 
-void Player::UpdateFacePointDir(bool useGamepad) {
-	if (useGamepad) {
-		float2 inputFloat2 = GetInputFloat2(InputActions::ORIENTATION, useGamepad);
+void Player::UpdateFacePointDir(bool useGamepad, bool faceToFront) {
+		if (useGamepad) {
+			float2 inputFloat2 = GetInputFloat2(InputActions::ORIENTATION, useGamepad);
 
-		facePointDir.x = inputFloat2.x;
-		facePointDir.z = inputFloat2.y;
+			facePointDir.x = inputFloat2.x;
+			facePointDir.z = inputFloat2.y;
 
-	} else {
-		LookAtMouse();
+		} else {
+			if (faceToFront) {
+				float2 inputFloat2 = GetInputFloat2(InputActions::MOVEMENT, false);
+				facePointDir.x = inputFloat2.x;
+				facePointDir.z = inputFloat2.y;
+			}
+			else LookAtMouse();
+		}
 	}
-}
 
 float3 Player::GetDirection() const {
 	float3 direction;
@@ -297,7 +302,7 @@ void Player::LookAtMouse() {
 	}
 }
 
-void Player::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
+void Player::Update(bool useGamepad, bool lockMovement, bool lockRotation, bool faceToFront) {
 
 	if (!lockMovement) {
 		movementInputDirection = GetInputMovementDirection(useGamepad && Input::IsGamepadConnected(0));
@@ -306,7 +311,7 @@ void Player::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 		if (agent) agent->SetMoveTarget(playerMainTransform->GetGlobalPosition(), false);
 	}
 	if (!lockRotation) {
-		UpdateFacePointDir(useGamepad && Input::IsGamepadConnected(0));
+		UpdateFacePointDir(useGamepad && Input::IsGamepadConnected(0), faceToFront);
 		LookAtFacePointTarget(useGamepad && Input::IsGamepadConnected(0));
 	}
 }

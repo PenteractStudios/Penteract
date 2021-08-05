@@ -18,10 +18,34 @@ public:
 		DEATH,
 		TOTAL
 	};
+	enum class FANG_STATES {
+		IDLE = 0,
+		RUN_BACKWARD,
+		RUN_FORWARD,
+		RUN_LEFT,
+		RUN_RIGHT,
+		DASH_BACKWARD,
+		DASH_FORWARD,
+		DASH_LEFT,
+		DASH_RIGHT,
+		DEATH,
+		SHOOTING,
+		DRIFT,
+		DASH,
+		RUN_FORWARD_LEFT, 
+		RUN_FORWARD_RIGHT, 
+		RUN_BACKWARD_LEFT,
+		RUN_BACKWARD_RIGHT,
+		EMP = 21,
+		ULTIMATE,
+		IDLE_AIM,
+		FOOT_SWITCH,
+		SPRINT
+	};
 
 	// ------- Contructors ------- //
 	Fang() {};
-	void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockOrientation = false) override;
+	void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockOrientation = false, bool faceToFront = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override {};
@@ -38,17 +62,18 @@ public:
 	bool IsVulnerable() const override;
 
 public:
-	std::vector<std::string> states{ "Idle" ,
+	std::vector<std::string> states{ 
+						"Idle" ,
 						"RunBackward" , "RunForward" , "RunLeft" , "RunRight" , //1 - 4
 						"DashBackward", "DashForward" , "DashLeft" , "DashRight" , //5 - 8
 						"Death" , "Shooting" , "Drift", "Dash", //9 - 12
 						"RunForwardLeft", "RunForwardRight", "RunBackwardLeft", "RunBackwardRight", // 13 - 16
 						"DashBackward", "DashForward" , "DashLeft" , "DashRight", //17 - 20
-						"EMP", "Ultimate","IdleAim","FootSwitch" //21 - 24
+						"EMP", "Ultimate","IdleAim","FootSwitch", //21 - 24
+						"Sprint" // 25 - 28
 	};
-
-	bool rightShot = true;
-
+	//Combat
+	float maxCombatTime = 5.f;
 	//Dash
 	float dashCooldown = 5.f;
 	float dashSpeed = 100.f;
@@ -63,9 +88,12 @@ public:
 	//Ultimate
 	int ultimateCooldown = 2;
 	float ultimateMovementSpeed = 4.0f;
-
+	
 
 private:
+	//Combat
+	float timeWithoutCombat = 0.f;
+	bool fighting = false;
 	//Dash
 	float dashCooldownRemaining = 0.f;
 	float dashRemaining = 0.f;
@@ -73,7 +101,7 @@ private:
 	bool dashing = false;
 	bool dashInCooldown = false;
 	bool hasDashed = false;
-
+	bool inCombat = false;
 	float3 initialPosition = float3(0, 0, 0);
 	float3 dashDirection = float3(0, 0, 0);
 

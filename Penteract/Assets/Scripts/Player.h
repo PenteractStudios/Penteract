@@ -50,7 +50,7 @@ public:
 	MovementDirection GetInputMovementDirection(bool useGamepad) const;
 	float3 GetDirection() const;
 	virtual void Shoot() {}
-	virtual void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockRotation = false);
+	virtual void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockRotation = false, bool faceToFront = false);
 	virtual void CheckCoolDowns(bool noCooldownMode = false) {}
 	virtual bool CanSwitch() const = 0;
 
@@ -62,7 +62,7 @@ public:
 	bool IsActive();
 	static bool GetInputBool(InputActions action, bool useGamepad = false);
 	float2 GetInputFloat2(InputActions action, bool useGamepad = false) const;
-	void UpdateFacePointDir(bool useGamepad);
+	void UpdateFacePointDir(bool useGamepad, bool faceToFront = false);
 	virtual void IncreaseUltimateCounter();
 
 public:
@@ -89,6 +89,7 @@ public:
 
 protected:
 	void MoveTo();
+
 private:
 	virtual bool CanShoot();
 	void ResetSwitchStatus();
@@ -96,6 +97,7 @@ private:
 	float2 GetControllerOrientationDirection() const;
 	void LookAtGamepadDir();
 	void LookAtFacePointTarget(bool useGamepad);
+
 private:
 	float currentSwitchDelay = 0.f;
 	bool playSwitchParticles = true;
