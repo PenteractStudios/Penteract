@@ -109,15 +109,19 @@ void HUDManager::Start() {
 
 		if (switchSkillParent) {
 			std::vector<GameObject*> switchChildren = switchSkillParent->GetChildren();
-			if (switchChildren.size() > HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL - 1) {
-				switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_WHITE]->Disable();
-				switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_GLOW]->Enable();
-				switchGlowImage = switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_GLOW]->GetComponent<ComponentImage>();
-				if (switchGlowImage) {
-					switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 0.0f));
-				}
+
+			if (switchChildren.size() < HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL) return;
+
+			switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_WHITE]->Disable();
+			switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_GLOW]->Enable();
+			switchGlowImage = switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_GLOW]->GetComponent<ComponentImage>();
+			if (switchGlowImage) {
+				switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 0.0f));
 			}
+
 		}
+
+		onimaruSkillParent->Disable();
 
 	}
 
@@ -297,14 +301,21 @@ void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 			ComponentText* text = nullptr;
 			ComponentImage* textFill = nullptr;
 
-			fillImage = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_FILL]->GetComponent<ComponentImage>();
+			std::vector<GameObject*> children = (*it)->GetChildren();
+
+			if (children.size() < HIERARCHY_INDEX_ABILITY_KEY_FILL) return;
+
+			fillImage = children[HIERARCHY_INDEX_ABILITY_FILL]->GetComponent<ComponentImage>();
 
 			if (ultCount != 2) {
 				pictogramImage = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_PICTO_SHADE]->GetComponent<ComponentImage>();
-				textFill = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_KEY_FILL]->GetComponent<ComponentImage>();
+				textFill = children[HIERARCHY_INDEX_ABILITY_KEY_FILL]->GetComponent<ComponentImage>();
 			} else {
+
+				if (children.size() < HIERARCHY_INDEX_ULTIMATE_ABILITY_DECOR_FILL) return;
+
 				pictogramImage = (*it)->GetChildren()[HIERARCHY_INDEX_ULTIMATE_ABILITY_PICTO_SHADE]->GetComponent<ComponentImage>();
-				textFill = (*it)->GetChildren()[HIERARCHY_INDEX_ULTIMATE_ABILITY_KEY_FILL]->GetComponent<ComponentImage>();
+				textFill = children[HIERARCHY_INDEX_ULTIMATE_ABILITY_KEY_FILL]->GetComponent<ComponentImage>();
 			}
 
 			if (fillImage && pictogramImage) {
@@ -360,11 +371,11 @@ void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 			ComponentImage* otherUltFill = otherUltFillObj->GetComponent<ComponentImage>();
 			if (otherUltFill) {
 				if (startingIt == 0) {
+					//Fang must fill with onimaru cd value
 					otherUltFill->SetFillValue(cooldowns[static_cast<int>(Cooldowns::ONIMARU_SKILL_3)]);
-					//Fang
 				} else {
+					//Onimaru must fill with fang cd value
 					otherUltFill->SetFillValue(cooldowns[static_cast<int>(Cooldowns::FANG_SKILL_3)]);
-					//Onimaru
 				}
 			}
 		}
@@ -376,7 +387,7 @@ void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 void HUDManager::SetRemainingDurationNormalizedValue(GameObject* canvas, int index, float normalizedValue) {
 	if (!canvas)return;
 	std::vector<GameObject*> children = canvas->GetChildren();
-	if (children.size() <= index)return;
+	if (children.size() <= index) return;
 
 	GameObject* fillHolder = children[index]->GetChild(HIERARCHY_INDEX_ABILITY_DURATION_FILL);
 	if (fillHolder) {
@@ -395,30 +406,29 @@ void HUDManager::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canv
 		if (cooldowns[static_cast<int>(cooldown)] == 1.0f) {
 			if (canvas) {
 				AbilityRefeshFX* ef = nullptr;
-				//AbilityRefreshEffectProgressBar* pef = nullptr;
+				std::vector<GameObject*> skills = canvas->GetChildren();
+
+				if (skills.size() < 2) return;
 
 				if (cooldown < Cooldowns::ONIMARU_SKILL_1) {
 					//Fang skill
-					if (canvas->GetChildren().size() > 0) {
-						//if (canvas->GetChildren()[static_cast<int>(cooldown)]->GetChildren().size() > HIERARCHY_INDEX_MAIN_BUTTON_UP) {
-						ef = GET_SCRIPT(canvas->GetChildren()[static_cast<int>(cooldown)]->GetChildren()[HIERARCHY_INDEX_ABILITY_EFFECT], AbilityRefeshFX);
-						//}
-					}
+
+					std::vector<GameObject*>children = skills[static_cast<int>(cooldown)]->GetChildren();
+
+					if (children.size() < HIERARCHY_INDEX_ABILITY_EFFECT) return;
+
+					ef = GET_SCRIPT(children[HIERARCHY_INDEX_ABILITY_EFFECT], AbilityRefeshFX);
+
 				} else if (cooldown < Cooldowns::SWITCH_SKILL) {
 					//Onimaru skill
-					if (canvas->GetChildren().size() > 0) {
-						//if (canvas->GetChildren()[static_cast<int>(cooldown) - 3]->GetChildren().size() > HIERARCHY_INDEX_MAIN_BUTTON_UP) {
-						ef = GET_SCRIPT(canvas->GetChild(static_cast<int>(cooldown) - 3)->GetChildren()[HIERARCHY_INDEX_ABILITY_EFFECT], AbilityRefeshFX);
+					std::vector<GameObject*>children = skills[static_cast<int>(cooldown) - 3]->GetChildren();
 
-						//}
-					}
+					if (children.size() < HIERARCHY_INDEX_ABILITY_EFFECT) return;
+					ef = GET_SCRIPT(children[HIERARCHY_INDEX_ABILITY_EFFECT], AbilityRefeshFX);
+
 				} else {
-					if (canvas->GetChildren().size() > 0) {
-						ef = GET_SCRIPT(canvas->GetChild(HIERARCHY_INDEX_SWITCH_ABILITY_EFFECT), AbilityRefeshFX);
-						//pef = GET_SCRIPT(canvas->GetChild(HIERARCHY_INDEX_SWAP_ABILITY_EFFECT), AbilityRefreshEffectProgressBar);
-
-
-					}
+					ef = GET_SCRIPT(skills[HIERARCHY_INDEX_SWITCH_ABILITY_EFFECT], AbilityRefeshFX);
+					//pef = GET_SCRIPT(canvas->GetChild(HIERARCHY_INDEX_SWAP_ABILITY_EFFECT), AbilityRefreshEffectProgressBar);
 				}
 
 				if (ef) {
@@ -429,14 +439,16 @@ void HUDManager::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canv
 						GameObject* ultiDecoFill = nullptr;
 
 						if (cooldown == Cooldowns::FANG_SKILL_3) {
-							ultiDecoFill = canvas->GetChildren()[static_cast<int>(cooldown)]->GetChildren()[HIERARCHY_INDEX_ULTIMATE_ABILITY_DECOR_FILL];
+							std::vector<GameObject*>children = skills[static_cast<int>(cooldown)]->GetChildren();
+							if (children.size() < HIERARCHY_INDEX_ULTIMATE_ABILITY_DECOR_FILL)return;
+							ultiDecoFill = children[HIERARCHY_INDEX_ULTIMATE_ABILITY_DECOR_FILL];
 						} else {
-							ultiDecoFill = canvas->GetChild(static_cast<int>(cooldown) - 3)->GetChildren()[HIERARCHY_INDEX_ULTIMATE_ABILITY_DECOR_FILL];
+							std::vector<GameObject*>children = skills[static_cast<int>(cooldown) - 3]->GetChildren();
+							if (children.size() < HIERARCHY_INDEX_ULTIMATE_ABILITY_DECOR_FILL)return;
+							ultiDecoFill = children[HIERARCHY_INDEX_ULTIMATE_ABILITY_DECOR_FILL];
 						}
 
-
 						if (ultiDecoFill) {
-							//TODO use image color fader script to be found on this gameobject
 							ImageColorFader* colorFader = GET_SCRIPT(ultiDecoFill, ImageColorFader);
 							if (colorFader) {
 								colorFader->Play();
@@ -444,7 +456,6 @@ void HUDManager::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canv
 						}
 					}
 
-					//PlayProgressBarEffect(pef, cooldown);
 					abilityCoolDownsRetreived[static_cast<int>(cooldown)] = true;
 					SetPictoState(cooldown, PictoState::AVAILABLE);
 				}
@@ -463,7 +474,7 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 
 	std::vector<GameObject*> children = switchSkillParent->GetChildren();
 
-	//TODO Check for hierarchy size
+	if (children.size() < HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL) return;
 
 	ComponentImage* fillColor = children[HIERARCHY_INDEX_SWITCH_ABILITY_FILL]->GetComponent<ComponentImage>();
 	ComponentImage* image = children[HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE]->GetComponent<ComponentImage>();
@@ -492,7 +503,6 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 	if (textFill) {
 		textFill->SetColor(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1 ? buttonColorNotAvailable : buttonColorAvailable);
 	}
-
 
 }
 
@@ -977,7 +987,7 @@ void HUDManager::SetPictoState(Cooldowns cooldown, PictoState newState) {
 	}
 
 	if (cooldown != Cooldowns::SWITCH_SKILL) {
-		if (children[static_cast<int>(cooldown) % 3]->HasChildren()) {
+		if (children[static_cast<int>(cooldown) % 3]->GetChildren().size() > HIERARCHY_INDEX_ABILITY_PICTO_SHADE - 1) {
 			GameObject* pictoShade = children[(static_cast<int>(cooldown)) % 3]->GetChild(HIERARCHY_INDEX_ABILITY_PICTO_SHADE);
 
 			if (pictoShade->HasChildren()) {
@@ -994,6 +1004,9 @@ void HUDManager::SetPictoState(Cooldowns cooldown, PictoState newState) {
 
 
 	} else {
+
+		if (children.size() < HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE) return;
+
 		GameObject* pictoShade = children[HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE];
 		if (pictoShade) {
 			if (pictoShade->HasChildren()) {
