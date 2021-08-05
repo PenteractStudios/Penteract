@@ -62,7 +62,7 @@ public:
 	float4 switchSkillColorNotAvailable = float4(133.f / 255.f, 243.f / 255.f, 196.f / 255.f, 150.f / 255.f);
 	float4 switchSkillColorAvailable = float4(133.f / 255.f, 243.f / 255.f, 196.f / 255.f, 255.f / 255.f);
 
-	float4 switchPictoColorNotInUse = float4(92.f / 255.f, 210.f / 255.f, 159.f / 255.f, 255.f / 255.f);
+	float4 switchPictoColorNotInUse = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 255.f / 255.f);
 	float4 switchPictoColorInUse = float4(0.f / 255.f, 0.f / 255.f, 0.f / 255.f, 255.f / 255.f);
 
 	UID fangSkillParentUID = 0;
@@ -84,7 +84,7 @@ public:
 	PictoState pictoStates[static_cast<int>(Cooldowns::TOTAL)];
 
 	float switchColorTimer = 0.0f;
-	float switchColorTotalTime = 2.0f;
+	float switchColorTotalTime = 1.25f;
 	bool switchColorIncreasing = true;
 
 	float switchSymbolRotationTime = 6.0f;

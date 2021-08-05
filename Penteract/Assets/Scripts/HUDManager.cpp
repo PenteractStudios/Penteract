@@ -424,9 +424,21 @@ void HUDManager::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canv
 					std::vector<GameObject*>children = skills[static_cast<int>(cooldown) - 3]->GetChildren();
 
 					if (children.size() < HIERARCHY_INDEX_ABILITY_EFFECT) return;
-					ef = GET_SCRIPT(children[HIERARCHY_INDEX_ABILITY_EFFECT], AbilityRefeshFX);
 
+					if (cooldown == Cooldowns::ONIMARU_SKILL_1) {
+						if (onimaruObj) {
+							GameObject* shieldObj = onimaruObj->GetChild("Shield");
+							if (shieldObj) {
+								if (!shieldObj->IsActive()) {
+									ef = GET_SCRIPT(children[HIERARCHY_INDEX_ABILITY_EFFECT], AbilityRefeshFX);
+								}
+							}
+						}
+					} else {
+						ef = GET_SCRIPT(children[HIERARCHY_INDEX_ABILITY_EFFECT], AbilityRefeshFX);
+					}
 				} else {
+					//Switch skill
 					ef = GET_SCRIPT(skills[HIERARCHY_INDEX_SWITCH_ABILITY_EFFECT], AbilityRefeshFX);
 					//pef = GET_SCRIPT(canvas->GetChild(HIERARCHY_INDEX_SWAP_ABILITY_EFFECT), AbilityRefreshEffectProgressBar);
 				}
@@ -542,9 +554,9 @@ void HUDManager::ManageSwitch() {
 				float delta = switchColorTimer / switchColorTotalTime;
 
 				if (switchColorIncreasing) {
-					fillImage->SetColor(float4(fillImage->GetColor().xyz(), Lerp(0.3f, 1, delta)));
+					fillImage->SetColor(float4(fillImage->GetColor().xyz(), Lerp(0.3f, 0.7f, delta)));
 				} else {
-					fillImage->SetColor(float4(fillImage->GetColor().xyz(), Lerp(1, 0.3f, delta)));
+					fillImage->SetColor(float4(fillImage->GetColor().xyz(), Lerp(0.7f, 0.3f, delta)));
 				}
 				switchColorTimer += Time::GetDeltaTime();
 			}
@@ -987,6 +999,7 @@ void HUDManager::SetPictoState(Cooldowns cooldown, PictoState newState) {
 	}
 
 	if (cooldown != Cooldowns::SWITCH_SKILL) {
+		//Character-specific ability picto state
 		if (children[static_cast<int>(cooldown) % 3]->GetChildren().size() > HIERARCHY_INDEX_ABILITY_PICTO_SHADE - 1) {
 			GameObject* pictoShade = children[(static_cast<int>(cooldown)) % 3]->GetChild(HIERARCHY_INDEX_ABILITY_PICTO_SHADE);
 
@@ -1001,10 +1014,8 @@ void HUDManager::SetPictoState(Cooldowns cooldown, PictoState newState) {
 			}
 
 		}
-
-
 	} else {
-
+		//Switch ability picto state
 		if (children.size() < HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE) return;
 
 		GameObject* pictoShade = children[HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE];

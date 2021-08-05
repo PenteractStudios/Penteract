@@ -39,7 +39,7 @@ void AbilityRefeshFX::Start() {
 		keyTransform2D = keyObj->GetComponent<ComponentTransform2D>();
 
 		if (pictoTransform2D) {
-			pictoTransform2D->GetScale();
+			originalScaleVector = pictoTransform2D->GetScale();
 		}
 	}
 
@@ -52,6 +52,8 @@ void AbilityRefeshFX::Start() {
 			glowImage->SetColor(float4(glowImage->GetColor().xyz(), 0));
 		}
 	}
+
+
 
 }
 
@@ -111,7 +113,6 @@ void AbilityRefeshFX::PlayEffect() {
 	}
 
 
-	originalScaleVector = pictoTransform2D->GetScale();
 
 	effectScaleVector = float3(effectScale);
 	effectTimer = 0;

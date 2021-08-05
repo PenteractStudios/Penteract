@@ -402,6 +402,7 @@ void Onimaru::InitShield() {
 
 		if (hudManagerScript) {
 			hudManagerScript->StartUsingSkill(HUDManager::Cooldowns::ONIMARU_SKILL_1);
+			hudManagerScript->SetCooldownRetreival(HUDManager::Cooldowns::ONIMARU_SKILL_1);
 		}
 
 		shieldGO->Enable();
