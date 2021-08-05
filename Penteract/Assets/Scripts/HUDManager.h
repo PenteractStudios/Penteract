@@ -174,6 +174,7 @@ private:
 	void PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns cooldown);
 	void PlayLostHealthFeedback();
 	void StartLostHealthFeedback();
+	void StopLostHealthFeedback();
 	void ResetLostHealthFeedback();
 	void SetPictoState(Cooldowns cooldown, PictoState newState);
 

@@ -169,7 +169,7 @@ void HUDManager::UpdateHealth(float fangHealth, float onimaruHealth) {
 	if (!fangObj || !onimaruObj || !playerController) return;
 	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
 
-	StartLostHealthFeedback();
+	if (switchState == SwitchState::IDLE) StartLostHealthFeedback(); // Temporary hack
 
 	float health = fangObj->IsActive() ? fangHealth : onimaruHealth;
 	float maxHealth = fangObj->IsActive() ? playerController->GetFangMaxHealth() : playerController->GetOnimaruMaxHealth();
@@ -241,6 +241,7 @@ void HUDManager::StartCharacterSwitch() {
 			}
 		}
 	}
+	if (playingLostHealthFeedback) StopLostHealthFeedback();
 }
 
 void HUDManager::SetCooldownRetreival(Cooldowns cooldown) {
@@ -826,6 +827,28 @@ void HUDManager::StartLostHealthFeedback() {
 	else {
 		ResetLostHealthFeedback();
 	}
+}
+
+void HUDManager::StopLostHealthFeedback() {
+	if (!fangObj || !onimaruObj || !fangHealthParent || !onimaruHealthParent || !playerController) return;
+	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
+
+	playingLostHealthFeedback = false;
+
+	// If X character is active, we have already swapped so we get the other one feedback bar
+	ComponentImage* lostHealth = nullptr;
+	lostHealth = fangObj->IsActive() ? onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>() : fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
+	float maxHealth = fangObj->IsActive() ? playerController->GetOnimaruMaxHealth() : playerController->GetFangMaxHealth();
+	float feedbackHealth = fangObj->IsActive() ? onimaruPreviousHealth : fangPreviousHealth;
+
+	if (lostHealth) {
+		lostHealth->SetColor(healthLostFeedbackFillBarFinalColor);
+		if (lostHealth->IsFill()) {
+			lostHealth->SetFillValue(feedbackHealth / maxHealth);
+		}
+	}
+
+	ResetLostHealthFeedback();
 }
 
 void HUDManager::ResetLostHealthFeedback() {
