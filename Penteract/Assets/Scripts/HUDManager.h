@@ -173,6 +173,8 @@ private:
 							//as the color changin and rotation of the picto for the switch icon
 	void PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns cooldown);
 	void PlayLostHealthFeedback();
+	void StartLostHealthFeedback();
+	void ResetLostHealthFeedback();
 	void SetPictoState(Cooldowns cooldown, PictoState newState);
 
 	void InitializeHealth();
