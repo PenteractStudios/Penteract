@@ -167,8 +167,8 @@ void AIMeleeGrunt::Update() {
 		if (movementScript->CharacterInAttackRange(player, gruntCharacter.attackRange)) {
 			int random = std::rand() % 100;
 			attackNumber = 3;
-			if (random < 0) attackNumber = 1;
-			else if (random < 0) attackNumber = 2;
+			if (random < 33) attackNumber = 1;
+			else if (random < 66) attackNumber = 2;
 			animation->SendTrigger("WalkForwardAttack" + std::to_string(attackNumber));
 			if (audios[static_cast<int>(AudioType::ATTACK)]) audios[static_cast<int>(AudioType::ATTACK)]->Play();
 			state = AIState::ATTACK;
