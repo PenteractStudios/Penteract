@@ -79,6 +79,10 @@ public:
 	bool shootingOnCooldown = false;
 	float normalOrientationSpeed = 7.5f;
 
+	//Combat
+	float timeWithoutCombat = 0.f;
+	bool aiming = false;
+
 	float3 lookAtMousePlanePosition = float3(0, 0, 0);
 	ComponentCamera* lookAtMouseCameraComp = nullptr;
 	CameraController* cameraController = nullptr;

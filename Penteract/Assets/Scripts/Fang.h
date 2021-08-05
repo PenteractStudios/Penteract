@@ -91,9 +91,6 @@ public:
 	
 
 private:
-	//Combat
-	float timeWithoutCombat = 0.f;
-	bool fighting = false;
 	//Dash
 	float dashCooldownRemaining = 0.f;
 	float dashRemaining = 0.f;

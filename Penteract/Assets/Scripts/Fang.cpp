@@ -225,10 +225,10 @@ bool Fang::CanEMP() {
 
 void Fang::CheckCoolDowns(bool noCooldownMode) {
 	//Combat
-	if (fighting) {
+	if (aiming) {
 		timeWithoutCombat += Time::GetDeltaTime();
 		if (timeWithoutCombat >= maxCombatTime) {
-			fighting = false;
+			aiming = false;
 			timeWithoutCombat = maxCombatTime;
 		}
 	}
@@ -274,7 +274,7 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 }
 
 void Fang::OnAnimationFinished() {
-	int idle = fighting ? static_cast<int>(FANG_STATES::IDLE_AIM) : static_cast<int>(FANG_STATES::IDLE);
+	int idle = aiming ? static_cast<int>(FANG_STATES::IDLE_AIM) : static_cast<int>(FANG_STATES::IDLE);
 	if (compAnimation) {
 		if (compAnimation->GetCurrentState()) {
 			if (compAnimation->GetCurrentState()->name == states[static_cast<int>(FANG_STATES::EMP)]) {
@@ -324,7 +324,7 @@ void Fang::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 		if (bullet->GetComponent<ComponentParticleSystem>()) {
 			bullet->GetComponent<ComponentParticleSystem>()->Play();
 			timeWithoutCombat = 0.f;
-			fighting = true;
+			aiming = true;
 		}
 		shootingGunTransform = nullptr;
 	}
@@ -366,7 +366,7 @@ void Fang::PlayAnimation() {
 		movementInputDirection = dashMovementDirection;
 	}
 	if (EMP->IsActive()) movementInputDirection = MovementDirection::NONE;
-	int idle = fighting ? static_cast<int>(FANG_STATES::IDLE_AIM) : static_cast<int>(FANG_STATES::IDLE);
+	int idle = aiming ? static_cast<int>(FANG_STATES::IDLE_AIM) : static_cast<int>(FANG_STATES::IDLE);
 	if (compAnimation->GetCurrentState()) {
 		if (ultimateOn || compAnimation->GetCurrentState()->name == states[static_cast<int>(FANG_STATES::ULTIMATE)]) {
 			if (compAnimation->GetCurrentState()->name != states[static_cast<int>(FANG_STATES::ULTIMATE)]) {
@@ -391,8 +391,8 @@ void Fang::PlayAnimation() {
 				}
 			}
 		} else {
-			if (compAnimation->GetCurrentState()->name != states[fighting?(GetMouseDirectionState() + dashAnimation): static_cast<int>(FANG_STATES::SPRINT)]) {
-				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[fighting ? (GetMouseDirectionState() + dashAnimation) : static_cast<int>(FANG_STATES::SPRINT)]);
+			if (compAnimation->GetCurrentState()->name != states[aiming?(GetMouseDirectionState() + dashAnimation): static_cast<int>(FANG_STATES::SPRINT)]) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[aiming ? (GetMouseDirectionState() + dashAnimation) : static_cast<int>(FANG_STATES::SPRINT)]);
 			}
 		}
 	}
@@ -426,7 +426,7 @@ bool Fang::CanUltimate() {
 void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation, bool faceToFront) {
 	if (isAlive) {
 		if (EMP) {
-			Player::Update(useGamepad, dashing || EMP->IsActive(), dashing || EMP->IsActive() || ultimateOn, !fighting);
+			Player::Update(useGamepad, dashing || EMP->IsActive(), dashing || EMP->IsActive() || ultimateOn, !aiming);
 			if (GetInputBool(InputActions::ABILITY_1, useGamepad) && !EMP->IsActive()) {
 				InitDash();
 			}
