@@ -4,5 +4,9 @@
             "Id": 14044598934269275938,
             "Type": "Texture"
         }
-    ]
+    ],
+    "Flip": false,
+    "Wrap": 2,
+    "MinFilter": 5,
+    "MagFilter": 1
 }

@@ -10,7 +10,15 @@
 #define HIERARCHY_INDEX_ABILITY_EFFECT 3
 #define HIERARCHY_INDEX_ABILITY_PICTO_SHADE 5
 #define HIERARCHY_INDEX_ABILITY_KEY_FILL 6
-#define HIERARCHY_INDEX_ULTIMATE_ABILITY_DECOR_FILL 7
+
+
+#define HIERARCHY_INDEX_OTHER_ULTIMATE_ABILITY_OTHER_ULT_FILL 4
+#define HIERARCHY_INDEX_OTHER_ULTIMATE_ABILITY_FILL 5
+#define HIERARCHY_INDEX_ULTIMATE_ABILITY_PICTO_SHADE 6
+#define HIERARCHY_INDEX_ULTIMATE_ABILITY_KEY_FILL 7
+
+
+#define HIERARCHY_INDEX_ULTIMATE_ABILITY_DECOR_FILL 8
 
 #define HIERARCHY_INDEX_SWITCH_ABILITY_FILL 1
 #define HIERARCHY_INDEX_SWITCH_ABILITY_DURATION_FILL 2
@@ -280,7 +288,7 @@ void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 	std::vector<GameObject*> skills = canvas->GetChildren();
 	//Skills size is supposed to be 3, for each character has 3 skills
 	if (skills.size() == 3) {
-
+		int ultCount = 0;
 		int skill = startingIt;
 		for (std::vector<GameObject*>::iterator it = skills.begin(); it != skills.end(); ++it) {
 
@@ -288,10 +296,17 @@ void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 			ComponentImage* pictogramImage = nullptr;
 			ComponentText* text = nullptr;
 			ComponentImage* textFill = nullptr;
-			fillImage = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_FILL]->GetComponent<ComponentImage>();
-			pictogramImage = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_PICTO_SHADE]->GetComponent<ComponentImage>();
 
-			textFill = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_KEY_FILL]->GetComponent<ComponentImage>();
+			fillImage = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_FILL]->GetComponent<ComponentImage>();
+
+			if (ultCount != 2) {
+				pictogramImage = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_PICTO_SHADE]->GetComponent<ComponentImage>();
+				textFill = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_KEY_FILL]->GetComponent<ComponentImage>();
+			} else {
+				pictogramImage = (*it)->GetChildren()[HIERARCHY_INDEX_ULTIMATE_ABILITY_PICTO_SHADE]->GetComponent<ComponentImage>();
+				textFill = (*it)->GetChildren()[HIERARCHY_INDEX_ULTIMATE_ABILITY_KEY_FILL]->GetComponent<ComponentImage>();
+			}
+
 			if (fillImage && pictogramImage) {
 
 				if (cooldowns[skill] < 1) {
@@ -307,29 +322,49 @@ void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 				}
 			}
 
-			GameObject* textParent = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_KEY_FILL];
+			//GameObject* textParent = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_KEY_FILL];
 
-			if (textParent) {
-				text = textParent->GetChild(1)->GetComponent<ComponentText>();
+			//if (textParent) {
+			//	text = textParent->GetChild(1)->GetComponent<ComponentText>();
+			//	if (text) {
+			//		text->SetFontColor(cooldowns[skill] < 1 ? buttonTextColorNotAvailable : buttonTextColorAvailable);
+			//	}
+			//}
+
+			if (textFill) {
+				textFill->SetColor(cooldowns[skill] < 1 ? buttonColorNotAvailable : buttonColorAvailable);
+				text = textFill->GetOwner().GetChild(1)->GetComponent<ComponentText>();
 				if (text) {
 					text->SetFontColor(cooldowns[skill] < 1 ? buttonTextColorNotAvailable : buttonTextColorAvailable);
 				}
 			}
 
-			if (textFill) {
-				textFill->SetColor(cooldowns[skill] < 1 ? buttonColorNotAvailable : buttonColorAvailable);
-			}
-
 			AbilityCoolDownEffectCheck(static_cast<Cooldowns>(skill), canvas);
 
 			++skill;
+			++ultCount;
 		}
 
 		if (skills[2]) {
-			if (cooldowns[startingIt + 2] != 1.0f) {
+			if (cooldowns[startingIt + 2] < 1.0f) {
 				GameObject* decorFill = skills[2]->GetChildren()[HIERARCHY_INDEX_ULTIMATE_ABILITY_DECOR_FILL];
 				if (decorFill) {
 					decorFill->Disable();
+				}
+			}
+		}
+
+		GameObject* otherUltFillObj = skills[2]->GetChildren()[HIERARCHY_INDEX_OTHER_ULTIMATE_ABILITY_OTHER_ULT_FILL];
+
+		if (otherUltFillObj) {
+			ComponentImage* otherUltFill = otherUltFillObj->GetComponent<ComponentImage>();
+			if (otherUltFill) {
+				if (startingIt == 0) {
+					otherUltFill->SetFillValue(cooldowns[static_cast<int>(Cooldowns::ONIMARU_SKILL_3)]);
+					//Fang
+				} else {
+					otherUltFill->SetFillValue(cooldowns[static_cast<int>(Cooldowns::FANG_SKILL_3)]);
+					//Onimaru
 				}
 			}
 		}
