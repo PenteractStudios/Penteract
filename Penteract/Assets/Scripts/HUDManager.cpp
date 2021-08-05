@@ -737,7 +737,7 @@ void HUDManager::ManageSwitch() {
 
 		break;
 	case SwitchState::PRE_DEPLOY:
-		// Workaround until we have SetPivot
+		// TODO: Refactor with pivot
 
 		if (switchTimer > switchBarGrowShrinkTime) {
 			switchTimer = switchBarGrowShrinkTime;

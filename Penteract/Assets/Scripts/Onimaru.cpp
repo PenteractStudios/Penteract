@@ -132,10 +132,6 @@ void Onimaru::StartUltimate() {
 		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(ULTI_INTRO)]);
 	}
 
-	if (hudControllerScript) {
-		hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::ONIMARU_SKILL_3);
-	}
-
 	if (hudManagerScript) {
 		hudManagerScript->SetCooldownRetreival(HUDManager::Cooldowns::ONIMARU_SKILL_3);
 		hudManagerScript->StartUsingSkill(HUDManager::Cooldowns::ONIMARU_SKILL_3);
@@ -283,7 +279,7 @@ void Onimaru::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* ev
 	}
 }
 
-void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID onimaruRightHandUID, UID shieldUID, UID onimaruUltimateBulletUID, UID onimaruBlastEffectsUID, UID cameraUID, UID canvasUID, float maxSpread_) {
+void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID onimaruRightHandUID, UID shieldUID, UID onimaruUltimateBulletUID, UID onimaruBlastEffectsUID, UID cameraUID, UID HUDManagerObjectUID, float maxSpread_) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(onimaruUID);
 	if (characterGameObject && characterGameObject->GetParent()) {
@@ -325,10 +321,9 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 		lookAtMousePlanePosition = gunTransform->GetGlobalPosition();
 	}
 
-	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
-	if (canvasGO) {
-		hudControllerScript = GET_SCRIPT(canvasGO, HUDController);
-		hudManagerScript = GET_SCRIPT(canvasGO, HUDManager);
+	GameObject* HUDManagerGO = GameplaySystems::GetGameObject(HUDManagerObjectUID);
+	if (HUDManagerGO) {
+		hudManagerScript = GET_SCRIPT(HUDManagerGO, HUDManager);
 	}
 
 	shieldGO = GameplaySystems::GetGameObject(shieldUID);
@@ -352,6 +347,8 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 
 	GameObject* blastParticlesGO = GameplaySystems::GetGameObject(onimaruBlastEffectsUID);
 	if (blastParticlesGO) blastParticles = blastParticlesGO->GetComponent<ComponentParticleSystem>();
+
+	if (characterGameObject) characterGameObject->Disable();
 }
 
 void Onimaru::OnAnimationFinished() {
@@ -527,9 +524,6 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 							compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 						}
 					}
-				}
-				if (hudControllerScript) {
-					hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::ONIMARU_SKILL_2);
 				}
 
 				if (hudManagerScript) {

@@ -88,10 +88,9 @@ public:
 	UID onimaruUltimateBulletUID = 0;
 
 	//HUD
-	UID canvasUID = 0;
+	UID HUDManagerObjectUID = 0;
 	float fangRecoveryRate = 1.0f;
 	float onimaruRecoveryRate = 1.0f;
-	bool firstTime = true;
 	bool hitTaken = false;
 
 	//Camera
@@ -125,7 +124,6 @@ private:
 	//HUD
 	float fangRecovering = 0.f;
 	float onimaruRecovering = 0.f;
-	HUDController* hudControllerScript = nullptr;
 	HUDManager* hudManagerScript = nullptr;
 
 	//Switch

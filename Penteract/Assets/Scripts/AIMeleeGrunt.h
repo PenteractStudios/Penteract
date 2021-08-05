@@ -49,7 +49,6 @@ public:
 public:
 
 	UID playerUID = 0;
-	UID canvasUID = 0;
 	UID winConditionUID = 0;
 	UID meleePunchUID = 0;
 	UID fangUID = 0;
@@ -91,7 +90,6 @@ private:
 	bool EMPUpgraded = false;
 	int deathType = 0;
 
-	HUDController* hudControllerScript = nullptr;
 	PlayerController* playerController = nullptr;
 	PlayerDeath* playerDeath = nullptr;
 	AIMovement* movementScript = nullptr;

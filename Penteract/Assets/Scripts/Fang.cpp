@@ -5,7 +5,7 @@
 #include "CameraController.h"
 #include "UltimateFang.h"
 
-void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, UID rightBulletUID, UID leftBulletUID, UID cameraUID, UID canvasUID, UID EMPUID, UID EMPEffectsUID, UID fangUltimateUID, UID ultimateVFXUID) {
+void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, UID rightBulletUID, UID leftBulletUID, UID cameraUID, UID HUDManagerObjectUID, UID EMPUID, UID EMPEffectsUID, UID fangUltimateUID, UID ultimateVFXUID) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(fangUID);
 	ultimateTotalTime = 4.6f;
@@ -51,10 +51,9 @@ void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, 
 			agent->SetMaxSpeed(movementSpeed);
 			agent->SetMaxAcceleration(MAX_ACCELERATION);
 		}
-		GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
-		if (canvasGO) {
-			hudControllerScript = GET_SCRIPT(canvasGO, HUDController);
-			hudManagerScript = GET_SCRIPT(canvasGO, HUDManager);
+		GameObject* HUDManagerGO = GameplaySystems::GetGameObject(HUDManagerObjectUID);
+		if (HUDManagerGO) {
+			hudManagerScript = GET_SCRIPT(HUDManagerGO, HUDManager);
 		}
 
 
@@ -82,11 +81,7 @@ void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, 
 			ultimateCooldownRemaining = ultimateCooldown;
 		}
 	}
-	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
-	if (canvasGO) {
-		hudControllerScript = GET_SCRIPT(canvasGO, HUDController);
-		hudManagerScript = GET_SCRIPT(canvasGO, HUDManager);
-	}
+
 	if (characterGameObject) {
 		characterGameObject->GetComponent<ComponentCapsuleCollider>()->Enable();
 
@@ -179,10 +174,6 @@ void Fang::InitDash() {
 		}
 	}
 
-	if (hudControllerScript) {
-		hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_1);
-	}
-
 	if (hudManagerScript) {
 		hudManagerScript->SetCooldownRetreival(HUDManager::Cooldowns::FANG_SKILL_1);
 	}
@@ -222,9 +213,7 @@ void Fang::ActivateEMP() {
 		if (fangAudios[static_cast<int>(FANG_AUDIOS::EMP)]) {
 			fangAudios[static_cast<int>(FANG_AUDIOS::EMP)]->Play();
 		}
-		if (hudControllerScript) {
-			hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_2);
-		}
+
 		if (hudManagerScript) {
 			hudManagerScript->SetCooldownRetreival(HUDManager::Cooldowns::FANG_SKILL_2);
 		}
@@ -428,10 +417,6 @@ void Fang::ActiveUltimate() {
 
 		if (fangAudios[static_cast<int>(FANG_AUDIOS::ULTIMATE)]) {
 			fangAudios[static_cast<int>(FANG_AUDIOS::ULTIMATE)]->Play();
-		}
-
-		if (hudControllerScript) {
-			hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_3);
 		}
 
 		if (hudManagerScript) {

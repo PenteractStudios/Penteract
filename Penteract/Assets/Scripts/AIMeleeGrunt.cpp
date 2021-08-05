@@ -16,7 +16,6 @@
 
 EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
 		MEMBER(MemberType::PREFAB_RESOURCE_UID, meleePunchUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
@@ -76,11 +75,6 @@ void AIMeleeGrunt::Start() {
 	animation = GetOwner().GetComponent<ComponentAnimation>();
 	ownerTransform = GetOwner().GetComponent<ComponentTransform>();
 
-	GameObject* canvas = GameplaySystems::GetGameObject(canvasUID);
-	if (canvas) {
-		hudControllerScript = GET_SCRIPT(canvas, HUDController);
-	}
-
 	movementScript = GET_SCRIPT(&GetOwner(), AIMovement);
 
 	int i = 0;
@@ -131,7 +125,6 @@ void AIMeleeGrunt::Update() {
 	if (!player) return;
 	if (!agent) return;
 	if (!movementScript) return;
-	if (!hudControllerScript) return;
 	if (!playerController) return;
 	if (!ownerTransform) return;
 	if (!animation) return;
@@ -225,9 +218,6 @@ void AIMeleeGrunt::Update() {
 			gruntCharacter.timeToDie -= Time::GetDeltaTime();
 		}
 		else {
-			if (hudControllerScript) {
-				hudControllerScript->UpdateScore(10);
-			}
 			if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
 			GameplaySystems::DestroyGameObject(&GetOwner());
 		}
