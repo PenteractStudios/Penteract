@@ -58,6 +58,7 @@ private:
 	void PlayAudio(AudioType audioType);											//Plays audio (if not null)
 
 	void UpdatePushBackPosition();
+	void CalculatePushBackRealDistance();											// Calculates the real distance of the pushback taking into account any obstacles in the path
 
 public:
 	Enemy rangerGruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 5.f, 5.f, 3.f, 2.f); //Enemy class instance (for shared values)
@@ -132,6 +133,7 @@ private:
 
 	float currentPushBackDistance = 0.f;
 	float currentSlowedDownTime = 0.f;
+	float pushBackRealDistance = 0.f;
 
 	float currentFleeingUpdateTime = 0.f; // Current Time that needs to compare against the fleeingUpdateTime in the flee state
 	float3 currentFleeDestination;        // Destination position where it is going to move far away from the player  

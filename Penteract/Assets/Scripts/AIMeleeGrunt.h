@@ -106,6 +106,9 @@ private:
 	float currentPushBackDistance = 0.f;
 	float currentSlowedDownTime = 0.f;
 
+	float pushBackRealDistance = 0.f;
+
 private:
 	void UpdatePushBackPosition();
+	void CalculatePushBackRealDistance();	// Calculates the real distance of the pushback taking into account any obstacles in the path
 };

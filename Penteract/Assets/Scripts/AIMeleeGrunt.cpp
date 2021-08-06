@@ -122,6 +122,8 @@ void AIMeleeGrunt::Start() {
 			componentMeshRenderer = gameObject->GetComponent<ComponentMeshRenderer>();
 		}
 	}
+
+	pushBackRealDistance = gruntCharacter.pushBackDistance;
 }
 void AIMeleeGrunt::DeleteAttackCollider() {
 	if (attackColliderOn) {
@@ -434,6 +436,7 @@ void AIMeleeGrunt::EnableBlastPushBack() {
 		gruntCharacter.beingPushed = true;
 		state = AIState::PUSHED;
 		if (animation->GetCurrentState()) animation->SendTrigger(animation->GetCurrentState()->name + "Hurt");
+		CalculatePushBackRealDistance();
 	}
 }
 
@@ -463,12 +466,30 @@ void AIMeleeGrunt::UpdatePushBackPosition() {
 		float distance = enemyPos.Distance(initialPos);
 		currentPushBackDistance += distance;
 
-		if (currentPushBackDistance >= gruntCharacter.pushBackDistance) {
+		if (currentPushBackDistance >= pushBackRealDistance) {
 			DisableBlastPushBack();
 			gruntCharacter.slowedDown = true;
 			currentPushBackDistance = 0.f;
 			currentSlowedDownTime = 0.f;
+			pushBackRealDistance = gruntCharacter.pushBackDistance;
 		}
+	}
+}
+void AIMeleeGrunt::CalculatePushBackRealDistance() {
+	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
+
+	float3 direction = (enemyPos - playerPos).Normalized();
+
+	bool hitResult = false;
+
+	float3 finalPos = enemyPos + direction * gruntCharacter.pushBackDistance;
+	float3 resultPos = { 0,0,0 };
+	
+	Navigation::Raycast(enemyPos, finalPos, hitResult, resultPos);
+
+	if (hitResult) {
+		pushBackRealDistance = resultPos.Distance(enemyPos) - 1; // Should be agent radius but it's not exposed
 	}
 }
 //Implement melee attack with this when frame events work

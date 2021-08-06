@@ -143,6 +143,8 @@ void RangedAI::Start() {
 	}
 
 	enemySpawnPointScript = GET_SCRIPT(GetOwner().GetParent(), EnemySpawnPoint);
+
+	pushBackRealDistance = rangerGruntCharacter.pushBackDistance;
 }
 
 void RangedAI::OnAnimationFinished() {
@@ -604,6 +606,7 @@ void RangedAI::EnableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		ChangeState(AIState::PUSHED);
 		rangerGruntCharacter.beingPushed = true;
+		CalculatePushBackRealDistance();
 	}
 }
 
@@ -648,12 +651,31 @@ void RangedAI::UpdatePushBackPosition() {
 		float distance = enemyPos.Distance(initialPos);
 		currentPushBackDistance += distance;
 
-		if (currentPushBackDistance >= rangerGruntCharacter.pushBackDistance) {
+		if (currentPushBackDistance >= pushBackRealDistance) {
 			agent->SetMaxSpeed(rangerGruntCharacter.slowedDownSpeed);
 			DisableBlastPushBack();
 			rangerGruntCharacter.slowedDown = true;
 			currentPushBackDistance = 0.f;
 			currentSlowedDownTime = 0.f;
+			pushBackRealDistance = rangerGruntCharacter.pushBackDistance;
 		}
+	}
+}
+
+void RangedAI::CalculatePushBackRealDistance() {
+	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
+
+	float3 direction = (enemyPos - playerPos).Normalized();
+
+	bool hitResult = false;
+
+	float3 finalPos = enemyPos + direction * rangerGruntCharacter.pushBackDistance;
+	float3 resultPos = { 0,0,0 };
+
+	Navigation::Raycast(enemyPos, finalPos, hitResult, resultPos);
+
+	if (hitResult) {
+		pushBackRealDistance = resultPos.Distance(enemyPos) - 1; // Should be agent radius but it's not exposed
 	}
 }
