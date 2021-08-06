@@ -2,6 +2,14 @@
 
 #include "Character.h"
 
+enum class DukeState {
+	BASIC_BEHAVIOUR,
+	MELEE_ATTACK,
+	SHOOT_SHIELD,
+	BULLET_HELL,
+	CHARGE
+};
+
 class Duke : public Character
 {
 public:
@@ -39,6 +47,8 @@ public:
 	float timeToDie = 5.f;
 	float pushBackDistance = 5.f;
 	float pushBackSpeed = 5.f;
+
+	DukeState state = DukeState::BASIC_BEHAVIOUR;
 
 private:
 	GameObject* player = nullptr;
