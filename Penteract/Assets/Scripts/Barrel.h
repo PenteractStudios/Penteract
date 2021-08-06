@@ -39,4 +39,5 @@ public:
 	float timerToDestroy = 3.0f;
 	float currentTimerToDestroy = 0.0f;
 	bool startTimerToDestroy = false;
+	bool timerDestroyActivated = false;
 };

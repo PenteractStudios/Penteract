@@ -42,7 +42,7 @@ void Barrel::Start() {
 
 void Barrel::Update() {
 
-	if (startTimerToDestroy) {
+	if (startTimerToDestroy && timerDestroyActivated) {
 		if (particlesForTimer) particlesForTimer->PlayChildParticles();
 		if (audioForTimer) audioForTimer->Play();
 
@@ -85,6 +85,7 @@ void Barrel::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 		
 		if (collidedWith.name == "FangBullet") {
 			startTimerToDestroy = true;
+			timerDestroyActivated = true;
 			GameplaySystems::DestroyGameObject(&collidedWith);
 		}
 
