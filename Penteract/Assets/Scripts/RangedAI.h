@@ -60,7 +60,7 @@ private:
 	void UpdatePushBackPosition();
 
 public:
-	Enemy rangerGruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 5.f, 5.f); //Enemy class instance (for shared values)
+	Enemy rangerGruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 5.f, 5.f, 3.f, 2.f); //Enemy class instance (for shared values)
 	UID playerUID = 0;				//Reference to player main Gameobject UID, used to check distances
 	UID playerMeshUIDFang = 0;		//Reference to player Fang mesh holding Gameobject UID, used for raycasting if fang is active
 	UID playerMeshUIDOnimaru = 0;	//Reference to player Fang mesh holding Gameobject UID, used for raycasting if onimaru is active
@@ -131,6 +131,7 @@ private:
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr }; //Array of ints used to play audios
 
 	float currentPushBackDistance = 0.f;
+	float currentSlowedDownTime = 0.f;
 
 	float currentFleeingUpdateTime = 0.f; // Current Time that needs to compare against the fleeingUpdateTime in the flee state
 	float3 currentFleeDestination;        // Destination position where it is going to move far away from the player  

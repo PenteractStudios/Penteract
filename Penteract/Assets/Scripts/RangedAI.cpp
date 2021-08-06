@@ -26,13 +26,17 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
+	MEMBER_SEPARATOR("Enemy stats"),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.lifePoints),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.timeToDie),
+	MEMBER_SEPARATOR("Push variables"),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackDistance),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackSpeed),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownSpeed),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownTime),
 	MEMBER(MemberType::FLOAT, attackSpeed),
 	MEMBER(MemberType::FLOAT, fleeingRange),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, trailPrefabUID),
@@ -266,6 +270,8 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 }
 
 void RangedAI::Update() {
+	if (!agent) return;
+
 	if (meshRenderer) {
 		if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
 			timeSinceLastHurt += Time::GetDeltaTime();
@@ -291,6 +297,14 @@ void RangedAI::Update() {
 		if (actualShotTimer == 0) {
 			ActualShot();
 		}
+	}
+
+	if (rangerGruntCharacter.slowedDown) {
+		if (currentSlowedDownTime >= rangerGruntCharacter.slowedDownTime) {
+			agent->SetMaxSpeed(rangerGruntCharacter.movementSpeed);
+			rangerGruntCharacter.slowedDown = false;
+		}
+		currentSlowedDownTime += Time::GetDeltaTime();
 	}
 
 	UpdateState();
@@ -372,6 +386,9 @@ void RangedAI::EnterState(AIState newState) {
 
 void RangedAI::UpdateState() {
 	if (!animation) return;
+
+	float speedToUse = rangerGruntCharacter.slowedDown ? rangerGruntCharacter.slowedDownSpeed : rangerGruntCharacter.movementSpeed;
+
 	switch (state) {
 	case AIState::START:
 		if (aiMovement) aiMovement->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), rangerGruntCharacter.fallingSpeed, true);
@@ -414,7 +431,7 @@ void RangedAI::UpdateState() {
 
 				if (!CharacterInRange(player, rangerGruntCharacter.attackRange - approachOffset, true) || !FindsRayToPlayer(false)) {
 					if (!aiMovement->CharacterInSight(player, fleeingRange)) {
-						if (aiMovement) aiMovement->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), static_cast<int>(rangerGruntCharacter.movementSpeed), false);
+						if (aiMovement) aiMovement->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), static_cast<int>(speedToUse), false);
 					}
 					else {
 						ChangeState(AIState::FLEE);
@@ -441,7 +458,7 @@ void RangedAI::UpdateState() {
 				}
 				else if (currentFleeingUpdateTime >= 0 && fleeingFarAway ) {   //Moving far away from player
 					currentFleeingUpdateTime -= Time::GetDeltaTime();
-					aiMovement->Seek(state, currentFleeDestination, static_cast<int>(rangerGruntCharacter.movementSpeed), false);
+					aiMovement->Seek(state, currentFleeDestination, static_cast<int>(speedToUse), false);
 
 					if (currentFleeingUpdateTime <= 0 ) {
 						fleeingFarAway = false;
@@ -632,9 +649,11 @@ void RangedAI::UpdatePushBackPosition() {
 		currentPushBackDistance += distance;
 
 		if (currentPushBackDistance >= rangerGruntCharacter.pushBackDistance) {
-			agent->SetMaxSpeed(rangerGruntCharacter.movementSpeed);
+			agent->SetMaxSpeed(rangerGruntCharacter.slowedDownSpeed);
 			DisableBlastPushBack();
+			rangerGruntCharacter.slowedDown = true;
 			currentPushBackDistance = 0.f;
+			currentSlowedDownTime = 0.f;
 		}
 	}
 }

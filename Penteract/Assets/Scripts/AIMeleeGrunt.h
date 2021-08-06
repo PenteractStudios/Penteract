@@ -66,7 +66,7 @@ public:
 	ResourcePrefab* meleePunch = nullptr;
 	WinLose* winLoseScript = nullptr;
 
-	Enemy gruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 5.f, 5.f);
+	Enemy gruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 5.f, 5.f, 3.f, 2.f);
 	bool killSent = false;
 
 	float hurtFeedbackTimeDuration = 0.5f;
@@ -104,6 +104,7 @@ private:
 	GameObject* punch = nullptr;
 
 	float currentPushBackDistance = 0.f;
+	float currentSlowedDownTime = 0.f;
 
 private:
 	void UpdatePushBackPosition();

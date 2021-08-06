@@ -7,13 +7,15 @@ public:
 	// ------- Contructors ------- //
 	Enemy() {};
 
-	Enemy(float lifePoints_, float movementSpeed_, float damageHit_, int fallingSpeed_, float searchRadius_, float attackRange_, float timeToDie_, float pushBackDistance_, float pushBackSpeed_)
+	Enemy(float lifePoints_, float movementSpeed_, float damageHit_, int fallingSpeed_, float searchRadius_, float attackRange_, float timeToDie_, float pushBackDistance_, float pushBackSpeed_, float slowedDownSpeed_, float slowedDownTime_)
 		: fallingSpeed(fallingSpeed_)
 		, searchRadius(searchRadius_) 
 		, attackRange(attackRange_)
 		, timeToDie(timeToDie_)
 		, pushBackDistance(pushBackDistance_)
-		, pushBackSpeed(pushBackSpeed_) {
+		, pushBackSpeed(pushBackSpeed_)
+		, slowedDownSpeed(slowedDownSpeed_)
+		, slowedDownTime(slowedDownTime_) {
 		lifePoints = lifePoints_;
 		movementSpeed = movementSpeed_;
 		damageHit = damageHit_;
@@ -33,6 +35,9 @@ public:
 	float timeToDie = 5.f;
 	float pushBackDistance = 5.f;
 	float pushBackSpeed = 5.f;
+	float slowedDownSpeed = 3.f;
+	float slowedDownTime = 2.f;
 	bool destroying = false;
 	bool beingPushed = false;
+	bool slowedDown = false;
 };
