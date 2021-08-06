@@ -1026,9 +1026,9 @@ void HUDManager::ResetLostHealthFeedback() {
 	if (switchState != SwitchState::IDLE) {
 		// If X character is active, we have already swapped so we get the other one feedback bar
 		ComponentImage* lostHealth = nullptr;
-		lostHealth = fangObj->IsActive() ? onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>() : fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
-		float maxHealth = fangObj->IsActive() ? playerController->GetOnimaruMaxHealth() : playerController->GetFangMaxHealth();
-		float feedbackHealth = fangObj->IsActive() ? onimaruPreviousHealth : fangPreviousHealth;
+		lostHealth = fangObj->IsActive() ? fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>() : onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
+		float maxHealth = fangObj->IsActive() ? playerController->GetFangMaxHealth() : playerController->GetOnimaruMaxHealth();
+		float feedbackHealth = fangObj->IsActive() ? fangPreviousHealth : onimaruPreviousHealth;
 
 		if (lostHealth) {
 			lostHealth->SetColor(healthLostFeedbackFillBarFinalColor);
