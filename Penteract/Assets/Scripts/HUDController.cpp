@@ -12,36 +12,42 @@
 
 #define HIERARCHY_INDEX_MAIN_HEALTH 1
 
-
-#define HIERARCHY_INDEX_MAIN_ABILITY_FILL 2
-#define HIERARCHY_INDEX_SECONDARY_ABILITY_FILL 1
+/* Current skill index in hierarchy */
 #define HIERARCHY_INDEX_MAIN_ABILITY_EFFECT 0
+#define HIERARCHY_INDEX_MAIN_ABILITY_FILL 2
+#define HIERARCHY_INDEX_MAIN_ABILITY_IMAGE 4
 #define HIERARCHY_INDEX_MAIN_BUTTON_UP 5
 #define HIERARCHY_INDEX_MAIN_BUTTON_DOWN 6  
 
+/* Alternative skill index in hierarchy */
+#define HIERARCHY_INDEX_SECONDARY_ABILITY_FILL 1
+
+/* Swap chararcters index in hierarchy */
 #define HIERARCHY_INDEX_SWAP_ABILITY_EFFECT 2
 #define HIERARCHY_INDEX_SWAP_ABILITY_FILL 3
+#define HIERARCHY_INDEX_SWAP_ABILITY_IMAGE 4
+
 
 EXPOSE_MEMBERS(HUDController) {
 	// Add members here to expose them to the engine. Example:
 	MEMBER(MemberType::GAME_OBJECT_UID, fangMainCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruMainCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangSkillsMainCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillsMainCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangSkillsSecondCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillsSecondCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangHealthMainCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthMainCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangHealthSecondCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthSecondCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, swapingSkillCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, scoreTextUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, canvasHUDUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, lowHealthWarningEffectUID),
-	MEMBER(MemberType::FLOAT, timeToFadeDurableHealthFeedbackInternal),
-	MEMBER(MemberType::FLOAT, delaySwitchTime)
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruMainCanvasUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, fangSkillsMainCanvasUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillsMainCanvasUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, fangSkillsSecondCanvasUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillsSecondCanvasUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, fangHealthMainCanvasUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthMainCanvasUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, fangHealthSecondCanvasUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthSecondCanvasUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, swapingSkillCanvasUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, scoreTextUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, canvasHUDUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, lowHealthWarningEffectUID),
+		MEMBER(MemberType::FLOAT, timeToFadeDurableHealthFeedbackInternal),
+		MEMBER(MemberType::FLOAT, delaySwitchTime)
 };
 
 GENERATE_BODY_IMPL(HUDController);
@@ -51,10 +57,6 @@ void HUDController::Start() {
 	prevLivesFang = prevLivesOni = MAX_HEALTH;
 	for (int i = 0; i < MAX_HEALTH; i++) {
 		remainingDurableHealthTimesFang[i] = remainingDurableHealthTimesOni[i] = 0;
-	}
-
-	for (int i = 0; i < static_cast<int>(Cooldowns::TOTAL); i++) {
-		abilityCoolDownsRetreived[i] = true;
 	}
 
 	timeToFadeDurableHealthFeedback = timeToFadeDurableHealthFeedbackInternal;
@@ -88,7 +90,6 @@ void HUDController::Start() {
 		onimaruCanvas->Disable();
 		fangCanvas->Enable();
 		fang->Enable();
-
 	}
 
 	if (fangHealthMainCanvas) {
@@ -158,7 +159,8 @@ void HUDController::LoadCooldownFeedbackStates(GameObject* canvas, int startingI
 	int skill = startingIndex;
 	for (std::vector<GameObject*>::iterator it = skills.begin(); it != skills.end(); ++it) {
 
-		ComponentImage* image = nullptr;
+		ComponentImage* fillColor = nullptr;
+		ComponentImage* imageColor = nullptr;
 		if ((*it)->GetChildren().size() > HIERARCHY_INDEX_MAIN_BUTTON_UP) {
 			//Cooldown does not return 1, meaning that it is ON Cooldown
 			if (cooldowns[skill] < 1) {
@@ -172,17 +174,20 @@ void HUDController::LoadCooldownFeedbackStates(GameObject* canvas, int startingI
 				(*it)->GetChild(HIERARCHY_INDEX_MAIN_BUTTON_DOWN)->Disable();
 			}
 
-			image = (*it)->GetChildren()[HIERARCHY_INDEX_MAIN_ABILITY_FILL]->GetComponent<ComponentImage>();
-			if (image) {
+			fillColor = (*it)->GetChildren()[HIERARCHY_INDEX_MAIN_ABILITY_FILL]->GetComponent<ComponentImage>();
+			imageColor = (*it)->GetChildren()[HIERARCHY_INDEX_MAIN_ABILITY_IMAGE]->GetComponent<ComponentImage>();
+			if (fillColor && imageColor) {
 
 				if (cooldowns[skill] < 1) {
-					image->SetColor(float4(colorBlueForCD, 0.3f + cooldowns[skill]));
+					fillColor->SetColor(float4(colorBlueForCD, 0.3f + cooldowns[skill]));
+					imageColor->SetColor(colorWhite);
 				} else {
-					image->SetColor(colorMagenta);
+					fillColor->SetColor(colorWhite);
+					imageColor->SetColor(colorBlueBackground);
 				}
 
-				if (image->IsFill()) {
-					image->SetFillValue(cooldowns[skill]);
+				if (fillColor->IsFill()) {
+					fillColor->SetFillValue(cooldowns[skill]);
 				}
 			}
 		}
@@ -208,8 +213,8 @@ void HUDController::ChangePlayerHUD(int fangLives, int oniLives) {
 		LoadCooldownFeedbackStates(fangSkillsMainCanvas, static_cast<int>(Cooldowns::FANG_SKILL_1));
 	}
 
-	remainingTimeActiveIndexesFang.clear();
-	remainingTimeActiveIndexesOni.clear();
+	//remainingTimeActiveIndexesFang.clear();
+	//remainingTimeActiveIndexesOni.clear();
 	for (int i = 0; i < MAX_HEALTH; i++) {
 		remainingDurableHealthTimesFang[i] = 0;
 		remainingDurableHealthTimesOni[i] = 0;
@@ -368,48 +373,56 @@ void HUDController::UpdateHP(float currentHp, float altHp) {
 
 void HUDController::UpdateDurableHPLoss(GameObject* targetCanvas) {
 	bool isFang = (targetCanvas->GetID() == fangHealthMainCanvas->GetID());
-
-	std::vector<int>& indexes = isFang ? remainingTimeActiveIndexesFang : remainingTimeActiveIndexesOni;
-
-	float* remainingTimes = isFang ? remainingDurableHealthTimesFang : remainingDurableHealthTimesOni;
-
-	if (indexes.size() > 0) {
-		std::vector<std::vector<int>::iterator>vectorIndexesToRemove;
-
-		for (std::vector<int>::iterator it = indexes.begin(); it != indexes.end(); ++it) {
-
-			if (remainingTimes[(*it)] <= 0) {
-				remainingTimes[(*it)] = 0;
-				vectorIndexesToRemove.push_back(it);
-			}
-
-			float delta = remainingTimes[(*it)] / timeToFadeDurableHealthFeedback;
+	if (isFang) {
+		if (AnyTimerCounting(isFang)) {
+			for (int i = 0; i < MAX_HEALTH; i++) {
+				if (remainingDurableHealthTimesFang[i] > 0) {
+					float delta = remainingDurableHealthTimesFang[i] / timeToFadeDurableHealthFeedback;
 
 
-			ComponentImage* image = targetCanvas->GetChildren()[*it]->GetChild(HIERARCHY_INDEX_MAIN_HEALTH)->GetComponent<ComponentImage>();
-			if (image) {
-				//We need access to image->SetAlphaTransparency to prevent possible errors
-				if (delta < 0.5f) {
+					ComponentImage* image = targetCanvas->GetChildren()[i]->GetChild(HIERARCHY_INDEX_MAIN_HEALTH)->GetComponent<ComponentImage>();
+					if (image) {
+						//We need access to image->SetAlphaTransparency to prevent possible errors
+						if (delta < 0.5f) {
 
-					//Remapping
-					delta = (delta) / (0.5f);
+							//Remapping
+							delta = (delta) / (0.5f);
 
-					image->SetColor(float4(1.0f, 1.0f, 1.0f, delta));
-				} else {
-					image->SetColor(float4(1.0f, 1.0f, 1.0f, 1.0f));
+							image->SetColor(float4(1.0f, 1.0f, 1.0f, delta));
+						} else {
+							image->SetColor(float4(1.0f, 1.0f, 1.0f, 1.0f));
+						}
+					}
+					remainingDurableHealthTimesFang[i] -= Time::GetDeltaTime();
 				}
 			}
-			remainingTimes[(*it)] -= Time::GetDeltaTime();
 		}
+	} else {
+		if (AnyTimerCounting(isFang)) {
+			for (int i = 0; i < MAX_HEALTH; i++) {
+				if (remainingDurableHealthTimesOni[i] > 0) {
+					float delta = remainingDurableHealthTimesOni[i] / timeToFadeDurableHealthFeedback;
 
-		for (int i = 0; i < vectorIndexesToRemove.size(); i++) {
-			indexes.erase(vectorIndexesToRemove[i]);
+
+					ComponentImage* image = targetCanvas->GetChildren()[i]->GetChild(HIERARCHY_INDEX_MAIN_HEALTH)->GetComponent<ComponentImage>();
+					if (image) {
+						//We need access to image->SetAlphaTransparency to prevent possible errors
+						if (delta < 0.5f) {
+
+							//Remapping
+							delta = (delta) / (0.5f);
+
+							image->SetColor(float4(1.0f, 1.0f, 1.0f, delta));
+						} else {
+							image->SetColor(float4(1.0f, 1.0f, 1.0f, 1.0f));
+						}
+					}
+					remainingDurableHealthTimesOni[i] -= Time::GetDeltaTime();
+				}
+			}
 		}
-
 	}
-
 }
-
 
 void HUDController::UpdateComponents() {
 
@@ -452,10 +465,12 @@ void HUDController::UpdateCommonSkill() {
 	std::vector<GameObject*> children = swapingSkillCanvas->GetChildren();
 	if (children.size() > HIERARCHY_INDEX_SWAP_ABILITY_FILL - 1) {
 		//Hardcoded value in hierarchy, changing the hierarchy without changing the index or the other way around will result in this not working properly
-		ComponentImage* image = children[HIERARCHY_INDEX_SWAP_ABILITY_FILL]->GetComponent<ComponentImage>();
-		if (image) {
-			image->SetFillValue(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
-			image->SetColor(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1 ? float4(colorBlueForCD, 1.0f) : colorMagenta);
+		ComponentImage* fillColor = children[HIERARCHY_INDEX_SWAP_ABILITY_FILL]->GetComponent<ComponentImage>();
+		ComponentImage* image = children[HIERARCHY_INDEX_SWAP_ABILITY_IMAGE]->GetComponent<ComponentImage>();
+		if (fillColor && image) {
+			fillColor->SetFillValue(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
+			fillColor->SetColor(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1 ? float4(colorBlueForCD, 1.0f) : colorWhite);
+			image->SetColor(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1 ? colorWhite : colorBlueBackground);
 
 			AbilityCoolDownEffectCheck(Cooldowns::SWITCH_SKILL, swapingSkillCanvas);
 		}
@@ -482,6 +497,24 @@ void HUDController::PlayProgressBarEffect(AbilityRefreshEffectProgressBar* ef, C
 	}
 }
 
+bool HUDController::AnyTimerCounting(bool isFang) {
+	if (isFang) {
+		for (int i = 0; i < MAX_HEALTH; i++) {
+			if (remainingDurableHealthTimesFang[i] > 0) {
+				return true;
+			}
+		}
+	} else {
+		for (int i = 0; i < MAX_HEALTH; i++) {
+			if (remainingDurableHealthTimesOni[i] > 0) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
 //Hierarchy sensitive method
 void HUDController::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canvas) {
 	if (!abilityCoolDownsRetreived[static_cast<int>(cooldown)]) {
@@ -491,6 +524,7 @@ void HUDController::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* c
 				AbilityRefreshEffectProgressBar* pef = nullptr;
 
 				if (cooldown < Cooldowns::ONIMARU_SKILL_1) {
+					//Fang skill
 					if (canvas->GetChildren().size() > 0) {
 						if (canvas->GetChildren()[static_cast<int>(cooldown)]->GetChildren().size() > HIERARCHY_INDEX_MAIN_BUTTON_UP) {
 							ef = GET_SCRIPT(canvas->GetChildren()[static_cast<int>(cooldown)]->GetChildren()[HIERARCHY_INDEX_MAIN_ABILITY_EFFECT], AbilityRefreshEffect);
@@ -501,6 +535,7 @@ void HUDController::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* c
 						}
 					}
 				} else if (cooldown < Cooldowns::SWITCH_SKILL) {
+					//Onimaru skill
 					if (canvas->GetChildren().size() > 0) {
 						if (canvas->GetChildren()[static_cast<int>(cooldown) - 3]->GetChildren().size() > HIERARCHY_INDEX_MAIN_BUTTON_UP) {
 							ef = GET_SCRIPT(canvas->GetChild(static_cast<int>(cooldown) - 3)->GetChildren()[HIERARCHY_INDEX_MAIN_ABILITY_EFFECT], AbilityRefreshEffect);
@@ -541,7 +576,8 @@ void HUDController::UpdateVisualCooldowns(GameObject* canvas, bool isMain, int s
 	int skill = startingIt;
 	for (std::vector<GameObject*>::iterator it = skills.begin(); it != skills.end(); ++it) {
 
-		ComponentImage* image = nullptr;
+		ComponentImage* fillColor = nullptr;
+		ComponentImage* imageColor = nullptr;
 		if (isMain) {
 			if ((*it)->GetChildren().size() > HIERARCHY_INDEX_MAIN_BUTTON_UP) {
 
@@ -552,26 +588,29 @@ void HUDController::UpdateVisualCooldowns(GameObject* canvas, bool isMain, int s
 					}
 				}
 
-				image = (*it)->GetChildren()[HIERARCHY_INDEX_MAIN_ABILITY_FILL]->GetComponent<ComponentImage>();
-				if (image) {
+				fillColor = (*it)->GetChildren()[HIERARCHY_INDEX_MAIN_ABILITY_FILL]->GetComponent<ComponentImage>();
+				imageColor = (*it)->GetChildren()[HIERARCHY_INDEX_MAIN_ABILITY_IMAGE]->GetComponent<ComponentImage>();
+				if (fillColor && imageColor) {
 
 					if (cooldowns[skill] < 1) {
-						image->SetColor(float4(colorBlueForCD, 0.3f + cooldowns[skill]));
+						fillColor->SetColor(float4(colorBlueForCD, 0.3f + cooldowns[skill]));
+						imageColor->SetColor(colorWhite);
 					} else {
-						image->SetColor(colorMagenta);
+						fillColor->SetColor(colorWhite);
+						imageColor->SetColor(colorBlueBackground);
 					}
 
-					if (image->IsFill()) {
-						image->SetFillValue(cooldowns[skill]);
+					if (fillColor->IsFill()) {
+						fillColor->SetFillValue(cooldowns[skill]);
 					}
 				}
 			}
 		} else {
 			if ((*it)->GetChildren().size() > 0) {
-				image = (*it)->GetChildren()[HIERARCHY_INDEX_SECONDARY_ABILITY_FILL]->GetComponent<ComponentImage>();
-				if (image) {
-					if (image->IsFill()) {
-						image->SetFillValue(cooldowns[skill]);
+				fillColor = (*it)->GetChildren()[HIERARCHY_INDEX_SECONDARY_ABILITY_FILL]->GetComponent<ComponentImage>();
+				if (fillColor) {
+					if (fillColor->IsFill()) {
+						fillColor->SetFillValue(cooldowns[skill]);
 					}
 				}
 			}
@@ -589,7 +628,7 @@ void HUDController::OnHealthLost(GameObject* targetCanvas, int health) {
 	bool isFang = (targetCanvas->GetID() == fangHealthMainCanvas->GetID());
 
 	int prevLivesToUse = isFang ? prevLivesFang : prevLivesOni;
-	std::vector<int>& remainingTimeActiveIndexesToUse = isFang ? remainingTimeActiveIndexesFang : remainingTimeActiveIndexesOni;
+	//std::vector<int>& remainingTimeActiveIndexesToUse = isFang ? remainingTimeActiveIndexesFang : remainingTimeActiveIndexesOni;
 	float* remainingDurableHealthTimesToUse = isFang ? remainingDurableHealthTimesFang : remainingDurableHealthTimesOni;
 
 	int healthLost = prevLivesToUse - health;
@@ -599,7 +638,7 @@ void HUDController::OnHealthLost(GameObject* targetCanvas, int health) {
 
 		GameObject* obj = targetCanvas->GetChild(healthToUse);
 
-		remainingTimeActiveIndexesToUse.push_back(healthToUse);
+		//remainingTimeActiveIndexesToUse.push_back(healthToUse);
 		remainingDurableHealthTimesToUse[healthToUse] = timeToFadeDurableHealthFeedback;
 
 		if (!obj) continue;

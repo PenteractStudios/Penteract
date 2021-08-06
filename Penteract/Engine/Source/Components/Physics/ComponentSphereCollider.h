@@ -3,6 +3,7 @@
 #include "Components/Component.h"
 #include "Modules/ModulePhysics.h"
 #include "Utils/MotionState.h"
+#include "Utils/Collider.h"
 
 #include "Math/float3.h"
 
@@ -21,7 +22,7 @@ public:
 	void OnDisable() override;
 
 	// ----- Collider Functions ---- //
-	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance); // Callback function for scripting
+	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, ComponentParticleSystem::Particle* p = nullptr); // Callback function for scripting
 
 public:
 	btRigidBody* rigidBody = nullptr;										// Body that is represented in the physic world.
@@ -34,4 +35,5 @@ public:
 	float3 centerOffset = float3::inf;										// Center of the Rigidbody shape relative to GameObject origin.
 	bool freezeRotation = false;											// If set to true, the GameObject will not rotate when interacted on a collision.
 	bool drawGizmo = true;
+	Collider col{ this, typeid(Component) };
 };

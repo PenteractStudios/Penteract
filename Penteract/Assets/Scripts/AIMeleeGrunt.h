@@ -14,6 +14,7 @@ class ComponentMeshRenderer;
 class ResourcePrefab;
 class HUDController;
 class PlayerController;
+class PlayerDeath;
 class AIMovement;
 class WinLose;
 class EnemySpawnPoint;
@@ -25,6 +26,8 @@ public:
 	enum class AudioType {
 		SPAWN,
 		ATTACK,
+		FOOTSTEP_RIGHT,
+		FOOTSTEP_LEFT,
 		HIT,
 		DEATH,
 		TOTAL
@@ -34,7 +37,14 @@ public:
 	void Update() override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
-	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance) override;
+	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
+	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
+	//void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
+	void DeleteAttackCollider();
+
+	void EnableBlastPushBack();
+	void DisableBlastPushBack();
+	bool IsBeingPushed() const;
 
 public:
 
@@ -42,7 +52,7 @@ public:
 	UID canvasUID = 0;
 	UID winConditionUID = 0;
 	UID meleePunchUID = 0;
-
+	UID fangUID = 0;
 	// Hit feedback
 	UID defaultMaterialPlaceHolderUID = 0;
 	UID damageMaterialPlaceHolderUID = 0;
@@ -50,18 +60,25 @@ public:
 	UID damageMaterialID = 0;
 
 	GameObject* player = nullptr;
+	GameObject* fang = nullptr;
 	GameObject* spawn = nullptr;
 	ComponentAgent* agent = nullptr;
 	ResourcePrefab* meleePunch = nullptr;
 	WinLose* winLoseScript = nullptr;
 
-	Enemy gruntCharacter = Enemy(5, 8.0f, 1, 30, 40.f, 5.f, 5.f);
+	Enemy gruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 5.f, 5.f);
 	bool killSent = false;
 
 	float hurtFeedbackTimeDuration = 0.5f;
 
-private:
+	float stunDuration = 3.f;
 
+	float groundPosition = 3.0f;
+
+private:
+	float attackDuration = 2.2f;
+	float attackRemaining = 0.0f;
+	bool attackColliderOn = false;
 	float3 velocity = float3(0, 0, 0);
 	AIState state = AIState::START;
 	bool hitTaken = false;
@@ -69,8 +86,14 @@ private:
 	ComponentTransform* ownerTransform = nullptr;
 	int damageRecieved = 0;
 
+	float stunTimeRemaining = 0.f;
+
+	bool EMPUpgraded = false;
+	int deathType = 0;
+
 	HUDController* hudControllerScript = nullptr;
 	PlayerController* playerController = nullptr;
+	PlayerDeath* playerDeath = nullptr;
 	AIMovement* movementScript = nullptr;
 	EnemySpawnPoint* enemySpawnPointScript = nullptr;
 
@@ -78,4 +101,10 @@ private:
 	ComponentMeshRenderer* componentMeshRenderer = nullptr;
 
 	float timeSinceLastHurt = 0.5f;
+	GameObject* punch = nullptr;
+
+	float currentPushBackDistance = 0.f;
+
+private:
+	void UpdatePushBackPosition();
 };

@@ -5,6 +5,7 @@
 #include "Application.h"
 #include "Modules/ModuleResources.h"
 #include "Modules/ModuleWindow.h"
+#include "Modules/ModuleRender.h"
 #include "Components/ComponentCamera.h"
 #include "Components/ComponentScript.h"
 #include "Utils/Logging.h"
@@ -22,6 +23,7 @@
 
 class GameObject;
 class ResourcePrefab;
+class ComponentEventSystem;
 
 namespace GameplaySystems {
 	TESSERACT_ENGINE_API GameObject* Instantiate(ResourcePrefab* prefab, float3 position, Quat rotation);
@@ -443,9 +445,9 @@ namespace Input {
 	//For these methods, playerID does mean the array index
 	TESSERACT_ENGINE_API bool GetControllerButtonDown(SDL_GameControllerButton button, int playerID);
 	TESSERACT_ENGINE_API bool GetControllerButtonUp(SDL_GameControllerButton button, int playerID);
-	TESSERACT_ENGINE_API bool GetControllerButtonRepeat(SDL_GameControllerButton button, int playerID);
 	TESSERACT_ENGINE_API bool GetControllerButton(SDL_GameControllerButton button, int playerID);
 	TESSERACT_ENGINE_API float GetControllerAxisValue(SDL_GameControllerAxis axis, int playerID);
+	TESSERACT_ENGINE_API void StartControllerVibration(int playerID, float strength, float duration);
 	TESSERACT_ENGINE_API bool IsGamepadConnected(int playerID);
 }; // namespace Input
 
@@ -477,6 +479,22 @@ namespace Screen {
 	TESSERACT_ENGINE_API int GetHeight();
 	TESSERACT_ENGINE_API float GetBrightness();
 	TESSERACT_ENGINE_API float2 GetResolution();
+	TESSERACT_ENGINE_API const bool IsVSyncActive();
+	TESSERACT_ENGINE_API void SetVSync(bool value);
+
+	TESSERACT_ENGINE_API void SetMSAAActive(bool value);
+	TESSERACT_ENGINE_API void SetMSAAType(MSAA_SAMPLES_TYPE value);
+	TESSERACT_ENGINE_API const bool IsMSAAActive();
+	TESSERACT_ENGINE_API const MSAA_SAMPLES_TYPE GetMSAAType();
+
+	TESSERACT_ENGINE_API const float GetBloomThreshold();
+	TESSERACT_ENGINE_API void SetBloomThreshold(float value);
+
+	TESSERACT_ENGINE_API const bool IsChromaticAberrationActive();
+	TESSERACT_ENGINE_API void SetChromaticAberration(bool value);
+	TESSERACT_ENGINE_API const float GetChromaticAberrationStrength();
+	TESSERACT_ENGINE_API void SetChromaticAberrationStrength(float value);
+
 }; // namespace Screen
 
 namespace SceneManager {
@@ -486,6 +504,10 @@ namespace SceneManager {
 
 namespace Physics {
 	TESSERACT_ENGINE_API GameObject* Raycast(const float3& start, const float3& end, const int mask);
+	TESSERACT_ENGINE_API void CreateRigidbody(Component* collider);
+	TESSERACT_ENGINE_API void UpdateRigidbody(Component* collider);
+	TESSERACT_ENGINE_API void RemoveRigidbody(Component* collider);
+
 }
 
 namespace Colors {
@@ -503,3 +525,11 @@ namespace Camera {
 namespace Audio {
 	TESSERACT_ENGINE_API void StopAllSources();
 }; // namespace Audio
+
+namespace UserInterface {
+	TESSERACT_ENGINE_API ComponentEventSystem* GetCurrentEventSystem();
+}; // namespace UserInterface
+
+namespace Navigation {
+	TESSERACT_ENGINE_API void Raycast(float3 startPosition, float3 targetPosition, bool& hitResult, float3& hitPosition);
+}

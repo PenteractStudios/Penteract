@@ -14,6 +14,7 @@ class ComponentTransform;
 class ResourcePrefab;
 class HUDController;
 class PlayerController;
+class PlayerDeath;
 class AIMovement;
 class WinLose;
 class EnemySpawnPoint;
@@ -25,6 +26,8 @@ public:
 	enum class AudioType {
 		SPAWN,
 		SHOOT,
+		FOOTSTEP_RIGHT,
+		FOOTSTEP_LEFT,
 		HIT,
 		DEATH,
 		TOTAL
@@ -34,8 +37,13 @@ public:
 	void Update() override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
-	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance) override; //This is commented until merge with collisions
+	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
+	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override; //This is commented until merge with collisions
 	void ShootPlayerInRange(); //Sets in motion the shooting at the player, if found and close enough
+
+	void EnableBlastPushBack();
+	void DisableBlastPushBack();
+	bool IsBeingPushed() const;
 
 private:
 	//State machine handling
@@ -49,8 +57,10 @@ private:
 	void ActualShot();																//Generates projectile prefab instance
 	void PlayAudio(AudioType audioType);											//Plays audio (if not null)
 
+	void UpdatePushBackPosition();
+
 public:
-	Enemy rangerGruntCharacter = Enemy(5, 8.0f, 1, 30, 40.f, 5.f, 5.f); //Enemy class instance (for shared values)
+	Enemy rangerGruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 5.f, 5.f); //Enemy class instance (for shared values)
 	UID playerUID = 0;				//Reference to player main Gameobject UID, used to check distances
 	UID playerMeshUIDFang = 0;		//Reference to player Fang mesh holding Gameobject UID, used for raycasting if fang is active
 	UID playerMeshUIDOnimaru = 0;	//Reference to player Fang mesh holding Gameobject UID, used for raycasting if onimaru is active
@@ -58,14 +68,18 @@ public:
 	UID meshUID2 = 0;				//Third mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID trailPrefabUID = 0;			//Reference to projectile prefab UID , for shooting
 	UID hudControllerObjUID = 0;	//Reference to Hud UID , for incrementing score
+	UID fangUID = 0;
 
 	UID winConditionUID = 0;
 
 	ResourcePrefab* shootTrailPrefab = nullptr; //Reference to projectile prefab , for shooting
 	GameObject* player = nullptr;				//Reference to player main Gameobject, used to check distances
+	GameObject* fang = nullptr;
 
 	HUDController* hudControllerScript = nullptr; //Reference to Hud , for incrementing score
 	PlayerController* playerController = nullptr; //Reference to player script, used to check distances
+
+	PlayerDeath* playerDeath = nullptr;
 
 	GameObject* fangMeshObj = nullptr;		//Reference to player Fang mesh holding Gameobject, used for raycasting if fang is active
 	GameObject* onimaruMeshObj = nullptr;	//Reference to player Fang mesh holding Gameobject, used for raycasting if onimaru is active
@@ -85,6 +99,10 @@ public:
 	float attackSpeed = 0.5f;			//Shots per second
 	float actualShotMaxTime = 0.3f;		//Internal variable used to match the shooting animation and the projectile creation
 	float timeSinceLastHurt = 0.5f;		//Timer to keep track of how long it's been since AI was hurt, if higher than hurtFeedbackTimeDuration, this tries to make AI turn red with DamagedMaterial
+	float stunDuration = 3.f;			//Max time the enemy will be stunned
+	float hurtFeedbackTimeDuration = 0.5f;	//Time that damaged material will be shown whenever AI is hit
+	float groundPosition = 3.0f;
+	float fleeingUpdateTime = 3.0f;        //Time that needs to wait in order to get away from the player in the flee state
 
 private:
 
@@ -98,14 +116,23 @@ private:
 
 	bool shot = false;					//Bool used to make sure shooting event happens only once whenever attackTimePool is low enough
 
+	float stunTimeRemaining = 0.f;			//Time remaining stunned
+
+	bool EMPUpgraded = false;			//Flag to control if the ability is uprgraded
+
 	ComponentAnimation* animation = nullptr;		//Refernece to  animatino component
 	ComponentTransform* ownerTransform = nullptr;	//Reference to owner transform componenet
 
 	float attackTimePool = 2.0f;			//Pool that counts down to 0 to make AI shoot a projectile
 	float actualShotTimer = -1.0f;			//Timer that counts down the seconds to match shooting animation with projectile creation
-	float hurtFeedbackTimeDuration = 0.5f;	//Time that damaged material will be shown whenever AI is hit
 
 	ComponentMeshRenderer* meshRenderer = nullptr;	//Reference to a meshRendererComponent, used for material setting on hurt
 
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr }; //Array of ints used to play audios
+
+	float currentPushBackDistance = 0.f;
+
+	float currentFleeingUpdateTime = 0.f; // Current Time that needs to compare against the fleeingUpdateTime in the flee state
+	float3 currentFleeDestination;        // Destination position where it is going to move far away from the player  
+	bool fleeingFarAway = false;          //Toggle to get away from the player
 };

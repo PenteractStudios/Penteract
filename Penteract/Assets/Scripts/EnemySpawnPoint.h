@@ -1,11 +1,15 @@
 #pragma once
 
 #include "Scripting/Script.h"
+#include "SpawnPointController.h"
+
 #include <vector>
 #include <tuple>
 
 class GameObject;
 class ResourcePrefab;
+class PlayerController;
+class SpawnPointController;
 
 class EnemySpawnPoint : public Script {
 	GENERATE_BODY(EnemySpawnPoint);
@@ -16,6 +20,8 @@ public:
 
 	void UpdateRemainingEnemies();
 	int GetAmountofEnemies() { return amountOfEnemies; };
+
+	void SetIndex(unsigned int _index) { index = _index; };
 
 public:
 	/* Wave configuration */
@@ -38,6 +44,12 @@ public:
 	float xAxisPos = 0;
 	float zAxisPos = 4;
 
+	/* Distance between the enemies */
+	unsigned int offset = 2;
+
+	/* Player */
+	UID playerUID = 0;
+
 private:
 	/* Owner */
 	GameObject* gameObject = nullptr;
@@ -46,15 +58,15 @@ private:
 	ResourcePrefab* meleeEnemyPrefab = nullptr;
 	ResourcePrefab* rangeEnemyPrefab = nullptr;
 
+	/* Player Controller */
+	PlayerController* playerScript = nullptr;
+
 	/* Enemy vector & iterator */
 	std::vector<std::tuple<unsigned int, unsigned int>> enemies;
 	std::vector<std::tuple<unsigned int, unsigned int>>::iterator it;
 
 	/* Amount of enemies for the win condition */
 	unsigned int amountOfEnemies = 0;
-
-	/* Distance between the enemies */
-	unsigned int offset = 2;
 
 	/* Flags to handle when to spawn the waves */
 	bool spawn = true;
@@ -65,6 +77,12 @@ private:
 		MELEE,
 		RANGE
 	};
+
+	/* Parent script */
+	SpawnPointController* spawnPointControllerScript = nullptr;
+
+	/* Index to update the spawn controller */
+	unsigned int index = 0;
 
 private:
 	void RenderEnemy(EnemyType type, unsigned int amount);

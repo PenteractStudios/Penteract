@@ -18,7 +18,8 @@
 #include "Components/UI/ComponentToggle.h"
 #include "Components/UI/ComponentText.h"
 #include "Components/UI/ComponentSlider.h"
-#include "Components/ComponentBoundingBox2D.h"
+#include "Components/UI/ComponentProgressBar.h"
+#include "Components/UI/ComponentBoundingBox2D.h"
 #include "Components/ComponentSkybox.h"
 #include "Components/ComponentTrail.h"
 #include "Components/ComponentParticleSystem.h"
@@ -26,11 +27,12 @@
 #include "Components/ComponentAnimation.h"
 #include "Components/ComponentAudioListener.h"
 #include "Components/ComponentAudioSource.h"
-#include "Components/UI/ComponentProgressBar.h"
 #include "Components/Physics/ComponentSphereCollider.h"
 #include "Components/Physics/ComponentBoxCollider.h"
 #include "Components/Physics/ComponentCapsuleCollider.h"
 #include "Components/ComponentAgent.h"
+#include "Components/ComponentObstacle.h"
+#include "Components/ComponentFog.h"
 
 class GameObject;
 
@@ -58,6 +60,7 @@ public:
 	int GetTotalTriangles() const;
 	std::vector<float> GetVertices(); // Gets all the vertices from the MeshRenderer Components only if the ResourceMesh is found and the GameObject is Static
 	std::vector<int> GetTriangles();  // Gets all the triangles from the MeshRenderer Components only if the ResourceMesh is found and the GameObject is Static
+	std::vector<float> GetNormals();
 
 	void SetNavMesh(UID navMesh);
 	UID GetNavMesh();
@@ -100,6 +103,8 @@ public:
 	PoolMap<UID, ComponentBoxCollider> boxColliderComponents;
 	PoolMap<UID, ComponentCapsuleCollider> capsuleColliderComponents;
 	PoolMap<UID, ComponentAgent> agentComponents;
+	PoolMap<UID, ComponentObstacle> obstacleComponents;
+	PoolMap<UID, ComponentFog> fogComponents;
 
 	// ---- Quadtree Parameters ---- //
 	Quadtree<GameObject> quadtree;

@@ -7,11 +7,10 @@
 #include "Modules/ModuleFiles.h"
 #include "Modules/ModuleEvents.h"
 #include "Modules/ModuleTime.h"
+#include "Components/ComponentScript.h"
 #include "Utils/Logging.h"
 #include "Utils/Buffer.h"
-#include "Utils/UID.h"
 #include "Utils/FileDialog.h"
-#include "Scripting/Script.h"
 #include "Scene.h"
 
 #include <Windows.h>
@@ -502,9 +501,9 @@ void ModuleProject::CreateMSVCProject(const char* path, const char* name, const 
 	std::string enginePath = FileDialog::GetFileFolder(FileDialog::GetAbsolutePath("").c_str());
 
 #ifdef _DEBUG
-	std::string result = fmt::format(project, name, UIDProject, "../../Project/Source/", "../../Project/Libs/MathGeoLib", "../../Project/Libs/SDL/include", "../../Project/Libs/rapidjson/include", "../../Project/Libs/OpenAL-soft/include", "../../Project/Libs/Bullet/include", enginePath);
+	std::string result = fmt::format(project, name, UIDProject, "../../Project/Source/", "../../Project/Libs/MathGeoLib", "../../Project/Libs/SDL/include", "../../Project/Libs/rapidjson/include", "../../Project/Libs/OpenAL-soft/include", "../../Project/Libs/Bullet/include", "../../Project/Libs/recastnavigation-1.5.1", enginePath);
 #else
-	std::string result = fmt::format(project, name, UIDProject, "../Engine/Source/", "../Engine/Libs/MathGeoLib", "../Engine/Libs/SDL/include", "../Engine/Libs/rapidjson/include", "../Engine/Libs/OpenAL-soft/include", "../Engine/Libs/Bullet/include", enginePath);
+	std::string result = fmt::format(project, name, UIDProject, "../Engine/Source/", "../Engine/Libs/MathGeoLib", "../Engine/Libs/SDL/include", "../Engine/Libs/rapidjson/include", "../Engine/Libs/OpenAL-soft/include", "../Engine/Libs/Bullet/include", "../Engine/Libs/recastnavigation-1.5.1", enginePath);
 #endif
 
 	App->files->Save(path, result.data(), result.size());

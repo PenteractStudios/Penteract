@@ -11,6 +11,8 @@
 #include "Modules/ModuleCamera.h"
 #include "Modules/ModuleResources.h"
 #include "Modules/ModulePhysics.h"
+#include "Modules/ModuleConfiguration.h"
+#include "Resources/ResourceScene.h"
 #include "Resources/ResourceNavMesh.h"
 #include "Scene.h"
 #include "Utils/ImGuiUtils.h"
@@ -29,12 +31,26 @@ void PanelConfiguration::Update() {
 	ImGui::SetNextWindowDockID(App->editor->dockLeftId, ImGuiCond_FirstUseEver);
 	std::string windowName = std::string(ICON_FK_COGS " ") + name;
 	if (ImGui::Begin(windowName.c_str(), &enabled)) {
+		// Save/Load buttons
+		ImGui::TextColored(App->editor->titleColor, "Configuration");
+		if (ImGui::Button("Reload")) {
+			App->configuration->LoadConfiguration();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Save")) {
+			App->configuration->SaveConfiguration();
+		}
+
+		ImGui::Separator();
+
 		// Application
 		if (ImGui::CollapsingHeader("Application")) {
 			if (ImGui::InputText("App name", App->appName, IM_ARRAYSIZE(App->appName))) {
 				App->window->SetTitle(App->appName);
 			}
 			ImGui::InputText("Organization", App->organization, IM_ARRAYSIZE(App->organization));
+			ImGui::TextColored(App->editor->titleColor, "Start scene");
+			ImGui::ResourceSlot<ResourceScene>("Scene", &App->scene->startSceneId);
 		}
 
 		// Time
@@ -202,8 +218,64 @@ void PanelConfiguration::Update() {
 			}
 		}
 
+		// Render
+		if (ImGui::CollapsingHeader("Render")) {
+			ImGui::TextColored(App->editor->titleColor, "Background Settings");
+			ImGui::ColorEdit3("Background", App->renderer->clearColor.ptr());
+
+			ImGui::Separator();
+
+			ImGui::TextColored(App->editor->titleColor, "SSAO Settings");
+			ImGui::Checkbox("Activate SSAO", &App->renderer->ssaoActive);
+			ImGui::DragFloat("Range", &App->renderer->ssaoRange, 0.01f, 0.0f, 100.0f);
+			ImGui::DragFloat("Bias", &App->renderer->ssaoBias, 0.0001f, 0.0f, 10.0f, "%.5f");
+			ImGui::DragFloat("Power", &App->renderer->ssaoPower, 0.01f, 0.0f, 100.0f);
+			ImGui::DragFloat("Direct Lighting Strength", &App->renderer->ssaoDirectLightingStrength, 0.0f, 0.0f, 1.0f);
+
+			ImGui::Separator();
+
+			ImGui::TextColored(App->editor->titleColor, "Bloom Settings");
+			ImGui::Checkbox("Activate Bloom", &App->renderer->bloomActive);
+			ImGui::SliderInt("Quality", &App->renderer->bloomQuality, 1, 7);
+			ImGui::DragFloat("Bloom Threshold", &App->renderer->bloomThreshold, 0.1f);
+			ImGui::DragFloat("Intensity", &App->renderer->bloomIntensity, 0.1f);
+			ImGui::Text("Shape");
+			ImGui::SliderFloat("Small weight", &App->renderer->bloomSmallWeight, 0.0f, 2.0f, "%.2f");
+			ImGui::SliderFloat("Medium weight", &App->renderer->bloomMediumWeight, 0.0f, 2.0f, "%.2f");
+			ImGui::SliderFloat("Large weight", &App->renderer->bloomLargeWeight, 0.0f, 2.0f, "%.2f");
+
+			ImGui::Separator();
+
+			ImGui::TextColored(App->editor->titleColor, "MSAA Settings");
+			if (ImGui::Checkbox("Activate MSAA", &App->renderer->msaaActive)) {
+				App->renderer->UpdateFramebuffers();
+			}
+			const char* items[] = {"x2", "x4", "x8"};
+			const char* itemCurrent = items[static_cast<int>(App->renderer->msaaSampleType)];
+			if (ImGui::BeginCombo("Samples Number", itemCurrent)) {
+				for (int n = 0; n < IM_ARRAYSIZE(items); ++n) {
+					bool isSelected = (itemCurrent == items[n]);
+					if (ImGui::Selectable(items[n], isSelected)) {
+						App->renderer->msaaSampleType = static_cast<MSAA_SAMPLES_TYPE>(n);
+						App->renderer->UpdateFramebuffers();
+					}
+					if (isSelected) {
+						ImGui::SetItemDefaultFocus();
+					}
+				}
+				ImGui::EndCombo();
+			}
+
+			ImGui::Separator();
+			ImGui::Checkbox("Activate Chromatic Aberration", &App->renderer->chromaticAberrationActive);
+			ImGui::DragFloat("Chromatic Aberration Strength", &App->renderer->chromaticAberrationStrength, 0.1f);
+		}
+
 		// Scene
 		if (ImGui::CollapsingHeader("Scene")) {
+			ImGui::TextColored(App->editor->titleColor, "Ambient color");
+			ImGui::ColorEdit3("Ambient Color", App->renderer->ambientColor.ptr());
+
 			Scene* scene = App->scene->scene;
 			ImGui::TextColored(App->editor->titleColor, "Quadtree");
 			ImGui::InputFloat2("Min Point", scene->quadtreeBounds.minPoint.ptr());
@@ -217,19 +289,10 @@ void PanelConfiguration::Update() {
 			if (ImGui::Button("Rebuild Quadtree")) {
 				scene->RebuildQuadtree();
 			}
-			ImGui::Separator();
-			ImGui::TextColored(App->editor->titleColor, "Background Settings");
-			ImGui::ColorEdit3("Background", App->renderer->clearColor.ptr());
-			ImGui::ColorEdit3("Ambient Color", App->renderer->ambientColor.ptr());
-			ImGui::Separator();
-			ImGui::TextColored(App->editor->titleColor, "SSAO Settings");
-			ImGui::Checkbox("Activate SSAO", &App->renderer->ssaoActive);
-			if (App->renderer->ssaoActive) {
-				ImGui::DragFloat("Range", &App->renderer->ssaoRange, 0.01f, 0.01f, 100.0f);
-				ImGui::DragFloat("Bias", &App->renderer->ssaoBias, 0.0001f, 0.0f, 10.0f, "%.5f");
-				ImGui::DragFloat("Power", &App->renderer->ssaoPower, 0.01f, 0.01f, 100.0f);
-			}
 
+			ImGui::Separator();
+
+			ImGui::TextColored(App->editor->titleColor, "NavMesh");
 			ImGui::ResourceSlot<ResourceNavMesh>("Nav Mesh", &scene->navMeshId);
 		}
 	}

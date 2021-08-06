@@ -49,7 +49,7 @@ void PanelScene::Update() {
 
 		if (ImGui::BeginMenuBar()) {
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(5, 5));
-			const char* shadingMode[4] = {"Shaded", "Wireframe", "Depth", "Ambient Occlusion"};
+			const char* shadingMode[6] = {"Shaded", "Wireframe", "Depth", "Ambient Occlusion", "Normals", "Positions"};
 			if (ImGui::Button(currentShadingMode)) {
 				ImGui::OpenPopup("DrawMode");
 			}
@@ -176,13 +176,15 @@ void PanelScene::Update() {
 				size.x,
 				size.y,
 			};
+			windowsPos.x = ImGui::GetWindowPos().x;
+			windowsPos.y = ImGui::GetWindowPos().y;
 		}
 
 		ImVec2 framebufferPosition = ImGui::GetWindowPos();
 		framebufferPosition.y += (ImGui::GetWindowHeight() - size.y);
 
 		// Draw
-		ImGui::Image((void*) App->renderer->renderTexture, size, ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::Image((void*) App->renderer->outputTexture, size, ImVec2(0, 1), ImVec2(1, 0));
 
 		if (App->camera->IsEngineCameraActive()) {
 			// Drag and drop
@@ -265,7 +267,7 @@ void PanelScene::Update() {
 
 		// Capture input
 		if (ImGui::IsWindowFocused()) {
-			if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) || App->input->GetKey(SDL_SCANCODE_LALT)) {
+			if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) != KeyState::KS_IDLE || App->input->GetKey(SDL_SCANCODE_LALT) != KeyState::KS_IDLE) {
 				ImGuizmo::Enable(false);
 			} else {
 				ImGuizmo::Enable(true);
@@ -285,9 +287,13 @@ void PanelScene::Update() {
 			}
 			ImGui::CaptureMouseFromApp(false);
 		}
-		ImGui::End();
-		ImGui::PopStyleVar();
 	}
+	ImGui::End();
+	ImGui::PopStyleVar();
+}
+
+const float2& PanelScene::GetWindowsPos() const {
+	return windowsPos;
 }
 
 const float2& PanelScene::GetMousePosOnScene() const {

@@ -1,11 +1,11 @@
 {
-    "ShaderType": 2,
+    "ShaderType": 3,
     "RenderingMode": 1,
     "DiffuseColor": [
         1.0,
         1.0,
         1.0,
-        1.0
+        0.23529411852359773
     ],
     "DiffuseMap": 5203187257264973716,
     "SpecularColor": [
@@ -20,6 +20,7 @@
     "NormalMap": 0,
     "NormalStrength": 0.0,
     "EmissiveMap": 15378481301298823951,
+    "Emissive": 5.0,
     "AmbientOcclusionMap": 0,
     "Smoothness": 0.0,
     "HasSmoothnessInAlphaChannel": false,

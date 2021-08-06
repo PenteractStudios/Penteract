@@ -28,7 +28,39 @@ vec4 GetDiffuse(vec2 tiledUV)
 void main() {
     vec2 tiledUV = GetTiledUVs(); 
     vec4 colorDiffuse = GetDiffuse(tiledUV);
-	if (colorDiffuse.a < 0.1) discard; // Alpha testing
+	if (MustDissolve(tiledUV) || colorDiffuse.a < .1) discard; // Alpha testing
     position = view * vec4(fragPos, 1.0);
     normal = vec4(mat3(view) * normalize(fragNormal), 1.0);
+}
+
+
+--- fragDepthPrepassConvertTextures
+
+layout(location = 0) out vec4 position;
+layout(location = 1) out vec4 normal;
+
+in vec2 uv;
+
+uniform int samplesNumber;
+
+uniform sampler2DMS depths;
+uniform sampler2DMS positions;
+uniform sampler2DMS normals;
+
+void main()
+{
+    ivec2 positionsSize = textureSize(positions);
+    ivec2 vp = ivec2(vec2(positionsSize) * uv);
+    int minIndex = 0;
+    float minDepth = texelFetch(depths, vp, 0).r;
+    for (int i = 1; i < samplesNumber; ++i) {
+        float sampleDepth = texelFetch(depths, vp, i).r;
+        if (sampleDepth < minDepth) {
+            minIndex = i;
+            minDepth = sampleDepth;
+        }
+    }
+    position = texelFetch(positions, vp, minIndex);
+    normal = texelFetch(normals, vp, minIndex);
+    gl_FragDepth = minDepth;
 }

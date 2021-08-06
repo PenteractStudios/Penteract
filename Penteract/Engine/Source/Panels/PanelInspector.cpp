@@ -12,17 +12,19 @@
 #include "Components/ComponentCamera.h"
 #include "Components/ComponentAnimation.h"
 #include "Components/ComponentMeshRenderer.h"
-#include "Components/ComponentBoundingBox2D.h"
 #include "Components/ComponentAgent.h"
+#include "Components/ComponentObstacle.h"
+#include "Components/UI/ComponentTransform2D.h"
+#include "Components/UI/ComponentBoundingBox2D.h"
 #include "Components/UI/ComponentEventSystem.h"
+#include "Components/UI/ComponentSelectable.h"
+#include "Components/UI/ComponentCanvasRenderer.h"
 #include "Components/UI/ComponentText.h"
 #include "Components/UI/ComponentImage.h"
 #include "Components/UI/ComponentCanvas.h"
 #include "Components/UI/ComponentButton.h"
 #include "Components/UI/ComponentSlider.h"
-#include "Components/UI/ComponentSelectable.h"
-#include "Components/UI/ComponentTransform2D.h"
-#include "Components/UI/ComponentCanvasRenderer.h"
+#include "Components/UI/ComponentProgressBar.h"
 #include "Components/Physics/ComponentSphereCollider.h"
 #include "Components/Physics/ComponentBoxCollider.h"
 #include "Modules/ModuleScene.h"
@@ -194,6 +196,12 @@ void PanelInspector::Update() {
 				case ComponentType::AGENT:
 					cName = "Agent";
 					break;
+				case ComponentType::OBSTACLE:
+					cName = "Obstacle";
+					break;
+				case ComponentType::FOG:
+					cName = "Fog";
+					break;
 				default:
 					cName = "";
 					break;
@@ -270,6 +278,14 @@ void PanelInspector::Update() {
 						App->editor->modalToOpen = Modal::COMPONENT_EXISTS;
 					}
 				}
+				if (ImGui::MenuItem("Fog")) {
+					ComponentFog* fog = selected->CreateComponent<ComponentFog>();
+					if (fog != nullptr) {
+						fog->Init();
+					} else {
+						App->editor->modalToOpen = Modal::COMPONENT_EXISTS;
+					}
+				}
 				if (ImGui::MenuItem("Script")) {
 					ComponentScript* script = selected->CreateComponent<ComponentScript>();
 					if (script != nullptr) {
@@ -286,61 +302,13 @@ void PanelInspector::Update() {
 						App->editor->modalToOpen = Modal::COMPONENT_EXISTS;
 					}
 				}
-				if (ImGui::MenuItem("Particle")) {
-					ComponentParticleSystem* particle = selected->CreateComponent<ComponentParticleSystem>();
-					if (particle != nullptr) {
-						particle->Init();
-					} else {
-						App->editor->modalToOpen = Modal::COMPONENT_EXISTS;
-					}
-				}
-				if (ImGui::MenuItem("Billboard")) {
-					ComponentBillboard* billboard = selected->CreateComponent<ComponentBillboard>();
-					if (billboard != nullptr) {
-						billboard->Init();
-					} else {
-						App->editor->modalToOpen = Modal::COMPONENT_EXISTS;
-					}
-				}
 
-				if (ImGui::MenuItem("Trail")) {
-					ComponentTrail* trail = selected->CreateComponent<ComponentTrail>();
-					if (trail != nullptr) {
-						trail->Init();
-					} else {
-						App->editor->modalToOpen = Modal::COMPONENT_EXISTS;
-					}
-				}
-				if (ImGui::MenuItem("Audio Source")) {
-					ComponentAudioSource* audioSource = selected->CreateComponent<ComponentAudioSource>();
-					if (audioSource != nullptr) {
-						audioSource->Init();
-					} else {
-						App->editor->modalToOpen = Modal::COMPONENT_EXISTS;
-					}
-				}
-				if (ImGui::MenuItem("Audio Listener")) {
-					ComponentAudioListener* audioListener = selected->CreateComponent<ComponentAudioListener>();
-					if (audioListener != nullptr) {
-						audioListener->Init();
-					} else {
-						App->editor->modalToOpen = Modal::COMPONENT_EXISTS;
-					}
-				}
-				if (ImGui::MenuItem("Agent")) {
-					ComponentAgent* agent = selected->CreateComponent<ComponentAgent>();
-					if (agent != nullptr) {
-						agent->Init();
-					} else {
-						App->editor->modalToOpen = Modal::COMPONENT_EXISTS;
-					}
-				}
 				// TRANSFORM is always there, cannot add a new one.
-
+				AddParticleComponentsOptions(selected);
 				AddAudioComponentsOptions(selected);
 				AddUIComponentsOptions(selected);
-
 				AddColliderComponentsOptions(selected);
+				AddNavigationComponentsOptions(selected);
 
 				ImGui::EndPopup();
 			}
@@ -355,6 +323,36 @@ Component* PanelInspector::GetComponentToDelete() const {
 
 void PanelInspector::SetComponentToDelete(Component* comp) {
 	componentToDelete = comp;
+}
+
+void PanelInspector::AddParticleComponentsOptions(GameObject* selected) {
+	if (ImGui::BeginMenu("Particles")) {
+		if (ImGui::MenuItem("Particle")) {
+			ComponentParticleSystem* particle = selected->CreateComponent<ComponentParticleSystem>();
+			if (particle != nullptr) {
+				particle->Init();
+			} else {
+				App->editor->modalToOpen = Modal::COMPONENT_EXISTS;
+			}
+		}
+		if (ImGui::MenuItem("Billboard")) {
+			ComponentBillboard* billboard = selected->CreateComponent<ComponentBillboard>();
+			if (billboard != nullptr) {
+				billboard->Init();
+			} else {
+				App->editor->modalToOpen = Modal::COMPONENT_EXISTS;
+			}
+		}
+		if (ImGui::MenuItem("Trail")) {
+			ComponentTrail* trail = selected->CreateComponent<ComponentTrail>();
+			if (trail != nullptr) {
+				trail->Init();
+			} else {
+				App->editor->modalToOpen = Modal::COMPONENT_EXISTS;
+			}
+		}
+		ImGui::EndMenu();
+	}
 }
 
 void PanelInspector::AddAudioComponentsOptions(GameObject* selected) {
@@ -419,11 +417,8 @@ void PanelInspector::AddUIComponentsOptions(GameObject* selected) {
 				App->editor->modalToOpen = Modal::COMPONENT_EXISTS;
 			}
 		}
-		// MenuItem("TextLabel")
-		// MenuItem("ProgressBar")
-		// ...
 
-		// Selectables
+		// ----- Selectables
 
 		if (ImGui::MenuItem("Button")) {
 			ComponentButton* component = selected->GetComponent<ComponentButton>();
@@ -447,9 +442,27 @@ void PanelInspector::AddUIComponentsOptions(GameObject* selected) {
 			}
 		}
 
-		// MenuItem("InputText")
-		// MenuItem("ScrollBar")
-		// ...
+		if (ImGui::MenuItem("ProgressBar")) {
+			ComponentProgressBar* component = selected->GetComponent<ComponentProgressBar>();
+			if (component == nullptr) {
+				typeToCreate = ComponentType::PROGRESS_BAR;
+				newUIComponentCreated = true;
+				newUISelectableCreated = true;
+			} else {
+				App->editor->modalToOpen = Modal::COMPONENT_EXISTS;
+			}
+		}
+
+		if (ImGui::MenuItem("Slider")) {
+			ComponentSlider* component = selected->GetComponent<ComponentSlider>();
+			if (component == nullptr) {
+				typeToCreate = ComponentType::SLIDER;
+				newUIComponentCreated = true;
+				newUISelectableCreated = true;
+			} else {
+				App->editor->modalToOpen = Modal::COMPONENT_EXISTS;
+			}
+		}
 
 		if (newUIComponentCreated) {
 			// Create new Transform2D
@@ -525,11 +538,59 @@ void PanelInspector::AddUIComponentsOptions(GameObject* selected) {
 			}
 			break;
 		}
+		case ComponentType::PROGRESS_BAR: {
+			ComponentProgressBar* component = selected->CreateComponent<ComponentProgressBar>();
+			component->Init();
+
+			GameObject* background = App->scene->scene->CreateGameObject(selected, GenerateUID(), "Background");
+			ComponentTransform2D* transform2D = background->CreateComponent<ComponentTransform2D>();
+			ComponentCanvasRenderer* canvasRenderer = background->CreateComponent<ComponentCanvasRenderer>();
+			ComponentImage* image = background->CreateComponent<ComponentImage>();
+			background->Init();
+			transform2D->SetSize(float2(700, 80));
+
+			GameObject* fill = App->scene->scene->CreateGameObject(selected, GenerateUID(), "Fill");
+			ComponentTransform2D* transform2DFill = fill->CreateComponent<ComponentTransform2D>();
+			ComponentCanvasRenderer* canvasRendererFill = fill->CreateComponent<ComponentCanvasRenderer>();
+			ComponentImage* imageFill = fill->CreateComponent<ComponentImage>();
+			fill->Init();
+			imageFill->SetColor(float4(1.f, 0, 0, 1.f));
+			break;
 		}
+		case ComponentType::SLIDER: {
+			ComponentSlider* component = selected->CreateComponent<ComponentSlider>();
+			component->Init();
+			if (!selected->GetComponent<ComponentImage>()) {
+				ComponentImage* image = selected->CreateComponent<ComponentImage>();
+				image->Init();
+			}
+
+			GameObject* background = App->scene->scene->CreateGameObject(selected, GenerateUID(), "Background");
+			ComponentTransform2D* transform2D = background->CreateComponent<ComponentTransform2D>();
+			ComponentCanvasRenderer* canvasRenderer = background->CreateComponent<ComponentCanvasRenderer>();
+			ComponentImage* image = background->CreateComponent<ComponentImage>();
+			background->Init();
+			transform2D->SetSize(float2(700, 80));
+
+			GameObject* fill = App->scene->scene->CreateGameObject(selected, GenerateUID(), "Fill");
+			ComponentTransform2D* transform2DFill = fill->CreateComponent<ComponentTransform2D>();
+			ComponentCanvasRenderer* canvasRendererFill = fill->CreateComponent<ComponentCanvasRenderer>();
+			ComponentImage* imageFill = fill->CreateComponent<ComponentImage>();
+			fill->Init();
+
+			GameObject* handle = App->scene->scene->CreateGameObject(selected, GenerateUID(), "Handle");
+			ComponentTransform2D* transform2DHandle = fill->CreateComponent<ComponentTransform2D>();
+			ComponentCanvasRenderer* canvasRendererHandle = fill->CreateComponent<ComponentCanvasRenderer>();
+			ComponentImage* imageHandle = fill->CreateComponent<ComponentImage>();
+			fill->Init();
+			break;
+		}
+		} // ens switch
 
 		ImGui::EndMenu();
 	}
 }
+
 void PanelInspector::AddColliderComponentsOptions(GameObject* selected) {
 	if (ImGui::BeginMenu("Collider")) {
 		if (ImGui::MenuItem("Sphere Collider")) {
@@ -556,6 +617,29 @@ void PanelInspector::AddColliderComponentsOptions(GameObject* selected) {
 				capsuleComponent->Init();
 			} else {
 				App->editor->modalToOpen = Modal::COMPONENT_EXISTS; // TODO: Control other colliders exists.
+			}
+		}
+
+		ImGui::EndMenu();
+	}
+}
+
+void PanelInspector::AddNavigationComponentsOptions(GameObject* selected) {
+	if (ImGui::BeginMenu("Navigation")) {
+		if (ImGui::MenuItem("Agent")) {
+			ComponentAgent* agent = selected->CreateComponent<ComponentAgent>();
+			if (agent != nullptr) {
+				agent->Init();
+			} else {
+				App->editor->modalToOpen = Modal::COMPONENT_EXISTS;
+			}
+		}
+		if (ImGui::MenuItem("Obstacle")) {
+			ComponentObstacle* obstacle = selected->CreateComponent<ComponentObstacle>();
+			if (obstacle != nullptr) {
+				obstacle->Init();
+			} else {
+				App->editor->modalToOpen = Modal::COMPONENT_EXISTS;
 			}
 		}
 

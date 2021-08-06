@@ -2,8 +2,8 @@
 
 #include "Component.h"
 #include "Scripting/Member.h"
-#include "Utils/UID.h"
 #include "Scripting/Script.h"
+#include "Utils/UID.h"
 
 #include <unordered_map>
 #include <vector>
@@ -14,7 +14,7 @@ class ComponentScript : public Component {
 public:
 	REGISTER_COMPONENT(ComponentScript, ComponentType::SCRIPT, true);
 
-	void Init() override;
+	void Start() override;
 
 	void OnEditorUpdate() override;
 	void Save(JsonValue jComponent) const override;

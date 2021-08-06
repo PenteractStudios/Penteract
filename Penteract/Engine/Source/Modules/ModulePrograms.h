@@ -24,6 +24,12 @@ public:
 	ProgramEnvironmentBRDF* environmentBRDF = nullptr;
 	ProgramSkybox* skybox = nullptr;
 
+	// Unlit Shader
+	ProgramUnlit* unlit = nullptr;
+
+	// Volumetric light Shader
+	ProgramVolumetricLight* volumetricLight = nullptr;
+
 	// Ilumination Shaders
 	ProgramStandardPhong* phongNormal = nullptr;
 	ProgramStandardPhong* phongNotNormal = nullptr;
@@ -32,24 +38,37 @@ public:
 	ProgramStandardSpecular* specularNormal = nullptr;
 	ProgramStandardSpecular* specularNotNormal = nullptr;
 
+	// Dissolve Shaders
+	ProgramStandardDissolve* dissolveStandard = nullptr;
+	ProgramUnlitDissolve* dissolveUnlit = nullptr;
+
 	// Depth prepass Shaders
 	ProgramDepthPrepass* depthPrepass = nullptr;
+	ProgramDepthPrepassConvertTextures* depthPrepassConvertTextures = nullptr;
+	ProgramDepthPrepassDissolve* depthPrepassDissolve = nullptr;
 
 	// SSAO Shaders
 	ProgramSSAO* ssao = nullptr;
-	ProgramSSAOBlur* ssaoBlur = 0;
+	ProgramBlur* blur = nullptr;
+
+	// Post-processing Shaders
+	ProgramPostprocess* postprocess = nullptr;
+	ProgramColorCorrection* colorCorrection = nullptr;
+
+	// Fog Shaders
+	ProgramHeightFog* heightFog = nullptr;
 
 	// Shadow Shaders
 	unsigned shadowMap = 0;
 
 	// Engine Shaders
-	ProgramDrawTexture* drawTexture = 0;
+	ProgramDrawTexture* drawTexture = nullptr;
 
 	// UI Shaders
-	ProgramTextUI* textUI = 0;
-	ProgramImageUI* imageUI = 0;
+	ProgramTextUI* textUI = nullptr;
+	ProgramImageUI* imageUI = nullptr;
 
 	// Particle Shaders
-	unsigned billboard = 0;
-	unsigned trail = 0;
+	ProgramBillboard* billboard = nullptr;
+	ProgramTrail* trail = nullptr;
 };

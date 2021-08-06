@@ -8,9 +8,8 @@
 #include "Modules/ModuleUserInterface.h"
 #include "Modules/ModuleWindow.h"
 #include "Modules/ModuleTime.h"
-#include "imgui.h"
-#include "Utils/Logging.h"
-#include "Scripting/Script.h"
+#include "Components/ComponentScript.h"
+#include "Components/UI/ComponentTransform2D.h"
 
 #include "Utils/Leaks.h"
 
@@ -27,22 +26,13 @@ ComponentSlider::~ComponentSlider() {
 
 void ComponentSlider::Init() {
 	// TODO: Refactor this. It's not good right now but it lets me check the functionality
-	std::vector<GameObject*> children = GetOwner().GetChildren();
-	for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); ++it) {
-		if (it == children.begin()) {
-			background = *it;
-		} else if (it == children.end() - 1) {
-			handle = *it;
-		} else {
-			fill = *it;
-		}
-	}
+	SearchForMissingGameObjectReferences();
 	SetNormalizedValue();
 }
 
 void ComponentSlider::Update() {
 	if (clicked) {
-		if (!App->input->GetMouseButton(1)) {
+		if (App->input->GetMouseButton(1) == KeyState::KS_IDLE) {
 			clicked = false;
 		} else {
 			float2 mousePos = App->input->GetMousePosition(true);
@@ -57,6 +47,10 @@ void ComponentSlider::Update() {
 			}
 		}
 	}
+
+	SearchForMissingGameObjectReferences();
+
+	if (background == nullptr || handle == nullptr || fill == nullptr) return;
 
 	ComponentTransform2D* backgroundTransform = background->GetComponent<ComponentTransform2D>();
 	ComponentTransform2D* fillTransform = fill->GetComponent<ComponentTransform2D>();
@@ -173,8 +167,12 @@ void ComponentSlider::OnClickedInternal() {
 
 void ComponentSlider::OnSliderDragged() {
 	// TODO: support for vertical sliders
-	ComponentTransform2D* backgroundTransform = background->GetComponent<ComponentTransform2D>();
 
+	SearchForMissingGameObjectReferences();
+
+	if (background == nullptr || handle == nullptr || fill == nullptr) return;
+
+	ComponentTransform2D* backgroundTransform = background->GetComponent<ComponentTransform2D>();
 	float size = 0.f;
 	if (newPosition.x > backgroundTransform->GetPosition().x - backgroundTransform->GetSize().x / 2.0f) {
 		size = newPosition.x - (backgroundTransform->GetPosition().x - backgroundTransform->GetSize().x / 2.0f);
@@ -290,7 +288,6 @@ void ComponentSlider::ChangeNormalizedValue(float normalizedValue_) {
 	currentValue = (maxValue - minValue) * normalizedValue;
 }
 
-
 float4 ComponentSlider::GetTintColor() const {
 	if (!IsActive()) return App->userInterface->GetErrorColor();
 
@@ -320,4 +317,19 @@ void ComponentSlider::SetNormalizedValue() {
 		normalizedValue = 0;
 	else
 		normalizedValue = (currentValue - minValue) / (maxValue - minValue);
+}
+
+void ComponentSlider::SearchForMissingGameObjectReferences() {
+	if (background == nullptr || handle == nullptr || fill == nullptr) {
+		std::vector<GameObject*> children = GetOwner().GetChildren();
+		for (std::vector<GameObject*>::iterator it = children.begin(); it != children.end(); ++it) {
+			if (it == children.begin()) {
+				background = *it;
+			} else if (it == children.end() - 1) {
+				handle = *it;
+			} else {
+				fill = *it;
+			}
+		}
+	}
 }

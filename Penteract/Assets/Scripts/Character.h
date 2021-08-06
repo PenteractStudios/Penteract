@@ -9,20 +9,20 @@ class ComponentAgent;
 class ComponentAnimation;
 class ComponentTransform;
 
-class Character
-{
+class Character {
 public:
 	Character() {}
 
 	virtual void GetHit(float damage_);
+	virtual void OnDeath();
 	void Recover(int recoveryLife_);
 
 	void SetTotalLifePoints(int totalLifePoints_);
-	void SetDamageHit(int damageHit_);
+	void SetDamageHit(float damageHit_);
 public:
 	bool isAlive = true;
-	float lifePoints = 1;
-	float damageHit = 1;
+	float lifePoints = 1.0f;
+	float damageHit = 1.0f;
 	float movementSpeed = 1.0f;
 	ComponentAgent* agent = nullptr;
 	ComponentAnimation* compAnimation = nullptr;

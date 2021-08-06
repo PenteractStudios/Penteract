@@ -1,8 +1,8 @@
 #pragma once
 #include "Module.h"
 
-#include "Math/float4x4.h"
 #include "btBulletDynamicsCommon.h"
+#include "Components/ComponentParticleSystem.h"
 
 // BULLET DEBUG: Uncomment to activate it
 //class DebugDrawer;
@@ -21,7 +21,7 @@ enum class CapsuleType;
 *	TRIGGER = It is like static, but the collisions against it have no physical effect to the colliding object.
 *	Usage in our game: Kinematics for player, enemies and bullets. Static for any level prop inside the navmesh. Trigger for any game event callback.
 */
-enum class ColliderType {
+enum class ColliderType : int {
 	DYNAMIC,
 	STATIC,
 	KINEMATIC,
@@ -35,7 +35,7 @@ enum class ColliderType {
 *	PLAYER = The Player of the game, should only exist one of this type. Interaction with WORLD_ELEMENTS and EVENT_TRIGGERS. Doesnt itneract with itself.
 *	EVERYTHING = The default setting. Interaction with all other types except NO_COLLISION.
 */
-enum WorldLayers {
+enum class WorldLayers : int {
 	NO_COLLISION = 1,
 	EVENT_TRIGGERS = 1 << 1,
 	WORLD_ELEMENTS = 1 << 2,
@@ -43,7 +43,8 @@ enum WorldLayers {
 	ENEMY = 1 << 4,
 	BULLET = 1 << 5,
 	BULLET_ENEMY = 1 << 6,
-	EVERYTHING = -1
+	SKILLS = 1 << 7,
+	EVERYTHING = 1 << 14	// 14 shift is the limit, as WorldLayer will be converted to short for the Physics library
 };
 
 class ModulePhysics : public Module {
@@ -72,6 +73,11 @@ public:
 
 	void AddBodyToWorld(btRigidBody* rigidbody, ColliderType colliderType, WorldLayers layer);
 
+	// -- Add/Remove Particle Body -- //
+	void CreateParticleRigidbody(ComponentParticleSystem::Particle* particle);
+	void RemoveParticleRigidbody(ComponentParticleSystem::Particle* particle);
+	void UpdateParticleRigidbody(ComponentParticleSystem::Particle* particle);
+
 	void InitializeRigidBodies(); // Called on Play(), this function adds all the collision objects to the physics world.
 	void ClearPhysicBodies();	  // Called on Stop(), this function removes all the collision objects from the physics world.
 
@@ -88,6 +94,8 @@ private:
 	btBroadphaseInterface* broadPhase = nullptr;
 	btSequentialImpulseConstraintSolver* constraintSolver = nullptr;
 	btDiscreteDynamicsWorld* world = nullptr;
+
+	std::vector<btRigidBody*> rigidBodiesToRemove;
 
 	//BULLET DEBUG: Uncomment to activate it
 	//DebugDrawer* debugDrawer;

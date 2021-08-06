@@ -2,9 +2,9 @@
     "ShaderType": 2,
     "RenderingMode": 0,
     "DiffuseColor": [
-        0.9852941036224365,
-        0.0,
-        0.0,
+        1.0,
+        0.9999899864196777,
+        0.9999899864196777,
         1.0
     ],
     "DiffuseMap": 17182364043525874115,
@@ -20,9 +20,10 @@
     "NormalMap": 9892134874493115841,
     "NormalStrength": 1.0,
     "EmissiveMap": 18075219244485809483,
+    "Emissive": 1.0,
     "AmbientOcclusionMap": 3084701112955396783,
     "Smoothness": 1.0,
-    "HasSmoothnessInAlphaChannel": false,
+    "HasSmoothnessInAlphaChannel": true,
     "Tiling": [
         1.0,
         1.0

@@ -34,12 +34,22 @@
 #define JSON_TAG_METALLIC "Metalness"
 #define JSON_TAG_NORMAL_MAP "NormalMap"
 #define JSON_TAG_NORMAL_STRENGTH "NormalStrength"
+#define JSON_TAG_EMISSIVE_COLOR "EmissiveColor"
 #define JSON_TAG_EMISSIVE_MAP "EmissiveMap"
+#define JSON_TAG_EMISSIVE_INTENSITY "Emissive"
 #define JSON_TAG_AMBIENT_OCCLUSION_MAP "AmbientOcclusionMap"
 #define JSON_TAG_SMOOTHNESS "Smoothness"
 #define JSON_TAG_HAS_SMOOTHNESS_IN_ALPHA_CHANNEL "HasSmoothnessInAlphaChannel"
+#define JSON_TAG_VOLUMETRIC_LIGHT_INTENSITY "VolumetricLightIntensity"
+#define JSON_TAG_VOLUMETRIC_LIGHT_ATTENUATION_EXPONENT "VolumetricLightAttenuationExponent"
+#define JSON_TAG_IS_SOFT "IsSoft"
+#define JSON_TAG_SOFT_RANGE "SoftRange"
 #define JSON_TAG_TILING "Tiling"
 #define JSON_TAG_OFFSET "Offset"
+#define JSON_TAG_DISSOLVE_SCALE "DissolveScale"
+#define JSON_TAG_DISSOLVE_OFFSET "DissolveOffset"
+#define JSON_TAG_DISSOLVE_DURATION "DissolveDuration"
+#define JSON_TAG_DISSOLVE_EDGE_SIZE "DissolveEdgeSize"
 
 void ResourceMaterial::Load() {
 	// Timer to measure loading a material
@@ -79,8 +89,11 @@ void ResourceMaterial::Load() {
 	App->resources->IncreaseReferenceCount(normalMapId);
 	normalStrength = jMaterial[JSON_TAG_NORMAL_STRENGTH];
 
+	emissiveColor = float4(jMaterial[JSON_TAG_EMISSIVE_COLOR][0], jMaterial[JSON_TAG_EMISSIVE_COLOR][1], jMaterial[JSON_TAG_EMISSIVE_COLOR][2], jMaterial[JSON_TAG_EMISSIVE_COLOR][3]);
 	emissiveMapId = jMaterial[JSON_TAG_EMISSIVE_MAP];
 	App->resources->IncreaseReferenceCount(emissiveMapId);
+
+	emissiveIntensity = jMaterial[JSON_TAG_EMISSIVE_INTENSITY];
 
 	ambientOcclusionMapId = jMaterial[JSON_TAG_AMBIENT_OCCLUSION_MAP];
 	App->resources->IncreaseReferenceCount(ambientOcclusionMapId);
@@ -90,6 +103,18 @@ void ResourceMaterial::Load() {
 
 	tiling = float2(jMaterial[JSON_TAG_TILING][0], jMaterial[JSON_TAG_TILING][1]);
 	offset = float2(jMaterial[JSON_TAG_OFFSET][0], jMaterial[JSON_TAG_OFFSET][1]);
+
+	// Dissolve values
+	dissolveScale = jMaterial[JSON_TAG_DISSOLVE_SCALE];
+	dissolveOffset = float2(jMaterial[JSON_TAG_DISSOLVE_OFFSET][0], jMaterial[JSON_TAG_DISSOLVE_OFFSET][1]);
+	dissolveDuration = jMaterial[JSON_TAG_DISSOLVE_DURATION];
+	dissolveEdgeSize = jMaterial[JSON_TAG_DISSOLVE_EDGE_SIZE];
+
+	volumetricLightInstensity = jMaterial[JSON_TAG_VOLUMETRIC_LIGHT_INTENSITY];
+	volumetricLightAttenuationExponent = jMaterial[JSON_TAG_VOLUMETRIC_LIGHT_ATTENUATION_EXPONENT];
+
+	isSoft = jMaterial[JSON_TAG_IS_SOFT];
+	softRange = jMaterial[JSON_TAG_SOFT_RANGE];
 
 	unsigned timeMs = timer.Stop();
 	LOG("Material loaded in %ums", timeMs);
@@ -137,7 +162,14 @@ void ResourceMaterial::SaveToFile(const char* filePath) {
 	jMaterial[JSON_TAG_METALLIC_MAP] = metallicMapId;
 	jMaterial[JSON_TAG_NORMAL_MAP] = normalMapId;
 	jMaterial[JSON_TAG_NORMAL_STRENGTH] = normalStrength;
+
+	JsonValue jEmissiveColor = jMaterial[JSON_TAG_EMISSIVE_COLOR];
+	jEmissiveColor[0] = emissiveColor.x;
+	jEmissiveColor[1] = emissiveColor.y;
+	jEmissiveColor[2] = emissiveColor.z;
+	jEmissiveColor[3] = emissiveColor.w;
 	jMaterial[JSON_TAG_EMISSIVE_MAP] = emissiveMapId;
+	jMaterial[JSON_TAG_EMISSIVE_INTENSITY] = emissiveIntensity;
 	jMaterial[JSON_TAG_AMBIENT_OCCLUSION_MAP] = ambientOcclusionMapId;
 
 	jMaterial[JSON_TAG_SMOOTHNESS] = smoothness;
@@ -149,6 +181,20 @@ void ResourceMaterial::SaveToFile(const char* filePath) {
 	JsonValue jOffset = jMaterial[JSON_TAG_OFFSET];
 	jOffset[0] = offset.x;
 	jOffset[1] = offset.y;
+
+	// Dissolve values
+	jMaterial[JSON_TAG_DISSOLVE_SCALE] = dissolveScale;
+	JsonValue jDissolveOffset = jMaterial[JSON_TAG_DISSOLVE_OFFSET];
+	jDissolveOffset[0] = dissolveOffset.x;
+	jDissolveOffset[1] = dissolveOffset.y;
+	jMaterial[JSON_TAG_DISSOLVE_DURATION] = dissolveDuration;
+	jMaterial[JSON_TAG_DISSOLVE_EDGE_SIZE] = dissolveEdgeSize;
+	
+	jMaterial[JSON_TAG_VOLUMETRIC_LIGHT_INTENSITY] = volumetricLightInstensity;
+	jMaterial[JSON_TAG_VOLUMETRIC_LIGHT_ATTENUATION_EXPONENT] = volumetricLightAttenuationExponent;
+
+	jMaterial[JSON_TAG_IS_SOFT] = isSoft;
+	jMaterial[JSON_TAG_SOFT_RANGE] = softRange;
 
 	// Write document to buffer
 	rapidjson::StringBuffer stringBuffer;
@@ -189,7 +235,7 @@ void ResourceMaterial::OnEditorUpdate() {
 
 	// Shader types
 	ImGui::TextColored(App->editor->titleColor, "Shader");
-	const char* shaderTypes[] = {"[Legacy] Phong", "Standard (specular settings)", "Standard"};
+	const char* shaderTypes[] = {"[Legacy] Phong", "Standard (specular settings)", "Standard", "Unlit", "Standard Dissolve", "Unlit Dissolve", "Volumetric Light"};
 	const char* shaderTypesCurrent = shaderTypes[(int) shaderType];
 	if (ImGui::BeginCombo("Shader Type", shaderTypesCurrent)) {
 		for (int n = 0; n < IM_ARRAYSIZE(shaderTypes); ++n) {
@@ -223,6 +269,30 @@ void ResourceMaterial::OnEditorUpdate() {
 		ImGui::EndCombo();
 	}
 	ImGui::NewLine();
+
+	if (shaderType == MaterialShader::VOLUMETRIC_LIGHT) {
+		ImGui::BeginColumns("##volumetric_light_map", 2, ImGuiColumnsFlags_NoResize | ImGuiColumnsFlags_NoBorder);
+		{
+			ImGui::ResourceSlot<ResourceTexture>("Volumetric Light Map", &diffuseMapId);
+		}
+		ImGui::NextColumn();
+		{
+			ImGui::NewLine();
+			ImGui::ColorEdit4("Color##color_vl", diffuseColor.ptr(), ImGuiColorEditFlags_NoInputs);
+			ImGui::DragFloat("Intensity##intensity_vl", &volumetricLightInstensity, App->editor->dragSpeed3f, 0.0f, inf);
+		}
+		ImGui::EndColumns();
+
+		ImGui::DragFloat("Attenuation Exponent##att_exp_vl", &volumetricLightAttenuationExponent, App->editor->dragSpeed2f, 0.0f, inf);
+
+		ImGui::NewLine();
+
+		ImGui::Text("Soft: ");
+		ImGui::SameLine();
+		ImGui::Checkbox("##soft", &isSoft);
+		ImGui::DragFloat("Softness Range", &softRange, App->editor->dragSpeed2f, 0.0f, inf);
+		return;
+	}
 
 	//Diffuse
 	ImGui::BeginColumns("##diffuse_material", 2, ImGuiColumnsFlags_NoResize | ImGuiColumnsFlags_NoBorder);
@@ -283,7 +353,8 @@ void ResourceMaterial::OnEditorUpdate() {
 		ImGui::EndColumns();
 		ImGui::NewLine();
 
-	} else {
+	} 
+	else if (shaderType != MaterialShader::UNLIT) {
 		const char* smoothnessItems[] = {"Diffuse Alpha", "Specular Alpha"};
 
 		if (shaderType == MaterialShader::STANDARD_SPECULAR) {
@@ -301,7 +372,7 @@ void ResourceMaterial::OnEditorUpdate() {
 			}
 			ImGui::EndColumns();
 
-		} else if (shaderType == MaterialShader::STANDARD) {
+		} else if (shaderType == MaterialShader::STANDARD || shaderType == MaterialShader::STANDARD_DISSOLVE) {
 			// Metallic Options
 			ImGui::BeginColumns("##metallic_material", 2, ImGuiColumnsFlags_NoResize | ImGuiColumnsFlags_NoBorder);
 			{
@@ -345,28 +416,41 @@ void ResourceMaterial::OnEditorUpdate() {
 		ImGui::NewLine();
 	}
 
-	// Normal Options
-	ImGui::BeginColumns("##normal_material", 2, ImGuiColumnsFlags_NoResize | ImGuiColumnsFlags_NoBorder);
-	{
-		ImGui::ResourceSlot<ResourceTexture>("Normal Map", &normalMapId);
-	}
-	ImGui::NextColumn();
-	{
-		ImGui::NewLine();
-		if (normalMapId != 0) {
-			ImGui::SliderFloat("##strength", &normalStrength, 0.0, 10.0);
+	if (shaderType != MaterialShader::UNLIT) {
+		// Normal Options
+		ImGui::BeginColumns("##normal_material", 2, ImGuiColumnsFlags_NoResize | ImGuiColumnsFlags_NoBorder);
+		{
+			ImGui::ResourceSlot<ResourceTexture>("Normal Map", &normalMapId);
 		}
+		ImGui::NextColumn();
+		{
+			ImGui::NewLine();
+			if (normalMapId != 0) {
+				ImGui::SliderFloat("##strength", &normalStrength, 0.0, 10.0);
+			}
+		}
+		ImGui::EndColumns();
+		ImGui::NewLine();
+
+		// Ambient Occlusion Options
+		ImGui::ResourceSlot<ResourceTexture>("Occlusion Map", &ambientOcclusionMapId);
+
+		ImGui::NewLine();
 	}
-	ImGui::EndColumns();
-	ImGui::NewLine();
-
-	// Ambient Occlusion Options
-	ImGui::ResourceSlot<ResourceTexture>("Occlusion Map", &ambientOcclusionMapId);
-
-	ImGui::NewLine();
 
 	// Emissive Options
-	ImGui::ResourceSlot<ResourceTexture>("Emissive Map", &emissiveMapId);
+	ImGui::BeginColumns("##emissive_map", 2, ImGuiColumnsFlags_NoResize | ImGuiColumnsFlags_NoBorder);
+	{
+		ImGui::ResourceSlot<ResourceTexture>("Emissive Map", &emissiveMapId);
+	}
+
+	ImGui::NextColumn();
+	{
+		ImGui::ColorEdit4("Color##color_e", emissiveColor.ptr(), ImGuiColorEditFlags_NoInputs);
+		ImGui::SliderFloat("##emissiveStrength", &emissiveIntensity, 0.0, 100.0);
+	}
+
+	ImGui::EndColumns();
 
 	ImGui::NewLine();
 	ImGui::NewLine();
@@ -374,4 +458,13 @@ void ResourceMaterial::OnEditorUpdate() {
 	// Tiling Options
 	ImGui::DragFloat2("Tiling", tiling.ptr(), App->editor->dragSpeed1f, 1, inf);
 	ImGui::DragFloat2("Offset", offset.ptr(), App->editor->dragSpeed3f, -inf, inf);
+
+	if (shaderType == MaterialShader::STANDARD_DISSOLVE || shaderType == MaterialShader::UNLIT_DISSOLVE) {
+		ImGui::NewLine();
+		ImGui::Text("Dissolve");
+		ImGui::DragFloat("Scale##dissolveScale", &dissolveScale, App->editor->dragSpeed2f, 0, inf);
+		ImGui::DragFloat2("Offset##dissolveOffset", dissolveOffset.ptr(), App->editor->dragSpeed2f, -inf, inf);
+		ImGui::DragFloat("Duration##dissolveScale", &dissolveDuration, App->editor->dragSpeed2f, 0, inf);
+		ImGui::DragFloat("Edge Size", &dissolveEdgeSize, App->editor->dragSpeed2f, 0, inf);
+	}
 }

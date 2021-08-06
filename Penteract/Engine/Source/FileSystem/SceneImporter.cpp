@@ -3,7 +3,6 @@
 #include "Application.h"
 #include "GameObject.h"
 #include "Utils/Logging.h"
-#include "Utils/MSTimer.h"
 #include "Utils/FileDialog.h"
 #include "FileSystem/TextureImporter.h"
 #include "Resources/ResourceScene.h"
@@ -21,7 +20,6 @@
 #include "Scripting/Script.h"
 #include "ImporterCommon.h"
 
-#include "rapidjson/document.h"
 #include "rapidjson/prettywriter.h"
 #include "rapidjson/error/en.h"
 
@@ -119,7 +117,7 @@ void SceneImporter::LoadScene(const char* filePath) {
 	scene->root = root;
 	root->scene = scene;
 	root->Load(jRoot);
-	root->InitComponents();
+	root->Start();
 
 	// Quadtree generation
 	JsonValue jQuadtreeBounds = jScene[JSON_TAG_QUADTREE_BOUNDS];

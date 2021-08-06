@@ -38,7 +38,7 @@
                     {
                         "Name": "speed",
                         "Type": "Int",
-                        "Value": 40
+                        "Value": 15
                     },
                     {
                         "Name": "life",
@@ -51,7 +51,7 @@
                 "Type": "SphereCollider",
                 "Active": true,
                 "colliderType": 2,
-                "layerType": 4,
+                "layerType": 6,
                 "mass": 1.0,
                 "radius": 0.6499999761581421,
                 "centerOffset": [
@@ -69,18 +69,10 @@
                 "Ytiles": 2,
                 "Xtiles": 5,
                 "AnimationSpeed": 10.0,
-                "InitColor": [
-                    1.0,
-                    0.9999899864196777,
-                    0.9999899864196777
-                ],
-                "FinalColor": [
-                    1.0,
-                    0.9999899864196777,
-                    0.9999899864196777
-                ],
-                "StartTransition": 0.0,
-                "EndTransition": 0.0,
+                "ColorOverLifetime": false,
+                "ColorLifeTime": 0.0,
+                "GradientColors": null,
+                "NumberColors": 0,
                 "FlipTexture": [
                     false,
                     false

@@ -22,10 +22,8 @@ struct TesseractEvent;
 
 // We should get these two values from the Character class
 
-#define ONIMARU_MAX_HEALTH 10.0f 
+#define ONIMARU_MAX_HEALTH 10.0f
 #define FANG_MAX_HEALTH 10.0f
-
-
 
 class PlayerController : public Script {
 	GENERATE_BODY(PlayerController);
@@ -45,14 +43,19 @@ public:
 	void SetNoCooldown(bool status);
 	int GetOverPowerMode();
 	bool IsPlayerDead() { return !playerFang.isAlive || !playerOnimaru.isAlive; }
-	void TakeDamage(bool ranged = false);
+	void TakeDamage(float damage);
+	static void SetUseGamepad(bool useGamepad_);
 
+	void AddEnemyInMap(GameObject* enemy);
+	void RemoveEnemyFromMap(GameObject* enemy);
 public:
 	//Debug
 	bool invincibleMode = false;
-	int overpowerMode = 1;
+	int overpowerMode = 0;
 	bool noCooldownMode = false;
 	bool debugGetHit = false;
+
+	static bool useGamepad;
 
 	Onimaru playerOnimaru = Onimaru();
 	Fang playerFang = Fang();
@@ -62,15 +65,26 @@ public:
 
 	//Fang
 	UID fangUID = 0;
-	UID fangTrailUID = 0;
+	UID fangTrailDashUID = 0;
+	UID fangTrailGunUID = 0;
 	UID fangLeftGunUID = 0;
 	UID fangRightGunUID = 0;
-	UID fangBulletUID = 0;
+	UID fangLeftBulletUID = 0;
+	UID fangRightBulletUID = 0;
+	UID EMPUID = 0;
+	UID EMPEffectsUID = 0;
+	UID fangUltimateUID = 0;
+	UID fangUltimateVFXUID = 0;
+
 	//Onimaru
 	UID onimaruUID = 0;
 	UID onimaruParticleUID = 0;
 	UID onimaruBulletUID = 0;
 	UID onimaruGunUID = 0;
+	UID onimaruRightHandUID = 0;
+	UID onimaruShieldUID = 0;
+	UID onimaruBlastEffectsUID = 0;
+	UID onimaruUltimateBulletUID = 0;
 
 	//HUD
 	UID canvasUID = 0;
@@ -94,18 +108,13 @@ public:
 	bool switchInProgress = false;
 	float switchDelay = 0.37f;
 
-	/* Fang & onimaru damage */
-	//split
-	float rangedDamageTaken = 1.0f;
-	float meleeDamageTaken = 1.0f;
-
 private:
 	void CheckCoolDowns();
 	void SwitchCharacter();
 	void UpdatePlayerStats();
 	bool CanSwitch();
 	void ResetSwitchStatus();
-
+	bool IsVulnerable() const;
 private:
 
 	//Switch
@@ -127,5 +136,5 @@ private:
 	ComponentTransform* cameraTransform = nullptr;
 
 	//Audio
-	ComponentAudioSource* audios[static_cast<int>(AudioPlayer::TOTAL)] = { nullptr };
+	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
 };
