@@ -33,14 +33,29 @@ private:
 	int currentPattern = 1;
 
 	bool* currentCorridorPattern;
-	bool corridorPattern1[CORRIDOR_TILES];
-	bool corridorPattern2[CORRIDOR_TILES];
-	bool corridorPattern3[CORRIDOR_TILES];
+	bool corridorPattern1[CORRIDOR_TILES] = {	true, false, true, false, true, false, false, false, false, true,
+												false, true, false, true, false, false, true, false, true, false, 
+												true, false, false, false, false, true, false, true};
+	bool corridorPattern2[CORRIDOR_TILES] = {	false, false, false, false, true, true, true, true, false, false,
+												false, false, true, true, true, true, false, false, false, false,
+												true, true, true, true, false, false, false, false};
+	bool corridorPattern3[CORRIDOR_TILES] = {	true, true, true, true, false, false, false, false, true, true,
+												true, true, false, false, false, false, true, true, true, true,
+												false, false, false, false, true, true, true, true};
 
 	bool* currentArenaPattern;
-	bool arenaPattern1[ARENA_TILES];
-	bool arenaPattern2[ARENA_TILES];
-	bool arenaPattern3[ARENA_TILES];
+	bool arenaPattern1[ARENA_TILES] = { true, true, true, true, true, true, true, true, true, true,
+										true, true, true, true, true, true, true, true, true, true,
+										true, true, true, true, false, false, false, false, false, false, 
+										false, false};
+	bool arenaPattern2[ARENA_TILES] = { false, false, false, false, false, false, false, false, false, false, 
+										false, false, false, false, false, false, false, false, false, false, 
+										false, false, false, false, true, true, true, true, true, true, 
+										true, true};
+	bool arenaPattern3[ARENA_TILES] = { true, true, true, false, true, true, true, true, true, false,
+										true, true, true, true, true, false, true, true, true, true, 
+										true, false, true, true, true, false, true, false, true, false,
+										true, false};
 
 	float timeRemainingTilesActive = 0.f;
 	float timeRemainingWarning = 0.f;
