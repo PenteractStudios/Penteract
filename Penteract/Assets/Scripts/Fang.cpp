@@ -381,9 +381,7 @@ void Fang::PlayAnimation() {
 				if (compAnimation->GetCurrentState()->name != states[static_cast<int>(FANG_STATES::DEATH)]) {
 					compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::DEATH)]);
 					if (compAnimation->GetCurrentStateSecondary()) {
-						if (compAnimation->GetCurrentStateSecondary()->name == states[static_cast<int>(FANG_STATES::SHOOTING)]) {
-							compAnimation->SendTriggerSecondary(states[static_cast<int>(FANG_STATES::SHOOTING)] + states[static_cast<int>(FANG_STATES::DEATH)]);
-						}
+							compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(FANG_STATES::DEATH)]);
 					}
 				}
 			} else {
