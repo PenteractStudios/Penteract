@@ -66,7 +66,6 @@ public:
 	//Fang
 	UID fangUID = 0;
 	UID fangTrailDashUID = 0;
-	UID fangTrailGunUID = 0;
 	UID fangLeftGunUID = 0;
 	UID fangRightGunUID = 0;
 	UID fangLeftBulletUID = 0;

@@ -45,20 +45,20 @@ public:
 
 	// ------- Contructors ------- //
 	Fang() {};
-	void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockOrientation = false, bool faceToFront = false) override;
+	void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockOrientation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override {};
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
 	void GetHit(float damage_) override;
-	void trailDelay();
+	void TrailDelay();
 	bool CanSwitch() const override;
 	bool IsInstantOrientation(bool useGamepad) const override;
 	float GetRealDashCooldown();
 	float GetRealEMPCooldown();
 	float GetRealUltimateCooldown();
 	void IncreaseUltimateCounter();
-	void Init(UID fangUID = 0, UID trailGunUID = 0, UID trailDashUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID cameraUID = 0, UID canvasUID = 0, UID EMPUID = 0, UID EMPEffectsUID = 0, UID fangUltimateUID = 0, UID ultimateVFXUID = 0);
+	void Init(UID fangUID = 0, UID trailDashUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID cameraUID = 0, UID canvasUID = 0, UID EMPUID = 0, UID EMPEffectsUID = 0, UID fangUltimateUID = 0, UID ultimateVFXUID = 0);
 	bool IsVulnerable() const override;
 
 public:
@@ -72,8 +72,8 @@ public:
 						"EMP", "Ultimate","IdleAim","FootSwitch", //21 - 24
 						"Sprint" // 25 - 28
 	};
-	//Combat
-	float maxCombatTime = 5.f;
+
+
 	//Dash
 	float dashCooldown = 5.f;
 	float dashSpeed = 100.f;
@@ -89,8 +89,8 @@ public:
 	int ultimateCooldown = 2;
 	float ultimateMovementSpeed = 4.0f;
 	
-
 private:
+
 	//Dash
 	float dashCooldownRemaining = 0.f;
 	float dashRemaining = 0.f;
@@ -110,14 +110,15 @@ private:
 	//Shoot
 	ComponentTransform* rightGunTransform = nullptr;
 	ComponentTransform* leftGunTransform = nullptr;
-	ComponentTransform* shootingGunTransform = nullptr;
+	ComponentParticleSystem* bullet = nullptr;
 	ComponentTrail* trailDash = nullptr;
-	ResourcePrefab* trailGun = nullptr;
 	ComponentParticleSystem* rightBullet = nullptr;
 	ComponentParticleSystem* leftBullet = nullptr;
 	GameObject* rightBulletAux = nullptr;
 	GameObject* leftBulletAux = nullptr;
 	bool shooting = false;
+	int transitioning = 0;
+
 	//Movement
 	MovementDirection dashMovementDirection = MovementDirection::NONE;
 
@@ -133,7 +134,8 @@ private:
 
 	//Audios
 	ComponentAudioSource* fangAudios[static_cast<int>(FANG_AUDIOS::TOTAL)] = { nullptr };
-
+	
+	
 private:
 	void InitDash();
 	void Dash();

@@ -26,6 +26,7 @@ enum class InputActions {
 	ABILITY_2,
 	ABILITY_3,
 	INTERACT,
+	AIM
 };
 
 class Player : public Character {
@@ -33,7 +34,7 @@ public:
 	// ------- Contructors ------- //
 	Player() {};
 
-	Player(int lifePoints_, float movementSpeed_, int damageHit_, float attackSpeed_)
+	Player(float lifePoints_, float movementSpeed_, float damageHit_, float attackSpeed_)
 		:
 		attackSpeed(attackSpeed_) {
 		lifePoints = lifePoints_;
@@ -50,7 +51,7 @@ public:
 	MovementDirection GetInputMovementDirection(bool useGamepad) const;
 	float3 GetDirection() const;
 	virtual void Shoot() {}
-	virtual void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockRotation = false, bool faceToFront = false);
+	virtual void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockRotation = false);
 	virtual void CheckCoolDowns(bool noCooldownMode = false) {}
 	virtual bool CanSwitch() const = 0;
 
@@ -78,22 +79,27 @@ public:
 	bool ultimateOn = false;
 	bool shootingOnCooldown = false;
 	float normalOrientationSpeed = 7.5f;
-
-	//Combat
-	float timeWithoutCombat = 0.f;
-	bool aiming = false;
-
-	float3 lookAtMousePlanePosition = float3(0, 0, 0);
+	float sprintMovementSpeed = 12.0f;
+	float3 lookAtMousePlanePosition = float3(0.f, 0.f, 0.f);
 	ComponentCamera* lookAtMouseCameraComp = nullptr;
 	CameraController* cameraController = nullptr;
-	float3 facePointDir = float3(0, 0, 0);
+	float3 facePointDir = float3(0.f, 0.f, 0.f);
 	MovementDirection movementInputDirection = MovementDirection::NONE;
 	ComponentTransform* playerMainTransform = nullptr;
 	virtual bool IsVulnerable() const = 0;
 
+	//Combat
+	float maxCombatTime = 5.f;
+	float decelerationRatio = 16.f;
 protected:
 	void MoveTo();
-
+	//Combat
+	float timeWithoutCombat = 0.f;
+	bool aiming = false;
+	bool faceToFront = false;
+	float deceleration = 0.f;
+	float3 decelerationDirection = float3(0.f,0.f,0.f);
+	bool decelerating = false;
 private:
 	virtual bool CanShoot();
 	void ResetSwitchStatus();
