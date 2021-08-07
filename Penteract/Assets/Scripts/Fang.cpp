@@ -227,10 +227,10 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 	//Combat
 	if (aiming) {
 		timeWithoutCombat += Time::GetDeltaTime();
-		if (timeWithoutCombat >= maxCombatTime) {
+		if (timeWithoutCombat >= aimTime) {
 			aiming = false;
 			transitioning = 0;
-			timeWithoutCombat = maxCombatTime;
+			timeWithoutCombat = aimTime;
 		}
 	}
 

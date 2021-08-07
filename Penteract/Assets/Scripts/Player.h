@@ -89,7 +89,7 @@ public:
 	virtual bool IsVulnerable() const = 0;
 
 	//Combat
-	float maxCombatTime = 5.f;
+	float aimTime = 5.f;
 	float decelerationRatio = 16.f;
 protected:
 	void MoveTo();
