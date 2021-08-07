@@ -112,6 +112,10 @@ void FloorIsLava::UpdateWarningTiles(bool activate)
 		if (currentCorridorPattern[i]) {
 			if (corridorTiles[i]) {
 				if (activate) {
+					ComponentAnimation* animation = corridorTiles[i]->GetComponent<ComponentAnimation>();
+					if (animation) {
+						animation->SendTrigger("ClosedOpening");
+					}
 					//corridorTiles[i][j].activate warning particles
 				}
 				else {
@@ -126,6 +130,10 @@ void FloorIsLava::UpdateWarningTiles(bool activate)
 		if (currentArenaPattern[i]) {
 			if (arenaTiles[i]) {
 				if (activate) {
+					ComponentAnimation* animation = arenaTiles[i]->GetComponent<ComponentAnimation>();
+					if (animation) {
+						animation->SendTrigger("ClosedOpening");
+					}
 					//arenaTiles[i][j].activate warning particles
 				}
 				else {
@@ -143,16 +151,21 @@ void FloorIsLava::UpdateFireActiveTiles(bool activate)
 		if (currentCorridorPattern[i]) {
 			if (corridorTiles[i]) {
 				ComponentBoxCollider* boxCollider = corridorTiles[i]->GetComponent<ComponentBoxCollider>();
-				if (boxCollider) {
-					if (activate) boxCollider->Enable();
-					else boxCollider->Disable();
-				}
 				GameObject* childFireParticlesObject = corridorTiles[i]->GetChild("FireVerticalParticleSystem");
+				ComponentAnimation* animation = corridorTiles[i]->GetComponent<ComponentAnimation>();
+				ComponentParticleSystem* fireParticles = nullptr;
 				if (childFireParticlesObject) {
-					ComponentParticleSystem* fireParticles = childFireParticlesObject->GetComponent<ComponentParticleSystem>();
-					if (fireParticles){
-						if (activate) fireParticles->PlayChildParticles();
-						else fireParticles->StopChildParticles();
+					fireParticles = childFireParticlesObject->GetComponent<ComponentParticleSystem>();					
+				}
+				if (boxCollider && fireParticles && animation) {
+					if (activate) {
+						boxCollider->Enable();
+						fireParticles->PlayChildParticles();
+					}
+					else {
+						boxCollider->Disable();
+						fireParticles->StopChildParticles();
+						animation->SendTrigger("OpenedClosing");
 					}
 				}
 			}
@@ -164,16 +177,21 @@ void FloorIsLava::UpdateFireActiveTiles(bool activate)
 		if (currentArenaPattern[i]) {
 			if (arenaTiles[i]) {
 				ComponentBoxCollider* boxCollider = arenaTiles[i]->GetComponent<ComponentBoxCollider>();
-				if (boxCollider) {
-					if (activate) boxCollider->Enable();
-					else boxCollider->Disable();
-				}
 				GameObject* childFireParticlesObject = arenaTiles[i]->GetChild("FireVerticalParticleSystem");
+				ComponentAnimation* animation = arenaTiles[i]->GetComponent<ComponentAnimation>();
+				ComponentParticleSystem* fireParticles = nullptr;
 				if (childFireParticlesObject) {
-					ComponentParticleSystem* fireParticles = childFireParticlesObject->GetComponent<ComponentParticleSystem>();
-					if (fireParticles) {
-						if (activate) fireParticles->PlayChildParticles();
-						else fireParticles->StopChildParticles();
+					fireParticles = childFireParticlesObject->GetComponent<ComponentParticleSystem>();
+				}
+				if (boxCollider && fireParticles && animation) {
+					if (activate) {
+						boxCollider->Enable();
+						fireParticles->PlayChildParticles();
+					}
+					else {
+						boxCollider->Disable();
+						fireParticles->StopChildParticles();
+						animation->SendTrigger("OpenedClosing");
 					}
 				}
 			}
