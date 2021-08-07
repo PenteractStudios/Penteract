@@ -2,10 +2,8 @@
 
 #include "Scripting/Script.h"
 
-#define CORRIDOR_ROWS 2
-#define CORRIDOR_COLS 18
-#define ARENA_ROWS 8
-#define ARENA_COLS 5
+#define CORRIDOR_TILES 28
+#define ARENA_TILES 32
 
 class FloorIsLava : public Script
 {
@@ -28,21 +26,21 @@ private:
 	GameObject* corridor = nullptr;
 	GameObject* arena = nullptr;
 
-	GameObject* corridorTiles[CORRIDOR_ROWS][CORRIDOR_COLS];
-	GameObject* arenaTiles[ARENA_ROWS][ARENA_COLS];
+	GameObject* corridorTiles[CORRIDOR_TILES];
+	GameObject* arenaTiles[ARENA_TILES];
 
 	int previousPattern = 1;
 	int currentPattern = 1;
 
-	bool currentCorridorPattern[CORRIDOR_ROWS][CORRIDOR_COLS];
-	bool corridorPattern1[CORRIDOR_ROWS][CORRIDOR_COLS];
-	bool corridorPattern2[CORRIDOR_ROWS][CORRIDOR_COLS];
-	bool corridorPattern3[CORRIDOR_ROWS][CORRIDOR_COLS];
+	bool* currentCorridorPattern;
+	bool corridorPattern1[CORRIDOR_TILES];
+	bool corridorPattern2[CORRIDOR_TILES];
+	bool corridorPattern3[CORRIDOR_TILES];
 
-	bool currentArenaPattern[ARENA_ROWS][ARENA_COLS];
-	bool arenaPattern1[ARENA_ROWS][ARENA_COLS];
-	bool arenaPattern2[ARENA_ROWS][ARENA_COLS];
-	bool arenaPattern3[ARENA_ROWS][ARENA_COLS];
+	bool* currentArenaPattern;
+	bool arenaPattern1[ARENA_TILES];
+	bool arenaPattern2[ARENA_TILES];
+	bool arenaPattern3[ARENA_TILES];
 
 	float timeRemainingTilesActive = 0.f;
 	float timeRemainingWarning = 0.f;
@@ -55,9 +53,7 @@ private:
 	bool firstTimeFireActive = true;
 
 private:
-	void UpdateWarningMatrices(bool activate);
-	void UpdateFireActiveMatrices(bool activate);
-	void SetCurrentCorridorPattern(bool pattern[CORRIDOR_ROWS][CORRIDOR_COLS]);
-	void SetCurrentArenaPattern(bool pattern[ARENA_ROWS][ARENA_COLS]);
+	void UpdateWarningTiles(bool activate);
+	void UpdateFireActiveTiles(bool activate);
 };
 

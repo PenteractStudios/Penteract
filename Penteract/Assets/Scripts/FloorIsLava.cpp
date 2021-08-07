@@ -19,26 +19,18 @@ void FloorIsLava::Start() {
 	
 	corridor = GameplaySystems::GetGameObject(corridorUID);
 	if (corridor) {
-		int i, j = 0;
+		int i = 0;
 		for (GameObject* children : corridor->GetChildren()) {
-			if (j >= CORRIDOR_COLS) {
-				j = 0;
-				if (i < CORRIDOR_ROWS) ++i;
-			}
-			corridorTiles[i][j] = children;
-			++j;
+			corridorTiles[i] = children;
+			++i;
 		}
 	}
 	arena = GameplaySystems::GetGameObject(arenaUID);
 	if (arena) {
-		int i, j = 0;
+		int i = 0;
 		for (GameObject* children : arena->GetChildren()) {
-			if (j >= ARENA_COLS) {
-				j = 0;
-				if (i < ARENA_COLS) ++i;
-			}
-			arenaTiles[i][j] = children;
-			++j;
+			arenaTiles[i] = children;
+			++i;
 		}
 	}
 
@@ -56,16 +48,16 @@ void FloorIsLava::Update() {
 		switch (currentPattern)
 		{
 		case 1:
-			SetCurrentCorridorPattern(corridorPattern1);
-			SetCurrentArenaPattern(arenaPattern1);
+			currentCorridorPattern = corridorPattern1;
+			currentArenaPattern = arenaPattern1;
 			break;
 		case 2:
-			SetCurrentCorridorPattern(corridorPattern2);
-			SetCurrentArenaPattern(arenaPattern2);
+			currentCorridorPattern = corridorPattern2;
+			currentArenaPattern = arenaPattern2;
 			break;
 		case 3:
-			SetCurrentCorridorPattern(corridorPattern3);
-			SetCurrentArenaPattern(arenaPattern3);
+			currentCorridorPattern = corridorPattern3;
+			currentArenaPattern = arenaPattern3;
 			break;
 		default:
 			break;
@@ -74,7 +66,7 @@ void FloorIsLava::Update() {
 	
 	if (warningActive) {
 		if (firstTimeWarning) {
-			UpdateWarningMatrices(true);
+			UpdateWarningTiles(true);
 			firstTimeWarning = false;
 		}
 
@@ -82,7 +74,7 @@ void FloorIsLava::Update() {
 			timeRemainingWarning -= Time::GetDeltaTime();
 		}
 		else {
-			UpdateWarningMatrices(false);
+			UpdateWarningTiles(false);
 			warningActive = false;
 			fireActive = true;
 			timeRemainingTilesActive = timeTilesActive;
@@ -92,7 +84,7 @@ void FloorIsLava::Update() {
 
 	if (fireActive) {
 		if (firstTimeFireActive) {
-			UpdateFireActiveMatrices(true);
+			UpdateFireActiveTiles(true);
 			firstTimeFireActive = false;
 		}
 
@@ -100,7 +92,7 @@ void FloorIsLava::Update() {
 			timeRemainingTilesActive -= Time::GetDeltaTime();
 		}
 		else {
-			UpdateFireActiveMatrices(false);
+			UpdateFireActiveTiles(false);
 			warningActive = true;
 			fireActive = false;
 			patternFinished = true;
@@ -113,91 +105,64 @@ void FloorIsLava::Update() {
 
 }
 
-void FloorIsLava::UpdateWarningMatrices(bool activate)
+void FloorIsLava::UpdateWarningTiles(bool activate)
 {
 	//corridor
-	for (int i = 0; i < CORRIDOR_ROWS; ++i) {
-		for (int j = 0; j < CORRIDOR_COLS; ++j) {
-			if (currentCorridorPattern[i][j]) {
-				if (corridorTiles[i][j]) {
-					if (activate) {
-						//corridorTiles[i][j].activate warning particles
-					}
-					else {
-						//corridorTiles[i][j].deactivate warning particles
-					}
+	for (int i = 0; i < CORRIDOR_TILES; ++i) {
+		if (currentCorridorPattern[i]) {
+			if (corridorTiles[i]) {
+				if (activate) {
+					//corridorTiles[i][j].activate warning particles
 				}
-			}
+				else {
+					//corridorTiles[i][j].deactivate warning particles
+				}
+			}			
 		}
 	}
 
 	//arena
-	for (int i = 0; i < ARENA_ROWS; ++i) {
-		for (int j = 0; j < ARENA_COLS; ++j) {
-			if (currentArenaPattern[i][j]) {
-				if (arenaTiles[i][j]) {
-					if (activate) {
-						//arenaTiles[i][j].activate warning particles
-					}
-					else {
-						//arenaTiles[i][j].deactivate warning particles
-					}
+	for (int i = 0; i < ARENA_TILES; ++i) {
+		if (currentArenaPattern[i]) {
+			if (arenaTiles[i]) {
+				if (activate) {
+					//arenaTiles[i][j].activate warning particles
+				}
+				else {
+					//arenaTiles[i][j].deactivate warning particles
 				}
 			}
-		}
+		}		
 	}
 }
 
-void FloorIsLava::UpdateFireActiveMatrices(bool activate)
+void FloorIsLava::UpdateFireActiveTiles(bool activate)
 {
 	//corridor
-	for (int i = 0; i < CORRIDOR_ROWS; ++i) {
-		for (int j = 0; j < CORRIDOR_COLS; ++j) {
-			if (currentCorridorPattern[i][j]) {
-				if (corridorTiles[i][j]) {
-					ComponentBoxCollider* boxCollider = corridorTiles[i][j]->GetComponent<ComponentBoxCollider>();
-					if (boxCollider) {
-						if (activate) boxCollider->Enable();
-						else boxCollider->Disable();
-					}
+	for (int i = 0; i < CORRIDOR_TILES; ++i) {
+		if (currentCorridorPattern[i]) {
+			if (corridorTiles[i]) {
+				ComponentBoxCollider* boxCollider = corridorTiles[i]->GetComponent<ComponentBoxCollider>();
+				if (boxCollider) {
+					if (activate) boxCollider->Enable();
+					else boxCollider->Disable();
 				}
 			}
-		}
+		}		
 	}
 
 	//arena
-	for (int i = 0; i < ARENA_ROWS; ++i) {
-		for (int j = 0; j < ARENA_COLS; ++j) {
-			if (currentArenaPattern[i][j]) {
-				if (arenaTiles[i][j]) {
-					ComponentBoxCollider* boxCollider = arenaTiles[i][j]->GetComponent<ComponentBoxCollider>();
-					if (boxCollider) {
-						if (activate) boxCollider->Enable();
-						else boxCollider->Disable();
-					}
+	for (int i = 0; i < ARENA_TILES; ++i) {
+		if (currentArenaPattern[i]) {
+			if (arenaTiles[i]) {
+				ComponentBoxCollider* boxCollider = arenaTiles[i]->GetComponent<ComponentBoxCollider>();
+				if (boxCollider) {
+					if (activate) boxCollider->Enable();
+					else boxCollider->Disable();
 				}
 			}
 		}
-	}
-}
-
-void FloorIsLava::SetCurrentCorridorPattern(bool pattern[CORRIDOR_ROWS][CORRIDOR_COLS])
-{
-	for (int i = 0; i < CORRIDOR_ROWS; ++i) {
-		for (int j = 0; j < CORRIDOR_COLS; ++j) {
-			currentCorridorPattern[i][j] = pattern[i][j];
-		}
-	}
-
-}
-
-void FloorIsLava::SetCurrentArenaPattern(bool pattern[ARENA_ROWS][ARENA_COLS])
-{
-	for (int i = 0; i < ARENA_ROWS; ++i) {
-		for (int j = 0; j < ARENA_COLS; ++j) {
-			currentArenaPattern[i][j] = pattern[i][j];
-		}
-	}
+	}	
 }
 
 
