@@ -147,6 +147,14 @@ void FloorIsLava::UpdateFireActiveTiles(bool activate)
 					if (activate) boxCollider->Enable();
 					else boxCollider->Disable();
 				}
+				GameObject* childFireParticlesObject = corridorTiles[i]->GetChild("FireVerticalParticleSystem");
+				if (childFireParticlesObject) {
+					ComponentParticleSystem* fireParticles = childFireParticlesObject->GetComponent<ComponentParticleSystem>();
+					if (fireParticles){
+						if (activate) fireParticles->PlayChildParticles();
+						else fireParticles->StopChildParticles();
+					}
+				}
 			}
 		}		
 	}
@@ -159,6 +167,14 @@ void FloorIsLava::UpdateFireActiveTiles(bool activate)
 				if (boxCollider) {
 					if (activate) boxCollider->Enable();
 					else boxCollider->Disable();
+				}
+				GameObject* childFireParticlesObject = arenaTiles[i]->GetChild("FireVerticalParticleSystem");
+				if (childFireParticlesObject) {
+					ComponentParticleSystem* fireParticles = childFireParticlesObject->GetComponent<ComponentParticleSystem>();
+					if (fireParticles) {
+						if (activate) fireParticles->PlayChildParticles();
+						else fireParticles->StopChildParticles();
+					}
 				}
 			}
 		}
