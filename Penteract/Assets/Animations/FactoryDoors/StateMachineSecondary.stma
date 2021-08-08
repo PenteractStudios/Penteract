@@ -1,0 +1,73 @@
+{
+    "InitialState": 0,
+    "Clips": [
+        14654052627670973986,
+        1267499798399892229,
+        3646111480446057889
+    ],
+    "States": [
+        {
+            "Id": 9918732810345630349,
+            "Name": "Closed",
+            "ClipId": 14654052627670973986
+        },
+        {
+            "Id": 11850863544472640316,
+            "Name": "Open",
+            "ClipId": 1267499798399892229
+        },
+        {
+            "Id": 15499260577458724826,
+            "Name": "Opening",
+            "ClipId": 3646111480446057889
+        }
+    ],
+    "Transitions": [
+        {
+            "Trigger": "OpeningClosed",
+            "Id": 5185371856330576180,
+            "Source": 15499260577458724826,
+            "Target": 9918732810345630349,
+            "Interpolation": 0.3
+        },
+        {
+            "Trigger": "OpeningOpen",
+            "Id": 14194558278777875210,
+            "Source": 15499260577458724826,
+            "Target": 11850863544472640316,
+            "Interpolation": 0.3
+        },
+        {
+            "Trigger": "ClosedOpening",
+            "Id": 16578485436787906653,
+            "Source": 9918732810345630349,
+            "Target": 15499260577458724826,
+            "Interpolation": 0.3
+        },
+        {
+            "Trigger": "ClosedOpen",
+            "Id": 7864588454183918437,
+            "Source": 9918732810345630349,
+            "Target": 11850863544472640316,
+            "Interpolation": 0.3
+        },
+        {
+            "Trigger": "OpenOpening",
+            "Id": 7096612754918933594,
+            "Source": 11850863544472640316,
+            "Target": 15499260577458724826,
+            "Interpolation": 0.3
+        },
+        {
+            "Trigger": "OpenClosed",
+            "Id": 9999797375595440360,
+            "Source": 11850863544472640316,
+            "Target": 9918732810345630349,
+            "Interpolation": 0.3
+        }
+    ],
+    "Bones": [
+        "joint1",
+        "joint3"
+    ]
+}
