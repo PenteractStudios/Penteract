@@ -63,7 +63,11 @@ public:
 	float blastDistance = 15.f;
 	float blastAngle = 50.f;
 	float blastDelay = 0.6;
+	float blastDamage = 1.0f;
+	// Shield
+	float shieldReboundedDamage = 1.0f;
 	float shieldingMaxSpeed = 2.0f;
+
 public:
 	// ------- Contructors ------- //
 	Onimaru() {};
