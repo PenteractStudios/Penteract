@@ -164,12 +164,13 @@ bool Onimaru::IsVulnerable() const {
 float Onimaru::GetRealShieldCooldown() {
 	if (shield == nullptr || shieldGO == nullptr) return 0.0f;
 	float realShieldCooldown = 1.0f;
-	float chargesWasted = (float)(shield->max_charges - shield->GetNumCharges()) / (float)shield->max_charges;
-	if (shield->GetIsActive()) {
-		realShieldCooldown = chargesWasted;
-	} else if (shield->GetCoolDown() > 0) {
-		realShieldCooldown = 1.0f - (shieldCooldownRemaining / (shield->GetCoolDown() / (1.0f - chargesWasted)));
-	}
+	realShieldCooldown = (float) shield->currentAvailableCharges / shield->maxCharges;
+	//float chargesWasted = (float)(shield->maxCharges - shield->GetNumCharges()) / (float)shield->maxCharges;
+	//if (shield->GetIsActive()) {
+	//	realShieldCooldown = chargesWasted;
+	//} else if (shield->GetCoolDown() > 0) {
+	//	realShieldCooldown = 1.0f - (shieldCooldownRemaining / (shield->GetCoolDown() / (1.0f - chargesWasted)));
+	//}
 
 	return realShieldCooldown;
 }
@@ -194,11 +195,14 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 		if (!blastInUse) blastCooldownRemaining -= Time::GetDeltaTime();
 	}
 	//ShieldCooldown
-	if (noCooldownMode || shieldCooldownRemaining <= 0.f) {
-		shieldCooldownRemaining = 0.f;
-		shieldInCooldown = false;
-	} else {
-		shieldCooldownRemaining -= Time::GetDeltaTime();
+	if (shield->NeedsRecharging()) {
+  		if (shieldCooldownRemainingCharge <= 0.f) {
+			shield->IncreaseCharge();
+			shieldCooldownRemainingCharge = shield->GetChargeCooldown();
+		}
+		else {
+			shieldCooldownRemainingCharge -= Time::GetDeltaTime();
+		}
 	}
 }
 
@@ -305,6 +309,7 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 	if (shieldGO) {
 		shield = GET_SCRIPT(shieldGO, Shield);
 		shieldGO->Disable();
+		shieldCooldownRemainingCharge = shield->GetChargeCooldown();
 	}
 
 	if (characterGameObject) {
@@ -337,7 +342,7 @@ void Onimaru::OnAnimationFinished() {
 bool Onimaru::CanShield() {
 	if (shield == nullptr || shieldGO == nullptr) return false;
 
-	return !shieldInCooldown && !shield->GetIsActive() && !ultimateOn;
+	return !ultimateOn && !shield->GetIsActive() && shield->CanUse();
 }
 
 bool Onimaru::CanUltimate() {
@@ -346,14 +351,12 @@ bool Onimaru::CanUltimate() {
 
 void Onimaru::InitShield() {
 	if (shield == nullptr || shieldGO == nullptr) return;
-
 	if (CanShield()) {
 		shield->InitShield();
 		if (shieldParticles) {
 			shieldParticles->Play();
 		}
 
-		shieldInCooldown = false;
 		if (agent) {
 			agent->SetMaxSpeed(movementSpeed / 2);
 		}
@@ -376,8 +379,8 @@ void Onimaru::InitShield() {
 void Onimaru::FadeShield() {
 	if (shield == nullptr || shieldGO == nullptr) return;
 	shield->FadeShield();
-	shieldInCooldown = true;
-	shieldCooldownRemaining = shield->GetCoolDown();
+	//shieldInCooldown = true;
+	//shieldCooldownRemaining = shield->GetCoolDown();
 	if (agent) agent->SetMaxSpeed(movementSpeed);
 
 	if (!shooting) {
@@ -424,16 +427,17 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 		}
 
 		if (!ultimateOn && !blastInUse) {
-
-			if (!shield->GetIsActive()) {
-				if (GetInputBool(InputActions::ABILITY_1, useGamepad)) {
+			
+			if (GetInputBool(InputActions::ABILITY_1, useGamepad)) {
+				if (!shield->GetIsActive() && shield->CanUse()) {
 					InitShield();
 				}
-			} else {
-				if (!GetInputBool(InputActions::ABILITY_1, useGamepad) || shield->GetNumCharges() == shield->max_charges) {
-					FadeShield();
-				}
 			}
+			
+			if (!GetInputBool(InputActions::ABILITY_1, useGamepad) || !shield->CanUse()) {
+				FadeShield();
+			}
+			
 
 			if (GetInputBool(InputActions::SHOOT, useGamepad)) {
 				if (!shooting) {

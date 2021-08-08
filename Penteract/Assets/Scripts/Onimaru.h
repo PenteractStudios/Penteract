@@ -107,9 +107,7 @@ private:
 
 	Shield* shield = nullptr;
 	GameObject* shieldGO = nullptr;
-
-	bool shieldInCooldown = false;
-	float shieldCooldownRemaining = 0.f;
+	float shieldCooldownRemainingCharge = 0.f;
 
 	bool blastInUse = false;
 	bool shooting = false;
