@@ -19,7 +19,6 @@ public:
 	bool CanUse() { return currentAvailableCharges > 0; }
 	bool GetIsActive() { return isActive; }
 	void SetIsActive(bool a) { isActive = a; }
-	int GetCoolDown() { return totalCooldown; }
 	int GetNumCharges() { return currentAvailableCharges; }
 	bool NeedsRecharging() { return currentAvailableCharges != maxCharges; }
 	void IncreaseCharge() { currentAvailableCharges = currentAvailableCharges == maxCharges ? currentAvailableCharges : currentAvailableCharges + 1; }
@@ -34,7 +33,6 @@ public:
 	PlayerController* playerController = nullptr;
 
 private:
-	int totalCooldown = 0;
 	bool isActive = false;
 
 };
