@@ -33,20 +33,20 @@ void LaserTurret::Update() {
     switch (currentState)
     {
     case TurretState::IDLE_START:
-        if (coolDownOff < coolDownOffTimer) {
-            coolDownOff += Time::GetDeltaTime();
-            if (coolDownOff > coolDownOffTimer) {
-                coolDownOff = 0;
+        if (coolDownOffTimer <= coolDownOff) {
+            coolDownOffTimer += Time::GetDeltaTime();
+            if (coolDownOffTimer > coolDownOff) {
+                coolDownOffTimer = 0;
                 currentState = TurretState::START;
                 animationComp->SendTrigger(states[static_cast<unsigned int>(TurretState::IDLE_START)] + states[static_cast<unsigned int>(TurretState::START)]);
             }
         }
         break;
     case TurretState::IDLE_END:
-        if (coolDownOn < coolDownOnTimer) {
-            coolDownOn += Time::GetDeltaTime();
-            if (coolDownOff > coolDownOffTimer) {
-                coolDownOff = 0;
+        if (coolDownOnTimer <= coolDownOn) {
+            coolDownOnTimer += Time::GetDeltaTime();
+            if (coolDownOnTimer > coolDownOn) {
+                coolDownOnTimer = 0;
                 currentState = TurretState::END;
                 animationComp->SendTrigger(states[static_cast<unsigned int>(TurretState::IDLE_END)] + states[static_cast<unsigned int>(TurretState::END)]);
             }
@@ -77,11 +77,13 @@ void LaserTurret::OnAnimationFinished() {
             animationComp->SendTrigger(animationComp->GetCurrentState()->name + states[static_cast<int>(TurretState::SHOOT)]);
             currentState = TurretState::SHOOT;
         } else if (animationComp->GetCurrentState()->name == states[static_cast<int>(TurretState::SHOOT)]) {
-            animationComp->SendTrigger(animationComp->GetCurrentState()->name + states[static_cast<int>(TurretState::END)]);
+            animationComp->SendTrigger(animationComp->GetCurrentState()->name + states[static_cast<int>(TurretState::IDLE_END)]);
             currentState = TurretState::IDLE_END;
+            coolDownOnTimer = 0.0f;
         } else if (animationComp->GetCurrentState()->name == states[static_cast<int>(TurretState::END)]) {
-            animationComp->SendTrigger(animationComp->GetCurrentState()->name + states[static_cast<int>(TurretState::START)]);
             currentState = TurretState::IDLE_START;
+            coolDownOffTimer = 0.0f;
+            animationComp->SendTrigger(animationComp->GetCurrentState()->name + states[static_cast<int>(TurretState::IDLE_START)]);
         }
 
     }

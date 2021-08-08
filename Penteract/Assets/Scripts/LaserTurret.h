@@ -28,10 +28,10 @@ public:
 	UID laserTargetUID = 0;
 
 	float coolDownOnTimer = 0.0f;
-	float coolDownOn = 0.05;
+	float coolDownOn = 0.05f;
 
 	float coolDownOffTimer = 0.0f;
-	float coolDownOff = 0.05;
+	float coolDownOff = 0.05f;
 
 private:
 
@@ -41,7 +41,7 @@ private:
 	
 	GameObject* laserObject = nullptr;
 
-	const std::string states[5] = { "Startup", "Shoot", "End", "IdleStart", "IdleEnd"};
+	const std::string states[5] = { "Startup", "Shoot", "End", "StartUpIdle", "EndIdle"};
 
 };
 
