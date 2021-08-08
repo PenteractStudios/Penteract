@@ -47,6 +47,8 @@ public:
 	float focusDistance = 100.f;
 	float transitionSpeed = 1000.f;
 
+	int obtainedPowerUps = 0; // PowerUp counter
+
 private:
 	void DoTransition();
 	void SpawnEnemies();
