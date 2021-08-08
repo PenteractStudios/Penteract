@@ -165,12 +165,6 @@ float Onimaru::GetRealShieldCooldown() {
 	if (shield == nullptr || shieldGO == nullptr) return 0.0f;
 	float realShieldCooldown = 1.0f;
 	realShieldCooldown = (float) shield->currentAvailableCharges / shield->maxCharges;
-	//float chargesWasted = (float)(shield->maxCharges - shield->GetNumCharges()) / (float)shield->maxCharges;
-	//if (shield->GetIsActive()) {
-	//	realShieldCooldown = chargesWasted;
-	//} else if (shield->GetCoolDown() > 0) {
-	//	realShieldCooldown = 1.0f - (shieldCooldownRemaining / (shield->GetCoolDown() / (1.0f - chargesWasted)));
-	//}
 
 	return realShieldCooldown;
 }
@@ -379,8 +373,6 @@ void Onimaru::InitShield() {
 void Onimaru::FadeShield() {
 	if (shield == nullptr || shieldGO == nullptr) return;
 	shield->FadeShield();
-	//shieldInCooldown = true;
-	//shieldCooldownRemaining = shield->GetCoolDown();
 	if (agent) agent->SetMaxSpeed(movementSpeed);
 
 	if (!shooting) {
