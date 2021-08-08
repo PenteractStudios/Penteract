@@ -16,7 +16,11 @@ void FactoryDoors::Update() {
 	if (!animation) return;
 
 	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_G)) {
-		Open();
+		animation->SendTrigger("ClosedOpening");
+	}
+	
+	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_H)) {
+		animation->SendTrigger("OpeningClosed");
 	}
 }
 
