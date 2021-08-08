@@ -162,7 +162,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 200.0,
-                            "HorizontalFov": 1.5148873329162598,
+                            "HorizontalFov": 1.533522367477417,
                             "VerticalFov": 1.0
                         }
                     },
@@ -1184,6 +1184,11 @@
                                                                 "Name": "sceneUID",
                                                                 "Type": "SceneResourceUID",
                                                                 "Value": 16893504836010757748
+                                                            },
+                                                            {
+                                                                "Name": "levelNum",
+                                                                "Type": "Int",
+                                                                "Value": 1
                                                             }
                                                         ]
                                                     },
@@ -22304,6 +22309,11 @@
                                                                                 "Name": "sceneUID",
                                                                                 "Type": "SceneResourceUID",
                                                                                 "Value": 16893504836010757748
+                                                                            },
+                                                                            {
+                                                                                "Name": "levelNum",
+                                                                                "Type": "Int",
+                                                                                "Value": 1
                                                                             }
                                                                         ]
                                                                     },

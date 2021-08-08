@@ -2,6 +2,8 @@
 
 #include "Scripting/Script.h"
 
+class PlayerController;
+
 class Shield : public Script
 {
 	GENERATE_BODY(Shield);
@@ -28,6 +30,8 @@ public:
 	int maxCharges = 0;
 	float chargeCooldown = 0;
 	int currentAvailableCharges = 0;
+	UID playerUID = 0;
+	PlayerController* playerController = nullptr;
 
 private:
 	int totalCooldown = 0;
