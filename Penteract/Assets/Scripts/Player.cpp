@@ -6,6 +6,9 @@
 
 #define PRESSED_TRIGGER_THRESHOLD 0.3f
 
+bool Player::level1Upgrade = false;
+bool Player::level2Upgrade = false;
+
 void Player::SetAttackSpeed(float attackSpeed_) {
 	attackSpeed = attackSpeed_;
 }
@@ -171,7 +174,7 @@ bool Player::GetInputBool(InputActions action, bool useGamepad) {
 		if (useGamepad && Input::IsGamepadConnected(0)) {
 			return Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_TRIGGERLEFT, 0) > PRESSED_TRIGGER_THRESHOLD;
 		} else {
-			return Input::GetMouseButtonDown(2) || Input::GetMouseButtonRepeat(2);
+			return Input::GetKeyCodeDown(Input::KEYCODE::KEY_SPACE) || Input::GetKeyCodeRepeat(Input::KEYCODE::KEY_SPACE);
 		}
 	case InputActions::ABILITY_2:
 		if (useGamepad && Input::IsGamepadConnected(0)) {

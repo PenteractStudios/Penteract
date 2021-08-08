@@ -3,6 +3,9 @@
 #include "Scripting/Script.h"
 
 class ComponentText;
+class GameObject;
+class PlayerController;
+
 class DialogueManager : public Script
 {
 	GENERATE_BODY(DialogueManager);
@@ -70,6 +73,10 @@ public:
 	GameObject* tutorialUpgrades2 = nullptr;
 	GameObject* tutorialUpgrades3 = nullptr;
 
+	UID playerUID = 0;
+	GameObject* player = nullptr;
+	PlayerController* playerControllerScript = nullptr;
+
 	// ------ TRANSITION INFO ------ //
 	float3 dialogueStartPosition = float3(0, 0, 0);
 	float3 dialogueEndPosition = float3(0, 0, 0);
@@ -86,7 +93,4 @@ public:
 	bool runChangeAnimation = false;
 	bool runCloseAnimation = false;
 	bool runSecondaryOpen = false;
-
-
-	int obtainedPowerUps = 0; // PowerUp counter
 };

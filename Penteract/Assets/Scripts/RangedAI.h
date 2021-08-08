@@ -102,6 +102,7 @@ public:
 	float stunDuration = 3.f;			//Max time the enemy will be stunned
 	float hurtFeedbackTimeDuration = 0.5f;	//Time that damaged material will be shown whenever AI is hit
 	float groundPosition = 3.0f;
+	float fleeingUpdateTime = 3.0f;        //Time that needs to wait in order to get away from the player in the flee state
 
 private:
 
@@ -117,8 +118,6 @@ private:
 
 	float stunTimeRemaining = 0.f;			//Time remaining stunned
 
-	bool EMPUpgraded = false;			//Flag to control if the ability is uprgraded
-
 	ComponentAnimation* animation = nullptr;		//Refernece to  animatino component
 	ComponentTransform* ownerTransform = nullptr;	//Reference to owner transform componenet
 
@@ -130,4 +129,8 @@ private:
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr }; //Array of ints used to play audios
 
 	float currentPushBackDistance = 0.f;
+
+	float currentFleeingUpdateTime = 0.f; // Current Time that needs to compare against the fleeingUpdateTime in the flee state
+	float3 currentFleeDestination;        // Destination position where it is going to move far away from the player  
+	bool fleeingFarAway = false;          //Toggle to get away from the player
 };
