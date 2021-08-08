@@ -4,6 +4,10 @@
 #include "GameObject.h"
 
 EXPOSE_MEMBERS(LaserTurret) {
+    MEMBER(MemberType::FLOAT, coolDownOn),
+    MEMBER(MemberType::FLOAT, coolDownOnTimer),
+    MEMBER(MemberType::FLOAT, coolDownOff),
+    MEMBER(MemberType::FLOAT, coolDownOffTimer),
     MEMBER(MemberType::GAME_OBJECT_UID, laserTargetUID)
 };
 
@@ -76,10 +80,12 @@ void LaserTurret::OnAnimationFinished() {
         if (animationComp->GetCurrentState()->name == states[static_cast<int>(TurretState::START)]) {
             animationComp->SendTrigger(animationComp->GetCurrentState()->name + states[static_cast<int>(TurretState::SHOOT)]);
             currentState = TurretState::SHOOT;
+            coolDownOnTimer = 0.0f;
+            coolDownOffTimer = 0.0f;
         } else if (animationComp->GetCurrentState()->name == states[static_cast<int>(TurretState::SHOOT)]) {
-            animationComp->SendTrigger(animationComp->GetCurrentState()->name + states[static_cast<int>(TurretState::IDLE_END)]);
             currentState = TurretState::IDLE_END;
             coolDownOnTimer = 0.0f;
+            animationComp->SendTrigger(animationComp->GetCurrentState()->name + states[static_cast<int>(TurretState::IDLE_END)]);
         } else if (animationComp->GetCurrentState()->name == states[static_cast<int>(TurretState::END)]) {
             currentState = TurretState::IDLE_START;
             coolDownOffTimer = 0.0f;

@@ -28,10 +28,10 @@ public:
 	UID laserTargetUID = 0;
 
 	float coolDownOnTimer = 0.0f;
-	float coolDownOn = 0.05f;
+	float coolDownOn = 2.0f;
 
 	float coolDownOffTimer = 0.0f;
-	float coolDownOff = 0.05f;
+	float coolDownOff = 2.0f;
 
 private:
 
