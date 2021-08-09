@@ -15,6 +15,8 @@ EXPOSE_MEMBERS(PlayerDeath) {
 	MEMBER(MemberType::FLOAT, rangedDamageTaken),
 	MEMBER(MemberType::FLOAT, meleeDamageTaken),
 	MEMBER(MemberType::FLOAT, barrelDamageTaken),
+	MEMBER(MemberType::FLOAT, fireDamageTaken),
+	MEMBER(MemberType::FLOAT, cooldownFireDamage),
 	MEMBER(MemberType::GAME_OBJECT_UID, transitionUID)
 };
 
@@ -33,6 +35,13 @@ void PlayerDeath::Update() {
 	if (player) {
 		if (playerController) {
 			dead = playerController->IsPlayerDead();
+		}
+		if (timerFireDamage <= cooldownFireDamage) {
+			timerFireDamage += Time::GetDeltaTime();
+			if (timerFireDamage > cooldownFireDamage) {
+				fireDamageActive = true;
+				timerFireDamage = 0.f;
+			}
 		}
 	}
 }
@@ -97,5 +106,11 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 	}
 	else if (collidedWith.name == "Barrel") {
 		if(playerController) playerController->TakeDamage(barrelDamageTaken);
+	}
+	else if (collidedWith.name == "FireTile") {
+		if (fireDamageActive) {
+			if (playerController) playerController->TakeDamage(fireDamageTaken);
+			fireDamageActive = false;
+		}
 	}
 }

@@ -12,6 +12,10 @@ void FireTilesAnimationController::Start() {
 }
 
 void FireTilesAnimationController::Update() {
+	
+}
+
+void FireTilesAnimationController::OnAnimationFinished() {
 	if (animation->GetCurrentState()) {
 		if (animation->GetCurrentState()->name == "Opening") {
 			animation->SendTrigger("OpeningOpened");
@@ -20,8 +24,4 @@ void FireTilesAnimationController::Update() {
 			animation->SendTrigger("ClosingClosed");
 		}
 	}
-}
-
-void FireTilesAnimationController::OnAnimationFinished()
-{
 }

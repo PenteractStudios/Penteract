@@ -31,9 +31,16 @@ public:
 	float meleeDamageTaken = 1.0f;
 	float barrelDamageTaken = 1.0f;
 
+	float fireDamageTaken = 1.0f;
+
+	float cooldownFireDamage = 1.0f;
+
 private:
 	GameObject* transitionGO = nullptr;
 	SceneTransition* sceneTransition = nullptr;
+
+	float timerFireDamage = 0.f;
+	bool fireDamageActive = false;
 
 };
 
