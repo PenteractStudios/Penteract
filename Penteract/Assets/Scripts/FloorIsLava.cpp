@@ -93,12 +93,18 @@ void FloorIsLava::Update() {
 		}
 		else {
 			UpdateFireActiveTiles(false);
-			warningActive = true;
-			fireActive = false;
-			patternFinished = true;
-			previousPattern = currentPattern;
-			timeRemainingWarning = timeWarning;
-			firstTimeWarning = true;
+			if (timerTilesClosingRemaining <= timerTilesClosing) {
+				timerTilesClosingRemaining += Time::GetDeltaTime();
+			}
+			else {
+				warningActive = true;
+				fireActive = false;
+				patternFinished = true;
+				previousPattern = currentPattern;
+				timeRemainingWarning = timeWarning;
+				firstTimeWarning = true;
+				timerTilesClosingRemaining = 0.f;
+			}
 		}
 
 	}

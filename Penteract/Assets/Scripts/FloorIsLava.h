@@ -60,6 +60,9 @@ private:
 	float timeRemainingTilesActive = 0.f;
 	float timeRemainingWarning = 0.f;
 
+	float timerTilesClosing = 2.f;
+	float timerTilesClosingRemaining = 0.f;
+
 	bool warningActive = true;
 	bool fireActive = false;
 	bool patternFinished = true;
