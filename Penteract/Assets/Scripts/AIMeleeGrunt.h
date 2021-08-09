@@ -88,7 +88,7 @@ private:
 
 	float stunTimeRemaining = 0.f;
 
-	bool EMPUpgraded = false;
+	//bool EMPUpgraded = false;
 	int deathType = 0;
 
 	HUDController* hudControllerScript = nullptr;
@@ -111,4 +111,5 @@ private:
 private:
 	void UpdatePushBackPosition();
 	void CalculatePushBackRealDistance();	// Calculates the real distance of the pushback taking into account any obstacles in the path
+	void Death();
 };
