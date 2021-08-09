@@ -50,6 +50,7 @@ public:
 	void RemoveEnemyFromMap(GameObject* enemy);
 
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
+	void ObtainUpgradeCell();
 
 public:
 	//Debug
@@ -59,6 +60,7 @@ public:
 	bool debugGetHit = false;
 
 	static bool useGamepad;
+	static int currentLevel;
 
 	Onimaru playerOnimaru = Onimaru();
 	Fang playerFang = Fang();
@@ -69,6 +71,7 @@ public:
 	//Fang
 	UID fangUID = 0;
 	UID fangTrailDashUID = 0;
+	UID fangDashDamageUID = 0;
 	UID fangTrailGunUID = 0;
 	UID fangLeftGunUID = 0;
 	UID fangRightGunUID = 0;
@@ -112,6 +115,9 @@ public:
 	float switchDelay = 0.37f;
 	float switchSphereRadius = 5.f;
 	float switchDamage = 1.f;
+
+	//Upgrades
+	int obtainedUpgradeCells = 0;
 
 private:
 	void CheckCoolDowns();

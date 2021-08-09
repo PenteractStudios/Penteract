@@ -119,8 +119,6 @@ private:
 
 	float stunTimeRemaining = 0.f;			//Time remaining stunned
 
-	bool EMPUpgraded = false;			//Flag to control if the ability is uprgraded
-
 	ComponentAnimation* animation = nullptr;		//Refernece to  animatino component
 	ComponentTransform* ownerTransform = nullptr;	//Reference to owner transform componenet
 

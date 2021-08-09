@@ -89,7 +89,7 @@ private:
 
 	float stunTimeRemaining = 0.f;
 
-	bool EMPUpgraded = false;
+	//bool EMPUpgraded = false;
 	int deathType = 0;
 
 	HUDController* hudControllerScript = nullptr;
@@ -108,4 +108,5 @@ private:
 
 private:
 	void UpdatePushBackPosition();
+	void Death();
 };
