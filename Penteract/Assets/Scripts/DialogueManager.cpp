@@ -19,6 +19,7 @@ EXPOSE_MEMBERS(DialogueManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialUpgrades1UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialUpgrades2UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialUpgrades3UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::FLOAT3, dialogueStartPosition),
 	MEMBER(MemberType::FLOAT3, dialogueEndPosition),
 	MEMBER(MemberType::FLOAT3, tutorialStartPosition),
@@ -63,6 +64,10 @@ void DialogueManager::Start() {
 	dialoguesArray[10] = Dialogue(DialogueWindow::TUTO_SWAP, "", &dialoguesArray[11]);
 	dialoguesArray[11] = Dialogue(DialogueWindow::ONIMARU, "OK Fang.\nWatch how it is done.", &dialoguesArray[12]);
 	dialoguesArray[12] = Dialogue(DialogueWindow::TUTO_ONIMARU, "", nullptr);
+
+	// Player controller
+	player = GameplaySystems::GetGameObject(playerUID);
+	if (player) playerControllerScript = GET_SCRIPT(player, PlayerController);
 
 }
 
@@ -220,7 +225,7 @@ void DialogueManager::CloseDialogue(Dialogue* dialogue) {
 }
 
 void DialogueManager::ActivatePowerUpDialogue() {
-	obtainedPowerUps += 1;
+	int obtainedPowerUps = playerControllerScript ? playerControllerScript->obtainedUpgradeCells : 0;
 	int nextDialogue;
 	switch (obtainedPowerUps) {
 	case 1:
@@ -231,9 +236,10 @@ void DialogueManager::ActivatePowerUpDialogue() {
 		break;
 	case 3:
 		nextDialogue = 5;
+		// Another dialog informing of the update also?
 		break;
 	default:
-		break;
+		return;
 	}
 	SetActiveDialogue(&dialoguesArray[nextDialogue]);
 
