@@ -22,6 +22,7 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 		MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, damageMaterialPlaceHolderUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, defaultMaterialPlaceHolderUID),
+		MEMBER_SEPARATOR("Enemy stats"),
 		MEMBER(MemberType::FLOAT, gruntCharacter.lifePoints),
 		MEMBER(MemberType::FLOAT, gruntCharacter.movementSpeed),
 		MEMBER(MemberType::FLOAT, gruntCharacter.damageHit),
@@ -29,8 +30,12 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 		MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
 		MEMBER(MemberType::FLOAT, gruntCharacter.attackRange),
 		MEMBER(MemberType::FLOAT, gruntCharacter.timeToDie),
+		MEMBER_SEPARATOR("Push variables"),
 		MEMBER(MemberType::FLOAT, gruntCharacter.pushBackDistance),
 		MEMBER(MemberType::FLOAT, gruntCharacter.pushBackSpeed),
+		MEMBER(MemberType::FLOAT, gruntCharacter.slowedDownSpeed),
+		MEMBER(MemberType::FLOAT, gruntCharacter.slowedDownTime),
+		MEMBER_SEPARATOR("Stun variables"),
 		MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
 		MEMBER(MemberType::FLOAT, stunDuration),
 		MEMBER(MemberType::FLOAT, groundPosition)
@@ -117,6 +122,8 @@ void AIMeleeGrunt::Start() {
 			componentMeshRenderer = gameObject->GetComponent<ComponentMeshRenderer>();
 		}
 	}
+
+	pushBackRealDistance = gruntCharacter.pushBackDistance;
 }
 void AIMeleeGrunt::DeleteAttackCollider() {
 	if (attackColliderOn) {
@@ -143,6 +150,18 @@ void AIMeleeGrunt::Update() {
 			componentMeshRenderer->materialId = defaultMaterialID;
 		}
 	}
+
+	float speedToUse = gruntCharacter.slowedDown ? gruntCharacter.slowedDownSpeed : gruntCharacter.movementSpeed;
+
+	if (gruntCharacter.slowedDown) {
+		if (currentSlowedDownTime >= gruntCharacter.slowedDownTime) {
+			agent->SetMaxSpeed(gruntCharacter.movementSpeed);
+			gruntCharacter.slowedDown = false;
+		}
+		currentSlowedDownTime += Time::GetDeltaTime();
+	}
+
+
 	switch (state) {
 	case AIState::START:
 		movementScript->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), gruntCharacter.fallingSpeed, true);
@@ -159,13 +178,13 @@ void AIMeleeGrunt::Update() {
 		if (!playerController->IsPlayerDead()) {
 			if (movementScript->CharacterInSight(player, gruntCharacter.searchRadius)) {
 				animation->SendTrigger("IdleRun");
-				if (agent) agent->SetMaxSpeed(gruntCharacter.movementSpeed);
+				if (agent) agent->SetMaxSpeed(speedToUse);
 				state = AIState::RUN;
 			}
 		}
 		break;
 	case AIState::RUN:
-		movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), gruntCharacter.movementSpeed, true);
+		movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), speedToUse, true);
 		if (movementScript->CharacterInAttackRange(player, gruntCharacter.attackRange)) {
 			animation->SendTriggerSecondary("RunAttack");
 			attackRemaining = attackDuration;
@@ -373,6 +392,7 @@ void AIMeleeGrunt::EnableBlastPushBack() {
 		gruntCharacter.beingPushed = true;
 		state = AIState::PUSHED;
 		if (animation->GetCurrentState()) animation->SendTrigger(animation->GetCurrentState()->name + "Hurt");
+		CalculatePushBackRealDistance();
 		// Damage
 		if (playerController->playerOnimaru.level2Upgrade) {
 			gruntCharacter.GetHit(playerController->playerOnimaru.blastDamage + playerController->GetOverPowerMode());
@@ -416,11 +436,30 @@ void AIMeleeGrunt::UpdatePushBackPosition() {
 		float distance = enemyPos.Distance(initialPos);
 		currentPushBackDistance += distance;
 
-		if (currentPushBackDistance >= gruntCharacter.pushBackDistance) {
-			agent->SetMaxSpeed(gruntCharacter.movementSpeed);
+		if (currentPushBackDistance >= pushBackRealDistance) {
 			DisableBlastPushBack();
+			gruntCharacter.slowedDown = true;
 			currentPushBackDistance = 0.f;
+			currentSlowedDownTime = 0.f;
+			pushBackRealDistance = gruntCharacter.pushBackDistance;
 		}
+	}
+}
+void AIMeleeGrunt::CalculatePushBackRealDistance() {
+	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
+
+	float3 direction = (enemyPos - playerPos).Normalized();
+
+	bool hitResult = false;
+
+	float3 finalPos = enemyPos + direction * gruntCharacter.pushBackDistance;
+	float3 resultPos = { 0,0,0 };
+	
+	Navigation::Raycast(enemyPos, finalPos, hitResult, resultPos);
+
+	if (hitResult) {
+		pushBackRealDistance = resultPos.Distance(enemyPos) - 1; // Should be agent radius but it's not exposed
 	}
 }
 
