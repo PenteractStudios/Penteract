@@ -1,9 +1,9 @@
 {
     "Name": "Closing",
-    "AnimationUID": 16075121931565869872,
-    "BeginIndex": 59,
-    "EndIndex": 64,
+    "AnimationUID": 2851912268304300485,
+    "BeginIndex": 100,
+    "EndIndex": 118,
     "Loop": false,
     "Speed": 1.0,
-    "FrameRate": 0.041025642305612567
+    "FrameRate": 0.04131355881690979
 }
