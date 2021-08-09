@@ -85,7 +85,9 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::INT, playerOnimaru.ultimateChargePoints),
 	MEMBER(MemberType::INT, playerOnimaru.ultimateChargePointsTotal),
 	MEMBER(MemberType::FLOAT, playerOnimaru.orientationThreshold),
-	MEMBER(MemberType::FLOAT, playerFang.orientationThreshold)
+	MEMBER(MemberType::FLOAT, playerFang.orientationThreshold),
+	MEMBER(MemberType::FLOAT, switchSphereRadius),
+	MEMBER(MemberType::FLOAT, switchDamage)
 };
 
 GENERATE_BODY_IMPL(PlayerController);
@@ -120,6 +122,11 @@ void PlayerController::Start() {
 		i++;
 	}
 
+	sCollider = GetOwner().GetComponent<ComponentSphereCollider>();
+	if (sCollider) {
+		sCollider->radius = switchSphereRadius;
+		sCollider->Disable();
+	}
 	obtainedUpgradeCells = 0;
 }
 
@@ -165,6 +172,7 @@ void PlayerController::SwitchCharacter() {
 	if (!playerFang.characterGameObject) return;
 	if (!playerOnimaru.characterGameObject) return;
 	bool doVisualSwitch = currentSwitchDelay < switchDelay ? false : true;
+	sCollider->Enable();
 	if (doVisualSwitch) {
 		if (audios[static_cast<int>(AudioType::SWITCH)]) {
 			audios[static_cast<int>(AudioType::SWITCH)]->Play();
@@ -198,6 +206,8 @@ void PlayerController::SwitchCharacter() {
 		playSwitchParticles = true;
 		switchInCooldown = true;
 		if (noCooldownMode) switchInProgress = false;
+		sCollider->Disable();
+		switchFirstHit = true;
 	} else {
 		if (playSwitchParticles) {
 			if (switchEffects) {
@@ -208,6 +218,30 @@ void PlayerController::SwitchCharacter() {
 			}
 			switchInProgress = true;
 			playSwitchParticles = false;
+		}
+		if (switchCollisionedGO.size() > 0) {
+			for (GameObject* enemy : switchCollisionedGO) {
+				AIMeleeGrunt* meleeScript = GET_SCRIPT(enemy, AIMeleeGrunt);
+				RangedAI* rangedScript = GET_SCRIPT(enemy, RangedAI);
+				if (rangedScript || meleeScript) {
+					if (meleeScript) {
+						meleeScript->EnableBlastPushBack();
+						if (switchFirstHit) {
+							meleeScript->gruntCharacter.GetHit(switchDamage);
+							meleeScript->PlayHit();
+						}
+					}
+					else if (rangedScript) {
+						rangedScript->EnableBlastPushBack();
+						if (switchFirstHit) {
+							rangedScript->rangerGruntCharacter.GetHit(switchDamage);
+							rangedScript->PlayHit();
+						}
+					}
+				}
+			}
+			switchFirstHit = false;
+			switchCollisionedGO.clear();
 		}
 		currentSwitchDelay += Time::GetDeltaTime();
 	}
@@ -352,5 +386,11 @@ void PlayerController::Update() {
 				switchCooldownRemaining = switchCooldown;
 			}
 		}
+	}
+}
+
+void PlayerController::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+	if (collidedWith.name == "MeleeGrunt" || collidedWith.name == "RangedGrunt") {
+		switchCollisionedGO.push_back(&collidedWith);
 	}
 }

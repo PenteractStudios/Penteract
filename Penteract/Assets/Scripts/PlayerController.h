@@ -49,6 +49,7 @@ public:
 	void AddEnemyInMap(GameObject* enemy);
 	void RemoveEnemyFromMap(GameObject* enemy);
 
+	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
 	void ObtainUpgradeCell();
 
 public:
@@ -112,6 +113,8 @@ public:
 	float switchCooldown = 5.f;
 	bool switchInProgress = false;
 	float switchDelay = 0.37f;
+	float switchSphereRadius = 5.f;
+	float switchDamage = 1.f;
 
 	//Upgrades
 	int obtainedUpgradeCells = 0;
@@ -138,6 +141,9 @@ private:
 	float currentSwitchDelay = 0.f;
 	bool playSwitchParticles = true;
 	GameObject* switchEffects = nullptr;
+	ComponentSphereCollider* sCollider = nullptr;
+	std::vector<GameObject*> switchCollisionedGO;
+	bool switchFirstHit = true;
 
 	//Camera
 	ComponentCamera* compCamera = nullptr;
