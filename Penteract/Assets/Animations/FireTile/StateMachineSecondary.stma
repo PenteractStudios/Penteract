@@ -114,26 +114,5 @@
             "Interpolation": 0.3
         }
     ],
-    "Bones": [
-        "joint01",
-        "joint02",
-        "joint03",
-        "joint04",
-        "joint05",
-        "joint06",
-        "joint07",
-        "joint08",
-        "joint09",
-        "joint10",
-        "joint11",
-        "joint12",
-        "joint13",
-        "joint14",
-        "joint15",
-        "joint16",
-        "joint17",
-        "joint18",
-        "joint19",
-        "joint20"
-    ]
+    "Bones": []
 }
