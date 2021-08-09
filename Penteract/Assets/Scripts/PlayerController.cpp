@@ -172,7 +172,7 @@ void PlayerController::SwitchCharacter() {
 	if (!playerFang.characterGameObject) return;
 	if (!playerOnimaru.characterGameObject) return;
 	bool doVisualSwitch = currentSwitchDelay < switchDelay ? false : true;
-	sCollider->Enable();
+	if (sCollider) sCollider->Enable();
 	if (doVisualSwitch) {
 		if (audios[static_cast<int>(AudioType::SWITCH)]) {
 			audios[static_cast<int>(AudioType::SWITCH)]->Play();
@@ -206,7 +206,7 @@ void PlayerController::SwitchCharacter() {
 		playSwitchParticles = true;
 		switchInCooldown = true;
 		if (noCooldownMode) switchInProgress = false;
-		sCollider->Disable();
+		if (sCollider) sCollider->Disable();
 		switchFirstHit = true;
 	} else {
 		if (playSwitchParticles) {
