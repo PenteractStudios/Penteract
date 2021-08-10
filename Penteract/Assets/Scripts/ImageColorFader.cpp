@@ -61,7 +61,6 @@ void ImageColorFader::Play() {
 	originalColor.z >= 0 ? originalColorToUse.z = originalColor.z : imageColor.z;
 	originalAlpha >= 0 ? originalColorToUse.w = originalAlpha : imageColor.w;
 	running = true;
-	Debug::Log("Running");
 }
 
 void ImageColorFader::Stop() {
@@ -72,7 +71,6 @@ void ImageColorFader::Stop() {
 		}
 	}
 	running = false;
-	Debug::Log("Stop");
 }
 
 //This method assumes targetImage is not null

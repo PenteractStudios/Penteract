@@ -193,6 +193,8 @@ private:
 
 	void InitializeHealth();
 
+	void ManageSwitchPreCollapseState(GameObject* activeParent, const std::vector<GameObject*>& skills);
+	void ManageSwitchCollapseState(GameObject* activeParent, const std::vector<GameObject*>& skills);
 
 };
 
