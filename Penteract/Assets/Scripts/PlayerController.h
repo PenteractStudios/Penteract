@@ -48,6 +48,10 @@ public:
 
 	void AddEnemyInMap(GameObject* enemy);
 	void RemoveEnemyFromMap(GameObject* enemy);
+
+	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
+	void ObtainUpgradeCell();
+
 public:
 	//Debug
 	bool invincibleMode = false;
@@ -56,6 +60,7 @@ public:
 	bool debugGetHit = false;
 
 	static bool useGamepad;
+	static int currentLevel;
 
 	Onimaru playerOnimaru = Onimaru();
 	Fang playerFang = Fang();
@@ -66,6 +71,8 @@ public:
 	//Fang
 	UID fangUID = 0;
 	UID fangTrailDashUID = 0;
+	UID fangDashDamageUID = 0;
+	UID fangTrailGunUID = 0;
 	UID fangLeftGunUID = 0;
 	UID fangRightGunUID = 0;
 	UID fangLeftBulletUID = 0;
@@ -106,6 +113,11 @@ public:
 	float switchCooldown = 5.f;
 	bool switchInProgress = false;
 	float switchDelay = 0.37f;
+	float switchSphereRadius = 5.f;
+	float switchDamage = 1.f;
+
+	//Upgrades
+	int obtainedUpgradeCells = 0;
 
 private:
 	void CheckCoolDowns();
@@ -129,6 +141,9 @@ private:
 	float currentSwitchDelay = 0.f;
 	bool playSwitchParticles = true;
 	GameObject* switchEffects = nullptr;
+	ComponentSphereCollider* sCollider = nullptr;
+	std::vector<GameObject*> switchCollisionedGO;
+	bool switchFirstHit = true;
 
 	//Camera
 	ComponentCamera* compCamera = nullptr;

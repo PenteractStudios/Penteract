@@ -81,6 +81,8 @@ public:
 	float normalOrientationSpeed = 7.5f;
 	float sprintMovementSpeed = 12.0f;
 	float3 lookAtMousePlanePosition = float3(0.f, 0.f, 0.f);
+	static bool level1Upgrade;
+	static bool level2Upgrade;
 	ComponentCamera* lookAtMouseCameraComp = nullptr;
 	CameraController* cameraController = nullptr;
 	float3 facePointDir = float3(0.f, 0.f, 0.f);

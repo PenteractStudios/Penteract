@@ -20,6 +20,8 @@
 #define PI 3.14159
 #define AUDIOSOURCE_NULL_MSG "shootAudioSource is NULL"
 
+int PlayerController::currentLevel = 1;
+
 EXPOSE_MEMBERS(PlayerController) {
 	MEMBER_SEPARATOR("Player References"),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
@@ -41,6 +43,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, playerFang.dashCooldown),
 	MEMBER(MemberType::FLOAT, playerFang.dashSpeed),
 	MEMBER(MemberType::FLOAT, playerFang.dashDuration),
+	MEMBER(MemberType::FLOAT, playerFang.dashDamage),
 	MEMBER(MemberType::FLOAT, playerFang.trailDashOffsetDuration),
 	MEMBER(MemberType::FLOAT, playerFang.EMPRadius),
 	MEMBER(MemberType::FLOAT, playerFang.EMPCooldown),
@@ -61,6 +64,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUltimateVFXUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, EMPUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, EMPEffectsUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangDashDamageUID),
 	MEMBER_SEPARATOR("Onimaru Stats"),
 	MEMBER(MemberType::FLOAT, playerOnimaru.lifePoints),
 	MEMBER(MemberType::FLOAT, playerOnimaru.movementSpeed),
@@ -101,7 +105,7 @@ EXPOSE_MEMBERS(PlayerController) {
 GENERATE_BODY_IMPL(PlayerController);
 
 void PlayerController::Start() {
-	playerFang.Init(fangUID, fangTrailDashUID, fangLeftGunUID, fangRightGunUID, fangRightBulletUID, fangLeftBulletUID, cameraUID, canvasUID, EMPUID, EMPEffectsUID, fangUltimateUID, fangUltimateVFXUID);
+	playerFang.Init(fangUID, fangTrailDashUID, fangLeftGunUID, fangRightGunUID, fangRightBulletUID, fangLeftBulletUID, cameraUID, canvasUID, fangDashDamageUID, EMPUID, EMPEffectsUID, fangUltimateUID, fangUltimateVFXUID);
 	playerOnimaru.Init(onimaruUID, onimaruBulletUID, onimaruGunUID, onimaruRightHandUID, onimaruShieldUID, onimaruUltimateBulletUID, onimaruBlastEffectsUID, cameraUID, canvasUID);
 
 	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
@@ -129,6 +133,13 @@ void PlayerController::Start() {
 		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
 		i++;
 	}
+
+	sCollider = GetOwner().GetComponent<ComponentSphereCollider>();
+	if (sCollider) {
+		sCollider->radius = switchSphereRadius;
+		sCollider->Disable();
+	}
+	obtainedUpgradeCells = 0;
 }
 
 bool PlayerController::useGamepad = false;
@@ -173,6 +184,7 @@ void PlayerController::SwitchCharacter() {
 	if (!playerFang.characterGameObject) return;
 	if (!playerOnimaru.characterGameObject) return;
 	bool doVisualSwitch = currentSwitchDelay < switchDelay ? false : true;
+	if (sCollider) sCollider->Enable();
 	if (doVisualSwitch) {
 		if (audios[static_cast<int>(AudioType::SWITCH)]) {
 			audios[static_cast<int>(AudioType::SWITCH)]->Play();
@@ -206,6 +218,8 @@ void PlayerController::SwitchCharacter() {
 		playSwitchParticles = true;
 		switchInCooldown = true;
 		if (noCooldownMode) switchInProgress = false;
+		if (sCollider) sCollider->Disable();
+		switchFirstHit = true;
 	} else {
 		if (playSwitchParticles) {
 			if (switchEffects) {
@@ -216,6 +230,30 @@ void PlayerController::SwitchCharacter() {
 			}
 			switchInProgress = true;
 			playSwitchParticles = false;
+		}
+		if (switchCollisionedGO.size() > 0) {
+			for (GameObject* enemy : switchCollisionedGO) {
+				AIMeleeGrunt* meleeScript = GET_SCRIPT(enemy, AIMeleeGrunt);
+				RangedAI* rangedScript = GET_SCRIPT(enemy, RangedAI);
+				if (rangedScript || meleeScript) {
+					if (meleeScript) {
+						meleeScript->EnableBlastPushBack();
+						if (switchFirstHit) {
+							meleeScript->gruntCharacter.GetHit(switchDamage);
+							meleeScript->PlayHit();
+						}
+					}
+					else if (rangedScript) {
+						rangedScript->EnableBlastPushBack();
+						if (switchFirstHit) {
+							rangedScript->rangerGruntCharacter.GetHit(switchDamage);
+							rangedScript->PlayHit();
+						}
+					}
+				}
+			}
+			switchFirstHit = false;
+			switchCollisionedGO.clear();
 		}
 		currentSwitchDelay += Time::GetDeltaTime();
 	}
@@ -310,6 +348,15 @@ void PlayerController::RemoveEnemyFromMap(GameObject* enemy) {
 	playerOnimaru.RemoveEnemy(enemy);
 }
 
+void PlayerController::ObtainUpgradeCell()
+{
+	if (++obtainedUpgradeCells == 3) {
+		// TODO: Check whether in level1 or level2
+		if (currentLevel == 1) Player::level1Upgrade = true;
+		else if (currentLevel == 2) Player::level2Upgrade = true;
+	}
+}
+
 void PlayerController::Update() {
 	if (!playerFang.characterGameObject) return;
 	if (!playerOnimaru.characterGameObject) return;
@@ -351,5 +398,11 @@ void PlayerController::Update() {
 				switchCooldownRemaining = switchCooldown;
 			}
 		}
+	}
+}
+
+void PlayerController::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+	if (collidedWith.name == "MeleeGrunt" || collidedWith.name == "RangedGrunt") {
+		switchCollisionedGO.push_back(&collidedWith);
 	}
 }
