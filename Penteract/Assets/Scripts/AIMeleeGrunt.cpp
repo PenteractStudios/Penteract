@@ -356,12 +356,7 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 			}
 
 			if (hitTaken) {
-				if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
-				if (componentMeshRenderer) {
-					if (damageMaterialID != 0) componentMeshRenderer->materialId = damageMaterialID;
-				}
-
-				timeSinceLastHurt = 0.0f;
+				PlayHit();
 			}
 
 			if (collidedWith.name == "EMP") {
@@ -420,6 +415,16 @@ void AIMeleeGrunt::DisableBlastPushBack() {
 
 bool AIMeleeGrunt::IsBeingPushed() const {
 	return gruntCharacter.beingPushed;
+}
+
+void AIMeleeGrunt::PlayHit()
+{
+	if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
+	if (componentMeshRenderer) {
+		if (damageMaterialID != 0) componentMeshRenderer->materialId = damageMaterialID;
+	}
+
+	timeSinceLastHurt = 0.0f;
 }
 
 void AIMeleeGrunt::UpdatePushBackPosition() {
@@ -506,9 +511,11 @@ void AIMeleeGrunt::Death()
 	else if (state == AIState::PUSHED) {
 		if (deathType) {
 			animation->SendTrigger("HurtDeath1");
+			if (animation->GetCurrentStateSecondary()) animation->SendTriggerSecondary("AttackDeath1");
 		}
 		else {
 			animation->SendTrigger("HurtDeath2");
+			if (animation->GetCurrentStateSecondary()) animation->SendTriggerSecondary("AttackDeath2");
 		}
 	}
 

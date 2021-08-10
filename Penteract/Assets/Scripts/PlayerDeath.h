@@ -30,6 +30,10 @@ public:
 	float rangedDamageTaken = 1.0f;
 	float meleeDamageTaken = 1.0f;
 	float barrelDamageTaken = 1.0f;
+	float laserBeamTaken = 1.0f;
+
+	float laserHitCooldownTimer = 0.0f;
+	float laserHitCooldown = 0.05f;
 
 	float fireDamageTaken = 1.0f;
 
@@ -39,6 +43,7 @@ private:
 	GameObject* transitionGO = nullptr;
 	SceneTransition* sceneTransition = nullptr;
 
+	bool getLaserHit = false;
 	float timerFireDamage = 0.f;
 	bool fireDamageActive = false;
 
