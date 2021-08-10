@@ -43,7 +43,7 @@ void SceneTransition::Update() {
 				if (levelNum == 2) {
 					PlayerController::currentLevel = 2;
 					Player::level2Upgrade = false;
-				} else if (levelNum = 1) {
+				} else if (levelNum == 1) {
 					PlayerController::currentLevel = 1;
 					Player::level1Upgrade = false;
 					Player::level2Upgrade = false;
