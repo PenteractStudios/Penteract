@@ -317,10 +317,10 @@ void Fang::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 		break;
 	case StateMachineEnum::SECONDARY:
 		if (std::strcmp(eventName, "LeftShot") == 0) {
-			bullet = rightBullet;
+			bullet = leftBullet;
 		}
 		else if (std::strcmp(eventName, "RightShot") == 0) {
-			bullet = leftBullet;
+			bullet = rightBullet;
 		}
 		break;
 	}
