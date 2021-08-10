@@ -42,6 +42,7 @@ public:
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
+	void PlayerHit();
 
 public:
 
@@ -83,6 +84,7 @@ private:
 	bool attackLeftColliderOn = false;
 	bool track = true;
 	bool attackStep = false;
+	bool alreadyHit = false;
 	int attackNumber = 3;
 
 	float3 velocity = float3(0, 0, 0);
@@ -94,7 +96,7 @@ private:
 
 	float stunTimeRemaining = 0.f;
 
-	bool EMPUpgraded = false;
+	//bool EMPUpgraded = false;
 	int deathType = 0;
 
 	HUDController* hudControllerScript = nullptr;
@@ -107,11 +109,12 @@ private:
 	ComponentMeshRenderer* componentMeshRenderer = nullptr;
 
 	float timeSinceLastHurt = 0.5f;
-	ComponentBoxCollider* rightBladeCollider = nullptr;
-	ComponentBoxCollider* leftBladeCollider = nullptr;
+	ComponentCapsuleCollider* rightBladeCollider = nullptr;
+	ComponentCapsuleCollider* leftBladeCollider = nullptr;
 
 	float currentPushBackDistance = 0.f;
 
 private:
 	void UpdatePushBackPosition();
+	void Death();
 };

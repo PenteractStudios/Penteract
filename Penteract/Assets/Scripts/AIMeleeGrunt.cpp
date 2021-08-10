@@ -59,9 +59,9 @@ void AIMeleeGrunt::Start() {
 	}
 
 	GameObject* rightBlade = GameplaySystems::GetGameObject(rightBladeColliderUID);
-	if (rightBlade) rightBladeCollider = rightBlade->GetComponent<ComponentBoxCollider>();
+	if (rightBlade) rightBladeCollider = rightBlade->GetComponent<ComponentCapsuleCollider>();
 	GameObject* leftBlade = GameplaySystems::GetGameObject(leftBladeColliderUID);
-	if (leftBlade) leftBladeCollider = leftBlade->GetComponent<ComponentBoxCollider>();
+	if (leftBlade) leftBladeCollider = leftBlade->GetComponent<ComponentCapsuleCollider>();
 
 	GameObject* winLose = GameplaySystems::GetGameObject(winConditionUID);
 
@@ -178,14 +178,16 @@ void AIMeleeGrunt::Update() {
 		if (track) { 
 			movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition()); 
 		}
-		if (attackRightColliderOn) {
+		if (attackRightColliderOn && !alreadyHit) {
 			if(!rightBladeCollider->IsActive()) rightBladeCollider->Enable();
+			alreadyHit = true;
 		}
 		else if (rightBladeCollider->IsActive()) {
 			rightBladeCollider->Disable();
 		}
-		if (attackLeftColliderOn) {
+		if (attackLeftColliderOn && !alreadyHit) {
 			if (!leftBladeCollider->IsActive()) leftBladeCollider->Enable();
+			alreadyHit = true;
 		}
 		else if (leftBladeCollider->IsActive()) {
 			leftBladeCollider->Disable();
@@ -276,7 +278,7 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 				if (!particle) return;
 				GameplaySystems::DestroyGameObject(&collidedWith);
 				hitTaken = true;
-				if (state == AIState::STUNNED && EMPUpgraded) {
+				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
 					gruntCharacter.GetHit(99);
 				}
 				else {
@@ -289,7 +291,7 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 				ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 				if (pSystem) pSystem->KillParticle(p);
 				hitTaken = true;
-				if (state == AIState::STUNNED && EMPUpgraded) {
+				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
 					gruntCharacter.GetHit(99);
 				}
 				else {
@@ -302,7 +304,7 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 				ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 				if (pSystem) pSystem->KillParticle(p);
 				hitTaken = true;
-				if (state == AIState::STUNNED && EMPUpgraded) {
+				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
 					gruntCharacter.GetHit(99);
 				}
 				else {
@@ -312,6 +314,15 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 			else if (collidedWith.name == "Barrel") {
 				hitTaken = true;
 				gruntCharacter.GetHit(playerDeath->barrelDamageTaken);
+			}
+			else if (collidedWith.name == "DashDamage" && playerController->playerFang.level1Upgrade) {
+				hitTaken = true;
+				gruntCharacter.GetHit(playerController->playerFang.dashDamage + playerController->GetOverPowerMode());
+			}
+			else if (collidedWith.name == "RangerProjectile" && playerController->playerOnimaru.level1Upgrade) {
+				hitTaken = true;
+				gruntCharacter.GetHit(playerController->playerOnimaru.shieldReboundedDamage + playerController->GetOverPowerMode());
+				GameplaySystems::DestroyGameObject(&collidedWith);
 			}
 
 			if (hitTaken) {
@@ -340,57 +351,7 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 		}
 
 		if (!gruntCharacter.isAlive) {
-			std::string curState = "WalkForward";
-			if (animation->GetCurrentState()->name == "Idle") curState = "Idle";
-			deathType = (rand() % 2 == 0) ? true : false;
-			if (state == AIState::ATTACK) {
-				if (deathType) {
-					animation->SendTrigger(curState + "Death1");
-				}
-				else {
-					animation->SendTrigger(curState + "Death2");
-				}
-			}
-			else if (state == AIState::IDLE) {
-				if (deathType) {
-					animation->SendTrigger("IdleDeath1");
-				}
-				else {
-					animation->SendTrigger("IdleDeath2");
-				}
-			}
-			else if (state == AIState::RUN) {
-				if (deathType) {
-					animation->SendTrigger("WalkForwardDeath1");
-				}
-				else {
-					animation->SendTrigger("WalkForwardDeath2");
-				}
-			}
-			else if (state == AIState::STUNNED) {
-				if (deathType) {
-					animation->SendTrigger("StunnedDeath1");
-				}
-				else {
-					animation->SendTrigger("StunnedDeath2");
-				}
-			}
-			else if (state == AIState::PUSHED) {
-				if (deathType) {
-					animation->SendTrigger("HurtDeath1");
-				}
-				else {
-					animation->SendTrigger("HurtDeath2");
-				}
-			}
-
-			if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
-			ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
-			if (collider) collider->Disable();
-
-			agent->RemoveAgentFromCrowd();
-			if (gruntCharacter.beingPushed) gruntCharacter.beingPushed = false;
-			state = AIState::DEATH;
+			Death();
 		}
 	}
 }
@@ -400,6 +361,20 @@ void AIMeleeGrunt::EnableBlastPushBack() {
 		gruntCharacter.beingPushed = true;
 		state = AIState::PUSHED;
 		if (animation->GetCurrentState()) animation->SendTrigger(animation->GetCurrentState()->name + "Hurt");
+		// Damage
+		if (playerController->playerOnimaru.level2Upgrade) {
+			gruntCharacter.GetHit(playerController->playerOnimaru.blastDamage + playerController->GetOverPowerMode());
+
+			if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
+			if (componentMeshRenderer) {
+				if (damageMaterialID != 0) componentMeshRenderer->materialId = damageMaterialID;
+			}
+			timeSinceLastHurt = 0.0f;
+
+			if (!gruntCharacter.isAlive) {
+				Death();
+			}
+		}
 	}
 }
 
@@ -455,6 +430,7 @@ void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const cha
 				if (attackNumber == 1) attackStep = true;
 				attackRightColliderOn = true;
 				attackLeftColliderOn = true;
+				alreadyHit = false;
 			}
 			if (strcmp(eventName, "BladeDamageOff") == 0) {
 				attackRightColliderOn = false;
@@ -471,6 +447,7 @@ void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const cha
 				attackStep = true;
 				attackRightColliderOn = true;
 				agent->SetMaxSpeed(gruntCharacter.movementSpeed + 3);
+				alreadyHit = true;
 			}
 			if (strcmp(eventName, "RightBladeDamageOff") == 0) {
 				track = true;
@@ -483,6 +460,7 @@ void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const cha
 				attackStep = true;
 				attackLeftColliderOn = true;
 				agent->SetMaxSpeed(gruntCharacter.movementSpeed + 3);
+				alreadyHit = true;
 			}
 			if (strcmp(eventName, "LeftBladeDamageOff") == 0) {
 				track = true;
@@ -495,4 +473,65 @@ void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const cha
 	default:
 		break;
 	}
+}
+
+void AIMeleeGrunt::Death()
+{
+	std::string curState = "Run";
+	if (animation->GetCurrentState()->name == "Idle") curState = "Idle";
+	deathType = (rand() % 2 == 0) ? true : false;
+	if (state == AIState::ATTACK) {
+		if (deathType) {
+			animation->SendTrigger(curState + "Death1");
+			animation->SendTriggerSecondary("AttackDeath1");
+		}
+		else {
+			animation->SendTrigger(curState + "Death2");
+			animation->SendTriggerSecondary("AttackDeath2");
+		}
+	}
+	else if (state == AIState::IDLE) {
+		if (deathType) {
+			animation->SendTrigger("IdleDeath1");
+		}
+		else {
+			animation->SendTrigger("IdleDeath2");
+		}
+	}
+	else if (state == AIState::RUN) {
+		if (deathType) {
+			animation->SendTrigger("RunDeath1");
+		}
+		else {
+			animation->SendTrigger("RunDeath2");
+		}
+	}
+	else if (state == AIState::STUNNED) {
+		if (deathType) {
+			animation->SendTrigger("StunnedDeath1");
+		}
+		else {
+			animation->SendTrigger("StunnedDeath2");
+		}
+	}
+	else if (state == AIState::PUSHED) {
+		if (deathType) {
+			animation->SendTrigger("HurtDeath1");
+		}
+		else {
+			animation->SendTrigger("HurtDeath2");
+		}
+	}
+
+	if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
+	ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
+	if (collider) collider->Disable();
+
+	agent->RemoveAgentFromCrowd();
+	if (gruntCharacter.beingPushed) gruntCharacter.beingPushed = false;
+	state = AIState::DEATH;
+}
+
+void AIMeleeGrunt::PlayerHit() {
+	alreadyHit = true;
 }

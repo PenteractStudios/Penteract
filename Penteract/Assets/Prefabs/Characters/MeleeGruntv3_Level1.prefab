@@ -72,7 +72,7 @@
                     {
                         "Name": "rightBladeColliderUID",
                         "Type": "GameObjectUID",
-                        "Value": 1260546437783239623
+                        "Value": 13602596442894281015
                     },
                     {
                         "Name": "winConditionUID",
@@ -82,7 +82,7 @@
                     {
                         "Name": "leftBladeColliderUID",
                         "Type": "GameObjectUID",
-                        "Value": 15700065437277814260
+                        "Value": 16979739281762966616
                     },
                     {
                         "Name": "fangUID",
@@ -119,6 +119,7 @@
                 "Gain": 0.10000000149011612,
                 "Mute": false,
                 "Looping": false,
+                "PlayOnAwake": false,
                 "AudioClipId": 1178050912941438583,
                 "SpatialBlend": 0,
                 "SourceType": 0,
@@ -136,6 +137,7 @@
                 "Gain": 0.6000000238418579,
                 "Mute": false,
                 "Looping": false,
+                "PlayOnAwake": false,
                 "AudioClipId": 17693944845173461891,
                 "SpatialBlend": 0,
                 "SourceType": 0,
@@ -153,6 +155,7 @@
                 "Gain": 1.0,
                 "Mute": true,
                 "Looping": false,
+                "PlayOnAwake": false,
                 "AudioClipId": 696444000373430212,
                 "SpatialBlend": 0,
                 "SourceType": 0,
@@ -170,6 +173,7 @@
                 "Gain": 1.0,
                 "Mute": true,
                 "Looping": false,
+                "PlayOnAwake": false,
                 "AudioClipId": 4050726513787811743,
                 "SpatialBlend": 0,
                 "SourceType": 0,
@@ -187,6 +191,7 @@
                 "Gain": 0.3499999940395355,
                 "Mute": false,
                 "Looping": false,
+                "PlayOnAwake": false,
                 "AudioClipId": 3690225030639504746,
                 "SpatialBlend": 0,
                 "SourceType": 0,
@@ -204,6 +209,7 @@
                 "Gain": 0.44999998807907107,
                 "Mute": false,
                 "Looping": false,
+                "PlayOnAwake": false,
                 "AudioClipId": 12181405488920341216,
                 "SpatialBlend": 0,
                 "SourceType": 0,
@@ -251,19 +257,19 @@
                         "Type": "MeshRenderer",
                         "Active": true,
                         "MeshID": 4061481385089222311,
-                        "MaterialID": 13197281403462661076
+                        "MaterialID": 4886769671297062398
                     },
                     {
                         "Type": "MeshRenderer",
                         "Active": true,
                         "MeshID": 8162125314749612365,
-                        "MaterialID": 11326588914046785439
+                        "MaterialID": 4886769671297062398
                     },
                     {
                         "Type": "MeshRenderer",
                         "Active": true,
                         "MeshID": 1860498927682383532,
-                        "MaterialID": 14060685321797421541
+                        "MaterialID": 4886769671297062398
                     },
                     {
                         "Type": "BoundingBox",
@@ -783,20 +789,18 @@
                                                                                         ]
                                                                                     },
                                                                                     {
-                                                                                        "Type": "BoxCollider",
+                                                                                        "Type": "CapsuleCollider",
                                                                                         "Active": true,
                                                                                         "colliderType": 2,
-                                                                                        "layerType": 4,
+                                                                                        "layerType": 6,
                                                                                         "mass": 1.0,
-                                                                                        "size": [
-                                                                                            50.0,
-                                                                                            10.0,
-                                                                                            5.0
-                                                                                        ],
+                                                                                        "radius": 0.15000000596046449,
+                                                                                        "height": 1.25,
+                                                                                        "capsuleType": 1,
                                                                                         "centerOffset": [
-                                                                                            -30.0,
-                                                                                            -5.0,
-                                                                                            -5.0
+                                                                                            -0.8500000238418579,
+                                                                                            -0.15000000596046449,
+                                                                                            -0.15000000596046449
                                                                                         ],
                                                                                         "freezeRotation": false
                                                                                     }
@@ -1318,20 +1322,18 @@
                                                                                         ]
                                                                                     },
                                                                                     {
-                                                                                        "Type": "BoxCollider",
+                                                                                        "Type": "CapsuleCollider",
                                                                                         "Active": true,
                                                                                         "colliderType": 2,
-                                                                                        "layerType": 4,
+                                                                                        "layerType": 6,
                                                                                         "mass": 1.0,
-                                                                                        "size": [
-                                                                                            50.0,
-                                                                                            10.0,
-                                                                                            5.0
-                                                                                        ],
+                                                                                        "radius": 0.15000000596046449,
+                                                                                        "height": 1.25,
+                                                                                        "capsuleType": 1,
                                                                                         "centerOffset": [
-                                                                                            30.0,
-                                                                                            5.0,
-                                                                                            5.0
+                                                                                            0.8500000238418579,
+                                                                                            0.15000000596046449,
+                                                                                            0.15000000596046449
                                                                                         ],
                                                                                         "freezeRotation": false
                                                                                     }

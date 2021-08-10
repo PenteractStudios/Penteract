@@ -4,6 +4,7 @@
 
 class GameObject;
 class DialogueManager;
+class PlayerController;
 class TriggerPowerUp : public Script
 {
 	GENERATE_BODY(TriggerPowerUp);
@@ -16,8 +17,11 @@ public:
 
 public:
 	UID gameControllerUID = 0;
+	UID playerUID = 0;
 	GameObject* gameController = nullptr;
+	GameObject* player = nullptr;
 	DialogueManager* dialogueManagerScript = nullptr;
+	PlayerController* playerControllerScript = nullptr;
 
 };
 
