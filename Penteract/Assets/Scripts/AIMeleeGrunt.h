@@ -43,6 +43,7 @@ public:
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
 	void PlayerHit();
+	void PlayHit();
 
 public:
 
@@ -67,7 +68,7 @@ public:
 	ComponentAgent* agent = nullptr;
 	WinLose* winLoseScript = nullptr;
 
-	Enemy gruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 5.f, 5.f);
+	Enemy gruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 5.f, 5.f, 3.f, 2.f);
 	bool killSent = false;
 
 	float hurtFeedbackTimeDuration = 0.5f;
@@ -113,8 +114,12 @@ private:
 	ComponentCapsuleCollider* leftBladeCollider = nullptr;
 
 	float currentPushBackDistance = 0.f;
+	float currentSlowedDownTime = 0.f;
+
+	float pushBackRealDistance = 0.f;
 
 private:
 	void UpdatePushBackPosition();
+	void CalculatePushBackRealDistance();	// Calculates the real distance of the pushback taking into account any obstacles in the path
 	void Death();
 };
