@@ -48,8 +48,6 @@ void PlayerDeath::Update() {
 			}
 		}
 
-	}
-}
 		if (timerFireDamage <= cooldownFireDamage) {
 			timerFireDamage += Time::GetDeltaTime();
 			if (timerFireDamage > cooldownFireDamage) {
