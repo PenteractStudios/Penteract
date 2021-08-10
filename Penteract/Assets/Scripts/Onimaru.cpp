@@ -12,7 +12,7 @@ bool Onimaru::CanShoot() {
 	return !shootingOnCooldown;
 }
 
-bool Onimaru::CanBlast() {
+bool Onimaru::CanBlast() const {
 	return !blastInCooldown && !IsShielding() && !ultimateOn && !blastInUse;
 }
 
@@ -106,7 +106,7 @@ void Onimaru::PlayAnimation() {
 	if (!isAlive) return; //Ultimate will block out all movement and idle from happening
 
 	if (!UltimateStarted()) {
-		if (!ultimateInUse) {
+		if (!ultimateOn) {
 			if (compAnimation->GetCurrentState()) {
 				if (movementInputDirection == MovementDirection::NONE) {
 					//Primery state machine idle when alive, without input movement
@@ -365,7 +365,7 @@ bool Onimaru::CanUltimate() const {
 }
 
 bool Onimaru::UltimateStarted() const {
-	return ultimateInUse && ultimateTimeRemaining > 0;
+	return ultimateOn && ultimateTimeRemaining > 0;
 }
 
 void Onimaru::InitShield() {
