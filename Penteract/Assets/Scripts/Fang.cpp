@@ -5,7 +5,7 @@
 #include "CameraController.h"
 #include "UltimateFang.h"
 
-void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, UID rightBulletUID, UID leftBulletUID, UID cameraUID, UID canvasUID, UID EMPUID, UID EMPEffectsUID, UID fangUltimateUID, UID ultimateVFXUID) {
+void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, UID rightBulletUID, UID leftBulletUID, UID cameraUID, UID canvasUID, UID dashUID, UID EMPUID, UID EMPEffectsUID, UID fangUltimateUID, UID ultimateVFXUID) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(fangUID);
 
@@ -66,6 +66,8 @@ void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, 
 				i++;
 			}
 		}
+		dash = GameplaySystems::GetGameObject(dashUID);
+
 		EMP = GameplaySystems::GetGameObject(EMPUID);
 		if (EMP) {
 			ComponentSphereCollider* sCollider = EMP->GetComponent<ComponentSphereCollider>();
@@ -93,6 +95,8 @@ void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, 
 			i++;
 		}
 	}
+	dash = GameplaySystems::GetGameObject(dashUID);
+
 	EMP = GameplaySystems::GetGameObject(EMPUID);
 	if (EMP) {
 		ComponentSphereCollider* sCollider = EMP->GetComponent<ComponentSphereCollider>();
@@ -153,6 +157,7 @@ void Fang::InitDash() {
 	if (CanDash()) {
 		hasDashed = true;
 		if (trailDash) trailDash->Play();
+		if (dash && level1Upgrade) dash->Enable();
 		trailDuration = dashDuration + trailDashOffsetDuration;
 		if (movementInputDirection != MovementDirection::NONE) {
 			dashDirection = GetDirection();
@@ -185,7 +190,7 @@ void Fang::Dash() {
 		newPosition += dashSpeed * dashDirection;
 		agent->SetMoveTarget(newPosition, false);
 	} else {
-		if (hasDashed)trailDelay();
+		if (hasDashed) trailDelay();
 	}
 }
 
@@ -239,6 +244,9 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 		if (dashRemaining <= 0.f) {
 			dashRemaining = 0.f;
 			dashing = false;
+			if (dash) {
+				if (dash->IsActive()) dash->Disable();
+			}
 			agent->SetMaxSpeed(movementSpeed);
 		} else {
 			dashRemaining -= Time::GetDeltaTime();

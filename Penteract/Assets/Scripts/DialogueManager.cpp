@@ -19,6 +19,7 @@ EXPOSE_MEMBERS(DialogueManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialUpgrades1UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialUpgrades2UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialUpgrades3UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::FLOAT3, dialogueStartPosition),
 	MEMBER(MemberType::FLOAT3, dialogueEndPosition),
 	MEMBER(MemberType::FLOAT3, tutorialStartPosition),
@@ -94,6 +95,10 @@ void DialogueManager::Start() {
 	dialoguesArray[32] = Dialogue(DialogueWindow::DOOR, true, "Fine... but it's on you.\nI’m taking no responsibility.", &dialoguesArray[33]);
 	dialoguesArray[33] = Dialogue(DialogueWindow::ONIMARU, true, "Thanks, Door.", &dialoguesArray[34]);
 	dialoguesArray[34] = Dialogue(DialogueWindow::DOOR, true, "Take care in there! Don’t get hurt!", nullptr);
+	// Player controller
+	player = GameplaySystems::GetGameObject(playerUID);
+	if (player) playerControllerScript = GET_SCRIPT(player, PlayerController);
+
 }
 
 void DialogueManager::Update() {
@@ -252,7 +257,7 @@ void DialogueManager::CloseDialogue(Dialogue* dialogue) {
 }
 
 void DialogueManager::ActivatePowerUpDialogue() {
-	obtainedPowerUps += 1;
+	int obtainedPowerUps = playerControllerScript ? playerControllerScript->obtainedUpgradeCells : 0;
 	int nextDialogue;
 	switch (obtainedPowerUps) {
 	case 1:
@@ -265,7 +270,7 @@ void DialogueManager::ActivatePowerUpDialogue() {
 		nextDialogue = 5;
 		break;
 	default:
-		break;
+		return;
 	}
 	SetActiveDialogue(&dialoguesArray[nextDialogue]);
 }

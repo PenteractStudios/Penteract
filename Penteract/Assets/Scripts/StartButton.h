@@ -24,6 +24,7 @@ public:
 	UID transitionUID = 0;
 
 	int checkpointNum = -1;
+	int levelNum = 0;
 
 private:
 	GameObject* player = nullptr;
