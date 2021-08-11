@@ -1,7 +1,7 @@
 #include "DialogueManager.h"
-#include "DialogueManager.h"
 
 #include "GameplaySystems.h"
+#include "GameController.h"
 #include "Player.h"
 #include "PlayerController.h"
 #include "GameObject.h"
@@ -52,8 +52,8 @@ void DialogueManager::Start() {
 
 	dialoguesArray[4] = Dialogue(DialogueWindow::UPGRADES2, "", nullptr);
 
-	dialoguesArray[5] = Dialogue(DialogueWindow::FANG, "I think I got it...\nYou can power it up this way,\nthen connect this here...\nand that there...", &dialoguesArray[6]);
-	dialoguesArray[6] = Dialogue(DialogueWindow::FANG, "Plug it in our core and...\nWHOAH! Oni, try this!", &dialoguesArray[7]);
+	dialoguesArray[5] = Dialogue(DialogueWindow::FANG, "I think I got it...\nYou can power it up this way,\nthen plug it in our core...", &dialoguesArray[6]);
+	dialoguesArray[6] = Dialogue(DialogueWindow::FANG, "WHOAH! Oni, check this out!", &dialoguesArray[7]);
 	dialoguesArray[7] = Dialogue(DialogueWindow::ONIMARU, "I am not sure about this Fang...\nBut OK, I trust you.", &dialoguesArray[8]);
 	dialoguesArray[8] = Dialogue(DialogueWindow::UPGRADES3, "", nullptr);
 
@@ -184,8 +184,10 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 		uiComponents.clear();
 		uiColors.clear();
 		RetrieveUIComponents(activeDialogueObject);
+		GameController::isGameplayBlocked = true;
 	} else {
 		activeDialogueObject = nullptr;
+		GameController::isGameplayBlocked = false;
 	}
 }
 

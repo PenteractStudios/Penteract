@@ -23,7 +23,7 @@ void TriggerSwapCharacters::Update() {
 void TriggerSwapCharacters::OnCollision(GameObject& /*collidedWith*/, float3 /*collisionNormal*/, float3 /*penetrationDistance*/, void* /*particle*/) {
     
     if (dialogueManagerScript) {
-        dialogueManagerScript->SetActiveDialogue(&dialogueManagerScript->dialoguesArray[9]);
+        dialogueManagerScript->SetActiveDialogue(&dialogueManagerScript->dialoguesArray[18]);
     }
     GetOwner().Disable();
 }

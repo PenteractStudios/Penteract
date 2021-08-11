@@ -47,9 +47,14 @@ public:
 	float focusDistance = 100.f;
 	float transitionSpeed = 1000.f;
 
+	/* isGameplayBlocked is used to stop all the gameplay without pausing the game.
+	In Fang and Onimaru.cpp - PlayAnimation(), it forces toe player to stay in an idle state
+	In Player.cpp - Update(), controls that the player becomes static and doesn't move.
+	*/ 
+	static inline bool isGameplayBlocked = false;
+
 private:
 	void DoTransition();
-	void SpawnEnemies();
 	void ClearPauseMenus();
 	void EnablePauseMenus();
 
