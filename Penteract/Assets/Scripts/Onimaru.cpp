@@ -1,25 +1,24 @@
 #include "Onimaru.h"
 
 #include "GameplaySystems.h"
+#include "GameController.h"
+#include "HUDController.h"
+#include "CameraController.h"
 #include "OnimaruBullet.h"
 #include "AIMeleeGrunt.h"
 #include "RangedAI.h"
-#include "HUDController.h"
 #include "Shield.h"
-#include "CameraController.h"
 
 bool Onimaru::CanShoot() {
-	return !shootingOnCooldown;
+	return !shootingOnCooldown && !GameController::isGameplayBlocked;
 }
 
 bool Onimaru::CanBlast() {
-	return !blastInCooldown && !IsShielding() && !ultimateOn && !blastInUse;
+	return !blastInCooldown && !IsShielding() && !ultimateOn && !blastInUse && !GameController::isGameplayBlocked;
 }
 
 void Onimaru::GetHit(float damage_) {
 	//We assume that the player is always alive when this method gets called, so no need to check if character was alive before taking lives
-
-
 
 	if (cameraController) {
 		cameraController->StartShake();
@@ -216,7 +215,7 @@ void Onimaru::OnDeath() {
 }
 
 bool Onimaru::CanSwitch() const {
-	return ultimateTimeRemaining <= 0 && !ultimateOn && !IsShielding() && !blastInUse;
+	return ultimateTimeRemaining <= 0 && !ultimateOn && !IsShielding() && !blastInUse && !GameController::isGameplayBlocked;
 }
 
 void Onimaru::OnAnimationSecondaryFinished() {
@@ -337,11 +336,11 @@ void Onimaru::OnAnimationFinished() {
 bool Onimaru::CanShield() {
 	if (shield == nullptr || shieldGO == nullptr) return false;
 
-	return !shieldInCooldown && !shield->GetIsActive() && !ultimateOn;
+	return !shieldInCooldown && !shield->GetIsActive() && !ultimateOn && !GameController::isGameplayBlocked;
 }
 
 bool Onimaru::CanUltimate() {
-	return !blastInUse && !IsShielding() && ultimateChargePoints >= ultimateChargePointsTotal;
+	return !blastInUse && !IsShielding() && ultimateChargePoints >= ultimateChargePointsTotal && !GameController::isGameplayBlocked;
 }
 
 void Onimaru::InitShield() {

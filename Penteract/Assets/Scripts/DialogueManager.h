@@ -24,11 +24,12 @@ public:
 
 	struct Dialogue {
 		Dialogue() {};
-		Dialogue(DialogueWindow character_, const char* text_, Dialogue* nextDialogue_) : character(character_), text(text_), nextDialogue(nextDialogue_) {};
+		Dialogue(DialogueWindow character_, bool isBlocking_, const char* text_, Dialogue* nextDialogue_) : character(character_), text(text_), nextDialogue(nextDialogue_), isBlocking(isBlocking_) {};
 
-		DialogueWindow character = DialogueWindow::NONE; // 1 = Fang, 2 = Onimaru, 3 = Duke, 4 = DOOR, 5 = Tutorial Fang, 6 = Tutorial Oni, 7 = Tutorial Swap, 8 = Upgrades 1/3, 9 = Upgrades 2/3, 10 = Upgrades 3/3
-		const char* text = nullptr;
-		Dialogue* nextDialogue = nullptr;
+		DialogueWindow character = DialogueWindow::NONE;	// Indirect reference to which dialogue window gameObject must be opened.
+		const char* text = nullptr;							// Text shown in the dialogue (only for 1,2,3 & 4. Should be empty for Tutorials and Upgrades).
+		Dialogue* nextDialogue = nullptr;					// Pointer to the next Dialogue in 'dialoguesArray', that will come out after this one.
+		bool isBlocking = false;							// Whether or not this dialogue window should pause the gameplay.
 	};
 
 public:
@@ -36,20 +37,17 @@ public:
 	void Start() override;
 	void Update() override;
 
-	void SetActiveDialogue(Dialogue* dialogue, bool runAnimation = true);
-	void ActivateDialogue(Dialogue* dialogue);
-	void ActivateNextDialogue(Dialogue* dialogue);
-	void CloseDialogue(Dialogue* dialogue);
-	void ActivatePowerUpDialogue();
+	void SetActiveDialogue(Dialogue* dialogue, bool runAnimation = true); // Sets the dialogue window in 'dialoguesArray' that must be activated next. Stops the dialogue flow if 'dialogue = nullptr".
 
-	void TransitionUIElementsColor(bool appearing = true, bool mustLerp = true);
-	void RetrieveUIComponents(GameObject* current);
+	void ActivateDialogue(Dialogue* dialogue);		// Starts the position and color "Open transition" for the active dialogue.
+	void ActivateNextDialogue(Dialogue* dialogue);	// Advances to the next linked dialogue, and determines if transitions must be done for the two dialogue windows. (It will activate Open and Close transitions if the windows are of different type)
+	void CloseDialogue(Dialogue* dialogue);			// Starts the position and color "Close transition" for the active dialogue.
+	void ActivatePowerUpDialogue();					// Calls the specific 'SetActiveDialogue()' depending on the number of upgrades collected in the level.
+
+	void TransitionUIElementsColor(bool appearing = true, bool mustLerp = true);	// Subfunction of 'ActivateDialogue()'. Defines the color transitions of the dialogue window.
+	void RetrieveUIComponents(GameObject* current);									// This function gets all UI components of the active dialogue window. The color transitions will be aplied to all of them.
 
 public:
-	Dialogue dialoguesArray[100];
-	Dialogue* activeDialogue = nullptr;			// Pointer to the Dialogue Tree
-	GameObject* activeDialogueObject = nullptr; // Pointer to the Dialogue GameObject in the scene (DialogueFang, DialogueOnimaru or DialogueDuke)
-
 	// ------ GAMEOBJECT REFS ------ //
 	UID fangTextObjectUID = 0;
 	UID onimaruTextObjectUID = 0;
@@ -71,22 +69,29 @@ public:
 	GameObject* tutorialUpgrades3 = nullptr;
 
 	// ------ TRANSITION INFO ------ //
-	float3 dialogueStartPosition = float3(0, 0, 0);
-	float3 dialogueEndPosition = float3(0, 0, 0);
-	float3 tutorialStartPosition = float3(0, 0, 0);
-	float3 tutorialEndPosition = float3(0, 0, 0);
-	float3 currentStartPosition = float3(0, 0, 0);
-	float3 currentEndPosition = float3(0, 0, 0);
-	float appearAnimationTime = .5f;
-	float disappearAnimationTime = .5f;
-	float animationLerpTime = 0.0f;
-	std::vector<Component*> uiComponents;
-	std::vector<float4> uiColors;
+	float3 dialogueStartPosition = float3(0, 0, 0); // "Closed" position of the dialogue windows.
+	float3 dialogueEndPosition = float3(0, 0, 0);	// "Open" position of the dialogue windows.
+	float3 tutorialStartPosition = float3(0, 0, 0);	// "Closed" position of the tutorial and upgrades windows.
+	float3 tutorialEndPosition = float3(0, 0, 0);	// "Open" position of the tutorial and upgrades windows.
+	float appearAnimationTime = .5f;				// Duration time of the "Open transition".
+	float disappearAnimationTime = .5f;				// Duration time of the "Close transition".
+
+private:
+	Dialogue dialoguesArray[100];					// Contains the definition and characteristics of every dialogue in the game.
+	Dialogue* activeDialogue = nullptr;				// Pointer to dialoguesArray of the active dialogue.
+	GameObject* activeDialogueObject = nullptr;		// Pointer to the Dialogue GameObject in the scene (DialogueFang, DialogueOnimaru, DialogueDuke, Tutorials or Upgrades).
+	int obtainedPowerUps = 0;						// PowerUp counter. Increments each time the player picks up a powerUp.
+
+	// ------ TRANSITION INFO ------ //
+	float3 currentStartPosition = float3(0, 0, 0);	// Captures wether 'dialogueStartPosition' or 'tutorialStartPosition', that must be used fot the current dialogue window.
+	float3 currentEndPosition = float3(0, 0, 0);	// Captures wether 'dialogueEndPosition' or 'tutorialEndPosition', that must be used fot the current dialogue window.
+	float animationLerpTime = 0.0f;					// Stores the elapsed time during Open and Close transitions.
+	std::vector<Component*> uiComponents;			// Stores the UI components in the active dialogue window. Obtained from 'RetrieveUIComponents()'. Used in 'TransitionUIElementsColor()'.
+	std::vector<float4> uiColors;					// Stores the corresponding color of each 'uiComponents'.
+
+	// ---- TRANSITION TRIGGERS ---- //
 	bool runOpenAnimation = false;
 	bool runChangeAnimation = false;
 	bool runCloseAnimation = false;
 	bool runSecondaryOpen = false;
-
-
-	int obtainedPowerUps = 0; // PowerUp counter
 };
