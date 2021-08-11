@@ -7,9 +7,6 @@
 #include "GameObject.h"
 #include "Components/UI/ComponentText.h"
 
-// TODO:
-// IsBlocking to "pause" the gameplay
-
 EXPOSE_MEMBERS(DialogueManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fangTextObjectUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruTextObjectUID),

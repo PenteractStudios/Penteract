@@ -51,6 +51,8 @@ public:
 	void RetrieveUIComponents(GameObject* current);									// This function gets all UI components of the active dialogue window. The color transitions will be aplied to all of them.
 
 public:
+	Dialogue dialoguesArray[100];					// Contains the definition and characteristics of every dialogue in the game.
+
 	// ------ GAMEOBJECT REFS ------ //
 	UID fangTextObjectUID = 0;
 	UID onimaruTextObjectUID = 0;
@@ -84,7 +86,6 @@ public:
 	float disappearAnimationTime = .5f;				// Duration time of the "Close transition".
 
 private:
-	Dialogue dialoguesArray[100];					// Contains the definition and characteristics of every dialogue in the game.
 	Dialogue* activeDialogue = nullptr;				// Pointer to dialoguesArray of the active dialogue.
 	GameObject* activeDialogueObject = nullptr;		// Pointer to the Dialogue GameObject in the scene (DialogueFang, DialogueOnimaru, DialogueDuke, Tutorials or Upgrades).
 	int obtainedPowerUps = 0;						// PowerUp counter. Increments each time the player picks up a powerUp.
