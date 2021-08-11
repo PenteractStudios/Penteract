@@ -7,7 +7,8 @@ enum class DukeState {
 	MELEE_ATTACK,
 	SHOOT_SHIELD,
 	BULLET_HELL,
-	CHARGE
+	CHARGE,
+	INVULNERABLE
 };
 
 class Duke : public Character
@@ -38,7 +39,7 @@ public:
 	void BulletHell();
 	void Charge();
 	void CallTroops();
-		
+
 public:
 	float damageBullet = 1.f;
 	float damageCharge = 1.f;

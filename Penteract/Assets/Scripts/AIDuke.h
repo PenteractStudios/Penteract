@@ -12,6 +12,7 @@ class ComponentMeshRenderer;
 class ResourcePrefab;
 class HUDController;
 class PlayerController;
+class AIMovement;
 
 enum class Phase {
 	PHASE1,
@@ -44,7 +45,7 @@ public:
 
 	float shieldCooldown = 0.f;
 	float shieldActiveTime = 5.f;
-	
+
 	float bulletHellCooldown = 0.f;
 	float bulletHellActiveTime = 5.f;
 
@@ -54,7 +55,8 @@ private:
 
 	ComponentAnimation* animation = nullptr;
 	ComponentTransform* ownerTransform = nullptr;
-	
+	AIMovement* movementScript = nullptr;
+
 	float currentShieldCooldown = 0.f;
 	float currentShieldActiveTime = 0.f;
 
@@ -63,7 +65,11 @@ private:
 
 	float currentMovingTime = 0.f;
 
-	int lifeThreshold = 70;
+	float lifeThreshold = 0.70f;
 
+	bool activeFireTiles = false;
+	bool activeLasers = false;
+
+	bool phase2Reached = false;
 };
 

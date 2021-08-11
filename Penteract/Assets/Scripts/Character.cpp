@@ -26,6 +26,11 @@ void Character::SetTotalLifePoints(int totalLifePoints_) {
 	totalLifePoints = totalLifePoints_;
 }
 
+float Character::GetTotalLifePoints() const
+{
+	return totalLifePoints;
+}
+
 void Character::SetDamageHit(float damageHit_) {
 	damageHit = damageHit_;
 }
