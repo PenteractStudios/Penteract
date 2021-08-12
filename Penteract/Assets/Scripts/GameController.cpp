@@ -235,12 +235,14 @@ void GameController::PauseGame() {
 	Time::PauseGame();
 	EnablePauseMenus();
 	isPaused = true;
+	isGameplayBlocked = true;
 }
 
 void GameController::ResumeGame() {
 	Time::ResumeGame();
 	ClearPauseMenus();
 	isPaused = false;
+	isGameplayBlocked = false;
 }
 
 void GameController::DoTransition() {
