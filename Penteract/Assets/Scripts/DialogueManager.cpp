@@ -42,6 +42,10 @@ void DialogueManager::Start() {
 		onimaruTextComponent = onimaruTextObject->GetComponent<ComponentText>();
 	}
 
+	// Player controller
+	player = GameplaySystems::GetGameObject(playerUID);
+	if (player) playerControllerScript = GET_SCRIPT(player, PlayerController);
+
 	// UPGRADES
 	dialoguesArray[0] = Dialogue(DialogueWindow::ONIMARU, true, "Hey Fang, look at this.", &dialoguesArray[1]);
 	dialoguesArray[1] = Dialogue(DialogueWindow::FANG, true, "Hmm...\nIt looks like Milibot has been\nresearching in some\nnew technologies...", &dialoguesArray[2]);
@@ -77,25 +81,21 @@ void DialogueManager::Start() {
 	// TODO: Onimaru Ultimate dialogue?
 
 	// LEVEL 1 - PRE-TRANSPORT
-	dialoguesArray[24] = Dialogue(DialogueWindow::ONIMARU, false, "Are you formulating any plan\nto go through Duke’s plating?\nThat is a strong one, to have protected him\nfrom that headshot.", &dialoguesArray[25]);
-	dialoguesArray[25] = Dialogue(DialogueWindow::FANG, false, "I’m formulating a plan\nto not get blown up by\nthese explosive barrels.", nullptr);
+	//dialoguesArray[24] = Dialogue(DialogueWindow::ONIMARU, false, "Are you formulating any plan\nto go through Duke’s plating?\nThat is a strong one, to have protected him\nfrom that headshot.", &dialoguesArray[25]);
+	//dialoguesArray[25] = Dialogue(DialogueWindow::FANG, false, "I’m formulating a plan\nto not get blown up by\nthese explosive barrels.", nullptr);
 
 	// LEVEL 1 - PRE-SECURITY
-	dialoguesArray[26] = Dialogue(DialogueWindow::FANG, false, "I wonder why Duke is running away.\nHe seems strong enough to face us by himself...", &dialoguesArray[27]);
-	dialoguesArray[27] = Dialogue(DialogueWindow::ONIMARU, false, "He is going to the Milibot factory.\nWho knows what weapons he is hiding in there...\nOr maybe he is just testing us again.", nullptr);
+	//dialoguesArray[26] = Dialogue(DialogueWindow::FANG, false, "I wonder why Duke is running away.\nHe seems strong enough to face us by himself...", &dialoguesArray[27]);
+	//dialoguesArray[27] = Dialogue(DialogueWindow::ONIMARU, false, "He is going to the Milibot factory.\nWho knows what weapons he is hiding in there...\nOr maybe he is just testing us again.", nullptr);
 
 	// LEVEL 1 - FINAL
-	dialoguesArray[28] = Dialogue(DialogueWindow::DOOR, true, "Oh hello guys!\nNice fight there, right?\nWhere have you been?\nI haven’t seen you in a while!", &dialoguesArray[29]);
+	dialoguesArray[28] = Dialogue(DialogueWindow::DOOR, true, "Oh hello guys!\nNice fights there, right?\nWhere have you been?\nI haven’t seen you in a while!", &dialoguesArray[29]);
 	dialoguesArray[29] = Dialogue(DialogueWindow::ONIMARU, true, "It has been five years.\nOpen up. We need to come in.", &dialoguesArray[30]);
 	dialoguesArray[30] = Dialogue(DialogueWindow::DOOR, true, "Aw… I'm sorry.\nSeems like Duke revoked your access.\nI don’t understand why though…", &dialoguesArray[31]);
 	dialoguesArray[31] = Dialogue(DialogueWindow::FANG, true, "Come on… We are friends right?\nJust pretend you malfunctioned\nor something, we won’t tell.", &dialoguesArray[32]);
 	dialoguesArray[32] = Dialogue(DialogueWindow::DOOR, true, "Fine... but it's on you.\nI’m taking no responsibility.", &dialoguesArray[33]);
 	dialoguesArray[33] = Dialogue(DialogueWindow::ONIMARU, true, "Thanks, Door.", &dialoguesArray[34]);
 	dialoguesArray[34] = Dialogue(DialogueWindow::DOOR, true, "Take care in there! Don’t get hurt!", nullptr);
-	// Player controller
-	player = GameplaySystems::GetGameObject(playerUID);
-	if (player) playerControllerScript = GET_SCRIPT(player, PlayerController);
-
 }
 
 void DialogueManager::Update() {
