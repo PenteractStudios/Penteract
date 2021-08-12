@@ -51,8 +51,8 @@ void DialogueManager::Start() {
 	dialoguesArray[4] = Dialogue(DialogueWindow::UPGRADES2, true, "", nullptr);
 
 	dialoguesArray[5] = Dialogue(DialogueWindow::FANG, true, "I think I got it...\nYou can power it up this way,\nthen plug it in our core...", &dialoguesArray[6]);
-	dialoguesArray[6] = Dialogue(DialogueWindow::FANG, true, "WHOAH! Oni, check this out!", &dialoguesArray[7]);
-	dialoguesArray[7] = Dialogue(DialogueWindow::ONIMARU, true, "I am not sure about this Fang...\nBut OK, I trust you.", &dialoguesArray[8]);
+	dialoguesArray[6] = Dialogue(DialogueWindow::FANG, true, "WHOAH!\nOni, check this out!", &dialoguesArray[7]);
+	dialoguesArray[7] = Dialogue(DialogueWindow::ONIMARU, true, "I am not sure about this Fang...\nBut OK.\nI trust you.", &dialoguesArray[8]);
 	dialoguesArray[8] = Dialogue(DialogueWindow::UPGRADES3, true, "", nullptr);
 
 	// LEVEL 1 - START
@@ -69,10 +69,10 @@ void DialogueManager::Start() {
 	// TODO: Fang Ultimate dialogue?
 
 	// SWAP DIALOGUE + ONIMARU TUTORIAL
-	dialoguesArray[18] = Dialogue(DialogueWindow::FANG, true, "Onimaru, get the repair bots ready...\nI’m gonna need a break.", &dialoguesArray[19]);
-	dialoguesArray[19] = Dialogue(DialogueWindow::ONIMARU, true, "Roger. Initialising Matter-Switch.", &dialoguesArray[20]);
+	dialoguesArray[18] = Dialogue(DialogueWindow::FANG, true, "Onimaru,\nget the repair bots ready...\nI’m gonna need a break.", &dialoguesArray[19]);
+	dialoguesArray[19] = Dialogue(DialogueWindow::ONIMARU, true, "Roger.\nInitialising Matter-Switch.", &dialoguesArray[20]);
 	dialoguesArray[20] = Dialogue(DialogueWindow::TUTO_SWAP, true, "", &dialoguesArray[21]);
-	dialoguesArray[21] = Dialogue(DialogueWindow::ONIMARU, true, "Watch how it is done.\nLong hallways is where I perform best.", &dialoguesArray[22]);
+	dialoguesArray[21] = Dialogue(DialogueWindow::ONIMARU, true, "Watch how it is done.\nLong hallways\nis where I perform best.", &dialoguesArray[22]);
 	dialoguesArray[22] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "", nullptr);
 	// TODO: Onimaru Ultimate dialogue?
 
