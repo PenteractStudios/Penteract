@@ -110,8 +110,8 @@ private:
 	ComponentMeshRenderer* componentMeshRenderer = nullptr;
 
 	float timeSinceLastHurt = 0.5f;
-	ComponentCapsuleCollider* rightBladeCollider = nullptr;
-	ComponentCapsuleCollider* leftBladeCollider = nullptr;
+	GameObject* rightBladeCollider = nullptr;
+	GameObject* leftBladeCollider = nullptr;
 
 	float currentPushBackDistance = 0.f;
 	float currentSlowedDownTime = 0.f;

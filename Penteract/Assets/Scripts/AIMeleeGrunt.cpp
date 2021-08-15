@@ -63,10 +63,8 @@ void AIMeleeGrunt::Start() {
 		playerDeath = GET_SCRIPT(fang, PlayerDeath);
 	}
 
-	GameObject* rightBlade = GameplaySystems::GetGameObject(rightBladeColliderUID);
-	if (rightBlade) rightBladeCollider = rightBlade->GetComponent<ComponentCapsuleCollider>();
-	GameObject* leftBlade = GameplaySystems::GetGameObject(leftBladeColliderUID);
-	if (leftBlade) leftBladeCollider = leftBlade->GetComponent<ComponentCapsuleCollider>();
+	rightBladeCollider = GameplaySystems::GetGameObject(rightBladeColliderUID);
+	leftBladeCollider = GameplaySystems::GetGameObject(leftBladeColliderUID);
 
 	GameObject* winLose = GameplaySystems::GetGameObject(winConditionUID);
 
@@ -196,20 +194,6 @@ void AIMeleeGrunt::Update() {
 	case AIState::ATTACK:
 		if (track) { 
 			movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition()); 
-		}
-		if (attackRightColliderOn && !alreadyHit) {
-			if(!rightBladeCollider->IsActive()) rightBladeCollider->Enable();
-			alreadyHit = true;
-		}
-		else if (rightBladeCollider->IsActive()) {
-			rightBladeCollider->Disable();
-		}
-		if (attackLeftColliderOn && !alreadyHit) {
-			if (!leftBladeCollider->IsActive()) leftBladeCollider->Enable();
-			alreadyHit = true;
-		}
-		else if (leftBladeCollider->IsActive()) {
-			leftBladeCollider->Disable();
 		}
 		if (attackStep) {
 			movementScript->Seek(state, ownerTransform->GetGlobalPosition() + ownerTransform->GetFront()*10, gruntCharacter.movementSpeed, false);
@@ -473,13 +457,12 @@ void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const cha
 			}
 			if (strcmp(eventName, "BladeDamageOn") == 0) {
 				if (attackNumber == 1) attackStep = true;
-				attackRightColliderOn = true;
-				attackLeftColliderOn = true;
-				alreadyHit = false;
+				if (!rightBladeCollider->IsActive()) rightBladeCollider->Enable();
+				if (!leftBladeCollider->IsActive()) leftBladeCollider->Enable();
 			}
 			if (strcmp(eventName, "BladeDamageOff") == 0) {
-				attackRightColliderOn = false;
-				attackLeftColliderOn = false;
+				if (rightBladeCollider->IsActive()) rightBladeCollider->Disable();
+				if (leftBladeCollider->IsActive()) leftBladeCollider->Disable();
 			}
 			if (strcmp(eventName, "StopStep") == 0) {
 				attackStep = false;
@@ -489,28 +472,25 @@ void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const cha
 		else if (attackNumber == 3) {
 			if (strcmp(eventName, "RightBladeDamageOn") == 0) {
 				track = false;
-				attackStep = true;
-				attackRightColliderOn = true;
+				if (!rightBladeCollider->IsActive()) rightBladeCollider->Enable();
 				agent->SetMaxSpeed(gruntCharacter.movementSpeed + 3);
-				alreadyHit = true;
 			}
 			if (strcmp(eventName, "RightBladeDamageOff") == 0) {
 				track = true;
 				attackStep = false;
-				attackRightColliderOn = false;
+				if (rightBladeCollider->IsActive()) rightBladeCollider->Disable();
 				agent->SetMaxSpeed(gruntCharacter.movementSpeed);
 			}
 			if (strcmp(eventName, "LeftBladeDamageOn") == 0) {
 				track = false;
 				attackStep = true;
-				attackLeftColliderOn = true;
+				if (!leftBladeCollider->IsActive()) leftBladeCollider->Enable();
 				agent->SetMaxSpeed(gruntCharacter.movementSpeed + 3);
-				alreadyHit = true;
 			}
 			if (strcmp(eventName, "LeftBladeDamageOff") == 0) {
 				track = true;
 				attackStep = false;
-				attackLeftColliderOn = false;
+				if (leftBladeCollider->IsActive()) leftBladeCollider->Disable();
 				agent->SetMaxSpeed(gruntCharacter.movementSpeed);
 			}
 		}

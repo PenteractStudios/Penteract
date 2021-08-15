@@ -104,14 +104,9 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 	if (collidedWith.name == "RangerProjectile") {
 		if(playerController) playerController->TakeDamage(rangedDamageTaken);
 	}
-	else if (collidedWith.name == "RightHand" || collidedWith.name == "LeftHand") { //meleegrunt
+	else if (collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") { //meleegrunt
 		if(playerController) playerController->TakeDamage(meleeDamageTaken);
-		GameObject* parent = &collidedWith;
-		while (parent->GetParent() && parent->name != "Character_Reference") {
-			parent = parent->GetParent();
-		}
-		if (parent->GetParent() != nullptr) rootParentScript = GET_SCRIPT(parent->GetParent(), AIMeleeGrunt);
-		rootParentScript->PlayerHit();
+		collidedWith.Disable();
 	}
 	else if (collidedWith.name == "Barrel") {
 		if(playerController) playerController->TakeDamage(barrelDamageTaken);
