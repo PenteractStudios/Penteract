@@ -8,7 +8,10 @@ enum class DukeState {
 	SHOOT_SHIELD,
 	BULLET_HELL,
 	CHARGE,
-	INVULNERABLE
+	INVULNERABLE,
+	STUNNED,
+	PUSHED,
+	DEATH
 };
 
 class Duke : public Character
@@ -48,6 +51,7 @@ public:
 	float timeToDie = 5.f;
 	float pushBackDistance = 5.f;
 	float pushBackSpeed = 5.f;
+	float barrelDamageTaken = 3.f;
 
 	DukeState state = DukeState::BASIC_BEHAVIOUR;
 
