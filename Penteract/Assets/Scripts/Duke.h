@@ -14,6 +14,14 @@ enum class DukeState {
 	DEATH
 };
 
+/*
+AIDuke will Init() the Duke class with all the necessary parameters. AIDuke will just be in charge of managing the behaviour (FSM),
+controlling phases and handling Collision and Animation Finished (which can be delegated in turn to Duke class).
+
+Duke class will contain all the boss stats, Animation FSM and agent, as well as the Abilities' methods. Duke class will be in charge
+of performing all the movement, abilities, animation and sound triggers when the AIDuke tells it to do so.
+*/
+
 class Duke : public Character
 {
 public:

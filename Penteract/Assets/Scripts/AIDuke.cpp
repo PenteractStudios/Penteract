@@ -22,7 +22,9 @@ EXPOSE_MEMBERS(AIDuke) {
 
 	MEMBER_SEPARATOR("Duke Abilities Variables"),
 	MEMBER(MemberType::FLOAT, shieldCooldown),
+	MEMBER(MemberType::FLOAT, shieldActiveTime),
 	MEMBER(MemberType::FLOAT, bulletHellCooldown),
+    MEMBER(MemberType::FLOAT, bulletHellActiveTime),
 	MEMBER(MemberType::FLOAT, movingTime),
 
 	MEMBER_SEPARATOR("Particles UIDs"),
@@ -33,7 +35,6 @@ EXPOSE_MEMBERS(AIDuke) {
 GENERATE_BODY_IMPL(AIDuke);
 
 void AIDuke::Start() {
-	dukeCharacter.SetTotalLifePoints(dukeCharacter.lifePoints);
 	duke = GameplaySystems::GetGameObject(dukeUID);
 	player = GameplaySystems::GetGameObject(playerUID);
 	if (player) {
@@ -41,8 +42,10 @@ void AIDuke::Start() {
 	}
 	movementScript = GET_SCRIPT(&GetOwner(), AIMovement);
 
-	animation = GetOwner().GetComponent<ComponentAnimation>();
 	ownerTransform = GetOwner().GetComponent<ComponentTransform>();
+
+	// Init Duke character
+	dukeCharacter.SetTotalLifePoints(dukeCharacter.lifePoints);
 }
 
 void AIDuke::Update() {
