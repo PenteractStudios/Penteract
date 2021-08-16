@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Scripting/Script.h"
+#include "Player.h"
 
 class ComponentText;
 class GameObject;
@@ -27,12 +28,13 @@ public:
 
 	struct Dialogue {
 		Dialogue() {};
-		Dialogue(DialogueWindow character_, bool isBlocking_, const char* text_, Dialogue* nextDialogue_) : character(character_), text(text_), nextDialogue(nextDialogue_), isBlocking(isBlocking_) {};
+		Dialogue(DialogueWindow character_, bool isBlocking_, const char* text_, Dialogue* nextDialogue_, InputActions closeButton_ = InputActions::INTERACT) : character(character_), isBlocking(isBlocking_), text(text_), nextDialogue(nextDialogue_), closeButton(closeButton_) {};
 
 		DialogueWindow character = DialogueWindow::NONE;	// Indirect reference to which dialogue window gameObject must be opened.
 		const char* text = nullptr;							// Text shown in the dialogue (only for 1,2,3 & 4. Should be empty for Tutorials and Upgrades).
 		Dialogue* nextDialogue = nullptr;					// Pointer to the next Dialogue in 'dialoguesArray', that will come out after this one.
 		bool isBlocking = false;							// Whether or not this dialogue window should pause the gameplay.
+		InputActions closeButton = InputActions::INTERACT;	// Definition of the button that will close this dialogue.
 	};
 
 public:

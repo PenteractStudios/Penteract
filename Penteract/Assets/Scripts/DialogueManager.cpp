@@ -2,7 +2,6 @@
 
 #include "GameplaySystems.h"
 #include "GameController.h"
-#include "Player.h"
 #include "PlayerController.h"
 #include "GameObject.h"
 #include "Components/UI/ComponentText.h"
@@ -75,7 +74,7 @@ void DialogueManager::Start() {
 	// SWAP DIALOGUE + ONIMARU TUTORIAL
 	dialoguesArray[18] = Dialogue(DialogueWindow::FANG, true, "Onimaru,\nget the repair bots ready...\nI’m gonna need a break.", &dialoguesArray[19]);
 	dialoguesArray[19] = Dialogue(DialogueWindow::ONIMARU, true, "Roger.\nInitialising Matter-Switch.", &dialoguesArray[20]);
-	dialoguesArray[20] = Dialogue(DialogueWindow::TUTO_SWAP, true, "", &dialoguesArray[21]);
+	dialoguesArray[20] = Dialogue(DialogueWindow::TUTO_SWAP, true, "", &dialoguesArray[21], InputActions::SWITCH);
 	dialoguesArray[21] = Dialogue(DialogueWindow::ONIMARU, true, "Watch how it is done.\nLong hallways\nis where I perform best.", &dialoguesArray[22]);
 	dialoguesArray[22] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "", nullptr);
 	// TODO: Onimaru Ultimate dialogue?
@@ -111,7 +110,7 @@ void DialogueManager::Update() {
 	if (activeDialogue) {
 		if (runOpenAnimation) ActivateDialogue(activeDialogue);
 
-		if (Player::GetInputBool(InputActions::INTERACT, PlayerController::useGamepad) && !(runOpenAnimation || runChangeAnimation || runCloseAnimation) && activeDialogueObject) {
+		if (Player::GetInputBool(activeDialogue->closeButton, PlayerController::useGamepad) && !(runOpenAnimation || runChangeAnimation || runCloseAnimation) && activeDialogueObject) {
 			if (activeDialogue->nextDialogue) {
 				runChangeAnimation = true;
 				if ((static_cast<int>(activeDialogue->character) < 5 && static_cast<int>(activeDialogue->nextDialogue->character) >= 5) ||
@@ -186,7 +185,7 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 		uiComponents.clear();
 		uiColors.clear();
 		RetrieveUIComponents(activeDialogueObject);
-		if (dialogue->isBlocking) GameController::isGameplayBlocked = true;
+		GameController::isGameplayBlocked = dialogue->isBlocking;
 	} else {
 		activeDialogueObject = nullptr;
 		GameController::isGameplayBlocked = false;
@@ -220,6 +219,12 @@ void DialogueManager::ActivateDialogue(Dialogue* dialogue) {
 void DialogueManager::ActivateNextDialogue(Dialogue* dialogue) {
 	activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(currentStartPosition);
 	activeDialogueObject->Disable();
+
+	// Activate the Switch animation when closing the Switch Tutorial window
+	if (dialogue->character == DialogueWindow::TUTO_SWAP) {
+		playerControllerScript->SwitchCharacter();
+	}
+
 	// TODO: here should go the transition animations
 	SetActiveDialogue(dialogue->nextDialogue, false);
 	activeDialogueObject->Enable();
