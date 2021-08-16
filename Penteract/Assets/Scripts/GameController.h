@@ -47,7 +47,8 @@ public:
 	float focusDistance = 100.f;
 	float transitionSpeed = 1000.f;
 
-	static inline bool isGameplayBlocked = false; // isGameplayBlocked is used to stop all the gameplay without pausing the game. In Fangand Onimaru.cpp - PlayAnimation(), it forces toe player to stay in an idle state. In Player.cpp - Update(), controls that the player becomes static and doesn't move.
+	static inline bool isGameplayBlocked = false;		// isGameplayBlocked is used to stop all the gameplay without pausing the game. In Fangand Onimaru.cpp - PlayAnimation(), it forces toe player to stay in an idle state. In Player.cpp - Update(), controls that the player becomes static and doesn't move.
+	static inline bool switchTutorialActive = false;	// This overrides the previous bool on Fang's 'CanSwitch()', used when the Switch Tutorial appears.
 
 private:
 	void DoTransition();

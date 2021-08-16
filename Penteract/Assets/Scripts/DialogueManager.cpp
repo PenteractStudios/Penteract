@@ -167,6 +167,7 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 			break;
 		case DialogueWindow::TUTO_SWAP:
 			activeDialogueObject = tutorialSwap;
+			GameController::switchTutorialActive = true;
 			break;
 		case DialogueWindow::UPGRADES1:
 			activeDialogueObject = tutorialUpgrades1;
@@ -189,6 +190,7 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 	} else {
 		activeDialogueObject = nullptr;
 		GameController::isGameplayBlocked = false;
+		GameController::switchTutorialActive = false;
 	}
 }
 
@@ -219,11 +221,6 @@ void DialogueManager::ActivateDialogue(Dialogue* dialogue) {
 void DialogueManager::ActivateNextDialogue(Dialogue* dialogue) {
 	activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(currentStartPosition);
 	activeDialogueObject->Disable();
-
-	// Activate the Switch animation when closing the Switch Tutorial window
-	if (dialogue->character == DialogueWindow::TUTO_SWAP) {
-		playerControllerScript->SwitchCharacter();
-	}
 
 	// TODO: here should go the transition animations
 	SetActiveDialogue(dialogue->nextDialogue, false);

@@ -2,12 +2,12 @@
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
-
 #include "AIMeleeGrunt.h"
 #include "RangedAI.h"
 #include "HUDController.h"
 #include "OnimaruBullet.h"
 #include "SwitchParticles.h"
+
 #include "Math/Quat.h"
 #include "Geometry/Plane.h"
 #include "Geometry/Frustum.h"
@@ -376,12 +376,14 @@ void PlayerController::Update() {
 
 			if (switchInProgress || (noCooldownMode && (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R) && (!useGamepad || !Input::IsGamepadConnected(0))
 				|| useGamepad && Input::IsGamepadConnected(0) && Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0)))) {
+
 				switchInProgress = true;
 				SwitchCharacter();
 			}
 
 			if (!switchInProgress && (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R) && (!useGamepad || !Input::IsGamepadConnected(0))
 				|| useGamepad && Input::IsGamepadConnected(0) && Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0))) {
+
 				switchInProgress = true;
 				switchCooldownRemaining = switchCooldown;
 			}
