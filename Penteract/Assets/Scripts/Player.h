@@ -57,6 +57,7 @@ public:
 	virtual void OnAnimationFinished() = 0;
 	virtual void OnAnimationSecondaryFinished() = 0;
 	virtual bool IsInstantOrientation(bool useGamepad) const = 0;
+	virtual bool IsVulnerable() const = 0;
 
 	int GetMouseDirectionState();
 	bool IsActive();
@@ -64,7 +65,6 @@ public:
 	float2 GetInputFloat2(InputActions action, bool useGamepad = false) const;
 	void UpdateFacePointDir(bool useGamepad);
 	virtual void IncreaseUltimateCounter();
-
 public:
 	float rangedDamageTaken = 1.0f;
 	float meleeDamageTaken = 1.0f;
@@ -86,8 +86,7 @@ public:
 	MovementDirection movementInputDirection = MovementDirection::NONE;
 	ComponentTransform* playerMainTransform = nullptr;
 	float ultimateTimeRemaining = 0.0f;
-	float ultimateTotalTime = 3.0f;
-	virtual bool IsVulnerable() const = 0;
+	float ultimateTotalTime = 4.6f;
 
 protected:
 	void MoveTo();
