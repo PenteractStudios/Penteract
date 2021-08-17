@@ -1,6 +1,6 @@
 {
     "ShaderType": 3,
-    "RenderingMode": 0,
+    "RenderingMode": 1,
     "DiffuseColor": [
         1.0,
         0.9999899864196777,
@@ -21,8 +21,8 @@
     "NormalStrength": 1.0,
     "EmissiveColor": [
         9.999999974752428e-7,
-        0.0,
-        0.0,
+        9.999899930335233e-7,
+        9.999899930335233e-7,
         0.0
     ],
     "EmissiveMap": 0,
