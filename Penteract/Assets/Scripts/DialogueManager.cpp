@@ -7,15 +7,20 @@
 #include "Components/UI/ComponentText.h"
 
 EXPOSE_MEMBERS(DialogueManager) {
+	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
+	MEMBER_SEPARATOR("Dialogue (sub)Text UIDs"),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangTextObjectUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruTextObjectUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dukeTextObjectUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, doorTextObjectUID),
+	MEMBER_SEPARATOR("Tutorial Objects UIDs"),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialFangUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialOnimaruUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialSwapUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialUpgrades1UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialUpgrades2UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialUpgrades3UID),
-	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
+	MEMBER_SEPARATOR("Fade In/Out configuration"),
 	MEMBER(MemberType::FLOAT3, dialogueStartPosition),
 	MEMBER(MemberType::FLOAT3, dialogueEndPosition),
 	MEMBER(MemberType::FLOAT3, tutorialStartPosition),
@@ -27,8 +32,23 @@ EXPOSE_MEMBERS(DialogueManager) {
 GENERATE_BODY_IMPL(DialogueManager);
 
 void DialogueManager::Start() {
+	// Get player controller
+	player = GameplaySystems::GetGameObject(playerUID);
+	if (player) playerControllerScript = GET_SCRIPT(player, PlayerController);
+
+	// Get dialogue windows
 	GameObject* fangTextObject = GameplaySystems::GetGameObject(fangTextObjectUID);
 	GameObject* onimaruTextObject = GameplaySystems::GetGameObject(onimaruTextObjectUID);
+	GameObject* dukeTextObject = GameplaySystems::GetGameObject(dukeTextObjectUID);
+	GameObject* doorTextObject = GameplaySystems::GetGameObject(doorTextObjectUID);
+	if (fangTextObject && onimaruTextObject && dukeTextObject && doorTextObject) {
+		fangTextComponent = fangTextObject->GetComponent<ComponentText>();
+		onimaruTextComponent = onimaruTextObject->GetComponent<ComponentText>();
+		dukeTextComponent = dukeTextObject->GetComponent<ComponentText>();
+		doorTextComponent = doorTextObject->GetComponent<ComponentText>();
+	}
+
+	// Get tutorials
 	tutorialFang = GameplaySystems::GetGameObject(tutorialFangUID);
 	tutorialOnimaru = GameplaySystems::GetGameObject(tutorialOnimaruUID);
 	tutorialSwap = GameplaySystems::GetGameObject(tutorialSwapUID);
@@ -36,27 +56,19 @@ void DialogueManager::Start() {
 	tutorialUpgrades2 = GameplaySystems::GetGameObject(tutorialUpgrades2UID);
 	tutorialUpgrades3 = GameplaySystems::GetGameObject(tutorialUpgrades3UID);
 
-	if (fangTextObject && onimaruTextObject) {
-		fangTextComponent = fangTextObject->GetComponent<ComponentText>();
-		onimaruTextComponent = onimaruTextObject->GetComponent<ComponentText>();
-	}
-
-	// Player controller
-	player = GameplaySystems::GetGameObject(playerUID);
-	if (player) playerControllerScript = GET_SCRIPT(player, PlayerController);
-
+	// ----- DIALOGUES INIT -----
 	// UPGRADES
-	dialoguesArray[0] = Dialogue(DialogueWindow::ONIMARU, true, "Hey Fang, look at this.", &dialoguesArray[1]);
-	dialoguesArray[1] = Dialogue(DialogueWindow::FANG, true, "Hmm...\nIt looks like Milibot has been\nresearching in some\nnew technologies...", &dialoguesArray[2]);
-	dialoguesArray[2] = Dialogue(DialogueWindow::FANG, true, "I might be able to\nseize its power for ourselves\nif we find a couple more.", &dialoguesArray[3]);
-	dialoguesArray[3] = Dialogue(DialogueWindow::UPGRADES1, true, "", nullptr);
+	dialoguesArray[0] = Dialogue(DialogueWindow::UPGRADES1, true, "", &dialoguesArray[1]);
+	dialoguesArray[1] = Dialogue(DialogueWindow::ONIMARU, true, "Hey Fang, look at this.", &dialoguesArray[2]);
+	dialoguesArray[2] = Dialogue(DialogueWindow::FANG, true, "Hmm...\nIt looks like Milibot has been\nresearching in some\nnew technologies...", &dialoguesArray[3]);
+	dialoguesArray[3] = Dialogue(DialogueWindow::FANG, true, "I might be able to\nseize its power for ourselves\nif we find a couple more.", nullptr);
 
 	dialoguesArray[4] = Dialogue(DialogueWindow::UPGRADES2, true, "", nullptr);
 
-	dialoguesArray[5] = Dialogue(DialogueWindow::FANG, true, "I think I got it...\nYou can power it up this way,\nthen plug it in our core...", &dialoguesArray[6]);
-	dialoguesArray[6] = Dialogue(DialogueWindow::FANG, true, "WHOAH!\nOni, check this out!", &dialoguesArray[7]);
-	dialoguesArray[7] = Dialogue(DialogueWindow::ONIMARU, true, "I am not sure about this Fang...\nBut OK.\nI trust you.", &dialoguesArray[8]);
-	dialoguesArray[8] = Dialogue(DialogueWindow::UPGRADES3, true, "", nullptr);
+	dialoguesArray[5] = Dialogue(DialogueWindow::UPGRADES3, true, "", &dialoguesArray[6]);
+	dialoguesArray[6] = Dialogue(DialogueWindow::FANG, true, "I think I got it...\nYou can power it up this way,\nthen plug it in our core...", &dialoguesArray[7]);
+	dialoguesArray[7] = Dialogue(DialogueWindow::FANG, true, "WHOAH!\nOni, check this out!", &dialoguesArray[8]);
+	dialoguesArray[8] = Dialogue(DialogueWindow::ONIMARU, true, "I am not sure about this Fang...\nBut OK.\nI trust you.", nullptr);
 
 	// LEVEL 1 - START
 	dialoguesArray[9] = Dialogue(DialogueWindow::DUKE, true, "Who do you think you are\nyou son of a…", &dialoguesArray[10]);
@@ -156,8 +168,12 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 			onimaruTextComponent->SetText(dialogue->text);
 			break;
 		case DialogueWindow::DUKE:
+			activeDialogueObject = dukeTextComponent->GetOwner().GetParent();
+			dukeTextComponent->SetText(dialogue->text);
 			break;
 		case DialogueWindow::DOOR:
+			activeDialogueObject = doorTextComponent->GetOwner().GetParent();
+			doorTextComponent->SetText(dialogue->text);
 			break;
 		case DialogueWindow::TUTO_FANG:
 			activeDialogueObject = tutorialFang;

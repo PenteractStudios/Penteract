@@ -58,8 +58,12 @@ public:
 	// ------ GAMEOBJECT REFS ------ //
 	UID fangTextObjectUID = 0;
 	UID onimaruTextObjectUID = 0;
+	UID dukeTextObjectUID = 0;
+	UID doorTextObjectUID = 0;
 	ComponentText* fangTextComponent = 0;
 	ComponentText* onimaruTextComponent = 0;
+	ComponentText* dukeTextComponent = 0;
+	ComponentText* doorTextComponent = 0;
 
 	UID tutorialFangUID = 0;
 	UID tutorialOnimaruUID = 0;
