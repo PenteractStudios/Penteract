@@ -7,12 +7,17 @@
 
 
 EXPOSE_MEMBERS(CameraController) {
+	MEMBER(MemberType::GAME_OBJECT_UID, playerControllerObjUID),
+	MEMBER_SEPARATOR("Camera Positioning"),
 	MEMBER(MemberType::FLOAT, cameraOffsetZ),
 	MEMBER(MemberType::FLOAT, cameraOffsetY),
 	MEMBER(MemberType::FLOAT, cameraOffsetX),
+	MEMBER(MemberType::FLOAT, zoomOffsetIncrementZ),
+	MEMBER(MemberType::FLOAT, zoomOffsetIncrementY),
+	MEMBER(MemberType::FLOAT, zoomOffsetIncrementX),
 	MEMBER(MemberType::FLOAT, smoothCameraSpeed),
 	MEMBER(MemberType::BOOL, useSmoothCamera),
-	MEMBER(MemberType::GAME_OBJECT_UID, playerControllerObjUID),
+	MEMBER_SEPARATOR("Shaker Control"),
 	MEMBER(MemberType::FLOAT, shakeTotalTime),
 	MEMBER(MemberType::FLOAT, shakeTimer),
 	MEMBER(MemberType::FLOAT, shakeMultiplier)
@@ -53,6 +58,24 @@ void CameraController::Update() {
 
 void CameraController::StartShake() {
 	shakeTimer = shakeTotalTime;
+}
+
+void CameraController::ZoomIn() {
+	if (!transform) return;
+	if (isZoomed) return;
+	cameraOffsetX += zoomOffsetIncrementX;
+	cameraOffsetY += zoomOffsetIncrementY;
+	cameraOffsetZ += zoomOffsetIncrementZ;
+	isZoomed = true;
+}
+
+void CameraController::ZoomOut() {
+	if (!transform) return;
+	if (!isZoomed) return;
+	cameraOffsetX -= zoomOffsetIncrementX;
+	cameraOffsetY -= zoomOffsetIncrementY;
+	cameraOffsetZ -= zoomOffsetIncrementZ;
+	isZoomed = false;
 }
 
 

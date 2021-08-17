@@ -3,11 +3,13 @@
 #include "GameplaySystems.h"
 #include "GameController.h"
 #include "PlayerController.h"
+#include "CameraController.h"
 #include "GameObject.h"
 #include "Components/UI/ComponentText.h"
 
 EXPOSE_MEMBERS(DialogueManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, gameCameraUID),
 	MEMBER_SEPARATOR("Dialogue (sub)Text UIDs"),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangTextObjectUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruTextObjectUID),
@@ -35,6 +37,10 @@ void DialogueManager::Start() {
 	// Get player controller
 	player = GameplaySystems::GetGameObject(playerUID);
 	if (player) playerControllerScript = GET_SCRIPT(player, PlayerController);
+
+	// Get camera controller
+	camera = GameplaySystems::GetGameObject(gameCameraUID);
+	if (camera) cameraControllerScript = GET_SCRIPT(camera, CameraController);
 
 	// Get dialogue windows
 	GameObject* fangTextObject = GameplaySystems::GetGameObject(fangTextObjectUID);
@@ -110,14 +116,10 @@ void DialogueManager::Start() {
 }
 
 void DialogueManager::Update() {
-	if (!fangTextComponent) return;
-	if (!onimaruTextComponent) return;
-	if (!tutorialFang) return;
-	if (!tutorialOnimaru) return;
-	if (!tutorialSwap) return;
-	if (!tutorialUpgrades1) return;
-	if (!tutorialUpgrades2) return;
-	if (!tutorialUpgrades3) return;
+	if (!fangTextComponent || !onimaruTextComponent) return;
+	if (!tutorialFang || !tutorialOnimaru || !tutorialSwap) return;
+	if (!tutorialUpgrades1 || !tutorialUpgrades2 || !tutorialUpgrades3) return;
+	if (!player || !camera) return;
 
 	if (activeDialogue) {
 		if (runOpenAnimation) ActivateDialogue(activeDialogue);
@@ -142,6 +144,7 @@ void DialogueManager::Update() {
 }
 
 void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
+	// Disable last active dialogue
 	if (activeDialogueObject) {
 		if (activeDialogueObject->IsActive()) {
 			activeDialogueObject->Disable();
@@ -149,6 +152,7 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 	}
 
 	if (dialogue) {
+		// Set the transition positions that correspond to the new active dialogue
 		if (static_cast<int>(dialogue->character) >= 5) {
 			currentStartPosition = tutorialStartPosition;
 			currentEndPosition = tutorialEndPosition;
@@ -157,6 +161,7 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 			currentEndPosition = dialogueEndPosition;
 		}
 
+		// Activation steps, corresponding to the dialogue type
 		activeDialogue = dialogue;
 		switch (dialogue->character) {
 		case DialogueWindow::FANG:
@@ -203,10 +208,20 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 		uiColors.clear();
 		RetrieveUIComponents(activeDialogueObject);
 		GameController::isGameplayBlocked = dialogue->isBlocking;
+
+		// Camera Zoom In
+		if (cameraControllerScript) {
+			cameraControllerScript->ZoomIn();
+		}
 	} else {
 		activeDialogueObject = nullptr;
 		GameController::isGameplayBlocked = false;
 		GameController::switchTutorialActive = false;
+
+		// Camera Zoom Out
+		if (cameraControllerScript) {
+			cameraControllerScript->ZoomOut();
+		}
 	}
 }
 

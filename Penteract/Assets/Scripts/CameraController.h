@@ -14,10 +14,16 @@ public:
 	void Start() override;
 	void Update() override;
 	void StartShake();
+	void ZoomIn();
+	void ZoomOut();
+
 public:
 	float cameraOffsetZ = 20.f;
 	float cameraOffsetY = 20.f;
 	float cameraOffsetX = 0.f;
+	float zoomOffsetIncrementZ = 0.f;
+	float zoomOffsetIncrementY = 0.f;
+	float zoomOffsetIncrementX = 0.f;
 	bool useSmoothCamera = true;
 	float smoothCameraSpeed = 5.0f;
 	UID playerControllerObjUID = 0;
@@ -30,5 +36,7 @@ public:
 private:
 	float2 GetRandomPosInUnitaryCircle(float2 center);
 
+private:
+	bool isZoomed = false;
 };
 

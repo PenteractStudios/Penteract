@@ -69,5 +69,5 @@ bool SpawnPointController::CanSpawn() {
 }
 
 bool SpawnPointController::CheckSpawnPointStatus() {
-	return std::all_of(enemySpawnPointStatus.begin(), enemySpawnPointStatus.end(), [](bool i) { return !i; });;
+	return std::all_of(enemySpawnPointStatus.begin(), enemySpawnPointStatus.end(), [](bool i) { return !i; });
 }

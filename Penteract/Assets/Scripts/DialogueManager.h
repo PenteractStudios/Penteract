@@ -6,6 +6,7 @@
 class ComponentText;
 class GameObject;
 class PlayerController;
+class CameraController;
 
 class DialogueManager : public Script
 {
@@ -82,6 +83,10 @@ public:
 	UID playerUID = 0;
 	GameObject* player = nullptr;
 	PlayerController* playerControllerScript = nullptr;
+
+	UID gameCameraUID = 0;
+	GameObject* camera = nullptr;
+	CameraController* cameraControllerScript = nullptr;
 
 	// ------ TRANSITION INFO ------ //
 	float3 dialogueStartPosition = float3(0, 0, 0); // "Closed" position of the dialogue windows.
