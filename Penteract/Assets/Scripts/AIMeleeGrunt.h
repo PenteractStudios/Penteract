@@ -77,17 +77,28 @@ public:
 
 	float groundPosition = 3.0f;
 
-private:
+	//Attack1 EN (double slice) ES (PAM VERTICAL)
+	float att1AttackSpeed = 1.f;
+	float att1MovementSpeedWhileAttacking = 1.f;
+	int att1AbilityChance = 33;
 
-	float attackDuration = 2.2f;
-	float attackRemaining = 0.0f;
-	bool attackRightColliderOn = false;
-	bool attackLeftColliderOn = false;
+	//Attack2 EN (slash) ES (PAM HORIZONTAL)
+	float att2AttackSpeed = 1.f;
+	float att2MovementSpeedWhileAttacking = 1.f;
+	int att2AbilityChance = 33;
+
+	//Attack3 EN (combo) ES (PAM PAM TOMA)
+	float att3AttackSpeed = 1.f;
+	float att3MovementSpeedWhileAttacking = 1.f;
+	int att3AbilityChance = 33;
+
+private:
 	bool track = true;
 	bool attackStep = false;
 	bool alreadyHit = false;
 	int attackNumber = 3;
-
+	float attackSpeed = 0.f;
+	float attackMovementSpeed = 0.f;
 	float3 velocity = float3(0, 0, 0);
 	AIState state = AIState::START;
 	bool hitTaken = false;

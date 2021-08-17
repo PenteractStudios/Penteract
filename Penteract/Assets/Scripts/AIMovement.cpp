@@ -95,3 +95,10 @@ bool AIMovement::CharacterInAttackRange(const GameObject* character, const float
 
 	return false;
 }
+
+void AIMovement::SetClipSpeed(UID clipUID, float speed) {
+	if (speed >= 0.f) {
+		ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(clipUID);
+		clip->speed = speed;
+	}
+}

@@ -24,7 +24,7 @@ public:
 	void Stop();
 	bool CharacterInSight(const GameObject* character, const float searchRadius);
 	bool CharacterInAttackRange(const GameObject* character, const float meleeRange);
-
+	void SetClipSpeed(UID clipUID, float speed = 1.f);
 public:
 	static int maxAcceleration;
 	float rotationSmoothness = 0.2f;

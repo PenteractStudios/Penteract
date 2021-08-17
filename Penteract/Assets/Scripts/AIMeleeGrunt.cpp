@@ -39,7 +39,19 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 		MEMBER_SEPARATOR("Stun variables"),
 		MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
 		MEMBER(MemberType::FLOAT, stunDuration),
-		MEMBER(MemberType::FLOAT, groundPosition)
+		MEMBER(MemberType::FLOAT, groundPosition),
+		MEMBER_SEPARATOR("Attack1"),
+		MEMBER(MemberType::FLOAT, att1AttackSpeed),
+		MEMBER(MemberType::FLOAT, att1MovementSpeedWhileAttacking),
+		MEMBER(MemberType::INT, att1AbilityChance),
+		MEMBER_SEPARATOR("Attack2"),
+		MEMBER(MemberType::FLOAT, att2AttackSpeed),
+		MEMBER(MemberType::FLOAT, att2MovementSpeedWhileAttacking),
+		MEMBER(MemberType::INT, att2AbilityChance),
+		MEMBER_SEPARATOR("Attack3"),
+		MEMBER(MemberType::FLOAT, att3AttackSpeed),
+		MEMBER(MemberType::FLOAT, att3MovementSpeedWhileAttacking),
+		MEMBER(MemberType::INT, att3AbilityChance),
 };
 
 GENERATE_BODY_IMPL(AIMeleeGrunt);
@@ -183,10 +195,24 @@ void AIMeleeGrunt::Update() {
 		movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), speedToUse, true);
 		if (movementScript->CharacterInAttackRange(player, gruntCharacter.attackRange)) {
 			int random = std::rand() % 100;
-			attackNumber = 3;
-			if (random < 33) attackNumber = 1;
-			else if (random < 66) attackNumber = 2;
+			if (random < att1AbilityChance) { 
+				attackNumber = 1;
+				attackSpeed = att1AttackSpeed;
+				attackMovementSpeed = att1MovementSpeedWhileAttacking;
+			}
+			else if (random < att1AbilityChance + att2AbilityChance) {
+				attackNumber = 2;
+				attackSpeed = att2AttackSpeed;
+				attackMovementSpeed = att2MovementSpeedWhileAttacking;
+			}
+			else {
+				attackNumber = 3;
+				attackSpeed = att3AttackSpeed;
+				attackMovementSpeed = att3MovementSpeedWhileAttacking;
+			}
+
 			animation->SendTrigger("WalkForwardAttack" + std::to_string(attackNumber));
+			movementScript->SetClipSpeed(animation->GetCurrentState()->clipUid, attackSpeed);
 			if (audios[static_cast<int>(AudioType::ATTACK)]) audios[static_cast<int>(AudioType::ATTACK)]->Play();
 			state = AIState::ATTACK;
 		}
@@ -196,7 +222,7 @@ void AIMeleeGrunt::Update() {
 			movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition()); 
 		}
 		if (attackStep) {
-			movementScript->Seek(state, ownerTransform->GetGlobalPosition() + ownerTransform->GetFront()*10, gruntCharacter.movementSpeed, false);
+			movementScript->Seek(state, ownerTransform->GetGlobalPosition() + ownerTransform->GetFront()*10, attackMovementSpeed, false);
 		}
 		else {
 			movementScript->Stop();
