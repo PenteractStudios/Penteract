@@ -58,9 +58,13 @@ public:
 	float bulletHellCooldown = 0.f;
 	float bulletHellActiveTime = 5.f;
 
+	float abilityChangeCooldown = 8.f;
+
 	float movingTime = 10.f;
 
 	float stunDuration = 3.f;
+
+	float troopsCounter = 5;
 
 private:
 
@@ -76,9 +80,12 @@ private:
 	float currentBulletHellCooldown = 0.f;
 	float currentBulletHellActiveTime = 0.f;
 
+	float currentAbilityChangeCooldown = 0.f;
+
 	float currentMovingTime = 0.f;
 
 	float lifeThreshold = 0.70f;
+	float lasersThreshold = 0.6f;
 
 	bool activeFireTiles = false;
 	bool activeLasers = false;

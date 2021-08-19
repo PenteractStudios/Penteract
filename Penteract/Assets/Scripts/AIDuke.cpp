@@ -19,6 +19,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::FLOAT, dukeCharacter.attackRange),
 	MEMBER(MemberType::FLOAT, dukeCharacter.pushBackDistance),
 	MEMBER(MemberType::FLOAT, dukeCharacter.pushBackSpeed),
+	MEMBER(MemberType::FLOAT, dukeCharacter.moveChangeEvery),
 
 	MEMBER_SEPARATOR("Duke Abilities Variables"),
 	MEMBER(MemberType::FLOAT, shieldCooldown),
@@ -26,6 +27,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::FLOAT, bulletHellCooldown),
     MEMBER(MemberType::FLOAT, bulletHellActiveTime),
 	MEMBER(MemberType::FLOAT, movingTime),
+	MEMBER(MemberType::FLOAT, abilityChangeCooldown),
 
 	MEMBER_SEPARATOR("Particles UIDs"),
 
@@ -45,7 +47,7 @@ void AIDuke::Start() {
 	ownerTransform = GetOwner().GetComponent<ComponentTransform>();
 
 	// Init Duke character
-	dukeCharacter.SetTotalLifePoints(dukeCharacter.lifePoints);
+	dukeCharacter.Init(dukeUID, playerUID);
 }
 
 void AIDuke::Update() {
@@ -58,6 +60,7 @@ void AIDuke::Update() {
 		if ((dukeCharacter.lifePoints < 0.85 * dukeCharacter.GetTotalLifePoints()) && !activeFireTiles) {
 			Debug::Log("BulletHell active and fire tiles on");
 			activeFireTiles = true;
+			currentBulletHellCooldown = 0.8 * bulletHellCooldown;
 		}
 		if (activeFireTiles) {
 			currentBulletHellCooldown += Time::GetDeltaTime();
@@ -65,9 +68,14 @@ void AIDuke::Update() {
 
 		if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints()) {
 			phase = Phase::PHASE2;
-			phase2Reached = true;
+			if (!phase2Reached) phase2Reached = true;
 			// Phase change VFX?
-			lifeThreshold -= 10;
+			lifeThreshold -= 0.1;
+			activeFireTiles = false;
+			Debug::Log("Fire tiles disabled");
+			dukeCharacter.CallTroops();
+			dukeCharacter.state = DukeState::INVULNERABLE;
+			dukeCharacter.criticalMode = true;
 			break;
 		}
 
@@ -80,14 +88,23 @@ void AIDuke::Update() {
 				return;
 			}
 
-			if (currentBulletHellCooldown >= bulletHellCooldown) dukeCharacter.state = DukeState::BULLET_HELL;
-			else if (phase2Reached) dukeCharacter.state = DukeState::CHARGE;
-			else if (currentShieldCooldown >= shieldCooldown) dukeCharacter.state = DukeState::SHOOT_SHIELD;
-			else if (player && movementScript->CharacterInAttackRange(player, dukeCharacter.attackRange)) dukeCharacter.state = DukeState::MELEE_ATTACK;
-			else {
+			if (currentBulletHellCooldown >= bulletHellCooldown) {
+				dukeCharacter.state = DukeState::BULLET_HELL;
+				dukeCharacter.agent->SetMoveTarget(ownerTransform->GetGlobalPosition());
+			} else if (phase2Reached && playerController->playerOnimaru.IsShielding()) {
+				dukeCharacter.state = DukeState::CHARGE;
+			} else if (currentShieldCooldown >= shieldCooldown) {
+				dukeCharacter.state = DukeState::SHOOT_SHIELD;
+				dukeCharacter.agent->SetMoveTarget(ownerTransform->GetGlobalPosition());
+			}
+			else if (player && movementScript->CharacterInAttackRange(player, dukeCharacter.attackRange)) {
+				dukeCharacter.state = DukeState::MELEE_ATTACK;
+				dukeCharacter.agent->SetMoveTarget(ownerTransform->GetGlobalPosition());
+			} else {
 				// TODO: Compute new position
-				movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
-				dukeCharacter.ShootAndMove(ownerTransform->GetGlobalPosition());
+				float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
+				movementScript->Orientate(dir);
+				dukeCharacter.ShootAndMove(dir);
 			}
 			break;
 		case DukeState::MELEE_ATTACK:
@@ -125,8 +142,115 @@ void AIDuke::Update() {
 	break;
 	case Phase::PHASE2:
 		Debug::Log("PHASE2");
+		if (!activeLasers && dukeCharacter.lifePoints < lasersThreshold * dukeCharacter.GetTotalLifePoints()) {
+			activeLasers = true;
+			Debug::Log("Lasers enabled");
+		}
+
+		if (troopsCounter <= 0) {
+			troopsCounter = 5;
+			activeFireTiles = true;
+			Debug::Log("Fire tiles enabled");
+			phase = Phase::PHASE1;
+		}
+		else {
+			troopsCounter -= 0.0033;
+			float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
+			movementScript->Orientate(dir);
+			dukeCharacter.Shoot();
+		}
 		break;
 	case Phase::PHASE3:
+		if (dukeCharacter.lifePoints <= 0.f) {
+			Debug::Log("Ugh...I'm...Dead...");
+			GameplaySystems::DestroyGameObject(duke);
+		}
+		if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints()) {
+			dukeCharacter.criticalMode = !dukeCharacter.criticalMode;
+			lifeThreshold -= 0.1f;
+			if (!dukeCharacter.criticalMode) {
+				dukeCharacter.CallTroops();
+				dukeCharacter.state = DukeState::SHOOT_SHIELD;
+			}
+		}
+		if (dukeCharacter.state != DukeState::BULLET_HELL && player &&
+			movementScript->CharacterInAttackRange(player, dukeCharacter.attackRange)) {
+			dukeCharacter.state = DukeState::MELEE_ATTACK;
+		}
+
+		if (dukeCharacter.criticalMode) {
+			switch (dukeCharacter.state) {
+			case DukeState::BASIC_BEHAVIOUR:
+				currentAbilityChangeCooldown += Time::GetDeltaTime();
+				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
+					dukeCharacter.state = DukeState::CHARGE;
+				}
+				else {
+					float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
+					movementScript->Orientate(dir);
+					dukeCharacter.ShootAndMove(dir);
+				}
+				break;
+			case DukeState::CHARGE:
+				dukeCharacter.Charge();
+				break;
+			case DukeState::MELEE_ATTACK:
+				dukeCharacter.MeleeAttack();
+				dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
+				break;
+			case DukeState::BULLET_HELL:
+				dukeCharacter.BulletHell();
+				currentBulletHellActiveTime += Time::GetDeltaTime();
+				if (currentBulletHellActiveTime >= bulletHellActiveTime) {
+					currentBulletHellCooldown = 0.f;
+					currentBulletHellActiveTime = 0.f;
+					dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
+				}
+				break;
+			default:
+				break;
+			}
+		} else {
+			switch (dukeCharacter.state)
+			{
+			case DukeState::SHOOT_SHIELD:
+				movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
+				dukeCharacter.ShieldShoot();
+				currentShieldActiveTime += Time::GetDeltaTime();
+				if (currentShieldActiveTime >= shieldActiveTime) {
+					currentShieldCooldown = 0.f;
+					currentShieldActiveTime = 0.f;
+					dukeCharacter.state = DukeState::BULLET_HELL;
+				}
+				break;
+			case DukeState::BULLET_HELL:
+				dukeCharacter.BulletHell();
+				currentBulletHellActiveTime += Time::GetDeltaTime();
+				if (currentBulletHellActiveTime >= bulletHellActiveTime) {
+					currentBulletHellCooldown = 0.f;
+					currentBulletHellActiveTime = 0.f;
+					dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
+				}
+				break;
+			case DukeState::BASIC_BEHAVIOUR:
+				currentAbilityChangeCooldown += Time::GetDeltaTime();
+				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
+					dukeCharacter.state = DukeState::SHOOT_SHIELD;
+					dukeCharacter.agent->SetMoveTarget(ownerTransform->GetGlobalPosition());
+				} else {
+					float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
+					movementScript->Orientate(dir);
+					dukeCharacter.ShootAndMove(dir);
+				}
+				break;
+			case DukeState::MELEE_ATTACK:
+				dukeCharacter.MeleeAttack();
+				dukeCharacter.state = DukeState::SHOOT_SHIELD;
+				break;
+			default:
+				break;
+			}
+		}
 	default:
 		break;
 	}

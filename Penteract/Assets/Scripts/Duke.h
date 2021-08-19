@@ -25,6 +25,12 @@ of performing all the movement, abilities, animation and sound triggers when the
 class Duke : public Character
 {
 public:
+
+	enum class DUKE_AUDIOS {
+		DEATH,
+		TOTAL
+	};
+
 	// ------- Contructors ------- //
 	Duke() {}
 
@@ -44,25 +50,36 @@ public:
 
 	// ------- Core Functions ------ //
 	void Init(UID dukeUID, UID playerUID);
-	void ShootAndMove(const float3& newPosition);
+	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void ShieldShoot();
 	void BulletHell();
 	void Charge();
 	void CallTroops();
+	void Shoot();
 
 public:
 	float damageBullet = 1.f;
 	float damageCharge = 1.f;
-	float searchRadius = 10.f;
+	float searchRadius = 8.f;
 	float attackRange = 2.0f;
 	float timeToDie = 5.f;
 	float pushBackDistance = 5.f;
 	float pushBackSpeed = 5.f;
 	float barrelDamageTaken = 3.f;
+	float moveChangeEvery = 2.0f;
 
 	DukeState state = DukeState::BASIC_BEHAVIOUR;
+	bool criticalMode = false;
 
 private:
 	GameObject* player = nullptr;
+	ComponentTransform* dukeTransform = nullptr;
+
+	float3 perpendicular;
+	float movementTimer = 0.f;
+	float movementChangeThreshold = 2.0f;
+
+	//Audios
+	ComponentAudioSource* dukeAudios[static_cast<int>(DUKE_AUDIOS::TOTAL)] = { nullptr };
 };
