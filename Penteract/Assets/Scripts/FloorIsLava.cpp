@@ -6,10 +6,9 @@
 #include <math.h>
 
 EXPOSE_MEMBERS(FloorIsLava) {
-    MEMBER(MemberType::GAME_OBJECT_UID, corridorUID),
-    MEMBER(MemberType::GAME_OBJECT_UID, arenaUID),
-	MEMBER(MemberType::FLOAT, timeTilesActive),
-	MEMBER(MemberType::FLOAT, timeWarning)
+    MEMBER(MemberType::FLOAT, timeTilesActive),
+	MEMBER(MemberType::FLOAT, timeWarning),
+	MEMBER(MemberType::STRING, container)
 
 };
 
@@ -17,51 +16,36 @@ GENERATE_BODY_IMPL(FloorIsLava);
 
 void FloorIsLava::Start() {
 	
-	corridor = GameplaySystems::GetGameObject(corridorUID);
-	if (corridor) {
-		int i = 0;
-		for (GameObject* children : corridor->GetChildren()) {
-			corridorTiles[i] = children;
-			++i;
-		}
+	tiles = GetOwner().GetChildren();		
+	
+	if (container == "corridor") {
+		pattern1 = corridorPattern1;
+		pattern2 = corridorPattern2;
+		pattern3 = corridorPattern3;
 	}
-	arena = GameplaySystems::GetGameObject(arenaUID);
-	if (arena) {
-		int i = 0;
-		for (GameObject* children : arena->GetChildren()) {
-			arenaTiles[i] = children;
-			++i;
-		}
+	else if (container == "arena") {
+		pattern1 = arenaPattern1;
+		pattern2 = arenaPattern2;
+		pattern3 = arenaPattern3;
 	}
-
-	timeRemainingWarning = timeWarning;
-	currentPattern = previousPattern;
+	else if (container == "boss") {
+		pattern1 = bossPattern1;
+		pattern2 = bossPattern2;
+		pattern3 = bossPattern3;
+	}
+	
+	timeRemainingWarning = timeWarning;	
 }
 
 void FloorIsLava::Update() {
 	
 	//select a random corridor and arena pattern
 	if (patternFinished) {
-		while (currentPattern == previousPattern) {
-			currentPattern = 1 + (rand() % 3);
+		while (currentPattern == nextPattern) {
+			nextPattern = 1 + (rand() % 3);
 		}
-		switch (currentPattern)
-		{
-		case 1:
-			currentCorridorPattern = corridorPattern1;
-			currentArenaPattern = arenaPattern1;
-			break;
-		case 2:
-			currentCorridorPattern = corridorPattern2;
-			currentArenaPattern = arenaPattern2;
-			break;
-		case 3:
-			currentCorridorPattern = corridorPattern3;
-			currentArenaPattern = arenaPattern3;
-			break;
-		default:
-			break;
-		}
+		SetPattern(currentPattern, currentTilesPattern);
+		SetPattern(nextPattern, nextTilesPattern);		
 	}
 	
 	if (warningActive) {
@@ -100,7 +84,7 @@ void FloorIsLava::Update() {
 				warningActive = true;
 				fireActive = false;
 				patternFinished = true;
-				previousPattern = currentPattern;
+				currentPattern = nextPattern;
 				timeRemainingWarning = timeWarning;
 				firstTimeWarning = true;
 				timerTilesClosingRemaining = 0.f;
@@ -111,54 +95,52 @@ void FloorIsLava::Update() {
 
 }
 
+void FloorIsLava::SetPattern(int pattern, bool*& boolPattern)
+{
+	switch (pattern)
+	{
+	case 1:
+		boolPattern = pattern1;
+		break;
+	case 2:
+		boolPattern = pattern2;
+		break;
+	case 3:
+		boolPattern = pattern3;
+		break;
+	default:
+		break;
+	}
+}
+
 void FloorIsLava::UpdateWarningTiles(bool activate)
 {
-	//corridor
-	for (int i = 0; i < CORRIDOR_TILES; ++i) {
-		if (currentCorridorPattern[i]) {
-			if (corridorTiles[i]) {
+	for (int i = 0; i < tiles.size(); ++i) {
+		if (currentTilesPattern[i]) {
+			if (tiles[i]) {
 				if (activate) {
-					ComponentAnimation* animation = corridorTiles[i]->GetComponent<ComponentAnimation>();
+					ComponentAnimation* animation = tiles[i]->GetComponent<ComponentAnimation>();
 					if (animation) {
 						animation->SendTrigger("ClosedOpening");
 					}
-					//corridorTiles[i][j].activate warning particles
+					//tiles[i].activate warning particles
 				}
 				else {
-					//corridorTiles[i][j].deactivate warning particles
+					//tiles[i].deactivate warning particles
 				}
 			}			
 		}
-	}
-
-	//arena
-	for (int i = 0; i < ARENA_TILES; ++i) {
-		if (currentArenaPattern[i]) {
-			if (arenaTiles[i]) {
-				if (activate) {
-					ComponentAnimation* animation = arenaTiles[i]->GetComponent<ComponentAnimation>();
-					if (animation) {
-						animation->SendTrigger("ClosedOpening");
-					}
-					//arenaTiles[i][j].activate warning particles
-				}
-				else {
-					//arenaTiles[i][j].deactivate warning particles
-				}
-			}
-		}		
 	}
 }
 
 void FloorIsLava::UpdateFireActiveTiles(bool activate)
 {
-	//corridor
-	for (int i = 0; i < CORRIDOR_TILES; ++i) {
-		if (currentCorridorPattern[i]) {
-			if (corridorTiles[i]) {
-				ComponentBoxCollider* boxCollider = corridorTiles[i]->GetComponent<ComponentBoxCollider>();
-				GameObject* childFireParticlesObject = corridorTiles[i]->GetChild("FireVerticalParticleSystem");
-				ComponentAnimation* animation = corridorTiles[i]->GetComponent<ComponentAnimation>();
+	for (int i = 0; i < tiles.size(); ++i) {
+		if (currentTilesPattern[i]) {
+			if (tiles[i]) {
+				ComponentBoxCollider* boxCollider = tiles[i]->GetComponent<ComponentBoxCollider>();
+				GameObject* childFireParticlesObject = tiles[i]->GetChild("FireVerticalParticleSystem");
+				ComponentAnimation* animation = tiles[i]->GetComponent<ComponentAnimation>();
 				ComponentParticleSystem* fireParticles = nullptr;
 				if (childFireParticlesObject) {
 					fireParticles = childFireParticlesObject->GetComponent<ComponentParticleSystem>();					
@@ -169,40 +151,16 @@ void FloorIsLava::UpdateFireActiveTiles(bool activate)
 						fireParticles->PlayChildParticles();
 					}
 					else {
-						boxCollider->Disable();
-						fireParticles->StopChildParticles();
-						animation->SendTrigger("OpenedClosing");
+						if (!nextTilesPattern[i]) {
+							boxCollider->Disable();
+							fireParticles->StopChildParticles();
+							animation->SendTrigger("OpenedClosing");
+						}
 					}
 				}
 			}
 		}		
 	}
-
-	//arena
-	for (int i = 0; i < ARENA_TILES; ++i) {
-		if (currentArenaPattern[i]) {
-			if (arenaTiles[i]) {
-				ComponentBoxCollider* boxCollider = arenaTiles[i]->GetComponent<ComponentBoxCollider>();
-				GameObject* childFireParticlesObject = arenaTiles[i]->GetChild("FireVerticalParticleSystem");
-				ComponentAnimation* animation = arenaTiles[i]->GetComponent<ComponentAnimation>();
-				ComponentParticleSystem* fireParticles = nullptr;
-				if (childFireParticlesObject) {
-					fireParticles = childFireParticlesObject->GetComponent<ComponentParticleSystem>();
-				}
-				if (boxCollider && fireParticles && animation) {
-					if (activate) {
-						boxCollider->Enable();
-						fireParticles->PlayChildParticles();
-					}
-					else {
-						boxCollider->Disable();
-						fireParticles->StopChildParticles();
-						animation->SendTrigger("OpenedClosing");
-					}
-				}
-			}
-		}
-	}	
 }
 
 
