@@ -29,6 +29,18 @@
                     0.0,
                     -0.0
                 ]
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 7525141702932352382,
+                "Values": [
+                    {
+                        "Name": "container",
+                        "Type": "String",
+                        "Value": "corridor"
+                    }
+                ]
             }
         ],
         "Children": [
@@ -10559,7 +10571,7 @@
                     },
                     {
                         "Type": "BoxCollider",
-                        "Active": false,
+                        "Active": true,
                         "colliderType": 1,
                         "layerType": 1,
                         "mass": 1.0,
@@ -11870,7 +11882,7 @@
                     },
                     {
                         "Type": "BoxCollider",
-                        "Active": false,
+                        "Active": true,
                         "colliderType": 1,
                         "layerType": 1,
                         "mass": 1.0,
@@ -13181,7 +13193,7 @@
                     },
                     {
                         "Type": "BoxCollider",
-                        "Active": false,
+                        "Active": true,
                         "colliderType": 1,
                         "layerType": 1,
                         "mass": 1.0,
@@ -14492,7 +14504,7 @@
                     },
                     {
                         "Type": "BoxCollider",
-                        "Active": false,
+                        "Active": true,
                         "colliderType": 1,
                         "layerType": 1,
                         "mass": 1.0,
@@ -15803,7 +15815,7 @@
                     },
                     {
                         "Type": "BoxCollider",
-                        "Active": false,
+                        "Active": true,
                         "colliderType": 1,
                         "layerType": 1,
                         "mass": 1.0,
@@ -17114,7 +17126,7 @@
                     },
                     {
                         "Type": "BoxCollider",
-                        "Active": false,
+                        "Active": true,
                         "colliderType": 1,
                         "layerType": 1,
                         "mass": 1.0,
@@ -18425,7 +18437,7 @@
                     },
                     {
                         "Type": "BoxCollider",
-                        "Active": false,
+                        "Active": true,
                         "colliderType": 1,
                         "layerType": 1,
                         "mass": 1.0,
@@ -19736,7 +19748,7 @@
                     },
                     {
                         "Type": "BoxCollider",
-                        "Active": false,
+                        "Active": true,
                         "colliderType": 1,
                         "layerType": 1,
                         "mass": 1.0,
@@ -21047,7 +21059,7 @@
                     },
                     {
                         "Type": "BoxCollider",
-                        "Active": false,
+                        "Active": true,
                         "colliderType": 1,
                         "layerType": 1,
                         "mass": 1.0,
@@ -22358,7 +22370,7 @@
                     },
                     {
                         "Type": "BoxCollider",
-                        "Active": false,
+                        "Active": true,
                         "colliderType": 1,
                         "layerType": 1,
                         "mass": 1.0,
@@ -23669,7 +23681,7 @@
                     },
                     {
                         "Type": "BoxCollider",
-                        "Active": false,
+                        "Active": true,
                         "colliderType": 1,
                         "layerType": 1,
                         "mass": 1.0,
@@ -24980,7 +24992,7 @@
                     },
                     {
                         "Type": "BoxCollider",
-                        "Active": false,
+                        "Active": true,
                         "colliderType": 1,
                         "layerType": 1,
                         "mass": 1.0,
@@ -26291,7 +26303,7 @@
                     },
                     {
                         "Type": "BoxCollider",
-                        "Active": false,
+                        "Active": true,
                         "colliderType": 1,
                         "layerType": 1,
                         "mass": 1.0,
@@ -27602,7 +27614,7 @@
                     },
                     {
                         "Type": "BoxCollider",
-                        "Active": false,
+                        "Active": true,
                         "colliderType": 1,
                         "layerType": 1,
                         "mass": 1.0,
@@ -28913,7 +28925,7 @@
                     },
                     {
                         "Type": "BoxCollider",
-                        "Active": false,
+                        "Active": true,
                         "colliderType": 1,
                         "layerType": 1,
                         "mass": 1.0,
@@ -30224,7 +30236,7 @@
                     },
                     {
                         "Type": "BoxCollider",
-                        "Active": false,
+                        "Active": true,
                         "colliderType": 1,
                         "layerType": 1,
                         "mass": 1.0,
@@ -31535,7 +31547,7 @@
                     },
                     {
                         "Type": "BoxCollider",
-                        "Active": false,
+                        "Active": true,
                         "colliderType": 1,
                         "layerType": 1,
                         "mass": 1.0,
@@ -32846,7 +32858,7 @@
                     },
                     {
                         "Type": "BoxCollider",
-                        "Active": false,
+                        "Active": true,
                         "colliderType": 1,
                         "layerType": 1,
                         "mass": 1.0,
@@ -34157,7 +34169,7 @@
                     },
                     {
                         "Type": "BoxCollider",
-                        "Active": false,
+                        "Active": true,
                         "colliderType": 1,
                         "layerType": 1,
                         "mass": 1.0,
@@ -35468,7 +35480,7 @@
                     },
                     {
                         "Type": "BoxCollider",
-                        "Active": false,
+                        "Active": true,
                         "colliderType": 1,
                         "layerType": 1,
                         "mass": 1.0,
