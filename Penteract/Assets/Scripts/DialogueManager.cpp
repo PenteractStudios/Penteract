@@ -211,7 +211,7 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 
 		// Camera Zoom In
 		if (cameraControllerScript) {
-			cameraControllerScript->ZoomIn();
+			cameraControllerScript->ChangeCameraOffset(-2, 10, 6);
 		}
 	} else {
 		activeDialogueObject = nullptr;
@@ -220,7 +220,7 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 
 		// Camera Zoom Out
 		if (cameraControllerScript) {
-			cameraControllerScript->ZoomOut();
+			cameraControllerScript->RestoreCameraOffset();
 		}
 	}
 }
