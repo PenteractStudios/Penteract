@@ -51,7 +51,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::INT, playerFang.ultimateCooldown),
 	MEMBER(MemberType::FLOAT, playerFang.ultimateMovementSpeed),
 	MEMBER(MemberType::FLOAT, playerFang.lifePoints),
-	MEMBER(MemberType::FLOAT, playerFang.movementSpeed),
+	MEMBER(MemberType::FLOAT, playerFang.normalMovementSpeed),
 	MEMBER(MemberType::FLOAT, playerFang.damageHit),
 	MEMBER(MemberType::FLOAT, playerFang.attackSpeed),
 	MEMBER(MemberType::FLOAT, playerFang.dashCooldown),
@@ -62,7 +62,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, playerFang.EMPRadius),
 	MEMBER(MemberType::FLOAT, playerFang.EMPCooldown),
 	MEMBER(MemberType::FLOAT, playerOnimaru.lifePoints),
-	MEMBER(MemberType::FLOAT, playerOnimaru.movementSpeed),
+	MEMBER(MemberType::FLOAT, playerOnimaru.normalMovementSpeed),
 	MEMBER(MemberType::FLOAT, playerOnimaru.damageHit),
 	MEMBER(MemberType::FLOAT, playerOnimaru.attackSpeed),
 	MEMBER(MemberType::FLOAT, playerOnimaru.blastCooldown),
@@ -86,6 +86,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::INT, playerOnimaru.ultimateChargePointsTotal),
 	MEMBER(MemberType::FLOAT, playerOnimaru.orientationThreshold),
 	MEMBER(MemberType::FLOAT, playerFang.orientationThreshold),
+	MEMBER(MemberType::FLOAT, playerOnimaru.ultimateMovementSpeed),
 	MEMBER(MemberType::FLOAT, switchSphereRadius),
 	MEMBER(MemberType::FLOAT, switchDamage)
 };
