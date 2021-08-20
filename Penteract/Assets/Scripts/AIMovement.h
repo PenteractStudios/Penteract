@@ -25,6 +25,8 @@ public:
 	bool CharacterInSight(const GameObject* character, const float searchRadius);
 	bool CharacterInAttackRange(const GameObject* character, const float meleeRange);
 	void SetClipSpeed(UID clipUID, float speed = 1.f);
+	GameObject* SearchRefenceInHierarchy(GameObject* root, std::string name);
+
 public:
 	static int maxAcceleration;
 	float rotationSmoothness = 0.2f;
