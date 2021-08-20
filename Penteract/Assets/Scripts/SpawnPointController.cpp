@@ -10,6 +10,7 @@ EXPOSE_MEMBERS(SpawnPointController) {
 	MEMBER(MemberType::BOOL, unlocksInitialDoor),
 	MEMBER(MemberType::GAME_OBJECT_UID, initialDoorUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, finalDoorUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onCompletionActivateThisUID)
 };
 
 GENERATE_BODY_IMPL(SpawnPointController);
@@ -23,6 +24,8 @@ void SpawnPointController::Start() {
 
 	initialDoor = GameplaySystems::GetGameObject(initialDoorUID);
 	finalDoor = GameplaySystems::GetGameObject(finalDoorUID);
+
+	onCompletionActivateThis = GameplaySystems::GetGameObject(onCompletionActivateThisUID);
 
 	unsigned int i = 0;
 	for (GameObject* child : gameObject->GetChildren()) {
@@ -43,6 +46,7 @@ void SpawnPointController::OnCollision(GameObject& collidedWith, float3 collisio
 	}
 	if (initialDoor && !initialDoor->IsActive()) initialDoor->Enable();
 	if (finalDoor && !finalDoor->IsActive()) finalDoor->Enable();
+	if (onCompletionActivateThis) onCompletionActivateThis->Disable();
 	ComponentBoxCollider* boxCollider = gameObject->GetComponent<ComponentBoxCollider>();
 	if (boxCollider) boxCollider->Disable();
 }
@@ -51,6 +55,7 @@ void SpawnPointController::OpenDoor() {
 	if (CheckSpawnPointStatus()) {
 		if (finalDoor && finalDoor->IsActive()) finalDoor->Disable();
 		if (unlocksInitialDoor && initialDoor && initialDoor->IsActive()) initialDoor->Disable();
+		if (onCompletionActivateThis) onCompletionActivateThis->Enable();
 		gameObject->Disable();
 	}
 }

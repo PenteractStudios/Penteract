@@ -19,6 +19,8 @@ public:
 	UID initialDoorUID = 0;
 	UID finalDoorUID = 0;
 
+	UID onCompletionActivateThisUID = 0;
+
 	bool unlocksInitialDoor = true;
 
 public:
@@ -48,6 +50,8 @@ private:
 	/* Door object */
 	GameObject* initialDoor = nullptr;
 	GameObject* finalDoor = nullptr;
+
+	GameObject* onCompletionActivateThis = nullptr;
 
 	/* Spawn points satus*/
 	std::vector<unsigned int> enemiesPerSpawnPoint;
