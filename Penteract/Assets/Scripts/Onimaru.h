@@ -31,7 +31,7 @@ public:
 		RUN_LEFT,
 		RUN_RIGHT,
 		BLAST,
-		NONE1,
+		ULTI_LOOP_WALKING,
 		ULTI_INTRO,
 		ULTI_LOOP,
 		DEATH,
@@ -41,12 +41,13 @@ public:
 		RUNFORWARDLEFT,
 		RUNFORWARDRIGHT,
 		RUNBACKWARDLEFT,
-		RUNBACKWARDRIGHT
+		RUNBACKWARDRIGHT,
+
 	};
 
 	std::vector<std::string> states{ "Idle" ,
 					"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
-					"EnergyBlast", "" , "UltiIntro" , "UltiLoop" ,
+					"EnergyBlast", "UltiLoopWalking" , "UltiIntro" , "UltiLoop" ,
 					"Death" , "Shooting", "Shield","ShootingShield" ,
 					"RunForwardLeft","RunForwardRight", "RunBackwardLeft", "RunBackwardRight"
 	};
@@ -65,6 +66,7 @@ public:
 	float blastDamage = 1.0f;
 	// Shield
 	float shieldReboundedDamage = 1.0f;
+	float shieldingMaxSpeed = 2.0f;
 
 public:
 	// ------- Contructors ------- //
@@ -136,7 +138,7 @@ private:
 private:
 
 	bool CanShoot() override;
-	bool CanBlast();
+	bool CanBlast() const;
 	void Shoot() override;
 	void Blast();
 	void PlayAnimation();
@@ -145,6 +147,7 @@ private:
 	void FinishUltimate();
 	void InitShield();
 	void FadeShield();
-	bool CanShield();
-	bool CanUltimate();
+	bool CanShield() const;
+	bool CanUltimate() const;
+	bool UltimateStarted() const;
 };
