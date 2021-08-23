@@ -77,17 +77,17 @@ public:
 
 	float groundPosition = 3.0f;
 
-	//Attack1 EN (double slice) ES (PAM VERTICAL)
+	//Attack1 
 	float att1AttackSpeed = 1.f;
 	float att1MovementSpeedWhileAttacking = 1.f;
 	int att1AbilityChance = 33;
 
-	//Attack2 EN (slash) ES (PAM HORIZONTAL)
+	//Attack2 
 	float att2AttackSpeed = 1.f;
 	float att2MovementSpeedWhileAttacking = 1.f;
 	int att2AbilityChance = 33;
 
-	//Attack3 EN (combo) ES (PAM PAM TOMA)
+	//Attack3 
 	float att3AttackSpeed = 1.f;
 	float att3MovementSpeedWhileAttacking = 1.f;
 	int att3AbilityChance = 33;

@@ -104,7 +104,7 @@ void AIMovement::SetClipSpeed(UID clipUID, float speed) {
 	}
 }
 
-GameObject* AIMovement::SearchRefenceInHierarchy(GameObject* root, std::string name) {
+GameObject* AIMovement::SearchReferenceInHierarchy(GameObject* root, std::string name) {
 	
 	if (root->name == name) {
 		return root;
@@ -112,7 +112,7 @@ GameObject* AIMovement::SearchRefenceInHierarchy(GameObject* root, std::string n
 	GameObject* reference = nullptr;
 	for (GameObject* child : root->GetChildren())
 	{
-		reference = SearchRefenceInHierarchy(child, name);
+		reference = SearchReferenceInHierarchy(child, name);
 		if (reference != nullptr) return reference;
 
 	}

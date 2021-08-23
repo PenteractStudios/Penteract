@@ -98,8 +98,8 @@ void AIMeleeGrunt::Start() {
 	}
 
 	movementScript = GET_SCRIPT(&GetOwner(), AIMovement);
-	rightBladeCollider = movementScript->SearchRefenceInHierarchy(&GetOwner(),"RightBlade");
-	leftBladeCollider = movementScript->SearchRefenceInHierarchy(&GetOwner(), "LeftBlade");
+	rightBladeCollider = movementScript->SearchReferenceInHierarchy(&GetOwner(),"RightBlade");
+	leftBladeCollider = movementScript->SearchReferenceInHierarchy(&GetOwner(), "LeftBlade");
 	if (rightBladeCollider->IsActive()) rightBladeCollider->Disable();
 	if (leftBladeCollider->IsActive()) leftBladeCollider->Disable();
 	int i = 0;

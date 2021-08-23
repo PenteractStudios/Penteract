@@ -65,11 +65,6 @@
                         "Value": 9349791306028942696
                     },
                     {
-                        "Name": "rightBladeColliderUID",
-                        "Type": "GameObjectUID",
-                        "Value": 12119067485365247026
-                    },
-                    {
                         "Name": "att2AttackSpeed",
                         "Type": "Float",
                         "Value": 1.5
@@ -80,14 +75,19 @@
                         "Value": 826311568033082909
                     },
                     {
-                        "Name": "leftBladeColliderUID",
+                        "Name": "rightBladeColliderUID",
                         "Type": "GameObjectUID",
-                        "Value": 114993121818193807
+                        "Value": 12119067485365247026
                     },
                     {
                         "Name": "winConditionUID",
                         "Type": "GameObjectUID",
                         "Value": 16579210181260590797
+                    },
+                    {
+                        "Name": "leftBladeColliderUID",
+                        "Type": "GameObjectUID",
+                        "Value": 114993121818193807
                     },
                     {
                         "Name": "fangUID",
@@ -852,7 +852,7 @@
                                                                                         "Components": [
                                                                                             {
                                                                                                 "Type": "Transform",
-                                                                                                "Active": true,
+                                                                                                "Active": false,
                                                                                                 "Position": [
                                                                                                     0.0,
                                                                                                     0.0,
@@ -1419,7 +1419,7 @@
                                                                                         "Components": [
                                                                                             {
                                                                                                 "Type": "Transform",
-                                                                                                "Active": true,
+                                                                                                "Active": false,
                                                                                                 "Position": [
                                                                                                     0.0,
                                                                                                     0.0,
