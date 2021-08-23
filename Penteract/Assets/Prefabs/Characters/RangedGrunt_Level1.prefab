@@ -50,6 +50,7 @@
                 "Gain": 0.10000000149011612,
                 "Mute": false,
                 "Looping": false,
+                "PlayOnAwake": false,
                 "AudioClipId": 3408669197192801730,
                 "SpatialBlend": 0,
                 "SourceType": 0,
@@ -67,6 +68,7 @@
                 "Gain": 0.25,
                 "Mute": false,
                 "Looping": false,
+                "PlayOnAwake": false,
                 "AudioClipId": 11505540831480452867,
                 "SpatialBlend": 0,
                 "SourceType": 0,
@@ -84,6 +86,7 @@
                 "Gain": 1.0,
                 "Mute": true,
                 "Looping": false,
+                "PlayOnAwake": false,
                 "AudioClipId": 5583254593256726173,
                 "SpatialBlend": 0,
                 "SourceType": 0,
@@ -101,6 +104,7 @@
                 "Gain": 1.0,
                 "Mute": true,
                 "Looping": false,
+                "PlayOnAwake": false,
                 "AudioClipId": 16630848835753496155,
                 "SpatialBlend": 0,
                 "SourceType": 0,
@@ -134,6 +138,7 @@
                 "Gain": 0.3499999940395355,
                 "Mute": false,
                 "Looping": false,
+                "PlayOnAwake": false,
                 "AudioClipId": 7710092202102288136,
                 "SpatialBlend": 0,
                 "SourceType": 0,
@@ -151,6 +156,7 @@
                 "Gain": 0.44999998807907107,
                 "Mute": false,
                 "Looping": false,
+                "PlayOnAwake": false,
                 "AudioClipId": 158916888946945514,
                 "SpatialBlend": 0,
                 "SourceType": 0,
@@ -178,24 +184,24 @@
                         "Value": 9349791306028942696
                     },
                     {
-                        "Name": "dmgMaterialObj",
-                        "Type": "GameObjectUID",
-                        "Value": 5104266340542563287
-                    },
-                    {
                         "Name": "fangUID",
                         "Type": "GameObjectUID",
                         "Value": 5514062913432514002
                     },
                     {
-                        "Name": "hudControllerObjUID",
+                        "Name": "dmgMaterialObj",
                         "Type": "GameObjectUID",
-                        "Value": 826311568033082909
+                        "Value": 5104266340542563287
                     },
                     {
                         "Name": "playerMeshUIDFang",
                         "Type": "GameObjectUID",
                         "Value": 8818586851523472818
+                    },
+                    {
+                        "Name": "hudControllerObjUID",
+                        "Type": "GameObjectUID",
+                        "Value": 826311568033082909
                     },
                     {
                         "Name": "playerMeshUIDOnimaru",
@@ -231,6 +237,11 @@
                         "Name": "rangerGruntCharacter.pushBackSpeed",
                         "Type": "Float",
                         "Value": 40.0
+                    },
+                    {
+                        "Name": "dissolveMaterialObj",
+                        "Type": "GameObjectUID",
+                        "Value": 8231736672731537390
                     }
                 ]
             }

@@ -55,11 +55,6 @@
                 "Script": 1991507863247597087,
                 "Values": [
                     {
-                        "Name": "hurtFeedbackTimeDuration",
-                        "Type": "Float",
-                        "Value": 0.10000000149011612
-                    },
-                    {
                         "Name": "gruntCharacter.pushBackDistance",
                         "Type": "Float",
                         "Value": 10.0
@@ -73,6 +68,11 @@
                         "Name": "defaultMaterialPlaceHolderUID",
                         "Type": "GameObjectUID",
                         "Value": 9837534394034980895
+                    },
+                    {
+                        "Name": "hurtFeedbackTimeDuration",
+                        "Type": "Float",
+                        "Value": 0.10000000149011612
                     },
                     {
                         "Name": "canvasUID",
@@ -103,6 +103,11 @@
                         "Name": "gruntCharacter.pushBackSpeed",
                         "Type": "Float",
                         "Value": 40.0
+                    },
+                    {
+                        "Name": "dissolveMaterialObj",
+                        "Type": "GameObjectUID",
+                        "Value": 9154389036086627855
                     }
                 ]
             },
@@ -113,6 +118,7 @@
                 "Gain": 0.10000000149011612,
                 "Mute": false,
                 "Looping": false,
+                "PlayOnAwake": false,
                 "AudioClipId": 1178050912941438583,
                 "SpatialBlend": 0,
                 "SourceType": 0,
@@ -130,6 +136,7 @@
                 "Gain": 0.6000000238418579,
                 "Mute": false,
                 "Looping": false,
+                "PlayOnAwake": false,
                 "AudioClipId": 17693944845173461891,
                 "SpatialBlend": 0,
                 "SourceType": 0,
@@ -147,6 +154,7 @@
                 "Gain": 1.0,
                 "Mute": true,
                 "Looping": false,
+                "PlayOnAwake": false,
                 "AudioClipId": 696444000373430212,
                 "SpatialBlend": 0,
                 "SourceType": 0,
@@ -164,6 +172,7 @@
                 "Gain": 1.0,
                 "Mute": true,
                 "Looping": false,
+                "PlayOnAwake": false,
                 "AudioClipId": 4050726513787811743,
                 "SpatialBlend": 0,
                 "SourceType": 0,
@@ -197,6 +206,7 @@
                 "Gain": 0.3499999940395355,
                 "Mute": false,
                 "Looping": false,
+                "PlayOnAwake": false,
                 "AudioClipId": 3690225030639504746,
                 "SpatialBlend": 0,
                 "SourceType": 0,
@@ -214,6 +224,7 @@
                 "Gain": 0.44999998807907107,
                 "Mute": false,
                 "Looping": false,
+                "PlayOnAwake": false,
                 "AudioClipId": 12181405488920341216,
                 "SpatialBlend": 0,
                 "SourceType": 0,

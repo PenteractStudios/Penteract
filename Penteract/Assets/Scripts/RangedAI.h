@@ -110,9 +110,7 @@ public:
 
 	UID dissolveMaterialObj = 0;		//Reference to dissolve material holding gameobject UID, used to be set whenever Ai has been recently hurt
 	UID dissolveMaterialID = 0;			//Reference to dissolve material, used to be set whenever Ai has been recently hurt
-	bool dissolveAlreadyStarted = false;	//Used to control other material setters
-	bool dissolveAlreadyPlayed = false;
-	float dissolveTimerToStart = 0.0f;
+	float dissolveTimerToStart = 0.0f;	//Timer until the dissolve animation is played
 
 private:
 
@@ -147,4 +145,6 @@ private:
 	bool fleeingFarAway = false;          //Toggle to get away from the player
 
 	float currentDissolveTime = 0.0f;
+	bool dissolveAlreadyStarted = false;	//Used to control other material setters so it doesn't interfere with Dissolve's material
+	bool dissolveAlreadyPlayed = false;		//Controls whether the animation function has already been played (called material->PlayAnimation) or not
 };
