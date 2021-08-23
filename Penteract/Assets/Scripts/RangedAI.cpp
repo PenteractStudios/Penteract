@@ -48,6 +48,9 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
 	MEMBER(MemberType::FLOAT, groundPosition),
 	MEMBER(MemberType::FLOAT, fleeingUpdateTime),
+	MEMBER_SEPARATOR("Dissolve properties"),
+	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialObj),
+	MEMBER(MemberType::FLOAT, dissolveTimerToStart)
 };//clang-format on
 
 GENERATE_BODY_IMPL(RangedAI);
@@ -77,6 +80,14 @@ void RangedAI::Start() {
 		ComponentMeshRenderer* dmgMeshRenderer = damagedObj->GetComponent<ComponentMeshRenderer>();
 		if (dmgMeshRenderer) {
 			damagedMaterialID = dmgMeshRenderer->materialId;
+		}
+	}
+
+	GameObject* dissolveObj = GameplaySystems::GetGameObject(dissolveMaterialObj);
+	if (dissolveObj) {
+		ComponentMeshRenderer* dissolveMeshRenderer = dissolveObj->GetComponent<ComponentMeshRenderer>();
+		if (dissolveMeshRenderer) {
+			dissolveMaterialID = dissolveMeshRenderer->materialId;
 		}
 	}
 
@@ -277,7 +288,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 void RangedAI::Update() {
 	if (!agent) return;
 
-	if (meshRenderer) {
+	if (!dissolveAlreadyStarted && meshRenderer) {
 		if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
 			timeSinceLastHurt += Time::GetDeltaTime();
 			if (timeSinceLastHurt > hurtFeedbackTimeDuration) {
@@ -285,6 +296,8 @@ void RangedAI::Update() {
 			}
 		}
 	}
+	
+	UpdateDissolveTimer();
 
 	if (!GetOwner().IsActive()) return;
 
@@ -493,6 +506,9 @@ void RangedAI::UpdateState() {
 		}
 		break;
 	case AIState::DEATH:
+		if (!dissolveAlreadyStarted) {
+			dissolveAlreadyStarted = true;
+		}
 		if (rangerGruntCharacter.destroying) {
 			if (rangerGruntCharacter.timeToDie > 0) {
 				rangerGruntCharacter.timeToDie -= Time::GetDeltaTime();
@@ -615,11 +631,7 @@ void RangedAI::EnableBlastPushBack() {
 			rangerGruntCharacter.GetHit(playerController->playerOnimaru.blastDamage + playerController->GetOverPowerMode());
 
 			PlayAudio(AudioType::HIT);
-			if (meshRenderer) {
-				if (damagedMaterialID != 0) {
-					meshRenderer->materialId = damagedMaterialID;
-				}
-			}
+			PlayHitMaterialEffect();
 			timeSinceLastHurt = 0.0f;
 
 			if (!rangerGruntCharacter.isAlive) {
@@ -647,11 +659,7 @@ bool RangedAI::IsBeingPushed() const {
 void RangedAI::PlayHit()
 {
 	PlayAudio(AudioType::HIT);
-	if (meshRenderer) {
-		if (damagedMaterialID != 0) {
-			meshRenderer->materialId = damagedMaterialID;
-		}
-	}
+	PlayHitMaterialEffect();
 	timeSinceLastHurt = 0.0f;
 }
 
@@ -711,5 +719,29 @@ void RangedAI::CalculatePushBackRealDistance() {
 
 	if (hitResult) {
 		pushBackRealDistance = resultPos.Distance(enemyPos) - 1; // Should be agent radius but it's not exposed
+	}
+}
+
+void RangedAI::PlayHitMaterialEffect()
+{
+	if (!dissolveAlreadyStarted && meshRenderer) {
+		if (damagedMaterialID != 0) {
+			meshRenderer->materialId = damagedMaterialID;
+		}
+	}
+}
+
+void RangedAI::UpdateDissolveTimer() {
+	if (dissolveAlreadyStarted && !dissolveAlreadyPlayed) {
+		if (currentDissolveTime >= dissolveTimerToStart) {
+			if (meshRenderer && dissolveMaterialID != 0) {
+				meshRenderer->materialId = dissolveMaterialID;
+				meshRenderer->PlayDissolveAnimation();
+			}
+			dissolveAlreadyPlayed = true;
+		}
+		else {
+			currentDissolveTime += Time::GetDeltaTime();
+		}
 	}
 }
