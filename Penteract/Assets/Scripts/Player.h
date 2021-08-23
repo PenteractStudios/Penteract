@@ -78,6 +78,8 @@ public:
 	bool ultimateOn = false;
 	bool shootingOnCooldown = false;
 	float normalOrientationSpeed = 7.5f;
+	float normalMovementSpeed = 4.0f;
+	float ultimateMovementSpeed = 4.0f;
 	static bool level1Upgrade;
 	static bool level2Upgrade;
 
