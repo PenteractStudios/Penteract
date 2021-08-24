@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "GameplaySystems.h"
 #include "EnemySpawnPoint.h"
+#include "GameObjectUtils.h"
 
 EXPOSE_MEMBERS(SpawnPointController) {
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, meleeEnemyPrefabUID),
@@ -10,6 +11,8 @@ EXPOSE_MEMBERS(SpawnPointController) {
 	MEMBER(MemberType::BOOL, unlocksInitialDoor),
 	MEMBER(MemberType::GAME_OBJECT_UID, initialDoorUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, finalDoorUID),
+	MEMBER(MemberType::FLOAT, timerToUnlock),
+	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID)
 };
 
 GENERATE_BODY_IMPL(SpawnPointController);
@@ -32,9 +35,33 @@ void SpawnPointController::Start() {
 		enemySpawnPointStatus.push_back(true);
 		++i;
 	}
+
+	GameObject* dissolveObj = GameplaySystems::GetGameObject(dissolveMaterialGOUID);
+	if (dissolveObj) {
+		ComponentMeshRenderer* dissolveMeshRenderer = dissolveObj->GetComponent<ComponentMeshRenderer>();
+		if (dissolveMeshRenderer) {
+			dissolveMaterialID = dissolveMeshRenderer->materialId;
+		}
+	}
 }
 
-void SpawnPointController::Update() {}
+void SpawnPointController::Update() {
+	if (unlockStarted) {
+		if (currentUnlockTime >= timerToUnlock) {
+			if (finalDoor && finalDoor->IsActive()) {
+				finalDoor->Disable();
+			}
+			if (unlocksInitialDoor && initialDoor && initialDoor->IsActive()) {
+				initialDoor->Disable();
+			}
+			gameObject->Disable();
+			unlockStarted = false;
+		}
+		else {
+			currentUnlockTime += Time::GetDeltaTime();
+		}
+	}
+}
 
 void SpawnPointController::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 	if (!gameObject) return;
@@ -49,9 +76,13 @@ void SpawnPointController::OnCollision(GameObject& collidedWith, float3 collisio
 
 void SpawnPointController::OpenDoor() {
 	if (CheckSpawnPointStatus()) {
-		if (finalDoor && finalDoor->IsActive()) finalDoor->Disable();
-		if (unlocksInitialDoor && initialDoor && initialDoor->IsActive()) initialDoor->Disable();
-		gameObject->Disable();
+		if (finalDoor && finalDoor->IsActive() && !unlockStarted) {
+			PlayDissolveAnimation(finalDoor);
+		}
+		if (unlocksInitialDoor && initialDoor && initialDoor->IsActive() && !unlockStarted) {
+			PlayDissolveAnimation(initialDoor);
+		}
+		unlockStarted = true;
 	}
 }
 
@@ -69,5 +100,27 @@ bool SpawnPointController::CanSpawn() {
 }
 
 bool SpawnPointController::CheckSpawnPointStatus() {
-	return std::all_of(enemySpawnPointStatus.begin(), enemySpawnPointStatus.end(), [](bool i) { return !i; });;
+	return std::all_of(enemySpawnPointStatus.begin(), enemySpawnPointStatus.end(), [](bool i) { return !i; });
+}
+
+void SpawnPointController::PlayDissolveAnimation(GameObject* root) {
+	if (dissolveMaterialID == 0) return;
+
+	GameObject* doorBack = SearchReferenceInHierarchy(root, doorEnergyBack);
+	if (doorBack) {
+		ComponentMeshRenderer* meshRenderer = doorBack->GetComponent<ComponentMeshRenderer>();
+		if (meshRenderer) {
+			meshRenderer->materialId = dissolveMaterialID;
+			meshRenderer->PlayDissolveAnimation();
+		}
+	}
+
+	GameObject* doorFront = SearchReferenceInHierarchy(root, doorEnergyFront);
+	if (doorFront) {
+		ComponentMeshRenderer* meshRenderer = doorFront->GetComponent<ComponentMeshRenderer>();
+		if (meshRenderer ) {
+			meshRenderer->materialId = dissolveMaterialID;
+			meshRenderer->PlayDissolveAnimation();
+		}
+	}
 }
