@@ -73,8 +73,11 @@ void Duke::BulletHell()
 	Debug::Log("Bullet hell");
 }
 
-void Duke::Charge()
+void Duke::Charge(DukeState nextState)
 {
+	if ((dukeTransform->GetGlobalPosition() - chargeTarget).Length() <= 0.1f) {
+		state = nextState;
+	}
 	Debug::Log("Electric Tackle!");
 }
 

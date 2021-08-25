@@ -14,6 +14,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::FLOAT, dukeCharacter.damageHit),
 	MEMBER(MemberType::FLOAT, dukeCharacter.damageBullet),
 	MEMBER(MemberType::FLOAT, dukeCharacter.damageCharge),
+	MEMBER(MemberType::FLOAT, dukeCharacter.chargeSpeed),
 	MEMBER(MemberType::FLOAT, dukeCharacter.movementSpeed),
 	MEMBER(MemberType::FLOAT, dukeCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, dukeCharacter.attackRange),
@@ -93,16 +94,19 @@ void AIDuke::Update() {
 		case DukeState::BASIC_BEHAVIOUR:
 			if (currentBulletHellCooldown >= bulletHellCooldown) {
 				dukeCharacter.state = DukeState::BULLET_HELL;
-				if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(0);
+				movementScript->Stop();
 			} else if (phase2Reached && playerController->playerOnimaru.IsShielding()) {
+				dukeCharacter.chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+				dukeCharacter.agent->SetMoveTarget(dukeCharacter.chargeTarget);
+				dukeCharacter.agent->SetMaxSpeed(dukeCharacter.chargeSpeed);
 				dukeCharacter.state = DukeState::CHARGE;
 			} else if (currentShieldCooldown >= shieldCooldown) {
 				dukeCharacter.state = DukeState::SHOOT_SHIELD;
-				if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(0);
+				movementScript->Stop();
 			}
 			else if (player && movementScript->CharacterInAttackRange(player, dukeCharacter.attackRange)) {
 				dukeCharacter.state = DukeState::MELEE_ATTACK;
-				if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(0);
+				movementScript->Stop();
 			} else {
 				if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(dukeCharacter.movementSpeed);
 				float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
@@ -135,8 +139,7 @@ void AIDuke::Update() {
 			break;
 		case DukeState::CHARGE:
 			movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
-			dukeCharacter.Charge();
-			dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
+             dukeCharacter.Charge(DukeState::BASIC_BEHAVIOUR);
 			break;
 		default:
 			break;
@@ -160,7 +163,7 @@ void AIDuke::Update() {
 			currentShieldCooldown = 0.f;
 		}
 		else {
-			troopsCounter -= 0.0033;
+			troopsCounter -= 0.033;
 			float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
 			movementScript->Orientate(dir);
 			dukeCharacter.Shoot();
@@ -179,10 +182,10 @@ void AIDuke::Update() {
 				dukeCharacter.state = DukeState::SHOOT_SHIELD;
 			}
 		}
-		if (dukeCharacter.state != DukeState::BULLET_HELL && player &&
+		if (dukeCharacter.state != DukeState::BULLET_HELL && player && !dukeCharacter.criticalMode &&
 			movementScript->CharacterInAttackRange(player, dukeCharacter.attackRange)) {
 			dukeCharacter.state = DukeState::MELEE_ATTACK;
-			if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(0);
+			movementScript->Stop();
 		}
 
 		if (dukeCharacter.criticalMode) {
@@ -190,6 +193,10 @@ void AIDuke::Update() {
 			case DukeState::BASIC_BEHAVIOUR:
 				currentAbilityChangeCooldown += Time::GetDeltaTime();
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
+					currentAbilityChangeCooldown = 0.f;
+					dukeCharacter.chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+					dukeCharacter.agent->SetMoveTarget(dukeCharacter.chargeTarget);
+					dukeCharacter.agent->SetMaxSpeed(dukeCharacter.chargeSpeed);
 					dukeCharacter.state = DukeState::CHARGE;
 				}
 				else {
@@ -200,11 +207,11 @@ void AIDuke::Update() {
 				}
 				break;
 			case DukeState::CHARGE:
-				dukeCharacter.Charge();
+				dukeCharacter.Charge(DukeState::MELEE_ATTACK);
 				break;
 			case DukeState::MELEE_ATTACK:
 				dukeCharacter.MeleeAttack();
-				dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
+				dukeCharacter.state = DukeState::BULLET_HELL;
 				break;
 			case DukeState::BULLET_HELL:
 				dukeCharacter.BulletHell();
@@ -243,7 +250,7 @@ void AIDuke::Update() {
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
 					currentAbilityChangeCooldown = 0.f;
 					dukeCharacter.state = DukeState::SHOOT_SHIELD;
-					if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(0);
+					movementScript->Stop();
 				} else {
 					if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(dukeCharacter.movementSpeed);
 					float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();

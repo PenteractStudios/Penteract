@@ -54,13 +54,14 @@ public:
 	void MeleeAttack();
 	void ShieldShoot();
 	void BulletHell();
-	void Charge();
+	void Charge(DukeState nextState);
 	void CallTroops();
 	void Shoot();
 
 public:
 	float damageBullet = 1.f;
 	float damageCharge = 1.f;
+	float chargeSpeed = 5.f;
 	float searchRadius = 8.f;
 	float attackRange = 2.0f;
 	float timeToDie = 5.f;
@@ -71,6 +72,8 @@ public:
 
 	DukeState state = DukeState::BASIC_BEHAVIOUR;
 	bool criticalMode = false;
+
+	float3 chargeTarget;
 
 private:
 	GameObject* player = nullptr;
