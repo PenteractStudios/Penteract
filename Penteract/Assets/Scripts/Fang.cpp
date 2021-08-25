@@ -326,13 +326,11 @@ void Fang::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 	}
 	if (bullet) {
 		transitioning++;
-		if(transitioning > 2){
+		if(transitioning > 1){
 			if (fangAudios[static_cast<int>(FANG_AUDIOS::SHOOT)]) {
 				fangAudios[static_cast<int>(FANG_AUDIOS::SHOOT)]->Play();
 			}
 			bullet->Play();
-			timeWithoutCombat = 0.f;
-			aiming = true;
 		}
 		bullet = nullptr;
 	}
@@ -449,6 +447,8 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 			}
 			if (!dashing && !EMP->IsActive()) {
 				if (GetInputBool(InputActions::SHOOT, useGamepad)) {
+					timeWithoutCombat = 0.f;
+					aiming = true;
 					Shoot();
 				}
 			}
@@ -458,6 +458,9 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 				if (shooting) {
 					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 					shooting = false;
+				}
+				if (!compAnimation->GetCurrentStateSecondary()) {
+					transitioning = 0;
 				}
 			}
 			if (GetInputBool(InputActions::ABILITY_2, useGamepad)) {
