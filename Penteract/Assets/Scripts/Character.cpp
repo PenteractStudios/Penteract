@@ -34,3 +34,7 @@ float Character::GetTotalLifePoints() const
 void Character::SetDamageHit(float damageHit_) {
 	damageHit = damageHit_;
 }
+
+float Character::GetTotalLifePoints() const {
+	return totalLifePoints;
+}

@@ -162,7 +162,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 200.0,
-                            "HorizontalFov": 1.727594256401062,
+                            "HorizontalFov": 1.5164095163345338,
                             "VerticalFov": 1.0
                         }
                     },
@@ -664,6 +664,11 @@
                                                 "Name": "sceneUID",
                                                 "Type": "SceneResourceUID",
                                                 "Value": 16893504836010757748
+                                            },
+                                            {
+                                                "Name": "levelNum",
+                                                "Type": "Int",
+                                                "Value": 1
                                             }
                                         ]
                                     },

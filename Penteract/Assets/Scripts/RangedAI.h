@@ -44,6 +44,7 @@ public:
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
+	void PlayHit();
 
 private:
 	//State machine handling
@@ -58,16 +59,16 @@ private:
 	void PlayAudio(AudioType audioType);											//Plays audio (if not null)
 
 	void UpdatePushBackPosition();
+	void CalculatePushBackRealDistance();											// Calculates the real distance of the pushback taking into account any obstacles in the path
 
 public:
-	Enemy rangerGruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 5.f, 5.f); //Enemy class instance (for shared values)
+	Enemy rangerGruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 5.f, 5.f, 3.f, 2.f); //Enemy class instance (for shared values)
 	UID playerUID = 0;				//Reference to player main Gameobject UID, used to check distances
 	UID playerMeshUIDFang = 0;		//Reference to player Fang mesh holding Gameobject UID, used for raycasting if fang is active
 	UID playerMeshUIDOnimaru = 0;	//Reference to player Fang mesh holding Gameobject UID, used for raycasting if onimaru is active
 	UID meshUID1 = 0;				//Second mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID meshUID2 = 0;				//Third mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID trailPrefabUID = 0;			//Reference to projectile prefab UID , for shooting
-	UID hudControllerObjUID = 0;	//Reference to Hud UID , for incrementing score
 	UID fangUID = 0;
 
 	UID winConditionUID = 0;
@@ -76,7 +77,6 @@ public:
 	GameObject* player = nullptr;				//Reference to player main Gameobject, used to check distances
 	GameObject* fang = nullptr;
 
-	HUDController* hudControllerScript = nullptr; //Reference to Hud , for incrementing score
 	PlayerController* playerController = nullptr; //Reference to player script, used to check distances
 
 	PlayerDeath* playerDeath = nullptr;
@@ -118,8 +118,6 @@ private:
 
 	float stunTimeRemaining = 0.f;			//Time remaining stunned
 
-	bool EMPUpgraded = false;			//Flag to control if the ability is uprgraded
-
 	ComponentAnimation* animation = nullptr;		//Refernece to  animatino component
 	ComponentTransform* ownerTransform = nullptr;	//Reference to owner transform componenet
 
@@ -131,6 +129,8 @@ private:
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr }; //Array of ints used to play audios
 
 	float currentPushBackDistance = 0.f;
+	float currentSlowedDownTime = 0.f;
+	float pushBackRealDistance = 0.f;
 
 	float currentFleeingUpdateTime = 0.f; // Current Time that needs to compare against the fleeingUpdateTime in the flee state
 	float3 currentFleeDestination;        // Destination position where it is going to move far away from the player  

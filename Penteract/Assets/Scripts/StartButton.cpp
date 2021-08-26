@@ -2,6 +2,7 @@
 
 #include "CheckpointManager.h"
 #include "SceneTransition.h"
+#include "PlayerController.h"
 
 #include "GameplaySystems.h"
 #include "GameObject.h"
@@ -11,7 +12,8 @@ int checkpoint;
 EXPOSE_MEMBERS(StartButton) {
 	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, transitionUID),
-	MEMBER(MemberType::INT, checkpointNum),
+        MEMBER(MemberType::INT, checkpointNum),
+        MEMBER(MemberType::INT, levelNum),
 };
 
 GENERATE_BODY_IMPL(StartButton);
@@ -62,11 +64,20 @@ void StartButton::OnButtonClick() {
     PlayAudio(UIAudio::CLICKED);
 
 	checkpoint = checkpointNum;
-    
+
     if (sceneTransition) {
 		sceneTransition->StartTransition();
 	} else {
 		if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
+        if (levelNum == 2) {
+            PlayerController::currentLevel = 2;
+            Player::level2Upgrade = false;
+        }
+        else if (levelNum == 1) {
+            PlayerController::currentLevel = 1;
+            Player::level1Upgrade = false;
+            Player::level2Upgrade = false;
+        }
 		if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
 	}
 }

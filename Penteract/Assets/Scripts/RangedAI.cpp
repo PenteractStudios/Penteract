@@ -26,18 +26,21 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
+	MEMBER_SEPARATOR("Enemy stats"),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.lifePoints),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.timeToDie),
+	MEMBER_SEPARATOR("Push variables"),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackDistance),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackSpeed),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownSpeed),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownTime),
 	MEMBER(MemberType::FLOAT, attackSpeed),
 	MEMBER(MemberType::FLOAT, fleeingRange),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, trailPrefabUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
-	MEMBER(MemberType::GAME_OBJECT_UID, hudControllerObjUID),
 	MEMBER(MemberType::FLOAT, timeSinceLastHurt),
 	MEMBER(MemberType::FLOAT, approachOffset), //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
 	MEMBER(MemberType::FLOAT, stunDuration),
@@ -82,11 +85,6 @@ void RangedAI::Start() {
 		agent->SetMaxAcceleration(static_cast<float>(AIMovement::maxAcceleration));
 		agent->SetAgentObstacleAvoidance(true);
 		agent->RemoveAgentFromCrowd();
-	}
-
-	GameObject* hudControllerObj = GameplaySystems::GetGameObject(hudControllerObjUID);
-	if (hudControllerObj) {
-		hudControllerScript = GET_SCRIPT(hudControllerObj, HUDController);
 	}
 
 	if (player) {
@@ -139,6 +137,8 @@ void RangedAI::Start() {
 	}
 
 	enemySpawnPointScript = GET_SCRIPT(GetOwner().GetParent(), EnemySpawnPoint);
+
+	pushBackRealDistance = rangerGruntCharacter.pushBackDistance;
 }
 
 void RangedAI::OnAnimationFinished() {
@@ -196,7 +196,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 				if (!particle) return;
 				GameplaySystems::DestroyGameObject(&collidedWith);
 				hitTaken = true;
-				if (state == AIState::STUNNED && EMPUpgraded) {
+				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
 					rangerGruntCharacter.GetHit(99);
 				}
 				else {
@@ -211,7 +211,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 				if (pSystem && p) pSystem->KillParticle(p);
 
 				hitTaken = true;
-				if (state == AIState::STUNNED && EMPUpgraded) {
+				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
 					rangerGruntCharacter.GetHit(99);
 				}
 				else {
@@ -219,14 +219,14 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 				}
 			}
 			else if (collidedWith.name == "OnimaruBulletUltimate") {
-				
+
 				if (!particle) return;
 				ComponentParticleSystem::Particle* p = static_cast<ComponentParticleSystem::Particle*>(particle);
 				ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 				if (pSystem && p) pSystem->KillParticle(p);
-				
+
 				hitTaken = true;
-				if (state == AIState::STUNNED && EMPUpgraded) {
+				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
 					rangerGruntCharacter.GetHit(99);
 				}
 				else {
@@ -237,15 +237,18 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 				rangerGruntCharacter.GetHit(playerDeath->barrelDamageTaken);
 				hitTaken = true;
 			}
+			else if (collidedWith.name == "DashDamage" && playerController->playerFang.level1Upgrade) {
+				hitTaken = true;
+				rangerGruntCharacter.GetHit(playerController->playerFang.dashDamage + playerController->GetOverPowerMode());
+			}
+			else if (collidedWith.name == "RangerProjectile" && playerController->playerOnimaru.level1Upgrade) {
+				hitTaken = true;
+				rangerGruntCharacter.GetHit(playerController->playerOnimaru.shieldReboundedDamage + playerController->GetOverPowerMode());
+				GameplaySystems::DestroyGameObject(&collidedWith);
+			}
 
 			if (hitTaken) {
-				PlayAudio(AudioType::HIT);
-				if (meshRenderer) {
-					if (damagedMaterialID != 0) {
-						meshRenderer->materialId = damagedMaterialID;
-					}
-				}
-				timeSinceLastHurt = 0.0f;
+				PlayHit();
 			}
 
 			if (collidedWith.name == "EMP") {
@@ -266,6 +269,8 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 }
 
 void RangedAI::Update() {
+	if (!agent) return;
+
 	if (meshRenderer) {
 		if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
 			timeSinceLastHurt += Time::GetDeltaTime();
@@ -291,6 +296,14 @@ void RangedAI::Update() {
 		if (actualShotTimer == 0) {
 			ActualShot();
 		}
+	}
+
+	if (rangerGruntCharacter.slowedDown) {
+		if (currentSlowedDownTime >= rangerGruntCharacter.slowedDownTime) {
+			agent->SetMaxSpeed(rangerGruntCharacter.movementSpeed);
+			rangerGruntCharacter.slowedDown = false;
+		}
+		currentSlowedDownTime += Time::GetDeltaTime();
 	}
 
 	UpdateState();
@@ -372,6 +385,9 @@ void RangedAI::EnterState(AIState newState) {
 
 void RangedAI::UpdateState() {
 	if (!animation) return;
+
+	float speedToUse = rangerGruntCharacter.slowedDown ? rangerGruntCharacter.slowedDownSpeed : rangerGruntCharacter.movementSpeed;
+
 	switch (state) {
 	case AIState::START:
 		if (aiMovement) aiMovement->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), rangerGruntCharacter.fallingSpeed, true);
@@ -414,7 +430,7 @@ void RangedAI::UpdateState() {
 
 				if (!CharacterInRange(player, rangerGruntCharacter.attackRange - approachOffset, true) || !FindsRayToPlayer(false)) {
 					if (!aiMovement->CharacterInSight(player, fleeingRange)) {
-						if (aiMovement) aiMovement->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), static_cast<int>(rangerGruntCharacter.movementSpeed), false);
+						if (aiMovement) aiMovement->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), static_cast<int>(speedToUse), false);
 					}
 					else {
 						ChangeState(AIState::FLEE);
@@ -441,7 +457,7 @@ void RangedAI::UpdateState() {
 				}
 				else if (currentFleeingUpdateTime >= 0 && fleeingFarAway ) {   //Moving far away from player
 					currentFleeingUpdateTime -= Time::GetDeltaTime();
-					aiMovement->Seek(state, currentFleeDestination, static_cast<int>(rangerGruntCharacter.movementSpeed), false);
+					aiMovement->Seek(state, currentFleeDestination, static_cast<int>(speedToUse), false);
 
 					if (currentFleeingUpdateTime <= 0 ) {
 						fleeingFarAway = false;
@@ -476,9 +492,6 @@ void RangedAI::UpdateState() {
 				rangerGruntCharacter.timeToDie -= Time::GetDeltaTime();
 			}
 			else {
-				if (hudControllerScript) {
-					hudControllerScript->UpdateScore(10);
-				}
 				GameplaySystems::DestroyGameObject(&GetOwner());
 			}
 		}
@@ -587,6 +600,27 @@ void RangedAI::EnableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		ChangeState(AIState::PUSHED);
 		rangerGruntCharacter.beingPushed = true;
+		CalculatePushBackRealDistance();
+		// Damage
+		if (playerController->playerOnimaru.level2Upgrade) {
+			rangerGruntCharacter.GetHit(playerController->playerOnimaru.blastDamage + playerController->GetOverPowerMode());
+
+			PlayAudio(AudioType::HIT);
+			if (meshRenderer) {
+				if (damagedMaterialID != 0) {
+					meshRenderer->materialId = damagedMaterialID;
+				}
+			}
+			timeSinceLastHurt = 0.0f;
+
+			if (!rangerGruntCharacter.isAlive) {
+				ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
+				if (collider) collider->Disable();
+				if (rangerGruntCharacter.beingPushed) DisableBlastPushBack();
+				ChangeState(AIState::DEATH);
+				if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
+			}
+		}
 	}
 }
 
@@ -599,6 +633,17 @@ void RangedAI::DisableBlastPushBack() {
 
 bool RangedAI::IsBeingPushed() const {
 	return rangerGruntCharacter.beingPushed;
+}
+
+void RangedAI::PlayHit()
+{
+	PlayAudio(AudioType::HIT);
+	if (meshRenderer) {
+		if (damagedMaterialID != 0) {
+			meshRenderer->materialId = damagedMaterialID;
+		}
+	}
+	timeSinceLastHurt = 0.0f;
 }
 
 void RangedAI::ShootPlayerInRange() {
@@ -631,10 +676,31 @@ void RangedAI::UpdatePushBackPosition() {
 		float distance = enemyPos.Distance(initialPos);
 		currentPushBackDistance += distance;
 
-		if (currentPushBackDistance >= rangerGruntCharacter.pushBackDistance) {
-			agent->SetMaxSpeed(rangerGruntCharacter.movementSpeed);
+		if (currentPushBackDistance >= pushBackRealDistance) {
+			agent->SetMaxSpeed(rangerGruntCharacter.slowedDownSpeed);
 			DisableBlastPushBack();
+			rangerGruntCharacter.slowedDown = true;
 			currentPushBackDistance = 0.f;
+			currentSlowedDownTime = 0.f;
+			pushBackRealDistance = rangerGruntCharacter.pushBackDistance;
 		}
+	}
+}
+
+void RangedAI::CalculatePushBackRealDistance() {
+	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
+
+	float3 direction = (enemyPos - playerPos).Normalized();
+
+	bool hitResult = false;
+
+	float3 finalPos = enemyPos + direction * rangerGruntCharacter.pushBackDistance;
+	float3 resultPos = { 0,0,0 };
+
+	Navigation::Raycast(enemyPos, finalPos, hitResult, resultPos);
+
+	if (hitResult) {
+		pushBackRealDistance = resultPos.Distance(enemyPos) - 1; // Should be agent radius but it's not exposed
 	}
 }

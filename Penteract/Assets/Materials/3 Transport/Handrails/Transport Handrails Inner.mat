@@ -19,8 +19,14 @@
     "MetallicMap": 3113526124294693245,
     "NormalMap": 2710092206977657850,
     "NormalStrength": 1.0,
+    "EmissiveColor": [
+        1.0,
+        1.0,
+        1.0,
+        0.0
+    ],
     "EmissiveMap": 0,
-    "Emissive": 2.0,
+    "Emissive": 0.0,
     "AmbientOcclusionMap": 6688375041375314018,
     "Smoothness": 1.0,
     "HasSmoothnessInAlphaChannel": true,
