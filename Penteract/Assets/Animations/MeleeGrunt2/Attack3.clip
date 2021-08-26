@@ -1,0 +1,35 @@
+{
+    "Name": "Attack3",
+    "AnimationUID": 380165032061128578,
+    "BeginIndex": 467,
+    "EndIndex": 528,
+    "Loop": false,
+    "Speed": 1.0,
+    "FrameRate": 0.033270321786403659,
+    "KeyEventClip": [
+        {
+            "KeyFrame": 471,
+            "Name": "RightBladeDamageOn"
+        },
+        {
+            "KeyFrame": 481,
+            "Name": "RightBladeDamageOff"
+        },
+        {
+            "KeyFrame": 510,
+            "Name": "RightBladeDamageOff"
+        },
+        {
+            "KeyFrame": 486,
+            "Name": "LeftBladeDamageOn"
+        },
+        {
+            "KeyFrame": 504,
+            "Name": "RightBladeDamageOn"
+        },
+        {
+            "KeyFrame": 496,
+            "Name": "LeftBladeDamageOff"
+        }
+    ]
+}

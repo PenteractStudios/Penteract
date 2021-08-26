@@ -22,6 +22,7 @@ public:
 
 	float GetTotalLifePoints() const;
 public:
+
 	bool isAlive = true;
 	float lifePoints = 1.0f;
 	float damageHit = 1.0f;

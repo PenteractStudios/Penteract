@@ -1,7 +1,7 @@
 ${EngineName} = "Tesseract"
 ${GameName} = "Penteract"
 ${GameProjectName} = "Penteract"
-${Version} = "0.1.1-alpha"
+${Version} = "0.1.0"
 
 ${PackageDir} = "Package"
 ${EngineSourceDir} = "Engine"

@@ -33,6 +33,7 @@ public:
 
 	int transitionMove = static_cast<int>(TransitionMove::LEFT_TO_RIGHT);
 	float speedTransition = 20;
+	int levelNum = 0;
 
 private:
 	GameObject* transitionGO = nullptr;
