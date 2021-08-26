@@ -65,6 +65,7 @@ public:
 	float searchRadius = 8.f;
 	float attackRange = 2.0f;
 	float attackSpeed = 0.5f;
+	int attackFlurry = 3;
 	float timeToDie = 5.f;
 	float pushBackDistance = 5.f;
 	float pushBackSpeed = 5.f;

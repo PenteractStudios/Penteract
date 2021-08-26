@@ -70,6 +70,7 @@ void Duke::MeleeAttack()
 
 void Duke::ShieldShoot()
 {
+	Shoot();
 	Debug::Log("I'm shielding while shooting at your face");
 }
 
@@ -111,8 +112,8 @@ void Duke::Shoot()
 				}
 			}
 		}
-		attackTimePool = 1.0f / (3*attackSpeed);
-		if (++attackFlurryCounter == 3) {
+		attackTimePool = 1.0f / (attackFlurry*attackSpeed);
+		if (++attackFlurryCounter == attackFlurry) {
 			attackTimePool = 1.0f / attackSpeed;
 			attackFlurryCounter = 0;
 		}

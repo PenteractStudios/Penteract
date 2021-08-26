@@ -20,6 +20,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::FLOAT, dukeCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, dukeCharacter.attackRange),
 	MEMBER(MemberType::FLOAT, dukeCharacter.attackSpeed),
+	MEMBER(MemberType::INT, dukeCharacter.attackFlurry),
 	MEMBER(MemberType::FLOAT, dukeCharacter.pushBackDistance),
 	MEMBER(MemberType::FLOAT, dukeCharacter.pushBackSpeed),
 	MEMBER(MemberType::FLOAT, dukeCharacter.moveChangeEvery),
@@ -188,6 +189,9 @@ void AIDuke::Update() {
 				dukeCharacter.state = DukeState::SHOOT_SHIELD;
 				movementScript->Stop();
 			}
+			else {
+				dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
+			}
 		}
 		if (dukeCharacter.state != DukeState::BULLET_HELL && player && !dukeCharacter.criticalMode &&
 			movementScript->CharacterInAttackRange(player, dukeCharacter.attackRange)) {
@@ -320,6 +324,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 		}
 
 		if (hitTaken) {
+			// TODO: play audio and VFX
 			/*if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
 			if (componentMeshRenderer) {
 				if (damageMaterialID != 0) componentMeshRenderer->materialId = damageMaterialID;
@@ -338,9 +343,8 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 			}
 			else if (state == AIState::RUN) {
 				animation->SendTrigger("RunBeginStun");
-			}
-			agent->RemoveAgentFromCrowd();
-			*/
+			}*/
+			dukeCharacter.agent->RemoveAgentFromCrowd();
 			stunTimeRemaining = stunDuration;
 			dukeCharacter.state = DukeState::STUNNED;
 		}
