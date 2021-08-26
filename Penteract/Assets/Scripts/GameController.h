@@ -23,7 +23,6 @@ public:
 	void Rotate(float2 mouseMotion, Frustum* frustum, ComponentTransform* transform);
 	void PauseGame();
 	void ResumeGame();
-
 public:
 	UID gameCameraUID = 0;
 	UID godCameraUID = 0;

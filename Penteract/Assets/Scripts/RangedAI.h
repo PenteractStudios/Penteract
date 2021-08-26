@@ -69,7 +69,6 @@ public:
 	UID meshUID1 = 0;				//Second mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID meshUID2 = 0;				//Third mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID trailPrefabUID = 0;			//Reference to projectile prefab UID , for shooting
-	UID hudControllerObjUID = 0;	//Reference to Hud UID , for incrementing score
 	UID fangUID = 0;
 
 	UID winConditionUID = 0;
@@ -78,7 +77,6 @@ public:
 	GameObject* player = nullptr;				//Reference to player main Gameobject, used to check distances
 	GameObject* fang = nullptr;
 
-	HUDController* hudControllerScript = nullptr; //Reference to Hud , for incrementing score
 	PlayerController* playerController = nullptr; //Reference to player script, used to check distances
 
 	PlayerDeath* playerDeath = nullptr;
