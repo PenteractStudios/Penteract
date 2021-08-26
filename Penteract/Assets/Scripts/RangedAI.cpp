@@ -75,6 +75,22 @@ void RangedAI::Start() {
 			noDmgMaterialID = meshRenderer->materialId;
 		}
 	}
+
+	int numChildren = GetOwner().GetChildren().size();
+	if (numChildren > 2) {
+		GameObject* weaponGO = GetOwner().GetChildren()[2];
+		if (weaponGO) {
+			weaponMeshRenderer = weaponGO->GetComponent<ComponentMeshRenderer>();
+		}
+	}
+
+	if (numChildren > 3) {
+		GameObject* backpackGO = GetOwner().GetChildren()[3];
+		if (backpackGO) {
+			backPackMeshRenderer = backpackGO->GetComponent<ComponentMeshRenderer>();
+		}
+	}
+
 	GameObject* damagedObj = GameplaySystems::GetGameObject(dmgMaterialObj);
 	if (damagedObj) {
 		ComponentMeshRenderer* dmgMeshRenderer = damagedObj->GetComponent<ComponentMeshRenderer>();
@@ -734,9 +750,21 @@ void RangedAI::PlayHitMaterialEffect()
 void RangedAI::UpdateDissolveTimer() {
 	if (dissolveAlreadyStarted && !dissolveAlreadyPlayed) {
 		if (currentDissolveTime >= dissolveTimerToStart) {
-			if (meshRenderer && dissolveMaterialID != 0) {
-				meshRenderer->materialId = dissolveMaterialID;
-				meshRenderer->PlayDissolveAnimation();
+			if (dissolveMaterialID != 0) {
+				if (meshRenderer) {
+					meshRenderer->materialId = dissolveMaterialID;
+					meshRenderer->PlayDissolveAnimation();
+				}
+
+				if (weaponMeshRenderer) {
+					weaponMeshRenderer->materialId = dissolveMaterialID;
+					weaponMeshRenderer->PlayDissolveAnimation();
+				}
+
+				if (backPackMeshRenderer) {
+					backPackMeshRenderer->materialId = dissolveMaterialID;
+					backPackMeshRenderer->PlayDissolveAnimation();
+				}
 			}
 			dissolveAlreadyPlayed = true;
 		}

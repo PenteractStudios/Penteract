@@ -133,6 +133,8 @@ private:
 	float actualShotTimer = -1.0f;			//Timer that counts down the seconds to match shooting animation with projectile creation
 
 	ComponentMeshRenderer* meshRenderer = nullptr;	//Reference to a meshRendererComponent, used for material setting on hurt
+	ComponentMeshRenderer* backPackMeshRenderer = nullptr;
+	ComponentMeshRenderer* weaponMeshRenderer = nullptr;
 
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr }; //Array of ints used to play audios
 
