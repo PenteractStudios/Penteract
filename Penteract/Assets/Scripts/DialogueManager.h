@@ -88,13 +88,14 @@ public:
 	GameObject* camera = nullptr;
 	CameraController* cameraControllerScript = nullptr;
 
-	// ------ TRANSITION INFO ------ //
+	// ----- TRANSITION CONFIG ----- //
 	float3 dialogueStartPosition = float3(0, 0, 0); // "Closed" position of the dialogue windows.
 	float3 dialogueEndPosition = float3(0, 0, 0);	// "Open" position of the dialogue windows.
 	float3 tutorialStartPosition = float3(0, 0, 0);	// "Closed" position of the tutorial and upgrades windows.
 	float3 tutorialEndPosition = float3(0, 0, 0);	// "Open" position of the tutorial and upgrades windows.
 	float appearAnimationTime = .5f;				// Duration time of the "Open transition".
 	float disappearAnimationTime = .5f;				// Duration time of the "Close transition".
+	float3 newCameraPosition = float3(0, 0, 0);		// Zoomed position of the camera when a dialogue is opened.
 
 private:
 	Dialogue* activeDialogue = nullptr;				// Pointer to dialoguesArray of the active dialogue.

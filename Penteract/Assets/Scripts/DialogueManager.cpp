@@ -22,13 +22,14 @@ EXPOSE_MEMBERS(DialogueManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialUpgrades1UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialUpgrades2UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialUpgrades3UID),
-	MEMBER_SEPARATOR("Fade In/Out configuration"),
+	MEMBER_SEPARATOR("Transition Configuration"),
 	MEMBER(MemberType::FLOAT3, dialogueStartPosition),
 	MEMBER(MemberType::FLOAT3, dialogueEndPosition),
 	MEMBER(MemberType::FLOAT3, tutorialStartPosition),
 	MEMBER(MemberType::FLOAT3, tutorialEndPosition),
 	MEMBER(MemberType::FLOAT, appearAnimationTime),
-	MEMBER(MemberType::FLOAT, disappearAnimationTime)
+	MEMBER(MemberType::FLOAT, disappearAnimationTime),
+	MEMBER(MemberType::FLOAT3, newCameraPosition)
 };
 
 GENERATE_BODY_IMPL(DialogueManager);
@@ -211,7 +212,7 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 
 		// Camera Zoom In
 		if (cameraControllerScript) {
-			cameraControllerScript->ChangeCameraOffset(-2, 10, 6);
+			cameraControllerScript->ChangeCameraOffset(newCameraPosition.x, newCameraPosition.y, newCameraPosition.z);
 		}
 	} else {
 		activeDialogueObject = nullptr;

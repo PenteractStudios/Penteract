@@ -35,8 +35,6 @@ public:
 
 private:
 	float2 GetRandomPosInUnitaryCircle(float2 center);
-
-private:
 	
 };
 
