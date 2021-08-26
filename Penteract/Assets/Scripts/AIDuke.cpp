@@ -7,7 +7,8 @@
 EXPOSE_MEMBERS(AIDuke) {
 	MEMBER_SEPARATOR("Objects UIDs"),
     MEMBER(MemberType::GAME_OBJECT_UID, dukeUID),
-    MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, bulletPrefabUID),
 
 	MEMBER_SEPARATOR("Duke Atributes"),
 	MEMBER(MemberType::FLOAT, dukeCharacter.lifePoints),
@@ -18,6 +19,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::FLOAT, dukeCharacter.movementSpeed),
 	MEMBER(MemberType::FLOAT, dukeCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, dukeCharacter.attackRange),
+	MEMBER(MemberType::FLOAT, dukeCharacter.attackSpeed),
 	MEMBER(MemberType::FLOAT, dukeCharacter.pushBackDistance),
 	MEMBER(MemberType::FLOAT, dukeCharacter.pushBackSpeed),
 	MEMBER(MemberType::FLOAT, dukeCharacter.moveChangeEvery),
@@ -47,7 +49,7 @@ void AIDuke::Start() {
 	ownerTransform = GetOwner().GetComponent<ComponentTransform>();
 
 	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID);
+	dukeCharacter.Init(dukeUID, playerUID, bulletPrefabUID);
 }
 
 void AIDuke::Update() {

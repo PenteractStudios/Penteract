@@ -49,7 +49,7 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID);
+	void Init(UID dukeUID, UID playerUID, UID bulletPrefabUID);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void ShieldShoot();
@@ -64,11 +64,14 @@ public:
 	float chargeSpeed = 5.f;
 	float searchRadius = 8.f;
 	float attackRange = 2.0f;
+	float attackSpeed = 0.5f;
 	float timeToDie = 5.f;
 	float pushBackDistance = 5.f;
 	float pushBackSpeed = 5.f;
 	float barrelDamageTaken = 3.f;
 	float moveChangeEvery = 2.0f;
+
+	ResourcePrefab* bulletPrefab = nullptr; // Reference to projectile prefab , for shooting
 
 	DukeState state = DukeState::BASIC_BEHAVIOUR;
 	bool criticalMode = false;
@@ -84,6 +87,10 @@ private:
 	float3 perpendicular;
 	float movementTimer = 0.f;
 	float movementChangeThreshold = 2.0f;
+	float attackTimePool = 0.f;
+	int attackFlurryCounter = 0;
+
+	GameObject* meshObj = nullptr;	//Main mesh for Getting MeshRenderer reference and checking frustum presence (if not inside frustum shooting won't happen)
 
 	//Audios
 	ComponentAudioSource* dukeAudios[static_cast<int>(DUKE_AUDIOS::TOTAL)] = { nullptr };

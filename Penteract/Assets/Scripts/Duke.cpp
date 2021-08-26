@@ -1,5 +1,7 @@
 #include "Duke.h"
 
+#include "RangerProjectileScript.h"
+
 #include <random>
 #include <string>
 
@@ -7,13 +9,15 @@ std::random_device rd;
 std::minstd_rand gen(rd());
 std::uniform_real_distribution<> rng(-1.0f, 1.0f);
 
-void Duke::Init(UID dukeUID, UID playerUID)
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletPrefabUID)
 {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(dukeUID);
 	player = GameplaySystems::GetGameObject(playerUID);
+	bulletPrefab = GameplaySystems::GetResource<ResourcePrefab>(bulletPrefabUID);
 
 	if (characterGameObject) {
+		meshObj = characterGameObject->GetChildren()[0];
 		dukeTransform = characterGameObject->GetComponent<ComponentTransform>();
 		agent = characterGameObject->GetComponent<ComponentAgent>();
 		compAnimation = characterGameObject->GetComponent<ComponentAnimation>();
@@ -55,6 +59,7 @@ void Duke::ShootAndMove(const float3& playerDirection)
 		movementTimer = 0.f;
 	}
 	agent->SetMoveTarget(dukeTransform->GetGlobalPosition() + perpendicular);
+	Shoot();
 	Debug::Log("I'm moving while shooting");
 }
 
@@ -88,5 +93,29 @@ void Duke::CallTroops()
 
 void Duke::Shoot()
 {
+	attackTimePool -= Time::GetDeltaTime();
+	if (attackTimePool <= 0) {
+		if (bulletPrefab) {
+			if (!meshObj) return;
+
+			ComponentBoundingBox* box = meshObj->GetComponent<ComponentBoundingBox>();
+
+			float offsetY = (box->GetWorldAABB().minPoint.y + box->GetWorldAABB().maxPoint.y) / 4;
+
+			GameObject* projectileInstance(GameplaySystems::Instantiate(bulletPrefab, characterGameObject->GetComponent<ComponentTransform>()->GetGlobalPosition() + float3(0, offsetY, 0), Quat(0, 0, 0, 0)));
+
+			if (projectileInstance) {
+				RangerProjectileScript* rps = GET_SCRIPT(projectileInstance, RangerProjectileScript);
+				if (rps && dukeTransform) {
+					rps->SetRangerDirection(dukeTransform->GetGlobalRotation());
+				}
+			}
+		}
+		attackTimePool = 1.0f / (3*attackSpeed);
+		if (++attackFlurryCounter == 3) {
+			attackTimePool = 1.0f / attackSpeed;
+			attackFlurryCounter = 0;
+		}
+	}
 	Debug::Log("PIUM!");
 }
