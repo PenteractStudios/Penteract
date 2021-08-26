@@ -2,7 +2,7 @@
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
-
+#include "GameController.h"
 #include "PlayerController.h"
 #include "PlayerDeath.h"
 #include "EnemySpawnPoint.h"
@@ -162,6 +162,9 @@ void AIMeleeGrunt::Update() {
 		currentSlowedDownTime += Time::GetDeltaTime();
 	}
 
+	if (GameController::isGameplayBlocked && state != AIState::START && state != AIState::SPAWN) {
+		state = AIState::IDLE;
+	}
 
 	switch (state) {
 	case AIState::START:
@@ -177,10 +180,12 @@ void AIMeleeGrunt::Update() {
 		break;
 	case AIState::IDLE:
 		if (!playerController->IsPlayerDead()) {
-			if (movementScript->CharacterInSight(player, gruntCharacter.searchRadius)) {
+			if (movementScript->CharacterInSight(player, gruntCharacter.searchRadius) && !GameController::isGameplayBlocked) {
 				animation->SendTrigger("IdleWalkForward");
 				if (agent) agent->SetMaxSpeed(speedToUse);
 				state = AIState::RUN;
+			} else {
+				if (animation->GetCurrentState()->name != "Idle") animation->SendTrigger(animation->GetCurrentState()->name + "Idle");
 			}
 		}
 		break;
