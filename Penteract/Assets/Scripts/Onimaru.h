@@ -4,6 +4,7 @@
 
 class OnimaruBullet;
 class HUDController;
+class HUDManager;
 class Shield;
 
 class Onimaru : public Player {
@@ -55,8 +56,7 @@ public:
 	//Onimaru ultimate related
 	float originalAttackSpeed = 0.0f;
 	float ultimateAttackSpeed = 20.0f;
-	float ultimateTimeRemaining = 0.0f;
-	float ultimateTotalTime = 3.0f;
+
 	float ultimateOrientationSpeed = 2.0f;
 	// Blast ability
 	float blastCooldown = 7.f;
@@ -71,7 +71,7 @@ public:
 public:
 	// ------- Contructors ------- //
 	Onimaru() {};
-	void Init(UID onimaruUID = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0, UID shieldUID = 0, UID onimaruTransformForUltimateProjectileOriginUID = 0, UID onimaruBlastEffectsUID = 0, UID cameraUID = 0, UID canvasUID = 0, float maxSpread = 5.0f);
+	void Init(UID onimaruUID = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0, UID shieldUID = 0, UID onimaruTransformForUltimateProjectileOriginUID = 0, UID onimaruBlastEffectsUID = 0, UID cameraUID = 0, UID HUDManagerObjectUID = 0);
 	void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockRotation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	bool CanSwitch() const override;
@@ -94,7 +94,7 @@ public:
 	void RemoveEnemy(GameObject* enemy);
 	bool IsShielding() const;
 	bool IsVulnerable() const override;
-
+	float GetNormalizedRemainingUltimateTime()const;
 private:
 
 	ResourcePrefab* trail = nullptr;
@@ -127,7 +127,7 @@ private:
 	bool calculateEnemiesInRange = true;
 
 	// HUD
-	HUDController* hudControllerScript = nullptr;
+	HUDManager* hudManagerScript = nullptr;
 
 	//Audio
 	ComponentAudioSource* onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::TOTAL)] = { nullptr };
