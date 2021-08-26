@@ -14,6 +14,7 @@ EXPOSE_MEMBERS(PlayerDeath) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::FLOAT, rangedDamageTaken),
 	MEMBER(MemberType::FLOAT, meleeDamageTaken),
+	MEMBER(MemberType::FLOAT, dukeDamageTaken),
 	MEMBER(MemberType::FLOAT, barrelDamageTaken),
 	MEMBER(MemberType::FLOAT, laserBeamTaken),
 	MEMBER(MemberType::FLOAT, laserHitCooldown),
@@ -103,18 +104,17 @@ void PlayerDeath::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char
 void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 	if (collidedWith.name == "RangerProjectile") {
 		if(playerController) playerController->TakeDamage(rangedDamageTaken);
-	}
-	else if (collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") { //meleegrunt
+	} else if (collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") { //meleegrunt
 		if(playerController) playerController->TakeDamage(meleeDamageTaken);
 		collidedWith.Disable();
-	}
-	else if (collidedWith.name == "Barrel") {
+	} else if (collidedWith.name == "Barrel") {
 		if(playerController) playerController->TakeDamage(barrelDamageTaken);
-	}
-	else if (collidedWith.name == "LaserBeam") {
+	} else if (collidedWith.name == "LaserBeam") {
 		if (getLaserHit) {
 			if (playerController) playerController->TakeDamage(laserBeamTaken);
 			getLaserHit = false;
 		}
+	} else if (collidedWith.name == "DukeProjectile") {
+		if (playerController) playerController->TakeDamage(dukeDamageTaken);
 	}
 }

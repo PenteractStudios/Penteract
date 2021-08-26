@@ -30,6 +30,7 @@ public:
 	bool dead = false;
 	float rangedDamageTaken = 1.0f;
 	float meleeDamageTaken = 1.0f;
+	float dukeDamageTaken = 1.0f;
 	float barrelDamageTaken = 1.0f;
 	float laserBeamTaken = 1.0f;
 
