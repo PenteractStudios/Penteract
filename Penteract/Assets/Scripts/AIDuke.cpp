@@ -27,7 +27,6 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::FLOAT, shieldActiveTime),
 	MEMBER(MemberType::FLOAT, bulletHellCooldown),
     MEMBER(MemberType::FLOAT, bulletHellActiveTime),
-	MEMBER(MemberType::FLOAT, movingTime),
 	MEMBER(MemberType::FLOAT, abilityChangeCooldown),
 
 	MEMBER_SEPARATOR("Particles UIDs"),
@@ -61,6 +60,7 @@ void AIDuke::Update() {
 		if ((dukeCharacter.lifePoints < 0.85 * dukeCharacter.GetTotalLifePoints()) && !activeFireTiles) {
 			Debug::Log("BulletHell active and fire tiles on");
 			activeFireTiles = true;
+			// TODO: signal fire tiles activation
 			currentBulletHellCooldown = 0.8 * bulletHellCooldown;
 		}
 		if (activeFireTiles) {
@@ -68,23 +68,24 @@ void AIDuke::Update() {
 		}
 		if (dukeCharacter.lifePoints < 0.4 * dukeCharacter.GetTotalLifePoints() &&
 			dukeCharacter.state != DukeState::BULLET_HELL && dukeCharacter.state != DukeState::CHARGE) {
-			lifeThreshold -= 0.1;
 			phase = Phase::PHASE3;
+			lifeThreshold -= 0.1;
 			dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 			Debug::Log("Phase3");
-			// Phase change VFX?
+			// Phase change VFX? and anim?
 			return;
-		}
-		if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints() &&
+		} else if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints() &&
 			dukeCharacter.state != DukeState::BULLET_HELL && dukeCharacter.state != DukeState::CHARGE) {
 			phase = Phase::PHASE2;
 			if (!phase2Reached) phase2Reached = true;
 			// Phase change VFX?
+			// Anim + dissolve for teleportation
 			lifeThreshold -= 0.1;
 			activeFireTiles = false;
 			Debug::Log("Fire tiles disabled");
 			dukeCharacter.CallTroops();
 			dukeCharacter.state = DukeState::INVULNERABLE;
+			dukeCharacter.isShielding = false;
 			dukeCharacter.criticalMode = true;
 			break;
 		}
@@ -95,7 +96,7 @@ void AIDuke::Update() {
 			if (currentBulletHellCooldown >= bulletHellCooldown) {
 				dukeCharacter.state = DukeState::BULLET_HELL;
 				movementScript->Stop();
-			} else if (phase2Reached && playerController->playerOnimaru.IsShielding()) {
+			} else if (phase2Reached && playerController->playerOnimaru.shieldBeingUsed >= 2.0f) {
 				dukeCharacter.chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
 				dukeCharacter.agent->SetMoveTarget(dukeCharacter.chargeTarget);
 				dukeCharacter.agent->SetMaxSpeed(dukeCharacter.chargeSpeed);
@@ -103,8 +104,7 @@ void AIDuke::Update() {
 			} else if (currentShieldCooldown >= shieldCooldown) {
 				dukeCharacter.state = DukeState::SHOOT_SHIELD;
 				movementScript->Stop();
-			}
-			else if (player && movementScript->CharacterInAttackRange(player, dukeCharacter.attackRange)) {
+			} else if (player && movementScript->CharacterInAttackRange(player, dukeCharacter.attackRange)) {
 				dukeCharacter.state = DukeState::MELEE_ATTACK;
 				movementScript->Stop();
 			} else {
@@ -123,6 +123,8 @@ void AIDuke::Update() {
 			dukeCharacter.ShieldShoot();
 			currentShieldActiveTime += Time::GetDeltaTime();
 			if (currentShieldActiveTime >= shieldActiveTime) {
+				// TODO: Deactivate shield animation
+				dukeCharacter.isShielding = false;
 				currentShieldCooldown = 0.f;
 				currentShieldActiveTime = 0.f;
 				dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
@@ -138,8 +140,7 @@ void AIDuke::Update() {
 			}
 			break;
 		case DukeState::CHARGE:
-			movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
-             dukeCharacter.Charge(DukeState::BASIC_BEHAVIOUR);
+            dukeCharacter.Charge(DukeState::BASIC_BEHAVIOUR);
 			break;
 		default:
 			break;
@@ -150,9 +151,11 @@ void AIDuke::Update() {
 		Debug::Log("PHASE2");
 		if (!activeLasers && dukeCharacter.lifePoints < lasersThreshold * dukeCharacter.GetTotalLifePoints()) {
 			activeLasers = true;
+			// TODO: signal lasers activation
 			Debug::Log("Lasers enabled");
 		}
 
+		// TODO: Replace this for real enemy troops control
 		if (troopsCounter <= 0) {
 			troopsCounter = 5;
 			activeFireTiles = true;
@@ -171,6 +174,7 @@ void AIDuke::Update() {
 		break;
 	case Phase::PHASE3:
 		if (dukeCharacter.lifePoints <= 0.f) {
+			// TODO: Init victory sequence
 			Debug::Log("Ugh...I'm...Dead...");
 			GameplaySystems::DestroyGameObject(duke);
 		}
@@ -180,6 +184,7 @@ void AIDuke::Update() {
 			if (!dukeCharacter.criticalMode) {
 				dukeCharacter.CallTroops();
 				dukeCharacter.state = DukeState::SHOOT_SHIELD;
+				movementScript->Stop();
 			}
 		}
 		if (dukeCharacter.state != DukeState::BULLET_HELL && player && !dukeCharacter.criticalMode &&
@@ -233,6 +238,8 @@ void AIDuke::Update() {
 				dukeCharacter.ShieldShoot();
 				currentAbilityChangeCooldown += Time::GetDeltaTime();
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
+					// TODO: Deactivate shield animation
+					dukeCharacter.isShielding = false;
 					currentAbilityChangeCooldown = 0.f;
 					dukeCharacter.state = DukeState::BULLET_HELL;
 				}

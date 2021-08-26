@@ -73,6 +73,8 @@ public:
 	DukeState state = DukeState::BASIC_BEHAVIOUR;
 	bool criticalMode = false;
 
+	bool isShielding = false;
+
 	float3 chargeTarget;
 
 private:

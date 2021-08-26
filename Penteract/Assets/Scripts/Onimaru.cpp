@@ -376,6 +376,7 @@ void Onimaru::InitShield() {
 void Onimaru::FadeShield() {
 	if (shield == nullptr || shieldGO == nullptr) return;
 	shield->FadeShield();
+	shieldBeingUsed = 0.f;
 	shieldInCooldown = true;
 	shieldCooldownRemaining = shield->GetCoolDown();
 	if (agent) agent->SetMaxSpeed(movementSpeed);
@@ -430,6 +431,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 					InitShield();
 				}
 			} else {
+				shieldBeingUsed += Time::GetDeltaTime();
 				if (!GetInputBool(InputActions::ABILITY_1, useGamepad) || shield->GetNumCharges() == shield->max_charges) {
 					FadeShield();
 				}

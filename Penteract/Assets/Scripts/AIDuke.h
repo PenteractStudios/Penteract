@@ -60,7 +60,7 @@ public:
 
 	float abilityChangeCooldown = 8.f;
 
-	float movingTime = 10.f;
+	//float movingTime = 10.f;
 
 	float stunDuration = 3.f;
 

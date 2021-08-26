@@ -63,6 +63,8 @@ public:
 	float blastAngle = 50.f;
 	float blastDelay = 0.6;
 
+	float shieldBeingUsed = 0.f;
+
 public:
 	// ------- Contructors ------- //
 	Onimaru() {};
