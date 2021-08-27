@@ -69,7 +69,7 @@ void LaserTurret::Update() {
 
 void LaserTurret::Init() {
 
-    currentState = TurretState::START;
+    currentState = TurretState::IDLE_START;
 
 }
 

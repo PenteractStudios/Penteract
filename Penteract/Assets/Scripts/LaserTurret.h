@@ -37,7 +37,7 @@ private:
 
 
 	ComponentAnimation* animationComp = nullptr;
-	TurretState currentState = TurretState::START;
+	TurretState currentState = TurretState::IDLE_START;
 
 	GameObject* laserObject = nullptr;
 
