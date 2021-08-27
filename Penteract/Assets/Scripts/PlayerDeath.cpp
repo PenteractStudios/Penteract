@@ -113,8 +113,9 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 	if (collidedWith.name == "RangerProjectile") {
 		if(playerController) playerController->TakeDamage(rangedDamageTaken);
 	}
-	else if (collidedWith.name == "MeleePunch") {
+	else if (collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") { //meleegrunt
 		if(playerController) playerController->TakeDamage(meleeDamageTaken);
+		collidedWith.Disable();
 	}
 	else if (collidedWith.name == "Barrel") {
 		if(playerController) playerController->TakeDamage(barrelDamageTaken);

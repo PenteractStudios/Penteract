@@ -9,7 +9,10 @@ EXPOSE_MEMBERS(Barrel) {
 	MEMBER(MemberType::GAME_OBJECT_UID, barrelUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, particlesUID),
-		MEMBER(MemberType::FLOAT, timeToDestroy)
+		MEMBER(MemberType::GAME_OBJECT_UID, particlesForTimerUID),
+		MEMBER(MemberType::FLOAT, timeToDestroy),
+		MEMBER(MemberType::FLOAT, timerToDestroy)
+
 };
 
 GENERATE_BODY_IMPL(Barrel);
@@ -29,9 +32,29 @@ void Barrel::Start() {
 		particles = particleAux->GetComponent<ComponentParticleSystem>();
 		audio = particleAux->GetComponent<ComponentAudioSource>();
 	}
+
+	GameObject* particleForTimerAux = GameplaySystems::GetGameObject(particlesForTimerUID);
+	if (particleForTimerAux) {
+		particlesForTimer = particleForTimerAux->GetComponent<ComponentParticleSystem>();
+		audioForTimer = particleForTimerAux->GetComponent<ComponentAudioSource>();
+	}
 }
 
 void Barrel::Update() {
+
+	if (startTimerToDestroy && timerDestroyActivated) {
+		if (particlesForTimer) particlesForTimer->PlayChildParticles();
+		if (audioForTimer) audioForTimer->Play();
+
+		currentTimerToDestroy += Time::GetDeltaTime();
+		if (currentTimerToDestroy >= timerToDestroy) {
+			if (particlesForTimer) particlesForTimer->StopChildParticles();
+			if (audioForTimer) audioForTimer->Stop();
+			isHit = true;
+			startTimerToDestroy = false;
+		}
+
+	}
 
 	if (isHit) {
 		if(barrelCollider) barrelCollider->Enable();
@@ -40,9 +63,7 @@ void Barrel::Update() {
 		if(audio) audio->Play();
 		if(barrel) barrel->GetComponent<ComponentMeshRenderer>()->Disable();
 	}
-	else {
-		//barrelCollider->Disable();
-	}
+
 	if (destroy) {
 		if (timeToDestroy > 0) {
 			timeToDestroy -= Time::GetDeltaTime();
@@ -52,6 +73,7 @@ void Barrel::Update() {
 			if(barrel) GameplaySystems::DestroyGameObject(barrel->GetParent());
 		}
 	}
+
 }
 
 void Barrel::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle)
@@ -60,20 +82,13 @@ void Barrel::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 		if (pSystem) pSystem->KillParticle(p);
-		isHit = true;
-		destroy = true;
-		if (cameraController) {
-			cameraController->StartShake();
-		}
+		
 		if (collidedWith.name == "FangBullet") {
+			startTimerToDestroy = true;
+			timerDestroyActivated = true;
 			GameplaySystems::DestroyGameObject(&collidedWith);
-			isHit = true;
-			destroy = true;
-			if (cameraController) {
-				cameraController->StartShake();
-			}
 		}
+
 	}
-	
 	
 }
