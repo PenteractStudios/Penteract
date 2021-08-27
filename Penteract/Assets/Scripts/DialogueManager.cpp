@@ -189,7 +189,7 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 			break;
 		case DialogueWindow::TUTO_SWAP:
 			activeDialogueObject = tutorialSwap;
-			GameController::switchTutorialActive = true;
+			GameController::ActivateSwitchTutorial(true);
 			break;
 		case DialogueWindow::UPGRADES1:
 			activeDialogueObject = tutorialUpgrades1;
@@ -208,7 +208,7 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 		uiComponents.clear();
 		uiColors.clear();
 		RetrieveUIComponents(activeDialogueObject);
-		GameController::isGameplayBlocked = dialogue->isBlocking;
+		GameController::BlockGameplay(dialogue->isBlocking);
 
 		// Camera Zoom In
 		if (cameraControllerScript) {
@@ -216,8 +216,8 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 		}
 	} else {
 		activeDialogueObject = nullptr;
-		GameController::isGameplayBlocked = false;
-		GameController::switchTutorialActive = false;
+		GameController::BlockGameplay(false);
+		GameController::ActivateSwitchTutorial(false);
 
 		// Camera Zoom Out
 		if (cameraControllerScript) {

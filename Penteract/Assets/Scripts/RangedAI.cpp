@@ -283,7 +283,7 @@ void RangedAI::Update() {
 
 	if (!GetOwner().IsActive()) return;
 
-	if ((state == AIState::IDLE || state == AIState::RUN || state == AIState::FLEE) && !GameController::isGameplayBlocked) {
+	if ((state == AIState::IDLE || state == AIState::RUN || state == AIState::FLEE) && !GameController::IsGameplayBlocked()) {
 		attackTimePool = Max(attackTimePool - Time::GetDeltaTime(), 0.0f);
 		if (attackTimePool == 0) {
 			if (actualShotTimer == -1) {
@@ -389,7 +389,7 @@ void RangedAI::UpdateState() {
 
 	float speedToUse = rangerGruntCharacter.slowedDown ? rangerGruntCharacter.slowedDownSpeed : rangerGruntCharacter.movementSpeed;
 
-	if (GameController::isGameplayBlocked && state != AIState::START && state != AIState::SPAWN) {
+	if (GameController::IsGameplayBlocked() && state != AIState::START && state != AIState::SPAWN) {
 		state = AIState::IDLE;
 	}
 
@@ -407,7 +407,7 @@ void RangedAI::UpdateState() {
 	case AIState::IDLE:
 		if (player) {
 			if (aiMovement) {
-				if (aiMovement->CharacterInSight(player, rangerGruntCharacter.searchRadius) && !GameController::isGameplayBlocked) {
+				if (aiMovement->CharacterInSight(player, rangerGruntCharacter.searchRadius) && !GameController::IsGameplayBlocked()) {
 					if (aiMovement->CharacterInSight(player, fleeingRange)) {
 						ChangeState(AIState::FLEE);
 						break;

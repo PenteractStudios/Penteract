@@ -162,7 +162,7 @@ void AIMeleeGrunt::Update() {
 		currentSlowedDownTime += Time::GetDeltaTime();
 	}
 
-	if (GameController::isGameplayBlocked && state != AIState::START && state != AIState::SPAWN) {
+	if (GameController::IsGameplayBlocked() && state != AIState::START && state != AIState::SPAWN) {
 		state = AIState::IDLE;
 	}
 
@@ -180,7 +180,7 @@ void AIMeleeGrunt::Update() {
 		break;
 	case AIState::IDLE:
 		if (!playerController->IsPlayerDead()) {
-			if (movementScript->CharacterInSight(player, gruntCharacter.searchRadius) && !GameController::isGameplayBlocked) {
+			if (movementScript->CharacterInSight(player, gruntCharacter.searchRadius) && !GameController::IsGameplayBlocked()) {
 				animation->SendTrigger("IdleWalkForward");
 				if (agent) agent->SetMaxSpeed(speedToUse);
 				state = AIState::RUN;

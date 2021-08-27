@@ -247,6 +247,26 @@ void GameController::ResumeGame() {
 	isGameplayBlocked = false;
 }
 
+bool GameController::IsGameplayBlocked()
+{
+	return isGameplayBlocked;
+}
+
+void GameController::BlockGameplay(bool blockIt)
+{
+	isGameplayBlocked = blockIt;
+}
+
+bool GameController::IsSwitchTutorialActive()
+{
+	return switchTutorialActive;
+}
+
+void GameController::ActivateSwitchTutorial(bool isActivated)
+{
+	switchTutorialActive = isActivated;
+}
+
 void GameController::DoTransition() {
 	if (player != nullptr) {
 		float3 finalPosition = float3(-164, 478, 449);

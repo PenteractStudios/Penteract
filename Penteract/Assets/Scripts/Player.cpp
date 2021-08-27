@@ -304,14 +304,14 @@ void Player::LookAtMouse() {
 
 void Player::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 
-	if (!lockMovement && !GameController::isGameplayBlocked) {
+	if (!lockMovement && !GameController::IsGameplayBlocked()) {
 		movementInputDirection = GetInputMovementDirection(useGamepad && Input::IsGamepadConnected(0));
 		MoveTo();
 	} else {
 		movementInputDirection = MovementDirection::NONE;
 		if (agent) agent->SetMoveTarget(playerMainTransform->GetGlobalPosition(), false);
 	}
-	if (!lockRotation && !GameController::isGameplayBlocked) {
+	if (!lockRotation && !GameController::IsGameplayBlocked()) {
 		UpdateFacePointDir(useGamepad && Input::IsGamepadConnected(0));
 		LookAtFacePointTarget(useGamepad && Input::IsGamepadConnected(0));
 	}

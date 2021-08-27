@@ -12,11 +12,11 @@
 #include "Shield.h"
 
 bool Onimaru::CanShoot() {
-	return !shootingOnCooldown && !GameController::isGameplayBlocked;
+	return !shootingOnCooldown && !GameController::IsGameplayBlocked();
 }
 
 bool Onimaru::CanBlast() const {
-	return !blastInCooldown && !IsShielding() && !ultimateOn && !blastInUse && !GameController::isGameplayBlocked;
+	return !blastInCooldown && !IsShielding() && !ultimateOn && !blastInUse && !GameController::IsGameplayBlocked();
 }
 
 void Onimaru::GetHit(float damage_) {
@@ -261,7 +261,7 @@ void Onimaru::OnDeath() {
 }
 
 bool Onimaru::CanSwitch() const {
-	return ultimateTimeRemaining <= 0 && !ultimateOn && !IsShielding() && !blastInUse && !GameController::isGameplayBlocked;
+	return ultimateTimeRemaining <= 0 && !ultimateOn && !IsShielding() && !blastInUse && !GameController::IsGameplayBlocked();
 }
 
 void Onimaru::OnAnimationSecondaryFinished() {
@@ -384,11 +384,11 @@ void Onimaru::OnAnimationFinished() {
 bool Onimaru::CanShield() const {
 	if (shield == nullptr || shieldGO == nullptr) return false;
 
-	return !shieldInCooldown && !shield->GetIsActive() && !ultimateOn && !GameController::isGameplayBlocked;
+	return !shieldInCooldown && !shield->GetIsActive() && !ultimateOn && !GameController::IsGameplayBlocked();
 }
 
 bool Onimaru::CanUltimate() const {
-	return !blastInUse && !IsShielding() && ultimateChargePoints >= ultimateChargePointsTotal && !GameController::isGameplayBlocked;
+	return !blastInUse && !IsShielding() && ultimateChargePoints >= ultimateChargePointsTotal && !GameController::IsGameplayBlocked();
 }
 
 bool Onimaru::UltimateStarted() const {
