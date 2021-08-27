@@ -45,7 +45,7 @@ void Fang::Init(UID fangUID, UID trailGunUID, UID trailDashUID, UID leftGunUID, 
 		if (compAnimation) {
 			currentState = compAnimation->GetCurrentState();
 		}
-
+		movementSpeed = normalMovementSpeed;
 		if (agent) {
 			agent->SetMaxSpeed(movementSpeed);
 			agent->SetMaxAcceleration(MAX_ACCELERATION);
@@ -292,7 +292,7 @@ void Fang::OnAnimationFinished() {
 			} else if (compAnimation->GetCurrentState()->name == "Ultimate") {
 				compAnimation->SendTrigger(states[22] + states[0]);
 				ultimateOn = false;
-				movementSpeed = oldMovementSpeed;
+				movementSpeed = normalMovementSpeed;
 				ultimateScript->EndUltimate();
 
 				if (hudManagerScript) {
@@ -419,7 +419,6 @@ void Fang::ActiveUltimate() {
 			hudManagerScript->StartUsingSkill(HUDManager::Cooldowns::FANG_SKILL_3);
 		}
 
-		oldMovementSpeed = movementSpeed;
 		movementSpeed = ultimateMovementSpeed;
 
 		if (fangAudios[static_cast<int>(FANG_AUDIOS::ULTIMATE)]) {
