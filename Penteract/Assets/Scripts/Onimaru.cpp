@@ -498,25 +498,29 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 			}
 
 			if (GetInputBool(InputActions::SHOOT, useGamepad)) {
-				if (!shooting) {
-					shooting = true;
-					if (bullet) {
-						bullet->Play();
-						bullet->SetParticlesPerSecond(float2(attackSpeed, attackSpeed));
-					}
-					if (compAnimation) {
-						if (!shield->GetIsActive()) {
-							if (compAnimation->GetCurrentState()) {
-								compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHOOTING)]);
+				if (CanShoot()) {
+					if (!shooting) {
+						shooting = true;
+						if (bullet) {
+							bullet->Play();
+							bullet->SetParticlesPerSecond(float2(attackSpeed, attackSpeed));
+						}
+						if (compAnimation) {
+							if (!shield->GetIsActive()) {
+								if (compAnimation->GetCurrentState()) {
+									compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHOOTING)]);
+								}
 							}
-						} else {
-							if (compAnimation->GetCurrentStateSecondary()) {
-								compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHOOTSHIELD)]);
+							else {
+								if (compAnimation->GetCurrentStateSecondary()) {
+									compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHOOTSHIELD)]);
+								}
 							}
 						}
 					}
-				} else {
-					Shoot();
+					else {
+						Shoot();
+					}
 				}
 			}
 		}
