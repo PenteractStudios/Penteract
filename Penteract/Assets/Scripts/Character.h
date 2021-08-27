@@ -21,7 +21,6 @@ public:
 	float GetTotalLifePoints() const;
 	void SetDamageHit(float damageHit_);
 
-	float GetTotalLifePoints() const;
 public:
 
 	bool isAlive = true;
