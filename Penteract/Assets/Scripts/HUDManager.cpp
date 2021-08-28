@@ -38,6 +38,9 @@
 #define HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN 1
 #define HIERARCHY_INDEX_SWITCH_HEALTH_FILL 2
 
+#define HIERARCHY_INDEX_HUD_LEFT_SIDE 0
+#define HIERARCHY_INDEX_HUD_RIGHT_SIDE 1
+
 EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerObjectUID),
 	MEMBER_SEPARATOR("HUD Abilities"),
@@ -158,12 +161,14 @@ void HUDManager::Start() {
 
 	if (sidesHUDParent) {
 		sidesHUDChildren = sidesHUDParent->GetChildren();
+		InitializeHUDSides();
 	}
 }
 
 void HUDManager::Update() {
 	ManageSwitch();
 	if (playingLostHealthFeedback) PlayLostHealthFeedback();
+	if (playingHitEffect) PlayHitEffect();
 }
 
 void HUDManager::UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown, float fangUltimateRemainingNormalizedValue, float oniUltimateRemainingNormalizedValue) {
@@ -216,6 +221,8 @@ void HUDManager::UpdateHealth(float fangHealth, float onimaruHealth) {
 
 	if (switchState != SwitchState::IDLE) ResetLostHealthFeedback();
 
+	playingHitEffect = true;
+	hitEffectTimer = 0.0f;
 }
 
 void HUDManager::HealthRegeneration(float health) {
@@ -900,6 +907,28 @@ void HUDManager::PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns cooldown)
 	}
 }
 
+void HUDManager::PlayHitEffect() {
+	if (sidesHUDChildren.size() != 2) return;
+
+	if (hitEffectTimer > hitEffectTotalTime) {
+		hitEffectTimer = hitEffectTotalTime;
+	}
+
+	for (GameObject* side : sidesHUDChildren) {
+		ComponentImage* sideImage = side->GetComponent<ComponentImage>();
+		if (sideImage) sideImage->SetColor(float4::Lerp(sideHitColor, sideNormalColor, hitEffectTimer / hitEffectTotalTime));
+	}
+
+	if (hitEffectTimer == hitEffectTotalTime) {
+		hitEffectTimer = 0.f;
+		playingHitEffect = false;
+	}
+	else {
+		hitEffectTimer += Time::GetDeltaTime();
+	}
+
+}
+
 void HUDManager::PlayLostHealthFeedback() {
 	if (!fangObj || !onimaruObj || !fangHealthParent || !onimaruHealthParent) return;
 	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
@@ -1148,6 +1177,26 @@ void HUDManager::InitializeHealth() {
 			healthLost->SetFillValue(healthValue / healthValue);
 		}
 		healthLost->SetColor(healthLostFeedbackFillBarFinalColor);
+	}
+}
+
+void HUDManager::InitializeHUDSides() {
+	if (sidesHUDChildren.size() == 2) {
+		// Get normal color 
+		GameObject* leftSide = sidesHUDChildren[HIERARCHY_INDEX_HUD_LEFT_SIDE];
+		ComponentImage* sideImage = nullptr;
+		if (leftSide) {
+			sideImage = leftSide->GetComponent<ComponentImage>();
+			if (sideImage) sideNormalColor = sideImage->GetColor();
+		}
+
+		// Get hit color and set it to normal
+		GameObject* rightSide = sidesHUDChildren[HIERARCHY_INDEX_HUD_RIGHT_SIDE];
+		if (rightSide) {
+			sideImage = rightSide->GetComponent<ComponentImage>();
+			if (sideImage) sideHitColor = sideImage->GetColor();
+			sideImage->SetColor(sideNormalColor);
+		}
 	}
 }
 
