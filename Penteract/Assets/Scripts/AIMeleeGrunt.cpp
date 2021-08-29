@@ -185,6 +185,7 @@ void AIMeleeGrunt::Update() {
 				if (agent) agent->SetMaxSpeed(speedToUse);
 				state = AIState::RUN;
 			} else {
+				movementScript->Stop();
 				if (animation->GetCurrentState()->name != "Idle") animation->SendTrigger(animation->GetCurrentState()->name + "Idle");
 			}
 		}
