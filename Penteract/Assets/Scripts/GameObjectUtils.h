@@ -1,9 +1,9 @@
 #include "GameObject.h"
 
 GameObject* SearchReferenceInHierarchy(GameObject* root, std::string name) {
-	if (root->name == name) {
-		return root;
-	}
+	if (root == nullptr) return nullptr;
+
+	if (root->name == name)	return root;
 
 	GameObject* reference = nullptr;
 	for (GameObject* child : root->GetChildren()) {

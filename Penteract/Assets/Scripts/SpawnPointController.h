@@ -67,5 +67,5 @@ private:
 
 private:
 	bool CheckSpawnPointStatus();
-	void PlayDissolveAnimation(GameObject* root);
+	void PlayDissolveAnimation(GameObject* root, bool playReverse);
 };

@@ -72,15 +72,20 @@ void SpawnPointController::OnCollision(GameObject& collidedWith, float3 collisio
 	if (finalDoor && !finalDoor->IsActive()) finalDoor->Enable();
 	ComponentBoxCollider* boxCollider = gameObject->GetComponent<ComponentBoxCollider>();
 	if (boxCollider) boxCollider->Disable();
+
+	if (initialDoor) {		// So it doesn't trigger those who are set by default
+		PlayDissolveAnimation(finalDoor, true);
+		PlayDissolveAnimation(initialDoor, true);
+	}
 }
 
 void SpawnPointController::OpenDoor() {
 	if (CheckSpawnPointStatus()) {
 		if (finalDoor && finalDoor->IsActive() && !unlockStarted) {
-			PlayDissolveAnimation(finalDoor);
+			PlayDissolveAnimation(finalDoor, false);
 		}
 		if (unlocksInitialDoor && initialDoor && initialDoor->IsActive() && !unlockStarted) {
-			PlayDissolveAnimation(initialDoor);
+			PlayDissolveAnimation(initialDoor, false);
 		}
 		unlockStarted = true;
 	}
@@ -103,15 +108,15 @@ bool SpawnPointController::CheckSpawnPointStatus() {
 	return std::all_of(enemySpawnPointStatus.begin(), enemySpawnPointStatus.end(), [](bool i) { return !i; });
 }
 
-void SpawnPointController::PlayDissolveAnimation(GameObject* root) {
-	if (dissolveMaterialID == 0) return;
+void SpawnPointController::PlayDissolveAnimation(GameObject* root, bool playReverse) {
+	if (dissolveMaterialID == 0 || !root) return;
 
 	GameObject* doorBack = SearchReferenceInHierarchy(root, doorEnergyBack);
 	if (doorBack) {
 		ComponentMeshRenderer* meshRenderer = doorBack->GetComponent<ComponentMeshRenderer>();
 		if (meshRenderer) {
 			meshRenderer->materialId = dissolveMaterialID;
-			meshRenderer->PlayDissolveAnimation();
+			meshRenderer->PlayDissolveAnimation(playReverse);
 		}
 	}
 
@@ -120,7 +125,7 @@ void SpawnPointController::PlayDissolveAnimation(GameObject* root) {
 		ComponentMeshRenderer* meshRenderer = doorFront->GetComponent<ComponentMeshRenderer>();
 		if (meshRenderer ) {
 			meshRenderer->materialId = dissolveMaterialID;
-			meshRenderer->PlayDissolveAnimation();
+			meshRenderer->PlayDissolveAnimation(playReverse);
 		}
 	}
 }
