@@ -1,0 +1,117 @@
+{
+    "Root": {
+        "Name": "UltiDecorFill",
+        "Active": true,
+        "RootBoneName": "",
+        "Mask": 0,
+        "Components": [
+            {
+                "Type": "Transform2D",
+                "Active": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "LocalEulerAngles": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "Size": [
+                    164.0,
+                    292.0
+                ],
+                "AnchorMin": [
+                    0.5,
+                    0.5
+                ],
+                "AnchorMax": [
+                    0.5,
+                    0.5
+                ],
+                "AnchorSelected": 5,
+                "IsCustomAnchor": false
+            },
+            {
+                "Type": "CanvasRenderer",
+                "Active": true
+            },
+            {
+                "Type": "Image",
+                "Active": true,
+                "TextureId": 924146106693867589,
+                "Color": [
+                    1.0,
+                    1.0,
+                    0.0,
+                    1.0
+                ],
+                "AlphaTransparency": true,
+                "IsFill": false,
+                "FillValue": 1.0
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 5899954894447219890,
+                "Values": [
+                    {
+                        "Name": "originalColor",
+                        "Type": "Float3",
+                        "Value": [
+                            6.0,
+                            6.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "Name": "targetColor",
+                        "Type": "Float3",
+                        "Value": [
+                            1.0,
+                            1.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "Name": "imageHoldingObjectUID",
+                        "Type": "GameObjectUID",
+                        "Value": 11399324418796455108
+                    },
+                    {
+                        "Name": "originalAlpha",
+                        "Type": "Float",
+                        "Value": 1.0
+                    },
+                    {
+                        "Name": "targetAlpha",
+                        "Type": "Float",
+                        "Value": 1.0
+                    },
+                    {
+                        "Name": "disableOnFinish",
+                        "Type": "Bool",
+                        "Value": false
+                    }
+                ]
+            }
+        ],
+        "Children": null
+    }
+}
