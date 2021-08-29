@@ -184,24 +184,24 @@
                         "Value": 9349791306028942696
                     },
                     {
-                        "Name": "fangUID",
-                        "Type": "GameObjectUID",
-                        "Value": 5514062913432514002
-                    },
-                    {
                         "Name": "dmgMaterialObj",
                         "Type": "GameObjectUID",
                         "Value": 5104266340542563287
                     },
                     {
-                        "Name": "playerMeshUIDFang",
+                        "Name": "fangUID",
                         "Type": "GameObjectUID",
-                        "Value": 8818586851523472818
+                        "Value": 5514062913432514002
                     },
                     {
                         "Name": "hudControllerObjUID",
                         "Type": "GameObjectUID",
                         "Value": 826311568033082909
+                    },
+                    {
+                        "Name": "playerMeshUIDFang",
+                        "Type": "GameObjectUID",
+                        "Value": 8818586851523472818
                     },
                     {
                         "Name": "playerMeshUIDOnimaru",
@@ -241,7 +241,7 @@
                     {
                         "Name": "dissolveMaterialObj",
                         "Type": "GameObjectUID",
-                        "Value": 8231736672731537390
+                        "Value": 17540906374647679369
                     }
                 ]
             }
