@@ -20,11 +20,13 @@ public:
 		DUKE = 3,
 		DOOR = 4,
 		TUTO_FANG = 5,
-		TUTO_ONIMARU = 6,
-		TUTO_SWAP = 7,
-		UPGRADES1 = 8,
-		UPGRADES2 = 9,
-		UPGRADES3 = 10
+		TUTO_FANG_ULTI = 6,
+		TUTO_ONIMARU = 7,
+		TUTO_ONIMARU_ULTI = 8,
+		TUTO_SWAP = 9,
+		UPGRADES1 = 10,
+		UPGRADES2 = 11,
+		UPGRADES3 = 12
 	};
 
 	struct Dialogue {
@@ -67,10 +69,14 @@ public:
 	ComponentText* doorTextComponent = 0;
 
 	UID tutorialFangUID = 0;
+	UID tutorialFangUltimateUID = 0;
 	UID tutorialOnimaruUID = 0;
+	UID tutorialOnimaruUltimateUID = 0;
 	UID tutorialSwapUID = 0;
 	GameObject* tutorialFang = nullptr;
+	GameObject* tutorialFangUltimate = nullptr;
 	GameObject* tutorialOnimaru = nullptr;
+	GameObject* tutorialOnimaruUltimate = nullptr;
 	GameObject* tutorialSwap = nullptr;
 
 	UID tutorialUpgrades1UID = 0;

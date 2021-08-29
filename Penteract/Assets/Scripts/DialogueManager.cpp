@@ -17,7 +17,9 @@ EXPOSE_MEMBERS(DialogueManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, doorTextObjectUID),
 	MEMBER_SEPARATOR("Tutorial Objects UIDs"),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialFangUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, tutorialFangUltimateUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialOnimaruUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, tutorialOnimaruUltimateUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialSwapUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialUpgrades1UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialUpgrades2UID),
@@ -57,7 +59,9 @@ void DialogueManager::Start() {
 
 	// Get tutorials
 	tutorialFang = GameplaySystems::GetGameObject(tutorialFangUID);
+	tutorialFangUltimate = GameplaySystems::GetGameObject(tutorialFangUltimateUID);
 	tutorialOnimaru = GameplaySystems::GetGameObject(tutorialOnimaruUID);
+	tutorialOnimaruUltimate = GameplaySystems::GetGameObject(tutorialOnimaruUltimateUID);
 	tutorialSwap = GameplaySystems::GetGameObject(tutorialSwapUID);
 	tutorialUpgrades1 = GameplaySystems::GetGameObject(tutorialUpgrades1UID);
 	tutorialUpgrades2 = GameplaySystems::GetGameObject(tutorialUpgrades2UID);
@@ -87,16 +91,16 @@ void DialogueManager::Start() {
 
 	// FANG TUTORIAL
 	dialoguesArray[15] = Dialogue(DialogueWindow::ONIMARU, true, "He is running away!\nDon’t let him escape!", &dialoguesArray[16]);
-	dialoguesArray[16] = Dialogue(DialogueWindow::TUTO_FANG, true, "", nullptr);
-	// TODO: Fang Ultimate dialogue?
+	dialoguesArray[16] = Dialogue(DialogueWindow::TUTO_FANG, true, "", &dialoguesArray[17]);
+	dialoguesArray[17] = Dialogue(DialogueWindow::TUTO_FANG_ULTI, true, "", nullptr);
 
 	// SWAP DIALOGUE + ONIMARU TUTORIAL
 	dialoguesArray[18] = Dialogue(DialogueWindow::FANG, true, "Onimaru,\nget the repair bots ready...\nI’m gonna need a break.", &dialoguesArray[19]);
 	dialoguesArray[19] = Dialogue(DialogueWindow::ONIMARU, true, "Roger.\nInitialising Matter-Switch.", &dialoguesArray[20]);
 	dialoguesArray[20] = Dialogue(DialogueWindow::TUTO_SWAP, true, "", &dialoguesArray[21], InputActions::SWITCH);
 	dialoguesArray[21] = Dialogue(DialogueWindow::ONIMARU, true, "Long hallways\nis where I perform best.\nWatch how it is done.", &dialoguesArray[22]);
-	dialoguesArray[22] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "", nullptr);
-	// TODO: Onimaru Ultimate dialogue?
+	dialoguesArray[22] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "", &dialoguesArray[23]);
+	dialoguesArray[23] = Dialogue(DialogueWindow::TUTO_ONIMARU_ULTI, true, "", nullptr);
 
 	// LEVEL 1 - PRE-TRANSPORT
 	//dialoguesArray[24] = Dialogue(DialogueWindow::ONIMARU, false, "Are you formulating any plan\nto go through Duke’s plating?\nThat is a strong one, to have protected him\nfrom that headshot.", &dialoguesArray[25]);
@@ -184,8 +188,14 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 		case DialogueWindow::TUTO_FANG:
 			activeDialogueObject = tutorialFang;
 			break;
+		case DialogueWindow::TUTO_FANG_ULTI:
+			activeDialogueObject = tutorialFangUltimate;
+			break;
 		case DialogueWindow::TUTO_ONIMARU:
 			activeDialogueObject = tutorialOnimaru;
+			break;
+		case DialogueWindow::TUTO_ONIMARU_ULTI:
+			activeDialogueObject = tutorialOnimaruUltimate;
 			break;
 		case DialogueWindow::TUTO_SWAP:
 			activeDialogueObject = tutorialSwap;
