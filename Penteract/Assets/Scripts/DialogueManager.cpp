@@ -231,6 +231,16 @@ void DialogueManager::ActivateDialogue(Dialogue* dialogue) {
 
 	if (activeDialogueObject) {
 		if (!activeDialogueObject->IsActive()) {
+			for (Component* component : uiComponents) {
+				if (component->GetType() == ComponentType::IMAGE) {
+					ComponentImage* image = static_cast<ComponentImage*>(component);
+					image->SetColor(float4(image->GetMainColor().x, image->GetMainColor().y, image->GetMainColor().z, 0));
+				}
+				else {
+					ComponentText* text = static_cast<ComponentText*>(component);
+					text->SetFontColor(float4(text->GetFontColor().x, text->GetFontColor().y, text->GetFontColor().z, 0));
+				}
+			}
 			activeDialogueObject->Enable();
 		}
 	}
@@ -256,10 +266,10 @@ void DialogueManager::ActivateNextDialogue(Dialogue* dialogue) {
 
 	// TODO: here should go the transition animations
 	SetActiveDialogue(dialogue->nextDialogue, false);
-	activeDialogueObject->Enable();
 	if (runSecondaryOpen) {
 		runOpenAnimation = true;
 	} else {
+		activeDialogueObject->Enable();
 		activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(currentEndPosition);
 	}
 	runChangeAnimation = false;
