@@ -70,6 +70,7 @@ void AIMovement::Seek(AIState state, const float3& newPosition, int speed, bool 
 	}
 
 }
+
 void AIMovement::Orientate(const float3& direction) {
 		targetRotation = Quat::LookAt(float3(0, 0, 1), direction.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
 		Quat rotation = Quat::Slerp(ownerTransform->GetGlobalRotation(), targetRotation, Min(Time::GetDeltaTime() / Max(rotationSmoothness, 0.000001f), 1.0f));
@@ -95,3 +96,27 @@ bool AIMovement::CharacterInAttackRange(const GameObject* character, const float
 
 	return false;
 }
+
+void AIMovement::SetClipSpeed(UID clipUID, float speed) {
+	if (speed >= 0.f) {
+		ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(clipUID);
+		clip->speed = speed;
+	}
+}
+
+GameObject* AIMovement::SearchReferenceInHierarchy(GameObject* root, std::string name) {
+	
+	if (root->name == name) {
+		return root;
+	}
+	GameObject* reference = nullptr;
+	for (GameObject* child : root->GetChildren())
+	{
+		reference = SearchReferenceInHierarchy(child, name);
+		if (reference != nullptr) return reference;
+
+	}
+	return nullptr;
+}
+
+

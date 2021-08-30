@@ -1,13 +1,13 @@
 #include "Fang.h"
 #include "GameplaySystems.h"
 #include "HUDController.h"
+#include "HUDManager.h"
 #include "CameraController.h"
 #include "UltimateFang.h"
 
-void Fang::Init(UID fangUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, UID rightBulletUID, UID leftBulletUID, UID cameraUID, UID canvasUID, UID dashUID, UID EMPUID, UID EMPEffectsUID, UID fangUltimateUID, UID ultimateVFXUID) {
+void Fang::Init(UID fangUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, UID rightBulletUID, UID leftBulletUID, UID cameraUID, UID HUDManagerObjectUID, UID dashUID, UID EMPUID, UID EMPEffectsUID, UID fangUltimateUID, UID ultimateVFXUID) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(fangUID);
-
 	if (characterGameObject && characterGameObject->GetParent()) {
 		playerMainTransform = characterGameObject->GetParent()->GetComponent<ComponentTransform>();
 		agent = characterGameObject->GetParent()->GetComponent<ComponentAgent>();
@@ -44,15 +44,18 @@ void Fang::Init(UID fangUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, 
 		if (compAnimation) {
 			currentState = compAnimation->GetCurrentState();
 		}
-
+		movementSpeed = normalMovementSpeed;
 		if (agent) {
 			agent->SetMaxSpeed(movementSpeed);
 			agent->SetMaxAcceleration(MAX_ACCELERATION);
 		}
-		GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
-		if (canvasGO) {
-			hudControllerScript = GET_SCRIPT(canvasGO, HUDController);
+		GameObject* HUDManagerGO = GameplaySystems::GetGameObject(HUDManagerObjectUID);
+		if (HUDManagerGO) {
+			hudManagerScript = GET_SCRIPT(HUDManagerGO, HUDManager);
 		}
+
+
+
 		if (characterGameObject) {
 			characterGameObject->GetComponent<ComponentCapsuleCollider>()->Enable();
 
@@ -78,10 +81,7 @@ void Fang::Init(UID fangUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, 
 			ultimateCooldownRemaining = ultimateCooldown;
 		}
 	}
-	GameObject* canvasGO = GameplaySystems::GetGameObject(canvasUID);
-	if (canvasGO) {
-		hudControllerScript = GET_SCRIPT(canvasGO, HUDController);
-	}
+
 	if (characterGameObject) {
 		characterGameObject->GetComponent<ComponentCapsuleCollider>()->Enable();
 
@@ -179,9 +179,10 @@ void Fang::InitDash() {
 		}
 	}
 
-	if (hudControllerScript) {
-		hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_1);
+	if (hudManagerScript) {
+		hudManagerScript->SetCooldownRetreival(HUDManager::Cooldowns::FANG_SKILL_1);
 	}
+
 }
 
 void Fang::Dash() {
@@ -217,9 +218,11 @@ void Fang::ActivateEMP() {
 		if (fangAudios[static_cast<int>(FANG_AUDIOS::EMP)]) {
 			fangAudios[static_cast<int>(FANG_AUDIOS::EMP)]->Play();
 		}
-		if (hudControllerScript) {
-			hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_2);
+
+		if (hudManagerScript) {
+			hudManagerScript->SetCooldownRetreival(HUDManager::Cooldowns::FANG_SKILL_2);
 		}
+
 	}
 }
 
@@ -293,8 +296,13 @@ void Fang::OnAnimationFinished() {
 			} else if (compAnimation->GetCurrentState()->name == states[static_cast<int>(FANG_STATES::ULTIMATE)]) {
 				compAnimation->SendTrigger(states[static_cast<int>(FANG_STATES::ULTIMATE)] + states[idle]);
 				ultimateOn = false;
-				movementSpeed = oldMovementSpeed;
+				movementSpeed = normalMovementSpeed;
 				ultimateScript->EndUltimate();
+
+				if (hudManagerScript) {
+					hudManagerScript->StopUsingSkill(HUDManager::Cooldowns::FANG_SKILL_3);
+				}
+
 			}
 		}
 	}
@@ -414,22 +422,28 @@ void Fang::PlayAnimation() {
 
 void Fang::ActiveUltimate() {
 	if (CanUltimate()) {
+		ultimateTimeRemaining = ultimateTotalTime;
 		ultimateCooldownRemaining = 0;
 		ultimateOn = true;
 		ultimateInCooldown = true;
 		if (ultimateVFX) ultimateVFX->PlayChildParticles();
 		ultimateScript->StartUltimate();
 
-		oldMovementSpeed = movementSpeed;
+		if (hudManagerScript) {
+			hudManagerScript->StartUsingSkill(HUDManager::Cooldowns::FANG_SKILL_3);
+		}
+
 		movementSpeed = ultimateMovementSpeed;
 
 		if (fangAudios[static_cast<int>(FANG_AUDIOS::ULTIMATE)]) {
 			fangAudios[static_cast<int>(FANG_AUDIOS::ULTIMATE)]->Play();
 		}
 
-		if (hudControllerScript) {
-			hudControllerScript->SetCooldownRetreival(HUDController::Cooldowns::FANG_SKILL_3);
+		if (hudManagerScript) {
+			hudManagerScript->SetCooldownRetreival(HUDManager::Cooldowns::FANG_SKILL_3);
 		}
+
+
 	}
 }
 
@@ -439,6 +453,14 @@ bool Fang::CanUltimate() {
 
 void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 	if (isAlive) {
+
+		if (ultimateOn) {
+			ultimateTimeRemaining -= Time::GetDeltaTime();
+			if (ultimateTimeRemaining <= 0) {
+				ultimateTimeRemaining = 0;
+			}
+		}
+
 		if (EMP) {
 			faceToFront = !aiming;
 			Player::Update(useGamepad, dashing || EMP->IsActive(), dashing || EMP->IsActive() || ultimateOn);

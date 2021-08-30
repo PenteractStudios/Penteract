@@ -4,6 +4,7 @@
 
 class OnimaruBullet;
 class HUDController;
+class HUDManager;
 class Shield;
 
 class Onimaru : public Player {
@@ -31,7 +32,7 @@ public:
 		RUN_LEFT,
 		RUN_RIGHT,
 		BLAST,
-		NONE1,
+		ULTI_LOOP_WALKING,
 		ULTI_INTRO,
 		ULTI_LOOP,
 		DEATH,
@@ -41,12 +42,13 @@ public:
 		RUNFORWARDLEFT,
 		RUNFORWARDRIGHT,
 		RUNBACKWARDLEFT,
-		RUNBACKWARDRIGHT
+		RUNBACKWARDRIGHT,
+
 	};
 
 	std::vector<std::string> states{ "Idle" ,
 					"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
-					"EnergyBlast", "" , "UltiIntro" , "UltiLoop" ,
+					"EnergyBlast", "UltiLoopWalking" , "UltiIntro" , "UltiLoop" ,
 					"Death" , "Shooting", "Shield","ShootingShield" ,
 					"RunForwardLeft","RunForwardRight", "RunBackwardLeft", "RunBackwardRight"
 	};
@@ -54,8 +56,7 @@ public:
 	//Onimaru ultimate related
 	float originalAttackSpeed = 0.0f;
 	float ultimateAttackSpeed = 20.0f;
-	float ultimateTimeRemaining = 0.0f;
-	float ultimateTotalTime = 3.0f;
+
 	float ultimateOrientationSpeed = 2.0f;
 	// Blast ability
 	float blastCooldown = 7.f;
@@ -65,11 +66,12 @@ public:
 	float blastDamage = 1.0f;
 	// Shield
 	float shieldReboundedDamage = 1.0f;
+	float shieldingMaxSpeed = 2.0f;
 
 public:
 	// ------- Contructors ------- //
 	Onimaru() {};
-	void Init(UID onimaruUID = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0, UID shieldUID = 0, UID onimaruTransformForUltimateProjectileOriginUID = 0, UID onimaruBlastEffectsUID = 0, UID cameraUID = 0, UID canvasUID = 0, float maxSpread = 5.0f);
+	void Init(UID onimaruUID = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0, UID shieldUID = 0, UID onimaruTransformForUltimateProjectileOriginUID = 0, UID onimaruBlastEffectsUID = 0, UID cameraUID = 0, UID HUDManagerObjectUID = 0);
 	void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockRotation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	bool CanSwitch() const override;
@@ -92,7 +94,7 @@ public:
 	void RemoveEnemy(GameObject* enemy);
 	bool IsShielding() const;
 	bool IsVulnerable() const override;
-
+	float GetNormalizedRemainingUltimateTime()const;
 private:
 
 	ResourcePrefab* trail = nullptr;
@@ -123,7 +125,7 @@ private:
 	bool calculateEnemiesInRange = true;
 
 	// HUD
-	HUDController* hudControllerScript = nullptr;
+	HUDManager* hudManagerScript = nullptr;
 
 	//Audio
 	ComponentAudioSource* onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::TOTAL)] = { nullptr };
@@ -134,7 +136,7 @@ private:
 private:
 
 	bool CanShoot() override;
-	bool CanBlast();
+	bool CanBlast() const;
 	void Shoot() override;
 	void Blast();
 	void PlayAnimation();
@@ -143,6 +145,7 @@ private:
 	void FinishUltimate();
 	void InitShield();
 	void FadeShield();
-	bool CanShield();
-	bool CanUltimate();
+	bool CanShield() const;
+	bool CanUltimate() const;
+	bool UltimateStarted() const;
 };
