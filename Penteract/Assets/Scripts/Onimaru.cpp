@@ -313,6 +313,7 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 			cameraController = GET_SCRIPT(cameraAux, CameraController);
 		}
 		shieldingMaxSpeed = normalMovementSpeed / 2;
+		movementSpeed = normalMovementSpeed;
 		if (agent) {
 			agent->SetMaxSpeed(movementSpeed);
 			agent->SetMaxAcceleration(MAX_ACCELERATION);
