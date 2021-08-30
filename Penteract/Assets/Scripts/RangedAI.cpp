@@ -41,7 +41,6 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::FLOAT, fleeingRange),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, trailPrefabUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
-	MEMBER(MemberType::GAME_OBJECT_UID, hudControllerObjUID),
 	MEMBER(MemberType::FLOAT, timeSinceLastHurt),
 	MEMBER(MemberType::FLOAT, approachOffset), //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
 	MEMBER(MemberType::FLOAT, stunDuration),
@@ -86,11 +85,6 @@ void RangedAI::Start() {
 		agent->SetMaxAcceleration(static_cast<float>(AIMovement::maxAcceleration));
 		agent->SetAgentObstacleAvoidance(true);
 		agent->RemoveAgentFromCrowd();
-	}
-
-	GameObject* hudControllerObj = GameplaySystems::GetGameObject(hudControllerObjUID);
-	if (hudControllerObj) {
-		hudControllerScript = GET_SCRIPT(hudControllerObj, HUDController);
 	}
 
 	if (player) {
@@ -498,9 +492,6 @@ void RangedAI::UpdateState() {
 				rangerGruntCharacter.timeToDie -= Time::GetDeltaTime();
 			}
 			else {
-				if (hudControllerScript) {
-					hudControllerScript->UpdateScore(10);
-				}
 				GameplaySystems::DestroyGameObject(&GetOwner());
 			}
 		}

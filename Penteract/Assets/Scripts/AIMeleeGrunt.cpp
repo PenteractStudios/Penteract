@@ -15,8 +15,7 @@
 #include <math.h>
 
 EXPOSE_MEMBERS(AIMeleeGrunt) {
-		MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, canvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, damageMaterialPlaceHolderUID),
@@ -92,11 +91,6 @@ void AIMeleeGrunt::Start() {
 	animation = GetOwner().GetComponent<ComponentAnimation>();
 	ownerTransform = GetOwner().GetComponent<ComponentTransform>();
 
-	GameObject* canvas = GameplaySystems::GetGameObject(canvasUID);
-	if (canvas) {
-		hudControllerScript = GET_SCRIPT(canvas, HUDController);
-	}
-
 	movementScript = GET_SCRIPT(&GetOwner(), AIMovement);
 	rightBladeCollider = movementScript->SearchReferenceInHierarchy(&GetOwner(),"RightBlade");
 	leftBladeCollider = movementScript->SearchReferenceInHierarchy(&GetOwner(), "LeftBlade");
@@ -145,7 +139,6 @@ void AIMeleeGrunt::Update() {
 	if (!player) return;
 	if (!agent) return;
 	if (!movementScript) return;
-	if (!hudControllerScript) return;
 	if (!playerController) return;
 	if (!ownerTransform) return;
 	if (!animation) return;
@@ -263,9 +256,6 @@ void AIMeleeGrunt::Update() {
 			gruntCharacter.timeToDie -= Time::GetDeltaTime();
 		}
 		else {
-			if (hudControllerScript) {
-				hudControllerScript->UpdateScore(10);
-			}
 			if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
 			GameplaySystems::DestroyGameObject(&GetOwner());
 		}
