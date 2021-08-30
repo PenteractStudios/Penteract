@@ -136,7 +136,7 @@ bool Fang::IsInstantOrientation(bool useGamepad) const {
 }
 
 void Fang::GetHit(float damage_) {
-	if (!dashing) {
+	if (!dashing && isAlive) {
 		if (cameraController) {
 			cameraController->StartShake();
 		}
@@ -145,10 +145,10 @@ void Fang::GetHit(float damage_) {
 		if (fangAudios[static_cast<int>(FANG_AUDIOS::HIT)]) fangAudios[static_cast<int>(FANG_AUDIOS::HIT)]->Play();
 		isAlive = lifePoints > 0.0f;
 
-		if (!isAlive) {
-			if (fangAudios[static_cast<int>(FANG_AUDIOS::DEATH)]) fangAudios[static_cast<int>(FANG_AUDIOS::DEATH)]->Play();
-			OnDeath();
+		if (!isAlive && fangAudios[static_cast<int>(FANG_AUDIOS::DEATH)]) {
+			fangAudios[static_cast<int>(FANG_AUDIOS::DEATH)]->Play();
 		}
+		//OnDeath();
 	}
 }
 
