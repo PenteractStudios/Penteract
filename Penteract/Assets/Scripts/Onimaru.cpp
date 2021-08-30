@@ -432,8 +432,6 @@ void Onimaru::FadeShield() {
 	if (shield == nullptr || shieldGO == nullptr) return;
 	shield->FadeShield();
 	
-	shieldInCooldown = true;
-	shieldCooldownRemaining = shield->GetCoolDown();
 	movementSpeed = normalMovementSpeed;
 	if (agent) agent->SetMaxSpeed(movementSpeed);
 
