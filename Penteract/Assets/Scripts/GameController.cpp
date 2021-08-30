@@ -247,7 +247,7 @@ void GameController::ResumeGame() {
 	isGameplayBlocked = false;
 }
 
-bool GameController::IsGameplayBlocked()
+bool const GameController::IsGameplayBlocked()
 {
 	return isGameplayBlocked;
 }
@@ -257,7 +257,7 @@ void GameController::BlockGameplay(bool blockIt)
 	isGameplayBlocked = blockIt;
 }
 
-bool GameController::IsSwitchTutorialActive()
+bool const GameController::IsSwitchTutorialActive()
 {
 	return switchTutorialActive;
 }

@@ -24,9 +24,9 @@ public:
 	void PauseGame();
 	void ResumeGame();
 
-	static bool IsGameplayBlocked();					// Getter for isGameplayBlocked
-	static void BlockGameplay(bool blockIt);			// Setter for isGameplayBlocked
-	static bool IsSwitchTutorialActive();				// Getter for switchTutorialActive
+	static bool const IsGameplayBlocked();					// Getter for isGameplayBlocked
+	static void BlockGameplay(bool blockIt);				// Setter for isGameplayBlocked
+	static bool const IsSwitchTutorialActive();				// Getter for switchTutorialActive
 	static void ActivateSwitchTutorial(bool isActivated);	// Setter for switchTutorialActive
 
 public:

@@ -21,7 +21,10 @@ void TriggerDialogue::Update() {}
 void TriggerDialogue::OnCollision(GameObject& /*collidedWith*/, float3 /*collisionNormal*/, float3 /*penetrationDistance*/, void* /*particle*/) {
 
     if (dialogueManagerScript) {
-        dialogueManagerScript->SetActiveDialogue(&dialogueManagerScript->dialoguesArray[dialogueID]);
+        if (dialogueID < sizeof(dialogueManagerScript->dialoguesArray) / sizeof(dialogueManagerScript->dialoguesArray[0])
+            && &dialogueManagerScript->dialoguesArray[dialogueID] != nullptr) {
+            dialogueManagerScript->SetActiveDialogue(&dialogueManagerScript->dialoguesArray[dialogueID]);
+        }
     }
     GetOwner().Disable();
 }
