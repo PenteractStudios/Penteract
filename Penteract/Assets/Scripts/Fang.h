@@ -3,6 +3,7 @@
 #include "Player.h"
 
 class HUDController;
+class HUDManager;
 class UltimateFang;
 class Fang : public Player {
 public:
@@ -35,7 +36,7 @@ public:
 	float GetRealEMPCooldown();
 	float GetRealUltimateCooldown();
 	void IncreaseUltimateCounter();
-	void Init(UID fangUID = 0, UID trailGunUID = 0, UID trailDashUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID cameraUID = 0, UID canvasUID = 0, UID EMPUID = 0, UID EMPEffectsUID = 0, UID fangUltimateUID = 0, UID ultimateVFXUID = 0);
+	void Init(UID fangUID = 0, UID trailGunUID = 0, UID trailDashUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID cameraUID = 0, UID HUDManagerObjectUID = 0, UID dashUID = 0, UID EMPUID = 0, UID EMPEffectsUID = 0, UID fangUltimateUID = 0, UID ultimateVFXUID = 0);
 	bool IsVulnerable() const override;
 public:
 	std::vector<std::string> states{ "Idle" ,
@@ -54,6 +55,8 @@ public:
 	float dashSpeed = 100.f;
 	float dashDuration = 0.1f;
 	float trailDashOffsetDuration = 0.2f;
+	GameObject* dash = nullptr;
+	float dashDamage = 1.0f;
 
 	//EMP
 	GameObject* EMP = nullptr;
@@ -95,8 +98,7 @@ private:
 	MovementDirection dashMovementDirection = MovementDirection::NONE;
 
 	//HUD
-	HUDController* hudControllerScript = nullptr;
-
+	HUDManager* hudManagerScript = nullptr;
 	//Ultimate
 	int ultimateCooldownRemaining = 0;
 	bool ultimateInCooldown = false;

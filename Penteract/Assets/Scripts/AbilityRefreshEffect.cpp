@@ -8,10 +8,10 @@
 // clang-format off
 EXPOSE_MEMBERS(AbilityRefreshEffect) {
 	MEMBER(MemberType::FLOAT, totalEffectTime),
-		MEMBER(MemberType::FLOAT, effectScale),
-		MEMBER(MemberType::GAME_OBJECT_UID, effectMember1UID),
-		MEMBER(MemberType::GAME_OBJECT_UID, skillParentObjectUID),
-		MEMBER(MemberType::BOOL, debugPlay)
+	MEMBER(MemberType::FLOAT, effectScale),
+	MEMBER(MemberType::GAME_OBJECT_UID, effectMember1UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, skillParentObjectUID),
+	MEMBER(MemberType::BOOL, debugPlay)
 };// clang-format on
 
 

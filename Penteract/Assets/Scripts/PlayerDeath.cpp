@@ -15,6 +15,11 @@ EXPOSE_MEMBERS(PlayerDeath) {
 	MEMBER(MemberType::FLOAT, rangedDamageTaken),
 	MEMBER(MemberType::FLOAT, meleeDamageTaken),
 	MEMBER(MemberType::FLOAT, barrelDamageTaken),
+	MEMBER(MemberType::FLOAT, laserBeamTaken),
+	MEMBER(MemberType::FLOAT, laserHitCooldown),
+	MEMBER(MemberType::FLOAT, laserHitCooldownTimer),
+	MEMBER(MemberType::FLOAT, fireDamageTaken),
+	MEMBER(MemberType::FLOAT, cooldownFireDamage),
 	MEMBER(MemberType::GAME_OBJECT_UID, transitionUID)
 };
 
@@ -33,6 +38,22 @@ void PlayerDeath::Update() {
 	if (player) {
 		if (playerController) {
 			dead = playerController->IsPlayerDead();
+		}
+
+		if (laserHitCooldownTimer <= laserHitCooldown) {
+			laserHitCooldownTimer += Time::GetDeltaTime();
+			if (laserHitCooldownTimer > laserHitCooldown) {
+				laserHitCooldownTimer = 0.0f;
+				getLaserHit = true;
+			}
+		}
+
+		if (timerFireDamage <= cooldownFireDamage) {
+			timerFireDamage += Time::GetDeltaTime();
+			if (timerFireDamage > cooldownFireDamage) {
+				fireDamageActive = true;
+				timerFireDamage = 0.f;
+			}
 		}
 	}
 }
@@ -92,10 +113,23 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 	if (collidedWith.name == "RangerProjectile") {
 		if(playerController) playerController->TakeDamage(rangedDamageTaken);
 	}
-	else if (collidedWith.name == "MeleePunch") {
+	else if (collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") { //meleegrunt
 		if(playerController) playerController->TakeDamage(meleeDamageTaken);
+		collidedWith.Disable();
 	}
 	else if (collidedWith.name == "Barrel") {
 		if(playerController) playerController->TakeDamage(barrelDamageTaken);
+	}
+	else if (collidedWith.name == "LaserBeam") {
+		if (getLaserHit) {
+			if (playerController) playerController->TakeDamage(laserBeamTaken);
+			getLaserHit = false;
+		}
+	}
+	else if (collidedWith.name == "FireTile") {
+		if (fireDamageActive) {
+			if (playerController) playerController->TakeDamage(fireDamageTaken);
+			fireDamageActive = false;
+		}
 	}
 }

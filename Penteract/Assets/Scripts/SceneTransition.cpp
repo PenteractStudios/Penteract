@@ -1,5 +1,7 @@
 #include "SceneTransition.h"
 
+#include "PlayerController.h"
+
 #include "Components/UI/ComponentTransform2D.h"
 #include "GameObject.h"
 #include "GameplaySystems.h"
@@ -14,7 +16,8 @@ EXPOSE_MEMBERS(SceneTransition) {
 	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, transitionUID),
 	MEMBER(MemberType::INT, transitionMove),
-	MEMBER(MemberType::FLOAT, speedTransition),
+		MEMBER(MemberType::FLOAT, speedTransition),
+		MEMBER(MemberType::INT, levelNum)
 };
 
 GENERATE_BODY_IMPL(SceneTransition);
@@ -37,6 +40,14 @@ void SceneTransition::Update() {
 			if (sceneUID != 0) {
 				isExit ? SceneManager::ExitGame() : SceneManager::ChangeScene(sceneUID);
 				if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
+				if (levelNum == 2) {
+					PlayerController::currentLevel = 2;
+					Player::level2Upgrade = false;
+				} else if (levelNum == 1) {
+					PlayerController::currentLevel = 1;
+					Player::level1Upgrade = false;
+					Player::level2Upgrade = false;
+				}
 			}
 		}
 		else {

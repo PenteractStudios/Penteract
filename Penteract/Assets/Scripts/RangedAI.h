@@ -44,6 +44,7 @@ public:
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
+	void PlayHit();
 
 private:
 	//State machine handling
@@ -58,16 +59,18 @@ private:
 	void PlayAudio(AudioType audioType);											//Plays audio (if not null)
 
 	void UpdatePushBackPosition();
+	void CalculatePushBackRealDistance();											// Calculates the real distance of the pushback taking into account any obstacles in the path
+	void PlayHitMaterialEffect();													// Changes material hit 
+	void UpdateDissolveTimer();														// If the currentDissolveTime is reached, Plays animation
 
 public:
-	Enemy rangerGruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 5.f, 5.f); //Enemy class instance (for shared values)
+	Enemy rangerGruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 5.f, 5.f, 3.f, 2.f); //Enemy class instance (for shared values)
 	UID playerUID = 0;				//Reference to player main Gameobject UID, used to check distances
 	UID playerMeshUIDFang = 0;		//Reference to player Fang mesh holding Gameobject UID, used for raycasting if fang is active
 	UID playerMeshUIDOnimaru = 0;	//Reference to player Fang mesh holding Gameobject UID, used for raycasting if onimaru is active
 	UID meshUID1 = 0;				//Second mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID meshUID2 = 0;				//Third mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID trailPrefabUID = 0;			//Reference to projectile prefab UID , for shooting
-	UID hudControllerObjUID = 0;	//Reference to Hud UID , for incrementing score
 	UID fangUID = 0;
 
 	UID winConditionUID = 0;
@@ -76,7 +79,6 @@ public:
 	GameObject* player = nullptr;				//Reference to player main Gameobject, used to check distances
 	GameObject* fang = nullptr;
 
-	HUDController* hudControllerScript = nullptr; //Reference to Hud , for incrementing score
 	PlayerController* playerController = nullptr; //Reference to player script, used to check distances
 
 	PlayerDeath* playerDeath = nullptr;
@@ -102,7 +104,11 @@ public:
 	float stunDuration = 3.f;			//Max time the enemy will be stunned
 	float hurtFeedbackTimeDuration = 0.5f;	//Time that damaged material will be shown whenever AI is hit
 	float groundPosition = 3.0f;
-	float fleeingUpdateTime = 3.0f;        //Time that needs to wait in order to get away from the player in the flee state
+	float fleeingUpdateTime = 3.0f;        //Time that needs to wait in order to get away from the player in the flee state	
+
+	UID dissolveMaterialObj = 0;		//Reference to dissolve material holding gameobject UID, used to be set whenever Ai has been recently hurt
+	UID dissolveMaterialID = 0;			//Reference to dissolve material, used to be set whenever Ai has been recently hurt
+	float dissolveTimerToStart = 0.0f;	//Timer until the dissolve animation is played
 
 private:
 
@@ -118,8 +124,6 @@ private:
 
 	float stunTimeRemaining = 0.f;			//Time remaining stunned
 
-	bool EMPUpgraded = false;			//Flag to control if the ability is uprgraded
-
 	ComponentAnimation* animation = nullptr;		//Refernece to  animatino component
 	ComponentTransform* ownerTransform = nullptr;	//Reference to owner transform componenet
 
@@ -127,12 +131,20 @@ private:
 	float actualShotTimer = -1.0f;			//Timer that counts down the seconds to match shooting animation with projectile creation
 
 	ComponentMeshRenderer* meshRenderer = nullptr;	//Reference to a meshRendererComponent, used for material setting on hurt
+	ComponentMeshRenderer* backPackMeshRenderer = nullptr;
+	ComponentMeshRenderer* weaponMeshRenderer = nullptr;
 
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr }; //Array of ints used to play audios
 
 	float currentPushBackDistance = 0.f;
+	float currentSlowedDownTime = 0.f;
+	float pushBackRealDistance = 0.f;
 
 	float currentFleeingUpdateTime = 0.f; // Current Time that needs to compare against the fleeingUpdateTime in the flee state
 	float3 currentFleeDestination;        // Destination position where it is going to move far away from the player  
 	bool fleeingFarAway = false;          //Toggle to get away from the player
+
+	float currentDissolveTime = 0.0f;
+	bool dissolveAlreadyStarted = false;	//Used to control other material setters so it doesn't interfere with Dissolve's material
+	bool dissolveAlreadyPlayed = false;		//Controls whether the animation function has already been played (called material->PlayAnimation) or not
 };

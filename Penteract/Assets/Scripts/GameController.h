@@ -23,7 +23,6 @@ public:
 	void Rotate(float2 mouseMotion, Frustum* frustum, ComponentTransform* transform);
 	void PauseGame();
 	void ResumeGame();
-
 public:
 	UID gameCameraUID = 0;
 	UID godCameraUID = 0;
@@ -46,6 +45,8 @@ public:
 	float rotationSpeedY = 10.f;
 	float focusDistance = 100.f;
 	float transitionSpeed = 1000.f;
+
+	int obtainedPowerUps = 0; // PowerUp counter
 
 private:
 	void DoTransition();
