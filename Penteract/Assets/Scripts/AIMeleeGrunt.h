@@ -76,6 +76,10 @@ public:
 
 	float groundPosition = 3.0f;
 
+	UID dissolveMaterialObj = 0;		//Reference to dissolve material holding gameobject UID, used to be set whenever Ai has been recently hurt
+	UID dissolveMaterialID = 0;			//Reference to dissolve material, used to be set whenever Ai has been recently hurt
+	float dissolveTimerToStart = 0.0f;	//Timer until the dissolve animation is played
+	
 	//Attack1 
 	float att1AttackSpeed = 1.f;
 	float att1MovementSpeedWhileAttacking = 1.f;
@@ -127,8 +131,14 @@ private:
 
 	float pushBackRealDistance = 0.f;
 
+	float currentDissolveTime = 0.0f;
+	bool dissolveAlreadyStarted = false;	//Used to control other material setters so it doesn't interfere with Dissolve's material
+	bool dissolveAlreadyPlayed = false;		//Controls whether the animation function has already been played (called material->PlayAnimation) or not
+
 private:
 	void UpdatePushBackPosition();
 	void CalculatePushBackRealDistance();	// Calculates the real distance of the pushback taking into account any obstacles in the path
 	void Death();
+	void PlayHitMaterialEffect();
+	void UpdateDissolveTimer();
 };
