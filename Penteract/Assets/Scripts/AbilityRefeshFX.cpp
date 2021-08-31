@@ -7,8 +7,8 @@
 #include "UISpriteSheetPlayer.h"
 #include "HUDManager.h"
 
-#define ANIMATION_COUNT 2
-#define HIERARCHY_INDEX_GLOW_EFFECT 2
+#define ANIMATION_COUNT 1
+#define HIERARCHY_INDEX_GLOW_EFFECT 1
 
 EXPOSE_MEMBERS(AbilityRefeshFX) {
 	MEMBER(MemberType::FLOAT, totalEffectTime),
@@ -46,7 +46,7 @@ void AbilityRefeshFX::Start() {
 	effectAudio = GetOwner().GetComponent<ComponentAudioSource>();
 	children = GetOwner().GetChildren();
 
-	if (children.size() > 2) {
+	if (children.size() > HIERARCHY_INDEX_GLOW_EFFECT) {
 		glowImage = children[HIERARCHY_INDEX_GLOW_EFFECT]->GetComponent<ComponentImage>();
 		if (glowImage) {
 			glowImage->SetColor(float4(glowImage->GetColor().xyz(), 0));
