@@ -18,6 +18,10 @@
 #include "Components/ComponentMeshRenderer.h"
 #include "Resources/ResourcePrefab.h"
 //clang-format off
+
+#define HIERARCHY_POSITION_WEAPON 2
+#define HIERARCHY_POSITION_BACKPACK 3
+
 EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
@@ -76,15 +80,15 @@ void RangedAI::Start() {
 	}
 
 	int numChildren = GetOwner().GetChildren().size();
-	if (numChildren > 2) {
-		GameObject* weaponGO = GetOwner().GetChildren()[2];
+	if (numChildren > HIERARCHY_POSITION_WEAPON) {
+		GameObject* weaponGO = GetOwner().GetChildren()[HIERARCHY_POSITION_WEAPON];
 		if (weaponGO) {
 			weaponMeshRenderer = weaponGO->GetComponent<ComponentMeshRenderer>();
 		}
 	}
 
-	if (numChildren > 3) {
-		GameObject* backpackGO = GetOwner().GetChildren()[3];
+	if (numChildren > HIERARCHY_POSITION_BACKPACK) {
+		GameObject* backpackGO = GetOwner().GetChildren()[HIERARCHY_POSITION_BACKPACK];
 		if (backpackGO) {
 			backPackMeshRenderer = backpackGO->GetComponent<ComponentMeshRenderer>();
 		}
