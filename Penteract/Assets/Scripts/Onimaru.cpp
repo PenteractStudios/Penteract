@@ -21,18 +21,19 @@ bool Onimaru::CanBlast() const {
 
 void Onimaru::GetHit(float damage_) {
 	//We assume that the player is always alive when this method gets called, so no need to check if character was alive before taking lives
+	if (isAlive) {
+		if (cameraController) {
+			cameraController->StartShake();
+		}
+    
+		lifePoints -= damage_;
+		if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::HIT)]) onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::HIT)]->Play();
+		isAlive = lifePoints > 0.0f;
 
-	if (cameraController) {
-		cameraController->StartShake();
-	}
-
-	lifePoints -= damage_;
-	if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::HIT)]) onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::HIT)]->Play();
-	isAlive = lifePoints > 0.0f;
-
-	if (!isAlive) {
-		if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::DEATH)]) onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::DEATH)]->Play();
-		OnDeath();
+		if (!isAlive) {
+			if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::DEATH)]) onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::DEATH)]->Play();
+			OnDeath();
+		}
 	}
 }
 
@@ -313,6 +314,7 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 			cameraController = GET_SCRIPT(cameraAux, CameraController);
 		}
 		shieldingMaxSpeed = normalMovementSpeed / 2;
+		movementSpeed = normalMovementSpeed;
 		if (agent) {
 			agent->SetMaxSpeed(movementSpeed);
 			agent->SetMaxAcceleration(MAX_ACCELERATION);

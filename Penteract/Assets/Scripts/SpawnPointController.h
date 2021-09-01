@@ -18,10 +18,16 @@ public:
 	/* Door UID */
 	UID initialDoorUID = 0;
 	UID finalDoorUID = 0;
-
 	UID onCompletionActivateThisUID = 0;
+  
+	std::string doorEnergyBack = "DoorEnergyBack";
+	std::string doorEnergyFront = "DoorEnergyFront";
 
 	bool unlocksInitialDoor = true;
+	float timerToUnlock = 0.0f;
+
+	/* Dissolve UID */
+	UID dissolveMaterialGOUID = 0;
 
 public:
 	void Start() override;
@@ -57,6 +63,12 @@ private:
 	std::vector<unsigned int> enemiesPerSpawnPoint;
 	std::vector<bool> enemySpawnPointStatus;
 
+	/* Dissolve UID */
+	UID dissolveMaterialID = 0;
+	float currentUnlockTime = 0.0f;
+	float unlockStarted = false;
+
 private:
 	bool CheckSpawnPointStatus();
+	void PlayDissolveAnimation(GameObject* root, bool playReverse);
 };
