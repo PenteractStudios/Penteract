@@ -41,6 +41,7 @@
 #define HIERARCHY_INDEX_HUD_RIGHT_SIDE 1
 
 #define HEALTH_HIERARCHY_NUM_CHILDREN 4
+#define HUD_HIT_FEEDBACK_SIDES 2
 
 EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerObjectUID),
@@ -884,7 +885,7 @@ void HUDManager::PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns cooldown)
 }
 
 void HUDManager::PlayHitEffect() {
-	if (sidesHUDChildren.size() != 2) return;
+	if (sidesHUDChildren.size() != HUD_HIT_FEEDBACK_SIDES) return;
 
 	if (hitEffectTimer > hitEffectTotalTime) {
 		hitEffectTimer = hitEffectTotalTime;
@@ -1136,7 +1137,7 @@ void HUDManager::InitializeHealth() {
 }
 
 void HUDManager::InitializeHUDSides() {
-	if (sidesHUDChildren.size() == 2) {
+	if (sidesHUDChildren.size() == HUD_HIT_FEEDBACK_SIDES) {
 		// Get normal color 
 		GameObject* leftSide = sidesHUDChildren[HIERARCHY_INDEX_HUD_LEFT_SIDE];
 		ComponentImage* sideImage = nullptr;
