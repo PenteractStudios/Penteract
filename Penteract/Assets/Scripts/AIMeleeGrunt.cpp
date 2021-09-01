@@ -9,7 +9,6 @@
 #include "HUDController.h"
 #include "AIMovement.h"
 #include "WinLose.h"
-#include "Player.h"
 #include "Onimaru.h"
 
 #include <math.h>
@@ -289,46 +288,35 @@ void AIMeleeGrunt::OnAnimationFinished() {
 	}
 }
 
+void AIMeleeGrunt::ParticleHit(GameObject& collidedWith, void* particle, Player& player) {
+	if (!particle) return;
+	ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+	if (pSystem) pSystem->KillParticle(p);
+	hitTaken = true;
+	if (state == AIState::STUNNED && player.level2Upgrade) {
+		gruntCharacter.GetHit(99);
+	}
+	else {
+		gruntCharacter.GetHit(player.damageHit + playerController->GetOverPowerMode());
+	}
+}
+
 void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 	if (state != AIState::START && state != AIState::SPAWN) {
 		if (gruntCharacter.isAlive && playerController) {
 			bool hitTaken = false;
-			if (collidedWith.name == "FangBullet") {
-				if (!particle) return;
-				GameplaySystems::DestroyGameObject(&collidedWith);
+			if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
 				hitTaken = true;
-				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
-					gruntCharacter.GetHit(99);
-				}
-				else {
-					gruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
-				}
+				ParticleHit(collidedWith, particle, playerController->playerFang);
 			}
 			else if (collidedWith.name == "OnimaruBullet") {
-				if (!particle) return;
-				ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
-				ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
-				if (pSystem) pSystem->KillParticle(p);
 				hitTaken = true;
-				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
-					gruntCharacter.GetHit(99);
-				}
-				else {
-					gruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
-				}
+				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
 			}
 			else if (collidedWith.name == "OnimaruBulletUltimate") {
-				if (!particle) return;
-				ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
-				ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
-				if (pSystem) pSystem->KillParticle(p);
 				hitTaken = true;
-				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
-					gruntCharacter.GetHit(99);
-				}
-				else {
-					gruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
-				}
+				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
 			}
 			else if (collidedWith.name == "Barrel") {
 				hitTaken = true;

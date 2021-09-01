@@ -1,6 +1,6 @@
 {
-    "ShaderType": 2,
-    "RenderingMode": 0,
+    "ShaderType": 3,
+    "RenderingMode": 1,
     "DiffuseColor": [
         1.0,
         1.0,

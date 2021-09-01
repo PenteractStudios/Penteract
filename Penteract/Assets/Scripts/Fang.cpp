@@ -23,7 +23,11 @@ void Fang::Init(UID fangUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, 
 		//left gun
 		GameObject* gunAux1 = GameplaySystems::GetGameObject(leftGunUID);
 		if (gunAux1) leftGunTransform = gunAux1->GetComponent<ComponentTransform>();
-		lookAtMousePlanePosition = leftGunTransform->GetGlobalPosition();
+
+		GameObject* lookAtPoint = GameplaySystems::GetGameObject(lookAtPointUID);
+		if (lookAtPoint) {
+			lookAtMousePlanePosition = lookAtPoint->GetComponent<ComponentTransform>()->GetGlobalPosition();
+		}
 
 		GameObject* trailAux = GameplaySystems::GetGameObject(trailDashUID);
 		if (trailAux) {
@@ -410,11 +414,12 @@ void Fang::PlayAnimation() {
 						compAnimation->SendTrigger(states[idle] + states[static_cast<int>(FANG_STATES::EMP)]);
 					}
 				}
-
 			}
 		} else {
 			if (compAnimation->GetCurrentState()->name != states[aiming?(GetMouseDirectionState() + dashAnimation): static_cast<int>(FANG_STATES::SPRINT)]) {
 				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[aiming ? (GetMouseDirectionState() + dashAnimation) : static_cast<int>(FANG_STATES::SPRINT)]);
+				ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentState()->clipUid);
+				SetClipSpeed(clip, agent->GetMaxSpeed());
 			}
 		}
 	}
@@ -471,6 +476,7 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 				if (GetInputBool(InputActions::SHOOT, useGamepad)) {
 					timeWithoutCombat = 0.f;
 					aiming = true;
+					decelerating = 0;
 					Shoot();
 				}
 			}
@@ -481,7 +487,7 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 					shooting = false;
 				}
-				if (!compAnimation->GetCurrentStateSecondary()) {
+				if (!compAnimation->GetCurrentStateSecondary() || compAnimation->GetCurrentStateSecondary()->name != "IdleAim") {
 					transitioning = 0;
 				}
 			}

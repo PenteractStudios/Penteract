@@ -20,8 +20,6 @@ bool Onimaru::CanBlast() const {
 void Onimaru::GetHit(float damage_) {
 	//We assume that the player is always alive when this method gets called, so no need to check if character was alive before taking lives
 
-
-
 	if (cameraController) {
 		cameraController->StartShake();
 	}
@@ -118,6 +116,9 @@ void Onimaru::PlayAnimation() {
 					//If Movement is found, Primary state machine will be in charge of getting movement animations
 					if (compAnimation->GetCurrentState()->name != (states[GetMouseDirectionState()])) {
 						compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[GetMouseDirectionState()]);
+						ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentState()->clipUid);
+						SetClipSpeed(clip, agent->GetMaxSpeed());
+						
 					}
 				}
 			}
@@ -263,14 +264,17 @@ bool Onimaru::CanSwitch() const {
 }
 
 void Onimaru::OnAnimationSecondaryFinished() {
-	if (compAnimation) {
-		if (blastInUse) {
-			blastInUse = false;
-			blastInCooldown = true;
-			currentBlastDuration = 0.f;
-			calculateEnemiesInRange = true;
-			if (compAnimation) {
-				if (compAnimation->GetCurrentStateSecondary() && compAnimation->GetCurrentState()) {
+	if (blastInUse) {
+		blastInUse = false;
+		blastInCooldown = true;
+		currentBlastDuration = 0.f;
+		calculateEnemiesInRange = true;
+		if (compAnimation) {
+			if (compAnimation->GetCurrentStateSecondary() && compAnimation->GetCurrentState()) {
+				if (shooting) {
+					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHOOTING)]);
+				}
+				else {
 					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 				}
 			}
@@ -337,9 +341,11 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 	GameObject* onimaruGun = GameplaySystems::GetGameObject(onimaruGunUID);
 	if (onimaruGun) {
 		gunTransform = onimaruGun->GetComponent<ComponentTransform>();
-		lookAtMousePlanePosition = gunTransform->GetGlobalPosition();
 	}
-
+	GameObject* lookAtPoint = GameplaySystems::GetGameObject(lookAtPointUID);
+	if(lookAtPoint){
+		lookAtMousePlanePosition = lookAtPoint->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	}
 	GameObject* HUDManagerGO = GameplaySystems::GetGameObject(HUDManagerObjectUID);
 	if (HUDManagerGO) {
 		hudManagerScript = GET_SCRIPT(HUDManagerGO, HUDManager);
@@ -396,7 +402,7 @@ bool Onimaru::UltimateStarted() const {
 }
 
 void Onimaru::InitShield() {
-	if (shield == nullptr || shieldGO == nullptr) return;
+  	if (shield == nullptr || shieldGO == nullptr) return;
 	if (CanShield()) {
 		shield->InitShield();
 		if (shieldParticles) {
@@ -483,7 +489,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 			}
 		}
 
-		if (!ultimateOn && !blastInUse) {
+		if (!ultimateOn) {
 			
 			if (GetInputBool(InputActions::ABILITY_1, useGamepad)) {
 				if (!shield->GetIsActive() && shield->CanUse()) {
@@ -491,7 +497,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 				}
 			}
 			
-			if (!GetInputBool(InputActions::ABILITY_1, useGamepad) || !shield->CanUse()) {
+			if ((!GetInputBool(InputActions::ABILITY_1, useGamepad) || !shield->CanUse()) && shield->GetIsActive()) {
 				FadeShield();
 			}
 			
@@ -541,25 +547,22 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 		if (CanBlast()) {
 			if (GetInputBool(InputActions::ABILITY_2, useGamepad)) {
 				blastInUse = true;
-				if (shooting) {
-					if (compAnimation) {
-						if (compAnimation->GetCurrentState() && compAnimation->GetCurrentStateSecondary()) {
-							compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+				if (compAnimation && compAnimation->GetCurrentState()) {
+						if (shooting) {
+							if (compAnimation->GetCurrentStateSecondary()) {
+								compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHOOTBLAST)]);
+							}
 						}
-					}
+						else {
+							compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(BLAST)]);
+						}
 				}
-
+				
 				if (hudManagerScript) {
 					hudManagerScript->SetCooldownRetreival(HUDManager::Cooldowns::ONIMARU_SKILL_2);
 				}
 
-
 				blastCooldownRemaining = blastCooldown;
-				if (compAnimation) {
-					if (compAnimation->GetCurrentState()) {
-						compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(BLAST)]);
-					}
-				}
 				Blast();
 			}
 		}

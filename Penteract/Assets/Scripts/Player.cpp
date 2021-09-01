@@ -118,6 +118,7 @@ void Player::MoveTo() {
 		deceleration = 0.f;
 	}
 	agent->SetMaxSpeed((aiming)? movementSpeed:sprintMovementSpeed - deceleration);
+
 	agent->SetMoveTarget(newPosition, false);
 }
 
