@@ -52,7 +52,6 @@ void Barrel::Update() {
 
 		currentTimerToDestroy += Time::GetDeltaTime();
 		if (currentTimerToDestroy >= timerToDestroy) {
-			if (particlesForTimer) particlesForTimer->StopChildParticles();
 			if (audioForTimer) audioForTimer->Stop();
 			isHit = true;
 			startTimerToDestroy = false;
@@ -66,9 +65,11 @@ void Barrel::Update() {
 		if(particles) particles->PlayChildParticles();
 		if(audio) audio->Play();
 		if(barrel) barrel->Disable();
+		destroy = true;
 	}
 
 	if (destroy) {
+
 		if (timeToDestroy > 0) {
 			timeToDestroy -= Time::GetDeltaTime();
 		}
