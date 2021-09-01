@@ -97,11 +97,9 @@ public:
 	float4 healthBarBackgroundColorInBackground = float4(0.f / 255.f, 40.f / 255.f, 60.f / 255.f, 30.f / 255.f);
 	float4 healthFillBarColorInBackground = float4(255.f / 255.f, 0.f / 255.f, 0.f / 255.f, 30.f / 255.f);
 	float4 healthOverlayColorInBackground = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 100.f / 255.f);
-	float4 healthTextColorInBackground = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 50.f / 255.f);
 	float4 healthBarBackgroundColor = float4(0.f / 255.f, 40.f / 255.f, 60.f / 255.f, 220.f / 255.f);
 	float4 healthFillBarColor = float4(255.f / 255.f, 0.f / 255.f, 0.f / 255.f, 255.f / 255.f);
 	float4 healthOverlayColor = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 255.f / 255.f);
-	float4 healthTextColor = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 178.f / 255.f);
 
 	// Health lost feedback
 	float4 healthLostFeedbackFillBarInitialColor = float4(0.f / 255.f, 177.f / 255.f, 227.f / 255.f, 204.f / 255.f);

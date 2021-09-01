@@ -32,7 +32,6 @@
 #define HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK 1
 #define HIERARCHY_INDEX_HEALTH_FILL 2
 #define HIERARCHY_INDEX_HEALTH_OVERLAY 3
-#define HIERARCHY_INDEX_HEALTH_TEXT 4
 
 #define HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP 0
 #define HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN 1
@@ -40,6 +39,8 @@
 
 #define HIERARCHY_INDEX_HUD_LEFT_SIDE 0
 #define HIERARCHY_INDEX_HUD_RIGHT_SIDE 1
+
+#define HEALTH_HIERARCHY_NUM_CHILDREN 4
 
 EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerObjectUID),
@@ -195,7 +196,7 @@ void HUDManager::UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2,
 
 void HUDManager::UpdateHealth(float fangHealth, float onimaruHealth) {
 	if (!fangObj || !onimaruObj || !playerController) return;
-	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
+	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
 	if (switchState == SwitchState::IDLE) StartLostHealthFeedback(); // Temporary hack
 
@@ -210,12 +211,6 @@ void HUDManager::UpdateHealth(float fangHealth, float onimaruHealth) {
 		}
 	}
 
-	ComponentText* healthText = nullptr;
-	healthText = fangObj->IsActive() ? fangHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>() : onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
-	if (healthText) {
-		healthText->SetText(std::to_string((int)health));
-	}
-
 	if (fangObj->IsActive()) fangPreviousHealth = fangHealth;
 	else onimaruPreviousHealth = onimaruHealth;
 
@@ -227,7 +222,7 @@ void HUDManager::UpdateHealth(float fangHealth, float onimaruHealth) {
 
 void HUDManager::HealthRegeneration(float health) {
 	if (!fangObj || !onimaruObj || !playerController) return;
-	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
+	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
 	float maxHealth = fangObj->IsActive() ? playerController->GetOnimaruMaxHealth() : playerController->GetFangMaxHealth();
 
@@ -238,13 +233,6 @@ void HUDManager::HealthRegeneration(float health) {
 		if (healthFill->IsFill()) {
 			healthFill->SetFillValue(health / maxHealth);
 		}
-	}
-
-	// Set current health text
-	ComponentText* healthText = nullptr;
-	healthText = fangObj->IsActive() ? onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>() : fangHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
-	if (healthText) {
-		healthText->SetText(std::to_string((int)health));
 	}
 
 	// Set health lost fill bar to current health
@@ -527,7 +515,7 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 void HUDManager::ManageSwitch() {
 	if (!fangSkillParent || !onimaruSkillParent || !fangHealthParent || !onimaruHealthParent || !switchHealthParent || !fangObj || !onimaruObj) return;
 	if (skillsFang.size() != 3 || skillsOni.size() != 3) return;
-	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
+	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
 	ComponentTransform2D* transform2D = nullptr;
 	ComponentTransform2D* health = nullptr;
@@ -620,7 +608,6 @@ void HUDManager::ManageSwitch() {
 			backgroundImage = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
 			fillImage = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
 			overlayImage = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
-			healthText = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
 			switchHealthStroke = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->GetComponent<ComponentImage>();
 
 			if (health) {
@@ -631,7 +618,6 @@ void HUDManager::ManageSwitch() {
 			backgroundImage = fangHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
 			fillImage = fangHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
 			overlayImage = fangHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
-			healthText = fangHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
 			switchHealthStroke = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentImage>();
 
 			if (health) {
@@ -650,10 +636,6 @@ void HUDManager::ManageSwitch() {
 
 		if (overlayImage) {
 			overlayImage->SetColor(float4::Lerp(healthOverlayColor, healthOverlayColorInBackground, switchTimer / switchCollapseMovementTime));
-		}
-
-		if (healthText) {
-			healthText->SetFontColor(float4::Lerp(healthTextColor, healthTextColorInBackground, switchTimer / switchCollapseMovementTime));
 		}
 
 		if (switchHealthStroke) {
@@ -809,7 +791,6 @@ void HUDManager::ManageSwitch() {
 			backgroundImage = fangHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
 			fillImage = fangHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
 			overlayImage = fangHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
-			healthText = fangHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
 			switchHealthStroke = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentImage>();
 
 			if (health) {
@@ -820,7 +801,6 @@ void HUDManager::ManageSwitch() {
 			backgroundImage = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
 			fillImage = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
 			overlayImage = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
-			healthText = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
 			switchHealthStroke = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->GetComponent<ComponentImage>();
 
 			if (health) {
@@ -838,10 +818,6 @@ void HUDManager::ManageSwitch() {
 
 		if (overlayImage) {
 			overlayImage->SetColor(float4::Lerp(healthOverlayColorInBackground, healthOverlayColor, switchTimer / switchCollapseMovementTime));
-		}
-
-		if (healthText) {
-			healthText->SetFontColor(float4::Lerp(healthTextColorInBackground, healthTextColor, switchTimer / switchCollapseMovementTime));
 		}
 
 		if (switchHealthStroke) {
@@ -931,7 +907,7 @@ void HUDManager::PlayHitEffect() {
 
 void HUDManager::PlayLostHealthFeedback() {
 	if (!fangObj || !onimaruObj || !fangHealthParent || !onimaruHealthParent) return;
-	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
+	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
 	if (lostHealthTimer > lostHealthFeedbackTotalTime) {
 		lostHealthTimer = lostHealthFeedbackTotalTime;
@@ -954,7 +930,7 @@ void HUDManager::PlayLostHealthFeedback() {
 
 void HUDManager::StartLostHealthFeedback() {
 	if (!fangObj || !onimaruObj || !fangHealthParent || !onimaruHealthParent) return;
-	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
+	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
 	lostHealthTimer = 0.f;
 
@@ -972,7 +948,7 @@ void HUDManager::StartLostHealthFeedback() {
 
 void HUDManager::StopLostHealthFeedback() {
 	if (!fangObj || !onimaruObj || !fangHealthParent || !onimaruHealthParent || !playerController) return;
-	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
+	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
 	playingLostHealthFeedback = false;
 
@@ -982,7 +958,7 @@ void HUDManager::StopLostHealthFeedback() {
 void HUDManager::ResetLostHealthFeedback() {
 	// We don't need to check for null because it's called from a function that already checks them but just in case it's called from anywhere else
 	if (!fangObj || !onimaruObj || !fangHealthParent || !onimaruHealthParent || !playerController) return;
-	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
+	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
 	float maxHealth = fangObj->IsActive() ? playerController->GetFangMaxHealth() : playerController->GetOnimaruMaxHealth();
 	ComponentImage* lostHealth = nullptr;
@@ -1076,7 +1052,7 @@ void HUDManager::SetPictoState(Cooldowns cooldown, PictoState newState) {
 
 void HUDManager::GetAllHealthColors() {
 	if (!fangHealthParent || !onimaruHealthParent) return;
-	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
+	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
 	// Get background color in background
 	ComponentImage* image = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
@@ -1090,10 +1066,6 @@ void HUDManager::GetAllHealthColors() {
 	image = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
 	if (image) healthOverlayColorInBackground = image->GetColor();
 
-	// Get health text color in background
-	ComponentText* healthText = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
-	if (healthText) healthTextColorInBackground = healthText->GetFontColor();
-
 	// Get main background color
 	image = fangHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
 	if (image) healthBarBackgroundColor = image->GetColor();
@@ -1105,11 +1077,6 @@ void HUDManager::GetAllHealthColors() {
 	// Get main overlay color
 	image = fangHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
 	if (image) healthOverlayColor = image->GetColor();
-
-	// Get main health text color
-	healthText = fangHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
-	if (healthText) healthTextColor = healthText->GetFontColor();
-
 
 	// Get lost feedback colors
 	image = fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
@@ -1145,18 +1112,6 @@ void HUDManager::InitializeHealth() {
 	}
 
 	onimaruPreviousHealth = healthValue;
-
-	ComponentText* healthText = fangHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
-	healthValue = playerController->GetFangMaxHealth();
-	if (healthText) {
-		healthText->SetText(std::to_string((int)healthValue));
-	}
-
-	healthText = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
-	healthValue = playerController->GetOnimaruMaxHealth();
-	if (healthText) {
-		healthText->SetText(std::to_string((int)healthValue));
-	}
 
 	// Set initial lost health bar
 	ComponentImage* healthLost = fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
