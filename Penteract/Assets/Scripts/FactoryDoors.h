@@ -10,9 +10,8 @@ class FactoryDoors : public Script {
 public:
 	void Start() override;
 	void Update() override;
+	void Open();
 
 private:
-	void Open();
 	ComponentAnimation* animation = nullptr;
-	
 };
