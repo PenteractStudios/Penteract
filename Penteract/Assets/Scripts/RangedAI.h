@@ -62,7 +62,7 @@ private:
 	void CalculatePushBackRealDistance();											// Calculates the real distance of the pushback taking into account any obstacles in the path
 	void PlayHitMaterialEffect();													// Changes material hit 
 	void UpdateDissolveTimer();														// If the currentDissolveTime is reached, Plays animation
-
+	void ParticleHit(GameObject& collidedWith, void* particle, Player& player);
 public:
 	Enemy rangerGruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 5.f, 5.f, 3.f, 2.f); //Enemy class instance (for shared values)
 	UID playerUID = 0;				//Reference to player main Gameobject UID, used to check distances

@@ -312,7 +312,6 @@ void AIMeleeGrunt::ParticleHit(GameObject& collidedWith, void* particle, Player&
 	ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 	if (pSystem) pSystem->KillParticle(p);
-	hitTaken = true;
 	if (state == AIState::STUNNED && player.level2Upgrade) {
 		gruntCharacter.GetHit(99);
 	}
