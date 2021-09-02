@@ -1183,6 +1183,11 @@
                                                         "Script": 15139721463718087939,
                                                         "Values": [
                                                             {
+                                                                "Name": "fadeDuration",
+                                                                "Type": "Float",
+                                                                "Value": 2.0
+                                                            },
+                                                            {
                                                                 "Name": "sceneUID",
                                                                 "Type": "SceneResourceUID",
                                                                 "Value": 16893504836010757748
@@ -1191,6 +1196,11 @@
                                                                 "Name": "levelNum",
                                                                 "Type": "Int",
                                                                 "Value": 1
+                                                            },
+                                                            {
+                                                                "Name": "fadeToBlackObjectUID",
+                                                                "Type": "GameObjectUID",
+                                                                "Value": 17695041365782035885
                                                             }
                                                         ]
                                                     },
@@ -1231,6 +1241,19 @@
                                                         "RolloffFactor": 1.0,
                                                         "ReferenceDistance": 10.0,
                                                         "MaxDistance": 30.0
+                                                    },
+                                                    {
+                                                        "Type": "Script",
+                                                        "Id": 12225364926990553757,
+                                                        "Active": true,
+                                                        "Script": 10048554049739023339,
+                                                        "Values": [
+                                                            {
+                                                                "Name": "controllerObjUID",
+                                                                "Type": "GameObjectUID",
+                                                                "Value": 3771293597699585983
+                                                            }
+                                                        ]
                                                     }
                                                 ],
                                                 "Children": [
@@ -7212,6 +7235,82 @@
                                         ]
                                     }
                                 ]
+                            },
+                            {
+                                "Id": 17695041365782035885,
+                                "Name": "Black",
+                                "Active": true,
+                                "Static": false,
+                                "ActiveHierarchy": true,
+                                "RootBoneId": 0,
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform2D",
+                                        "Id": 14809460731840285128,
+                                        "Active": true,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            5000.0,
+                                            5000.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Id": 7095614592984564895,
+                                        "Active": true
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Id": 957524486406911858,
+                                        "Active": true,
+                                        "TextureId": 0,
+                                        "Color": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": false,
+                                        "FillValue": 1.0
+                                    }
+                                ],
+                                "Children": null
                             }
                         ]
                     },

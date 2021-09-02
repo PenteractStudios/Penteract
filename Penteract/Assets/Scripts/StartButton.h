@@ -6,10 +6,10 @@
 class GameObject;
 class ComponentSelectable;
 class ComponentAudioSource;
+class ComponentImage;
 class SceneTransition;
 
-class StartButton : public Script
-{
+class StartButton : public Script {
 	GENERATE_BODY(StartButton);
 
 public:
@@ -22,18 +22,27 @@ public:
 public:
 	UID sceneUID = 0;
 	UID transitionUID = 0;
-
+	UID fadeToBlackObjectUID = 0;
 	int checkpointNum = -1;
 	int levelNum = 0;
-
+	float fadeDuration = 3.0f;
 private:
 	GameObject* player = nullptr;
 
 	GameObject* transitionGO = nullptr;
 	SceneTransition* sceneTransition = nullptr;
 
+	/* UI */
+	ComponentImage* fadeToBlackImage = nullptr;
+	float fadeTimer = 0.0f;
+
 	/* Audio */
 	bool playHoveredAudio = true;
+	bool pressed = false;
 	ComponentSelectable* selectable = nullptr;
 	ComponentAudioSource* audios[static_cast<int>(UIAudio::TOTAL)] = { nullptr };
+
+private:
+	void DoTransition();
+
 };
