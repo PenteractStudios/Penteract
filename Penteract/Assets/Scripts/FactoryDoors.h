@@ -14,4 +14,5 @@ public:
 private:
 	void Open();
 	ComponentAnimation* animation = nullptr;
+	
 };
