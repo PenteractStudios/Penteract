@@ -113,6 +113,11 @@
                         "Name": "att1AttackSpeed",
                         "Type": "Float",
                         "Value": 1.5
+                    },
+                    {
+                        "Name": "dissolveMaterialObj",
+                        "Type": "GameObjectUID",
+                        "Value": 76536311638176447
                     }
                 ]
             },
