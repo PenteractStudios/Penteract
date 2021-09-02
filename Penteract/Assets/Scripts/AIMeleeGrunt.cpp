@@ -48,6 +48,9 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 		MEMBER(MemberType::FLOAT, att3AttackSpeed),
 		MEMBER(MemberType::FLOAT, att3MovementSpeedWhileAttacking),
 		MEMBER(MemberType::INT, att3AbilityChance),
+		MEMBER_SEPARATOR("Dissolve properties"),
+		MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialObj),
+		MEMBER(MemberType::FLOAT, dissolveTimerToStart)
 };
 
 GENERATE_BODY_IMPL(AIMeleeGrunt);
@@ -113,6 +116,14 @@ void AIMeleeGrunt::Start() {
 		}
 	}
 
+	GameObject* dissolveObj = GameplaySystems::GetGameObject(dissolveMaterialObj);
+	if (dissolveObj) {
+		ComponentMeshRenderer* dissolveMeshRenderer = dissolveObj->GetComponent<ComponentMeshRenderer>();
+		if (dissolveMeshRenderer) {
+			dissolveMaterialID = dissolveMeshRenderer->materialId;
+		}
+	}
+
 	gameObject = GameplaySystems::GetGameObject(defaultMaterialPlaceHolderUID);
 	if (gameObject) {
 		ComponentMeshRenderer* meshRenderer = gameObject->GetComponent<ComponentMeshRenderer>();
@@ -144,12 +155,17 @@ void AIMeleeGrunt::Update() {
 	if (!componentMeshRenderer) return;
 	if (!playerDeath) return;
 	if (!rightBladeCollider || !leftBladeCollider) return;
-	if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
-		timeSinceLastHurt += Time::GetDeltaTime();
-		if (timeSinceLastHurt > hurtFeedbackTimeDuration) {
-			componentMeshRenderer->materialId = defaultMaterialID;
+
+	if (!dissolveAlreadyPlayed && componentMeshRenderer) {
+		if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
+			timeSinceLastHurt += Time::GetDeltaTime();
+			if (timeSinceLastHurt > hurtFeedbackTimeDuration) {
+				componentMeshRenderer->materialId = defaultMaterialID;
+			}
 		}
 	}
+
+	UpdateDissolveTimer();
 
 	float speedToUse = gruntCharacter.slowedDown ? gruntCharacter.slowedDownSpeed : gruntCharacter.movementSpeed;
 
@@ -233,6 +249,9 @@ void AIMeleeGrunt::Update() {
 		UpdatePushBackPosition();
 		break;
 	case AIState::DEATH:
+		if (!dissolveAlreadyStarted) {
+			dissolveAlreadyStarted = true;
+		}
 		break;
 	}
 
@@ -363,9 +382,7 @@ void AIMeleeGrunt::EnableBlastPushBack() {
 			gruntCharacter.GetHit(playerController->playerOnimaru.blastDamage + playerController->GetOverPowerMode());
 
 			if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
-			if (componentMeshRenderer) {
-				if (damageMaterialID != 0) componentMeshRenderer->materialId = damageMaterialID;
-			}
+			PlayHitMaterialEffect();
 			timeSinceLastHurt = 0.0f;
 
 			if (!gruntCharacter.isAlive) {
@@ -390,10 +407,7 @@ bool AIMeleeGrunt::IsBeingPushed() const {
 void AIMeleeGrunt::PlayHit()
 {
 	if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
-	if (componentMeshRenderer) {
-		if (damageMaterialID != 0) componentMeshRenderer->materialId = damageMaterialID;
-	}
-
+	PlayHitMaterialEffect();
 	timeSinceLastHurt = 0.0f;
 }
 
@@ -518,4 +532,28 @@ void AIMeleeGrunt::Death()
 
 void AIMeleeGrunt::PlayerHit() {
 	alreadyHit = true;
+}
+
+void AIMeleeGrunt::PlayHitMaterialEffect()
+{
+	if (!dissolveAlreadyStarted && componentMeshRenderer) {
+		if (damageMaterialID != 0) {
+			componentMeshRenderer->materialId = damageMaterialID;
+		}
+	}
+}
+
+void AIMeleeGrunt::UpdateDissolveTimer() {
+	if (dissolveAlreadyStarted && !dissolveAlreadyPlayed) {
+		if (currentDissolveTime >= dissolveTimerToStart) {
+			if (componentMeshRenderer && dissolveMaterialID != 0) {
+				componentMeshRenderer->materialId = dissolveMaterialID;
+				componentMeshRenderer->PlayDissolveAnimation();
+			}
+			dissolveAlreadyPlayed = true;
+		}
+		else {
+			currentDissolveTime += Time::GetDeltaTime();
+		}
+	}
 }
