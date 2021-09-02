@@ -18,8 +18,8 @@ public:
 	/* Door UID */
 	UID initialDoorUID = 0;
 	UID finalDoorUID = 0;
-	UID onCompletionActivateThisUID = 0;
-  
+	UID gameObjectActivatedOnCombatEndUID = 0;
+
 	std::string doorEnergyBack = "DoorEnergyBack";
 	std::string doorEnergyFront = "DoorEnergyFront";
 
@@ -57,7 +57,7 @@ private:
 	GameObject* initialDoor = nullptr;
 	GameObject* finalDoor = nullptr;
 
-	GameObject* onCompletionActivateThis = nullptr;
+	GameObject* gameObjectActivatedOnCombatEnd = nullptr;	// This gameObject will be disabled when triggering the combat, and will be enabled again when the combat ends (in 'OpenDoor()'). Useful to set up triggers and other gameplay features after a combat encounter.
 
 	/* Spawn points satus*/
 	std::vector<unsigned int> enemiesPerSpawnPoint;
