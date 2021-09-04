@@ -7,12 +7,14 @@
 
 
 EXPOSE_MEMBERS(CameraController) {
-	MEMBER(MemberType::FLOAT, cameraOffsetZ),
-	MEMBER(MemberType::FLOAT, cameraOffsetY),
-	MEMBER(MemberType::FLOAT, cameraOffsetX),
+	MEMBER(MemberType::GAME_OBJECT_UID, playerControllerObjUID),
+	MEMBER_SEPARATOR("Camera Positioning"),
+	MEMBER(MemberType::FLOAT, cameraInitialOffsetZ),
+	MEMBER(MemberType::FLOAT, cameraInitialOffsetY),
+	MEMBER(MemberType::FLOAT, cameraInitialOffsetX),
 	MEMBER(MemberType::FLOAT, smoothCameraSpeed),
 	MEMBER(MemberType::BOOL, useSmoothCamera),
-	MEMBER(MemberType::GAME_OBJECT_UID, playerControllerObjUID),
+	MEMBER_SEPARATOR("Shaker Control"),
 	MEMBER(MemberType::FLOAT, shakeTotalTime),
 	MEMBER(MemberType::FLOAT, shakeTimer),
 	MEMBER(MemberType::FLOAT, shakeMultiplier)
@@ -27,6 +29,8 @@ void CameraController::Start() {
 	if (playerControllerObj) {
 		playerController = GET_SCRIPT(playerControllerObj, PlayerController);
 	}
+	
+	RestoreCameraOffset();
 }
 
 void CameraController::Update() {
@@ -53,6 +57,20 @@ void CameraController::Update() {
 
 void CameraController::StartShake() {
 	shakeTimer = shakeTotalTime;
+}
+
+void CameraController::ChangeCameraOffset(float x, float y, float z)
+{
+	cameraOffsetZ = z;
+	cameraOffsetY = y;
+	cameraOffsetX = x;
+}
+
+void CameraController::RestoreCameraOffset()
+{
+	cameraOffsetZ = cameraInitialOffsetZ;
+	cameraOffsetY = cameraInitialOffsetY;
+	cameraOffsetX = cameraInitialOffsetX;
 }
 
 

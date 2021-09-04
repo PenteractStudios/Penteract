@@ -1,5 +1,7 @@
 #include "Player.h"
+
 #include "CameraController.h"
+#include "GameController.h"
 #include "Geometry/Plane.h"
 #include "Geometry/Frustum.h"
 #include "Geometry/LineSegment.h"
@@ -327,13 +329,14 @@ void Player::LookAtMouse() {
 
 void Player::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 
-	if (!lockMovement) {
+	if (!lockMovement && !GameController::IsGameplayBlocked()) {
 		movementInputDirection = GetInputMovementDirection(useGamepad && Input::IsGamepadConnected(0));
 		MoveTo();
 	} else {
+		movementInputDirection = MovementDirection::NONE;
 		if (agent) agent->SetMoveTarget(playerMainTransform->GetGlobalPosition(), false);
 	}
-	if (!lockRotation) {
+	if (!lockRotation && !GameController::IsGameplayBlocked()) {
 		UpdateFacePointDir(useGamepad && Input::IsGamepadConnected(0), faceToFront);
 		LookAtFacePointTarget(useGamepad && Input::IsGamepadConnected(0));
 	}

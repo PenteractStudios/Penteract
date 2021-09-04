@@ -1,5 +1,6 @@
 #include "Fang.h"
 #include "GameplaySystems.h"
+#include "GameController.h"
 #include "HUDController.h"
 #include "HUDManager.h"
 #include "CameraController.h"
@@ -129,7 +130,7 @@ bool Fang::IsVulnerable() const {
 
 bool Fang::CanSwitch() const {
 	if (!EMP) return false;
-	return !EMP->IsActive() && !ultimateOn;
+	return !EMP->IsActive() && !ultimateOn && (!GameController::IsGameplayBlocked() || GameController::IsSwitchTutorialActive());
 }
 
 void Fang::IncreaseUltimateCounter() {
@@ -209,7 +210,7 @@ void Fang::TrailDelay() {
 }
 
 bool Fang::CanDash() {
-	return isAlive && !dashing && !dashInCooldown && !EMP->IsActive() && !ultimateOn;
+	return isAlive && !dashing && !dashInCooldown && !EMP->IsActive() && !ultimateOn && !GameController::IsGameplayBlocked();
 }
 
 void Fang::ActivateEMP() {
@@ -231,7 +232,7 @@ void Fang::ActivateEMP() {
 }
 
 bool Fang::CanEMP() {
-	return !EMP->IsActive() && !EMPInCooldown && !dashing;
+	return !EMP->IsActive() && !EMPInCooldown && !dashing && !GameController::IsGameplayBlocked();
 }
 
 void Fang::CheckCoolDowns(bool noCooldownMode) {
@@ -361,7 +362,7 @@ float Fang::GetRealUltimateCooldown() {
 }
 
 bool Fang::CanShoot() {
-	return !shooting && !ultimateOn && !compAnimation->GetCurrentStateSecondary();
+	return !shooting && !ultimateOn && !compAnimation->GetCurrentStateSecondary()  && !GameController::IsGameplayBlocked();
 }
 
 void Fang::Shoot() {
@@ -453,7 +454,7 @@ void Fang::ActiveUltimate() {
 }
 
 bool Fang::CanUltimate() {
-	return ultimateCooldownRemaining >= ultimateCooldown && !ultimateOn;
+	return ultimateCooldownRemaining >= ultimateCooldown && !ultimateOn && !GameController::IsGameplayBlocked();
 }
 
 void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {

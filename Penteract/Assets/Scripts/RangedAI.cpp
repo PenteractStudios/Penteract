@@ -1,5 +1,6 @@
 #include "RangedAI.h"
 
+#include "GameController.h"
 #include "PlayerController.h"
 #include "PlayerDeath.h"
 #include "HUDController.h"
@@ -18,6 +19,10 @@
 #include "Components/ComponentMeshRenderer.h"
 #include "Resources/ResourcePrefab.h"
 //clang-format off
+
+#define HIERARCHY_POSITION_WEAPON 2
+#define HIERARCHY_POSITION_BACKPACK 3
+
 EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
@@ -76,15 +81,15 @@ void RangedAI::Start() {
 	}
 
 	int numChildren = GetOwner().GetChildren().size();
-	if (numChildren > 2) {
-		GameObject* weaponGO = GetOwner().GetChildren()[2];
+	if (numChildren > HIERARCHY_POSITION_WEAPON) {
+		GameObject* weaponGO = GetOwner().GetChildren()[HIERARCHY_POSITION_WEAPON];
 		if (weaponGO) {
 			weaponMeshRenderer = weaponGO->GetComponent<ComponentMeshRenderer>();
 		}
 	}
 
-	if (numChildren > 3) {
-		GameObject* backpackGO = GetOwner().GetChildren()[3];
+	if (numChildren > HIERARCHY_POSITION_BACKPACK) {
+		GameObject* backpackGO = GetOwner().GetChildren()[HIERARCHY_POSITION_BACKPACK];
 		if (backpackGO) {
 			backPackMeshRenderer = backpackGO->GetComponent<ComponentMeshRenderer>();
 		}
@@ -295,7 +300,7 @@ void RangedAI::Update() {
 
 	if (!GetOwner().IsActive()) return;
 
-	if (state == AIState::IDLE || state == AIState::RUN || state == AIState::FLEE) {
+	if ((state == AIState::IDLE || state == AIState::RUN || state == AIState::FLEE) && !GameController::IsGameplayBlocked()) {
 		attackTimePool = Max(attackTimePool - Time::GetDeltaTime(), 0.0f);
 		if (attackTimePool == 0) {
 			if (actualShotTimer == -1) {
@@ -401,6 +406,10 @@ void RangedAI::UpdateState() {
 
 	float speedToUse = rangerGruntCharacter.slowedDown ? rangerGruntCharacter.slowedDownSpeed : rangerGruntCharacter.movementSpeed;
 
+	if (GameController::IsGameplayBlocked() && state != AIState::START && state != AIState::SPAWN) {
+		state = AIState::IDLE;
+	}
+
 	switch (state) {
 	case AIState::START:
 		if (aiMovement) aiMovement->Seek(state, float3(ownerTransform->GetGlobalPosition().x, 0, ownerTransform->GetGlobalPosition().z), rangerGruntCharacter.fallingSpeed, true);
@@ -415,7 +424,8 @@ void RangedAI::UpdateState() {
 	case AIState::IDLE:
 		if (player) {
 			if (aiMovement) {
-				if (aiMovement->CharacterInSight(player, rangerGruntCharacter.searchRadius)) {
+				aiMovement->Stop();
+				if (aiMovement->CharacterInSight(player, rangerGruntCharacter.searchRadius) && !GameController::IsGameplayBlocked()) {
 					if (aiMovement->CharacterInSight(player, fleeingRange)) {
 						ChangeState(AIState::FLEE);
 						break;
@@ -432,6 +442,8 @@ void RangedAI::UpdateState() {
 					else {
 						ChangeState(AIState::RUN);
 					}
+				} else {
+					if (animation->GetCurrentState()->name != "Idle") animation->SendTrigger(animation->GetCurrentState()->name + "Idle");
 				}
 			}
 		}

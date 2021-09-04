@@ -1,20 +1,22 @@
 #include "Onimaru.h"
 
 #include "GameplaySystems.h"
+#include "GameController.h"
+#include "HUDController.h"
+#include "HUDManager.h"
+#include "CameraController.h"
 #include "OnimaruBullet.h"
 #include "AIMeleeGrunt.h"
 #include "RangedAI.h"
-#include "HUDController.h"
-#include "HUDManager.h"
+
 #include "Shield.h"
-#include "CameraController.h"
 
 bool Onimaru::CanShoot() {
-	return !shootingOnCooldown;
+	return !shootingOnCooldown && !GameController::IsGameplayBlocked();
 }
 
 bool Onimaru::CanBlast() const {
-	return !blastInCooldown && !IsShielding() && !ultimateOn && !blastInUse;
+	return !blastInCooldown && !IsShielding() && !ultimateOn && !blastInUse && !GameController::IsGameplayBlocked();
 }
 
 void Onimaru::GetHit(float damage_) {
@@ -23,7 +25,7 @@ void Onimaru::GetHit(float damage_) {
 		if (cameraController) {
 			cameraController->StartShake();
 		}
-
+    
 		lifePoints -= damage_;
 		if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::HIT)]) onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::HIT)]->Play();
 		isAlive = lifePoints > 0.0f;
@@ -261,7 +263,7 @@ void Onimaru::OnDeath() {
 }
 
 bool Onimaru::CanSwitch() const {
-	return ultimateTimeRemaining <= 0 && !ultimateOn && !IsShielding() && !blastInUse;
+	return ultimateTimeRemaining <= 0 && !ultimateOn && !IsShielding() && !blastInUse && !GameController::IsGameplayBlocked();
 }
 
 void Onimaru::OnAnimationSecondaryFinished() {
@@ -390,12 +392,11 @@ void Onimaru::OnAnimationFinished() {
 
 bool Onimaru::CanShield() const {
 	if (shield == nullptr || shieldGO == nullptr) return false;
-
-	return !ultimateOn && !shield->GetIsActive() && shield->CanUse();
+	return !ultimateOn && !shield->GetIsActive() && shield->CanUse() && !GameController::IsGameplayBlocked();
 }
 
 bool Onimaru::CanUltimate() const {
-	return !blastInUse && !IsShielding() && ultimateChargePoints >= ultimateChargePointsTotal;
+	return !blastInUse && !IsShielding() && ultimateChargePoints >= ultimateChargePointsTotal && !GameController::IsGameplayBlocked();
 }
 
 bool Onimaru::UltimateStarted() const {
@@ -504,25 +505,29 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 			
 
 			if (GetInputBool(InputActions::SHOOT, useGamepad)) {
-				if (!shooting) {
-					shooting = true;
-					if (bullet) {
-						bullet->Play();
-						bullet->SetParticlesPerSecond(float2(attackSpeed, attackSpeed));
-					}
-					if (compAnimation) {
-						if (!shield->GetIsActive()) {
-							if (compAnimation->GetCurrentState()) {
-								compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHOOTING)]);
+				if (CanShoot()) {
+					if (!shooting) {
+						shooting = true;
+						if (bullet) {
+							bullet->Play();
+							bullet->SetParticlesPerSecond(float2(attackSpeed, attackSpeed));
+						}
+						if (compAnimation) {
+							if (!shield->GetIsActive()) {
+								if (compAnimation->GetCurrentState()) {
+									compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(SHOOTING)]);
+								}
 							}
-						} else {
-							if (compAnimation->GetCurrentStateSecondary()) {
-								compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHOOTSHIELD)]);
+							else {
+								if (compAnimation->GetCurrentStateSecondary()) {
+									compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(SHOOTSHIELD)]);
+								}
 							}
 						}
 					}
-				} else {
-					Shoot();
+					else {
+						Shoot();
+					}
 				}
 			}
 		}
