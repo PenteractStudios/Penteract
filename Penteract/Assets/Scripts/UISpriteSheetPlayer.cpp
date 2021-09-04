@@ -35,11 +35,11 @@ void UISpriteSheetPlayer::Update() {
 			currentFrameObj->Disable();
 
 		if (currentFrame >= frames.size()) {
+			currentFrame = 0;
 			if (!loops) {
 				playing = false;
+				return;
 			}
-			currentFrame = 0;
-			return;
 		}
 
 		currentFrameObj = frames[currentFrame];
@@ -53,10 +53,29 @@ void UISpriteSheetPlayer::Update() {
 }
 
 void UISpriteSheetPlayer::Play() {
+	if (!(frames.size() > 0)) return;
+
 	playing = true;
+
+	currentFrame = 0;
+
+	currentFrameObj = frames[currentFrame];
+	if (currentFrameObj)
+		currentFrameObj->Enable();
 }
 
 void UISpriteSheetPlayer::Stop() {
+
+	if (currentFrameObj) {
+		currentFrameObj->Disable();
+	}
+
+	currentFrame = 0;
+
 	playing = false;
+}
+
+bool UISpriteSheetPlayer::IsPlaying() const {
+	return playing;
 }
 

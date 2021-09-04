@@ -13,6 +13,7 @@ public:
 	void Update() override;
 	void Play();
 	void Stop();
+	bool IsPlaying()const;
 public:
 
 	float secondsPerFrame = 0.1f;
