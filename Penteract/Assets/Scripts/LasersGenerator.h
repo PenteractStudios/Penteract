@@ -39,6 +39,9 @@ private:
 	GeneratorState currentState = GeneratorState::IDLE;
 
 	GameObject* laserObject = nullptr;
+	LasersGenerator* pairScript = nullptr;
+
+	bool beingUsed = false;
 
 	float chargingTimer = 0.f;
 

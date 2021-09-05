@@ -23,6 +23,7 @@ void LasersGenerator::Start() {
     }
     if (pair) {
         pairAnimationComp = pair->GetComponent<ComponentAnimation>();
+        pairScript = GET_SCRIPT(pair, LasersGenerator);
     }
 
     laserObject = GameplaySystems::GetGameObject(laserTargetUID);
@@ -44,8 +45,13 @@ void LasersGenerator::Update() {
             if (coolDownOffTimer > coolDownOff) {
                 coolDownOffTimer = 0;
                 currentState = GeneratorState::START;
-                animationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::IDLE)] + states[static_cast<unsigned int>(GeneratorState::START)]);
-                //pairAnimationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::IDLE)] + states[static_cast<unsigned int>(GeneratorState::START)]);
+                pairScript->beingUsed = true;
+                if (!beingUsed) {
+                    animationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::IDLE)] + states[static_cast<unsigned int>(GeneratorState::START)]);
+                }
+                if (pairScript->currentState == GeneratorState::IDLE) {
+                    pairAnimationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::IDLE)] + states[static_cast<unsigned int>(GeneratorState::START)]);
+                }
             }
         }
         break;
@@ -64,9 +70,13 @@ void LasersGenerator::Update() {
             if (coolDownOnTimer > coolDownOn) {
                 coolDownOnTimer = 0;
                 currentState = GeneratorState::IDLE;
-                animationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::SHOOT)] + states[static_cast<unsigned int>(GeneratorState::IDLE)]);
-                //pairAnimationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::SHOOT)] + states[static_cast<unsigned int>(GeneratorState::IDLE)]);
-
+                pairScript->beingUsed = false;
+                if (!beingUsed) {
+                    animationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::SHOOT)] + states[static_cast<unsigned int>(GeneratorState::IDLE)]);
+                }
+                if (pairScript->currentState == GeneratorState::IDLE) {
+                    pairAnimationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::SHOOT)] + states[static_cast<unsigned int>(GeneratorState::IDLE)]);
+                }
             }
         }
         break;
