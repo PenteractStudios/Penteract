@@ -130,7 +130,8 @@ bool Fang::IsVulnerable() const {
 
 bool Fang::CanSwitch() const {
 	if (!EMP) return false;
-	return !EMP->IsActive() && !ultimateOn && !GameController::IsGameplayBlocked() || (GameController::IsGameplayBlocked() && !GameController::IsSwitchTutorialActive());
+	if (!GameController::IsSwitchTutorialFinished()) return false;
+	return !EMP->IsActive() && !ultimateOn && !GameController::IsGameplayBlocked();
 }
 
 void Fang::IncreaseUltimateCounter() {
