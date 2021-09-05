@@ -470,7 +470,7 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 		if (EMP) {
 			faceToFront = !aiming;
 			Player::Update(useGamepad, dashing || EMP->IsActive(), dashing || EMP->IsActive() || ultimateOn);
-			if (GetInputBool(InputActions::ABILITY_1, useGamepad) && !EMP->IsActive()) {
+			if (GetInputBool(InputActions::ABILITY_1, useGamepad) && !EMP->IsActive() && !ultimateOn) {
 				InitDash();
 			}
 			if (!dashing && !EMP->IsActive()) {
@@ -492,7 +492,7 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 					transitioning = 0;
 				}
 			}
-			if (GetInputBool(InputActions::ABILITY_2, useGamepad)) {
+			if (GetInputBool(InputActions::ABILITY_2, useGamepad) && !ultimateOn) {
 				ActivateEMP();
 			}
 
