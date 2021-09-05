@@ -411,9 +411,9 @@ void Fang::PlayAnimation() {
 					if (compAnimation->GetCurrentState()->name != states[idle] && compAnimation->GetCurrentState()->name != states[static_cast<int>(FANG_STATES::EMP)]) {
 						compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[idle]);
 					}
-					if (compAnimation->GetCurrentState()->name == states[idle] && EMP->IsActive()) {
-						compAnimation->SendTrigger(states[idle] + states[static_cast<int>(FANG_STATES::EMP)]);
-					}
+				}
+				if (compAnimation->GetCurrentState()->name != states[static_cast<int>(FANG_STATES::EMP)] && EMP->IsActive()) {
+					compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::EMP)]);
 				}
 			}
 		} else {
