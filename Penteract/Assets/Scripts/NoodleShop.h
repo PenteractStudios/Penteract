@@ -11,6 +11,7 @@ class NoodleShop : public Script
 
 public:
 	UID doorUID = 0;
+	UID noodleShopObstacleUID = 0;
 
 public:
 	void Start() override;
