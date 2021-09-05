@@ -26,8 +26,8 @@ public:
 
 	static bool const IsGameplayBlocked();					// Getter for isGameplayBlocked
 	static void BlockGameplay(bool blockIt);				// Setter for isGameplayBlocked
-	static bool const IsSwitchTutorialActive();				// Getter for switchTutorialActive
-	static void ActivateSwitchTutorial(bool isActivated);	// Setter for switchTutorialActive
+	static bool const IsSwitchTutorialFinished();			// Getter for switchTutorialFinished
+	static void FinishSwitchTutorial(bool isFinished);		// Setter for switchTutorialFinished
 
 public:
 	UID gameCameraUID = 0;
@@ -83,6 +83,6 @@ private:
 
 	bool isPaused = false;
 	static inline bool isGameplayBlocked = false;		// isGameplayBlocked is used to stop the gameplay without pausing the game itself. When true, all entities will remain in an IDLE state, and player input will be mostly ignored.
-	static inline bool switchTutorialActive = false;	// This overrides the previous bool on Fang's 'CanSwitch()', used when the Switch Tutorial appears.
+	static inline bool switchTutorialFinished = false;	// This overrides the previous bool on Fang's 'CanSwitch()', used when the Switch Tutorial appears.
 };
 

@@ -36,7 +36,7 @@ void GameController::Start() {
 	showWireframe = false;
 	transitionFinished = false;
 	isGameplayBlocked = false;
-	switchTutorialActive = false;
+	switchTutorialFinished = false;
 
 	gameCamera = GameplaySystems::GetGameObject(gameCameraUID);
 	godCamera = GameplaySystems::GetGameObject(godCameraUID);
@@ -257,14 +257,14 @@ void GameController::BlockGameplay(bool blockIt)
 	isGameplayBlocked = blockIt;
 }
 
-bool const GameController::IsSwitchTutorialActive()
+bool const GameController::IsSwitchTutorialFinished()
 {
-	return switchTutorialActive;
+	return switchTutorialFinished;
 }
 
-void GameController::ActivateSwitchTutorial(bool isActivated)
+void GameController::FinishSwitchTutorial(bool isFinished)
 {
-	switchTutorialActive = isActivated;
+	switchTutorialFinished = isFinished;
 }
 
 void GameController::DoTransition() {

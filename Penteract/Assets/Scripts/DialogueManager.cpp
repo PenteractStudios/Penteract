@@ -138,6 +138,12 @@ void DialogueManager::Update() {
 					runSecondaryOpen = true;
 				}
 			} else runCloseAnimation = true;
+
+			// TODO Should be needed in order to make the switch Animation
+			//if (activeDialogue->closeButton == InputActions::SWITCH) {
+			//	//GameController::ActivateSwitchTutorial(true);
+			//	playerControllerScript->SwitchCharacter();
+			//}
 		}
 
 		if (runChangeAnimation && !runCloseAnimation) {
@@ -199,7 +205,7 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 			break;
 		case DialogueWindow::TUTO_SWAP:
 			activeDialogueObject = tutorialSwap;
-			GameController::ActivateSwitchTutorial(true);
+			GameController::FinishSwitchTutorial(true);
 			break;
 		case DialogueWindow::UPGRADES1:
 			activeDialogueObject = tutorialUpgrades1;
@@ -227,7 +233,7 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 	} else {
 		activeDialogueObject = nullptr;
 		GameController::BlockGameplay(false);
-		GameController::ActivateSwitchTutorial(false);
+		//GameController::ActivateSwitchTutorial(true);
 
 		// Camera Zoom Out
 		if (cameraControllerScript) {
