@@ -83,7 +83,7 @@ void Barrel::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 		if (pSystem) pSystem->KillParticle(p);
 		
-		if (collidedWith.name == "FangBullet" || collidedWith.name == "OnimaruBullet") {
+		if (collidedWith.name == "FangBullet") {
 			startTimerToDestroy = true;
 			timerDestroyActivated = true;
 			GameplaySystems::DestroyGameObject(&collidedWith);
