@@ -117,6 +117,7 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 	}
 	else if (collidedWith.name == "Barrel") {
 		if(playerController) playerController->TakeDamage(barrelDamageTaken);
+		collidedWith.Disable();
 	}
 	else if (collidedWith.name == "LaserBeam") {
 		if (getLaserHit) {
