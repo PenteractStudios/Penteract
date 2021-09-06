@@ -59,6 +59,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fangLeftBulletUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangLeftGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangRightGunUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangLaserUID),
 	MEMBER_SEPARATOR("Fang Abilities"),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangTrailDashUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUltimateUID),
@@ -106,7 +107,7 @@ EXPOSE_MEMBERS(PlayerController) {
 GENERATE_BODY_IMPL(PlayerController);
 
 void PlayerController::Start() {
-	playerFang.Init(fangUID, fangTrailDashUID, fangLeftGunUID, fangRightGunUID, fangRightBulletUID, fangLeftBulletUID, cameraUID, HUDManagerObjectUID, fangDashDamageUID, EMPUID, EMPEffectsUID, fangUltimateUID, fangUltimateVFXUID);
+	playerFang.Init(fangUID, fangTrailDashUID, fangLeftGunUID, fangRightGunUID, fangRightBulletUID, fangLeftBulletUID, fangLaserUID, cameraUID, HUDManagerObjectUID, fangDashDamageUID, EMPUID, EMPEffectsUID, fangUltimateUID, fangUltimateVFXUID);
 	playerOnimaru.Init(onimaruUID, onimaruBulletUID, onimaruGunUID, onimaruRightHandUID, onimaruShieldUID, onimaruUltimateBulletUID, onimaruBlastEffectsUID, cameraUID, HUDManagerObjectUID);
 
 	GameObject* HUDManagerGO = GameplaySystems::GetGameObject(HUDManagerObjectUID);

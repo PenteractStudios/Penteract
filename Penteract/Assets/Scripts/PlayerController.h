@@ -78,6 +78,7 @@ public:
 	UID fangRightGunUID = 0;
 	UID fangLeftBulletUID = 0;
 	UID fangRightBulletUID = 0;
+	UID fangLaserUID = 0;
 	UID EMPUID = 0;
 	UID EMPEffectsUID = 0;
 	UID fangUltimateUID = 0;
