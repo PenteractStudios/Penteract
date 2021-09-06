@@ -66,6 +66,10 @@ public:
 	float2 GetInputFloat2(InputActions action, bool useGamepad = false) const;
 	void UpdateFacePointDir(bool useGamepad, bool faceToFront = false);
 	virtual void IncreaseUltimateCounter();
+	void SetClipSpeed(ResourceClip* clip, float movementSpeed) {
+		clip->speed = movementSpeed * animationSpeedFactor;
+	}
+
 public:
 	float rangedDamageTaken = 1.0f;
 	float meleeDamageTaken = 1.0f;
@@ -92,10 +96,11 @@ public:
 	ComponentTransform* playerMainTransform = nullptr;
 	float ultimateTimeRemaining = 0.0f;
 	float ultimateTotalTime = 4.6f;
-
+	float animationSpeedFactor = 1.f;
 	//Combat
 	float aimTime = 5.f;
 	float decelerationRatio = 16.f;
+	UID lookAtPointUID = 0;
 protected:
 	void MoveTo();
 	//Combat

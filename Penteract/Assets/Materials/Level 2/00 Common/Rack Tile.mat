@@ -1,0 +1,35 @@
+{
+    "ShaderType": 1,
+    "RenderingMode": 0,
+    "DiffuseColor": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+    ],
+    "DiffuseMap": 16016062693315879954,
+    "SpecularColor": [
+        0.15000000596046449,
+        0.15000000596046449,
+        0.15000000596046449,
+        1.0
+    ],
+    "SpecularMap": 16320947558683256362,
+    "Metalness": 0.0,
+    "MetallicMap": 0,
+    "NormalMap": 12982448587514478695,
+    "NormalStrength": 1.0,
+    "EmissiveMap": 0,
+    "Emissive": 0.0,
+    "AmbientOcclusionMap": 11295684021422557929,
+    "Smoothness": 1.0,
+    "HasSmoothnessInAlphaChannel": true,
+    "Tiling": [
+        1.0,
+        1.0
+    ],
+    "Offset": [
+        0.0,
+        0.0
+    ]
+}

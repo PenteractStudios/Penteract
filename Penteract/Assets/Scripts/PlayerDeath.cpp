@@ -18,6 +18,8 @@ EXPOSE_MEMBERS(PlayerDeath) {
 	MEMBER(MemberType::FLOAT, laserBeamTaken),
 	MEMBER(MemberType::FLOAT, laserHitCooldown),
 	MEMBER(MemberType::FLOAT, laserHitCooldownTimer),
+	MEMBER(MemberType::FLOAT, fireDamageTaken),
+	MEMBER(MemberType::FLOAT, cooldownFireDamage),
 	MEMBER(MemberType::GAME_OBJECT_UID, transitionUID)
 };
 
@@ -46,6 +48,13 @@ void PlayerDeath::Update() {
 			}
 		}
 
+		if (timerFireDamage <= cooldownFireDamage) {
+			timerFireDamage += Time::GetDeltaTime();
+			if (timerFireDamage > cooldownFireDamage) {
+				fireDamageActive = true;
+				timerFireDamage = 0.f;
+			}
+		}
 	}
 }
 
@@ -113,6 +122,12 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 		if (getLaserHit) {
 			if (playerController) playerController->TakeDamage(laserBeamTaken);
 			getLaserHit = false;
+		}
+	}
+	else if (collidedWith.name == "FireTile") {
+		if (fireDamageActive) {
+			if (playerController) playerController->TakeDamage(fireDamageTaken);
+			fireDamageActive = false;
 		}
 	}
 }

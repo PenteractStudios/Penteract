@@ -2,13 +2,13 @@
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
-
 #include "AIMeleeGrunt.h"
 #include "RangedAI.h"
 #include "HUDController.h"
 #include "HUDManager.h"
 #include "OnimaruBullet.h"
 #include "SwitchParticles.h"
+
 #include "Math/Quat.h"
 #include "Geometry/Plane.h"
 #include "Geometry/Frustum.h"
@@ -39,6 +39,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, playerFang.ultimateMovementSpeed),
 	MEMBER(MemberType::FLOAT, playerFang.lifePoints),
 	MEMBER(MemberType::FLOAT, playerFang.normalMovementSpeed),
+	MEMBER(MemberType::FLOAT, playerFang.animationSpeedFactor),
 	MEMBER(MemberType::FLOAT, playerFang.damageHit),
 	MEMBER(MemberType::FLOAT, playerFang.attackSpeed),
 	MEMBER(MemberType::FLOAT, playerFang.dashCooldown),
@@ -60,6 +61,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fangLeftGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangRightGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangLaserUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, playerFang.lookAtPointUID),
 	MEMBER_SEPARATOR("Fang Abilities"),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangTrailDashUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUltimateUID),
@@ -70,6 +72,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER_SEPARATOR("Onimaru Stats"),
 	MEMBER(MemberType::FLOAT, playerOnimaru.lifePoints),
 	MEMBER(MemberType::FLOAT, playerOnimaru.normalMovementSpeed),
+	MEMBER(MemberType::FLOAT, playerOnimaru.animationSpeedFactor),
 	MEMBER(MemberType::FLOAT, playerOnimaru.damageHit),
 	MEMBER(MemberType::FLOAT, playerOnimaru.attackSpeed),
 	MEMBER(MemberType::FLOAT, playerOnimaru.blastCooldown),
@@ -91,6 +94,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruBulletUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruRightHandUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, playerOnimaru.lookAtPointUID),
 	MEMBER_SEPARATOR("Onimaru Abilities"),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruShieldUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruBlastEffectsUID),
@@ -370,12 +374,14 @@ void PlayerController::Update() {
 
 			if (switchInProgress || (noCooldownMode && (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R) && (!useGamepad || !Input::IsGamepadConnected(0))
 				|| useGamepad && Input::IsGamepadConnected(0) && Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0)))) {
+
 				switchInProgress = true;
 				SwitchCharacter();
 			}
 
 			if (!switchInProgress && (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R) && (!useGamepad || !Input::IsGamepadConnected(0))
 				|| useGamepad && Input::IsGamepadConnected(0) && Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0))) {
+
 				switchInProgress = true;
 				switchCooldownRemaining = switchCooldown;
 			}
