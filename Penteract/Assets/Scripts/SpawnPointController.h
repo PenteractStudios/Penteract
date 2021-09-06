@@ -18,8 +18,16 @@ public:
 	/* Door UID */
 	UID initialDoorUID = 0;
 	UID finalDoorUID = 0;
+	UID gameObjectActivatedOnCombatEndUID = 0;
+
+	std::string doorEnergyBack = "DoorEnergyBack";
+	std::string doorEnergyFront = "DoorEnergyFront";
 
 	bool unlocksInitialDoor = true;
+	float timerToUnlock = 0.0f;
+
+	/* Dissolve UID */
+	UID dissolveMaterialGOUID = 0;
 
 public:
 	void Start() override;
@@ -49,10 +57,18 @@ private:
 	GameObject* initialDoor = nullptr;
 	GameObject* finalDoor = nullptr;
 
+	GameObject* gameObjectActivatedOnCombatEnd = nullptr;	// This gameObject will be disabled when triggering the combat, and will be enabled again when the combat ends (in 'OpenDoor()'). Useful to set up triggers and other gameplay features after a combat encounter.
+
 	/* Spawn points satus*/
 	std::vector<unsigned int> enemiesPerSpawnPoint;
 	std::vector<bool> enemySpawnPointStatus;
 
+	/* Dissolve UID */
+	UID dissolveMaterialID = 0;
+	float currentUnlockTime = 0.0f;
+	float unlockStarted = false;
+
 private:
 	bool CheckSpawnPointStatus();
+	void PlayDissolveAnimation(GameObject* root, bool playReverse);
 };

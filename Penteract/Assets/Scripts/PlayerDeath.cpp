@@ -18,6 +18,8 @@ EXPOSE_MEMBERS(PlayerDeath) {
 	MEMBER(MemberType::FLOAT, laserBeamTaken),
 	MEMBER(MemberType::FLOAT, laserHitCooldown),
 	MEMBER(MemberType::FLOAT, laserHitCooldownTimer),
+	MEMBER(MemberType::FLOAT, fireDamageTaken),
+	MEMBER(MemberType::FLOAT, cooldownFireDamage),
 	MEMBER(MemberType::GAME_OBJECT_UID, transitionUID)
 };
 
@@ -45,6 +47,14 @@ void PlayerDeath::Update() {
 				laserHitCooldownTimer = 0.0f;
 				if (playerController) playerController->TakeDamage(laserBeamTaken);
 				getLaserHit = false;
+			}
+		}
+
+		if (timerFireDamage <= cooldownFireDamage) {
+			timerFireDamage += Time::GetDeltaTime();
+			if (timerFireDamage > cooldownFireDamage) {
+				fireDamageActive = true;
+				timerFireDamage = 0.f;
 			}
 		}
 	}
@@ -77,11 +87,9 @@ void PlayerDeath::OnAnimationSecondaryFinished() {
 			if (animation->GetCurrentState() && animation->GetCurrentStateSecondary()) {
 				if (animation->GetCurrentStateSecondary()->name == LEFT_SHOT) {
 					animation->SendTriggerSecondary(playerController->playerFang.states[10] + animation->GetCurrentState()->name);
-					playerController->playerFang.rightShot = true;
 				}
 				else if (animation->GetCurrentStateSecondary()->name == RIGHT_SHOT) {
 					animation->SendTriggerSecondary(playerController->playerFang.states[11] + animation->GetCurrentState()->name);
-					playerController->playerFang.rightShot = false;
 				}
 			}
 		}
@@ -111,8 +119,15 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 	}
 	else if (collidedWith.name == "Barrel") {
 		if(playerController) playerController->TakeDamage(barrelDamageTaken);
+		collidedWith.Disable();
 	}
 	else if (collidedWith.name == "LaserBeam") {
 		getLaserHit = true;
+	}
+	else if (collidedWith.name == "FireTile") {
+		if (fireDamageActive) {
+			if (playerController) playerController->TakeDamage(fireDamageTaken);
+			fireDamageActive = false;
+		}
 	}
 }
