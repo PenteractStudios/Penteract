@@ -12,8 +12,8 @@ int checkpoint;
 EXPOSE_MEMBERS(StartButton) {
 	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, transitionUID),
-        MEMBER(MemberType::INT, checkpointNum),
-        MEMBER(MemberType::INT, levelNum),
+    MEMBER(MemberType::INT, checkpointNum),
+    MEMBER(MemberType::INT, levelNum),
 };
 
 GENERATE_BODY_IMPL(StartButton);
