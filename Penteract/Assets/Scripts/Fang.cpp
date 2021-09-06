@@ -31,7 +31,7 @@ void Fang::Init(UID fangUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, 
 		}
 
 		//laser
-		GameObject* fangLaser = GameplaySystems::GetGameObject(laserUID);
+		fangLaser = GameplaySystems::GetGameObject(laserUID);
 
 		GameObject* trailAux = GameplaySystems::GetGameObject(trailDashUID);
 		if (trailAux) {
