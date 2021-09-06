@@ -38,12 +38,12 @@
         0.0,
         0.0
     ],
-    "DissolveScale": 4.0,
+    "DissolveScale": 5.050000190734863,
     "DissolveOffset": [
         0.0,
         0.0
     ],
-    "DissolveDuration": 1.0,
+    "DissolveDuration": 0.800000011920929,
     "DissolveEdgeSize": 0.10000000149011612,
     "VolumetricLightIntensity": 0.0,
     "VolumetricLightAttenuationExponent": 0.0,
