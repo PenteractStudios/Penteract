@@ -411,9 +411,9 @@ void Fang::PlayAnimation() {
 					if (compAnimation->GetCurrentState()->name != states[idle] && compAnimation->GetCurrentState()->name != states[static_cast<int>(FANG_STATES::EMP)]) {
 						compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[idle]);
 					}
-					if (compAnimation->GetCurrentState()->name == states[idle] && EMP->IsActive()) {
-						compAnimation->SendTrigger(states[idle] + states[static_cast<int>(FANG_STATES::EMP)]);
-					}
+				}
+				if (compAnimation->GetCurrentState()->name != states[static_cast<int>(FANG_STATES::EMP)] && EMP->IsActive()) {
+					compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::EMP)]);
 				}
 			}
 		} else {
@@ -470,7 +470,7 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 		if (EMP) {
 			faceToFront = !aiming;
 			Player::Update(useGamepad, dashing || EMP->IsActive(), dashing || EMP->IsActive() || ultimateOn);
-			if (GetInputBool(InputActions::ABILITY_1, useGamepad) && !EMP->IsActive()) {
+			if (GetInputBool(InputActions::ABILITY_1, useGamepad) && !EMP->IsActive() && !ultimateOn) {
 				InitDash();
 			}
 			if (!dashing && !EMP->IsActive()) {
@@ -492,7 +492,7 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 					transitioning = 0;
 				}
 			}
-			if (GetInputBool(InputActions::ABILITY_2, useGamepad)) {
+			if (GetInputBool(InputActions::ABILITY_2, useGamepad) && !ultimateOn) {
 				ActivateEMP();
 			}
 
