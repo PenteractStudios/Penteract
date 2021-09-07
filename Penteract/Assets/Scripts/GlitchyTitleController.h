@@ -3,6 +3,7 @@
 #include "Scripting/Script.h"
 
 class ComponentImage;
+class ComponentAudioSource;
 class UISpriteSheetPlayer;
 class CanvasFader;
 
@@ -17,6 +18,9 @@ public:
 	bool ReadyForTransition()const;
 
 public:
+
+	enum class GlitchTitleAudio { FADE_IN, GLITCH, TOTAL };
+
 	float maxTimeForGlitch = 2.0f;
 	float minTimeForGlitch = 4.0f;
 	float fadeInTotalTime = 0.5f;
@@ -29,12 +33,13 @@ public:
 
 private:
 	void StartStateIdle();
+	void PlayAudio(GlitchTitleAudio type);
 
 private:
 	enum class GlitchState { FADE_IN, WAIT_START, START, IDLE, GLITCH, PLAY, WAIT_FADE_OUT, FADE_OUT };
 	GlitchState glitchState = GlitchState::FADE_IN;
 	float glitchTimer = 10.0f;
-	float fadeInTimer = 0.0f;
+	float stateTimer = 0.0f;
 
 	UISpriteSheetPlayer* startUpTitleSpriteSheetPlayer = nullptr;
 	UISpriteSheetPlayer* loopingTitleSpriteSheetPlayer = nullptr;
@@ -43,6 +48,7 @@ private:
 	CanvasFader* canvasFader = nullptr;
 	const float4 alphaBlack = float4(0, 0, 0, 1);
 	const float4 noAlphaBlack = float4(0, 0, 0, 0);
+	ComponentAudioSource* audios[static_cast<int>(UIAudio::TOTAL)] = { nullptr };
 
 
 

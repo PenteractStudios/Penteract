@@ -4,6 +4,7 @@
 #include "UISpriteSheetPlayer.h"
 #include "Components/UI/ComponentImage.h"
 #include "CanvasFader.h"
+#include "Components/ComponentAudioSource.h"
 
 EXPOSE_MEMBERS(GlitchyTitleController) {
 	MEMBER(MemberType::FLOAT, minTimeForGlitch),
@@ -48,6 +49,12 @@ void GlitchyTitleController::Start() {
 		startPlayingTitleSpriteSheetPlayer = GET_SCRIPT(startPlayingTitleObj, UISpriteSheetPlayer);
 	}
 
+	int i = 0;
+	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
+		if (i < static_cast<int>(GlitchTitleAudio::TOTAL)) audios[i] = &src;
+		++i;
+	}
+
 }
 
 void GlitchyTitleController::Update() {
@@ -58,13 +65,6 @@ void GlitchyTitleController::Update() {
 	switch (glitchState) {
 	case GlitchState::FADE_IN:
 		if (canvasFader) {
-			//fadeInTimer += Time::GetDeltaTime();
-			//blackImage->SetColor(float4::Lerp(alphaBlack, noAlphaBlack, Clamp01(fadeInTimer / fadeInTotalTime)));
-
-			//if (fadeInTimer >= fadeInTotalTime) {
-			//	glitchState = GlitchState::WAIT_START;
-			//	fadeInTimer = 0;
-			//}
 
 			if (!canvasFader->IsPlaying()) {
 				glitchState = GlitchState::WAIT_START;
@@ -76,10 +76,11 @@ void GlitchyTitleController::Update() {
 		}
 		break;
 	case GlitchState::WAIT_START:
-		fadeInTimer += Time::GetDeltaTime();
-		if (fadeInTimer >= fadeInTotalTime) {
+		stateTimer += Time::GetDeltaTime();
+		if (stateTimer >= fadeInTotalTime) {
 			glitchState = GlitchState::START;
 			startUpTitleSpriteSheetPlayer->Play();
+			PlayAudio(GlitchTitleAudio::FADE_IN);
 		}
 		break;
 	case GlitchState::START:
@@ -89,6 +90,7 @@ void GlitchyTitleController::Update() {
 		if (glitchTimer <= 0) {
 			loopingTitleSpriteSheetPlayer->Stop();
 			glitchTitleSpriteSheetPlayer->Play();
+			PlayAudio(GlitchTitleAudio::GLITCH);
 			glitchState = GlitchState::GLITCH;
 		}
 		glitchTimer -= Time::GetDeltaTime();
@@ -97,13 +99,24 @@ void GlitchyTitleController::Update() {
 		if (glitchTitleSpriteSheetPlayer->IsPlaying())return;
 		StartStateIdle();
 		break;
+
+
+		//When button gets pressed
 	case GlitchState::PLAY:
-		fadeInTimer = 0.0f;
+
+		stateTimer = 0.0f;
+
+		loopingTitleSpriteSheetPlayer->Stop();
+		glitchTitleSpriteSheetPlayer->Stop();
+		startPlayingTitleSpriteSheetPlayer->Stop();
+
+		startPlayingTitleSpriteSheetPlayer->Play();
+
 		glitchState = GlitchState::WAIT_FADE_OUT;
 		break;
 	case GlitchState::WAIT_FADE_OUT:
-		fadeInTimer += Time::GetDeltaTime();
-		if (fadeInTimer >= fadeInTotalTime) {
+		stateTimer += Time::GetDeltaTime();
+		if (stateTimer >= fadeInTotalTime) {
 			canvasFader->FadeOut();
 			glitchState = GlitchState::FADE_OUT;
 		}
@@ -115,10 +128,6 @@ void GlitchyTitleController::Update() {
 
 void GlitchyTitleController::PressedPlay() {
 	glitchState = GlitchState::PLAY;
-	loopingTitleSpriteSheetPlayer->Stop();
-	glitchTitleSpriteSheetPlayer->Stop();
-	startPlayingTitleSpriteSheetPlayer->Stop();
-	startPlayingTitleSpriteSheetPlayer->Play();
 }
 
 bool GlitchyTitleController::ReadyForTransition() const {
@@ -129,4 +138,8 @@ void GlitchyTitleController::StartStateIdle() {
 	glitchState = GlitchState::IDLE;
 	glitchTimer = minTimeForGlitch + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (maxTimeForGlitch - minTimeForGlitch)));
 	loopingTitleSpriteSheetPlayer->Play();
+}
+
+void GlitchyTitleController::PlayAudio(GlitchTitleAudio type) {
+	if (audios[static_cast<int>(type)]) audios[static_cast<int>(type)]->Play();
 }
