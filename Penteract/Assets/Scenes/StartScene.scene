@@ -163,7 +163,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 200.0,
-                            "HorizontalFov": 1.3371851444244385,
+                            "HorizontalFov": 1.281530499458313,
                             "VerticalFov": 1.0
                         }
                     },
@@ -1221,14 +1221,14 @@
                                                         "Script": 10048554049739023339,
                                                         "Values": [
                                                             {
-                                                                "Name": "controllerObjUID",
-                                                                "Type": "GameObjectUID",
-                                                                "Value": 3771293597699585983
-                                                            },
-                                                            {
                                                                 "Name": "fadeToBlackObjectUID",
                                                                 "Type": "GameObjectUID",
                                                                 "Value": 17695041365782035885
+                                                            },
+                                                            {
+                                                                "Name": "controllerObjUID",
+                                                                "Type": "GameObjectUID",
+                                                                "Value": 3771293597699585983
                                                             },
                                                             {
                                                                 "Name": "sceneUID",
@@ -3440,7 +3440,7 @@
                                 ]
                             },
                             {
-                                "Id": 3771293597699585983,
+                                "Id": 2149423061758228828,
                                 "Name": "GlitchyTitle",
                                 "Active": true,
                                 "Static": false,
@@ -3449,8 +3449,34 @@
                                 "Mask": 0,
                                 "Components": [
                                     {
+                                        "Type": "Transform",
+                                        "Id": 16213453940210611928,
+                                        "Active": true,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            -0.0,
+                                            0.0,
+                                            -0.0
+                                        ]
+                                    },
+                                    {
                                         "Type": "Transform2D",
-                                        "Id": 17051290479511130379,
+                                        "Id": 17263061831624509175,
                                         "Active": true,
                                         "Position": [
                                             0.0,
@@ -3464,9 +3490,9 @@
                                             1.0
                                         ],
                                         "Scale": [
-                                            0.5,
-                                            0.5,
-                                            0.5
+                                            0.44999998807907107,
+                                            0.44999998807907107,
+                                            0.44999998807907107
                                         ],
                                         "LocalEulerAngles": [
                                             0.0,
@@ -3494,7 +3520,7 @@
                                     },
                                     {
                                         "Type": "Script",
-                                        "Id": 1988795434943198302,
+                                        "Id": 15127546922942270797,
                                         "Active": true,
                                         "Script": 16746575365898461252,
                                         "Values": [
@@ -3504,14 +3530,14 @@
                                                 "Value": 9693072970663710125
                                             },
                                             {
-                                                "Name": "loopingTitleObjUID",
-                                                "Type": "GameObjectUID",
-                                                "Value": 6739931987885618446
-                                            },
-                                            {
                                                 "Name": "blackImageObjUID",
                                                 "Type": "GameObjectUID",
                                                 "Value": 17695041365782035885
+                                            },
+                                            {
+                                                "Name": "loopingTitleObjUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 6739931987885618446
                                             },
                                             {
                                                 "Name": "glitchTitleObjUID",
@@ -3524,6 +3550,44 @@
                                                 "Value": 14285847449439769328
                                             }
                                         ]
+                                    },
+                                    {
+                                        "Type": "AudioSource",
+                                        "Id": 5271169571327707211,
+                                        "Active": true,
+                                        "Pitch": 1.0,
+                                        "Gain": 1.0,
+                                        "Mute": false,
+                                        "Looping": false,
+                                        "PlayOnAwake": false,
+                                        "AudioClipId": 0,
+                                        "SpatialBlend": 1,
+                                        "SourceType": 0,
+                                        "InnerAngle": 90.0,
+                                        "OuterAngle": 180.0,
+                                        "OuterGain": 0.0,
+                                        "RolloffFactor": 1.0,
+                                        "ReferenceDistance": 10.0,
+                                        "MaxDistance": 30.0
+                                    },
+                                    {
+                                        "Type": "AudioSource",
+                                        "Id": 13943588374866549648,
+                                        "Active": true,
+                                        "Pitch": 1.0,
+                                        "Gain": 1.0,
+                                        "Mute": false,
+                                        "Looping": false,
+                                        "PlayOnAwake": false,
+                                        "AudioClipId": 0,
+                                        "SpatialBlend": 1,
+                                        "SourceType": 0,
+                                        "InnerAngle": 90.0,
+                                        "OuterAngle": 180.0,
+                                        "OuterGain": 0.0,
+                                        "RolloffFactor": 1.0,
+                                        "ReferenceDistance": 10.0,
+                                        "MaxDistance": 30.0
                                     }
                                 ],
                                 "Children": [
