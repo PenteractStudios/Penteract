@@ -123,6 +123,7 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 	}
 	else if (collidedWith.name == "LaserBeam") {
 		getLaserHit = true;
+		laserHitCooldownTimer = laserHitCooldown;
 	}
 	else if (collidedWith.name == "FireTile") {
 		if (fireDamageActive) {
