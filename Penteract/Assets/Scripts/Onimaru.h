@@ -43,14 +43,16 @@ public:
 		RUNFORWARDRIGHT,
 		RUNBACKWARDLEFT,
 		RUNBACKWARDRIGHT,
+		SHOOTBLAST,
 
 	};
 
 	std::vector<std::string> states{ "Idle" ,
 					"RunBackward" , "RunForward" , "RunLeft" , "RunRight" ,
 					"EnergyBlast", "UltiLoopWalking" , "UltiIntro" , "UltiLoop" ,
-					"Death" , "Shooting", "Shield","ShootingShield" ,
+					"Death" , "Shooting", "Shield", "ShootingShield",
 					"RunForwardLeft","RunForwardRight", "RunBackwardLeft", "RunBackwardRight"
+					, "ShootingBlast"
 	};
 
 	//Onimaru ultimate related
@@ -114,9 +116,7 @@ private:
 
 	Shield* shield = nullptr;
 	GameObject* shieldGO = nullptr;
-
-	bool shieldInCooldown = false;
-	float shieldCooldownRemaining = 0.f;
+	float shieldCooldownRemainingCharge = 0.f;
 
 	bool blastInUse = false;
 	bool shooting = false;

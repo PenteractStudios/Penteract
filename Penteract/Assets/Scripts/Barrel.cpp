@@ -7,6 +7,7 @@
 EXPOSE_MEMBERS(Barrel) {
 	// Add members here to expose them to the engine. Example:
 	MEMBER(MemberType::GAME_OBJECT_UID, barrelUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, sphereColliderUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, particlesUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, particlesForTimerUID),
@@ -19,10 +20,13 @@ GENERATE_BODY_IMPL(Barrel);
 
 void Barrel::Start() {
 	barrel = GameplaySystems::GetGameObject(barrelUID);
-	if (barrel) {
-		barrelCollider = barrel->GetComponent<ComponentSphereCollider>();
+	
+	GameObject* barrelColliderAux = GameplaySystems::GetGameObject(sphereColliderUID);
+	if (barrelColliderAux) {
+		barrelCollider = barrelColliderAux;
 		barrelCollider->Disable();
 	}
+
 	GameObject* cameraAux = GameplaySystems::GetGameObject(cameraUID);
 	if (cameraAux) {
 		cameraController = GET_SCRIPT(cameraAux, CameraController);
@@ -48,7 +52,6 @@ void Barrel::Update() {
 
 		currentTimerToDestroy += Time::GetDeltaTime();
 		if (currentTimerToDestroy >= timerToDestroy) {
-			if (particlesForTimer) particlesForTimer->StopChildParticles();
 			if (audioForTimer) audioForTimer->Stop();
 			isHit = true;
 			startTimerToDestroy = false;
@@ -61,10 +64,12 @@ void Barrel::Update() {
 		isHit = false;
 		if(particles) particles->PlayChildParticles();
 		if(audio) audio->Play();
-		if(barrel) barrel->GetComponent<ComponentMeshRenderer>()->Disable();
+		if(barrel) barrel->Disable();
+		destroy = true;
 	}
 
 	if (destroy) {
+
 		if (timeToDestroy > 0) {
 			timeToDestroy -= Time::GetDeltaTime();
 		}
@@ -83,9 +88,13 @@ void Barrel::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 		if (pSystem) pSystem->KillParticle(p);
 		
-		if (collidedWith.name == "FangBullet") {
-			startTimerToDestroy = true;
-			timerDestroyActivated = true;
+		if ( collidedWith.name == "FangBullet" || collidedWith.name == "OnimaruBullet"  ) {
+
+			if (!timerDestroyActivated) {
+				startTimerToDestroy = true;
+				timerDestroyActivated = true;
+			}
+			
 			GameplaySystems::DestroyGameObject(&collidedWith);
 		}
 
