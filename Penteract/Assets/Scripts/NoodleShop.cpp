@@ -5,7 +5,8 @@
 #include "GameObject.h"
 
 EXPOSE_MEMBERS(NoodleShop) {
-    MEMBER(MemberType::GAME_OBJECT_UID, doorUID)
+    MEMBER(MemberType::GAME_OBJECT_UID, doorUID),
+    MEMBER(MemberType::GAME_OBJECT_UID, noodleShopObstacleUID)
 };
 
 GENERATE_BODY_IMPL(NoodleShop);
@@ -27,5 +28,9 @@ void NoodleShop::OnCollision(GameObject& collidedWith, float3 collisionNormal, f
         script->Open();
         ComponentCapsuleCollider* capsuleCollider = gameObject->GetComponent<ComponentCapsuleCollider>();
 	    if (capsuleCollider) capsuleCollider->Disable();
+        GameObject* noodleShopObstacleGO = GameplaySystems::GetGameObject(noodleShopObstacleUID);
+        if (noodleShopObstacleGO) {
+            noodleShopObstacleGO->Disable();
+        }
     }
 }

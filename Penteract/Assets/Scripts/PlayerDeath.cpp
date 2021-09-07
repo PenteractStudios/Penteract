@@ -85,11 +85,9 @@ void PlayerDeath::OnAnimationSecondaryFinished() {
 			if (animation->GetCurrentState() && animation->GetCurrentStateSecondary()) {
 				if (animation->GetCurrentStateSecondary()->name == LEFT_SHOT) {
 					animation->SendTriggerSecondary(playerController->playerFang.states[10] + animation->GetCurrentState()->name);
-					playerController->playerFang.rightShot = true;
 				}
 				else if (animation->GetCurrentStateSecondary()->name == RIGHT_SHOT) {
 					animation->SendTriggerSecondary(playerController->playerFang.states[11] + animation->GetCurrentState()->name);
-					playerController->playerFang.rightShot = false;
 				}
 			}
 		}
@@ -119,6 +117,7 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 	}
 	else if (collidedWith.name == "Barrel") {
 		if(playerController) playerController->TakeDamage(barrelDamageTaken);
+		collidedWith.Disable();
 	}
 	else if (collidedWith.name == "LaserBeam") {
 		if (getLaserHit) {

@@ -27,7 +27,7 @@ public:
 	static bool const IsGameplayBlocked();					// Getter for isGameplayBlocked
 	static void BlockGameplay(bool blockIt);				// Setter for isGameplayBlocked
 	static bool const IsSwitchTutorialActive();				// Getter for switchTutorialActive
-	static void ActivateSwitchTutorial(bool isActivated);	// Setter for switchTutorialActive
+	static void ActivateSwitchTutorial(bool isFinished);	// Setter for switchTutorialActive
 
 public:
 	UID gameCameraUID = 0;

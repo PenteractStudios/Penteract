@@ -181,7 +181,12 @@
                     {
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
-                        "Value": 9349791306028942696
+                        "Value": 9835691270176894595
+                    },
+                    {
+                        "Name": "fangUID",
+                        "Type": "GameObjectUID",
+                        "Value": 3676940907943335204
                     },
                     {
                         "Name": "dmgMaterialObj",
@@ -189,9 +194,9 @@
                         "Value": 5104266340542563287
                     },
                     {
-                        "Name": "fangUID",
+                        "Name": "playerMeshUIDFang",
                         "Type": "GameObjectUID",
-                        "Value": 5514062913432514002
+                        "Value": 4308162313156923061
                     },
                     {
                         "Name": "hudControllerObjUID",
@@ -199,14 +204,9 @@
                         "Value": 826311568033082909
                     },
                     {
-                        "Name": "playerMeshUIDFang",
-                        "Type": "GameObjectUID",
-                        "Value": 8818586851523472818
-                    },
-                    {
                         "Name": "playerMeshUIDOnimaru",
                         "Type": "GameObjectUID",
-                        "Value": 9731621354327714566
+                        "Value": 15542147319077027094
                     },
                     {
                         "Name": "winConditionUID",
@@ -1779,6 +1779,40 @@
                             34.52862548828125,
                             143.65089416503907,
                             3.695608139038086
+                        ]
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "DO_NOT_TOUCH_HIERARCHY",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
                         ]
                     }
                 ],
