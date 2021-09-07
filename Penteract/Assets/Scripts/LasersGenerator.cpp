@@ -33,9 +33,7 @@ void LasersGenerator::Start() {
 }
 
 void LasersGenerator::Update() {
-    if (!animationComp) {
-        Debug::Log("animationComp is nullptr");
-    }
+    if (!animationComp) return;
 
     switch (currentState)
     {

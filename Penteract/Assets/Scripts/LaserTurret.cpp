@@ -30,9 +30,7 @@ void LaserTurret::Start() {
 
 void LaserTurret::Update() {
 
-    if (!animationComp) {
-        Debug::Log("animationComp is nullptr");
-    }
+    if (!animationComp) return;
 
     switch (currentState)
     {
