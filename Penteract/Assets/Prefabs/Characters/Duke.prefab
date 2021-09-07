@@ -1,0 +1,196 @@
+{
+    "Root": {
+        "Name": "Duke Placeholder",
+        "Active": true,
+        "RootBoneName": "",
+        "Mask": 0,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Active": true,
+                "Position": [
+                    61.17604064941406,
+                    0.0,
+                    4.995634078979492
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    0.029999999329447748,
+                    0.029999999329447748,
+                    0.029999999329447748
+                ],
+                "LocalEulerAngles": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ]
+            },
+            {
+                "Type": "Animation",
+                "Active": true,
+                "StateMachinePrincipalId": 0,
+                "StateMachineSecondaryId": 0
+            },
+            {
+                "Type": "Agent",
+                "Active": true,
+                "MaxSpeed": 5.0,
+                "MaxAcceleration": 8.0,
+                "AvoidingObstacle": true
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 6803541990823883369,
+                "Values": null
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 14370151214457210467,
+                "Values": [
+                    {
+                        "Name": "dukeUID",
+                        "Type": "GameObjectUID",
+                        "Value": 10033978160918323691
+                    },
+                    {
+                        "Name": "dukeCharacter.lifePoints",
+                        "Type": "Float",
+                        "Value": 100.0
+                    },
+                    {
+                        "Name": "dukeCharacter.chargeSpeed",
+                        "Type": "Float",
+                        "Value": 14.0
+                    },
+                    {
+                        "Name": "playerUID",
+                        "Type": "GameObjectUID",
+                        "Value": 17022400611641520942
+                    },
+                    {
+                        "Name": "shieldCooldown",
+                        "Type": "Float",
+                        "Value": 10.0
+                    },
+                    {
+                        "Name": "bulletHellCooldown",
+                        "Type": "Float",
+                        "Value": 15.0
+                    },
+                    {
+                        "Name": "dukeCharacter.attackRange",
+                        "Type": "Float",
+                        "Value": 5.0
+                    },
+                    {
+                        "Name": "dukeCharacter.movementSpeed",
+                        "Type": "Float",
+                        "Value": 4.199999809265137
+                    },
+                    {
+                        "Name": "dukeCharacter.searchRadius",
+                        "Type": "Float",
+                        "Value": 9.0
+                    },
+                    {
+                        "Name": "dukeCharacter.moveChangeEvery",
+                        "Type": "Float",
+                        "Value": 1.899999976158142
+                    },
+                    {
+                        "Name": "dukeCharacter.attackSpeed",
+                        "Type": "Float",
+                        "Value": 1.0
+                    },
+                    {
+                        "Name": "abilityChangeCooldown",
+                        "Type": "Float",
+                        "Value": 7.0
+                    },
+                    {
+                        "Name": "bulletPrefabUID",
+                        "Type": "PrefabResourceUID",
+                        "Value": 3702716748539090661
+                    }
+                ]
+            },
+            {
+                "Type": "CapsuleCollider",
+                "Active": true,
+                "colliderType": 2,
+                "layerType": 4,
+                "mass": 1.0,
+                "radius": 1.649999976158142,
+                "height": 1.4500000476837159,
+                "capsuleType": 1,
+                "centerOffset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "freezeRotation": false
+            }
+        ],
+        "Children": [
+            {
+                "Name": "DukeLP",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.7071068286895752,
+                            0.0,
+                            0.0,
+                            0.7071067094802856
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0000001192092896,
+                            1.0000001192092896
+                        ],
+                        "LocalEulerAngles": [
+                            -90.00000762939453,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "Type": "MeshRenderer",
+                        "Active": true,
+                        "MeshID": 101529919533757449,
+                        "MaterialID": 2179567558967159318
+                    },
+                    {
+                        "Type": "BoundingBox",
+                        "Active": true,
+                        "LocalBoundingBox": [
+                            -58.588722229003909,
+                            -23.89168357849121,
+                            -76.30799865722656,
+                            71.07378387451172,
+                            23.89168357849121,
+                            76.30799102783203
+                        ]
+                    }
+                ],
+                "Children": null
+            }
+        ]
+    }
+}
