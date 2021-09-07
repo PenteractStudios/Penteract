@@ -325,7 +325,7 @@ void DialogueManager::ActivateNextDialogue(Dialogue* dialogue) {
 			}
 		}
 		else {
-			if (elapsedFlashTime > flashTime / 3) {
+			if (elapsedFlashTime > flashTime * 0.33f) {
 				flash->GetComponent<ComponentImage>()->SetColor(float4(0.522f, 0.953f, 0.768f, 1.f));
 			}
 
