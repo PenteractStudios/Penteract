@@ -97,7 +97,6 @@ void EnemySpawnPoint::RenderEnemy(EnemyType type, unsigned int amount) {
 					goBounds = child->GetComponent<ComponentBoundingBox>();
 					ComponentMeshRenderer* meshRenderer = child->GetComponent<ComponentMeshRenderer>();
 					if (!textures.empty()) {
-						//int position = rand() % textures.size();
 						//Random distribution it cant be saved into global 
 						std::random_device rd;  //Will be used to obtain a seed for the random number engine
 						std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
