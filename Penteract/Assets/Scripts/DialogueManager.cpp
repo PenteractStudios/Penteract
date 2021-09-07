@@ -232,6 +232,7 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 		case DialogueWindow::TUTO_SWAP:
 			activeDialogueObject = tutorialSwap;
 			GameController::ActivateSwitchTutorial(true);
+			GameController::ReachSwitchTutorial(true);
 			break;
 		case DialogueWindow::UPGRADES1:
 			activeDialogueObject = tutorialUpgrades1;
