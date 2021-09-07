@@ -37,6 +37,7 @@ void GameController::Start() {
 	transitionFinished = false;
 	isGameplayBlocked = false;
 	switchTutorialActive = false;
+	switchTutorialReached = false;
 
 	gameCamera = GameplaySystems::GetGameObject(gameCameraUID);
 	godCamera = GameplaySystems::GetGameObject(godCameraUID);
