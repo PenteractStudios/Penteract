@@ -39,7 +39,7 @@
             {
                 "Type": "Agent",
                 "Active": true,
-                "MaxSpeed": 5.0,
+                "MaxSpeed": 8.0,
                 "MaxAcceleration": 9999.0,
                 "AvoidingObstacle": true
             },
@@ -86,29 +86,29 @@
                         "Value": 40.0
                     },
                     {
-                        "Name": "playerUID",
-                        "Type": "GameObjectUID",
-                        "Value": 9349791306028942696
-                    },
-                    {
                         "Name": "hurtFeedbackTimeDuration",
                         "Type": "Float",
                         "Value": 0.10000000149011612
                     },
                     {
+                        "Name": "playerUID",
+                        "Type": "GameObjectUID",
+                        "Value": 9835691270176894595
+                    },
+                    {
                         "Name": "fangUID",
                         "Type": "GameObjectUID",
-                        "Value": 5514062913432514002
+                        "Value": 3676940907943335204
                     },
                     {
                         "Name": "playerMeshUIDOnimaru",
                         "Type": "GameObjectUID",
-                        "Value": 9731621354327714566
+                        "Value": 15542147319077027094
                     },
                     {
                         "Name": "playerMeshUIDFang",
                         "Type": "GameObjectUID",
-                        "Value": 8818586851523472818
+                        "Value": 4308162313156923061
                     },
                     {
                         "Name": "winConditionUID",
