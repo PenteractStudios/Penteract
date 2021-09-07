@@ -163,7 +163,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 200.0,
-                            "HorizontalFov": 1.2512747049331666,
+                            "HorizontalFov": 1.3371851444244385,
                             "VerticalFov": 1.0
                         }
                     },
@@ -1177,34 +1177,6 @@
                                                         "FillValue": 0.0
                                                     },
                                                     {
-                                                        "Type": "Script",
-                                                        "Id": 2871491441929303635,
-                                                        "Active": true,
-                                                        "Script": 15139721463718087939,
-                                                        "Values": [
-                                                            {
-                                                                "Name": "sceneUID",
-                                                                "Type": "SceneResourceUID",
-                                                                "Value": 16893504836010757748
-                                                            },
-                                                            {
-                                                                "Name": "fadeDuration",
-                                                                "Type": "Float",
-                                                                "Value": 2.0
-                                                            },
-                                                            {
-                                                                "Name": "levelNum",
-                                                                "Type": "Int",
-                                                                "Value": 1
-                                                            },
-                                                            {
-                                                                "Name": "fadeToBlackObjectUID",
-                                                                "Type": "GameObjectUID",
-                                                                "Value": 17695041365782035885
-                                                            }
-                                                        ]
-                                                    },
-                                                    {
                                                         "Type": "AudioSource",
                                                         "Id": 12314672494891821595,
                                                         "Active": true,
@@ -1252,6 +1224,16 @@
                                                                 "Name": "controllerObjUID",
                                                                 "Type": "GameObjectUID",
                                                                 "Value": 3771293597699585983
+                                                            },
+                                                            {
+                                                                "Name": "fadeToBlackObjectUID",
+                                                                "Type": "GameObjectUID",
+                                                                "Value": 17695041365782035885
+                                                            },
+                                                            {
+                                                                "Name": "sceneUID",
+                                                                "Type": "SceneResourceUID",
+                                                                "Value": 16893504836010757748
                                                             }
                                                         ]
                                                     }
@@ -3527,6 +3509,11 @@
                                                 "Value": 6739931987885618446
                                             },
                                             {
+                                                "Name": "blackImageObjUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 17695041365782035885
+                                            },
+                                            {
                                                 "Name": "glitchTitleObjUID",
                                                 "Type": "GameObjectUID",
                                                 "Value": 11859482013086116686
@@ -3602,7 +3589,12 @@
                                                     {
                                                         "Name": "playOnAwake",
                                                         "Type": "Bool",
-                                                        "Value": true
+                                                        "Value": false
+                                                    },
+                                                    {
+                                                        "Name": "secondsPerFrame",
+                                                        "Type": "Float",
+                                                        "Value": 0.05999999865889549
                                                     }
                                                 ]
                                             }
@@ -4737,6 +4729,11 @@
                                                         "Name": "loops",
                                                         "Type": "Bool",
                                                         "Value": true
+                                                    },
+                                                    {
+                                                        "Name": "secondsPerFrame",
+                                                        "Type": "Float",
+                                                        "Value": 0.10000000149011612
                                                     }
                                                 ]
                                             }
@@ -5714,7 +5711,13 @@
                                                 "Id": 1015410831155196418,
                                                 "Active": true,
                                                 "Script": 15815488295708913647,
-                                                "Values": null
+                                                "Values": [
+                                                    {
+                                                        "Name": "secondsPerFrame",
+                                                        "Type": "Float",
+                                                        "Value": 0.05999999865889549
+                                                    }
+                                                ]
                                             }
                                         ],
                                         "Children": [
@@ -6163,6 +6166,11 @@
                                                         "Name": "playOnAwake",
                                                         "Type": "Bool",
                                                         "Value": false
+                                                    },
+                                                    {
+                                                        "Name": "secondsPerFrame",
+                                                        "Type": "Float",
+                                                        "Value": 0.05999999865889549
                                                     }
                                                 ]
                                             }
@@ -7308,6 +7316,19 @@
                                         "AlphaTransparency": true,
                                         "IsFill": false,
                                         "FillValue": 1.0
+                                    },
+                                    {
+                                        "Type": "Script",
+                                        "Id": 14440382252402911934,
+                                        "Active": true,
+                                        "Script": 2718730059581919394,
+                                        "Values": [
+                                            {
+                                                "Name": "blackImageObjUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 17695041365782035885
+                                            }
+                                        ]
                                     }
                                 ],
                                 "Children": null

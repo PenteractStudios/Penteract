@@ -1,6 +1,9 @@
 #include "GlitchyTitleController.h"
+
 #include "GameplaySystems.h"
 #include "UISpriteSheetPlayer.h"
+#include "Components/UI/ComponentImage.h"
+#include "CanvasFader.h"
 
 EXPOSE_MEMBERS(GlitchyTitleController) {
 	MEMBER(MemberType::FLOAT, minTimeForGlitch),
@@ -8,7 +11,8 @@ EXPOSE_MEMBERS(GlitchyTitleController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, startUpTitleObjUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, loopingTitleObjUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, glitchTitleObjUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, startPlayingTitleObjUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, startPlayingTitleObjUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, blackImageObjUID)
 };
 
 GENERATE_BODY_IMPL(GlitchyTitleController);
@@ -18,6 +22,15 @@ void GlitchyTitleController::Start() {
 	GameObject* loopingTitleObj = GameplaySystems::GetGameObject(loopingTitleObjUID);
 	GameObject* glitchTitleObj = GameplaySystems::GetGameObject(glitchTitleObjUID);
 	GameObject* startPlayingTitleObj = GameplaySystems::GetGameObject(startPlayingTitleObjUID);
+	GameObject* blackImageObj = GameplaySystems::GetGameObject(blackImageObjUID);
+
+	if (blackImageObjUID) {
+		canvasFader = GET_SCRIPT(blackImageObj, CanvasFader);
+		if (canvasFader) {
+			//blackImage->SetColor(alphaBlack);
+			canvasFader->FadeIn();
+		}
+	}
 
 	if (startUpTitleObj) {
 		startUpTitleSpriteSheetPlayer = GET_SCRIPT(startUpTitleObj, UISpriteSheetPlayer);
@@ -43,6 +56,32 @@ void GlitchyTitleController::Update() {
 	if (startUpTitleSpriteSheetPlayer->IsPlaying() || startPlayingTitleSpriteSheetPlayer->IsPlaying())return;
 
 	switch (glitchState) {
+	case GlitchState::FADE_IN:
+		if (canvasFader) {
+			//fadeInTimer += Time::GetDeltaTime();
+			//blackImage->SetColor(float4::Lerp(alphaBlack, noAlphaBlack, Clamp01(fadeInTimer / fadeInTotalTime)));
+
+			//if (fadeInTimer >= fadeInTotalTime) {
+			//	glitchState = GlitchState::WAIT_START;
+			//	fadeInTimer = 0;
+			//}
+
+			if (!canvasFader->IsPlaying()) {
+				glitchState = GlitchState::WAIT_START;
+			}
+
+		} else {
+			//Error prevention
+			glitchState = GlitchState::WAIT_START;
+		}
+		break;
+	case GlitchState::WAIT_START:
+		fadeInTimer += Time::GetDeltaTime();
+		if (fadeInTimer >= fadeInTotalTime) {
+			glitchState = GlitchState::START;
+			startUpTitleSpriteSheetPlayer->Play();
+		}
+		break;
 	case GlitchState::START:
 		StartStateIdle();
 		break;
@@ -59,7 +98,15 @@ void GlitchyTitleController::Update() {
 		StartStateIdle();
 		break;
 	case GlitchState::PLAY:
-		glitchState = GlitchState::FADE_OUT;
+		fadeInTimer = 0.0f;
+		glitchState = GlitchState::WAIT_FADE_OUT;
+		break;
+	case GlitchState::WAIT_FADE_OUT:
+		fadeInTimer += Time::GetDeltaTime();
+		if (fadeInTimer >= fadeInTotalTime) {
+			canvasFader->FadeOut();
+			glitchState = GlitchState::FADE_OUT;
+		}
 		break;
 	case GlitchState::FADE_OUT:
 		break;
@@ -72,6 +119,10 @@ void GlitchyTitleController::PressedPlay() {
 	glitchTitleSpriteSheetPlayer->Stop();
 	startPlayingTitleSpriteSheetPlayer->Stop();
 	startPlayingTitleSpriteSheetPlayer->Play();
+}
+
+bool GlitchyTitleController::ReadyForTransition() const {
+	return glitchState == GlitchState::FADE_OUT;
 }
 
 void GlitchyTitleController::StartStateIdle() {

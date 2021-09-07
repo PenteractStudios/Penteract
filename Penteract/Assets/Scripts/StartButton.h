@@ -6,9 +6,8 @@
 class GameObject;
 class ComponentSelectable;
 class ComponentAudioSource;
-class ComponentImage;
 class SceneTransition;
-
+class CanvasFader;
 class StartButton : public Script {
 	GENERATE_BODY(StartButton);
 
@@ -25,7 +24,6 @@ public:
 	UID fadeToBlackObjectUID = 0;
 	int checkpointNum = -1;
 	int levelNum = 0;
-	float fadeDuration = 3.0f;
 private:
 	GameObject* player = nullptr;
 
@@ -33,8 +31,7 @@ private:
 	SceneTransition* sceneTransition = nullptr;
 
 	/* UI */
-	ComponentImage* fadeToBlackImage = nullptr;
-	float fadeTimer = 0.0f;
+	CanvasFader* canvasFader = nullptr;
 
 	/* Audio */
 	bool playHoveredAudio = true;

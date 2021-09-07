@@ -6,7 +6,7 @@
 
 #include "GameplaySystems.h"
 #include "GameObject.h"
-#include "Components/UI/ComponentImage.h"
+#include "CanvasFader.h"
 
 int checkpoint;
 
@@ -16,7 +16,6 @@ EXPOSE_MEMBERS(StartButton) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fadeToBlackObjectUID),
 	MEMBER(MemberType::INT, checkpointNum),
 	MEMBER(MemberType::INT, levelNum),
-	MEMBER(MemberType::FLOAT, fadeDuration)
 };
 
 GENERATE_BODY_IMPL(StartButton);
@@ -39,7 +38,7 @@ void StartButton::Start() {
 	GameObject* fadeToBlackObject = GameplaySystems::GetGameObject(fadeToBlackObjectUID);
 
 	if (fadeToBlackObject) {
-		fadeToBlackImage = fadeToBlackObject->GetComponent<ComponentImage>();
+		canvasFader = GET_SCRIPT(fadeToBlackObject, CanvasFader);
 	}
 
 }
@@ -47,13 +46,8 @@ void StartButton::Start() {
 void StartButton::Update() {
 	/* Audio */
 
-	if (pressed && fadeToBlackImage) {
-		fadeTimer += Time::GetDeltaTime();
-		float delta = Clamp01(fadeTimer / fadeDuration);
-
-		fadeToBlackImage->SetColor(float4(0, 0, 0, delta));
-
-		if (fadeTimer >= fadeDuration) {
+	if (pressed && canvasFader) {
+		if (!canvasFader->IsPlaying()) {
 			DoTransition();
 		}
 
@@ -84,11 +78,11 @@ void StartButton::OnButtonClick() {
 
 	PlayAudio(UIAudio::CLICKED);
 
-	if (!fadeToBlackImage) {
+	if (!canvasFader) {
 		DoTransition();
 	} else {
 		pressed = true;
-		fadeTimer = 0.0f;
+		canvasFader->FadeOut();
 	}
 
 }
