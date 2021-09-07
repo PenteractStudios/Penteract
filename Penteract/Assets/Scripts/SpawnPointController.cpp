@@ -13,13 +13,27 @@ EXPOSE_MEMBERS(SpawnPointController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, finalDoorUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, gameObjectActivatedOnCombatEndUID),
 	MEMBER(MemberType::FLOAT, timerToUnlock),
-	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, texturesUID)
 };
 
 GENERATE_BODY_IMPL(SpawnPointController);
 
 void SpawnPointController::Start() {
 	gameObject = &GetOwner();
+
+	GameObject* texturesPlaceholderAux = GameplaySystems::GetGameObject(texturesUID);
+	std::vector<UID> textures;
+
+	if (texturesPlaceholderAux) {
+		for (const auto& child : texturesPlaceholderAux->GetChildren()) {
+			ComponentMeshRenderer* meshRenderer = child->GetComponent<ComponentMeshRenderer>();
+			if (meshRenderer) {
+				textures.push_back(meshRenderer->materialId);
+			}
+		}
+
+	}
 
 	/* Enemy prefabs to be used by the controller's children */
 	meleeEnemyPrefab = GameplaySystems::GetResource<ResourcePrefab>(meleeEnemyPrefabUID);
@@ -33,7 +47,10 @@ void SpawnPointController::Start() {
 	unsigned int i = 0;
 	for (GameObject* child : gameObject->GetChildren()) {
 		EnemySpawnPoint* childScript = GET_SCRIPT(child, EnemySpawnPoint);
-		if (childScript) childScript->SetIndex(i);
+		if (childScript) {
+			childScript->SetIndex(i);
+			childScript->textures = textures;
+		}
 		enemiesPerSpawnPoint.push_back(0);
 		enemySpawnPointStatus.push_back(true);
 		++i;

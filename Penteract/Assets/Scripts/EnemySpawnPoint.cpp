@@ -5,7 +5,6 @@
 #include "GameplaySystems.h"
 #include "GameObject.h"
 #include "WinLose.h"
-
 EXPOSE_MEMBERS(EnemySpawnPoint) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::FLOAT, xAxisPos),
@@ -96,6 +95,18 @@ void EnemySpawnPoint::RenderEnemy(EnemyType type, unsigned int amount) {
 			for (auto& child : go->GetChildren()) {
 				if (child->HasComponent<ComponentMeshRenderer>()) {
 					goBounds = child->GetComponent<ComponentBoundingBox>();
+					ComponentMeshRenderer* meshRenderer = child->GetComponent<ComponentMeshRenderer>();
+					if (!textures.empty()) {
+						//int position = rand() % textures.size();
+						//Random distribution it cant be saved into global 
+						std::random_device rd;  //Will be used to obtain a seed for the random number engine
+						std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+						std::uniform_int_distribution<> distrib(0,textures.size());
+						
+						int position = distrib(gen);
+						meshRenderer->materialId = textures[position];
+					}
+
 					break;
 				}
 			}

@@ -29,6 +29,9 @@ public:
 	/* Dissolve UID */
 	UID dissolveMaterialGOUID = 0;
 
+	/* TexturePlaceholder */
+	UID texturesUID = 0;
+
 public:
 	void Start() override;
 	void Update() override;
@@ -68,6 +71,7 @@ private:
 	float currentUnlockTime = 0.0f;
 	float unlockStarted = false;
 
+	
 private:
 	bool CheckSpawnPointStatus();
 	void PlayDissolveAnimation(GameObject* root, bool playReverse);
