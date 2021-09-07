@@ -5,7 +5,9 @@
 #include "PlayerController.h"
 #include "CameraController.h"
 #include "GameObject.h"
+#include "Components/UI/ComponentTransform2D.h"
 #include "Components/UI/ComponentText.h"
+#include "Components/UI/Componentimage.h"
 
 EXPOSE_MEMBERS(DialogueManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
@@ -31,7 +33,10 @@ EXPOSE_MEMBERS(DialogueManager) {
 	MEMBER(MemberType::FLOAT3, tutorialEndPosition),
 	MEMBER(MemberType::FLOAT, appearAnimationTime),
 	MEMBER(MemberType::FLOAT, disappearAnimationTime),
-	MEMBER(MemberType::FLOAT3, newCameraPosition)
+	MEMBER(MemberType::FLOAT3, newCameraPosition),
+	MEMBER_SEPARATOR("Transition Configuration"),
+	MEMBER(MemberType::GAME_OBJECT_UID, flashUID),
+	MEMBER(MemberType::FLOAT, flashTime)
 };
 
 GENERATE_BODY_IMPL(DialogueManager);
@@ -66,6 +71,13 @@ void DialogueManager::Start() {
 	tutorialUpgrades1 = GameplaySystems::GetGameObject(tutorialUpgrades1UID);
 	tutorialUpgrades2 = GameplaySystems::GetGameObject(tutorialUpgrades2UID);
 	tutorialUpgrades3 = GameplaySystems::GetGameObject(tutorialUpgrades3UID);
+
+	// Get Flash
+	flash = GameplaySystems::GetGameObject(flashUID);
+	if (flash) {
+		ComponentTransform2D* flashTransform = flash->GetComponent<ComponentTransform2D>();
+		if (flashTransform) flashTransform->SetPosition(dialogueEndPosition);
+	}
 
 	// ----- DIALOGUES INIT -----
 	// UPGRADES
@@ -121,10 +133,10 @@ void DialogueManager::Start() {
 }
 
 void DialogueManager::Update() {
-	if (!fangTextComponent || !onimaruTextComponent) return;
+	if (!fangTextComponent || !onimaruTextComponent || !dukeTextComponent || !doorTextComponent) return;
 	if (!tutorialFang || !tutorialOnimaru || !tutorialSwap) return;
 	if (!tutorialUpgrades1 || !tutorialUpgrades2 || !tutorialUpgrades3) return;
-	if (!player || !camera) return;
+	if (!player || !camera || !flash) return;
 
 	if (activeDialogue) {
 		if (runOpenAnimation) ActivateDialogue(activeDialogue);
@@ -132,10 +144,15 @@ void DialogueManager::Update() {
 		if (Player::GetInputBool(activeDialogue->closeButton, PlayerController::useGamepad) && !(runOpenAnimation || runChangeAnimation || runCloseAnimation) && activeDialogueObject) {
 			if (activeDialogue->nextDialogue) {
 				runChangeAnimation = true;
-				if ((static_cast<int>(activeDialogue->character) < 5 && static_cast<int>(activeDialogue->nextDialogue->character) >= 5) ||
-					(static_cast<int>(activeDialogue->character) >= 5 && static_cast<int>(activeDialogue->nextDialogue->character) < 5)) {
+				// If dialogue is followed by tutorial, or tutorial is followed by dialogue
+				if ((activeDialogue->character < DialogueWindow::TUTO_FANG && activeDialogue->nextDialogue->character >= DialogueWindow::TUTO_FANG) ||
+					(activeDialogue->character >= DialogueWindow::TUTO_FANG && activeDialogue->nextDialogue->character < DialogueWindow::TUTO_FANG)) {
 					runCloseAnimation = true;
 					runSecondaryOpen = true;
+				}
+				// If dialogue if sollowed by dialogue, and both are from different characters
+				else if ((activeDialogue->character < DialogueWindow::TUTO_FANG && activeDialogue->nextDialogue->character < DialogueWindow::TUTO_FANG) && (activeDialogue->character != activeDialogue->nextDialogue->character)) {
+					mustFlash = true;
 				}
 			} else runCloseAnimation = true;
 		}
@@ -271,18 +288,45 @@ void DialogueManager::ActivateDialogue(Dialogue* dialogue) {
 }
 
 void DialogueManager::ActivateNextDialogue(Dialogue* dialogue) {
-	activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(currentStartPosition);
-	activeDialogueObject->Disable();
-
-	// TODO: here should go the transition animations
-	SetActiveDialogue(dialogue->nextDialogue, false);
 	if (runSecondaryOpen) {
+		activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(currentStartPosition);
+		activeDialogueObject->Disable();
+		SetActiveDialogue(dialogue->nextDialogue, false);
 		runOpenAnimation = true;
-	} else {
+		runChangeAnimation = false;
+	}
+	else if (mustFlash) {
+		if (elapsedFlashTime == 0) {
+			flash->Enable();
+			activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(currentStartPosition);
+			activeDialogueObject->Disable();
+			SetActiveDialogue(dialogue->nextDialogue, false);
+		}
+		else {
+			if (elapsedFlashTime > flashTime / 3) {
+				flash->GetComponent<ComponentImage>()->SetColor(float4(0.522f, 0.953f, 0.768f, 1.f));
+			}
+
+			if (elapsedFlashTime >= flashTime) {
+				flash->Disable();
+				flash->GetComponent<ComponentImage>()->SetColor(float4(1.f, 1.f, 1.f, 1.f));
+				activeDialogueObject->Enable();
+				activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(currentEndPosition);
+				runChangeAnimation = false;
+				mustFlash = false;
+				elapsedFlashTime = 0;
+			}
+		}
+		if (runChangeAnimation) elapsedFlashTime += Time::GetDeltaTime();
+	}
+	else {
+		activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(currentStartPosition);
+		activeDialogueObject->Disable();
+		SetActiveDialogue(dialogue->nextDialogue, false);
 		activeDialogueObject->Enable();
 		activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(currentEndPosition);
+		runChangeAnimation = false;
 	}
-	runChangeAnimation = false;
 }
 
 void DialogueManager::CloseDialogue(Dialogue* dialogue) {

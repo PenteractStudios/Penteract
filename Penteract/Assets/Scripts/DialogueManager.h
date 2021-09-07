@@ -63,10 +63,10 @@ public:
 	UID onimaruTextObjectUID = 0;
 	UID dukeTextObjectUID = 0;
 	UID doorTextObjectUID = 0;
-	ComponentText* fangTextComponent = 0;
-	ComponentText* onimaruTextComponent = 0;
-	ComponentText* dukeTextComponent = 0;
-	ComponentText* doorTextComponent = 0;
+	ComponentText* fangTextComponent = nullptr;
+	ComponentText* onimaruTextComponent = nullptr;
+	ComponentText* dukeTextComponent = nullptr;
+	ComponentText* doorTextComponent = nullptr;
 
 	UID tutorialFangUID = 0;
 	UID tutorialFangUltimateUID = 0;
@@ -103,6 +103,11 @@ public:
 	float disappearAnimationTime = .5f;				// Duration time of the "Close transition".
 	float3 newCameraPosition = float3(0, 0, 0);		// Zoomed position of the camera when a dialogue is opened.
 
+	// ------ FLASH TRANSITION ----- //
+	UID flashUID = 0;
+	GameObject* flash = nullptr;					// The flash effect that appears between consecutives dialgues of different characters.
+	float flashTime = 0.1f;							// The duration of the flash effect.
+
 private:
 	Dialogue* activeDialogue = nullptr;				// Pointer to dialoguesArray of the active dialogue.
 	GameObject* activeDialogueObject = nullptr;		// Pointer to the Dialogue GameObject in the scene (DialogueFang, DialogueOnimaru, DialogueDuke, Tutorials or Upgrades).
@@ -112,6 +117,7 @@ private:
 	float3 currentStartPosition = float3(0, 0, 0);	// Captures wether 'dialogueStartPosition' or 'tutorialStartPosition', that must be used fot the current dialogue window.
 	float3 currentEndPosition = float3(0, 0, 0);	// Captures wether 'dialogueEndPosition' or 'tutorialEndPosition', that must be used fot the current dialogue window.
 	float animationLerpTime = 0.0f;					// Stores the elapsed time during Open and Close transitions.
+	float elapsedFlashTime = 0.f;					// Stores the elapsed time of the flash effect.
 	std::vector<Component*> uiComponents;			// Stores the UI components in the active dialogue window. Obtained from 'RetrieveUIComponents()'. Used in 'TransitionUIElementsColor()'.
 	std::vector<float4> uiColors;					// Stores the corresponding color of each 'uiComponents'.
 
@@ -120,4 +126,5 @@ private:
 	bool runChangeAnimation = false;
 	bool runCloseAnimation = false;
 	bool runSecondaryOpen = false;
+	bool mustFlash = false;
 };
