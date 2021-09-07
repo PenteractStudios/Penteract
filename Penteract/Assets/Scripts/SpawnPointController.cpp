@@ -4,6 +4,7 @@
 #include "GameplaySystems.h"
 #include "EnemySpawnPoint.h"
 #include "GameObjectUtils.h"
+#include "Components/ComponentLight.h"
 
 EXPOSE_MEMBERS(SpawnPointController) {
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, meleeEnemyPrefabUID),
@@ -13,7 +14,10 @@ EXPOSE_MEMBERS(SpawnPointController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, finalDoorUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, gameObjectActivatedOnCombatEndUID),
 	MEMBER(MemberType::FLOAT, timerToUnlock),
-	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID)
+	MEMBER_SEPARATOR("Dissolve material reference in placeholders"),
+	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID),
+	MEMBER_SEPARATOR("Laser Door Light Gameobject reference"),
+	MEMBER(MemberType::GAME_OBJECT_UID, laserDoorLightUID)
 };
 
 GENERATE_BODY_IMPL(SpawnPointController);
@@ -46,6 +50,14 @@ void SpawnPointController::Start() {
 			dissolveMaterialID = dissolveMeshRenderer->materialId;
 		}
 	}
+
+	GameObject* laserDoorGameObject = GameplaySystems::GetGameObject(laserDoorLightUID);
+	if (laserDoorGameObject) {
+		doorLight = laserDoorGameObject->GetComponent<ComponentLight>();
+		if (doorLight) {
+			doorLightInitialIntensity = doorLight->GetIntensity();
+		}
+	}
 }
 
 void SpawnPointController::Update() {
@@ -59,9 +71,11 @@ void SpawnPointController::Update() {
 			}
 			gameObject->Disable();
 			unlockStarted = false;
+			SetLightIntensity(0.0f);
 		}
 		else {
 			currentUnlockTime += Time::GetDeltaTime();
+			SetLightIntensity(doorLightInitialIntensity * (1 - (currentUnlockTime / timerToUnlock)));
 		}
 	}
 }
@@ -132,5 +146,11 @@ void SpawnPointController::PlayDissolveAnimation(GameObject* root, bool playReve
 			meshRenderer->materialId = dissolveMaterialID;
 			meshRenderer->PlayDissolveAnimation(playReverse);
 		}
+	}
+}
+
+void SpawnPointController::SetLightIntensity(float newIntensity) {
+	if (doorLight) {
+		doorLight->SetIntensity(newIntensity);
 	}
 }

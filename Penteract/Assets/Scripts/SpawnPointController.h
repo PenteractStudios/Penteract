@@ -6,6 +6,7 @@
 
 class GameObject;
 class ResourcePrefab;
+class ComponentLight;
 
 class SpawnPointController : public Script {
 	GENERATE_BODY(SpawnPointController);
@@ -28,6 +29,9 @@ public:
 
 	/* Dissolve UID */
 	UID dissolveMaterialGOUID = 0;
+
+	/* Laser Door UID */
+	UID laserDoorLightUID = 0;
 
 public:
 	void Start() override;
@@ -68,7 +72,12 @@ private:
 	float currentUnlockTime = 0.0f;
 	float unlockStarted = false;
 
+	/* Door Light */
+	ComponentLight* doorLight = nullptr;
+	float doorLightInitialIntensity = 0.0f;
+
 private:
 	bool CheckSpawnPointStatus();
 	void PlayDissolveAnimation(GameObject* root, bool playReverse);
+	void SetLightIntensity(float newIntensity);
 };
