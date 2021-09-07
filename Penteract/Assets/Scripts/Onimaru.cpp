@@ -220,6 +220,8 @@ float Onimaru::GetRealShieldCooldown() {
 
 void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 	//aimingLaser
+	if (!onimaruLaser)return;
+
 	if (shooting) {
 		if (!onimaruLaser->IsActive()) {
 			onimaruLaser->Enable();

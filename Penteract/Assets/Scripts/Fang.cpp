@@ -239,6 +239,7 @@ bool Fang::CanEMP() {
 }
 
 void Fang::CheckCoolDowns(bool noCooldownMode) {
+	if (!fangLaser) return;
 
 	//Combat
 	if (aiming) {
