@@ -123,6 +123,7 @@ private:
 	bool shot = false;					//Bool used to make sure shooting event happens only once whenever attackTimePool is low enough
 
 	float stunTimeRemaining = 0.f;			//Time remaining stunned
+	int deathType = 0;
 
 	ComponentAnimation* animation = nullptr;		//Refernece to  animatino component
 	ComponentTransform* ownerTransform = nullptr;	//Reference to owner transform componenet
