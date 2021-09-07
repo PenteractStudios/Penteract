@@ -92,6 +92,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, onimaruRecoveryRate),
 	MEMBER_SEPARATOR("Onimaru Shoot"),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruBulletUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruLaserUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruRightHandUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerOnimaru.lookAtPointUID),
@@ -112,7 +113,7 @@ GENERATE_BODY_IMPL(PlayerController);
 
 void PlayerController::Start() {
 	playerFang.Init(fangUID, fangTrailDashUID, fangLeftGunUID, fangRightGunUID, fangRightBulletUID, fangLeftBulletUID, fangLaserUID, cameraUID, HUDManagerObjectUID, fangDashDamageUID, EMPUID, EMPEffectsUID, fangUltimateUID, fangUltimateVFXUID);
-	playerOnimaru.Init(onimaruUID, onimaruBulletUID, onimaruGunUID, onimaruRightHandUID, onimaruShieldUID, onimaruUltimateBulletUID, onimaruBlastEffectsUID, cameraUID, HUDManagerObjectUID);
+	playerOnimaru.Init(onimaruUID, onimaruLaserUID, onimaruBulletUID, onimaruGunUID, onimaruRightHandUID, onimaruShieldUID, onimaruUltimateBulletUID, onimaruBlastEffectsUID, cameraUID, HUDManagerObjectUID);
 
 	GameObject* HUDManagerGO = GameplaySystems::GetGameObject(HUDManagerObjectUID);
 	if (HUDManagerGO) {

@@ -219,6 +219,18 @@ float Onimaru::GetRealShieldCooldown() {
 }
 
 void Onimaru::CheckCoolDowns(bool noCooldownMode) {
+	//aimingLaser
+	if (shooting) {
+		if (!onimaruLaser->IsActive()) {
+			onimaruLaser->Enable();
+		}
+	}
+	else {
+		if (onimaruLaser->IsActive()) {
+			onimaruLaser->Disable();
+		}
+	}
+
 	//AttackCooldown
 	if (attackCooldownRemaining <= 0.f) {
 		attackCooldownRemaining = 0.f;
@@ -304,7 +316,7 @@ void Onimaru::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* ev
 	}
 }
 
-void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID onimaruRightHandUID, UID shieldUID, UID onimaruUltimateBulletUID, UID onimaruBlastEffectsUID, UID cameraUID, UID HUDManagerObjectUID) {
+void Onimaru::Init(UID onimaruUID,UID onimaruLaserUID, UID onimaruBulletUID, UID onimaruGunUID, UID onimaruRightHandUID, UID shieldUID, UID onimaruUltimateBulletUID, UID onimaruBlastEffectsUID, UID cameraUID, UID HUDManagerObjectUID) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(onimaruUID);
 	if (characterGameObject && characterGameObject->GetParent()) {
@@ -332,6 +344,8 @@ void Onimaru::Init(UID onimaruUID, UID onimaruBulletUID, UID onimaruGunUID, UID 
 				bullet->Play();
 			}
 		}
+
+		onimaruLaser = GameplaySystems::GetGameObject(onimaruLaserUID);
 
 		GameObject* ultimateBulletAux = GameplaySystems::GetGameObject(onimaruUltimateBulletUID);
 		if (bulletAux) {

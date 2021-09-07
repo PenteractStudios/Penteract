@@ -94,7 +94,7 @@ public:
 	UID onimaruShieldUID = 0;
 	UID onimaruBlastEffectsUID = 0;
 	UID onimaruUltimateBulletUID = 0;
-
+	UID onimaruLaserUID = 0;
 	//HUD
 	UID HUDManagerObjectUID = 0;
 	float fangRecoveryRate = 1.0f;
