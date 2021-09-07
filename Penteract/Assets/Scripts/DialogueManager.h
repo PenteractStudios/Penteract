@@ -40,6 +40,14 @@ public:
 		InputActions closeButton = InputActions::INTERACT;	// Definition of the button that will close this dialogue.
 	};
 
+	enum class AudioDialogue {
+		OPEN,
+		SWOOSH,
+		FLASH,
+		BUTTON,
+		TOTAL
+	};
+
 public:
 
 	void Start() override;
@@ -55,6 +63,7 @@ public:
 	void TransitionUIElementsColor(bool appearing = true, bool mustLerp = true);	// Subfunction of 'ActivateDialogue()'. Defines the color transitions of the dialogue window.
 	void RetrieveUIComponents(GameObject* current);									// This function gets all UI components of the active dialogue window. The color transitions will be aplied to all of them.
 
+	void PlayOpeningAudio();
 public:
 	Dialogue dialoguesArray[100];					// Contains the definition and characteristics of every dialogue in the game.
 
@@ -108,6 +117,11 @@ public:
 	GameObject* flash = nullptr;					// The flash effect that appears between consecutives dialgues of different characters.
 	float flashTime = 0.1f;							// The duration of the flash effect.
 
+	// ---------- AUDIOS ----------- //
+	UID audioSourcesUID = 0;
+	GameObject* audioSources = nullptr;
+	ComponentAudioSource* audios[static_cast<int>(AudioDialogue::TOTAL)] = { nullptr };
+
 private:
 	Dialogue* activeDialogue = nullptr;				// Pointer to dialoguesArray of the active dialogue.
 	GameObject* activeDialogueObject = nullptr;		// Pointer to the Dialogue GameObject in the scene (DialogueFang, DialogueOnimaru, DialogueDuke, Tutorials or Upgrades).
@@ -127,4 +141,5 @@ private:
 	bool runCloseAnimation = false;
 	bool runSecondaryOpen = false;
 	bool mustFlash = false;
+	bool triggerAudio = true;
 };

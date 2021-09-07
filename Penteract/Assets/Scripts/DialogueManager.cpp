@@ -36,7 +36,9 @@ EXPOSE_MEMBERS(DialogueManager) {
 	MEMBER(MemberType::FLOAT3, newCameraPosition),
 	MEMBER_SEPARATOR("Transition Configuration"),
 	MEMBER(MemberType::GAME_OBJECT_UID, flashUID),
-	MEMBER(MemberType::FLOAT, flashTime)
+	MEMBER(MemberType::FLOAT, flashTime),
+	MEMBER_SEPARATOR("Audio"),
+	MEMBER(MemberType::GAME_OBJECT_UID, audioSourcesUID)
 };
 
 GENERATE_BODY_IMPL(DialogueManager);
@@ -79,8 +81,18 @@ void DialogueManager::Start() {
 		if (flashTransform) flashTransform->SetPosition(dialogueEndPosition);
 	}
 
+	// Get Audios
+	audioSources = GameplaySystems::GetGameObject(audioSourcesUID);
+	if (audioSources) {
+		int i = 0;
+		for (ComponentAudioSource& src : audioSources->GetComponents<ComponentAudioSource>()) {
+			if (i < static_cast<int>(AudioDialogue::TOTAL)) audios[i] = &src;
+			i++;
+		}
+	}
+
 	// ----- DIALOGUES INIT -----
-	// UPGRADES
+	// LEVEL 1 - UPGRADES
 	dialoguesArray[0] = Dialogue(DialogueWindow::UPGRADES1, true, "", &dialoguesArray[1]);
 	dialoguesArray[1] = Dialogue(DialogueWindow::ONIMARU, true, "Hey Fang, look at this.", &dialoguesArray[2]);
 	dialoguesArray[2] = Dialogue(DialogueWindow::FANG, true, "Hmm...\nIt looks like Milibot has been\nresearching in some\nnew technologies...", &dialoguesArray[3]);
@@ -101,12 +113,12 @@ void DialogueManager::Start() {
 	dialoguesArray[13] = Dialogue(DialogueWindow::DUKE, true, "I made you what you are,\neven if you hate it!\nPart of you is mine,\nand you should be grateful.", &dialoguesArray[14]);
 	dialoguesArray[14] = Dialogue(DialogueWindow::DUKE, true, "But well... Let’s see how an outdated\npile of junk like you performs\nagainst my latest designs...\nSecurity!", nullptr);
 
-	// FANG TUTORIAL
+	// LEVEL 1 - FANG TUTORIAL
 	dialoguesArray[15] = Dialogue(DialogueWindow::ONIMARU, true, "He is running away!\nDon’t let him escape!", &dialoguesArray[16]);
 	dialoguesArray[16] = Dialogue(DialogueWindow::TUTO_FANG, true, "", &dialoguesArray[17]);
 	dialoguesArray[17] = Dialogue(DialogueWindow::TUTO_FANG_ULTI, true, "", nullptr);
 
-	// SWAP DIALOGUE + ONIMARU TUTORIAL
+	// LEVEL 1 - SWAP DIALOGUE + ONIMARU TUTORIAL
 	dialoguesArray[18] = Dialogue(DialogueWindow::FANG, true, "Onimaru,\nget the repair bots ready...\nI’m gonna need a break.", &dialoguesArray[19]);
 	dialoguesArray[19] = Dialogue(DialogueWindow::ONIMARU, true, "Roger.\nInitialising Matter-Switch.", &dialoguesArray[20]);
 	dialoguesArray[20] = Dialogue(DialogueWindow::TUTO_SWAP, true, "", &dialoguesArray[21], InputActions::SWITCH);
@@ -142,6 +154,9 @@ void DialogueManager::Update() {
 		if (runOpenAnimation) ActivateDialogue(activeDialogue);
 
 		if (Player::GetInputBool(activeDialogue->closeButton, PlayerController::useGamepad) && !(runOpenAnimation || runChangeAnimation || runCloseAnimation) && activeDialogueObject) {
+			if (audios[static_cast<int>(AudioDialogue::BUTTON)]) {
+				audios[static_cast<int>(AudioDialogue::BUTTON)]->Play();
+			}
 			if (activeDialogue->nextDialogue) {
 				runChangeAnimation = true;
 				// If dialogue is followed by tutorial, or tutorial is followed by dialogue
@@ -269,6 +284,9 @@ void DialogueManager::ActivateDialogue(Dialogue* dialogue) {
 				}
 			}
 			activeDialogueObject->Enable();
+			if (audios[static_cast<int>(AudioDialogue::SWOOSH)]) {
+				audios[static_cast<int>(AudioDialogue::SWOOSH)]->Play();
+			}
 		}
 	}
 
@@ -301,6 +319,9 @@ void DialogueManager::ActivateNextDialogue(Dialogue* dialogue) {
 			activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(currentStartPosition);
 			activeDialogueObject->Disable();
 			SetActiveDialogue(dialogue->nextDialogue, false);
+			if (audios[static_cast<int>(AudioDialogue::FLASH)]) {
+				audios[static_cast<int>(AudioDialogue::FLASH)]->Play();
+			}
 		}
 		else {
 			if (elapsedFlashTime > flashTime / 3) {
@@ -331,11 +352,20 @@ void DialogueManager::ActivateNextDialogue(Dialogue* dialogue) {
 
 void DialogueManager::CloseDialogue(Dialogue* dialogue) {
 	animationLerpTime += Time::GetDeltaTime();
+
+	if (triggerAudio) {
+		if (audios[static_cast<int>(AudioDialogue::SWOOSH)]) {
+			audios[static_cast<int>(AudioDialogue::SWOOSH)]->Play();
+		}
+		triggerAudio = false;
+	}
+
 	if (runCloseAnimation) {
 		if (animationLerpTime < appearAnimationTime) {
 			activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(float3::Lerp(currentEndPosition, currentStartPosition, animationLerpTime / appearAnimationTime));
 			TransitionUIElementsColor(false);
 		} else {
+			triggerAudio = true;
 			runCloseAnimation = false;
 			animationLerpTime = 0;
 			activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(currentStartPosition);
@@ -400,5 +430,12 @@ void DialogueManager::RetrieveUIComponents(GameObject* current) {
 	}
 	for (GameObject* child : current->GetChildren()) {
 		RetrieveUIComponents(child);
+	}
+}
+
+void DialogueManager::PlayOpeningAudio()
+{
+	if (audios[static_cast<int>(AudioDialogue::OPEN)]) {
+		audios[static_cast<int>(AudioDialogue::OPEN)]->Play();
 	}
 }
