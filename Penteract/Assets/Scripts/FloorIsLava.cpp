@@ -8,7 +8,8 @@
 EXPOSE_MEMBERS(FloorIsLava) {
     MEMBER(MemberType::FLOAT, timeTilesActive),
 	MEMBER(MemberType::FLOAT, timeWarning),
-	MEMBER(MemberType::STRING, container)
+	MEMBER(MemberType::STRING, container),
+	MEMBER(MemberType::BOOL, sequential)
 
 };
 
@@ -19,9 +20,7 @@ void FloorIsLava::Start() {
 	tiles = GetOwner().GetChildren();		
 	
 	if (container == "corridor") {
-		pattern1 = corridorPattern1;
-		pattern2 = corridorPattern2;
-		pattern3 = corridorPattern3;
+		sequentialPattern = corridorPatterns[0];
 	}
 	else if (container == "arena") {
 		pattern1 = arenaPattern1;
@@ -41,11 +40,24 @@ void FloorIsLava::Update() {
 	
 	//select a random corridor and arena pattern
 	if (patternFinished) {
-		while (currentPattern == nextPattern) {
-			nextPattern = 1 + (rand() % 3);
+		if (sequential) {
+			currentTilesPattern = &sequentialPattern[sequentialCount];
+			if (sequentialCount < 11) {
+				++sequentialCount;
+				nextTilesPattern = &sequentialPattern[sequentialCount];
+			}
+			else {
+				sequentialCount = 0;
+			}
 		}
-		SetPattern(currentPattern, currentTilesPattern);
-		SetPattern(nextPattern, nextTilesPattern);		
+		else {
+			currentPattern = nextPattern;
+			while (currentPattern == nextPattern) {
+				nextPattern = 1 + (rand() % 3);
+			}
+			SetPattern(currentPattern, currentTilesPattern);
+			SetPattern(nextPattern, nextTilesPattern);
+		}
 	}
 	
 	if (warningActive) {
@@ -84,7 +96,6 @@ void FloorIsLava::Update() {
 				warningActive = true;
 				fireActive = false;
 				patternFinished = true;
-				currentPattern = nextPattern;
 				timeRemainingWarning = timeWarning;
 				firstTimeWarning = true;
 				timerTilesClosingRemaining = 0.f;
