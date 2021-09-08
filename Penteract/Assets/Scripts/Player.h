@@ -26,6 +26,7 @@ enum class InputActions {
 	ABILITY_2,
 	ABILITY_3,
 	INTERACT,
+	AIM
 };
 
 class Player : public Character {
@@ -33,7 +34,7 @@ public:
 	// ------- Contructors ------- //
 	Player() {};
 
-	Player(int lifePoints_, float movementSpeed_, int damageHit_, float attackSpeed_)
+	Player(float lifePoints_, float movementSpeed_, float damageHit_, float attackSpeed_)
 		:
 		attackSpeed(attackSpeed_) {
 		lifePoints = lifePoints_;
@@ -63,8 +64,12 @@ public:
 	bool IsActive();
 	static bool GetInputBool(InputActions action, bool useGamepad = false);
 	float2 GetInputFloat2(InputActions action, bool useGamepad = false) const;
-	void UpdateFacePointDir(bool useGamepad);
+	void UpdateFacePointDir(bool useGamepad, bool faceToFront = false);
 	virtual void IncreaseUltimateCounter();
+	void SetClipSpeed(ResourceClip* clip, float movementSpeed) {
+		clip->speed = movementSpeed * animationSpeedFactor;
+	}
+
 public:
 	float rangedDamageTaken = 1.0f;
 	float meleeDamageTaken = 1.0f;
@@ -78,22 +83,33 @@ public:
 	bool ultimateOn = false;
 	bool shootingOnCooldown = false;
 	float normalOrientationSpeed = 7.5f;
+	float sprintMovementSpeed = 12.0f;
+	float3 lookAtMousePlanePosition = float3(0.f, 0.f, 0.f);
 	float normalMovementSpeed = 4.0f;
 	float ultimateMovementSpeed = 4.0f;
 	static bool level1Upgrade;
 	static bool level2Upgrade;
-
-	float3 lookAtMousePlanePosition = float3(0, 0, 0);
 	ComponentCamera* lookAtMouseCameraComp = nullptr;
 	CameraController* cameraController = nullptr;
-	float3 facePointDir = float3(0, 0, 0);
+	float3 facePointDir = float3(0.f, 0.f, 0.f);
 	MovementDirection movementInputDirection = MovementDirection::NONE;
 	ComponentTransform* playerMainTransform = nullptr;
 	float ultimateTimeRemaining = 0.0f;
 	float ultimateTotalTime = 4.6f;
-
+	float animationSpeedFactor = 1.f;
+	//Combat
+	float aimTime = 5.f;
+	float decelerationRatio = 16.f;
+	UID lookAtPointUID = 0;
 protected:
 	void MoveTo();
+	//Combat
+	float timeWithoutCombat = 0.f;
+	bool aiming = false;
+	bool faceToFront = false;
+	float deceleration = 0.f;
+	float3 decelerationDirection = float3(0.f,0.f,0.f);
+	bool decelerating = false;
 private:
 	virtual bool CanShoot();
 	void ResetSwitchStatus();
@@ -101,6 +117,7 @@ private:
 	float2 GetControllerOrientationDirection() const;
 	void LookAtGamepadDir();
 	void LookAtFacePointTarget(bool useGamepad);
+
 private:
 	float currentSwitchDelay = 0.f;
 	bool playSwitchParticles = true;

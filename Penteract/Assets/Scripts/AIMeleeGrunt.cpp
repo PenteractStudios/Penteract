@@ -2,14 +2,13 @@
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
-
+#include "GameController.h"
 #include "PlayerController.h"
 #include "PlayerDeath.h"
 #include "EnemySpawnPoint.h"
 #include "HUDController.h"
 #include "AIMovement.h"
 #include "WinLose.h"
-#include "Player.h"
 #include "Onimaru.h"
 
 #include <math.h>
@@ -178,6 +177,9 @@ void AIMeleeGrunt::Update() {
 		currentSlowedDownTime += Time::GetDeltaTime();
 	}
 
+	if (GameController::IsGameplayBlocked() && state != AIState::START && state != AIState::SPAWN) {
+		state = AIState::IDLE;
+	}
 
 	switch (state) {
 	case AIState::START:
@@ -193,10 +195,13 @@ void AIMeleeGrunt::Update() {
 		break;
 	case AIState::IDLE:
 		if (!playerController->IsPlayerDead()) {
-			if (movementScript->CharacterInSight(player, gruntCharacter.searchRadius)) {
+			if (movementScript->CharacterInSight(player, gruntCharacter.searchRadius) && !GameController::IsGameplayBlocked()) {
 				animation->SendTrigger("IdleWalkForward");
 				if (agent) agent->SetMaxSpeed(speedToUse);
 				state = AIState::RUN;
+			} else {
+				movementScript->Stop();
+				if (animation->GetCurrentState()->name != "Idle") animation->SendTrigger(animation->GetCurrentState()->name + "Idle");
 			}
 		}
 		break;
@@ -308,46 +313,38 @@ void AIMeleeGrunt::OnAnimationFinished() {
 	}
 }
 
+void AIMeleeGrunt::ParticleHit(GameObject& collidedWith, void* particle, Player& player) {
+	if (!particle) return;
+	ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+	if (pSystem) pSystem->KillParticle(p);
+	if (state == AIState::STUNNED && player.level2Upgrade) {
+		gruntCharacter.GetHit(99);
+	}
+	else {
+		gruntCharacter.GetHit(player.damageHit + playerController->GetOverPowerMode());
+	}
+}
+
 void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 	if (state != AIState::START && state != AIState::SPAWN) {
 		if (gruntCharacter.isAlive && playerController) {
 			bool hitTaken = false;
 			if (collidedWith.name == "FangBullet") {
-				if (!particle) return;
-				GameplaySystems::DestroyGameObject(&collidedWith);
 				hitTaken = true;
-				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
-					gruntCharacter.GetHit(99);
-				}
-				else {
-					gruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
-				}
+				GameplaySystems::DestroyGameObject(&collidedWith);
+				gruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
+			}else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
+				hitTaken = true;
+				ParticleHit(collidedWith, particle, playerController->playerFang);
 			}
 			else if (collidedWith.name == "OnimaruBullet") {
-				if (!particle) return;
-				ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
-				ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
-				if (pSystem) pSystem->KillParticle(p);
 				hitTaken = true;
-				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
-					gruntCharacter.GetHit(99);
-				}
-				else {
-					gruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
-				}
+				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
 			}
 			else if (collidedWith.name == "OnimaruBulletUltimate") {
-				if (!particle) return;
-				ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
-				ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
-				if (pSystem) pSystem->KillParticle(p);
 				hitTaken = true;
-				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
-					gruntCharacter.GetHit(99);
-				}
-				else {
-					gruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
-				}
+				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
 			}
 			else if (collidedWith.name == "Barrel") {
 				hitTaken = true;

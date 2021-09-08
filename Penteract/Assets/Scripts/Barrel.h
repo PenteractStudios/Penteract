@@ -24,8 +24,9 @@ public:
 	UID cameraUID = 0;
 	UID particlesUID = 0;
 	UID particlesForTimerUID = 0;
+	UID sphereColliderUID = 0;
 
-	ComponentSphereCollider* barrelCollider = nullptr;
+	GameObject* barrelCollider = nullptr;
 	CameraController* cameraController = nullptr;
 	ComponentParticleSystem* particles = nullptr;
 	ComponentParticleSystem* particlesForTimer = nullptr;

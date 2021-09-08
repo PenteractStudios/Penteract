@@ -19,6 +19,7 @@ class ComponentAgent;
 class ComponentAnimation;
 class State;
 class ResourcePrefab;
+class DialogueManager;
 struct TesseractEvent;
 
 // We should get these two values from the Character class
@@ -151,4 +152,6 @@ private:
 
 	//Audio
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
+
+	friend class DialogueManager;
 };

@@ -4,6 +4,7 @@
 
 #include "AIState.h"
 #include "Enemy.h"
+#include "Player.h"
 
 class GameObject;
 class ComponentAnimation;
@@ -139,6 +140,7 @@ private:
 	void UpdatePushBackPosition();
 	void CalculatePushBackRealDistance();	// Calculates the real distance of the pushback taking into account any obstacles in the path
 	void Death();
+	void ParticleHit(GameObject& collidedWith, void* particle, Player& player);
 	void PlayHitMaterialEffect();
 	void UpdateDissolveTimer();
 };
