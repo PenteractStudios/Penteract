@@ -69,7 +69,7 @@ void Player::LookAtGamepadDir() {
 }
 
 void Player::LookAtFacePointTarget(bool useGamepad) {
-	if (facePointDir.x == 0 && facePointDir.z == 0)return;
+	if (facePointDir.x == 0 && facePointDir.z == 0) return;
 	Quat quat = playerMainTransform->GetGlobalRotation();
 
 	float angle = Atan2(facePointDir.x, facePointDir.z);
@@ -106,8 +106,21 @@ void Player::LookAtFacePointTarget(bool useGamepad) {
 }
 
 void Player::MoveTo() {
-	float3 newPosition = playerMainTransform->GetGlobalPosition() + GetDirection();
-	agent->SetMaxSpeed(movementSpeed);
+	float3 dir = GetDirection();
+	float3 newPosition = playerMainTransform->GetGlobalPosition() + ((deceleration > 0.f) ? decelerationDirection : dir);
+	if (decelerating)
+	{
+		deceleration += decelerationRatio * Time::GetDeltaTime();
+	} else if (!float3(0,0,0).Equals(dir))
+	{
+		decelerationDirection = dir;
+	}
+	if (deceleration >= movementSpeed) {
+		decelerating = false;
+		deceleration = 0.f;
+	}
+	agent->SetMaxSpeed((aiming)? movementSpeed:sprintMovementSpeed - deceleration);
+
 	agent->SetMoveTarget(newPosition, false);
 }
 
@@ -198,6 +211,13 @@ bool Player::GetInputBool(InputActions action, bool useGamepad) {
 		} else {
 			return Input::GetKeyCodeDown(Input::KEYCODE::KEY_F);
 		}
+	case InputActions::AIM:
+		if (useGamepad && Input::IsGamepadConnected(0)) {
+			//return Input::GetControllerButton(Input::SDL_CONTROLLER_BUTTON_A, 0);
+		}
+		else {
+			return Input::GetMouseButtonRepeat(1);
+		}
 		break;
 	default:
 		return false;
@@ -246,17 +266,22 @@ float2 Player::GetInputFloat2(InputActions action, bool useGamepad) const {
 	return result;
 }
 
-void Player::UpdateFacePointDir(bool useGamepad) {
-	if (useGamepad) {
-		float2 inputFloat2 = GetInputFloat2(InputActions::ORIENTATION, useGamepad);
+void Player::UpdateFacePointDir(bool useGamepad, bool faceToFront) {
+		if (useGamepad) {
+			float2 inputFloat2 = GetInputFloat2(InputActions::ORIENTATION, useGamepad);
 
-		facePointDir.x = inputFloat2.x;
-		facePointDir.z = inputFloat2.y;
+			facePointDir.x = inputFloat2.x;
+			facePointDir.z = inputFloat2.y;
 
-	} else {
-		LookAtMouse();
+		} else {
+			if (faceToFront) {
+				float2 inputFloat2 = GetInputFloat2(InputActions::MOVEMENT, false);
+				facePointDir.x = inputFloat2.x;
+				facePointDir.z = inputFloat2.y;
+			}
+			else LookAtMouse();
+		}
 	}
-}
 
 float3 Player::GetDirection() const {
 	float3 direction;
@@ -312,7 +337,7 @@ void Player::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 		if (agent) agent->SetMoveTarget(playerMainTransform->GetGlobalPosition(), false);
 	}
 	if (!lockRotation && !GameController::IsGameplayBlocked()) {
-		UpdateFacePointDir(useGamepad && Input::IsGamepadConnected(0));
+		UpdateFacePointDir(useGamepad && Input::IsGamepadConnected(0), faceToFront);
 		LookAtFacePointTarget(useGamepad && Input::IsGamepadConnected(0));
 	}
 }
