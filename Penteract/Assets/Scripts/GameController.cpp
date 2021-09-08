@@ -265,9 +265,9 @@ bool const GameController::IsSwitchTutorialActive()
 	return switchTutorialActive;
 }
 
-void GameController::ActivateSwitchTutorial(bool isActivated)
+void GameController::ActivateSwitchTutorial(bool isFinished)
 {
-	switchTutorialActive = isActivated;
+	switchTutorialActive = isFinished;
 }
 
 void GameController::DoTransition() {

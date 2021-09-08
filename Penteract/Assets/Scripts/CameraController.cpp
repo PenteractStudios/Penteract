@@ -9,9 +9,9 @@
 EXPOSE_MEMBERS(CameraController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerControllerObjUID),
 	MEMBER_SEPARATOR("Camera Positioning"),
-	MEMBER(MemberType::FLOAT, cameraInitialOffsetZ),
-	MEMBER(MemberType::FLOAT, cameraInitialOffsetY),
-	MEMBER(MemberType::FLOAT, cameraInitialOffsetX),
+	MEMBER(MemberType::FLOAT, cameraOffsetX),
+	MEMBER(MemberType::FLOAT, cameraOffsetY),
+	MEMBER(MemberType::FLOAT, cameraOffsetZ),
 	MEMBER(MemberType::FLOAT, smoothCameraSpeed),
 	MEMBER(MemberType::BOOL, useSmoothCamera),
 	MEMBER_SEPARATOR("Shaker Control"),
@@ -30,6 +30,10 @@ void CameraController::Start() {
 		playerController = GET_SCRIPT(playerControllerObj, PlayerController);
 	}
 	
+	cameraInitialOffsetX = cameraOffsetX;
+	cameraInitialOffsetY = cameraOffsetY;
+	cameraInitialOffsetZ = cameraOffsetZ;
+
 	RestoreCameraOffset();
 }
 

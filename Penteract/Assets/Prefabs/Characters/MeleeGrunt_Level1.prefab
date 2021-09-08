@@ -1,6 +1,6 @@
 {
     "Root": {
-        "Name": "MeleeGruntv3",
+        "Name": "MeleeGrunt",
         "Active": true,
         "RootBoneName": "CenterHip",
         "Mask": 0,
@@ -62,7 +62,7 @@
                     {
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
-                        "Value": 9349791306028942696
+                        "Value": 9835691270176894595
                     },
                     {
                         "Name": "att2AttackSpeed",
@@ -92,7 +92,7 @@
                     {
                         "Name": "fangUID",
                         "Type": "GameObjectUID",
-                        "Value": 5514062913432514002
+                        "Value": 3676940907943335204
                     },
                     {
                         "Name": "damageMaterialPlaceHolderUID",
@@ -1861,6 +1861,40 @@
                         "Children": null
                     }
                 ]
+            },
+            {
+                "Name": "DO_NOT_TOUCH_HIERARCHY",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    }
+                ],
+                "Children": null
             }
         ]
     }
