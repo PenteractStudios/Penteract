@@ -42,13 +42,12 @@ void FloorIsLava::Update() {
 	if (patternFinished) {
 		if (sequential) {
 			currentTilesPattern = &sequentialPattern[sequentialCount];
-			if (sequentialCount < 11) {
-				++sequentialCount;
-				nextTilesPattern = &sequentialPattern[sequentialCount];
-			}
-			else {
+			++sequentialCount;
+			if (sequentialCount > CORRIDOR_PATTERNS) {
 				sequentialCount = 0;
-			}
+			}		
+			nextTilesPattern = &sequentialPattern[sequentialCount];
+			
 		}
 		else {
 			currentPattern = nextPattern;
