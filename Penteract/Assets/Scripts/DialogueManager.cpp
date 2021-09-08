@@ -165,7 +165,7 @@ void DialogueManager::Update() {
 					runCloseAnimation = true;
 					runSecondaryOpen = true;
 				}
-				// If dialogue if sollowed by dialogue, and both are from different characters
+				// If dialogue is followed by dialogue, and both are from different characters
 				else if ((activeDialogue->character < DialogueWindow::TUTO_FANG && activeDialogue->nextDialogue->character < DialogueWindow::TUTO_FANG) && (activeDialogue->character != activeDialogue->nextDialogue->character)) {
 					mustFlash = true;
 				}

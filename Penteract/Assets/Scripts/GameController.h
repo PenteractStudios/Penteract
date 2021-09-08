@@ -28,8 +28,8 @@ public:
 	static void BlockGameplay(bool blockIt);				// Setter for isGameplayBlocked
 	static bool const IsSwitchTutorialActive();				// Getter for switchTutorialActive
 	static void ActivateSwitchTutorial(bool isFinished);	// Setter for switchTutorialActive
-	static bool const IsSwitchTutorialReached();			// Getter for switchTutorialActive
-	static void ReachSwitchTutorial(bool isReached);		// Setter for switchTutorialActive
+	static bool const IsSwitchTutorialReached();			// Getter for switchTutorialReached
+	static void ReachSwitchTutorial(bool isReached);		// Setter for switchTutorialReached
 	
 
 public:
