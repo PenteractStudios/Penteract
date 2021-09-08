@@ -3,9 +3,11 @@
 #include "DialogueManager.h"
 #include "GameplaySystems.h"
 #include "GameObject.h"
+#include "TriggerCallback.h"
 
 EXPOSE_MEMBERS(TriggerDialogue) {
     MEMBER(MemberType::GAME_OBJECT_UID, gameControllerUID),
+    MEMBER(MemberType::GAME_OBJECT_UID, triggerCallbackUID),
     MEMBER(MemberType::INT, dialogueID)
 };
 
@@ -14,6 +16,8 @@ GENERATE_BODY_IMPL(TriggerDialogue);
 void TriggerDialogue::Start() {
     gameController = GameplaySystems::GetGameObject(gameControllerUID);
     if (gameController) dialogueManagerScript = GET_SCRIPT(gameController, DialogueManager);
+    GameObject* triggerCallback = GameplaySystems::GetGameObject(triggerCallbackUID);
+    if (triggerCallback) triggerCallbackScript = GET_SCRIPT(triggerCallback, TriggerCallback);
 }
 
 void TriggerDialogue::Update() {}
@@ -24,6 +28,7 @@ void TriggerDialogue::OnCollision(GameObject& /*collidedWith*/, float3 /*collisi
         if (dialogueID < sizeof(dialogueManagerScript->dialoguesArray) / sizeof(dialogueManagerScript->dialoguesArray[0])
             && &dialogueManagerScript->dialoguesArray[dialogueID] != nullptr) {
             dialogueManagerScript->SetActiveDialogue(&dialogueManagerScript->dialoguesArray[dialogueID]);
+            if (triggerCallbackScript) triggerCallbackScript->OpenFactoryDoors();
         }
     }
     GetOwner().Disable();

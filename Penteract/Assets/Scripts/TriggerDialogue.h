@@ -4,8 +4,8 @@
 
 class GameObject;
 class DialogueManager;
-class TriggerDialogue : public Script
-{
+class TriggerCallback;
+class TriggerDialogue : public Script {
 	GENERATE_BODY(TriggerDialogue);
 
 public:
@@ -16,9 +16,11 @@ public:
 
 public:
 	UID gameControllerUID = 0;
+	UID triggerCallbackUID = 0;
 	GameObject* gameController = nullptr;
 	DialogueManager* dialogueManagerScript = nullptr;
 	int dialogueID = 0;
 
+private:
+	TriggerCallback* triggerCallbackScript = nullptr;
 };
-
