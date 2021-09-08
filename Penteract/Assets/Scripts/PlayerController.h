@@ -79,6 +79,7 @@ public:
 	UID fangRightGunUID = 0;
 	UID fangLeftBulletUID = 0;
 	UID fangRightBulletUID = 0;
+	UID fangLaserUID = 0;
 	UID EMPUID = 0;
 	UID EMPEffectsUID = 0;
 	UID fangUltimateUID = 0;
@@ -93,7 +94,7 @@ public:
 	UID onimaruShieldUID = 0;
 	UID onimaruBlastEffectsUID = 0;
 	UID onimaruUltimateBulletUID = 0;
-
+	UID onimaruLaserUID = 0;
 	//HUD
 	UID HUDManagerObjectUID = 0;
 	float fangRecoveryRate = 1.0f;
