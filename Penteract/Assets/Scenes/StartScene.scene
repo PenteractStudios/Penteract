@@ -1221,14 +1221,14 @@
                                                         "Script": 10048554049739023339,
                                                         "Values": [
                                                             {
+                                                                "Name": "controllerObjUID",
+                                                                "Type": "GameObjectUID",
+                                                                "Value": 2149423061758228828
+                                                            },
+                                                            {
                                                                 "Name": "fadeToBlackObjectUID",
                                                                 "Type": "GameObjectUID",
                                                                 "Value": 17695041365782035885
-                                                            },
-                                                            {
-                                                                "Name": "controllerObjUID",
-                                                                "Type": "GameObjectUID",
-                                                                "Value": 3771293597699585983
                                                             },
                                                             {
                                                                 "Name": "sceneUID",
@@ -3530,14 +3530,14 @@
                                                 "Value": 9693072970663710125
                                             },
                                             {
-                                                "Name": "blackImageObjUID",
-                                                "Type": "GameObjectUID",
-                                                "Value": 17695041365782035885
-                                            },
-                                            {
                                                 "Name": "loopingTitleObjUID",
                                                 "Type": "GameObjectUID",
                                                 "Value": 6739931987885618446
+                                            },
+                                            {
+                                                "Name": "blackImageObjUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 17695041365782035885
                                             },
                                             {
                                                 "Name": "glitchTitleObjUID",

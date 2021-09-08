@@ -48,7 +48,7 @@ private:
 	CanvasFader* canvasFader = nullptr;
 	const float4 alphaBlack = float4(0, 0, 0, 1);
 	const float4 noAlphaBlack = float4(0, 0, 0, 0);
-	ComponentAudioSource* audios[static_cast<int>(UIAudio::TOTAL)] = { nullptr };
+	ComponentAudioSource* audios[static_cast<int>(GlitchTitleAudio::TOTAL)] = { nullptr };
 
 
 
