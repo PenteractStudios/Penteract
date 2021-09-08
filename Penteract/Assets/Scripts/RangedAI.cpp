@@ -392,7 +392,10 @@ void RangedAI::EnterState(AIState newState) {
 		if (shot) {
 			animation->SendTriggerSecondary("ShootDeath");
 		}
-		animation->SendTrigger(animation->GetCurrentState()->name + "Death");
+		std::string changeState = animation->GetCurrentState()->name + "Death";
+		deathType = 1 + rand() % 2;
+		std::string deathTypeStr = std::to_string(deathType);
+		animation->SendTrigger(changeState + deathTypeStr);
 		PlayAudio(AudioType::DEATH);
 		agent->RemoveAgentFromCrowd();
 		state = AIState::DEATH;
