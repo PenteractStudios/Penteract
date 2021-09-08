@@ -275,7 +275,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 			if (collidedWith.name == "EMP") {
 				if (agent) agent->RemoveAgentFromCrowd();
 				stunTimeRemaining = stunDuration;
-				ChangeState(AIState::STUNNED);
+				if(state != AIState::STUNNED) ChangeState(AIState::STUNNED);
 			}
 		}
 
@@ -372,14 +372,8 @@ void RangedAI::EnterState(AIState newState) {
 		if (shot) {
 			animation->SendTriggerSecondary("ShootBeginStun");
 		}
-		if (state == AIState::IDLE) {
-			animation->SendTrigger("IdleBeginStun");
-		}
-		else if (state == AIState::RUN) {
-			animation->SendTrigger("RunForwardBeginStun");
-		}
-		else if (state == AIState::FLEE) {
-			animation->SendTrigger("RunBackwardBeginStun");
+		if (animation->GetCurrentState()) {
+			animation->SendTrigger(animation->GetCurrentState()->name + "BeginStun");
 		}
 		break;
 	case AIState::DEATH:
