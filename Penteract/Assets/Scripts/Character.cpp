@@ -33,3 +33,7 @@ void Character::SetDamageHit(float damageHit_) {
 float Character::GetTotalLifePoints() const {
 	return totalLifePoints;
 }
+
+bool Character::IsFullHealth() const {
+	return lifePoints == totalLifePoints;
+}

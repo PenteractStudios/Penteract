@@ -134,6 +134,8 @@ public:
 	void SetCooldownRetreival(Cooldowns cooldown);
 	void StartUsingSkill(Cooldowns cooldown);
 	void StopUsingSkill(Cooldowns cooldown);
+	void OnCharacterDeath();
+	void OnCharacterResurrect();
 private:
 
 	PlayerController* playerController = nullptr;

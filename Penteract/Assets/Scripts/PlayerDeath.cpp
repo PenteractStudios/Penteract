@@ -38,7 +38,7 @@ void PlayerDeath::Start() {
 void PlayerDeath::Update() {
 	if (player) {
 		if (playerController) {
-			dead = playerController->IsPlayerDead();
+			dead = playerController->IsActiveCharacterDead();
 		}
 
 		if (getLaserHit) {
@@ -62,19 +62,18 @@ void PlayerDeath::Update() {
 
 void PlayerDeath::OnAnimationFinished() {
 	if (dead) {
-		if (sceneTransition) {
-			sceneTransition->StartTransition();
+		if (playerController) {
+			if (playerController->IsPlayerDead()) {
+				OnLoseConditionMet();
+			} else {
+				playerController->OnCharacterDeath();
+			}
 		}
-		else {
-			if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
-		}
-	}
-	else {
+	} else {
 		if (!playerController)return;
 		if (playerController->playerFang.characterGameObject->IsActive()) {
 			playerController->playerFang.OnAnimationFinished();
-		}
-		else {
+		} else {
 			playerController->playerOnimaru.OnAnimationFinished();
 		}
 	}
@@ -87,13 +86,11 @@ void PlayerDeath::OnAnimationSecondaryFinished() {
 			if (animation->GetCurrentState() && animation->GetCurrentStateSecondary()) {
 				if (animation->GetCurrentStateSecondary()->name == LEFT_SHOT) {
 					animation->SendTriggerSecondary(playerController->playerFang.states[10] + animation->GetCurrentState()->name);
-				}
-				else if (animation->GetCurrentStateSecondary()->name == RIGHT_SHOT) {
+				} else if (animation->GetCurrentStateSecondary()->name == RIGHT_SHOT) {
 					animation->SendTriggerSecondary(playerController->playerFang.states[11] + animation->GetCurrentState()->name);
 				}
 			}
-		}
-		else {
+		} else {
 			playerController->playerOnimaru.OnAnimationSecondaryFinished();
 		}
 	}
@@ -111,23 +108,27 @@ void PlayerDeath::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char
 
 void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 	if (collidedWith.name == "RangerProjectile") {
-		if(playerController) playerController->TakeDamage(rangedDamageTaken);
-	}
-	else if (collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") { //meleegrunt
-		if(playerController) playerController->TakeDamage(meleeDamageTaken);
+		if (playerController) playerController->TakeDamage(rangedDamageTaken);
+	} else if (collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") { //meleegrunt
+		if (playerController) playerController->TakeDamage(meleeDamageTaken);
 		collidedWith.Disable();
-	}
-	else if (collidedWith.name == "Barrel") {
-		if(playerController) playerController->TakeDamage(barrelDamageTaken);
+	} else if (collidedWith.name == "Barrel") {
+		if (playerController) playerController->TakeDamage(barrelDamageTaken);
 		collidedWith.Disable();
-	}
-	else if (collidedWith.name == "LaserBeam") {
+	} else if (collidedWith.name == "LaserBeam") {
 		getLaserHit = true;
-	}
-	else if (collidedWith.name == "FireTile") {
+	} else if (collidedWith.name == "FireTile") {
 		if (fireDamageActive) {
 			if (playerController) playerController->TakeDamage(fireDamageTaken);
 			fireDamageActive = false;
 		}
+	}
+}
+
+void PlayerDeath::OnLoseConditionMet() {
+	if (sceneTransition) {
+		sceneTransition->StartTransition();
+	} else {
+		if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 	}
 }

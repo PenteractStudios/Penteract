@@ -179,9 +179,9 @@ void PlayerController::SetNoCooldown(bool status) {
 //Switch
 bool PlayerController::CanSwitch() {
 	if (playerFang.characterGameObject->IsActive()) {
-		return !switchInCooldown && playerFang.CanSwitch() && !playerFang.ultimateOn;
+		return !switchInCooldown && playerOnimaru.CanSwitch() && playerFang.CanSwitch() && !playerFang.ultimateOn;
 	} else {
-		return !switchInCooldown && playerOnimaru.CanSwitch();
+		return !switchInCooldown && playerOnimaru.CanSwitch() && playerFang.CanSwitch();
 	}
 }
 
@@ -250,8 +250,7 @@ void PlayerController::SwitchCharacter() {
 							meleeScript->gruntCharacter.GetHit(switchDamage);
 							meleeScript->PlayHit();
 						}
-					}
-					else if (rangedScript) {
+					} else if (rangedScript) {
 						rangedScript->EnableBlastPushBack();
 						if (switchFirstHit) {
 							rangedScript->rangerGruntCharacter.GetHit(switchDamage);
@@ -270,6 +269,7 @@ void PlayerController::SwitchCharacter() {
 void PlayerController::CheckCoolDowns() {
 	playerFang.CheckCoolDowns(noCooldownMode);
 	playerOnimaru.CheckCoolDowns(noCooldownMode);
+
 	if (noCooldownMode || switchCooldownRemaining <= 0.f) {
 		switchCooldownRemaining = 0.f;
 		switchInCooldown = false;
@@ -282,6 +282,14 @@ void PlayerController::CheckCoolDowns() {
 		if (fangRecovering >= fangRecoveryRate) {
 			fangRecovering = 0.0f;
 			playerFang.Recover(1.f);
+
+
+			if (!playerFang.isAlive) {
+				if (playerFang.IsFullHealth()) {
+					OnCharacterResurrect();
+				}
+			}
+
 		} else {
 			fangRecovering += Time::GetDeltaTime();
 
@@ -292,6 +300,13 @@ void PlayerController::CheckCoolDowns() {
 		if (onimaruRecovering >= onimaruRecoveryRate) {
 			onimaruRecovering = 0.0f;
 			playerOnimaru.Recover(1.f);
+
+			if (!playerOnimaru.isAlive) {
+				if (playerOnimaru.IsFullHealth()) {
+					OnCharacterResurrect();
+				}
+			}
+
 		} else {
 			onimaruRecovering += Time::GetDeltaTime();
 		}
@@ -344,12 +359,33 @@ void PlayerController::RemoveEnemyFromMap(GameObject* enemy) {
 	playerOnimaru.RemoveEnemy(enemy);
 }
 
-void PlayerController::ObtainUpgradeCell()
-{
+void PlayerController::ObtainUpgradeCell() {
 	if (++obtainedUpgradeCells == 3) {
 		// TODO: Check whether in level1 or level2
 		if (currentLevel == 1) Player::level1Upgrade = true;
 		else if (currentLevel == 2) Player::level2Upgrade = true;
+	}
+}
+
+void PlayerController::OnCharacterDeath() {
+	SwitchCharacter();
+
+	if (playerFang.isAlive) {
+		playerFang.agent->AddAgentToCrowd();
+	} else {
+		playerOnimaru.agent->AddAgentToCrowd();
+	}
+
+	if (hudManagerScript) {
+		hudManagerScript->OnCharacterDeath();
+	}
+
+}
+
+void PlayerController::OnCharacterResurrect() {
+	playerOnimaru.isAlive = playerFang.isAlive = true;
+	if (hudManagerScript) {
+		hudManagerScript->OnCharacterResurrect();
 	}
 }
 
@@ -368,27 +404,27 @@ void PlayerController::Update() {
 		playerOnimaru.Update(useGamepad);
 	}
 
-	if (playerFang.isAlive && playerOnimaru.isAlive) {
-		CheckCoolDowns();
-		UpdatePlayerStats();
+	//if (playerFang.isAlive && playerOnimaru.isAlive) {
+	CheckCoolDowns();
+	UpdatePlayerStats();
 
-		if (CanSwitch()) {
+	if (CanSwitch()) {
 
-			if (switchInProgress || (noCooldownMode && (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R) && (!useGamepad || !Input::IsGamepadConnected(0))
-				|| useGamepad && Input::IsGamepadConnected(0) && Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0)))) {
+		if (switchInProgress || (noCooldownMode && (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R) && (!useGamepad || !Input::IsGamepadConnected(0))
+			|| useGamepad && Input::IsGamepadConnected(0) && Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0)))) {
 
-				switchInProgress = true;
-				SwitchCharacter();
-			}
+			switchInProgress = true;
+			SwitchCharacter();
+		}
 
-			if (!switchInProgress && (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R) && (!useGamepad || !Input::IsGamepadConnected(0))
-				|| useGamepad && Input::IsGamepadConnected(0) && Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0))) {
+		if (!switchInProgress && (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R) && (!useGamepad || !Input::IsGamepadConnected(0))
+			|| useGamepad && Input::IsGamepadConnected(0) && Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0))) {
 
-				switchInProgress = true;
-				switchCooldownRemaining = switchCooldown;
-			}
+			switchInProgress = true;
+			switchCooldownRemaining = switchCooldown;
 		}
 	}
+	//}
 }
 
 void PlayerController::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {

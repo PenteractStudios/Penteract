@@ -286,6 +286,15 @@ void HUDManager::StopUsingSkill(Cooldowns cooldown) {
 		SetPictoState(cooldown, cooldowns[static_cast<int>(cooldown)] < 1.0f ? PictoState::UNAVAILABLE : PictoState::AVAILABLE);
 }
 
+void HUDManager::OnCharacterDeath() {
+	switchSkillParent->Disable();
+	abilityCoolDownsRetreived[static_cast<int>(Cooldowns::SWITCH_SKILL)] = false;
+}
+
+void HUDManager::OnCharacterResurrect() {
+	switchSkillParent->Enable();
+}
+
 void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 
 	std::vector<GameObject*> skills = canvas->GetChildren();

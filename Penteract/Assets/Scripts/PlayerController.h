@@ -44,7 +44,8 @@ public:
 	int GetOverPowerMode();
 	float GetOnimaruMaxHealth() const;
 	float GetFangMaxHealth() const;
-	bool IsPlayerDead() { return !playerFang.isAlive || !playerOnimaru.isAlive; }
+	bool IsPlayerDead() { return !playerFang.isAlive && !playerOnimaru.isAlive; }
+	bool IsActiveCharacterDead() { return (playerFang.characterGameObject->IsActive() && !playerFang.isAlive) || (playerOnimaru.characterGameObject->IsActive() && !playerOnimaru.isAlive); }
 	void TakeDamage(float damage);
 	static void SetUseGamepad(bool useGamepad_);
 
@@ -53,7 +54,8 @@ public:
 
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
 	void ObtainUpgradeCell();
-
+	void OnCharacterDeath();
+	void OnCharacterResurrect();
 public:
 	//Debug
 	bool invincibleMode = false;
