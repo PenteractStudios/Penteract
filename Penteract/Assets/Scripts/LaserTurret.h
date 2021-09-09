@@ -13,7 +13,7 @@ class LaserTurret : public Script
 		SHOOT,
 		END,
 		IDLE_START,
-		IDLE_END
+		SHOOTING_END
 	};
 
 public:
@@ -37,8 +37,8 @@ private:
 
 
 	ComponentAnimation* animationComp = nullptr;
-	TurretState currentState = TurretState::START;
-	
+	TurretState currentState = TurretState::IDLE_START;
+
 	GameObject* laserObject = nullptr;
 
 	const std::string states[5] = { "Startup", "Shoot", "End", "StartUpIdle", "EndIdle"};

@@ -19,36 +19,61 @@ public:
 		DEATH,
 		TOTAL
 	};
+	enum class FANG_STATES {
+		IDLE = 0,
+		RUN_BACKWARD,
+		RUN_FORWARD,
+		RUN_LEFT,
+		RUN_RIGHT,
+		DASH_BACKWARD,
+		DASH_FORWARD,
+		DASH_LEFT,
+		DASH_RIGHT,
+		DEATH,
+		SHOOTING,
+		DRIFT,
+		DASH,
+		RUN_FORWARD_LEFT, 
+		RUN_FORWARD_RIGHT, 
+		RUN_BACKWARD_LEFT,
+		RUN_BACKWARD_RIGHT,
+		EMP = 21,
+		ULTIMATE,
+		IDLE_AIM,
+		FOOT_SWITCH,
+		SPRINT
+	};
 
 	// ------- Contructors ------- //
 	Fang() {};
 	void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockOrientation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	void OnAnimationFinished() override;
-	void OnAnimationSecondaryFinished() override;
+	void OnAnimationSecondaryFinished() override {};
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
 	void GetHit(float damage_) override;
-	void trailDelay();
+	void TrailDelay();
 	bool CanSwitch() const override;
 	bool IsInstantOrientation(bool useGamepad) const override;
-
 	float GetRealDashCooldown();
 	float GetRealEMPCooldown();
 	float GetRealUltimateCooldown();
 	void IncreaseUltimateCounter();
-	void Init(UID fangUID = 0, UID trailGunUID = 0, UID trailDashUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID cameraUID = 0, UID HUDManagerObjectUID = 0, UID dashUID = 0, UID EMPUID = 0, UID EMPEffectsUID = 0, UID fangUltimateUID = 0, UID ultimateVFXUID = 0);
+	void Init(UID fangUID = 0, UID trailDashUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID laserUID = 0, UID cameraUID = 0, UID HUDManagerObjectUID = 0, UID dashUID = 0, UID EMPUID = 0, UID EMPEffectsUID = 0, UID fangUltimateUID = 0, UID ultimateVFXUID = 0);
 	bool IsVulnerable() const override;
+
 public:
-	std::vector<std::string> states{ "Idle" ,
+	std::vector<std::string> states{ 
+						"Idle" ,
 						"RunBackward" , "RunForward" , "RunLeft" , "RunRight" , //1 - 4
 						"DashBackward", "DashForward" , "DashLeft" , "DashRight" , //5 - 8
-						"Death" , "LeftShot" , "RightShot", "", //9 - 12
+						"Death" , "Shooting" , "Drift", "Dash", //9 - 12
 						"RunForwardLeft", "RunForwardRight", "RunBackwardLeft", "RunBackwardRight", // 13 - 16
 						"DashBackward", "DashForward" , "DashLeft" , "DashRight", //17 - 20
-						"EMP", "Ultimate" //21 - 22
+						"EMP", "Ultimate","IdleAim","FootSwitch", //21 - 24
+						"Sprint" // 25 - 28
 	};
 
-	bool rightShot = true;
 
 	//Dash
 	float dashCooldown = 5.f;
@@ -66,9 +91,9 @@ public:
 	//Ultimate
 	int ultimateCooldown = 2;
 	float ultimateMovementSpeed = 4.0f;
-
-
+	
 private:
+
 	//Dash
 	float dashCooldownRemaining = 0.f;
 	float dashRemaining = 0.f;
@@ -76,7 +101,7 @@ private:
 	bool dashing = false;
 	bool dashInCooldown = false;
 	bool hasDashed = false;
-
+	bool inCombat = false;
 	float3 initialPosition = float3(0, 0, 0);
 	float3 dashDirection = float3(0, 0, 0);
 
@@ -88,12 +113,16 @@ private:
 	//Shoot
 	ComponentTransform* rightGunTransform = nullptr;
 	ComponentTransform* leftGunTransform = nullptr;
+	ComponentParticleSystem* bullet = nullptr;
 	ComponentTrail* trailDash = nullptr;
-	ResourcePrefab* trailGun = nullptr;
 	ComponentParticleSystem* rightBullet = nullptr;
 	ComponentParticleSystem* leftBullet = nullptr;
 	GameObject* rightBulletAux = nullptr;
 	GameObject* leftBulletAux = nullptr;
+	GameObject* fangLaser = nullptr;
+	bool shooting = false;
+	int transitioning = 0;
+
 	//Movement
 	MovementDirection dashMovementDirection = MovementDirection::NONE;
 
@@ -108,6 +137,8 @@ private:
 
 	//Audios
 	ComponentAudioSource* fangAudios[static_cast<int>(FANG_AUDIOS::TOTAL)] = { nullptr };
+	
+	
 private:
 	void InitDash();
 	void Dash();

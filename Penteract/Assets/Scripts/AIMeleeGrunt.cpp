@@ -2,14 +2,13 @@
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
-
+#include "GameController.h"
 #include "PlayerController.h"
 #include "PlayerDeath.h"
 #include "EnemySpawnPoint.h"
 #include "HUDController.h"
 #include "AIMovement.h"
 #include "WinLose.h"
-#include "Player.h"
 #include "Onimaru.h"
 
 #include <math.h>
@@ -49,6 +48,9 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 		MEMBER(MemberType::FLOAT, att3AttackSpeed),
 		MEMBER(MemberType::FLOAT, att3MovementSpeedWhileAttacking),
 		MEMBER(MemberType::INT, att3AbilityChance),
+		MEMBER_SEPARATOR("Dissolve properties"),
+		MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialObj),
+		MEMBER(MemberType::FLOAT, dissolveTimerToStart)
 };
 
 GENERATE_BODY_IMPL(AIMeleeGrunt);
@@ -114,6 +116,14 @@ void AIMeleeGrunt::Start() {
 		}
 	}
 
+	GameObject* dissolveObj = GameplaySystems::GetGameObject(dissolveMaterialObj);
+	if (dissolveObj) {
+		ComponentMeshRenderer* dissolveMeshRenderer = dissolveObj->GetComponent<ComponentMeshRenderer>();
+		if (dissolveMeshRenderer) {
+			dissolveMaterialID = dissolveMeshRenderer->materialId;
+		}
+	}
+
 	gameObject = GameplaySystems::GetGameObject(defaultMaterialPlaceHolderUID);
 	if (gameObject) {
 		ComponentMeshRenderer* meshRenderer = gameObject->GetComponent<ComponentMeshRenderer>();
@@ -145,12 +155,17 @@ void AIMeleeGrunt::Update() {
 	if (!componentMeshRenderer) return;
 	if (!playerDeath) return;
 	if (!rightBladeCollider || !leftBladeCollider) return;
-	if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
-		timeSinceLastHurt += Time::GetDeltaTime();
-		if (timeSinceLastHurt > hurtFeedbackTimeDuration) {
-			componentMeshRenderer->materialId = defaultMaterialID;
+
+	if (!dissolveAlreadyPlayed && componentMeshRenderer) {
+		if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
+			timeSinceLastHurt += Time::GetDeltaTime();
+			if (timeSinceLastHurt > hurtFeedbackTimeDuration) {
+				componentMeshRenderer->materialId = defaultMaterialID;
+			}
 		}
 	}
+
+	UpdateDissolveTimer();
 
 	float speedToUse = gruntCharacter.slowedDown ? gruntCharacter.slowedDownSpeed : gruntCharacter.movementSpeed;
 
@@ -162,6 +177,9 @@ void AIMeleeGrunt::Update() {
 		currentSlowedDownTime += Time::GetDeltaTime();
 	}
 
+	if (GameController::IsGameplayBlocked() && state != AIState::START && state != AIState::SPAWN) {
+		state = AIState::IDLE;
+	}
 
 	switch (state) {
 	case AIState::START:
@@ -177,10 +195,13 @@ void AIMeleeGrunt::Update() {
 		break;
 	case AIState::IDLE:
 		if (!playerController->IsPlayerDead()) {
-			if (movementScript->CharacterInSight(player, gruntCharacter.searchRadius)) {
+			if (movementScript->CharacterInSight(player, gruntCharacter.searchRadius) && !GameController::IsGameplayBlocked()) {
 				animation->SendTrigger("IdleWalkForward");
 				if (agent) agent->SetMaxSpeed(speedToUse);
 				state = AIState::RUN;
+			} else {
+				movementScript->Stop();
+				if (animation->GetCurrentState()->name != "Idle") animation->SendTrigger(animation->GetCurrentState()->name + "Idle");
 			}
 		}
 		break;
@@ -234,6 +255,9 @@ void AIMeleeGrunt::Update() {
 		UpdatePushBackPosition();
 		break;
 	case AIState::DEATH:
+		if (!dissolveAlreadyStarted) {
+			dissolveAlreadyStarted = true;
+		}
 		break;
 	}
 
@@ -289,46 +313,38 @@ void AIMeleeGrunt::OnAnimationFinished() {
 	}
 }
 
+void AIMeleeGrunt::ParticleHit(GameObject& collidedWith, void* particle, Player& player) {
+	if (!particle) return;
+	ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+	if (pSystem) pSystem->KillParticle(p);
+	if (state == AIState::STUNNED && player.level2Upgrade) {
+		gruntCharacter.GetHit(99);
+	}
+	else {
+		gruntCharacter.GetHit(player.damageHit + playerController->GetOverPowerMode());
+	}
+}
+
 void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 	if (state != AIState::START && state != AIState::SPAWN) {
 		if (gruntCharacter.isAlive && playerController) {
 			bool hitTaken = false;
 			if (collidedWith.name == "FangBullet") {
-				if (!particle) return;
-				GameplaySystems::DestroyGameObject(&collidedWith);
 				hitTaken = true;
-				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
-					gruntCharacter.GetHit(99);
-				}
-				else {
-					gruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
-				}
+				GameplaySystems::DestroyGameObject(&collidedWith);
+				gruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
+			}else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
+				hitTaken = true;
+				ParticleHit(collidedWith, particle, playerController->playerFang);
 			}
 			else if (collidedWith.name == "OnimaruBullet") {
-				if (!particle) return;
-				ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
-				ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
-				if (pSystem) pSystem->KillParticle(p);
 				hitTaken = true;
-				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
-					gruntCharacter.GetHit(99);
-				}
-				else {
-					gruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
-				}
+				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
 			}
 			else if (collidedWith.name == "OnimaruBulletUltimate") {
-				if (!particle) return;
-				ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
-				ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
-				if (pSystem) pSystem->KillParticle(p);
 				hitTaken = true;
-				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
-					gruntCharacter.GetHit(99);
-				}
-				else {
-					gruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
-				}
+				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
 			}
 			else if (collidedWith.name == "Barrel") {
 				hitTaken = true;
@@ -375,9 +391,7 @@ void AIMeleeGrunt::EnableBlastPushBack() {
 			gruntCharacter.GetHit(playerController->playerOnimaru.blastDamage + playerController->GetOverPowerMode());
 
 			if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
-			if (componentMeshRenderer) {
-				if (damageMaterialID != 0) componentMeshRenderer->materialId = damageMaterialID;
-			}
+			PlayHitMaterialEffect();
 			timeSinceLastHurt = 0.0f;
 
 			if (!gruntCharacter.isAlive) {
@@ -402,10 +416,7 @@ bool AIMeleeGrunt::IsBeingPushed() const {
 void AIMeleeGrunt::PlayHit()
 {
 	if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
-	if (componentMeshRenderer) {
-		if (damageMaterialID != 0) componentMeshRenderer->materialId = damageMaterialID;
-	}
-
+	PlayHitMaterialEffect();
 	timeSinceLastHurt = 0.0f;
 }
 
@@ -530,4 +541,28 @@ void AIMeleeGrunt::Death()
 
 void AIMeleeGrunt::PlayerHit() {
 	alreadyHit = true;
+}
+
+void AIMeleeGrunt::PlayHitMaterialEffect()
+{
+	if (!dissolveAlreadyStarted && componentMeshRenderer) {
+		if (damageMaterialID != 0) {
+			componentMeshRenderer->materialId = damageMaterialID;
+		}
+	}
+}
+
+void AIMeleeGrunt::UpdateDissolveTimer() {
+	if (dissolveAlreadyStarted && !dissolveAlreadyPlayed) {
+		if (currentDissolveTime >= dissolveTimerToStart) {
+			if (componentMeshRenderer && dissolveMaterialID != 0) {
+				componentMeshRenderer->materialId = dissolveMaterialID;
+				componentMeshRenderer->PlayDissolveAnimation();
+			}
+			dissolveAlreadyPlayed = true;
+		}
+		else {
+			currentDissolveTime += Time::GetDeltaTime();
+		}
+	}
 }

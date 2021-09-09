@@ -23,6 +23,12 @@ public:
 	void Rotate(float2 mouseMotion, Frustum* frustum, ComponentTransform* transform);
 	void PauseGame();
 	void ResumeGame();
+
+	static bool const IsGameplayBlocked();					// Getter for isGameplayBlocked
+	static void BlockGameplay(bool blockIt);				// Setter for isGameplayBlocked
+	static bool const IsSwitchTutorialActive();				// Getter for switchTutorialActive
+	static void ActivateSwitchTutorial(bool isFinished);	// Setter for switchTutorialActive
+
 public:
 	UID gameCameraUID = 0;
 	UID godCameraUID = 0;
@@ -46,11 +52,8 @@ public:
 	float focusDistance = 100.f;
 	float transitionSpeed = 1000.f;
 
-	int obtainedPowerUps = 0; // PowerUp counter
-
 private:
 	void DoTransition();
-	void SpawnEnemies();
 	void ClearPauseMenus();
 	void EnablePauseMenus();
 
@@ -79,5 +82,7 @@ private:
 	bool transitionFinished = false;
 
 	bool isPaused = false;
+	static inline bool isGameplayBlocked = false;		// isGameplayBlocked is used to stop the gameplay without pausing the game itself. When true, all entities will remain in an IDLE state, and player input will be mostly ignored.
+	static inline bool switchTutorialActive = false;	// This overrides the previous bool on Fang's 'CanSwitch()', used when the Switch Tutorial appears.
 };
 

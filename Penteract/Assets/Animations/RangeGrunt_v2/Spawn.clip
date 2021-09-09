@@ -1,0 +1,10 @@
+{
+    "Name": "Spawn",
+    "AnimationUID": 17180514647000583777,
+    "BeginIndex": 120,
+    "EndIndex": 160,
+    "Loop": false,
+    "Speed": 1.0,
+    "FrameRate": 0.033259425312280658,
+    "KeyEventClip": null
+}

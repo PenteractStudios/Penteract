@@ -19,6 +19,7 @@ class ComponentAgent;
 class ComponentAnimation;
 class State;
 class ResourcePrefab;
+class DialogueManager;
 struct TesseractEvent;
 
 // We should get these two values from the Character class
@@ -78,6 +79,7 @@ public:
 	UID fangRightGunUID = 0;
 	UID fangLeftBulletUID = 0;
 	UID fangRightBulletUID = 0;
+	UID fangLaserUID = 0;
 	UID EMPUID = 0;
 	UID EMPEffectsUID = 0;
 	UID fangUltimateUID = 0;
@@ -92,7 +94,7 @@ public:
 	UID onimaruShieldUID = 0;
 	UID onimaruBlastEffectsUID = 0;
 	UID onimaruUltimateBulletUID = 0;
-
+	UID onimaruLaserUID = 0;
 	//HUD
 	UID HUDManagerObjectUID = 0;
 	float fangRecoveryRate = 1.0f;
@@ -151,4 +153,6 @@ private:
 
 	//Audio
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
+
+	friend class DialogueManager;
 };
