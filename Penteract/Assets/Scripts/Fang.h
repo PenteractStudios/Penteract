@@ -53,6 +53,7 @@ public:
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
 	void GetHit(float damage_) override;
 	void TrailDelay();
+	bool isAiming();
 	bool CanSwitch() const override;
 	bool IsInstantOrientation(bool useGamepad) const override;
 	float GetRealDashCooldown();
@@ -128,6 +129,7 @@ private:
 
 	//HUD
 	HUDManager* hudManagerScript = nullptr;
+
 	//Ultimate
 	int ultimateCooldownRemaining = 0;
 	bool ultimateInCooldown = false;
