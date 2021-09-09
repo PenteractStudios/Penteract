@@ -60,6 +60,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fangLeftBulletUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangLeftGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangRightGunUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangLaserUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerFang.lookAtPointUID),
 	MEMBER_SEPARATOR("Fang Abilities"),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangTrailDashUID),
@@ -82,6 +83,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, playerOnimaru.ultimateAttackSpeed),
 	MEMBER(MemberType::FLOAT, playerOnimaru.ultimateTotalTime),
 	MEMBER(MemberType::FLOAT, playerOnimaru.ultimateOrientationSpeed),
+	MEMBER(MemberType::FLOAT, playerOnimaru.ultimateMovementSpeed),
 	MEMBER(MemberType::INT, playerOnimaru.ultimateChargePoints),
 	MEMBER(MemberType::INT, playerOnimaru.ultimateChargePointsTotal),
 	MEMBER(MemberType::FLOAT, playerOnimaru.orientationThreshold),
@@ -91,6 +93,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, onimaruRecoveryRate),
 	MEMBER_SEPARATOR("Onimaru Shoot"),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruBulletUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruLaserUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruRightHandUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerOnimaru.lookAtPointUID),
@@ -110,8 +113,8 @@ EXPOSE_MEMBERS(PlayerController) {
 GENERATE_BODY_IMPL(PlayerController);
 
 void PlayerController::Start() {
-	playerFang.Init(fangUID, fangTrailDashUID, fangLeftGunUID, fangRightGunUID, fangRightBulletUID, fangLeftBulletUID, cameraUID, HUDManagerObjectUID, fangDashDamageUID, EMPUID, EMPEffectsUID, fangUltimateUID, fangUltimateVFXUID);
-	playerOnimaru.Init(onimaruUID, onimaruBulletUID, onimaruGunUID, onimaruRightHandUID, onimaruShieldUID, onimaruUltimateBulletUID, onimaruBlastEffectsUID, cameraUID, HUDManagerObjectUID);
+	playerFang.Init(fangUID, fangTrailDashUID, fangLeftGunUID, fangRightGunUID, fangRightBulletUID, fangLeftBulletUID, fangLaserUID, cameraUID, HUDManagerObjectUID, fangDashDamageUID, EMPUID, EMPEffectsUID, fangUltimateUID, fangUltimateVFXUID);
+	playerOnimaru.Init(onimaruUID, onimaruLaserUID, onimaruBulletUID, onimaruGunUID, onimaruRightHandUID, onimaruShieldUID, onimaruUltimateBulletUID, onimaruBlastEffectsUID, cameraUID, HUDManagerObjectUID);
 
 	GameObject* HUDManagerGO = GameplaySystems::GetGameObject(HUDManagerObjectUID);
 	if (HUDManagerGO) {
@@ -297,7 +300,7 @@ void PlayerController::CheckCoolDowns() {
 //HUD
 void PlayerController::UpdatePlayerStats() {
 	float realSwitchCooldown = 1.0f - (switchCooldownRemaining / switchCooldown);
-	
+
 	if (hudManagerScript) {
 		if (hitTaken) {
 			hudManagerScript->UpdateHealth(playerFang.lifePoints, playerOnimaru.lifePoints);
