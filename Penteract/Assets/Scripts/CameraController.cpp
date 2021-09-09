@@ -44,11 +44,6 @@ void CameraController::Update() {
 	float3 playerGlobalPos = playerController->playerFang.playerMainTransform->GetGlobalPosition();
 
 	float3 desiredPosition = playerGlobalPos + float3(cameraOffsetX, cameraOffsetY, cameraOffsetZ);
-	//float3 aimingPositionPositiveX = playerGlobalPos + float3(cameraOffsetX + aimingDistance, cameraOffsetY, cameraOffsetZ);
-	//float3 aimingPositionNegativeX = playerGlobalPos + float3(cameraOffsetX - aimingDistance, cameraOffsetY, cameraOffsetZ);
-
-	//float3 aimingPositionPositiveY = playerGlobalPos + float3(cameraOffsetX , cameraOffsetY + aimingDistance, cameraOffsetZ);
-	//float3 aimingPositionNegativeY = playerGlobalPos + float3(cameraOffsetX , cameraOffsetY - aimingDistance, cameraOffsetZ);
 
 	float3 smoothedPosition = desiredPosition;
 		
