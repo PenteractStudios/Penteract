@@ -32,6 +32,7 @@ void PlayerDeath::Start() {
 		transitionGO = GameplaySystems::GetGameObject(transitionUID);
 		if (transitionGO) sceneTransition = GET_SCRIPT(transitionGO, SceneTransition);
 	}
+	laserHitCooldownTimer = laserHitCooldown;
 }
 
 void PlayerDeath::Update() {
@@ -40,11 +41,12 @@ void PlayerDeath::Update() {
 			dead = playerController->IsPlayerDead();
 		}
 
-		if (laserHitCooldownTimer <= laserHitCooldown) {
+		if (getLaserHit) {
 			laserHitCooldownTimer += Time::GetDeltaTime();
 			if (laserHitCooldownTimer > laserHitCooldown) {
 				laserHitCooldownTimer = 0.0f;
-				getLaserHit = true;
+				if (playerController) playerController->TakeDamage(laserBeamTaken);
+				getLaserHit = false;
 			}
 		}
 
@@ -117,12 +119,10 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 	}
 	else if (collidedWith.name == "Barrel") {
 		if(playerController) playerController->TakeDamage(barrelDamageTaken);
+		collidedWith.Disable();
 	}
 	else if (collidedWith.name == "LaserBeam") {
-		if (getLaserHit) {
-			if (playerController) playerController->TakeDamage(laserBeamTaken);
-			getLaserHit = false;
-		}
+		getLaserHit = true;
 	}
 	else if (collidedWith.name == "FireTile") {
 		if (fireDamageActive) {

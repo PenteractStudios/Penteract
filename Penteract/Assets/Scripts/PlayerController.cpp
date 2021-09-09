@@ -83,6 +83,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, playerOnimaru.ultimateAttackSpeed),
 	MEMBER(MemberType::FLOAT, playerOnimaru.ultimateTotalTime),
 	MEMBER(MemberType::FLOAT, playerOnimaru.ultimateOrientationSpeed),
+	MEMBER(MemberType::FLOAT, playerOnimaru.ultimateMovementSpeed),
 	MEMBER(MemberType::INT, playerOnimaru.ultimateChargePoints),
 	MEMBER(MemberType::INT, playerOnimaru.ultimateChargePointsTotal),
 	MEMBER(MemberType::FLOAT, playerOnimaru.orientationThreshold),
@@ -299,7 +300,7 @@ void PlayerController::CheckCoolDowns() {
 //HUD
 void PlayerController::UpdatePlayerStats() {
 	float realSwitchCooldown = 1.0f - (switchCooldownRemaining / switchCooldown);
-	
+
 	if (hudManagerScript) {
 		if (hitTaken) {
 			hudManagerScript->UpdateHealth(playerFang.lifePoints, playerOnimaru.lifePoints);
