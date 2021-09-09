@@ -509,7 +509,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 		if (!ultimateOn) {
 			
 			if (GetInputBool(InputActions::ABILITY_1, useGamepad)) {
-				if (!shield->GetIsActive() && shield->CanUse()) {
+				if (!shield->GetIsActive() && shield->CanUse() && !blastInUse) {
 					InitShield();
 				}
 			}
