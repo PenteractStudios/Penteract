@@ -37,6 +37,7 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.timeToDie),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.barrelDamageTaken),
 	MEMBER_SEPARATOR("Push variables"),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackDistance),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackSpeed),
@@ -255,7 +256,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
 			}
 			else if (collidedWith.name == "Barrel") {
-				rangerGruntCharacter.GetHit(playerDeath->barrelDamageTaken);
+				rangerGruntCharacter.GetHit(rangerGruntCharacter.barrelDamageTaken);
 				hitTaken = true;
 			}
 			else if (collidedWith.name == "DashDamage" && playerController->playerFang.level1Upgrade) {
@@ -300,7 +301,7 @@ void RangedAI::Update() {
 			}
 		}
 	}
-	
+
 	UpdateDissolveTimer();
 
 	if (!GetOwner().IsActive()) return;
