@@ -18,8 +18,8 @@ public:
 	float restTime = 0.0f;
 
 private:
-	bool firstAdvert = false;
-	bool isChanging = false;
+	bool firstAdvert = true;
+	bool isChanging = true;
 	float2 offset = { 0.0f, 0.0f };
 };
 
