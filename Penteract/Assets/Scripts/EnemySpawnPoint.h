@@ -5,7 +5,6 @@
 
 #include <vector>
 #include <tuple>
-#include <random>
 
 class GameObject;
 class ResourcePrefab;
@@ -51,13 +50,10 @@ public:
 	/* Player */
 	UID playerUID = 0;
 
-	/* TexturesPlaceholder */
-	std::vector<UID> textures;
-
 private:
 	/* Owner */
 	GameObject* gameObject = nullptr;
-	
+
 	/* Prefabs */
 	ResourcePrefab* meleeEnemyPrefab = nullptr;
 	ResourcePrefab* rangeEnemyPrefab = nullptr;
