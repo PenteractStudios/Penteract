@@ -55,7 +55,8 @@ EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, switchHealthParentUID),
 	MEMBER(MemberType::FLOAT, lostHealthFeedbackAlpha),
 	MEMBER_SEPARATOR("HUD Sides"),
-	MEMBER(MemberType::GAME_OBJECT_UID, sidesHUDParentUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, sidesHUDParentUID),
+	MEMBER(MemberType::STRING, shieldObjName)
 };
 
 GENERATE_BODY_IMPL(HUDManager);
@@ -176,11 +177,17 @@ void HUDManager::Update() {
 void HUDManager::UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown, float fangUltimateRemainingNormalizedValue, float oniUltimateRemainingNormalizedValue) {
 	cooldowns[static_cast<int>(Cooldowns::FANG_SKILL_1)] = fangCooldown1;
 	cooldowns[static_cast<int>(Cooldowns::FANG_SKILL_2)] = fangCooldown2;
-	cooldowns[static_cast<int>(Cooldowns::FANG_SKILL_3)] = fangUltimateRemainingNormalizedValue == 0 ? fangCooldown3 : 1.0f;
+	cooldowns[static_cast<int>(Cooldowns::FANG_SKILL_3)] = fangUltimateRemainingNormalizedValue == 0 ? fangCooldown3 : 0.99f;
 	cooldowns[static_cast<int>(Cooldowns::ONIMARU_SKILL_1)] = onimaruCooldown1;
 	cooldowns[static_cast<int>(Cooldowns::ONIMARU_SKILL_2)] = onimaruCooldown2;
-	cooldowns[static_cast<int>(Cooldowns::ONIMARU_SKILL_3)] = oniUltimateRemainingNormalizedValue == 0 ? onimaruCooldown3 : 1.0f;
+	cooldowns[static_cast<int>(Cooldowns::ONIMARU_SKILL_3)] = oniUltimateRemainingNormalizedValue == 0 ? onimaruCooldown3 : 0.99f;
 	cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] = switchCooldown;
+
+
+	//std::string message = std::to_string(fangCooldown1) + " " + std::to_string(fangCooldown2) + " " + std::to_string(fangCooldown3) + " " +
+	//	std::to_string(onimaruCooldown1) + " " + std::to_string(onimaruCooldown2) + " " + std::to_string(onimaruCooldown3) + " " + std::to_string(switchCooldown);
+
+	//Debug::Log(message.c_str());
 
 	if (onimaruObj && fangObj && fangSkillParent && onimaruSkillParent) {
 
@@ -422,7 +429,7 @@ void HUDManager::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canv
 
 					if (cooldown == Cooldowns::ONIMARU_SKILL_1) {
 						if (onimaruObj) {
-							GameObject* shieldObj = onimaruObj->GetChild("Shield");
+							GameObject* shieldObj = onimaruObj->GetChild(shieldObjName.c_str());
 							if (shieldObj) {
 								if (!shieldObj->IsActive()) {
 									ef = GET_SCRIPT(children[HIERARCHY_INDEX_ABILITY_EFFECT], AbilityRefeshFX);
@@ -880,8 +887,7 @@ void HUDManager::PlayHitEffect() {
 	if (hitEffectTimer == hitEffectTotalTime) {
 		hitEffectTimer = 0.f;
 		playingHitEffect = false;
-	}
-	else {
+	} else {
 		hitEffectTimer += Time::GetDeltaTime();
 	}
 

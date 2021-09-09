@@ -123,7 +123,7 @@ public:
 
 	float4 sideNormalColor = float4(103.f / 255.f, 180.f / 255.f, 169.f / 255.f, 30.f / 255.f);
 	float4 sideHitColor = float4(248.f / 255.f, 47.f / 255.f, 47.f / 255.f, 30.f / 255.f);
-
+	std::string shieldObjName = "VFXShield";
 public:
 	void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown, float fangUltimateRemainingNormalizedValue, float oniUltimateRemainingNormalizedValue);
 	void UpdateHealth(float fangHealth, float onimaruHealth);

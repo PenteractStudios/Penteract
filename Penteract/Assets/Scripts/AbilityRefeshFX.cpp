@@ -7,8 +7,7 @@
 #include "UISpriteSheetPlayer.h"
 #include "HUDManager.h"
 
-#define ANIMATION_COUNT 1
-#define HIERARCHY_INDEX_GLOW_EFFECT 1
+#define HIERARCHY_INDEX_GLOW_EFFECT 2
 
 EXPOSE_MEMBERS(AbilityRefeshFX) {
 	MEMBER(MemberType::FLOAT, totalEffectTime),
