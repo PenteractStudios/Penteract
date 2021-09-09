@@ -332,6 +332,7 @@ void PlayerController::TakeDamage(float damage) {
 	}
 }
 
+
 void PlayerController::SetUseGamepad(bool useGamepad_) {
 	//Other callbacks would go here
 	useGamepad = useGamepad_;
