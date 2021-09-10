@@ -54,9 +54,9 @@
                 "Script": 1795085235405539910,
                 "Values": [
                     {
-                        "Name": "scrollingBackgroundObjUID",
+                        "Name": "backgroundUID",
                         "Type": "GameObjectUID",
-                        "Value": 15619019341942753131
+                        "Value": 7795550498316423022
                     },
                     {
                         "Name": "playAgainButtonUID",
@@ -64,9 +64,9 @@
                         "Value": 10524194915938984956
                     },
                     {
-                        "Name": "backgroundUID",
+                        "Name": "scrollingBackgroundObjUID",
                         "Type": "GameObjectUID",
-                        "Value": 7795550498316423022
+                        "Value": 15619019341942753131
                     },
                     {
                         "Name": "mainMenuButtonUID",
@@ -2836,7 +2836,7 @@
                         "Active": true,
                         "Position": [
                             0.0,
-                            -500.0,
+                            -420.0,
                             0.0
                         ],
                         "Rotation": [
@@ -2970,7 +2970,7 @@
                                 "Active": true,
                                 "Position": [
                                     0.0,
-                                    0.0,
+                                    -3.0,
                                     0.0
                                 ],
                                 "Rotation": [
@@ -3015,12 +3015,12 @@
                             {
                                 "Type": "Text",
                                 "Active": true,
-                                "FontID": 13870526982062861803,
+                                "FontID": 9939030777484332345,
                                 "FontSize": 24.0,
                                 "LineHeight": 16.0,
-                                "LetterSpacing": 0.0,
-                                "Alignment": 0,
-                                "Value": "Main Menu",
+                                "LetterSpacing": 4.0,
+                                "Alignment": 1,
+                                "Value": "MAIN MENU",
                                 "Color": [
                                     1.0,
                                     1.0,
@@ -3044,7 +3044,7 @@
                         "Active": true,
                         "Position": [
                             0.0,
-                            -400.0,
+                            -300.0,
                             0.0
                         ],
                         "Rotation": [
@@ -3178,7 +3178,7 @@
                                 "Active": true,
                                 "Position": [
                                     0.0,
-                                    0.0,
+                                    -6.0,
                                     0.0
                                 ],
                                 "Rotation": [
@@ -3223,12 +3223,12 @@
                             {
                                 "Type": "Text",
                                 "Active": true,
-                                "FontID": 13870526982062861803,
-                                "FontSize": 24.0,
+                                "FontID": 9939030777484332345,
+                                "FontSize": 28.0,
                                 "LineHeight": 16.0,
-                                "LetterSpacing": 0.0,
-                                "Alignment": 0,
-                                "Value": "Play Again",
+                                "LetterSpacing": 4.0,
+                                "Alignment": 1,
+                                "Value": "RETRY",
                                 "Color": [
                                     1.0,
                                     1.0,
@@ -3252,7 +3252,7 @@
                         "Active": true,
                         "Position": [
                             0.0,
-                            -400.0,
+                            -300.0,
                             0.0
                         ],
                         "Rotation": [
@@ -3330,7 +3330,7 @@
                         "Active": true,
                         "Position": [
                             0.0,
-                            -500.0,
+                            -420.0,
                             0.0
                         ],
                         "Rotation": [
