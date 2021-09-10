@@ -354,6 +354,7 @@ void Fang::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 				fangAudios[static_cast<int>(FANG_AUDIOS::SHOOT)]->Play();
 			}
 			bullet->Play();
+
 		}
 		bullet = nullptr;
 	}
@@ -381,7 +382,9 @@ void Fang::Shoot() {
 		shooting = true;
 		attackCooldownRemaining = 1.f / attackSpeed;
 		//setear la velocidad de animacion
-		if(compAnimation->GetCurrentState()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::SHOOTING)]);
+		if (compAnimation->GetCurrentState()) { 
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::SHOOTING)]); 
+		}
 		if (compAnimation->GetCurrentStateSecondary()) { 
 			ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentStateSecondary()->clipUid);
 			clip->speed = attackSpeed;
@@ -498,9 +501,7 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 					shooting = false;
 				}
-				if (!compAnimation->GetCurrentStateSecondary() || compAnimation->GetCurrentStateSecondary()->name != "IdleAim") {
-					transitioning = 0;
-				}
+
 			}
 			if (GetInputBool(InputActions::ABILITY_2, useGamepad) && !ultimateOn) {
 				ActivateEMP();

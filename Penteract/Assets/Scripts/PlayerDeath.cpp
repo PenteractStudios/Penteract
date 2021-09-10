@@ -83,17 +83,9 @@ void PlayerDeath::OnAnimationFinished() {
 void PlayerDeath::OnAnimationSecondaryFinished() {
 	if (playerController) {
 		if (playerController->playerFang.IsActive()) {
-			ComponentAnimation* animation = playerController->playerFang.compAnimation;
-			if (animation->GetCurrentState() && animation->GetCurrentStateSecondary()) {
-				if (animation->GetCurrentStateSecondary()->name == LEFT_SHOT) {
-					animation->SendTriggerSecondary(playerController->playerFang.states[10] + animation->GetCurrentState()->name);
-				}
-				else if (animation->GetCurrentStateSecondary()->name == RIGHT_SHOT) {
-					animation->SendTriggerSecondary(playerController->playerFang.states[11] + animation->GetCurrentState()->name);
-				}
-			}
+			playerController->playerFang.OnAnimationSecondaryFinished();
 		}
-		else {
+		else if(playerController->playerOnimaru.IsActive()) {
 			playerController->playerOnimaru.OnAnimationSecondaryFinished();
 		}
 	}
