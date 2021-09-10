@@ -231,7 +231,6 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 			break;
 		case DialogueWindow::TUTO_SWAP:
 			activeDialogueObject = tutorialSwap;
-			GameController::ActivateSwitchTutorial(true);
 			GameController::ReachSwitchTutorial(true);
 			break;
 		case DialogueWindow::UPGRADES1:
@@ -302,6 +301,9 @@ void DialogueManager::ActivateDialogue(Dialogue* dialogue) {
 			animationLerpTime = 0;
 			activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(currentEndPosition);
 			TransitionUIElementsColor(true, false);
+			if (activeDialogue->character == DialogueWindow::TUTO_SWAP) {
+				GameController::ActivateSwitchTutorial(true);
+			}
 		}
 	}
 }
