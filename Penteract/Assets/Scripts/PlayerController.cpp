@@ -404,7 +404,6 @@ void PlayerController::Update() {
 		playerOnimaru.Update(useGamepad);
 	}
 
-	//if (playerFang.isAlive && playerOnimaru.isAlive) {
 	CheckCoolDowns();
 	UpdatePlayerStats();
 
@@ -424,7 +423,6 @@ void PlayerController::Update() {
 			switchCooldownRemaining = switchCooldown;
 		}
 	}
-	//}
 }
 
 void PlayerController::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
