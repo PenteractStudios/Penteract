@@ -239,14 +239,10 @@ bool Fang::CanEMP() {
 }
 
 void Fang::CheckCoolDowns(bool noCooldownMode) {
-	if (!fangLaser) return;
-
 	//Combat
 	if (aiming) {
-		if (fangLaser) {
-			if (!fangLaser->IsActive()) {
-				fangLaser->Enable();
-			}
+		if (fangLaser && !fangLaser->IsActive()) {
+			fangLaser->Enable();
 		}
 		timeWithoutCombat += Time::GetDeltaTime();
 		if (timeWithoutCombat >= aimTime) {
@@ -254,11 +250,10 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 			transitioning = 0;
 			timeWithoutCombat = aimTime;
 		}
-	} else {
-		if (fangLaser) {
-			if (fangLaser->IsActive()) {
-				fangLaser->Disable();
-			}
+	}
+	else {
+		if (fangLaser && fangLaser->IsActive()) {
+			fangLaser->Disable();
 		}
 	}
 
