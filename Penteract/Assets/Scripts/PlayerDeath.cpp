@@ -38,6 +38,7 @@ void PlayerDeath::Start() {
 
 	if (gameOverGO)gameOverController = GET_SCRIPT(gameOverGO, GameOverUIController);
 
+	laserHitCooldownTimer = laserHitCooldown;
 }
 
 void PlayerDeath::Update() {
@@ -46,11 +47,12 @@ void PlayerDeath::Update() {
 			dead = playerController->IsPlayerDead();
 		}
 
-		if (laserHitCooldownTimer <= laserHitCooldown) {
+		if (getLaserHit) {
 			laserHitCooldownTimer += Time::GetDeltaTime();
 			if (laserHitCooldownTimer > laserHitCooldown) {
 				laserHitCooldownTimer = 0.0f;
-				getLaserHit = true;
+				if (playerController) playerController->TakeDamage(laserBeamTaken);
+				getLaserHit = false;
 			}
 		}
 
@@ -120,11 +122,9 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 		collidedWith.Disable();
 	}
 	else if (collidedWith.name == "LaserBeam") {
-		if (getLaserHit) {
-			if (playerController) playerController->TakeDamage(laserBeamTaken);
-			getLaserHit = false;
-		}
-	} else if (collidedWith.name == "FireTile") {
+		getLaserHit = true;
+	}
+	else if (collidedWith.name == "FireTile") {
 		if (fireDamageActive) {
 			if (playerController) playerController->TakeDamage(fireDamageTaken);
 			fireDamageActive = false;

@@ -9,7 +9,7 @@ public:
 
 	Enemy(float lifePoints_, float movementSpeed_, float damageHit_, int fallingSpeed_, float searchRadius_, float attackRange_, float timeToDie_, float pushBackDistance_, float pushBackSpeed_, float slowedDownSpeed_, float slowedDownTime_)
 		: fallingSpeed(fallingSpeed_)
-		, searchRadius(searchRadius_) 
+		, searchRadius(searchRadius_)
 		, attackRange(attackRange_)
 		, timeToDie(timeToDie_)
 		, pushBackDistance(pushBackDistance_)
@@ -40,4 +40,6 @@ public:
 	bool destroying = false;
 	bool beingPushed = false;
 	bool slowedDown = false;
+	//Barrel
+	float barrelDamageTaken = 2.f;
 };
