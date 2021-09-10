@@ -76,6 +76,7 @@ void RangedAI::Start() {
 	if (meshObj) {
 		ComponentBoundingBox* bb = meshObj->GetComponent<ComponentBoundingBox>();
 		bbCenter = (bb->GetLocalMinPointAABB() + bb->GetLocalMaxPointAABB()) / 2;
+		meshRenderer = meshObj->GetComponent<ComponentMeshRenderer>();
 	}
 
 	int numChildren = GetOwner().GetChildren().size();
@@ -790,10 +791,10 @@ void RangedAI::SetRandomMaterial()
 			std::uniform_int_distribution<int> distrib(1, materials.size());
 
 			int position = distrib(gen)-1;
+			noDmgMaterialID = materials[position];
 
 			for (auto& child : GetOwner().GetChildren()) {
 				if (child->HasComponent<ComponentMeshRenderer>()) {
-					noDmgMaterialID = materials[position];
 
 					for (auto& mesh : child->GetComponents<ComponentMeshRenderer>()) {
 						mesh.materialId = materials[position];
