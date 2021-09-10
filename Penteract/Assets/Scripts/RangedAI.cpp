@@ -275,7 +275,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 			if (collidedWith.name == "EMP") {
 				if (agent) agent->RemoveAgentFromCrowd();
 				stunTimeRemaining = stunDuration;
-				ChangeState(AIState::STUNNED);
+				if(state != AIState::STUNNED) ChangeState(AIState::STUNNED);
 			}
 		}
 
@@ -300,7 +300,7 @@ void RangedAI::Update() {
 			}
 		}
 	}
-	
+
 	UpdateDissolveTimer();
 
 	if (!GetOwner().IsActive()) return;
@@ -372,14 +372,8 @@ void RangedAI::EnterState(AIState newState) {
 		if (shot) {
 			animation->SendTriggerSecondary("ShootBeginStun");
 		}
-		if (state == AIState::IDLE) {
-			animation->SendTrigger("IdleBeginStun");
-		}
-		else if (state == AIState::RUN) {
-			animation->SendTrigger("RunForwardBeginStun");
-		}
-		else if (state == AIState::FLEE) {
-			animation->SendTrigger("RunBackwardBeginStun");
+		if (animation->GetCurrentState()) {
+			animation->SendTrigger(animation->GetCurrentState()->name + "BeginStun");
 		}
 		break;
 	case AIState::DEATH:
@@ -444,12 +438,8 @@ void RangedAI::UpdateState() {
 						break;
 					}
 
-					if (FindsRayToPlayer(false)) {
-						OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
-					}
-					else {
-						ChangeState(AIState::RUN);
-					}
+					OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
+
 				} else {
 					if (animation->GetCurrentState()->name != "Idle") animation->SendTrigger(animation->GetCurrentState()->name + "Idle");
 				}
@@ -461,7 +451,7 @@ void RangedAI::UpdateState() {
 			if (aiMovement->CharacterInSight(player, rangerGruntCharacter.searchRadius)) {
 				OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
 
-				if (!CharacterInRange(player, rangerGruntCharacter.attackRange - approachOffset, true) || !FindsRayToPlayer(false)) {
+				if (!CharacterInRange(player, rangerGruntCharacter.attackRange - approachOffset, true)) {
 					if (!aiMovement->CharacterInSight(player, fleeingRange)) {
 						if (aiMovement) aiMovement->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), static_cast<int>(speedToUse), false);
 					}
@@ -500,6 +490,7 @@ void RangedAI::UpdateState() {
 				else { //Staying in same position
 					if (animation->GetCurrentState() && animation->GetCurrentState()->name != "Idle") animation->SendTrigger(animation->GetCurrentState()->name + "Idle");
 					currentFleeingUpdateTime += Time::GetDeltaTime();
+					aiMovement->Stop();
 				}
 			}
 
@@ -683,7 +674,7 @@ void RangedAI::ShootPlayerInRange() {
 		shot = true;
 
 		if (animation) {
-			if (animation->GetCurrentState()) animation->SendTriggerSecondary(animation->GetCurrentState()->name + "Shoot");
+			if (animation->GetCurrentState() && animation->GetCurrentState()->name != "Shoot") animation->SendTriggerSecondary(animation->GetCurrentState()->name + "Shoot");
 		}
 
 		actualShotTimer = actualShotMaxTime;
