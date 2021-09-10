@@ -60,7 +60,7 @@ public:
 
 	UID rightBladeColliderUID = 0;
 	UID leftBladeColliderUID = 0;
-	
+
 
 	GameObject* player = nullptr;
 	GameObject* fang = nullptr;
@@ -80,18 +80,18 @@ public:
 	UID dissolveMaterialObj = 0;		//Reference to dissolve material holding gameobject UID, used to be set whenever Ai has been recently hurt
 	UID dissolveMaterialID = 0;			//Reference to dissolve material, used to be set whenever Ai has been recently hurt
 	float dissolveTimerToStart = 0.0f;	//Timer until the dissolve animation is played
-	
-	//Attack1 
+
+	//Attack1
 	float att1AttackSpeed = 1.f;
 	float att1MovementSpeedWhileAttacking = 1.f;
 	int att1AbilityChance = 33;
 
-	//Attack2 
+	//Attack2
 	float att2AttackSpeed = 1.f;
 	float att2MovementSpeedWhileAttacking = 1.f;
 	int att2AbilityChance = 33;
 
-	//Attack3 
+	//Attack3
 	float att3AttackSpeed = 1.f;
 	float att3MovementSpeedWhileAttacking = 1.f;
 	int att3AbilityChance = 33;
