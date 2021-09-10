@@ -1,6 +1,6 @@
 {
     "Root": {
-        "Name": "RangeGrunt",
+        "Name": "RangedGrunt",
         "Active": true,
         "RootBoneName": "CenterHip",
         "Mask": 0,
