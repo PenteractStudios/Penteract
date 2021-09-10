@@ -5,9 +5,9 @@
 class FactoryDoors;
 class DialogueManager;
 
-class TriggerCallback : public Script
+class AfterDialogCallback : public Script
 {
-	GENERATE_BODY(TriggerCallback);
+	GENERATE_BODY(AfterDialogCallback);
 
 public:
 	void Start() override;

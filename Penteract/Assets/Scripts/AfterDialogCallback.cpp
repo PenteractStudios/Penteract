@@ -1,29 +1,29 @@
-#include "TriggerCallback.h"
+#include "AfterDialogCallback.h"
 
 #include "FactoryDoors.h"
 #include "GameplaySystems.h"
 #include "GameObject.h"
 #include "DialogueManager.h"
 
-EXPOSE_MEMBERS(TriggerCallback) {
+EXPOSE_MEMBERS(AfterDialogCallback) {
 	MEMBER(MemberType::GAME_OBJECT_UID, gameControllerUID)
 };
 
-GENERATE_BODY_IMPL(TriggerCallback);
+GENERATE_BODY_IMPL(AfterDialogCallback);
 
-void TriggerCallback::Start() {
+void AfterDialogCallback::Start() {
 	GameObject* gameController = GameplaySystems::GetGameObject(gameControllerUID);
 	if (gameController) dialogueManagerScript = GET_SCRIPT(gameController, DialogueManager);
 	factoryDoorsScript = GET_SCRIPT(&GetOwner(), FactoryDoors);
 }
 
-void TriggerCallback::Update() {
+void AfterDialogCallback::Update() {
 	if (factoryDoorsScript && hasOpenedDialog && !dialogueManagerScript->HasActiveDialogue()) {
 		factoryDoorsScript->Open();
 		hasOpenedDialog = false;
 	}
 }
 
-void TriggerCallback::OpenFactoryDoors() {
+void AfterDialogCallback::OpenFactoryDoors() {
 	hasOpenedDialog = true;
 }

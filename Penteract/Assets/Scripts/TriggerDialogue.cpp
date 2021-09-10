@@ -3,11 +3,11 @@
 #include "DialogueManager.h"
 #include "GameplaySystems.h"
 #include "GameObject.h"
-#include "TriggerCallback.h"
+#include "AfterDialogCallback.h"
 
 EXPOSE_MEMBERS(TriggerDialogue) {
     MEMBER(MemberType::GAME_OBJECT_UID, gameControllerUID),
-    MEMBER(MemberType::GAME_OBJECT_UID, triggerCallbackUID),
+    MEMBER(MemberType::GAME_OBJECT_UID, afterDialogCallbackUID),
     MEMBER(MemberType::INT, dialogueID)
 };
 
@@ -16,8 +16,8 @@ GENERATE_BODY_IMPL(TriggerDialogue);
 void TriggerDialogue::Start() {
     gameController = GameplaySystems::GetGameObject(gameControllerUID);
     if (gameController) dialogueManagerScript = GET_SCRIPT(gameController, DialogueManager);
-    GameObject* triggerCallback = GameplaySystems::GetGameObject(triggerCallbackUID);
-    if (triggerCallback) triggerCallbackScript = GET_SCRIPT(triggerCallback, TriggerCallback);
+    GameObject* afterDialogCallback = GameplaySystems::GetGameObject(afterDialogCallbackUID);
+    if (afterDialogCallback) afterDialogCallbackScript = GET_SCRIPT(afterDialogCallback, AfterDialogCallback);
 }
 
 void TriggerDialogue::Update() {}
@@ -28,7 +28,7 @@ void TriggerDialogue::OnCollision(GameObject& /*collidedWith*/, float3 /*collisi
         if (dialogueID < sizeof(dialogueManagerScript->dialoguesArray) / sizeof(dialogueManagerScript->dialoguesArray[0])
             && &dialogueManagerScript->dialoguesArray[dialogueID] != nullptr) {
             dialogueManagerScript->SetActiveDialogue(&dialogueManagerScript->dialoguesArray[dialogueID]);
-            if (triggerCallbackScript) triggerCallbackScript->OpenFactoryDoors();
+            if (afterDialogCallbackScript) afterDialogCallbackScript->OpenFactoryDoors();
         }
     }
     GetOwner().Disable();
