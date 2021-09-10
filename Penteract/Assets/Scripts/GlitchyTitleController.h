@@ -6,6 +6,7 @@ class ComponentImage;
 class ComponentAudioSource;
 class UISpriteSheetPlayer;
 class CanvasFader;
+class StartTitleGlitchOnPlay;
 
 class GlitchyTitleController : public Script {
 	GENERATE_BODY(GlitchyTitleController);
@@ -14,7 +15,7 @@ public:
 
 	void Start() override;
 	void Update() override;
-	void PressedPlay(); //Method to be called to trigger FadeOut when play is pressed and whiel fade to black is happening
+	void PressedPlay(StartTitleGlitchOnPlay* pressedButton_); //Method to be called to trigger FadeOut when play is pressed and whiel fade to black is happening
 	bool ReadyForTransition()const;
 
 public:
@@ -30,6 +31,7 @@ public:
 	UID glitchTitleObjUID = 0;
 	UID startPlayingTitleObjUID = 0;
 	UID blackImageObjUID = 0;
+	StartTitleGlitchOnPlay* pressedButton = nullptr;
 
 
 private:
@@ -51,7 +53,6 @@ private:
 	const float4 alphaBlack = float4(0, 0, 0, 1);
 	const float4 noAlphaBlack = float4(0, 0, 0, 0);
 	ComponentAudioSource* audios[static_cast<int>(GlitchTitleAudio::TOTAL)] = { nullptr };
-
 
 
 };

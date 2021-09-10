@@ -1398,14 +1398,14 @@
                                                         "Script": 10048554049739023339,
                                                         "Values": [
                                                             {
-                                                                "Name": "controllerObjUID",
-                                                                "Type": "GameObjectUID",
-                                                                "Value": 2149423061758228828
-                                                            },
-                                                            {
                                                                 "Name": "fadeToBlackObjectUID",
                                                                 "Type": "GameObjectUID",
                                                                 "Value": 17695041365782035885
+                                                            },
+                                                            {
+                                                                "Name": "controllerObjUID",
+                                                                "Type": "GameObjectUID",
+                                                                "Value": 2149423061758228828
                                                             },
                                                             {
                                                                 "Name": "sceneUID",
@@ -3707,14 +3707,14 @@
                                                 "Value": 9693072970663710125
                                             },
                                             {
-                                                "Name": "loopingTitleObjUID",
-                                                "Type": "GameObjectUID",
-                                                "Value": 6739931987885618446
-                                            },
-                                            {
                                                 "Name": "blackImageObjUID",
                                                 "Type": "GameObjectUID",
                                                 "Value": 17695041365782035885
+                                            },
+                                            {
+                                                "Name": "loopingTitleObjUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 6739931987885618446
                                             },
                                             {
                                                 "Name": "glitchTitleObjUID",
@@ -26509,7 +26509,7 @@
                                                                     {
                                                                         "Type": "Script",
                                                                         "Id": 17684605255849114503,
-                                                                        "Active": false,
+                                                                        "Active": true,
                                                                         "Script": 10048554049739023339,
                                                                         "Values": [
                                                                             {
@@ -26518,14 +26518,14 @@
                                                                                 "Value": 5283034992592177512
                                                                             },
                                                                             {
-                                                                                "Name": "fadeToBlackObjectUID",
-                                                                                "Type": "GameObjectUID",
-                                                                                "Value": 17695041365782035885
-                                                                            },
-                                                                            {
                                                                                 "Name": "controllerObjUID",
                                                                                 "Type": "GameObjectUID",
                                                                                 "Value": 2149423061758228828
+                                                                            },
+                                                                            {
+                                                                                "Name": "fadeToBlackObjectUID",
+                                                                                "Type": "GameObjectUID",
+                                                                                "Value": 17695041365782035885
                                                                             },
                                                                             {
                                                                                 "Name": "sceneUID",
@@ -27019,18 +27019,18 @@
                                                                     {
                                                                         "Type": "Script",
                                                                         "Id": 2612739787865740396,
-                                                                        "Active": false,
+                                                                        "Active": true,
                                                                         "Script": 10048554049739023339,
                                                                         "Values": [
-                                                                            {
-                                                                                "Name": "fadeToBlackObjectUID",
-                                                                                "Type": "GameObjectUID",
-                                                                                "Value": 17695041365782035885
-                                                                            },
                                                                             {
                                                                                 "Name": "controllerObjUID",
                                                                                 "Type": "GameObjectUID",
                                                                                 "Value": 2149423061758228828
+                                                                            },
+                                                                            {
+                                                                                "Name": "fadeToBlackObjectUID",
+                                                                                "Type": "GameObjectUID",
+                                                                                "Value": 17695041365782035885
                                                                             },
                                                                             {
                                                                                 "Name": "checkpointNum",
@@ -27534,7 +27534,7 @@
                                                                     {
                                                                         "Type": "Script",
                                                                         "Id": 6208812339116101362,
-                                                                        "Active": false,
+                                                                        "Active": true,
                                                                         "Script": 10048554049739023339,
                                                                         "Values": [
                                                                             {
@@ -27543,14 +27543,14 @@
                                                                                 "Value": 2
                                                                             },
                                                                             {
-                                                                                "Name": "controllerObjUID",
-                                                                                "Type": "GameObjectUID",
-                                                                                "Value": 2149423061758228828
-                                                                            },
-                                                                            {
                                                                                 "Name": "fadeToBlackObjectUID",
                                                                                 "Type": "GameObjectUID",
                                                                                 "Value": 17695041365782035885
+                                                                            },
+                                                                            {
+                                                                                "Name": "controllerObjUID",
+                                                                                "Type": "GameObjectUID",
+                                                                                "Value": 2149423061758228828
                                                                             },
                                                                             {
                                                                                 "Name": "swapPanelsObjUID",
@@ -28049,7 +28049,7 @@
                                                                     {
                                                                         "Type": "Script",
                                                                         "Id": 15084137963601009019,
-                                                                        "Active": false,
+                                                                        "Active": true,
                                                                         "Script": 10048554049739023339,
                                                                         "Values": [
                                                                             {
@@ -28058,14 +28058,14 @@
                                                                                 "Value": 3
                                                                             },
                                                                             {
-                                                                                "Name": "controllerObjUID",
-                                                                                "Type": "GameObjectUID",
-                                                                                "Value": 2149423061758228828
-                                                                            },
-                                                                            {
                                                                                 "Name": "fadeToBlackObjectUID",
                                                                                 "Type": "GameObjectUID",
                                                                                 "Value": 17695041365782035885
+                                                                            },
+                                                                            {
+                                                                                "Name": "controllerObjUID",
+                                                                                "Type": "GameObjectUID",
+                                                                                "Value": 2149423061758228828
                                                                             },
                                                                             {
                                                                                 "Name": "swapPanelsObjUID",
@@ -28564,7 +28564,7 @@
                                                                     {
                                                                         "Type": "Script",
                                                                         "Id": 3258013298464362883,
-                                                                        "Active": false,
+                                                                        "Active": true,
                                                                         "Script": 10048554049739023339,
                                                                         "Values": [
                                                                             {
@@ -28573,14 +28573,14 @@
                                                                                 "Value": 4
                                                                             },
                                                                             {
-                                                                                "Name": "controllerObjUID",
-                                                                                "Type": "GameObjectUID",
-                                                                                "Value": 2149423061758228828
-                                                                            },
-                                                                            {
                                                                                 "Name": "fadeToBlackObjectUID",
                                                                                 "Type": "GameObjectUID",
                                                                                 "Value": 17695041365782035885
+                                                                            },
+                                                                            {
+                                                                                "Name": "controllerObjUID",
+                                                                                "Type": "GameObjectUID",
+                                                                                "Value": 2149423061758228828
                                                                             },
                                                                             {
                                                                                 "Name": "swapPanelsObjUID",

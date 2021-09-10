@@ -53,12 +53,7 @@ void StartTitleGlitchOnPlay::Start() {
 }
 
 void StartTitleGlitchOnPlay::Update() {
-	if (pressed && canvasFader && controller) {
-		if (!canvasFader->IsPlaying() && controller->ReadyForTransition()) {
-			DoTransition();
-		}
-
-	} else {
+	if (!pressed) {
 		if (selectable) {
 			ComponentEventSystem* eventSystem = UserInterface::GetCurrentEventSystem();
 			if (eventSystem) {
@@ -82,11 +77,16 @@ void StartTitleGlitchOnPlay::Update() {
 }
 
 void StartTitleGlitchOnPlay::OnButtonClick() {
-	if (controller) {
-		controller->PressedPlay();
-	}
 
 	PlayAudio(UIAudio::CLICKED);
+
+	if (swapPanelsScript) {
+		swapPanelsScript->DoSwapPanels();
+	}
+
+	if (controller) {
+		controller->PressedPlay(this);
+	}
 
 	if (!canvasFader) {
 		DoTransition();
@@ -94,9 +94,7 @@ void StartTitleGlitchOnPlay::OnButtonClick() {
 		pressed = true;
 	}
 
-	if (swapPanelsScript) {
-		swapPanelsScript->DoSwapPanels();
-	}
+
 
 }
 

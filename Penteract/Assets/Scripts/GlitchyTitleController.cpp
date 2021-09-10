@@ -5,6 +5,7 @@
 #include "Components/UI/ComponentImage.h"
 #include "CanvasFader.h"
 #include "Components/ComponentAudioSource.h"
+#include "StartTitleGlitchOnPlay.h"
 
 EXPOSE_MEMBERS(GlitchyTitleController) {
 	MEMBER(MemberType::FLOAT, minTimeForTimeGlitches),
@@ -138,13 +139,19 @@ void GlitchyTitleController::Update() {
 		}
 		break;
 	case GlitchState::FADE_OUT:
-
+		if (!canvasFader->IsPlaying()) {
+			if (pressedButton) {
+				pressedButton->DoTransition();
+			}
+		}
 		break;
 	}
 }
 
-void GlitchyTitleController::PressedPlay() {
+void GlitchyTitleController::PressedPlay(StartTitleGlitchOnPlay* pressedButton_) {
+	pressedButton = pressedButton_;
 	glitchState = GlitchState::PLAY;
+
 }
 
 bool GlitchyTitleController::ReadyForTransition() const {

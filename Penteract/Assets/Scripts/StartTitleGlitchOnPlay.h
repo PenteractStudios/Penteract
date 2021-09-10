@@ -14,6 +14,13 @@ class StartTitleGlitchOnPlay : public Script {
 	GENERATE_BODY(StartTitleGlitchOnPlay);
 
 public:
+	void Start() override;
+	void Update() override;
+
+	void OnButtonClick() override;
+	void DoTransition();
+
+public:
 	UID controllerObjUID = 0;
 	UID sceneUID = 0;
 	UID fadeToBlackObjectUID = 0;
@@ -21,12 +28,6 @@ public:
 	int levelNum = 1;
 	int checkpointNum = -1;
 
-public:
-
-	void Start() override;
-	void Update() override;
-
-	void OnButtonClick() override;
 private:
 	GlitchyTitleController* controller = nullptr;
 	void PlayAudio(UIAudio type);
@@ -43,7 +44,5 @@ private:
 	ComponentSelectable* selectable = nullptr;
 	ComponentAudioSource* audios[static_cast<int>(UIAudio::TOTAL)] = { nullptr };
 	SwapPanels* swapPanelsScript = nullptr;
-private:
-	void DoTransition();
 };
 
