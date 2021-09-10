@@ -59,6 +59,7 @@ public:
 	float4 skillPictoColorNotAvailable = float4(0.f / 255.f, 177.f / 255.f, 227.f / 255.f, 255.f / 255.f);
 	float4 skillPictoColorInUse = float4(0.f / 255.f, 40.f / 255.f, 60.f / 255.f, 255.f / 255.f);
 
+	float4 switchSkillColorDeadCharacter = float4(255.0f / 255.f, 0.0f / 255.f, 0.0f / 255.f, 255.0f / 255.f);
 	float4 switchSkillColorNotAvailable = float4(133.f / 255.f, 243.f / 255.f, 196.f / 255.f, 150.f / 255.f);
 	float4 switchSkillColorAvailable = float4(133.f / 255.f, 243.f / 255.f, 196.f / 255.f, 255.f / 255.f);
 

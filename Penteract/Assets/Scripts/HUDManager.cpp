@@ -50,7 +50,7 @@ EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, switchHealthParentUID),
 	MEMBER(MemberType::FLOAT, lostHealthFeedbackAlpha),
 	MEMBER_SEPARATOR("HUD Sides"),
-	MEMBER(MemberType::GAME_OBJECT_UID, sidesHUDParentUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, sidesHUDParentUID),
 };
 
 GENERATE_BODY_IMPL(HUDManager);
@@ -259,12 +259,12 @@ void HUDManager::StartCharacterSwitch() {
 	if (switchSkillParent) {
 		std::vector<GameObject*> switchChildren = switchSkillParent->GetChildren();
 		if (switchChildren.size() > HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL - 1) {
-			switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_WHITE]->Enable();
-
-			switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_GLOW]->Enable();
-
 			if (switchGlowImage) {
-				switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 1.0f));
+				if (playerController && playerController->AreBothCharactersAlive()) {
+					switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 1.0f));
+					switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_WHITE]->Enable();
+					switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_GLOW]->Enable();
+				}
 			}
 		}
 	}
@@ -287,12 +287,11 @@ void HUDManager::StopUsingSkill(Cooldowns cooldown) {
 }
 
 void HUDManager::OnCharacterDeath() {
-	switchSkillParent->Disable();
 	abilityCoolDownsRetreived[static_cast<int>(Cooldowns::SWITCH_SKILL)] = false;
 }
 
 void HUDManager::OnCharacterResurrect() {
-	switchSkillParent->Enable();
+
 }
 
 void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
@@ -447,8 +446,12 @@ void HUDManager::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canv
 					}
 				} else {
 					//Switch skill
-					ef = GET_SCRIPT(skills[HIERARCHY_INDEX_SWITCH_ABILITY_EFFECT], AbilityRefeshFX);
-					//pef = GET_SCRIPT(canvas->GetChild(HIERARCHY_INDEX_SWAP_ABILITY_EFFECT), AbilityRefreshEffectProgressBar);
+
+					if (playerController) {
+						if (playerController->AreBothCharactersAlive()) {
+							ef = GET_SCRIPT(skills[HIERARCHY_INDEX_SWITCH_ABILITY_EFFECT], AbilityRefeshFX);
+						}
+					}
 				}
 
 				if (ef) {
@@ -511,7 +514,13 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 
 	if (fillColor && image) {
 		fillColor->SetFillValue(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
-		fillColor->SetColor(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1 ? float4(switchSkillColorNotAvailable.xyz(), 0.3f + cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]) : switchSkillColorAvailable);
+		if (playerController) {
+			if (playerController->playerFang.isAlive && playerController->playerOnimaru.isAlive) {
+				fillColor->SetColor(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1 ? float4(switchSkillColorNotAvailable.xyz(), 0.3f + cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]) : switchSkillColorAvailable);
+			} else {
+				fillColor->SetColor(switchSkillColorDeadCharacter);
+			}
+		}
 	}
 
 	AbilityCoolDownEffectCheck(Cooldowns::SWITCH_SKILL, switchSkillParent);
@@ -543,7 +552,7 @@ void HUDManager::ManageSwitch() {
 	ComponentTransform2D* switchHealthFillTransform2D = nullptr;
 
 	if (switchShadeTransform) {
-		if (switchState != SwitchState::IDLE || cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] >= 1.0f) {
+		if ((switchState != SwitchState::IDLE || cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] >= 1.0f) && playerController && playerController->AreBothCharactersAlive()) {
 			Quat rotToAdd;
 			rotToAdd.SetFromAxisAngle(float4(0, 0, 1, 1), Time::GetDeltaTime() * rotationSpeed);
 			switchShadeTransform->SetRotation(rotToAdd * switchShadeTransform->GetGlobalRotation());
@@ -578,15 +587,15 @@ void HUDManager::ManageSwitch() {
 		break;
 	case SwitchState::PRE_COLLAPSE:
 
-		//TODO make glow happen
-		//TODO activate white effect under picto 
-
 		if (switchTimer > switchPreCollapseMovementTime) {
 			switchTimer = switchPreCollapseMovementTime;
 		}
 
+		//Glow should only update if both characters are alive
 		if (switchGlowImage) {
-			switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 1 - Clamp(switchTimer / switchPreCollapseMovementTime, 0.0f, 0.7f)));
+			if (playerController && playerController->AreBothCharactersAlive()) {
+				switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 1 - Clamp(switchTimer / switchPreCollapseMovementTime, 0.0f, 0.7f)));
+			}
 		}
 
 		ManageSwitchPreCollapseState(fangSkillParent->IsActive() ? fangSkillParent : onimaruSkillParent, fangSkillParent->IsActive() ? skillsFang : skillsOni);
@@ -594,8 +603,12 @@ void HUDManager::ManageSwitch() {
 
 
 		if (switchTimer == switchPreCollapseMovementTime) {
+
+			//Glow should only update if both characters are alive
 			if (switchGlowImage) {
-				switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 0));
+				if (playerController && playerController->AreBothCharactersAlive()) {
+					switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 0));
+				}
 			}
 			switchState = SwitchState::COLLAPSE;
 			switchTimer = 0;
@@ -609,8 +622,11 @@ void HUDManager::ManageSwitch() {
 			switchTimer = switchCollapseMovementTime;
 		}
 
+		//Glow should only update if both characters are alive
 		if (switchGlowImage) {
-			switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 1 - Clamp01(0.7f + switchTimer / switchPreCollapseMovementTime)));
+			if (playerController && playerController->AreBothCharactersAlive()) {
+				switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 1 - Clamp01(0.7f + switchTimer / switchPreCollapseMovementTime)));
+			}
 		}
 
 		ManageSwitchCollapseState(fangSkillParent->IsActive() ? fangSkillParent : onimaruSkillParent, fangSkillParent->IsActive() ? skillsFang : skillsOni);
@@ -893,8 +909,19 @@ void HUDManager::ManageSwitch() {
 				switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_WHITE]->Disable();
 			}
 
-			SetPictoState(Cooldowns::SWITCH_SKILL, PictoState::UNAVAILABLE);
+			//IN_USE pictoState is black colored, which, in case of having a dead character, works perfectly
+			if (playerController && playerController->AreBothCharactersAlive()) {
+				SetPictoState(Cooldowns::SWITCH_SKILL, PictoState::UNAVAILABLE);
+			} else {
+				SetPictoState(Cooldowns::SWITCH_SKILL, PictoState::IN_USE);
+			}
+
 			switchTimer = 0;
+		}
+
+		//Reset glow just in case a character was dead and glowEffect was interrupted
+		if (switchGlowImage) {
+			switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 0.0f));
 		}
 
 		break;

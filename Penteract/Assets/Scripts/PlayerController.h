@@ -46,6 +46,7 @@ public:
 	float GetFangMaxHealth() const;
 	bool IsPlayerDead() { return !playerFang.isAlive && !playerOnimaru.isAlive; }
 	bool IsActiveCharacterDead() { return (playerFang.characterGameObject->IsActive() && !playerFang.isAlive) || (playerOnimaru.characterGameObject->IsActive() && !playerOnimaru.isAlive); }
+	bool AreBothCharactersAlive(){ return playerFang.isAlive && playerOnimaru.isAlive; }
 	void TakeDamage(float damage);
 	static void SetUseGamepad(bool useGamepad_);
 
