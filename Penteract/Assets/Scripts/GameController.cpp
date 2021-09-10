@@ -4,6 +4,7 @@
 #include "Modules/ModuleCamera.h"
 #include "GameplaySystems.h"
 #include "StatsDisplayer.h"
+#include "PauseController.h"
 
 #include "Math/float3x3.h"
 #include "Geometry/frustum.h"
@@ -91,9 +92,11 @@ void GameController::Update() {
 
 	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)) {
 		if (isPaused) {
+			PauseController::SetIsPause(false);
 			ResumeGame();
 		}
 		else {
+			PauseController::SetIsPause(true);
 			PauseGame();
 		}
 	}

@@ -27,6 +27,7 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 		MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
 		MEMBER(MemberType::FLOAT, gruntCharacter.attackRange),
 		MEMBER(MemberType::FLOAT, gruntCharacter.timeToDie),
+		MEMBER(MemberType::FLOAT, gruntCharacter.barrelDamageTaken),
 		MEMBER_SEPARATOR("Push variables"),
 		MEMBER(MemberType::FLOAT, gruntCharacter.pushBackDistance),
 		MEMBER(MemberType::FLOAT, gruntCharacter.pushBackSpeed),
@@ -209,7 +210,7 @@ void AIMeleeGrunt::Update() {
 		movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), speedToUse, true);
 		if (movementScript->CharacterInAttackRange(player, gruntCharacter.attackRange)) {
 			int random = std::rand() % 100;
-			if (random < att1AbilityChance) { 
+			if (random < att1AbilityChance) {
 				attackNumber = 1;
 				attackSpeed = att1AttackSpeed;
 				attackMovementSpeed = att1MovementSpeedWhileAttacking;
@@ -232,8 +233,8 @@ void AIMeleeGrunt::Update() {
 		}
 		break;
 	case AIState::ATTACK:
-		if (track) { 
-			movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition()); 
+		if (track) {
+			movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
 		}
 		if (attackStep) {
 			movementScript->Seek(state, ownerTransform->GetGlobalPosition() + ownerTransform->GetFront()*10, attackMovementSpeed, false);
@@ -352,7 +353,7 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 			}
 			else if (collidedWith.name == "Barrel") {
 				hitTaken = true;
-				gruntCharacter.GetHit(playerDeath->barrelDamageTaken);
+				gruntCharacter.GetHit(gruntCharacter.barrelDamageTaken);
 			}
 			else if (collidedWith.name == "DashDamage" && playerController->playerFang.level1Upgrade) {
 				hitTaken = true;
@@ -450,7 +451,7 @@ void AIMeleeGrunt::CalculatePushBackRealDistance() {
 
 	float3 finalPos = enemyPos + direction * gruntCharacter.pushBackDistance;
 	float3 resultPos = { 0,0,0 };
-	
+
 	Navigation::Raycast(enemyPos, finalPos, hitResult, resultPos);
 
 	if (hitResult) {

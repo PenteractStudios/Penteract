@@ -6,7 +6,7 @@
 #include "CameraController.h"
 #include "UltimateFang.h"
 
-void Fang::Init(UID fangUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, UID rightBulletUID, UID leftBulletUID, UID cameraUID, UID HUDManagerObjectUID, UID dashUID, UID EMPUID, UID EMPEffectsUID, UID fangUltimateUID, UID ultimateVFXUID) {
+void Fang::Init(UID fangUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, UID rightBulletUID, UID leftBulletUID, UID laserUID, UID cameraUID, UID HUDManagerObjectUID, UID dashUID, UID EMPUID, UID EMPEffectsUID, UID fangUltimateUID, UID ultimateVFXUID) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(fangUID);
 	if (characterGameObject && characterGameObject->GetParent()) {
@@ -29,6 +29,9 @@ void Fang::Init(UID fangUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, 
 		if (lookAtPoint) {
 			lookAtMousePlanePosition = lookAtPoint->GetComponent<ComponentTransform>()->GetGlobalPosition();
 		}
+
+		//laser
+		fangLaser = GameplaySystems::GetGameObject(laserUID);
 
 		GameObject* trailAux = GameplaySystems::GetGameObject(trailDashUID);
 		if (trailAux) {
@@ -235,14 +238,23 @@ bool Fang::CanEMP() {
 }
 
 void Fang::CheckCoolDowns(bool noCooldownMode) {
+	if (!fangLaser) return;
 
 	//Combat
 	if (aiming) {
+		if (!fangLaser->IsActive()) {
+			fangLaser->Enable();
+		}
 		timeWithoutCombat += Time::GetDeltaTime();
 		if (timeWithoutCombat >= aimTime || GameController::IsGameplayBlocked()) {
 			aiming = false;
 			transitioning = 0;
 			timeWithoutCombat = aimTime;
+		}
+	}
+	else {
+		if (fangLaser->IsActive()) {
+			fangLaser->Disable();
 		}
 	}
 
@@ -482,7 +494,7 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 			}
 
 			Dash();
-			if (!GetInputBool(InputActions::SHOOT, useGamepad)) {
+			if (!GetInputBool(InputActions::SHOOT, useGamepad) || dashing || EMP->IsActive() || ultimateOn) {
 				if (shooting) {
 					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 					shooting = false;
