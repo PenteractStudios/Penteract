@@ -59,7 +59,7 @@ public:
 	float GetRealEMPCooldown();
 	float GetRealUltimateCooldown();
 	void IncreaseUltimateCounter();
-	void Init(UID fangUID = 0, UID trailDashUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID cameraUID = 0, UID HUDManagerObjectUID = 0, UID dashUID = 0, UID EMPUID = 0, UID EMPEffectsUID = 0, UID fangUltimateUID = 0, UID ultimateVFXUID = 0);
+	void Init(UID fangUID = 0, UID trailDashUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID laserUID = 0, UID cameraUID = 0, UID HUDManagerObjectUID = 0, UID dashUID = 0, UID EMPUID = 0, UID EMPEffectsUID = 0, UID fangUltimateUID = 0, UID ultimateVFXUID = 0);
 	bool IsVulnerable() const override;
 
 public:
@@ -119,6 +119,7 @@ private:
 	ComponentParticleSystem* leftBullet = nullptr;
 	GameObject* rightBulletAux = nullptr;
 	GameObject* leftBulletAux = nullptr;
+	GameObject* fangLaser = nullptr;
 	bool shooting = false;
 	int transitioning = 0;
 
