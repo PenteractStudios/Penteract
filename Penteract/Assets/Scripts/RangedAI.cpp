@@ -36,7 +36,6 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.lifePoints),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
-	MEMBER(MemberType::FLOAT, rangerGruntCharacter.timeToDie),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.barrelDamageTaken),
 	MEMBER_SEPARATOR("Push variables"),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackDistance),
@@ -516,10 +515,8 @@ void RangedAI::UpdateState() {
 			dissolveAlreadyStarted = true;
 		}
 		if (rangerGruntCharacter.destroying) {
-			if (rangerGruntCharacter.timeToDie > 0) {
-				rangerGruntCharacter.timeToDie -= Time::GetDeltaTime();
-			}
-			else {
+			if (meshRenderer && meshRenderer->HasDissolveAnimationFinished()) {
+				if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
 				GameplaySystems::DestroyGameObject(&GetOwner());
 			}
 		}
@@ -642,7 +639,6 @@ void RangedAI::EnableBlastPushBack() {
 				if (collider) collider->Disable();
 				if (rangerGruntCharacter.beingPushed) DisableBlastPushBack();
 				ChangeState(AIState::DEATH);
-				if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
 			}
 		}
 	}

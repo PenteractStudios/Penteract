@@ -26,7 +26,6 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 		MEMBER(MemberType::INT, gruntCharacter.fallingSpeed),
 		MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
 		MEMBER(MemberType::FLOAT, gruntCharacter.attackRange),
-		MEMBER(MemberType::FLOAT, gruntCharacter.timeToDie),
 		MEMBER(MemberType::FLOAT, gruntCharacter.barrelDamageTaken),
 		MEMBER_SEPARATOR("Push variables"),
 		MEMBER(MemberType::FLOAT, gruntCharacter.pushBackDistance),
@@ -277,10 +276,7 @@ void AIMeleeGrunt::Update() {
 				}
 			}
 		}
-		if (gruntCharacter.timeToDie > 0) {
-			gruntCharacter.timeToDie -= Time::GetDeltaTime();
-		}
-		else {
+		if (componentMeshRenderer && componentMeshRenderer->HasDissolveAnimationFinished()) {
 			if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
 			GameplaySystems::DestroyGameObject(&GetOwner());
 		}
