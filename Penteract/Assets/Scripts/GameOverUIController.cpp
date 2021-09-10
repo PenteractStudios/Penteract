@@ -18,7 +18,9 @@ EXPOSE_MEMBERS(GameOverUIController) {
 	MEMBER(MemberType::FLOAT, fadeInTime),
 	MEMBER(MemberType::GAME_OBJECT_UID, playAgainButtonUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, mainMenuButtonUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, backgroundUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, backgroundUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, scrollingBackgroundObjUID),
+	MEMBER(MemberType::FLOAT, scrollDuration)
 };
 
 GENERATE_BODY_IMPL(GameOverUIController);
@@ -36,6 +38,7 @@ void GameOverUIController::Start() {
 	GameObject* playAgainGO = GameplaySystems::GetGameObject(playAgainButtonUID);
 	GameObject* mainMenuGO = GameplaySystems::GetGameObject(mainMenuButtonUID);
 	GameObject* backgroundGO = GameplaySystems::GetGameObject(backgroundUID);
+	GameObject* scrollingBackgroundObj = GameplaySystems::GetGameObject(scrollingBackgroundObjUID);
 
 	if (playAgainGO) {
 		playAgainButtonImage = playAgainGO->GetComponent<ComponentImage>();
@@ -48,6 +51,11 @@ void GameOverUIController::Start() {
 
 	if (backgroundGO) {
 		backgroundImage = backgroundGO->GetComponent<ComponentImage>();
+
+	}
+
+	if (scrollingBackgroundObj) {
+		scrollingBackgroundImage = scrollingBackgroundObj->GetComponent<ComponentImage>();
 	}
 
 	std::vector<GameObject*> children = GetOwner().GetChildren();
@@ -61,6 +69,14 @@ void GameOverUIController::Start() {
 void GameOverUIController::Update() {
 	if (!inOutPlayer || !loopPlayer || !vibrationPlayer) return;
 
+	if (scrollingBackgroundImage) {
+		if (scrollingTimer < scrollDuration) {
+			scrollingTimer += Time::GetDeltaTime();
+			scrollingBackgroundImage->SetTextureOffset(float2(-scrollingTimer * 0.1f, scrollingTimer * 0.1f));
+		} else {
+			scrollingTimer = 0.0f;
+		}
+	}
 	switch (state) {
 	case GameOverState::OFFLINE:
 		break;
@@ -114,10 +130,11 @@ void GameOverUIController::GameOver() {
 			(*it)->Enable();
 		}
 
-		if (backgroundImage && playAgainButtonImage && mainMenuButtonImage) {
+		if (backgroundImage && playAgainButtonImage && mainMenuButtonImage && scrollingBackgroundImage) {
 			backgroundOriginalColor = backgroundImage->GetColor();
 			playAgainButtonImageOriginalColor = playAgainButtonImage->GetColor();
 			mainMenuButtonImageOriginalColor = mainMenuButtonImage->GetColor();
+			scrollingBackgroundImageOriginalColor = scrollingBackgroundImage->GetColor();
 			SetColors(0);
 		}
 
@@ -133,9 +150,11 @@ void GameOverUIController::EnterIdleState() {
 void GameOverUIController::SetColors(float delta) {
 	if (!playAgainButtonImage || !playAgainButtonText || !mainMenuButtonImage || !mainMenuButtonText || !backgroundImage)return;
 
-	playAgainButtonImage->SetColor(float4(playAgainButtonImageOriginalColor.x, playAgainButtonImageOriginalColor.y, playAgainButtonImageOriginalColor.z, delta));
+	playAgainButtonImage->SetColor(float4(playAgainButtonImageOriginalColor.xyz(), delta));
 	playAgainButtonText->SetFontColor(float4(1, 1, 1, delta));
-	mainMenuButtonImage->SetColor(float4(mainMenuButtonImageOriginalColor.x, mainMenuButtonImageOriginalColor.y, mainMenuButtonImageOriginalColor.z, delta));
+	mainMenuButtonImage->SetColor(float4(mainMenuButtonImageOriginalColor.xyz(), delta));
 	mainMenuButtonText->SetFontColor(float4(1, 1, 1, delta));
-	backgroundImage->SetColor(float4(backgroundOriginalColor.x, backgroundOriginalColor.y, backgroundOriginalColor.z, delta * backgroundOriginalColor.w));
+	backgroundImage->SetColor(float4(backgroundOriginalColor.xyz(), delta * backgroundOriginalColor.w));
+
+	scrollingBackgroundImage->SetColor(float4(scrollingBackgroundImageOriginalColor.xyz(), delta * scrollingBackgroundImageOriginalColor.w));
 }

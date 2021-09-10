@@ -54,34 +54,39 @@
                 "Script": 1795085235405539910,
                 "Values": [
                     {
-                        "Name": "backgroundUID",
+                        "Name": "scrollingBackgroundObjUID",
                         "Type": "GameObjectUID",
-                        "Value": 18207609150325590151
+                        "Value": 15619019341942753131
                     },
                     {
                         "Name": "playAgainButtonUID",
                         "Type": "GameObjectUID",
-                        "Value": 12932807800376531987
+                        "Value": 10524194915938984956
+                    },
+                    {
+                        "Name": "backgroundUID",
+                        "Type": "GameObjectUID",
+                        "Value": 7795550498316423022
                     },
                     {
                         "Name": "mainMenuButtonUID",
                         "Type": "GameObjectUID",
-                        "Value": 851196553950455579
+                        "Value": 1223936139276477804
                     },
                     {
                         "Name": "inOutPlayerUID",
                         "Type": "GameObjectUID",
-                        "Value": 2190912562880854289
+                        "Value": 5933972757940718185
                     },
                     {
                         "Name": "loopPlayerUID",
                         "Type": "GameObjectUID",
-                        "Value": 12781921598746088148
+                        "Value": 319198281573650438
                     },
                     {
                         "Name": "vibrationPlayerUID",
                         "Type": "GameObjectUID",
-                        "Value": 4973279999518564437
+                        "Value": 9261878078690991983
                     }
                 ]
             }
@@ -145,17 +150,104 @@
                         "Active": true,
                         "TextureId": 0,
                         "Color": [
-                            0.0,
-                            0.7843137383460999,
-                            0.8666666746139526,
-                            0.0470588244497776
+                            0.06666667014360428,
+                            0.1921568661928177,
+                            0.2705882489681244,
+                            0.8823529481887817
                         ],
                         "AlphaTransparency": true,
                         "IsFill": false,
-                        "FillValue": 1.0
+                        "FillValue": 1.0,
+                        "Offset": [
+                            0.0,
+                            0.0
+                        ],
+                        "Tiling": [
+                            1.0,
+                            1.0
+                        ]
                     }
                 ],
-                "Children": null
+                "Children": [
+                    {
+                        "Name": "ScrollingGlpyhs",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform2D",
+                                "Active": true,
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Pivot": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "Size": [
+                                    2000.0,
+                                    2000.0
+                                ],
+                                "AnchorMin": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorMax": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorSelected": 5,
+                                "IsCustomAnchor": false
+                            },
+                            {
+                                "Type": "CanvasRenderer",
+                                "Active": true
+                            },
+                            {
+                                "Type": "Image",
+                                "Active": true,
+                                "TextureId": 16088894305820618009,
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    0.0784313753247261
+                                ],
+                                "AlphaTransparency": true,
+                                "IsFill": false,
+                                "FillValue": 1.0,
+                                "Offset": [
+                                    0.0,
+                                    0.0
+                                ],
+                                "Tiling": [
+                                    5.0,
+                                    5.0
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    }
+                ]
             },
             {
                 "Name": "AnimatedGameOver",
@@ -330,7 +422,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -400,7 +500,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -470,7 +578,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -540,7 +656,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -610,7 +734,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -680,7 +812,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -750,7 +890,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -820,7 +968,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -890,7 +1046,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -960,7 +1124,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -1030,7 +1202,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -1100,7 +1280,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -1170,7 +1358,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -1305,7 +1501,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -1375,7 +1579,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -1445,7 +1657,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -1515,7 +1735,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -1585,7 +1813,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -1655,7 +1891,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -1725,7 +1969,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -1795,7 +2047,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -1865,7 +2125,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -1935,7 +2203,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -2005,7 +2281,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -2075,7 +2359,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -2204,7 +2496,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -2274,7 +2574,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -2344,7 +2652,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -2414,7 +2730,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -2484,7 +2808,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -2603,7 +2935,15 @@
                         ],
                         "AlphaTransparency": true,
                         "IsFill": false,
-                        "FillValue": 1.0
+                        "FillValue": 1.0,
+                        "Offset": [
+                            0.0,
+                            0.0
+                        ],
+                        "Tiling": [
+                            1.0,
+                            1.0
+                        ]
                     },
                     {
                         "Type": "Script",
@@ -2678,6 +3018,7 @@
                                 "FontID": 13870526982062861803,
                                 "FontSize": 24.0,
                                 "LineHeight": 16.0,
+                                "LetterSpacing": 0.0,
                                 "Alignment": 0,
                                 "Value": "Main Menu",
                                 "Color": [
@@ -2802,7 +3143,15 @@
                         ],
                         "AlphaTransparency": true,
                         "IsFill": false,
-                        "FillValue": 1.0
+                        "FillValue": 1.0,
+                        "Offset": [
+                            0.0,
+                            0.0
+                        ],
+                        "Tiling": [
+                            1.0,
+                            1.0
+                        ]
                     },
                     {
                         "Type": "Script",
@@ -2877,6 +3226,7 @@
                                 "FontID": 13870526982062861803,
                                 "FontSize": 24.0,
                                 "LineHeight": 16.0,
+                                "LetterSpacing": 0.0,
                                 "Alignment": 0,
                                 "Value": "Play Again",
                                 "Color": [
@@ -2956,7 +3306,15 @@
                         ],
                         "AlphaTransparency": true,
                         "IsFill": false,
-                        "FillValue": 1.0
+                        "FillValue": 1.0,
+                        "Offset": [
+                            0.0,
+                            0.0
+                        ],
+                        "Tiling": [
+                            1.0,
+                            1.0
+                        ]
                     }
                 ],
                 "Children": null
@@ -3026,7 +3384,15 @@
                         ],
                         "AlphaTransparency": true,
                         "IsFill": false,
-                        "FillValue": 1.0
+                        "FillValue": 1.0,
+                        "Offset": [
+                            0.0,
+                            0.0
+                        ],
+                        "Tiling": [
+                            1.0,
+                            1.0
+                        ]
                     }
                 ],
                 "Children": null
