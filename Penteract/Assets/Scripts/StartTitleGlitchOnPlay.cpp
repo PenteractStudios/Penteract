@@ -5,6 +5,7 @@
 #include "CheckpointManager.h"
 #include "SceneTransition.h"
 #include "PlayerController.h"
+#include "SwapPanels.h"
 
 #include "GameplaySystems.h"
 #include "GameObject.h"
@@ -15,7 +16,9 @@ EXPOSE_MEMBERS(StartTitleGlitchOnPlay) {
 	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fadeToBlackObjectUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, controllerObjUID),
-	MEMBER(MemberType::INT, levelNum)
+	MEMBER(MemberType::GAME_OBJECT_UID, swapPanelsObjUID),
+	MEMBER(MemberType::INT, levelNum),
+	MEMBER(MemberType::INT, checkpointNum),
 };
 
 GENERATE_BODY_IMPL(StartTitleGlitchOnPlay);
@@ -39,6 +42,11 @@ void StartTitleGlitchOnPlay::Start() {
 
 	if (fadeToBlackObject) {
 		canvasFader = GET_SCRIPT(fadeToBlackObject, CanvasFader);
+	}
+
+	GameObject* swapPanelsObj = GameplaySystems::GetGameObject(swapPanelsObjUID);
+	if (swapPanelsObj) {
+		swapPanelsScript = GET_SCRIPT(swapPanelsObj, SwapPanels);
 	}
 
 
@@ -86,10 +94,14 @@ void StartTitleGlitchOnPlay::OnButtonClick() {
 		pressed = true;
 	}
 
+	if (swapPanelsScript) {
+		swapPanelsScript->DoSwapPanels();
+	}
+
 }
 
 void StartTitleGlitchOnPlay::DoTransition() {
-
+	checkpoint = checkpointNum;
 	if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 	if (levelNum == 2) {
 		PlayerController::currentLevel = 2;

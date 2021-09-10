@@ -8,6 +8,7 @@ class GameObject;
 class ComponentSelectable;
 class ComponentAudioSource;
 class CanvasFader;
+class SwapPanels;
 
 class StartTitleGlitchOnPlay : public Script {
 	GENERATE_BODY(StartTitleGlitchOnPlay);
@@ -16,7 +17,10 @@ public:
 	UID controllerObjUID = 0;
 	UID sceneUID = 0;
 	UID fadeToBlackObjectUID = 0;
+	UID swapPanelsObjUID = 0;
 	int levelNum = 1;
+	int checkpointNum = -1;
+
 public:
 
 	void Start() override;
@@ -38,7 +42,7 @@ private:
 	bool pressed = false;
 	ComponentSelectable* selectable = nullptr;
 	ComponentAudioSource* audios[static_cast<int>(UIAudio::TOTAL)] = { nullptr };
-
+	SwapPanels* swapPanelsScript = nullptr;
 private:
 	void DoTransition();
 };

@@ -14,11 +14,16 @@ public:
 	void Play();
 	void Stop();
 	bool IsPlaying()const;
+	float CalcDuration();
 public:
 
 	float secondsPerFrame = 0.1f;
 	bool loops = false;
 	bool playOnAwake = false;
+
+private:
+	void FillFrameVector();
+
 private:
 	float animationTimer = 0.0f;
 	std::vector<GameObject*>frames;

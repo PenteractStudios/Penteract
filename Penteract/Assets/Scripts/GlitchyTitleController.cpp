@@ -7,8 +7,9 @@
 #include "Components/ComponentAudioSource.h"
 
 EXPOSE_MEMBERS(GlitchyTitleController) {
-	MEMBER(MemberType::FLOAT, minTimeForGlitch),
-	MEMBER(MemberType::FLOAT, maxTimeForGlitch),
+	MEMBER(MemberType::FLOAT, minTimeForTimeGlitches),
+	MEMBER(MemberType::FLOAT, maxTimeForTimeBetweenGlitches),
+	MEMBER(MemberType::FLOAT, glitchDuration),
 	MEMBER(MemberType::GAME_OBJECT_UID, startUpTitleObjUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, loopingTitleObjUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, glitchTitleObjUID),
@@ -43,6 +44,7 @@ void GlitchyTitleController::Start() {
 
 	if (glitchTitleObj) {
 		glitchTitleSpriteSheetPlayer = GET_SCRIPT(glitchTitleObj, UISpriteSheetPlayer);
+		glitchDuration = glitchTitleSpriteSheetPlayer->CalcDuration();
 	}
 
 	if (startPlayingTitleObj) {
@@ -60,7 +62,7 @@ void GlitchyTitleController::Start() {
 void GlitchyTitleController::Update() {
 
 	if (!startUpTitleSpriteSheetPlayer || !loopingTitleSpriteSheetPlayer || !glitchTitleSpriteSheetPlayer || !startPlayingTitleSpriteSheetPlayer)return;
-	if (startUpTitleSpriteSheetPlayer->IsPlaying() || startPlayingTitleSpriteSheetPlayer->IsPlaying())return;
+	if (startPlayingTitleSpriteSheetPlayer->IsPlaying())return;
 
 	switch (glitchState) {
 	case GlitchState::FADE_IN:
@@ -78,26 +80,40 @@ void GlitchyTitleController::Update() {
 	case GlitchState::WAIT_START:
 		stateTimer += Time::GetDeltaTime();
 		if (stateTimer >= fadeInTotalTime) {
-			glitchState = GlitchState::START;
+			glitchState = GlitchState::WAIT_START_SPRITESHEET;
 			startUpTitleSpriteSheetPlayer->Play();
 			PlayAudio(GlitchTitleAudio::FADE_IN);
+			stateTimer = 0;
+		}
+		break;
+	case GlitchState::WAIT_START_SPRITESHEET:
+		stateTimer += Time::GetDeltaTime();
+		if (stateTimer >= startUpTitleSpriteSheetPlayer->CalcDuration()) {
+			glitchState = GlitchState::START;
 		}
 		break;
 	case GlitchState::START:
 		StartStateIdle();
 		break;
 	case GlitchState::IDLE:
-		if (glitchTimer <= 0) {
+		if (timerBetweenGlitches <= 0) {
 			loopingTitleSpriteSheetPlayer->Stop();
 			glitchTitleSpriteSheetPlayer->Play();
 			PlayAudio(GlitchTitleAudio::GLITCH);
 			glitchState = GlitchState::GLITCH;
 		}
-		glitchTimer -= Time::GetDeltaTime();
+		timerBetweenGlitches -= Time::GetDeltaTime();
 		break;
 	case GlitchState::GLITCH:
-		if (glitchTitleSpriteSheetPlayer->IsPlaying())return;
-		StartStateIdle();
+		//if (glitchTitleSpriteSheetPlayer->IsPlaying())return;
+
+		if (glitchTimer > glitchDuration) {
+			glitchTitleSpriteSheetPlayer->Stop();
+			StartStateIdle();
+			glitchTimer = 0.0f;
+		} else {
+			glitchTimer += Time::GetDeltaTime();
+		}
 		break;
 
 
@@ -122,6 +138,7 @@ void GlitchyTitleController::Update() {
 		}
 		break;
 	case GlitchState::FADE_OUT:
+
 		break;
 	}
 }
@@ -136,7 +153,8 @@ bool GlitchyTitleController::ReadyForTransition() const {
 
 void GlitchyTitleController::StartStateIdle() {
 	glitchState = GlitchState::IDLE;
-	glitchTimer = minTimeForGlitch + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (maxTimeForGlitch - minTimeForGlitch)));
+	timerBetweenGlitches = minTimeForTimeGlitches + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (maxTimeForTimeBetweenGlitches - minTimeForTimeGlitches)));
+	loopingTitleSpriteSheetPlayer->Stop();
 	loopingTitleSpriteSheetPlayer->Play();
 }
 
