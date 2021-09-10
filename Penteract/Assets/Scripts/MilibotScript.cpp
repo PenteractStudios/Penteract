@@ -8,14 +8,14 @@ EXPOSE_MEMBERS(MilibotScript) {
     // MEMBER(MemberType::PREFAB_RESOURCE_UID, exampleMember2),
     // MEMBER(MemberType::GAME_OBJECT_UID, exampleMember3)
     MEMBER(MemberType::FLOAT, rotationSpeed),
-    MEMBER(MemberType::FLOAT, positionSpeed),
-    MEMBER(MemberType::FLOAT, motionTime),
+    MEMBER(MemberType::FLOAT, amplitude),
 };
 
 GENERATE_BODY_IMPL(MilibotScript);
 
 void MilibotScript::Start() {
 	transform = GetOwner().GetComponent<ComponentTransform>();
+    initialPosition = transform->GetGlobalPosition();
 }
 
 void MilibotScript::Update() {
@@ -26,25 +26,7 @@ void MilibotScript::Update() {
 
 
 
+    offset = offset + Time::GetDeltaTime();
+    transform->SetGlobalPosition(initialPosition + float3(0.f, Sin(offset) * amplitude, 0.f));
 
-    if (restMotionTime > 0) {
-        restMotionTime -=  Time::GetDeltaTime();
-        newPosition = transform->GetGlobalPosition();
-        if (isUp) {
-            newPosition.y += positionSpeed * Time::GetDeltaTime();
-        }
-        else {
-            newPosition.y -= positionSpeed * Time::GetDeltaTime();
-        }
-        transform->SetGlobalPosition(newPosition);
-    }
-    else {
-        restMotionTime = motionTime;
-        if (isUp) {
-            isUp = false;
-        }
-        else {
-            isUp = true;
-        }
-    }
 }
