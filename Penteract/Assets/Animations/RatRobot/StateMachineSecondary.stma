@@ -1,0 +1,26 @@
+{
+    "InitialState": 0,
+    "Clips": [
+        4562489729912278978
+    ],
+    "States": [
+        {
+            "Id": 1329593421227997819,
+            "Name": "Idle",
+            "ClipId": 4562489729912278978
+        }
+    ],
+    "Transitions": null,
+    "Bones": [
+        "Joint_Neck",
+        "Joint_Back",
+        "Joint_Bottom",
+        "Joint_Tail_01",
+        "Joint_Tail_02",
+        "Joint_Foot_L",
+        "Joint_Foot_R",
+        "Joint_Hand_L",
+        "Joint_Hand_R",
+        "Joint_Face"
+    ]
+}
