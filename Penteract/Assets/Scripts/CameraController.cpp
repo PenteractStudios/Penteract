@@ -13,6 +13,7 @@ EXPOSE_MEMBERS(CameraController) {
 	MEMBER(MemberType::FLOAT, cameraOffsetY),
 	MEMBER(MemberType::FLOAT, cameraOffsetZ),
 	MEMBER(MemberType::FLOAT, smoothCameraSpeed),
+	MEMBER(MemberType::FLOAT, aimingCameraSpeed),
 	MEMBER(MemberType::FLOAT, aimingDistance),
 	MEMBER(MemberType::BOOL, useSmoothCamera),
 	MEMBER_SEPARATOR("Shaker Control"),
@@ -61,7 +62,7 @@ void CameraController::Update() {
 
 			aimingPosition = playerGlobalPos + float3(cameraOffsetX + aimingPositionX, cameraOffsetY , cameraOffsetZ + aimingPositionZ);
 
-			smoothedPosition = float3::Lerp(transform->GetGlobalPosition(), aimingPosition, smoothCameraSpeed * Time::GetDeltaTime());
+			smoothedPosition = float3::Lerp(transform->GetGlobalPosition(), aimingPosition, aimingCameraSpeed * Time::GetDeltaTime());
 			
 		}
 		else {
