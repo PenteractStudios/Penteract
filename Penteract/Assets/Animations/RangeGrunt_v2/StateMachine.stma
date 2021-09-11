@@ -101,13 +101,6 @@
             "Interpolation": 0.3
         },
         {
-            "Trigger": "BeginStunShoot",
-            "Id": 6038141652760622747,
-            "Source": 12424540790435034714,
-            "Target": 5071456042115141460,
-            "Interpolation": 0.3
-        },
-        {
             "Trigger": "BeginStunEndStun",
             "Id": 17846347612385784335,
             "Source": 12424540790435034714,
@@ -168,13 +161,6 @@
             "Id": 4382601707014239273,
             "Source": 9971322047911232404,
             "Target": 1221852778024825111,
-            "Interpolation": 0.3
-        },
-        {
-            "Trigger": "IdleShoot",
-            "Id": 3448965510181873616,
-            "Source": 9971322047911232404,
-            "Target": 5071456042115141460,
             "Interpolation": 0.3
         },
         {
@@ -241,13 +227,6 @@
             "Interpolation": 0.3
         },
         {
-            "Trigger": "RunForwardShoot",
-            "Id": 11086244178970349890,
-            "Source": 15933906697139743253,
-            "Target": 5071456042115141460,
-            "Interpolation": 0.3
-        },
-        {
             "Trigger": "RunForwardEndStun",
             "Id": 12708606985674397106,
             "Source": 15933906697139743253,
@@ -308,13 +287,6 @@
             "Id": 4375034850600194433,
             "Source": 16055215049133415841,
             "Target": 1221852778024825111,
-            "Interpolation": 0.3
-        },
-        {
-            "Trigger": "Death1Shoot",
-            "Id": 7612031649729393130,
-            "Source": 16055215049133415841,
-            "Target": 5071456042115141460,
             "Interpolation": 0.3
         },
         {
@@ -381,13 +353,6 @@
             "Interpolation": 0.3
         },
         {
-            "Trigger": "RunBackwardShoot",
-            "Id": 16801528503367446581,
-            "Source": 4893990883493428206,
-            "Target": 5071456042115141460,
-            "Interpolation": 0.3
-        },
-        {
             "Trigger": "RunBackwardEndStun",
             "Id": 3019399500173637833,
             "Source": 4893990883493428206,
@@ -451,13 +416,6 @@
             "Interpolation": 0.3
         },
         {
-            "Trigger": "Death2Shoot",
-            "Id": 6519465810755651615,
-            "Source": 1221852778024825111,
-            "Target": 5071456042115141460,
-            "Interpolation": 0.3
-        },
-        {
             "Trigger": "Death2EndStun",
             "Id": 6809928747343596824,
             "Source": 1221852778024825111,
@@ -482,76 +440,6 @@
             "Trigger": "Death2Stunned",
             "Id": 3898246634743520598,
             "Source": 1221852778024825111,
-            "Target": 5750569467877802611,
-            "Interpolation": 0.3
-        },
-        {
-            "Trigger": "ShootBeginStun",
-            "Id": 6713560286811254384,
-            "Source": 5071456042115141460,
-            "Target": 12424540790435034714,
-            "Interpolation": 0.3
-        },
-        {
-            "Trigger": "ShootIdle",
-            "Id": 8888028859473244353,
-            "Source": 5071456042115141460,
-            "Target": 9971322047911232404,
-            "Interpolation": 0.3
-        },
-        {
-            "Trigger": "ShootRunForward",
-            "Id": 6722070334405110219,
-            "Source": 5071456042115141460,
-            "Target": 15933906697139743253,
-            "Interpolation": 0.3
-        },
-        {
-            "Trigger": "ShootDeath1",
-            "Id": 14519463207683054315,
-            "Source": 5071456042115141460,
-            "Target": 16055215049133415841,
-            "Interpolation": 0.3
-        },
-        {
-            "Trigger": "ShootRunBackward",
-            "Id": 15763260523021953154,
-            "Source": 5071456042115141460,
-            "Target": 4893990883493428206,
-            "Interpolation": 0.3
-        },
-        {
-            "Trigger": "ShootDeath2",
-            "Id": 10048129831171370744,
-            "Source": 5071456042115141460,
-            "Target": 1221852778024825111,
-            "Interpolation": 0.3
-        },
-        {
-            "Trigger": "ShootEndStun",
-            "Id": 12238515436315377692,
-            "Source": 5071456042115141460,
-            "Target": 2919972115588906500,
-            "Interpolation": 0.3
-        },
-        {
-            "Trigger": "ShootSpawn",
-            "Id": 14973676298193384275,
-            "Source": 5071456042115141460,
-            "Target": 8729099952172827020,
-            "Interpolation": 0.3
-        },
-        {
-            "Trigger": "ShootStart",
-            "Id": 6389604237053357884,
-            "Source": 5071456042115141460,
-            "Target": 15377882843137053179,
-            "Interpolation": 0.3
-        },
-        {
-            "Trigger": "ShootStunned",
-            "Id": 8452352967378015601,
-            "Source": 5071456042115141460,
             "Target": 5750569467877802611,
             "Interpolation": 0.3
         },
@@ -595,13 +483,6 @@
             "Id": 6932358240342583501,
             "Source": 2919972115588906500,
             "Target": 1221852778024825111,
-            "Interpolation": 0.3
-        },
-        {
-            "Trigger": "EndStunShoot",
-            "Id": 10403377127858859409,
-            "Source": 2919972115588906500,
-            "Target": 5071456042115141460,
             "Interpolation": 0.3
         },
         {
@@ -668,13 +549,6 @@
             "Interpolation": 0.3
         },
         {
-            "Trigger": "SpawnShoot",
-            "Id": 10800600057688522090,
-            "Source": 8729099952172827020,
-            "Target": 5071456042115141460,
-            "Interpolation": 0.3
-        },
-        {
             "Trigger": "SpawnEndStun",
             "Id": 116726217844632035,
             "Source": 8729099952172827020,
@@ -738,13 +612,6 @@
             "Interpolation": 0.3
         },
         {
-            "Trigger": "StartShoot",
-            "Id": 6559184651827170837,
-            "Source": 15377882843137053179,
-            "Target": 5071456042115141460,
-            "Interpolation": 0.3
-        },
-        {
             "Trigger": "StartEndStun",
             "Id": 9120664906383127911,
             "Source": 15377882843137053179,
@@ -805,13 +672,6 @@
             "Id": 16889660637691049910,
             "Source": 5750569467877802611,
             "Target": 1221852778024825111,
-            "Interpolation": 0.3
-        },
-        {
-            "Trigger": "StunnedShoot",
-            "Id": 7818268547143106595,
-            "Source": 5750569467877802611,
-            "Target": 5071456042115141460,
             "Interpolation": 0.3
         },
         {
