@@ -1,20 +1,20 @@
-#include "AdvertScrip.h"
+#include "AdvertScript.h"
 #include "GameplaySystems.h"
 
 
-EXPOSE_MEMBERS(AdvertScrip) {
-        MEMBER(MemberType::FLOAT, speed),
+EXPOSE_MEMBERS(AdvertScript) {
+    MEMBER(MemberType::FLOAT, speed),
         MEMBER(MemberType::FLOAT, startTime),
         MEMBER(MemberType::FLOAT, changeTime),
 };
 
-GENERATE_BODY_IMPL(AdvertScrip);
+GENERATE_BODY_IMPL(AdvertScript);
 
-void AdvertScrip::Start() {
+void AdvertScript::Start() {
     restTime = changeTime;
 }
 
-void AdvertScrip::Update() {
+void AdvertScript::Update() {
     //Go Down
     if (startTime > 0) {
         startTime -= Time::GetDeltaTime();
@@ -31,7 +31,7 @@ void AdvertScrip::Update() {
                     isChanging = false;
                 }
             }
-            if (!firstAdvert) {
+            else {
                 if ((offset.y > 0)) {
                     offset -= float2(0, speed) * Time::GetDeltaTime();
                     GetOwner().GetComponent<ComponentMeshRenderer>()->SetTextureOffset(offset);
@@ -49,13 +49,7 @@ void AdvertScrip::Update() {
             else {
                 isChanging = true;
                 restTime = changeTime;
-                if (firstAdvert) { 
-                    firstAdvert = false; 
-                }
-                else
-                {
-                    firstAdvert = true;
-                }
+                firstAdvert = !firstAdvert;
             }
         }
     }

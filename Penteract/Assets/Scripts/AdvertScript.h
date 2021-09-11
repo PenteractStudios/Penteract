@@ -3,9 +3,9 @@
 #include "Scripting/Script.h"
 
 
-class AdvertScrip : public Script
+class AdvertScript : public Script
 {
-	GENERATE_BODY(AdvertScrip);
+	GENERATE_BODY(AdvertScript);
 
 public:
 
