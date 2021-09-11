@@ -51,11 +51,19 @@ void SpawnPointController::Start() {
 		}
 	}
 
-	GameObject* laserDoorGameObject = GameplaySystems::GetGameObject(laserDoorLightUID);
-	if (laserDoorGameObject) {
-		doorLight = laserDoorGameObject->GetComponent<ComponentLight>();
-		if (doorLight) {
-			doorLightInitialIntensity = doorLight->GetIntensity();
+	GameObject* laserDoorLightInitial = SearchReferenceInHierarchy(initialDoor, doorLightGameObjectName);
+	if (laserDoorLightInitial) {
+		initialDoorLight = laserDoorLightInitial->GetComponent<ComponentLight>();
+		if (initialDoorLight) {
+			initialDoorLightStartIntensity = initialDoorLight->GetIntensity();
+		}
+	}
+
+	GameObject* laserDoorLightFinal = SearchReferenceInHierarchy(finalDoor, doorLightGameObjectName);
+	if (laserDoorLightFinal) {
+		finalDoorLight = laserDoorLightFinal->GetComponent<ComponentLight>();
+		if (finalDoorLight) {
+			finalDoorLightStartIntensity = finalDoorLight->GetIntensity();
 		}
 	}
 }
@@ -71,11 +79,13 @@ void SpawnPointController::Update() {
 			}
 			gameObject->Disable();
 			unlockStarted = false;
-			SetLightIntensity(0.0f);
+			SetLightIntensity(initialDoorLight, 0.0f);
+			SetLightIntensity(finalDoorLight, 0.0f);
 		}
 		else {
 			currentUnlockTime += Time::GetDeltaTime();
-			SetLightIntensity(doorLightInitialIntensity * (1 - (currentUnlockTime / timerToUnlock)));
+			SetLightIntensity(initialDoorLight, initialDoorLightStartIntensity * (1 - (currentUnlockTime / timerToUnlock)));
+			SetLightIntensity(finalDoorLight, finalDoorLightStartIntensity * (1 - (currentUnlockTime / timerToUnlock)));
 		}
 	}
 }
@@ -94,6 +104,10 @@ void SpawnPointController::OnCollision(GameObject& collidedWith, float3 collisio
 	if (initialDoor) {		// So it doesn't trigger those who are set by default
 		PlayDissolveAnimation(finalDoor, true);
 		PlayDissolveAnimation(initialDoor, true);
+
+		unlockStarted = true;
+		isClosing = true;
+		ResetUnlockAnimation();
 	}
 }
 
@@ -105,8 +119,12 @@ void SpawnPointController::OpenDoor() {
 		if (unlocksInitialDoor && initialDoor && initialDoor->IsActive() && !unlockStarted) {
 			PlayDissolveAnimation(initialDoor, false);
 		}
-    if (gameObjectActivatedOnCombatEnd) gameObjectActivatedOnCombatEnd->Enable();
+
+		if (gameObjectActivatedOnCombatEnd) gameObjectActivatedOnCombatEnd->Enable();
+
+		if (!unlockStarted) ResetUnlockAnimation();
 		unlockStarted = true;
+		isClosing = false;
 	}
 }
 
@@ -149,8 +167,13 @@ void SpawnPointController::PlayDissolveAnimation(GameObject* root, bool playReve
 	}
 }
 
-void SpawnPointController::SetLightIntensity(float newIntensity) {
-	if (doorLight) {
-		doorLight->SetIntensity(newIntensity);
+void SpawnPointController::SetLightIntensity(ComponentLight* light, float newIntensity) {
+	if (light) {
+		light->SetIntensity(newIntensity);
 	}
+}
+
+void SpawnPointController::ResetUnlockAnimation() {
+	currentUnlockTime = 0.0f;
+	Debug::Log("HOLA");
 }

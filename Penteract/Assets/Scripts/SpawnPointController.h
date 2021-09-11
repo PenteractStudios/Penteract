@@ -73,11 +73,19 @@ private:
 	float unlockStarted = false;
 
 	/* Door Light */
-	ComponentLight* doorLight = nullptr;
-	float doorLightInitialIntensity = 0.0f;
+	std::string doorLightGameObjectName = "LaserDoor"; // This is the name of the GameObject that contains the Light
+
+	ComponentLight* initialDoorLight = nullptr;
+	float initialDoorLightStartIntensity = 0.0f;
+
+	ComponentLight* finalDoorLight = nullptr;
+	float finalDoorLightStartIntensity = 0.0f;
+
+	bool isClosing = false;
 
 private:
 	bool CheckSpawnPointStatus();
 	void PlayDissolveAnimation(GameObject* root, bool playReverse);
-	void SetLightIntensity(float newIntensity);
+	void SetLightIntensity(ComponentLight* light, float newIntensity);
+	void ResetUnlockAnimation();
 };
