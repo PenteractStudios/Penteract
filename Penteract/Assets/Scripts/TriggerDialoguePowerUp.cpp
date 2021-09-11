@@ -27,6 +27,9 @@ void TriggerDialoguePowerUp::Update() {
 void TriggerDialoguePowerUp::OnCollision(GameObject& /*collidedWith*/, float3 /*collisionNormal*/, float3 /*penetrationDistance*/, void* /*particle*/) {
 
     if (playerControllerScript) playerControllerScript->ObtainUpgradeCell();
-    if (dialogueManagerScript) dialogueManagerScript->ActivatePowerUpDialogue();
+    if (dialogueManagerScript) {
+        dialogueManagerScript->PlayOpeningAudio();
+        dialogueManagerScript->ActivatePowerUpDialogue();
+    }
     GetOwner().Disable();
 }

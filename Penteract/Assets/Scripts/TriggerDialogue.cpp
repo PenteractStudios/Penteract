@@ -23,6 +23,7 @@ void TriggerDialogue::OnCollision(GameObject& /*collidedWith*/, float3 /*collisi
     if (dialogueManagerScript) {
         if (dialogueID < sizeof(dialogueManagerScript->dialoguesArray) / sizeof(dialogueManagerScript->dialoguesArray[0])
             && &dialogueManagerScript->dialoguesArray[dialogueID] != nullptr) {
+            dialogueManagerScript->PlayOpeningAudio();
             dialogueManagerScript->SetActiveDialogue(&dialogueManagerScript->dialoguesArray[dialogueID]);
         }
     }

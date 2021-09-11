@@ -548,7 +548,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 		}
 
 		if (shooting) {
-			if (!GetInputBool(InputActions::SHOOT, useGamepad)) {
+			if (!GetInputBool(InputActions::SHOOT, useGamepad) || GameController::IsGameplayBlocked()) {
 				shooting = false;
 				if (compAnimation) {
 					if (shield->GetIsActive()) {
