@@ -107,19 +107,19 @@ void DialogueManager::Start() {
 
 	// LEVEL 1 - START
 	dialoguesArray[9] = Dialogue(DialogueWindow::DUKE, true, "Who do you think you are\nyou son of a...", &dialoguesArray[10]);
-	dialoguesArray[10] = Dialogue(DialogueWindow::DUKE, true, "...Fang.\nIt�s been a while!\nWhat do you think\nabout this plating,\nimpressive huh?", &dialoguesArray[11]);
-	dialoguesArray[11] = Dialogue(DialogueWindow::DUKE, true, "You would be unstoppable\nif you hadn�t left.\nSo,\nyou decided to come back?", &dialoguesArray[12]);
+	dialoguesArray[10] = Dialogue(DialogueWindow::DUKE, true, "...Fang.\nIt's been a while!\nWhat do you think\nabout this plating,\nimpressive huh?", &dialoguesArray[11]);
+	dialoguesArray[11] = Dialogue(DialogueWindow::DUKE, true, "You would be unstoppable\nif you hadn't left.\nSo,\nyou decided to come back?", &dialoguesArray[12]);
 	dialoguesArray[12] = Dialogue(DialogueWindow::FANG, true, "You wish.\nI'm here to kill you.\nRewarded 50 million\nand the pleasure of\ndoing it myself.", &dialoguesArray[13]);
 	dialoguesArray[13] = Dialogue(DialogueWindow::DUKE, true, "I made you what you are,\neven if you hate it!\nPart of you is mine,\nand you should\nbe more grateful.", &dialoguesArray[14]);
-	dialoguesArray[14] = Dialogue(DialogueWindow::DUKE, true, "But well... Let�s see how\nan outdated pile of junk\nlike you performs against\nmy latest designs...\nSecurity!", nullptr);
+	dialoguesArray[14] = Dialogue(DialogueWindow::DUKE, true, "But well... Let's see how\nan outdated pile of junk\nlike you performs against\nmy latest designs...\nSecurity!", nullptr);
 
 	// LEVEL 1 - FANG TUTORIAL
-	dialoguesArray[15] = Dialogue(DialogueWindow::ONIMARU, true, "He is running away!\nDon�t let him escape!", &dialoguesArray[16]);
+	dialoguesArray[15] = Dialogue(DialogueWindow::ONIMARU, true, "He is running away!\nDon't let him escape!", &dialoguesArray[16]);
 	dialoguesArray[16] = Dialogue(DialogueWindow::TUTO_FANG, true, "", &dialoguesArray[17]);
 	dialoguesArray[17] = Dialogue(DialogueWindow::TUTO_FANG_ULTI, true, "", nullptr);
 
 	// LEVEL 1 - SWAP DIALOGUE + ONIMARU TUTORIAL
-	dialoguesArray[18] = Dialogue(DialogueWindow::FANG, true, "Onimaru,\nget the repair bots\nready...\nI�m gonna need a break.", &dialoguesArray[19]);
+	dialoguesArray[18] = Dialogue(DialogueWindow::FANG, true, "Onimaru,\nget the repair bots\nready...\nI'm gonna need a break.", &dialoguesArray[19]);
 	dialoguesArray[19] = Dialogue(DialogueWindow::ONIMARU, true, "Roger.\nInitialising Matter-Switch.", &dialoguesArray[20]);
 	dialoguesArray[20] = Dialogue(DialogueWindow::TUTO_SWAP, true, "", &dialoguesArray[21], InputActions::SWITCH);
 	dialoguesArray[21] = Dialogue(DialogueWindow::ONIMARU, true, "Long hallways\nis where I perform best.\nWatch how it is done.", &dialoguesArray[22]);
@@ -127,21 +127,21 @@ void DialogueManager::Start() {
 	dialoguesArray[23] = Dialogue(DialogueWindow::TUTO_ONIMARU_ULTI, true, "", nullptr);
 
 	// LEVEL 1 - PRE-TRANSPORT
-	//dialoguesArray[24] = Dialogue(DialogueWindow::ONIMARU, false, "Are you formulating any plan\nto go through Duke�s plating?\nThat is a strong one, to have protected him\nfrom that headshot.", &dialoguesArray[25]);
-	//dialoguesArray[25] = Dialogue(DialogueWindow::FANG, false, "I�m formulating a plan\nto not get blown up by\nthese explosive barrels.", nullptr);
+	//dialoguesArray[24] = Dialogue(DialogueWindow::ONIMARU, false, "Are you formulating any plan\nto go through Duke's plating?\nThat is a strong one, to have protected him\nfrom that headshot.", &dialoguesArray[25]);
+	//dialoguesArray[25] = Dialogue(DialogueWindow::FANG, false, "I'm formulating a plan\nto not get blown up by\nthese explosive barrels.", nullptr);
 
 	// LEVEL 1 - PRE-SECURITY
 	//dialoguesArray[26] = Dialogue(DialogueWindow::FANG, false, "I wonder why Duke is running away.\nHe seems strong enough to face us by himself...", &dialoguesArray[27]);
 	//dialoguesArray[27] = Dialogue(DialogueWindow::ONIMARU, false, "He is going to the Milibot factory.\nWho knows what weapons he is hiding in there...\nOr maybe he is just testing us again.", nullptr);
 
 	// LEVEL 1 - FINAL
-	dialoguesArray[28] = Dialogue(DialogueWindow::DOOR, true, "Oh hello guys!\nNice fights there, right?\nWhere have you been?\nI haven�t seen you\nin a while!", &dialoguesArray[29]);
+	dialoguesArray[28] = Dialogue(DialogueWindow::DOOR, true, "Oh hello guys!\nNice fights there, right?\nWhere have you been?\nI haven't seen you\nin a while!", &dialoguesArray[29]);
 	dialoguesArray[29] = Dialogue(DialogueWindow::ONIMARU, true, "It has been five years.\nOpen up.\nWe need to come in.", &dialoguesArray[30]);
-	dialoguesArray[30] = Dialogue(DialogueWindow::DOOR, true, "Aw� I'm sorry.\nSeems like Duke\nrevoked your access.\nI don�t understand\nwhy though...", &dialoguesArray[31]);
-	dialoguesArray[31] = Dialogue(DialogueWindow::FANG, true, "Come on...\nWe are friends right?\nJust pretend you\nmalfunctioned or something,\nwe won�t tell.", &dialoguesArray[32]);
-	dialoguesArray[32] = Dialogue(DialogueWindow::DOOR, true, "Fine...\nI'll open the elevator.\nBut this time it's on you.\nI�m taking\nno responsibility.", &dialoguesArray[33]);
+	dialoguesArray[30] = Dialogue(DialogueWindow::DOOR, true, "Aw' I'm sorry.\nSeems like Duke\nrevoked your access.\nI don't understand\nwhy though...", &dialoguesArray[31]);
+	dialoguesArray[31] = Dialogue(DialogueWindow::FANG, true, "Come on...\nWe are friends right?\nJust pretend you\nmalfunctioned or something,\nwe won't tell.", &dialoguesArray[32]);
+	dialoguesArray[32] = Dialogue(DialogueWindow::DOOR, true, "Fine...\nI'll open the elevator.\nBut this time it's on you.\nI'm taking\nno responsibility.", &dialoguesArray[33]);
 	dialoguesArray[33] = Dialogue(DialogueWindow::ONIMARU, true, "Thanks, Door.", &dialoguesArray[34]);
-	dialoguesArray[34] = Dialogue(DialogueWindow::DOOR, true, "Take care in there\nsweethearts!\nDon�t get hurt!", nullptr);
+	dialoguesArray[34] = Dialogue(DialogueWindow::DOOR, true, "Take care in there\nsweethearts!\nDon't get hurt!", nullptr);
 }
 
 void DialogueManager::Update() {
