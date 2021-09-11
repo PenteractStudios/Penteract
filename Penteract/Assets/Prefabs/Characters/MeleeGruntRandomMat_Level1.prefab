@@ -65,11 +65,6 @@
                         "Value": 9835691270176894595
                     },
                     {
-                        "Name": "rightBladeColliderUID",
-                        "Type": "GameObjectUID",
-                        "Value": 12119067485365247026
-                    },
-                    {
                         "Name": "att2AttackSpeed",
                         "Type": "Float",
                         "Value": 1.5
@@ -80,14 +75,19 @@
                         "Value": 826311568033082909
                     },
                     {
-                        "Name": "leftBladeColliderUID",
+                        "Name": "rightBladeColliderUID",
                         "Type": "GameObjectUID",
-                        "Value": 114993121818193807
+                        "Value": 12119067485365247026
                     },
                     {
                         "Name": "winConditionUID",
                         "Type": "GameObjectUID",
                         "Value": 16579210181260590797
+                    },
+                    {
+                        "Name": "leftBladeColliderUID",
+                        "Type": "GameObjectUID",
+                        "Value": 114993121818193807
                     },
                     {
                         "Name": "fangUID",
@@ -127,7 +127,7 @@
                     {
                         "Name": "materialsUID",
                         "Type": "GameObjectUID",
-                        "Value": 10757349562374830401
+                        "Value": 6950254357275478483
                     }
                 ]
             },
