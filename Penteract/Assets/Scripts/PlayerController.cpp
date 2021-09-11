@@ -8,6 +8,7 @@
 #include "HUDManager.h"
 #include "OnimaruBullet.h"
 #include "SwitchParticles.h"
+#include "GameController.h"
 
 #include "Math/Quat.h"
 #include "Geometry/Plane.h"
@@ -170,6 +171,10 @@ float PlayerController::GetOnimaruMaxHealth() const {
 
 float PlayerController::GetFangMaxHealth() const {
 	return playerFang.GetTotalLifePoints();
+}
+
+bool PlayerController::IsPlayerDead() {
+	return !playerFang.isAlive && (!playerOnimaru.isAlive || !GameController::IsSwitchTutorialReached());
 }
 
 void PlayerController::SetNoCooldown(bool status) {
@@ -404,7 +409,10 @@ void PlayerController::Update() {
 		playerOnimaru.Update(useGamepad);
 	}
 
-	CheckCoolDowns();
+	if (!IsPlayerDead()) {
+		CheckCoolDowns();
+	}
+
 	UpdatePlayerStats();
 
 	if (CanSwitch()) {
