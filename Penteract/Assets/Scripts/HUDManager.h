@@ -199,5 +199,7 @@ private:
 	void ManageSwitchPreCollapseState(GameObject* activeParent, const std::vector<GameObject*>& skills);
 	void ManageSwitchCollapseState(GameObject* activeParent, const std::vector<GameObject*>& skills);
 
+	void ManageSwitchGreenEffect(bool growing, float timer);
+
 };
 

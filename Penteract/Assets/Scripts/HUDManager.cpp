@@ -20,13 +20,16 @@
 
 #define HIERARCHY_INDEX_ULTIMATE_ABILITY_DECOR_FILL 8
 
-#define HIERARCHY_INDEX_SWITCH_ABILITY_FILL 1
-#define HIERARCHY_INDEX_SWITCH_ABILITY_DURATION_FILL 2
-#define HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_WHITE 3
-#define HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_GLOW 4
-#define HIERARCHY_INDEX_SWITCH_ABILITY_EFFECT 5
-#define HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE 7
-#define HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL 8
+#define HIERARCHY_INDEX_SWITCH_ABILITY_GREEN_EFFECT 0
+#define HIERARCHY_INDEX_SWITCH_ABILITY_FILL 2
+#define HIERARCHY_INDEX_SWITCH_ABILITY_DURATION_FILL 3
+#define HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_WHITE 4
+#define HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_GLOW 5
+#define HIERARCHY_INDEX_SWITCH_ABILITY_EFFECT 6
+#define HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE 8
+#define HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL 9
+
+#define SWITCH_SKILL_HIERARCHY_NUM_CHILDREN 10
 
 #define HIERARCHY_INDEX_HEALTH_BACKGROUND 0
 #define HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK 1
@@ -124,6 +127,7 @@ void HUDManager::Start() {
 			if (switchGlowImage) {
 				switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 0.0f));
 			}
+			switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_GREEN_EFFECT]->Disable();
 
 		}
 
@@ -269,6 +273,8 @@ void HUDManager::StartCharacterSwitch() {
 			if (switchGlowImage) {
 				switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 1.0f));
 			}
+
+			switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_GREEN_EFFECT]->Enable();
 		}
 	}
 	if (playingLostHealthFeedback) StopLostHealthFeedback();
@@ -521,7 +527,7 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 }
 
 void HUDManager::ManageSwitch() {
-	if (!fangSkillParent || !onimaruSkillParent || !fangHealthParent || !onimaruHealthParent || !switchHealthParent || !fangObj || !onimaruObj) return;
+	if (!fangSkillParent || !onimaruSkillParent || !switchSkillParent || !fangHealthParent || !onimaruHealthParent || !switchHealthParent || !fangObj || !onimaruObj) return;
 	if (skillsFang.size() != 3 || skillsOni.size() != 3) return;
 	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 	if (switchHealthChildren.size() != SWITCH_HEALTH_HIERARCHY_NUM_CHILDREN) return;
@@ -585,6 +591,7 @@ void HUDManager::ManageSwitch() {
 		}
 
 		ManageSwitchPreCollapseState(fangSkillParent->IsActive() ? fangSkillParent : onimaruSkillParent, fangSkillParent->IsActive() ? skillsFang : skillsOni);
+		ManageSwitchGreenEffect(true, switchPreCollapseMovementTime);
 
 
 
@@ -609,6 +616,7 @@ void HUDManager::ManageSwitch() {
 		}
 
 		ManageSwitchCollapseState(fangSkillParent->IsActive() ? fangSkillParent : onimaruSkillParent, fangSkillParent->IsActive() ? skillsFang : skillsOni);
+		ManageSwitchGreenEffect(false, switchCollapseMovementTime);
 
 		//Health handling
 
@@ -775,6 +783,8 @@ void HUDManager::ManageSwitch() {
 			}
 		}
 
+		ManageSwitchGreenEffect(true, switchDeployMovementTime);
+
 		if (fangObj->IsActive()) {
 			health = fangHealthParent->GetComponent<ComponentTransform2D>();
 			backgroundImage = fangHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
@@ -848,12 +858,15 @@ void HUDManager::ManageSwitch() {
 			}
 		}
 
+		ManageSwitchGreenEffect(false, switchPreCollapseMovementTime);
+
 		if (switchTimer == switchPostDeployMovementTime) {
 			switchState = SwitchState::IDLE;
 
 			std::vector<GameObject*> switchChildren = switchSkillParent->GetChildren();
 			if (switchChildren.size() > HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL - 1) {
 				switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_WHITE]->Disable();
+				switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_GREEN_EFFECT]->Disable();
 			}
 
 			SetPictoState(Cooldowns::SWITCH_SKILL, PictoState::UNAVAILABLE);
@@ -1171,5 +1184,18 @@ void HUDManager::ManageSwitchCollapseState(GameObject* skillsParent, const std::
 			transform2D->SetPosition(float3::Lerp(cooldownTransformOriginalPositions[i] + float3(switchExtraOffset + i * 10.0f, 0, 0), cooldownTransformOriginalPositions[static_cast<int>(Cooldowns::SWITCH_SKILL)], switchTimer / switchCollapseMovementTime));
 		}
 
+	}
+}
+
+void HUDManager::ManageSwitchGreenEffect(bool growing, float timer) {
+	std::vector<GameObject*> switchSkillChildren = switchSkillParent->GetChildren();
+
+	if (switchSkillChildren.size() == SWITCH_SKILL_HIERARCHY_NUM_CHILDREN) {
+		float xInitialScale = growing ? 0.5f : 1;
+		float xFinalScale = growing ? 1 : 0.5f;
+		ComponentTransform2D* transform2D = switchSkillChildren[HIERARCHY_INDEX_SWITCH_ABILITY_GREEN_EFFECT]->GetComponent<ComponentTransform2D>();
+		if (transform2D) {
+			transform2D->SetScale(float3::Lerp(float3(xInitialScale, 1.f, 1.f), float3(xFinalScale,1,1), switchTimer / timer));
+		}
 	}
 }
