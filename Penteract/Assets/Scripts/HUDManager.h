@@ -123,6 +123,9 @@ public:
 
 	float4 sideNormalColor = float4(103.f / 255.f, 180.f / 255.f, 169.f / 255.f, 30.f / 255.f);
 	float4 sideHitColor = float4(248.f / 255.f, 47.f / 255.f, 47.f / 255.f, 30.f / 255.f);
+
+	float criticalHealthPercentage = 15.f;
+
 	std::string shieldObjName = "VFXShield";
 public:
 	void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown, float fangUltimateRemainingNormalizedValue, float oniUltimateRemainingNormalizedValue);
@@ -171,6 +174,7 @@ private:
 	bool playingHitEffect = false;
 	float hitEffectTimer = 0.0f;
 	float hitEffectTotalTime = 1.0f;
+	bool criticalHealthWarning = false;
 
 	// HUD sides
 	GameObject* sidesHUDParent = nullptr;
@@ -185,6 +189,8 @@ private:
 							//as the color changin and rotation of the picto for the switch icon
 	void PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns cooldown);
 	void PlayHitEffect();
+	void ShowCriticalHealthWarning();
+	void HideCriticalHealthWarning();
 	void PlayLostHealthFeedback();
 	void StartLostHealthFeedback();
 	void StopLostHealthFeedback();

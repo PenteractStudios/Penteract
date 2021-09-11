@@ -59,6 +59,7 @@ EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::FLOAT, lostHealthFeedbackAlpha),
 	MEMBER_SEPARATOR("HUD Sides"),
 	MEMBER(MemberType::GAME_OBJECT_UID, sidesHUDParentUID),
+	MEMBER(MemberType::FLOAT, criticalHealthPercentage),
 	MEMBER(MemberType::STRING, shieldObjName)
 };
 
@@ -228,6 +229,8 @@ void HUDManager::UpdateHealth(float fangHealth, float onimaruHealth) {
 
 	if (switchState != SwitchState::IDLE) ResetLostHealthFeedback();
 
+	if (!criticalHealthWarning && health <= maxHealth * (criticalHealthPercentage / 100.f)) ShowCriticalHealthWarning();
+
 	playingHitEffect = true;
 	hitEffectTimer = 0.0f;
 }
@@ -261,6 +264,7 @@ void HUDManager::HealthRegeneration(float health) {
 }
 
 void HUDManager::StartCharacterSwitch() {
+	if (!fangObj || !playerController) return;
 	switchTimer = 0;
 	switchState = SwitchState::PRE_COLLAPSE;
 	if (switchSkillParent) {
@@ -278,6 +282,16 @@ void HUDManager::StartCharacterSwitch() {
 		}
 	}
 	if (playingLostHealthFeedback) StopLostHealthFeedback();
+		
+	// Check if the new character needs the health warning
+
+	float health = fangObj->IsActive() ? onimaruPreviousHealth : fangPreviousHealth;
+	float maxHealth = fangObj->IsActive() ? playerController->GetOnimaruMaxHealth() : playerController->GetFangMaxHealth();
+
+	if (health > maxHealth * (criticalHealthPercentage / 100.f)) {
+		if (criticalHealthWarning) HideCriticalHealthWarning();
+	}
+	else if (!criticalHealthWarning) ShowCriticalHealthWarning();
 }
 
 void HUDManager::SetCooldownRetreival(Cooldowns cooldown) {
@@ -892,9 +906,12 @@ void HUDManager::PlayHitEffect() {
 		hitEffectTimer = hitEffectTotalTime;
 	}
 
+	float4 initialHitColor = criticalHealthWarning ? float4(sideHitColor.x, sideHitColor.y, sideHitColor.z, sideHitColor.w * 2) : sideHitColor;
+	float4 finalHitColor = criticalHealthWarning ? sideHitColor : sideNormalColor;
+
 	for (GameObject* side : sidesHUDChildren) {
 		ComponentImage* sideImage = side->GetComponent<ComponentImage>();
-		if (sideImage) sideImage->SetColor(float4::Lerp(sideHitColor, sideNormalColor, hitEffectTimer / hitEffectTotalTime));
+		if (sideImage) sideImage->SetColor(float4::Lerp(initialHitColor, finalHitColor, hitEffectTimer / hitEffectTotalTime));
 	}
 
 	if (hitEffectTimer == hitEffectTotalTime) {
@@ -904,6 +921,28 @@ void HUDManager::PlayHitEffect() {
 		hitEffectTimer += Time::GetDeltaTime();
 	}
 
+}
+
+void HUDManager::ShowCriticalHealthWarning() {
+	if (sidesHUDChildren.size() != HUD_HIT_FEEDBACK_SIDES) return;
+
+	for (GameObject* side : sidesHUDChildren) {
+		ComponentImage* sideImage = side->GetComponent<ComponentImage>();
+		if (sideImage) sideImage->SetColor(float4(sideHitColor.x, sideHitColor.y, sideHitColor.z, sideHitColor.w * 2));
+	}
+
+	criticalHealthWarning = true;
+}
+
+void HUDManager::HideCriticalHealthWarning() {
+	if (sidesHUDChildren.size() != HUD_HIT_FEEDBACK_SIDES) return;
+
+	for (GameObject* side : sidesHUDChildren) {
+		ComponentImage* sideImage = side->GetComponent<ComponentImage>();
+		if (sideImage) sideImage->SetColor(sideNormalColor);
+	}
+
+	criticalHealthWarning = false;
 }
 
 void HUDManager::PlayLostHealthFeedback() {
