@@ -5,9 +5,9 @@
 
 class PlayerController;
 class SceneTransition;
+class GameOverUIController;
 
-class PlayerDeath : public Script
-{
+class PlayerDeath : public Script {
 	GENERATE_BODY(PlayerDeath);
 
 public:
@@ -24,6 +24,7 @@ public:
 	UID playerUID = 0;
 	UID sceneUID = 0;
 	UID transitionUID = 0;
+	UID gameOverUID = 0;
 	GameObject* player = nullptr;
 	PlayerController* playerController = nullptr;
 	AIMeleeGrunt* rootParentScript = nullptr;
@@ -43,7 +44,7 @@ public:
 private:
 	GameObject* transitionGO = nullptr;
 	SceneTransition* sceneTransition = nullptr;
-
+	GameOverUIController* gameOverController = nullptr;
 	bool getLaserHit = false;
 	float timerFireDamage = 0.f;
 	bool fireDamageActive = false;
