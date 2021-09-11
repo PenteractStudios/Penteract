@@ -515,7 +515,7 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 	if (fillColor && image) {
 		fillColor->SetFillValue(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
 		if (playerController) {
-			if (playerController->playerFang.isAlive && playerController->playerOnimaru.isAlive) {
+			if (playerController->AreBothCharactersAlive()) {
 				fillColor->SetColor(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1 ? float4(switchSkillColorNotAvailable.xyz(), 0.3f + cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]) : switchSkillColorAvailable);
 			} else {
 				fillColor->SetColor(switchSkillColorDeadCharacter);
