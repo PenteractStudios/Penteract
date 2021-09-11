@@ -368,7 +368,7 @@ void PlayerController::Update() {
 		playerOnimaru.Update(useGamepad);
 	}
 
-	if (playerFang.isAlive && playerOnimaru.isAlive) {
+	if (playerFang.isAlive || playerOnimaru.isAlive) {
 		CheckCoolDowns();
 		UpdatePlayerStats();
 
