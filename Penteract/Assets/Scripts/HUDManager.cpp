@@ -1,5 +1,6 @@
 #include "HUDManager.h"
 #include "PlayerController.h";
+#include "GameController.h"
 #include "Components/UI/ComponentTransform2D.h"
 #include "Components/UI/ComponentImage.h"
 #include "ImageColorFader.h"
@@ -66,10 +67,12 @@ void HUDManager::Start() {
 	fangSkillParent = GameplaySystems::GetGameObject(fangSkillParentUID);
 	onimaruSkillParent = GameplaySystems::GetGameObject(onimaruSkillParentUID);
 	switchSkillParent = GameplaySystems::GetGameObject(switchSkillParentUID);
+	switchSkillActivated = false;
 
 	if (fangSkillParent && onimaruSkillParent && switchSkillParent) {
 		skillsFang = fangSkillParent->GetChildren();
 		skillsOni = onimaruSkillParent->GetChildren();
+		switchSkillParent->Disable();
 
 		//Vector used later to avoid a flicker on first swtich
 		std::vector<ComponentTransform2D*>oniTransforms;
@@ -162,6 +165,16 @@ void HUDManager::Start() {
 }
 
 void HUDManager::Update() {
+	// This checks for when the Switch tutorial is reached.When this happens, switch is activated and Player will be able to switch from then on.
+	if (GameController::IsSwitchTutorialReached() && !switchSkillActivated) {
+		if (switchSkillParent) {
+			if (!switchSkillParent->IsActive()) {
+				switchSkillParent->Enable();
+				switchSkillActivated = true;
+			}
+		}
+	}
+
 	ManageSwitch();
 	if (playingLostHealthFeedback) PlayLostHealthFeedback();
 }

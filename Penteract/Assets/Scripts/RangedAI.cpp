@@ -279,14 +279,6 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 				if(state != AIState::STUNNED) ChangeState(AIState::STUNNED);
 			}
 		}
-
-		if (!rangerGruntCharacter.isAlive) {
-			ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
-			if (collider) collider->Disable();
-			if (rangerGruntCharacter.beingPushed) DisableBlastPushBack();
-			ChangeState(AIState::DEATH);
-			if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
-		}
 	}
 }
 
@@ -328,6 +320,15 @@ void RangedAI::Update() {
 			rangerGruntCharacter.slowedDown = false;
 		}
 		currentSlowedDownTime += Time::GetDeltaTime();
+	}
+
+	if (!rangerGruntCharacter.isAlive && state != AIState::DEATH && !GameController::IsGameplayBlocked()) {
+		PlayAudio(AudioType::DEATH);
+		ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
+		if (collider) collider->Disable();
+		if (rangerGruntCharacter.beingPushed) DisableBlastPushBack();
+		ChangeState(AIState::DEATH);
+		if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
 	}
 
 	UpdateState();
@@ -397,7 +398,6 @@ void RangedAI::EnterState(AIState newState) {
 		deathType = 1 + rand() % 2;
 		std::string deathTypeStr = std::to_string(deathType);
 		animation->SendTrigger(changeState + deathTypeStr);
-		PlayAudio(AudioType::DEATH);
 		agent->RemoveAgentFromCrowd();
 		state = AIState::DEATH;
 		break;
@@ -636,14 +636,6 @@ void RangedAI::EnableBlastPushBack() {
 			PlayAudio(AudioType::HIT);
 			PlayHitMaterialEffect();
 			timeSinceLastHurt = 0.0f;
-
-			if (!rangerGruntCharacter.isAlive) {
-				ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
-				if (collider) collider->Disable();
-				if (rangerGruntCharacter.beingPushed) DisableBlastPushBack();
-				ChangeState(AIState::DEATH);
-				if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
-			}
 		}
 	}
 }

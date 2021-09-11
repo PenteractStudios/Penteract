@@ -75,7 +75,7 @@ void AIMeleeGrunt::Start() {
 		playerDeath = GET_SCRIPT(fang, PlayerDeath);
 	}
 
-
+	
 
 	GameObject* winLose = GameplaySystems::GetGameObject(winConditionUID);
 
@@ -285,6 +285,10 @@ void AIMeleeGrunt::Update() {
 			GameplaySystems::DestroyGameObject(&GetOwner());
 		}
 	}
+
+	if (!gruntCharacter.isAlive) {
+		Death();
+	}
 }
 
 void AIMeleeGrunt::OnAnimationFinished() {
@@ -374,10 +378,6 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 				state = AIState::STUNNED;
 			}
 		}
-
-		if (!gruntCharacter.isAlive) {
-			Death();
-		}
 	}
 }
 
@@ -394,10 +394,6 @@ void AIMeleeGrunt::EnableBlastPushBack() {
 			if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
 			PlayHitMaterialEffect();
 			timeSinceLastHurt = 0.0f;
-
-			if (!gruntCharacter.isAlive) {
-				Death();
-			}
 		}
 	}
 }
@@ -523,20 +519,22 @@ void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const cha
 }
 
 void AIMeleeGrunt::Death()
-{
-	if (animation->GetCurrentState() && state != AIState::DEATH){
-		std::string changeState = animation->GetCurrentState()->name + "Death";
-		deathType = 1 + rand() % 2;
-		std::string deathTypeStr = std::to_string(deathType);
-		animation->SendTrigger(changeState + deathTypeStr);
+{	
+	if (!GameController::IsGameplayBlocked()) {
+		if (animation->GetCurrentState() && state != AIState::DEATH) {
+			std::string changeState = animation->GetCurrentState()->name + "Death";
+			deathType = 1 + rand() % 2;
+			std::string deathTypeStr = std::to_string(deathType);
+			animation->SendTrigger(changeState + deathTypeStr);
 
-		if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
-		ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
-		if (collider) collider->Disable();
+			if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
+			ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
+			if (collider) collider->Disable();
 
-		agent->RemoveAgentFromCrowd();
-		if (gruntCharacter.beingPushed) gruntCharacter.beingPushed = false;
-		state = AIState::DEATH;
+			agent->RemoveAgentFromCrowd();
+			if (gruntCharacter.beingPushed) gruntCharacter.beingPushed = false;
+			state = AIState::DEATH;
+		}
 	}
 }
 

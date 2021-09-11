@@ -5,6 +5,7 @@
 
 #include "PlayerController.h"
 #include "SceneTransition.h"
+#include "GameOverUIController.h"
 
 #define LEFT_SHOT "LeftShot"
 #define RIGHT_SHOT "RightShot"
@@ -20,7 +21,8 @@ EXPOSE_MEMBERS(PlayerDeath) {
 	MEMBER(MemberType::FLOAT, laserHitCooldownTimer),
 	MEMBER(MemberType::FLOAT, fireDamageTaken),
 	MEMBER(MemberType::FLOAT, cooldownFireDamage),
-	MEMBER(MemberType::GAME_OBJECT_UID, transitionUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, transitionUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, gameOverUID)
 };
 
 GENERATE_BODY_IMPL(PlayerDeath);
@@ -32,6 +34,10 @@ void PlayerDeath::Start() {
 		transitionGO = GameplaySystems::GetGameObject(transitionUID);
 		if (transitionGO) sceneTransition = GET_SCRIPT(transitionGO, SceneTransition);
 	}
+	GameObject* gameOverGO = GameplaySystems::GetGameObject(gameOverUID);
+
+	if (gameOverGO)gameOverController = GET_SCRIPT(gameOverGO, GameOverUIController);
+
 	laserHitCooldownTimer = laserHitCooldown;
 }
 
@@ -126,9 +132,13 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 }
 
 void PlayerDeath::OnLoseConditionMet() {
-	if (sceneTransition) {
-		sceneTransition->StartTransition();
-	} else {
-		if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
+	if (gameOverController) {
+			gameOverController->GameOver();
+	} else{
+		if (sceneTransition) {
+			sceneTransition->StartTransition();
+		} else {
+			if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
+		}
 	}
 }
