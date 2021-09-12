@@ -25,9 +25,14 @@ void SecurityLasersPatterns::Start() {
     GameObject* generator2 = GameplaySystems::GetGameObject(generator2UID);
     GameObject* generator3 = GameplaySystems::GetGameObject(generator3UID);
     GameObject* generator4 = GameplaySystems::GetGameObject(generator4UID);
+
+    float chargingTime = 0.f;
     if (generator1) {
         LasersGenerator* script = GET_SCRIPT(generator1, LasersGenerator);
-        if (script) generators.push_back(script);
+        if (script) {
+            generators.push_back(script);
+            chargingTime = script->chargingDuration;
+        }
     }
     if (generator2) {
         LasersGenerator* script = GET_SCRIPT(generator2, LasersGenerator);
@@ -42,7 +47,7 @@ void SecurityLasersPatterns::Start() {
         if (script) generators.push_back(script);
     }
 
-    permutationDuration = intervalDuration * (generators.size()-1) + CHARGING_DURATION + laserActiveDuration;
+    permutationDuration = intervalDuration * (generators.size()-1) + chargingTime + laserActiveDuration;
     permutationTimer = permutationDuration;
 }
 
