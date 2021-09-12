@@ -6,7 +6,7 @@
 #include "CameraController.h"
 #include "UltimateFang.h"
 
-void Fang::Init(UID fangUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, UID rightBulletUID, UID leftBulletUID, UID laserUID, UID cameraUID, UID HUDManagerObjectUID, UID dashUID, UID EMPUID, UID EMPEffectsUID, UID fangUltimateUID, UID ultimateVFXUID) {
+void Fang::Init(UID fangUID, UID dashParticleUID, UID leftGunUID, UID rightGunUID, UID rightBulletUID, UID leftBulletUID, UID laserUID, UID cameraUID, UID HUDManagerObjectUID, UID dashUID, UID EMPUID, UID EMPEffectsUID, UID fangUltimateUID, UID ultimateVFXUID) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(fangUID);
 	if (characterGameObject && characterGameObject->GetParent()) {
@@ -33,10 +33,10 @@ void Fang::Init(UID fangUID, UID trailDashUID, UID leftGunUID, UID rightGunUID, 
 		//laser
 		fangLaser = GameplaySystems::GetGameObject(laserUID);
 
-		GameObject* trailAux = GameplaySystems::GetGameObject(trailDashUID);
-		if (trailAux) {
-			trailDash = trailAux->GetComponent<ComponentTrail>();
-			if (trailDash) trailDash->Stop();
+		GameObject* dashAux = GameplaySystems::GetGameObject(dashParticleUID);
+		if (dashAux) {
+			dashParticle = dashAux->GetComponent<ComponentParticleSystem>();
+			if (dashParticle) dashParticle->Stop();
 		}
 
 		rightBulletAux = GameplaySystems::GetGameObject(rightBulletUID);
@@ -164,15 +164,15 @@ void Fang::GetHit(float damage_) {
 void Fang::InitDash() {
 	if (CanDash()) {
 		hasDashed = true;
-		if (trailDash) trailDash->Play();
 		if (dash && level1Upgrade) dash->Enable();
-		trailDuration = dashDuration + trailDashOffsetDuration;
 		if (movementInputDirection != MovementDirection::NONE) {
 			dashDirection = GetDirection();
 			dashMovementDirection = movementInputDirection;
 		} else {
 			dashDirection = facePointDir;
 		}
+
+		if (dashParticle)dashParticle->PlayChildParticles(); 
 
 		dashCooldownRemaining = dashCooldown;
 		dashRemaining = dashDuration;
@@ -197,19 +197,9 @@ void Fang::Dash() {
 		float3 newPosition = playerMainTransform->GetGlobalPosition();
 		newPosition += dashSpeed * dashDirection;
 		agent->SetMoveTarget(newPosition, false);
-	} else {
-		if (hasDashed) TrailDelay();
 	}
 }
 
-void Fang::TrailDelay() {
-	if (trailDuration >= 0) {
-		trailDuration -= Time::GetDeltaTime();
-	} else {
-		hasDashed = false;
-		if (trailDash) trailDash->Stop();
-	}
-}
 
 bool Fang::CanDash() {
 	return isAlive && !dashing && !dashInCooldown && !EMP->IsActive() && !ultimateOn && !GameController::IsGameplayBlocked();
@@ -349,7 +339,7 @@ void Fang::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 			if (fangAudios[static_cast<int>(FANG_AUDIOS::SHOOT)]) {
 				fangAudios[static_cast<int>(FANG_AUDIOS::SHOOT)]->Play();
 			}
-			bullet->Play();
+			bullet->PlayChildParticles();
 		}
 		bullet = nullptr;
 	}
