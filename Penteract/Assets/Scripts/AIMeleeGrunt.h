@@ -145,4 +145,5 @@ private:
 	void PlayHitMaterialEffect();
 	void UpdateDissolveTimer();
 	void SetRandomMaterial();
+	void SetMaterial(UID newMaterialID, bool needToPlayDissolve = false);
 };
