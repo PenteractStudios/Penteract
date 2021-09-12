@@ -17,8 +17,8 @@ void WinCondition::Start() {
 void WinCondition::Update() {}
 
 void WinCondition::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
-	ComponentCapsuleCollider* capsuleCollider = gameObject->GetComponent<ComponentCapsuleCollider>();
-	if (capsuleCollider) capsuleCollider->Disable();
+	ComponentBoxCollider* boxCollider = gameObject->GetComponent<ComponentBoxCollider>();
+	if (boxCollider) boxCollider->Disable();
 
 	if (sceneUID) SceneManager::ChangeScene(sceneUID);
 	PlayerController::currentLevel = 2;
