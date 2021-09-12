@@ -374,6 +374,10 @@ bool Fang::CanShoot() {
 	return !shooting && !ultimateOn && !compAnimation->GetCurrentStateSecondary()  && !GameController::IsGameplayBlocked();
 }
 
+bool Fang::isAiming() {
+	return aiming;
+}
+
 void Fang::Shoot() {
 	if (CanShoot()) {
 		//shootingOnCooldown = true;
