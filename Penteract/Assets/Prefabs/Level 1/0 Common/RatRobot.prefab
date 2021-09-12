@@ -37,6 +37,13 @@
                 "StateMachineSecondaryId": 170235261915610627
             },
             {
+                "Type": "Agent",
+                "Active": true,
+                "MaxSpeed": 10.0,
+                "MaxAcceleration": 100.0,
+                "AvoidingObstacle": true
+            },
+            {
                 "Type": "Script",
                 "Active": true,
                 "Script": 17939709168703530699,
@@ -47,19 +54,6 @@
                         "Value": 9835691270176894595
                     }
                 ]
-            },
-            {
-                "Type": "Agent",
-                "Active": true,
-                "MaxSpeed": 10.0,
-                "MaxAcceleration": 100.0,
-                "AvoidingObstacle": true
-            },
-            {
-                "Type": "Script",
-                "Active": true,
-                "Script": 6803541990823883369,
-                "Values": null
             }
         ],
         "Children": [

@@ -21,19 +21,19 @@ public:
 
 	void Start() override;
 	void Update() override;
+	void OnAnimationFinished() override;
 
 public:
 	UID playerId = 0;
 	float fleeRange = 10.0f;
+	float rotationSmoothness = 0.2f;
 
 private:
 	void ChangeState(RatRobotState newState);
-	bool PlayerInRange();
 
 private:
 	GameObject* player = nullptr;
 	RatRobotState state = RatRobotState::IDLE1;
-	AIMovement* aiMovement = nullptr;
 
 	ComponentTransform* playerTransform = nullptr;
 
