@@ -201,12 +201,6 @@ void HUDManager::UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2,
 	cooldowns[static_cast<int>(Cooldowns::ONIMARU_SKILL_3)] = oniUltimateRemainingNormalizedValue == 0 ? onimaruCooldown3 : 0.99f;
 	cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] = switchCooldown;
 
-
-	//std::string message = std::to_string(fangCooldown1) + " " + std::to_string(fangCooldown2) + " " + std::to_string(fangCooldown3) + " " +
-	//	std::to_string(onimaruCooldown1) + " " + std::to_string(onimaruCooldown2) + " " + std::to_string(onimaruCooldown3) + " " + std::to_string(switchCooldown);
-
-	//Debug::Log(message.c_str());
-
 	if (onimaruObj && fangObj && fangSkillParent && onimaruSkillParent) {
 
 		if (fangObj->IsActive()) {
@@ -375,15 +369,6 @@ void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 					fillImage->SetFillValue(cooldowns[skill]);
 				}
 			}
-
-			//GameObject* textParent = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_KEY_FILL];
-
-			//if (textParent) {
-			//	text = textParent->GetChild(1)->GetComponent<ComponentText>();
-			//	if (text) {
-			//		text->SetFontColor(cooldowns[skill] < 1 ? buttonTextColorNotAvailable : buttonTextColorAvailable);
-			//	}
-			//}
 
 			if (textFill) {
 				textFill->SetColor(cooldowns[skill] < 1 ? buttonColorNotAvailable : buttonColorAvailable);
