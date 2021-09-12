@@ -10,6 +10,8 @@ EXPOSE_MEMBERS(SpawnPointController) {
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, meleeEnemyPrefabUID),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, rangeEnemyPrefabUID),
 	MEMBER(MemberType::BOOL, unlocksInitialDoor),
+	MEMBER(MemberType::BOOL, isInitiallyLocked),
+	MEMBER(MemberType::BOOL, isLastDoor),
 	MEMBER(MemberType::GAME_OBJECT_UID, initialDoorUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, finalDoorUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, gameObjectActivatedOnCombatEndUID),
@@ -71,27 +73,33 @@ void SpawnPointController::Start() {
 void SpawnPointController::Update() {
 	if (unlockStarted) {
 		if (currentUnlockTime >= timerToUnlock) {
-			if (finalDoor && finalDoor->IsActive()) {
-				finalDoor->Disable();
+			if (!isClosing) {			// Must open the door
+				if (finalDoor && finalDoor->IsActive()) {
+					finalDoor->Disable();
+				}
+				if (unlocksInitialDoor && initialDoor && initialDoor->IsActive()) {
+					initialDoor->Disable();
+				}
+				gameObject->Disable();
 			}
-			if (unlocksInitialDoor && initialDoor && initialDoor->IsActive()) {
-				initialDoor->Disable();
-			}
-			gameObject->Disable();
+			
 			unlockStarted = false;
-			SetLightIntensity(initialDoorLight, isClosing ? initialDoorLightStartIntensity : 0.0f);
-			SetLightIntensity(finalDoorLight, isClosing ? finalDoorLightStartIntensity : 0.0f);
+			
+			if (!mustKeepOpen) {
+				SetLightIntensity(initialDoorLight, isClosing ? initialDoorLightStartIntensity : 0.0f);
+				SetLightIntensity(finalDoorLight, isClosing ? finalDoorLightStartIntensity : 0.0f);
+			}
+
 		}
 		else {
 			currentUnlockTime += Time::GetDeltaTime();
 
-			float initialDoorNewIntensity = isClosing ? initialDoorLightStartIntensity * (currentUnlockTime / timerToUnlock) : initialDoorLightStartIntensity * (1 - (currentUnlockTime / timerToUnlock));
-			float finalDoorNewIntensity = isClosing ? finalDoorLightStartIntensity * (currentUnlockTime / timerToUnlock) : finalDoorLightStartIntensity * (1 - (currentUnlockTime / timerToUnlock));
-			
-			Debug::Log(std::to_string(initialDoorNewIntensity).c_str());
-			
-			SetLightIntensity(initialDoorLight, initialDoorNewIntensity);
-			SetLightIntensity(finalDoorLight, finalDoorNewIntensity);
+			if (!mustKeepOpen) {
+				float initialDoorNewIntensity = isClosing ? initialDoorLightStartIntensity * (currentUnlockTime / timerToUnlock) : initialDoorLightStartIntensity * (1 - (currentUnlockTime / timerToUnlock));
+				float finalDoorNewIntensity = isClosing ? finalDoorLightStartIntensity * (currentUnlockTime / timerToUnlock) : finalDoorLightStartIntensity * (1 - (currentUnlockTime / timerToUnlock));
+				SetLightIntensity(initialDoorLight, initialDoorNewIntensity);
+				SetLightIntensity(finalDoorLight, finalDoorNewIntensity);
+			}
 		}
 	}
 }
@@ -107,10 +115,9 @@ void SpawnPointController::OnCollision(GameObject& collidedWith, float3 collisio
 	ComponentBoxCollider* boxCollider = gameObject->GetComponent<ComponentBoxCollider>();
 	if (boxCollider) boxCollider->Disable();
 
-	if (initialDoor) {		// So it doesn't trigger those who are set by default
+	if (!isInitiallyLocked) {
 		PlayDissolveAnimation(finalDoor, true);
 		PlayDissolveAnimation(initialDoor, true);
-
 		unlockStarted = true;
 		isClosing = true;
 		ResetUnlockAnimation();
@@ -129,9 +136,9 @@ void SpawnPointController::OpenDoor() {
 		if (gameObjectActivatedOnCombatEnd) gameObjectActivatedOnCombatEnd->Enable();
 
 		if (!unlockStarted) ResetUnlockAnimation();
+		if (!isLastDoor) mustKeepOpen = true;
 		unlockStarted = true;
 		isClosing = false;
-
 	}
 }
 

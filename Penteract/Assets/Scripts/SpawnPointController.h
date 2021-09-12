@@ -24,9 +24,10 @@ public:
 	std::string doorEnergyBack = "DoorEnergyBack";
 	std::string doorEnergyFront = "DoorEnergyFront";
 
-	bool unlocksInitialDoor = true;
+	bool unlocksInitialDoor = true;				// Set to true if this must unlock first door
 	bool isInitiallyLocked = false;				// This should be set to true if it's the first door of Level1, that is initially blocked and MUST NOT unlock/lock
-	float timerToUnlock = 0.0f;
+	bool isLastDoor = false;					// Set to true if this is the last door of the Spawn Points
+	float timerToUnlock = 0.0f;					// The timer to unlock/lock the door
 
 	/* Dissolve UID */
 	UID dissolveMaterialGOUID = 0;
@@ -72,21 +73,22 @@ private:
 	UID dissolveMaterialID = 0;
 	float currentUnlockTime = 0.0f;
 	bool unlockStarted = false;				// This tells whether it needs to start the unlock/lock animation 
+	bool mustKeepOpen = false;
 
 	/* Door Light */
-	std::string doorLightGameObjectName = "LaserDoor"; // This is the name of the GameObject that contains the Light
+	std::string doorLightGameObjectName = "LaserDoor";		// This is the name of the GameObject that contains the Light
 
-	ComponentLight* initialDoorLight = nullptr;
-	float initialDoorLightStartIntensity = 0.0f;
+	ComponentLight* initialDoorLight = nullptr;				// Component Light obtained from LaserDoor of the Initial Door
+	float initialDoorLightStartIntensity = 0.0f;			// Initial intensity of the initialDoorLight
 
-	ComponentLight* finalDoorLight = nullptr;
-	float finalDoorLightStartIntensity = 0.0f;
+	ComponentLight* finalDoorLight = nullptr;				// Component Light obtained from LaserDoor of the final Door
+	float finalDoorLightStartIntensity = 0.0f;				// Initial intensity of the finalDoorLight
 
 	bool isClosing = false;
 
 private:
 	bool CheckSpawnPointStatus();
-	void PlayDissolveAnimation(GameObject* root, bool playReverse);
-	void SetLightIntensity(ComponentLight* light, float newIntensity);
-	void ResetUnlockAnimation();
+	void PlayDissolveAnimation(GameObject* root, bool playReverse);				// Searches on root the GameObject called "DoorEnergyBack" and "DoorEnergyFront" and calls PlayDissolveAnimation on their materials. PlayReverse will play the reverse animation.
+	void SetLightIntensity(ComponentLight* light, float newIntensity);			// Sets newIntensity to the light given
+	void ResetUnlockAnimation();												// Sets currentUnlockTime to 0
 };
