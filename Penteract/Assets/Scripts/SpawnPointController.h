@@ -25,6 +25,7 @@ public:
 	std::string doorEnergyFront = "DoorEnergyFront";
 
 	bool unlocksInitialDoor = true;
+	bool isInitiallyLocked = false;				// This should be set to true if it's the first door of Level1, that is initially blocked and MUST NOT unlock/lock
 	float timerToUnlock = 0.0f;
 
 	/* Dissolve UID */
@@ -70,7 +71,7 @@ private:
 	/* Dissolve UID */
 	UID dissolveMaterialID = 0;
 	float currentUnlockTime = 0.0f;
-	float unlockStarted = false;
+	bool unlockStarted = false;				// This tells whether it needs to start the unlock/lock animation 
 
 	/* Door Light */
 	std::string doorLightGameObjectName = "LaserDoor"; // This is the name of the GameObject that contains the Light

@@ -79,13 +79,19 @@ void SpawnPointController::Update() {
 			}
 			gameObject->Disable();
 			unlockStarted = false;
-			SetLightIntensity(initialDoorLight, 0.0f);
-			SetLightIntensity(finalDoorLight, 0.0f);
+			SetLightIntensity(initialDoorLight, isClosing ? initialDoorLightStartIntensity : 0.0f);
+			SetLightIntensity(finalDoorLight, isClosing ? finalDoorLightStartIntensity : 0.0f);
 		}
 		else {
 			currentUnlockTime += Time::GetDeltaTime();
-			SetLightIntensity(initialDoorLight, initialDoorLightStartIntensity * (1 - (currentUnlockTime / timerToUnlock)));
-			SetLightIntensity(finalDoorLight, finalDoorLightStartIntensity * (1 - (currentUnlockTime / timerToUnlock)));
+
+			float initialDoorNewIntensity = isClosing ? initialDoorLightStartIntensity * (currentUnlockTime / timerToUnlock) : initialDoorLightStartIntensity * (1 - (currentUnlockTime / timerToUnlock));
+			float finalDoorNewIntensity = isClosing ? finalDoorLightStartIntensity * (currentUnlockTime / timerToUnlock) : finalDoorLightStartIntensity * (1 - (currentUnlockTime / timerToUnlock));
+			
+			Debug::Log(std::to_string(initialDoorNewIntensity).c_str());
+			
+			SetLightIntensity(initialDoorLight, initialDoorNewIntensity);
+			SetLightIntensity(finalDoorLight, finalDoorNewIntensity);
 		}
 	}
 }
@@ -125,6 +131,7 @@ void SpawnPointController::OpenDoor() {
 		if (!unlockStarted) ResetUnlockAnimation();
 		unlockStarted = true;
 		isClosing = false;
+
 	}
 }
 
@@ -175,5 +182,4 @@ void SpawnPointController::SetLightIntensity(ComponentLight* light, float newInt
 
 void SpawnPointController::ResetUnlockAnimation() {
 	currentUnlockTime = 0.0f;
-	Debug::Log("HOLA");
 }
