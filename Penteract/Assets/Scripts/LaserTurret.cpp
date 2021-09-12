@@ -14,7 +14,7 @@ EXPOSE_MEMBERS(LaserTurret) {
 GENERATE_BODY_IMPL(LaserTurret);
 
 void LaserTurret::Start() {
-	
+
     GameObject* owner = &GetOwner();
 
     if (owner) {
@@ -30,9 +30,7 @@ void LaserTurret::Start() {
 
 void LaserTurret::Update() {
 
-    if (!animationComp) {
-        Debug::Log("animationComp is nullptr");
-    }
+    if (!animationComp) return;
 
     switch (currentState)
     {
@@ -46,30 +44,30 @@ void LaserTurret::Update() {
             }
         }
         break;
-    case TurretState::IDLE_END:
+    case TurretState::SHOOTING_END:
         if (coolDownOnTimer <= coolDownOn) {
             coolDownOnTimer += Time::GetDeltaTime();
             if (coolDownOnTimer > coolDownOn) {
                 coolDownOnTimer = 0;
                 currentState = TurretState::END;
-                animationComp->SendTrigger(states[static_cast<unsigned int>(TurretState::IDLE_END)] + states[static_cast<unsigned int>(TurretState::END)]);
+                animationComp->SendTrigger(states[static_cast<unsigned int>(TurretState::SHOOTING_END)] + states[static_cast<unsigned int>(TurretState::END)]);
             }
         }
         break;
     }
 
-    if (currentState != TurretState::SHOOT) {
+    if (currentState != TurretState::SHOOT && currentState != TurretState::SHOOTING_END) {
         if (laserObject && laserObject->IsActive()) laserObject->Disable();
     }
     else {
         if (laserObject && !laserObject->IsActive()) laserObject->Enable();
     }
-	
+
 }
 
 void LaserTurret::Init() {
 
-    currentState = TurretState::START;
+    currentState = TurretState::IDLE_START;
 
 }
 
@@ -83,9 +81,9 @@ void LaserTurret::OnAnimationFinished() {
             coolDownOnTimer = 0.0f;
             coolDownOffTimer = 0.0f;
         } else if (animationComp->GetCurrentState()->name == states[static_cast<int>(TurretState::SHOOT)]) {
-            currentState = TurretState::IDLE_END;
+            currentState = TurretState::SHOOTING_END;
             coolDownOnTimer = 0.0f;
-            animationComp->SendTrigger(animationComp->GetCurrentState()->name + states[static_cast<int>(TurretState::IDLE_END)]);
+            animationComp->SendTrigger(animationComp->GetCurrentState()->name + states[static_cast<int>(TurretState::SHOOTING_END)]);
         } else if (animationComp->GetCurrentState()->name == states[static_cast<int>(TurretState::END)]) {
             currentState = TurretState::IDLE_START;
             coolDownOffTimer = 0.0f;

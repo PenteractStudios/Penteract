@@ -1,5 +1,6 @@
 #include "RangedAI.h"
 
+#include "GameController.h"
 #include "PlayerController.h"
 #include "PlayerDeath.h"
 #include "HUDController.h"
@@ -18,6 +19,10 @@
 #include "Components/ComponentMeshRenderer.h"
 #include "Resources/ResourcePrefab.h"
 //clang-format off
+
+#define HIERARCHY_POSITION_WEAPON 2
+#define HIERARCHY_POSITION_BACKPACK 3
+
 EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
@@ -32,6 +37,7 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.timeToDie),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.barrelDamageTaken),
 	MEMBER_SEPARATOR("Push variables"),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackDistance),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackSpeed),
@@ -76,15 +82,15 @@ void RangedAI::Start() {
 	}
 
 	int numChildren = GetOwner().GetChildren().size();
-	if (numChildren > 2) {
-		GameObject* weaponGO = GetOwner().GetChildren()[2];
+	if (numChildren > HIERARCHY_POSITION_WEAPON) {
+		GameObject* weaponGO = GetOwner().GetChildren()[HIERARCHY_POSITION_WEAPON];
 		if (weaponGO) {
 			weaponMeshRenderer = weaponGO->GetComponent<ComponentMeshRenderer>();
 		}
 	}
 
-	if (numChildren > 3) {
-		GameObject* backpackGO = GetOwner().GetChildren()[3];
+	if (numChildren > HIERARCHY_POSITION_BACKPACK) {
+		GameObject* backpackGO = GetOwner().GetChildren()[HIERARCHY_POSITION_BACKPACK];
 		if (backpackGO) {
 			backPackMeshRenderer = backpackGO->GetComponent<ComponentMeshRenderer>();
 		}
@@ -214,54 +220,43 @@ void RangedAI::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* e
 		}
 	}
 }
+void RangedAI::ParticleHit(GameObject& collidedWith, void* particle, Player& player) {
+	if (!particle) return;
+	ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+	if (pSystem) pSystem->KillParticle(p);
+	if (state == AIState::STUNNED && player.level2Upgrade) {
+		rangerGruntCharacter.GetHit(99);
+	}
+	else {
+		rangerGruntCharacter.GetHit(player.damageHit + playerController->GetOverPowerMode());
+	}
+}
+
 
 void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		if (rangerGruntCharacter.isAlive && playerController) {
 			bool hitTaken = false;
 			if (collidedWith.name == "FangBullet") {
-				if (!particle) return;
-				GameplaySystems::DestroyGameObject(&collidedWith);
 				hitTaken = true;
-				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
-					rangerGruntCharacter.GetHit(99);
-				}
-				else {
-					rangerGruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
-				}
+				GameplaySystems::DestroyGameObject(&collidedWith);
+				rangerGruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
+			}
+			else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
+				hitTaken = true;
+				ParticleHit(collidedWith, particle, playerController->playerFang);
 			}
 			else if (collidedWith.name == "OnimaruBullet") {
-
-				if (!particle) return;
-				ComponentParticleSystem::Particle* p = static_cast<ComponentParticleSystem::Particle*>(particle);
-				ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
-				if (pSystem && p) pSystem->KillParticle(p);
-
 				hitTaken = true;
-				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
-					rangerGruntCharacter.GetHit(99);
-				}
-				else {
-					rangerGruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
-				}
+				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
 			}
 			else if (collidedWith.name == "OnimaruBulletUltimate") {
-
-				if (!particle) return;
-				ComponentParticleSystem::Particle* p = static_cast<ComponentParticleSystem::Particle*>(particle);
-				ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
-				if (pSystem && p) pSystem->KillParticle(p);
-
 				hitTaken = true;
-				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
-					rangerGruntCharacter.GetHit(99);
-				}
-				else {
-					rangerGruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
-				}
+				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
 			}
 			else if (collidedWith.name == "Barrel") {
-				rangerGruntCharacter.GetHit(playerDeath->barrelDamageTaken);
+				rangerGruntCharacter.GetHit(rangerGruntCharacter.barrelDamageTaken);
 				hitTaken = true;
 			}
 			else if (collidedWith.name == "DashDamage" && playerController->playerFang.level1Upgrade) {
@@ -281,16 +276,8 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 			if (collidedWith.name == "EMP") {
 				if (agent) agent->RemoveAgentFromCrowd();
 				stunTimeRemaining = stunDuration;
-				ChangeState(AIState::STUNNED);
+				if(state != AIState::STUNNED) ChangeState(AIState::STUNNED);
 			}
-		}
-
-		if (!rangerGruntCharacter.isAlive) {
-			ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
-			if (collider) collider->Disable();
-			if (rangerGruntCharacter.beingPushed) DisableBlastPushBack();
-			ChangeState(AIState::DEATH);
-			if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
 		}
 	}
 }
@@ -306,12 +293,12 @@ void RangedAI::Update() {
 			}
 		}
 	}
-	
+
 	UpdateDissolveTimer();
 
 	if (!GetOwner().IsActive()) return;
 
-	if (state == AIState::IDLE || state == AIState::RUN || state == AIState::FLEE) {
+	if ((state == AIState::IDLE || state == AIState::RUN || state == AIState::FLEE) && !GameController::IsGameplayBlocked()) {
 		attackTimePool = Max(attackTimePool - Time::GetDeltaTime(), 0.0f);
 		if (attackTimePool == 0) {
 			if (actualShotTimer == -1) {
@@ -333,6 +320,15 @@ void RangedAI::Update() {
 			rangerGruntCharacter.slowedDown = false;
 		}
 		currentSlowedDownTime += Time::GetDeltaTime();
+	}
+
+	if (!rangerGruntCharacter.isAlive && state != AIState::DEATH && !GameController::IsGameplayBlocked()) {
+		PlayAudio(AudioType::DEATH);
+		ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
+		if (collider) collider->Disable();
+		if (rangerGruntCharacter.beingPushed) DisableBlastPushBack();
+		ChangeState(AIState::DEATH);
+		if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
 	}
 
 	UpdateState();
@@ -378,14 +374,8 @@ void RangedAI::EnterState(AIState newState) {
 		if (shot) {
 			animation->SendTriggerSecondary("ShootBeginStun");
 		}
-		if (state == AIState::IDLE) {
-			animation->SendTrigger("IdleBeginStun");
-		}
-		else if (state == AIState::RUN) {
-			animation->SendTrigger("RunForwardBeginStun");
-		}
-		else if (state == AIState::FLEE) {
-			animation->SendTrigger("RunBackwardBeginStun");
+		if (animation->GetCurrentState()) {
+			animation->SendTrigger(animation->GetCurrentState()->name + "BeginStun");
 		}
 		break;
 	case AIState::DEATH:
@@ -404,8 +394,10 @@ void RangedAI::EnterState(AIState newState) {
 		if (shot) {
 			animation->SendTriggerSecondary("ShootDeath");
 		}
-		animation->SendTrigger(animation->GetCurrentState()->name + "Death");
-		PlayAudio(AudioType::DEATH);
+		std::string changeState = animation->GetCurrentState()->name + "Death";
+		deathType = 1 + rand() % 2;
+		std::string deathTypeStr = std::to_string(deathType);
+		animation->SendTrigger(changeState + deathTypeStr);
 		agent->RemoveAgentFromCrowd();
 		state = AIState::DEATH;
 		break;
@@ -416,6 +408,10 @@ void RangedAI::UpdateState() {
 	if (!animation) return;
 
 	float speedToUse = rangerGruntCharacter.slowedDown ? rangerGruntCharacter.slowedDownSpeed : rangerGruntCharacter.movementSpeed;
+
+	if (GameController::IsGameplayBlocked() && state != AIState::START && state != AIState::SPAWN) {
+		state = AIState::IDLE;
+	}
 
 	switch (state) {
 	case AIState::START:
@@ -431,7 +427,8 @@ void RangedAI::UpdateState() {
 	case AIState::IDLE:
 		if (player) {
 			if (aiMovement) {
-				if (aiMovement->CharacterInSight(player, rangerGruntCharacter.searchRadius)) {
+				aiMovement->Stop();
+				if (aiMovement->CharacterInSight(player, rangerGruntCharacter.searchRadius) && !GameController::IsGameplayBlocked()) {
 					if (aiMovement->CharacterInSight(player, fleeingRange)) {
 						ChangeState(AIState::FLEE);
 						break;
@@ -442,12 +439,10 @@ void RangedAI::UpdateState() {
 						break;
 					}
 
-					if (FindsRayToPlayer(false)) {
-						OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
-					}
-					else {
-						ChangeState(AIState::RUN);
-					}
+					OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
+
+				} else {
+					if (animation->GetCurrentState()->name != "Idle") animation->SendTrigger(animation->GetCurrentState()->name + "Idle");
 				}
 			}
 		}
@@ -457,7 +452,7 @@ void RangedAI::UpdateState() {
 			if (aiMovement->CharacterInSight(player, rangerGruntCharacter.searchRadius)) {
 				OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
 
-				if (!CharacterInRange(player, rangerGruntCharacter.attackRange - approachOffset, true) || !FindsRayToPlayer(false)) {
+				if (!CharacterInRange(player, rangerGruntCharacter.attackRange - approachOffset, true)) {
 					if (!aiMovement->CharacterInSight(player, fleeingRange)) {
 						if (aiMovement) aiMovement->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), static_cast<int>(speedToUse), false);
 					}
@@ -496,6 +491,7 @@ void RangedAI::UpdateState() {
 				else { //Staying in same position
 					if (animation->GetCurrentState() && animation->GetCurrentState()->name != "Idle") animation->SendTrigger(animation->GetCurrentState()->name + "Idle");
 					currentFleeingUpdateTime += Time::GetDeltaTime();
+					aiMovement->Stop();
 				}
 			}
 
@@ -640,14 +636,6 @@ void RangedAI::EnableBlastPushBack() {
 			PlayAudio(AudioType::HIT);
 			PlayHitMaterialEffect();
 			timeSinceLastHurt = 0.0f;
-
-			if (!rangerGruntCharacter.isAlive) {
-				ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
-				if (collider) collider->Disable();
-				if (rangerGruntCharacter.beingPushed) DisableBlastPushBack();
-				ChangeState(AIState::DEATH);
-				if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
-			}
 		}
 	}
 }
@@ -679,7 +667,7 @@ void RangedAI::ShootPlayerInRange() {
 		shot = true;
 
 		if (animation) {
-			if (animation->GetCurrentState()) animation->SendTriggerSecondary(animation->GetCurrentState()->name + "Shoot");
+			if (animation->GetCurrentState() && animation->GetCurrentState()->name != "Shoot") animation->SendTriggerSecondary(animation->GetCurrentState()->name + "Shoot");
 		}
 
 		actualShotTimer = actualShotMaxTime;

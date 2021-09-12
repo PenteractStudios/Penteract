@@ -2,14 +2,13 @@
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
-
+#include "GameController.h"
 #include "PlayerController.h"
 #include "PlayerDeath.h"
 #include "EnemySpawnPoint.h"
 #include "HUDController.h"
 #include "AIMovement.h"
 #include "WinLose.h"
-#include "Player.h"
 #include "Onimaru.h"
 
 #include <math.h>
@@ -28,6 +27,7 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 		MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
 		MEMBER(MemberType::FLOAT, gruntCharacter.attackRange),
 		MEMBER(MemberType::FLOAT, gruntCharacter.timeToDie),
+		MEMBER(MemberType::FLOAT, gruntCharacter.barrelDamageTaken),
 		MEMBER_SEPARATOR("Push variables"),
 		MEMBER(MemberType::FLOAT, gruntCharacter.pushBackDistance),
 		MEMBER(MemberType::FLOAT, gruntCharacter.pushBackSpeed),
@@ -178,6 +178,9 @@ void AIMeleeGrunt::Update() {
 		currentSlowedDownTime += Time::GetDeltaTime();
 	}
 
+	if (GameController::IsGameplayBlocked() && state != AIState::START && state != AIState::SPAWN) {
+		state = AIState::IDLE;
+	}
 
 	switch (state) {
 	case AIState::START:
@@ -193,10 +196,13 @@ void AIMeleeGrunt::Update() {
 		break;
 	case AIState::IDLE:
 		if (!playerController->IsPlayerDead()) {
-			if (movementScript->CharacterInSight(player, gruntCharacter.searchRadius)) {
+			if (movementScript->CharacterInSight(player, gruntCharacter.searchRadius) && !GameController::IsGameplayBlocked()) {
 				animation->SendTrigger("IdleWalkForward");
 				if (agent) agent->SetMaxSpeed(speedToUse);
 				state = AIState::RUN;
+			} else {
+				movementScript->Stop();
+				if (animation->GetCurrentState()->name != "Idle") animation->SendTrigger(animation->GetCurrentState()->name + "Idle");
 			}
 		}
 		break;
@@ -204,7 +210,7 @@ void AIMeleeGrunt::Update() {
 		movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), speedToUse, true);
 		if (movementScript->CharacterInAttackRange(player, gruntCharacter.attackRange)) {
 			int random = std::rand() % 100;
-			if (random < att1AbilityChance) { 
+			if (random < att1AbilityChance) {
 				attackNumber = 1;
 				attackSpeed = att1AttackSpeed;
 				attackMovementSpeed = att1MovementSpeedWhileAttacking;
@@ -227,8 +233,8 @@ void AIMeleeGrunt::Update() {
 		}
 		break;
 	case AIState::ATTACK:
-		if (track) { 
-			movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition()); 
+		if (track) {
+			movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
 		}
 		if (attackStep) {
 			movementScript->Seek(state, ownerTransform->GetGlobalPosition() + ownerTransform->GetFront()*10, attackMovementSpeed, false);
@@ -279,6 +285,10 @@ void AIMeleeGrunt::Update() {
 			GameplaySystems::DestroyGameObject(&GetOwner());
 		}
 	}
+
+	if (!gruntCharacter.isAlive) {
+		Death();
+	}
 }
 
 void AIMeleeGrunt::OnAnimationFinished() {
@@ -308,50 +318,42 @@ void AIMeleeGrunt::OnAnimationFinished() {
 	}
 }
 
+void AIMeleeGrunt::ParticleHit(GameObject& collidedWith, void* particle, Player& player) {
+	if (!particle) return;
+	ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+	if (pSystem) pSystem->KillParticle(p);
+	if (state == AIState::STUNNED && player.level2Upgrade) {
+		gruntCharacter.GetHit(99);
+	}
+	else {
+		gruntCharacter.GetHit(player.damageHit + playerController->GetOverPowerMode());
+	}
+}
+
 void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 	if (state != AIState::START && state != AIState::SPAWN) {
 		if (gruntCharacter.isAlive && playerController) {
 			bool hitTaken = false;
 			if (collidedWith.name == "FangBullet") {
-				if (!particle) return;
-				GameplaySystems::DestroyGameObject(&collidedWith);
 				hitTaken = true;
-				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
-					gruntCharacter.GetHit(99);
-				}
-				else {
-					gruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
-				}
+				GameplaySystems::DestroyGameObject(&collidedWith);
+				gruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
+			}else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
+				hitTaken = true;
+				ParticleHit(collidedWith, particle, playerController->playerFang);
 			}
 			else if (collidedWith.name == "OnimaruBullet") {
-				if (!particle) return;
-				ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
-				ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
-				if (pSystem) pSystem->KillParticle(p);
 				hitTaken = true;
-				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
-					gruntCharacter.GetHit(99);
-				}
-				else {
-					gruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
-				}
+				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
 			}
 			else if (collidedWith.name == "OnimaruBulletUltimate") {
-				if (!particle) return;
-				ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
-				ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
-				if (pSystem) pSystem->KillParticle(p);
 				hitTaken = true;
-				if (state == AIState::STUNNED && playerController->playerFang.level2Upgrade) {
-					gruntCharacter.GetHit(99);
-				}
-				else {
-					gruntCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
-				}
+				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
 			}
 			else if (collidedWith.name == "Barrel") {
 				hitTaken = true;
-				gruntCharacter.GetHit(playerDeath->barrelDamageTaken);
+				gruntCharacter.GetHit(gruntCharacter.barrelDamageTaken);
 			}
 			else if (collidedWith.name == "DashDamage" && playerController->playerFang.level1Upgrade) {
 				hitTaken = true;
@@ -376,10 +378,6 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 				state = AIState::STUNNED;
 			}
 		}
-
-		if (!gruntCharacter.isAlive) {
-			Death();
-		}
 	}
 }
 
@@ -396,10 +394,6 @@ void AIMeleeGrunt::EnableBlastPushBack() {
 			if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
 			PlayHitMaterialEffect();
 			timeSinceLastHurt = 0.0f;
-
-			if (!gruntCharacter.isAlive) {
-				Death();
-			}
 		}
 	}
 }
@@ -457,7 +451,7 @@ void AIMeleeGrunt::CalculatePushBackRealDistance() {
 
 	float3 finalPos = enemyPos + direction * gruntCharacter.pushBackDistance;
 	float3 resultPos = { 0,0,0 };
-	
+
 	Navigation::Raycast(enemyPos, finalPos, hitResult, resultPos);
 
 	if (hitResult) {
@@ -526,19 +520,21 @@ void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const cha
 
 void AIMeleeGrunt::Death()
 {	
-	if (animation->GetCurrentState() && state != AIState::DEATH){
-		std::string changeState = animation->GetCurrentState()->name + "Death";
-		deathType = 1 + rand() % 2;
-		std::string deathTypeStr = std::to_string(deathType);
-		animation->SendTrigger(changeState + deathTypeStr);
+	if (!GameController::IsGameplayBlocked()) {
+		if (animation->GetCurrentState() && state != AIState::DEATH) {
+			std::string changeState = animation->GetCurrentState()->name + "Death";
+			deathType = 1 + rand() % 2;
+			std::string deathTypeStr = std::to_string(deathType);
+			animation->SendTrigger(changeState + deathTypeStr);
 
-		if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
-		ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
-		if (collider) collider->Disable();
+			if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
+			ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
+			if (collider) collider->Disable();
 
-		agent->RemoveAgentFromCrowd();
-		if (gruntCharacter.beingPushed) gruntCharacter.beingPushed = false;
-		state = AIState::DEATH;
+			agent->RemoveAgentFromCrowd();
+			if (gruntCharacter.beingPushed) gruntCharacter.beingPushed = false;
+			state = AIState::DEATH;
+		}
 	}
 }
 

@@ -3,7 +3,7 @@
 #include "Scripting/Script.h"
 #include "Enemy.h"
 #include "AIState.h"
-
+#include "Player.h"
 #include <string>
 
 class ComponentAgent;
@@ -60,8 +60,9 @@ private:
 
 	void UpdatePushBackPosition();
 	void CalculatePushBackRealDistance();											// Calculates the real distance of the pushback taking into account any obstacles in the path
-	void PlayHitMaterialEffect();													// Changes material hit 
+	void PlayHitMaterialEffect();													// Changes material hit
 	void UpdateDissolveTimer();														// If the currentDissolveTime is reached, Plays animation
+	void ParticleHit(GameObject& collidedWith, void* particle, Player& player);
 
 public:
 	Enemy rangerGruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 5.f, 5.f, 3.f, 2.f); //Enemy class instance (for shared values)
@@ -104,7 +105,7 @@ public:
 	float stunDuration = 3.f;			//Max time the enemy will be stunned
 	float hurtFeedbackTimeDuration = 0.5f;	//Time that damaged material will be shown whenever AI is hit
 	float groundPosition = 3.0f;
-	float fleeingUpdateTime = 3.0f;        //Time that needs to wait in order to get away from the player in the flee state	
+	float fleeingUpdateTime = 3.0f;        //Time that needs to wait in order to get away from the player in the flee state
 
 	UID dissolveMaterialObj = 0;		//Reference to dissolve material holding gameobject UID, used to be set whenever Ai has been recently hurt
 	UID dissolveMaterialID = 0;			//Reference to dissolve material, used to be set whenever Ai has been recently hurt
@@ -123,6 +124,7 @@ private:
 	bool shot = false;					//Bool used to make sure shooting event happens only once whenever attackTimePool is low enough
 
 	float stunTimeRemaining = 0.f;			//Time remaining stunned
+	int deathType = 0;
 
 	ComponentAnimation* animation = nullptr;		//Refernece to  animatino component
 	ComponentTransform* ownerTransform = nullptr;	//Reference to owner transform componenet
@@ -141,7 +143,7 @@ private:
 	float pushBackRealDistance = 0.f;
 
 	float currentFleeingUpdateTime = 0.f; // Current Time that needs to compare against the fleeingUpdateTime in the flee state
-	float3 currentFleeDestination;        // Destination position where it is going to move far away from the player  
+	float3 currentFleeDestination;        // Destination position where it is going to move far away from the player
 	bool fleeingFarAway = false;          //Toggle to get away from the player
 
 	float currentDissolveTime = 0.0f;

@@ -7,12 +7,16 @@
 
 
 EXPOSE_MEMBERS(CameraController) {
-	MEMBER(MemberType::FLOAT, cameraOffsetZ),
-	MEMBER(MemberType::FLOAT, cameraOffsetY),
-	MEMBER(MemberType::FLOAT, cameraOffsetX),
-	MEMBER(MemberType::FLOAT, smoothCameraSpeed),
-	MEMBER(MemberType::BOOL, useSmoothCamera),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerControllerObjUID),
+	MEMBER_SEPARATOR("Camera Positioning"),
+	MEMBER(MemberType::FLOAT, cameraOffsetX),
+	MEMBER(MemberType::FLOAT, cameraOffsetY),
+	MEMBER(MemberType::FLOAT, cameraOffsetZ),
+	MEMBER(MemberType::FLOAT, smoothCameraSpeed),
+	MEMBER(MemberType::FLOAT, aimingCameraSpeed),
+	MEMBER(MemberType::FLOAT, aimingDistance),
+	MEMBER(MemberType::BOOL, useSmoothCamera),
+	MEMBER_SEPARATOR("Shaker Control"),
 	MEMBER(MemberType::FLOAT, shakeTotalTime),
 	MEMBER(MemberType::FLOAT, shakeTimer),
 	MEMBER(MemberType::FLOAT, shakeMultiplier)
@@ -27,6 +31,12 @@ void CameraController::Start() {
 	if (playerControllerObj) {
 		playerController = GET_SCRIPT(playerControllerObj, PlayerController);
 	}
+	
+	cameraInitialOffsetX = cameraOffsetX;
+	cameraInitialOffsetY = cameraOffsetY;
+	cameraInitialOffsetZ = cameraOffsetZ;
+
+	RestoreCameraOffset();
 }
 
 void CameraController::Update() {
@@ -34,12 +44,30 @@ void CameraController::Update() {
 	if (playerController == nullptr || transform == nullptr) return;
 	float3 playerGlobalPos = playerController->playerFang.playerMainTransform->GetGlobalPosition();
 
-
 	float3 desiredPosition = playerGlobalPos + float3(cameraOffsetX, cameraOffsetY, cameraOffsetZ);
-	float3 smoothedPosition = desiredPosition;
 
+	float3 smoothedPosition = desiredPosition;
+		
 	if (useSmoothCamera) {
-		smoothedPosition = float3::Lerp(transform->GetGlobalPosition(), desiredPosition, smoothCameraSpeed * Time::GetDeltaTime());
+		if (playerController->playerFang.isAiming()) {
+			float2 mousePosition = Input::GetMousePositionNormalized();
+
+			if (mousePosition.x > 0.75) { aimingPositionX = aimingDistance; }
+			else if (mousePosition.x < -0.75) { aimingPositionX = -aimingDistance; }
+			else { aimingPositionX = 0.0f; }
+
+			if (mousePosition.y > 0.75) { aimingPositionZ = -aimingDistance; }
+			else if (mousePosition.y < -0.75) { aimingPositionZ = aimingDistance; }
+			else { aimingPositionZ = 0.0f; }
+
+			aimingPosition = playerGlobalPos + float3(cameraOffsetX + aimingPositionX, cameraOffsetY , cameraOffsetZ + aimingPositionZ);
+
+			smoothedPosition = float3::Lerp(transform->GetGlobalPosition(), aimingPosition, aimingCameraSpeed * Time::GetDeltaTime());
+			
+		}
+		else {
+			smoothedPosition = float3::Lerp(transform->GetGlobalPosition(), desiredPosition, smoothCameraSpeed * Time::GetDeltaTime());
+		}
 	}
 
 	if (shakeTimer > 0) {
@@ -51,8 +79,24 @@ void CameraController::Update() {
 	}
 }
 
+
+
 void CameraController::StartShake() {
 	shakeTimer = shakeTotalTime;
+}
+
+void CameraController::ChangeCameraOffset(float x, float y, float z)
+{
+	cameraOffsetZ = z;
+	cameraOffsetY = y;
+	cameraOffsetX = x;
+}
+
+void CameraController::RestoreCameraOffset()
+{
+	cameraOffsetZ = cameraInitialOffsetZ;
+	cameraOffsetY = cameraInitialOffsetY;
+	cameraOffsetX = cameraInitialOffsetX;
 }
 
 

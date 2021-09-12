@@ -267,10 +267,20 @@ struct ProgramBlur : Program {
 	int horizontalLocation = -1;
 };
 
+struct ProgramBloomCombine : Program {
+	ProgramBloomCombine(unsigned program);
+
+	int brightTextureLocation = -1;
+	int bloomTextureLocation = -1;
+	int brightLevelLocation = -1;
+	int bloomLevelLocation = -1;
+	float bloomWeightLocation = -1;
+};
+
 struct ProgramPostprocess : Program {
 	ProgramPostprocess(unsigned program);
 
-	int textureSceneLocation = -1;
+	int sceneTextureLocation = -1;
 	int bloomThresholdLocation = -1;
 	int samplesNumberLocation = -1;
 	int bloomActiveLocation = -1;
@@ -279,18 +289,10 @@ struct ProgramPostprocess : Program {
 struct ProgramColorCorrection : Program {
 	ProgramColorCorrection(unsigned program);
 
-	int textureSceneLocation = -1;
-	int bloomBlurLocation = -1;
-	int hasBloomBlurLocation = -1;
+	int sceneTextureLocation = -1;
+	int bloomTextureLocation = -1;
+	int hasBloomLocation = -1;
 	int bloomIntensityLocation = -1;
-
-	int smallWeightLocation = -1;
-	int mediumWeightLocation = -1;
-	int largeWeightLocation = -1;
-
-	int smallMipLevelLocation = -1;
-	int mediumMipLevelLocation = -1;
-	int largeMipLevelLocation = -1;
 
 	int hasChromaticAberrationLocation = -1;
 	int chromaticAberrationStrengthLocation = -1;
@@ -328,6 +330,8 @@ struct ProgramImageUI : Program {
 	int inputColorLocation = -1;
 	int hasDiffuseLocation = -1;
 	int diffuseLocation = -1;
+	int offsetLocation = -1;
+	int tilingLocation = -1;
 };
 
 struct ProgramTextUI : Program {
@@ -357,6 +361,7 @@ struct ProgramBillboard : Program {
 	int inputColorLocation = -1;
 	int hasDiffuseLocation = -1;
 	int diffuseMapLocation = -1;
+	int intensityLocation = -1;
 
 	int currentFrameLocation = -1;
 	int xTilesLocation = -1;
@@ -390,7 +395,6 @@ struct ProgramStandardDissolve : ProgramStandardMetallic {
 	int offsetLocation = -1;
 	int edgeSizeLocation = -1;
 };
-
 
 struct ProgramUnlitDissolve : ProgramUnlit {
 	ProgramUnlitDissolve(unsigned program);

@@ -4,6 +4,7 @@
 #include "Modules/ModuleCamera.h"
 #include "GameplaySystems.h"
 #include "StatsDisplayer.h"
+#include "PauseController.h"
 
 #include "Math/float3x3.h"
 #include "Geometry/frustum.h"
@@ -35,6 +36,9 @@ void GameController::Start() {
 
 	showWireframe = false;
 	transitionFinished = false;
+	isGameplayBlocked = false;
+	switchTutorialActive = false;
+	switchTutorialReached = false;
 
 	gameCamera = GameplaySystems::GetGameObject(gameCameraUID);
 	godCamera = GameplaySystems::GetGameObject(godCameraUID);
@@ -88,9 +92,11 @@ void GameController::Update() {
 
 	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)) {
 		if (isPaused) {
+			PauseController::SetIsPause(false);
 			ResumeGame();
 		}
 		else {
+			PauseController::SetIsPause(true);
 			PauseGame();
 		}
 	}
@@ -235,12 +241,38 @@ void GameController::PauseGame() {
 	Time::PauseGame();
 	EnablePauseMenus();
 	isPaused = true;
+	isGameplayBlocked = true;
 }
 
 void GameController::ResumeGame() {
 	Time::ResumeGame();
 	ClearPauseMenus();
 	isPaused = false;
+	isGameplayBlocked = false;
+}
+
+bool const GameController::IsGameplayBlocked() {
+	return isGameplayBlocked;
+}
+
+void GameController::BlockGameplay(bool blockIt) {
+	isGameplayBlocked = blockIt;
+}
+
+bool const GameController::IsSwitchTutorialActive() {
+	return switchTutorialActive;
+}
+
+void GameController::ActivateSwitchTutorial(bool isFinished) {
+	switchTutorialActive = isFinished;
+}
+
+bool const GameController::IsSwitchTutorialReached() {
+	return switchTutorialReached;
+}
+
+void GameController::ReachSwitchTutorial(bool isReached) {
+	switchTutorialReached = isReached;
 }
 
 void GameController::DoTransition() {

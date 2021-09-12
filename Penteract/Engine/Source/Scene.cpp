@@ -6,6 +6,7 @@
 #include "Modules/ModuleResources.h"
 #include "Modules/ModulePhysics.h"
 #include "Modules/ModuleTime.h"
+#include "Modules/ModuleWindow.h"
 #include "Resources/ResourceMesh.h"
 #include "Utils/Logging.h"
 
@@ -45,6 +46,7 @@ Scene::Scene(unsigned numGameObjects) {
 	agentComponents.Allocate(numGameObjects);
 	obstacleComponents.Allocate(numGameObjects);
 	fogComponents.Allocate(numGameObjects);
+	videoComponents.Allocate(numGameObjects);
 }
 
 void Scene::ClearScene() {
@@ -52,6 +54,7 @@ void Scene::ClearScene() {
 	root = nullptr;
 	quadtree.Clear();
 	SetNavMesh(0);
+	SetCursor(0);
 
 	assert(gameObjects.Count() == 0); // There should be no GameObjects outside the scene hierarchy
 	gameObjects.Clear();			  // This looks redundant, but it resets the free list so that GameObject order is mantained when saving/loading
@@ -180,6 +183,8 @@ Component* Scene::GetComponentByTypeAndId(ComponentType type, UID componentId) {
 		return obstacleComponents.Find(componentId);
 	case ComponentType::FOG:
 		return fogComponents.Find(componentId);
+	case ComponentType::VIDEO:
+		return videoComponents.Find(componentId);
 	default:
 		LOG("Component of type %i hasn't been registered in Scene::GetComponentByTypeAndId.", (unsigned) type);
 		assert(false);
@@ -251,6 +256,8 @@ Component* Scene::CreateComponentByTypeAndId(GameObject* owner, ComponentType ty
 		return obstacleComponents.Obtain(componentId, owner, componentId, owner->IsActive());
 	case ComponentType::FOG:
 		return fogComponents.Obtain(componentId, owner, componentId, owner->IsActive());
+	case ComponentType::VIDEO:
+		return videoComponents.Obtain(componentId, owner, componentId, owner->IsActive());
 	default:
 		LOG("Component of type %i hasn't been registered in Scene::CreateComponentByTypeAndId.", (unsigned) type);
 		assert(false);
@@ -356,6 +363,9 @@ void Scene::RemoveComponentByTypeAndId(ComponentType type, UID componentId) {
 	case ComponentType::FOG:
 		fogComponents.Release(componentId);
 		break;
+	case ComponentType::VIDEO:
+		videoComponents.Release(componentId);
+		break;
 	default:
 		LOG("Component of type %i hasn't been registered in Scene::RemoveComponentByTypeAndId.", (unsigned) type);
 		assert(false);
@@ -460,4 +470,40 @@ void Scene::SetNavMesh(UID navMesh) {
 
 UID Scene::GetNavMesh() {
 	return navMeshId;
+}
+
+void Scene::SetCursor(UID cursor) {
+	if (cursorId != 0) {
+		App->resources->DecreaseReferenceCount(cursorId);
+	}
+
+	cursorId = cursor;
+
+	if (cursor != 0) {
+		App->resources->IncreaseReferenceCount(cursor);
+	}
+	App->window->SetCursor(cursorId, widthCursor, heightCursor);
+#if GAME
+	App->window->ActivateCursor(true);
+#endif
+}
+
+UID Scene::GetCursor() {
+	return cursorId;
+}
+
+void Scene::SetCursorWidth(int width) {
+	widthCursor = width;
+}
+
+int Scene::GetCursorWidth() {
+	return widthCursor;
+}
+
+void Scene::SetCursorHeight(int height) {
+	heightCursor = height;
+}
+
+int Scene::GetCursorHeight() {
+	return heightCursor;
 }
