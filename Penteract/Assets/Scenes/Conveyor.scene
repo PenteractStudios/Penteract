@@ -7,13 +7,16 @@
     ],
     "QuadtreeMaxDepth": 4,
     "QuadtreeElementsPerNode": 200,
-    "GameCamera": 11788649308059046956,
+    "GameCamera": 7605697547542090804,
     "AmbientLight": [
         0.25,
         0.25,
         0.25
     ],
     "NavMesh": 0,
+    "Cursor": 0,
+    "CursorHeight": 0,
+    "CursorWidth": 0,
     "Root": {
         "Id": 6399651853644844037,
         "Name": "Scene",
@@ -188,8 +191,8 @@
                 "Children": null
             },
             {
-                "Id": 10924242091878038570,
-                "Name": "RobotsBuildLine",
+                "Id": 11280460451184897855,
+                "Name": "RootNode",
                 "Active": true,
                 "Static": false,
                 "ActiveHierarchy": true,
@@ -198,11 +201,11 @@
                 "Components": [
                     {
                         "Type": "Transform",
-                        "Id": 729155405662743196,
+                        "Id": 12186792508962282495,
                         "Active": true,
                         "Position": [
                             0.0,
-                            38.53583908081055,
+                            0.0,
                             0.0
                         ],
                         "Rotation": [
@@ -224,7 +227,7 @@
                     },
                     {
                         "Type": "Animation",
-                        "Id": 1953621909316012244,
+                        "Id": 1268137437899933834,
                         "Active": true,
                         "StateMachinePrincipalId": 0,
                         "StateMachineSecondaryId": 0
@@ -232,7 +235,7 @@
                 ],
                 "Children": [
                     {
-                        "Id": 7625524544204826594,
+                        "Id": 14682247915845755768,
                         "Name": "Build_Line_Machine",
                         "Active": true,
                         "Static": false,
@@ -242,7 +245,7 @@
                         "Components": [
                             {
                                 "Type": "Transform",
-                                "Id": 13325905966978076966,
+                                "Id": 5256203991254322418,
                                 "Active": true,
                                 "Position": [
                                     -64.93569946289063,
@@ -268,14 +271,14 @@
                             },
                             {
                                 "Type": "MeshRenderer",
-                                "Id": 2582595022332587469,
+                                "Id": 3986010426960196037,
                                 "Active": true,
-                                "MeshID": 4578639737135910264,
-                                "MaterialID": 6741276381584946567
+                                "MeshID": 1905863721815203663,
+                                "MaterialID": 13345185173790388989
                             },
                             {
                                 "Type": "BoundingBox",
-                                "Id": 10361347303498217210,
+                                "Id": 10959194497156187830,
                                 "Active": true,
                                 "LocalBoundingBox": [
                                     -22.656063079833986,
@@ -288,29 +291,14 @@
                             },
                             {
                                 "Type": "Script",
-                                "Id": 31388793246458565,
+                                "Id": 13599963111582748899,
                                 "Active": true,
                                 "Script": 5477745749997917066,
                                 "Values": [
                                     {
-                                        "Name": "changeDirection",
-                                        "Type": "Bool",
-                                        "Value": true
-                                    },
-                                    {
-                                        "Name": "meleeFront",
-                                        "Type": "PrefabResourceUID",
-                                        "Value": 4365742590536277938
-                                    },
-                                    {
                                         "Name": "distanceBetweenRobots",
                                         "Type": "Float",
                                         "Value": 10.0
-                                    },
-                                    {
-                                        "Name": "lineLenght",
-                                        "Type": "Float",
-                                        "Value": 160.0
                                     },
                                     {
                                         "Name": "numOfRobots",
@@ -321,13 +309,23 @@
                                         "Name": "speed",
                                         "Type": "Float",
                                         "Value": 15.0
+                                    },
+                                    {
+                                        "Name": "meleeFront",
+                                        "Type": "PrefabResourceUID",
+                                        "Value": 4365742590536277938
+                                    },
+                                    {
+                                        "Name": "changeDirection",
+                                        "Type": "Bool",
+                                        "Value": true
                                     }
                                 ]
                             }
                         ],
                         "Children": [
                             {
-                                "Id": 12077499129815111016,
+                                "Id": 15480825242809006578,
                                 "Name": "Basic_Enemy_Robot_BACK",
                                 "Active": true,
                                 "Static": false,
@@ -337,47 +335,47 @@
                                 "Components": [
                                     {
                                         "Type": "Transform",
-                                        "Id": 9942348940503129874,
+                                        "Id": 4630568105269842059,
                                         "Active": true,
                                         "Position": [
-                                            -9.377418518066407,
-                                            -149.56216430664063,
-                                            31.070968627929689
+                                            -9.399803161621094,
+                                            -151.17288208007813,
+                                            31.093896865844728
                                         ],
                                         "Rotation": [
-                                            1.7763563100046585e-15,
-                                            -1.1920926823449918e-7,
+                                            -2.117582368135751e-22,
+                                            -1.1920926112907182e-7,
                                             1.0,
                                             -4.371138118131057e-8
                                         ],
                                         "Scale": [
-                                            0.061142031103372577,
-                                            0.046962007880210879,
-                                            0.055326007306575778
+                                            0.06114201620221138,
+                                            0.04696200042963028,
+                                            0.05532599985599518
                                         ],
                                         "LocalEulerAngles": [
-                                            0.000013660375770996325,
-                                            8.006693723826286e-13,
+                                            0.000013660374861501623,
+                                            5.971138297353185e-13,
                                             -180.0
                                         ]
                                     },
                                     {
                                         "Type": "MeshRenderer",
-                                        "Id": 14538766785122055308,
+                                        "Id": 4526292731813878429,
                                         "Active": true,
-                                        "MeshID": 17570437358467099775,
-                                        "MaterialID": 13481931779523114950
+                                        "MeshID": 10753930685535392920,
+                                        "MaterialID": 12619700680028482018
                                     },
                                     {
                                         "Type": "MeshRenderer",
-                                        "Id": 14541332150555452291,
+                                        "Id": 13274285193080567303,
                                         "Active": true,
-                                        "MeshID": 14719212470833030796,
-                                        "MaterialID": 18256374538216272878
+                                        "MeshID": 5737909821303765975,
+                                        "MaterialID": 3822444955872523626
                                     },
                                     {
                                         "Type": "BoundingBox",
-                                        "Id": 13602966124246640995,
+                                        "Id": 17658242800565173084,
                                         "Active": true,
                                         "LocalBoundingBox": [
                                             -21.180160522460939,
@@ -394,7 +392,7 @@
                         ]
                     },
                     {
-                        "Id": 1577974273949836075,
+                        "Id": 1895097044003594831,
                         "Name": "Pipes_Machines_Zone",
                         "Active": true,
                         "Static": false,
@@ -404,7 +402,7 @@
                         "Components": [
                             {
                                 "Type": "Transform",
-                                "Id": 884424964735119757,
+                                "Id": 13974249495447621305,
                                 "Active": true,
                                 "Position": [
                                     -63.5744514465332,
@@ -430,14 +428,14 @@
                             },
                             {
                                 "Type": "MeshRenderer",
-                                "Id": 17787760101862753372,
+                                "Id": 1337061668998622741,
                                 "Active": true,
-                                "MeshID": 4674279126636949545,
-                                "MaterialID": 1583151448714851027
+                                "MeshID": 17889354235413575469,
+                                "MaterialID": 12130334002261095372
                             },
                             {
                                 "Type": "BoundingBox",
-                                "Id": 8732718474490097531,
+                                "Id": 11917602525577912911,
                                 "Active": true,
                                 "LocalBoundingBox": [
                                     -24.544092178344728,
@@ -452,7 +450,7 @@
                         "Children": null
                     },
                     {
-                        "Id": 6920652193195818286,
+                        "Id": 16915858772207459472,
                         "Name": "Build_Line_Machine_2",
                         "Active": true,
                         "Static": false,
@@ -462,7 +460,7 @@
                         "Components": [
                             {
                                 "Type": "Transform",
-                                "Id": 497817017755111731,
+                                "Id": 4870567077510586751,
                                 "Active": true,
                                 "Position": [
                                     34.472198486328128,
@@ -488,14 +486,14 @@
                             },
                             {
                                 "Type": "MeshRenderer",
-                                "Id": 15008425380147501253,
+                                "Id": 7507591781020840550,
                                 "Active": true,
-                                "MeshID": 6885661542171248235,
-                                "MaterialID": 6741276381584946567
+                                "MeshID": 169345499015789592,
+                                "MaterialID": 13345185173790388989
                             },
                             {
                                 "Type": "BoundingBox",
-                                "Id": 14676666029331831467,
+                                "Id": 16762172314225576427,
                                 "Active": true,
                                 "LocalBoundingBox": [
                                     -22.656063079833986,
@@ -508,29 +506,19 @@
                             },
                             {
                                 "Type": "Script",
-                                "Id": 7253872950309940718,
+                                "Id": 10589953379291515746,
                                 "Active": true,
                                 "Script": 5477745749997917066,
                                 "Values": [
                                     {
                                         "Name": "distanceBetweenRobots",
                                         "Type": "Float",
-                                        "Value": 10.0
-                                    },
-                                    {
-                                        "Name": "lineLenght",
-                                        "Type": "Float",
-                                        "Value": 160.0
-                                    },
-                                    {
-                                        "Name": "numOfRobots",
-                                        "Type": "Int",
-                                        "Value": 16
+                                        "Value": 16.0
                                     },
                                     {
                                         "Name": "speed",
                                         "Type": "Float",
-                                        "Value": 15.0
+                                        "Value": 20.0
                                     },
                                     {
                                         "Name": "meleeFront",
@@ -542,7 +530,7 @@
                         ],
                         "Children": [
                             {
-                                "Id": 8013604599156348190,
+                                "Id": 8656147667385589149,
                                 "Name": "Basic_Enemy_Robot_FRONT",
                                 "Active": true,
                                 "Static": false,
@@ -552,12 +540,12 @@
                                 "Components": [
                                     {
                                         "Type": "Transform",
-                                        "Id": 2715265065692839575,
+                                        "Id": 1222654540133975859,
                                         "Active": true,
                                         "Position": [
-                                            -9.387948989868164,
-                                            10.0,
-                                            31.03643798828125
+                                            -9.388633728027344,
+                                            4.5157928466796879,
+                                            31.09518051147461
                                         ],
                                         "Rotation": [
                                             4.728176028056131e-15,
@@ -578,21 +566,21 @@
                                     },
                                     {
                                         "Type": "MeshRenderer",
-                                        "Id": 18255126143398512223,
+                                        "Id": 5566446112071538259,
                                         "Active": true,
-                                        "MeshID": 9149324689804186269,
-                                        "MaterialID": 12959178650572789767
+                                        "MeshID": 17700050247424089389,
+                                        "MaterialID": 7531450930879172507
                                     },
                                     {
                                         "Type": "MeshRenderer",
-                                        "Id": 4215923320815440762,
+                                        "Id": 17832694814101991563,
                                         "Active": true,
-                                        "MeshID": 7610163975686500899,
-                                        "MaterialID": 12917759906669142717
+                                        "MeshID": 9397958359674116649,
+                                        "MaterialID": 4847815383550763072
                                     },
                                     {
                                         "Type": "BoundingBox",
-                                        "Id": 9294620100654375733,
+                                        "Id": 10144896109197231524,
                                         "Active": true,
                                         "LocalBoundingBox": [
                                             -20.933208465576173,
