@@ -19,12 +19,14 @@
 #include "Components/ComponentMeshRenderer.h"
 #include "Resources/ResourcePrefab.h"
 //clang-format off
+#include <random>
 
 #define HIERARCHY_POSITION_WEAPON 2
 #define HIERARCHY_POSITION_BACKPACK 3
 
 EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, materialsUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
@@ -76,9 +78,6 @@ void RangedAI::Start() {
 		ComponentBoundingBox* bb = meshObj->GetComponent<ComponentBoundingBox>();
 		bbCenter = (bb->GetLocalMinPointAABB() + bb->GetLocalMaxPointAABB()) / 2;
 		meshRenderer = meshObj->GetComponent<ComponentMeshRenderer>();
-		if (meshRenderer) {
-			noDmgMaterialID = meshRenderer->materialId;
-		}
 	}
 
 	int numChildren = GetOwner().GetChildren().size();
@@ -172,6 +171,7 @@ void RangedAI::Start() {
 	enemySpawnPointScript = GET_SCRIPT(GetOwner().GetParent(), EnemySpawnPoint);
 
 	pushBackRealDistance = rangerGruntCharacter.pushBackDistance;
+	SetRandomMaterial();
 }
 
 void RangedAI::OnAnimationFinished() {
@@ -749,6 +749,42 @@ void RangedAI::UpdateDissolveTimer() {
 		}
 		else {
 			currentDissolveTime += Time::GetDeltaTime();
+		}
+	}
+}
+
+void RangedAI::SetRandomMaterial()
+{
+	GameObject* materialsHolder = GameplaySystems::GetGameObject(materialsUID);
+
+	if (materialsHolder) {
+		std::vector<UID> materials;
+
+		for (const auto& child : materialsHolder->GetChildren()) {
+			ComponentMeshRenderer* meshRenderer = child->GetComponent<ComponentMeshRenderer>();
+			if (meshRenderer && meshRenderer->materialId) {
+				materials.push_back(meshRenderer->materialId);
+			}
+		}
+
+		
+		if (!materials.empty()) {
+			//Random distribution it cant be saved into global 
+			std::random_device rd;  //Will be used to obtain a seed for the random number engine
+			std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+			std::uniform_int_distribution<int> distrib(1, materials.size());
+
+			int position = distrib(gen)-1;
+			noDmgMaterialID = materials[position];
+
+			for (auto& child : GetOwner().GetChildren()) {
+				if (child->HasComponent<ComponentMeshRenderer>()) {
+
+					for (auto& mesh : child->GetComponents<ComponentMeshRenderer>()) {
+						mesh.materialId = materials[position];
+					}
+				}
+			}
 		}
 	}
 }

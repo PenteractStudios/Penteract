@@ -52,6 +52,7 @@ public:
 	UID winConditionUID = 0;
 	UID meleePunchUID = 0;
 	UID fangUID = 0;
+	UID materialsUID = 0;
 	// Hit feedback
 	UID defaultMaterialPlaceHolderUID = 0;
 	UID damageMaterialPlaceHolderUID = 0;
@@ -143,4 +144,5 @@ private:
 	void ParticleHit(GameObject& collidedWith, void* particle, Player& player);
 	void PlayHitMaterialEffect();
 	void UpdateDissolveTimer();
+	void SetRandomMaterial();
 };
