@@ -338,7 +338,6 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 			if (collidedWith.name == "FangBullet") {
 				hitTaken = true;
 				ParticleHit(collidedWith, particle, playerController->playerFang);
-				//GameplaySystems::DestroyGameObject(&collidedWith);
 				gruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
 			}else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
 				hitTaken = true;
