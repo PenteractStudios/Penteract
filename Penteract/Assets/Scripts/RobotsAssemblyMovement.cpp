@@ -5,12 +5,17 @@
 #include "GameplaySystems.h"
 
 EXPOSE_MEMBERS(RobotsAssemblyMovement) {
+	MEMBER_SEPARATOR("Robot line variables"),
 	MEMBER(MemberType::FLOAT, distanceBetweenRobots),
 	MEMBER(MemberType::INT, numOfRobots),
 	MEMBER(MemberType::FLOAT, speed),
 	MEMBER(MemberType::BOOL, changeDirection),
 	MEMBER(MemberType::FLOAT, lineLenght),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, meleeFront),
+	MEMBER_SEPARATOR("Stop variables"),
+	MEMBER(MemberType::FLOAT, distanceBetweenStops),
+	MEMBER(MemberType::FLOAT, stopTime),
+	MEMBER_SEPARATOR("Robots prefabs"),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, robotType1),
 };
 
 GENERATE_BODY_IMPL(RobotsAssemblyMovement);
@@ -25,7 +30,7 @@ void RobotsAssemblyMovement::Start() {
 			direction = transform->GetFront();
 		}
 	}
-	ResourcePrefab* robotPrefab = GameplaySystems::GetResource<ResourcePrefab>(meleeFront);
+	ResourcePrefab* robotPrefab = GameplaySystems::GetResource<ResourcePrefab>(robotType1);
 	GameObject* robot = nullptr;
 	forward = changeDirection ? -1 : 1;
 	if (robotPrefab) {
@@ -51,15 +56,30 @@ void RobotsAssemblyMovement::Update() {
 
 	ComponentTransform* robotTransform = nullptr;
 
-	for (GameObject* robot : robots) {
-		robotTransform = robot->GetComponent<ComponentTransform>();
-		float3 position = robotTransform->GetGlobalPosition();
+	if (!robotsStopped) {
+		for (GameObject* robot : robots) {
+			robotTransform = robot->GetComponent<ComponentTransform>();
+			float3 position = robotTransform->GetGlobalPosition();
 
-		float3 newPosition = initialPos;
+			float3 newPosition = initialPos;
 
-		if (initialPos.Distance(position) <= lineLenght) {
-			newPosition = position + direction * speed * Time::GetDeltaTime() * forward;
+			if (initialPos.Distance(position) <= lineLenght) {
+				newPosition = position + direction * speed * Time::GetDeltaTime() * forward;
+			}
+			robotTransform->SetGlobalPosition(newPosition);
 		}
-		robotTransform->SetGlobalPosition(newPosition);
+		currentDistanceBetweenStops += speed * Time::GetDeltaTime();
+
+		if (currentDistanceBetweenStops > distanceBetweenStops) {
+			robotsStopped = true;
+			currentDistanceBetweenStops = 0.f;
+		}
+	}
+	else {
+		if (stopTimer >= stopTime) {
+			robotsStopped = false;
+			stopTimer = 0.f;
+		}
+		else stopTimer += Time::GetDeltaTime();
 	}
 }

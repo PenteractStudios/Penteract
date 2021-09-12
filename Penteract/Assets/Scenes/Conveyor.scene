@@ -311,7 +311,7 @@
                                         "Value": 15.0
                                     },
                                     {
-                                        "Name": "meleeFront",
+                                        "Name": "robotType1",
                                         "Type": "PrefabResourceUID",
                                         "Value": 4365742590536277938
                                     },
@@ -319,6 +319,11 @@
                                         "Name": "changeDirection",
                                         "Type": "Bool",
                                         "Value": true
+                                    },
+                                    {
+                                        "Name": "meleeFront",
+                                        "Type": "PrefabResourceUID",
+                                        "Value": 4365742590536277938
                                     }
                                 ]
                             }
@@ -519,6 +524,11 @@
                                         "Name": "speed",
                                         "Type": "Float",
                                         "Value": 20.0
+                                    },
+                                    {
+                                        "Name": "robotType1",
+                                        "Type": "PrefabResourceUID",
+                                        "Value": 8720296919104794261
                                     },
                                     {
                                         "Name": "meleeFront",
