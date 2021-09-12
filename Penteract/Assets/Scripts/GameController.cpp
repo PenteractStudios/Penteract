@@ -90,7 +90,7 @@ void GameController::Update() {
 		}
 	}
 
-	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)) {
+	if ((Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)) && !isVideoActive) {
 		if (isPaused) {
 			PauseController::SetIsPause(false);
 			ResumeGame();
@@ -273,6 +273,11 @@ bool const GameController::IsSwitchTutorialReached() {
 
 void GameController::ReachSwitchTutorial(bool isReached) {
 	switchTutorialReached = isReached;
+}
+
+void GameController::SetVideoActive(bool isActived)
+{
+	isVideoActive = isActived;
 }
 
 void GameController::DoTransition() {
