@@ -20,13 +20,13 @@
     "NormalMap": 17834545825322005794,
     "NormalStrength": 1.0,
     "EmissiveColor": [
-        0.0,
-        0.0,
-        0.0,
+        1.0,
+        0.9999899864196777,
+        0.9999899864196777,
         0.0
     ],
     "EmissiveMap": 3607218665118887642,
-    "Emissive": 0.0,
+    "Emissive": 5.0,
     "AmbientOcclusionMap": 10130480381772999154,
     "Smoothness": 1.0,
     "HasSmoothnessInAlphaChannel": true,
