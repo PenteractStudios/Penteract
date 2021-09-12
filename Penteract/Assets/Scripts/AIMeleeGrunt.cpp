@@ -157,7 +157,7 @@ void AIMeleeGrunt::Update() {
 		if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
 			timeSinceLastHurt += Time::GetDeltaTime();
 			if (timeSinceLastHurt > hurtFeedbackTimeDuration) {
-				componentMeshRenderer->materialId = defaultMaterialID;
+				SetMaterial(defaultMaterialID);
 			}
 		}
 	}
@@ -540,19 +540,16 @@ void AIMeleeGrunt::PlayerHit() {
 
 void AIMeleeGrunt::PlayHitMaterialEffect()
 {
-	if (!dissolveAlreadyStarted && componentMeshRenderer) {
-		if (damageMaterialID != 0) {
-			componentMeshRenderer->materialId = damageMaterialID;
-		}
+	if (!dissolveAlreadyStarted) {
+		SetMaterial(damageMaterialID);
 	}
 }
 
 void AIMeleeGrunt::UpdateDissolveTimer() {
 	if (dissolveAlreadyStarted && !dissolveAlreadyPlayed) {
 		if (currentDissolveTime >= dissolveTimerToStart) {
-			if (componentMeshRenderer && dissolveMaterialID != 0) {
-				componentMeshRenderer->materialId = dissolveMaterialID;
-				componentMeshRenderer->PlayDissolveAnimation();
+			if (dissolveMaterialID != 0) {
+				SetMaterial(dissolveMaterialID, true);
 			}
 			dissolveAlreadyPlayed = true;
 		}
@@ -592,6 +589,17 @@ void AIMeleeGrunt::SetRandomMaterial()
 						mesh.materialId = materials[position];
 					}
 				}
+			}
+		}
+	}
+}
+
+void AIMeleeGrunt::SetMaterial(UID newMaterialID, bool needToPlayDissolve) {
+	if (newMaterialID > 0 && GetOwner().GetChildren().size() > 0) {
+		for (ComponentMeshRenderer& mesh : GetOwner().GetChildren()[0]->GetComponents<ComponentMeshRenderer>()) {
+			mesh.materialId = newMaterialID;
+			if (needToPlayDissolve) {
+				mesh.PlayDissolveAnimation();
 			}
 		}
 	}
