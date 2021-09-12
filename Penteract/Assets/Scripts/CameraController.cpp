@@ -54,8 +54,11 @@ void CameraController::Update() {
 		float2 shakeDir = GetRandomPosInUnitaryCircle(float2(0, 0));
 		transform->SetGlobalPosition(smoothedPosition + transform->GetRight() * shakeDir.x * shakeMultiplier + transform->GetUp() * shakeDir.y * shakeMultiplier);
 		shakeTimer -= Time::GetDeltaTime();
+		Screen::SetChromaticAberration(true);
+
 	} else {
 		transform->SetGlobalPosition(smoothedPosition);
+		Screen::SetChromaticAberration(false);
 	}
 }
 
