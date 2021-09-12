@@ -120,7 +120,7 @@ void HUDManager::Start() {
 		if (switchSkillParent) {
 			std::vector<GameObject*> switchChildren = switchSkillParent->GetChildren();
 
-			if (switchChildren.size() < HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL) return;
+			if (switchChildren.size() != SWITCH_SKILL_HIERARCHY_NUM_CHILDREN) return;
 
 			switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_WHITE]->Disable();
 			switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_GLOW]->Enable();
@@ -508,7 +508,7 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 
 	std::vector<GameObject*> children = switchSkillParent->GetChildren();
 
-	if (children.size() < HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL) return;
+	if (children.size() != SWITCH_SKILL_HIERARCHY_NUM_CHILDREN) return;
 
 	ComponentImage* fillColor = children[HIERARCHY_INDEX_SWITCH_ABILITY_FILL]->GetComponent<ComponentImage>();
 	ComponentImage* image = children[HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE]->GetComponent<ComponentImage>();
@@ -928,7 +928,7 @@ void HUDManager::ShowCriticalHealthWarning() {
 
 	for (GameObject* side : sidesHUDChildren) {
 		ComponentImage* sideImage = side->GetComponent<ComponentImage>();
-		if (sideImage) sideImage->SetColor(float4(sideHitColor.x, sideHitColor.y, sideHitColor.z, sideHitColor.w * 2));
+		if (sideImage) sideImage->SetColor(float4(sideHitColor.x, sideHitColor.y, sideHitColor.z, sideHitColor.w));
 	}
 
 	criticalHealthWarning = true;
