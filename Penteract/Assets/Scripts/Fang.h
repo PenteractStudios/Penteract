@@ -51,8 +51,7 @@ public:
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override {};
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
-	void GetHit(float damage_) override;
-	void TrailDelay();
+	void GetHit(float damage_) override;;
 	bool isAiming();
 	bool CanSwitch() const override;
 	bool IsInstantOrientation(bool useGamepad) const override;
@@ -60,7 +59,7 @@ public:
 	float GetRealEMPCooldown();
 	float GetRealUltimateCooldown();
 	void IncreaseUltimateCounter();
-	void Init(UID fangUID = 0, UID trailDashUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID laserUID = 0, UID cameraUID = 0, UID HUDManagerObjectUID = 0, UID dashUID = 0, UID EMPUID = 0, UID EMPEffectsUID = 0, UID fangUltimateUID = 0, UID ultimateVFXUID = 0);
+	void Init(UID fangUID = 0, UID dashParticleUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID laserUID = 0, UID cameraUID = 0, UID HUDManagerObjectUID = 0, UID dashUID = 0, UID EMPUID = 0, UID EMPEffectsUID = 0, UID fangUltimateUID = 0, UID ultimateVFXUID = 0);
 	bool IsVulnerable() const override;
 
 public:
@@ -80,7 +79,6 @@ public:
 	float dashCooldown = 5.f;
 	float dashSpeed = 100.f;
 	float dashDuration = 0.1f;
-	float trailDashOffsetDuration = 0.2f;
 	GameObject* dash = nullptr;
 	float dashDamage = 1.0f;
 
@@ -98,7 +96,6 @@ private:
 	//Dash
 	float dashCooldownRemaining = 0.f;
 	float dashRemaining = 0.f;
-	float trailDuration = 0.2f;
 	bool dashing = false;
 	bool dashInCooldown = false;
 	bool hasDashed = false;
@@ -115,7 +112,7 @@ private:
 	ComponentTransform* rightGunTransform = nullptr;
 	ComponentTransform* leftGunTransform = nullptr;
 	ComponentParticleSystem* bullet = nullptr;
-	ComponentTrail* trailDash = nullptr;
+	ComponentParticleSystem* dashParticle = nullptr;
 	ComponentParticleSystem* rightBullet = nullptr;
 	ComponentParticleSystem* leftBullet = nullptr;
 	GameObject* rightBulletAux = nullptr;
