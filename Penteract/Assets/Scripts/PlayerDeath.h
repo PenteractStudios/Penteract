@@ -46,6 +46,7 @@ private:
 	SceneTransition* sceneTransition = nullptr;
 	GameOverUIController* gameOverController = nullptr;
 	bool getLaserHit = false;
+	bool lastFrameLaserHit = false;
 	float timerFireDamage = 0.f;
 	bool fireDamageActive = false;
 
