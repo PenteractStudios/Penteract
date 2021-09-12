@@ -19,7 +19,7 @@ void VideoScene1Start::Start() {
     if (componentVideo) {
         componentVideo->Play();
     }
-    //Time::PauseGame(); // TODO Uncomment this line after release engine
+    Time::PauseGame();
 }
 
 void VideoScene1Start::Update() {
