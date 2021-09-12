@@ -12,13 +12,15 @@
 #include "Onimaru.h"
 
 #include <math.h>
+#include <random>
+
 
 EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, materialsUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, damageMaterialPlaceHolderUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, defaultMaterialPlaceHolderUID),
 		MEMBER_SEPARATOR("Enemy stats"),
 		MEMBER(MemberType::FLOAT, gruntCharacter.lifePoints),
 		MEMBER(MemberType::FLOAT, gruntCharacter.movementSpeed),
@@ -125,14 +127,6 @@ void AIMeleeGrunt::Start() {
 		}
 	}
 
-	gameObject = GameplaySystems::GetGameObject(defaultMaterialPlaceHolderUID);
-	if (gameObject) {
-		ComponentMeshRenderer* meshRenderer = gameObject->GetComponent<ComponentMeshRenderer>();
-		if (meshRenderer) {
-			defaultMaterialID = meshRenderer->materialId;
-		}
-	}
-
 	gameObject = &GetOwner();
 	if (gameObject) {
 		// Workaround get the first children - Create a Prefab overrides childs IDs
@@ -143,6 +137,8 @@ void AIMeleeGrunt::Start() {
 	}
 
 	pushBackRealDistance = gruntCharacter.pushBackDistance;
+	SetRandomMaterial();
+
 }
 
 void AIMeleeGrunt::Update() {
@@ -562,6 +558,41 @@ void AIMeleeGrunt::UpdateDissolveTimer() {
 		}
 		else {
 			currentDissolveTime += Time::GetDeltaTime();
+		}
+	}
+}
+
+void AIMeleeGrunt::SetRandomMaterial()
+{
+	GameObject* materialsHolder = GameplaySystems::GetGameObject(materialsUID);
+
+	if (materialsHolder) {
+		std::vector<UID> materials;
+		for (const auto& child : materialsHolder->GetChildren()) {
+			ComponentMeshRenderer* meshRenderer = child->GetComponent<ComponentMeshRenderer>();
+			if (meshRenderer && meshRenderer->materialId) {
+				materials.push_back(meshRenderer->materialId);
+			}
+		}
+
+		
+		if (!materials.empty()) {
+			//Random distribution it cant be saved into global 
+			std::random_device rd;  //Will be used to obtain a seed for the random number engine
+			std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+			std::uniform_int_distribution<int> distrib(1, materials.size());
+
+			int position = distrib(gen)-1;
+
+			for (auto& child : GetOwner().GetChildren()) {
+				if (child->HasComponent<ComponentMeshRenderer>()) {
+					defaultMaterialID = materials[position];
+
+					for (auto& mesh : child->GetComponents<ComponentMeshRenderer>()) {
+						mesh.materialId = materials[position];
+					}
+				}
+			}
 		}
 	}
 }
