@@ -8,7 +8,6 @@
 #include "EnemySpawnPoint.h"
 #include "HUDController.h"
 #include "AIMovement.h"
-#include "WinLose.h"
 #include "Onimaru.h"
 
 #include <math.h>
@@ -18,7 +17,6 @@
 EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, materialsUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, damageMaterialPlaceHolderUID),
 		MEMBER_SEPARATOR("Enemy stats"),
@@ -75,14 +73,6 @@ void AIMeleeGrunt::Start() {
 
 	if (fang) {
 		playerDeath = GET_SCRIPT(fang, PlayerDeath);
-	}
-
-	
-
-	GameObject* winLose = GameplaySystems::GetGameObject(winConditionUID);
-
-	if (winLose) {
-		winLoseScript = GET_SCRIPT(winLose, WinLose);
 	}
 
 	agent = GetOwner().GetComponent<ComponentAgent>();
@@ -259,8 +249,7 @@ void AIMeleeGrunt::Update() {
 	}
 
 	if (gruntCharacter.destroying) {
-		if (!killSent && winLoseScript != nullptr) {
-			winLoseScript->IncrementDeadEnemies();
+		if (!killSent) {
 			if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
 			killSent = true;
 

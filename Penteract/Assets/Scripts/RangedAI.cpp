@@ -7,7 +7,6 @@
 #include "AIMovement.h"
 #include "RangerProjectileScript.h"
 #include "EnemySpawnPoint.h"
-#include "WinLose.h"
 #include "Onimaru.h"
 
 #include "GameObject.h"
@@ -30,7 +29,6 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
-	MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
 	MEMBER_SEPARATOR("Enemy stats"),
@@ -161,11 +159,6 @@ void RangedAI::Start() {
 	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
 		if (i < static_cast<int>(AudioType::TOTAL)) audios[i] = &src;
 		++i;
-	}
-
-	GameObject* winConditionGo = GameplaySystems::GetGameObject(winConditionUID);
-	if (winConditionGo) {
-		winLoseScript = GET_SCRIPT(winConditionGo, WinLose);
 	}
 
 	enemySpawnPointScript = GET_SCRIPT(GetOwner().GetParent(), EnemySpawnPoint);
@@ -379,8 +372,6 @@ void RangedAI::EnterState(AIState newState) {
 		}
 		break;
 	case AIState::DEATH:
-
-		if (winLoseScript) winLoseScript->IncrementDeadEnemies();
 		if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
 		if (playerController) {
 			if (playerController->playerOnimaru.characterGameObject->IsActive()) {

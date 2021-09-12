@@ -4,7 +4,6 @@
 #include "PlayerController.h"
 #include "GameplaySystems.h"
 #include "GameObject.h"
-#include "WinLose.h"
 
 EXPOSE_MEMBERS(EnemySpawnPoint) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),

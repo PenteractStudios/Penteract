@@ -16,7 +16,6 @@ class HUDController;
 class PlayerController;
 class PlayerDeath;
 class AIMovement;
-class WinLose;
 class EnemySpawnPoint;
 
 class RangedAI : public Script {
@@ -75,8 +74,6 @@ public:
 	UID trailPrefabUID = 0;			//Reference to projectile prefab UID , for shooting
 	UID fangUID = 0;
 
-	UID winConditionUID = 0;
-
 	ResourcePrefab* shootTrailPrefab = nullptr; //Reference to projectile prefab , for shooting
 	GameObject* player = nullptr;				//Reference to player main Gameobject, used to check distances
 	GameObject* fang = nullptr;
@@ -120,8 +117,6 @@ private:
 	AIMovement* aiMovement = nullptr;	//Reference to movement holding script
 	AIState state = AIState::START;		//AI State
 	float3 bbCenter = float3(0, 0, 0);	//Bounding box center, to generate an offset for raycasting
-
-	WinLose* winLoseScript = nullptr;
 
 	bool shot = false;					//Bool used to make sure shooting event happens only once whenever attackTimePool is low enough
 
