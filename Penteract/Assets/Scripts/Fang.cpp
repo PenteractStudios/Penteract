@@ -133,7 +133,7 @@ bool Fang::IsVulnerable() const {
 
 bool Fang::CanSwitch() const {
 	if (!EMP) return false;
-	return !EMP->IsActive() && !ultimateOn && (!GameController::IsGameplayBlocked() || GameController::IsSwitchTutorialActive());
+	return !EMP->IsActive() && !ultimateOn && GameController::IsSwitchTutorialReached() && (!GameController::IsGameplayBlocked() || GameController::IsSwitchTutorialActive());
 }
 
 void Fang::IncreaseUltimateCounter() {
@@ -185,12 +185,11 @@ void Fang::InitDash() {
 		if (fangAudios[static_cast<int>(FANG_AUDIOS::DASH)]) {
 			fangAudios[static_cast<int>(FANG_AUDIOS::DASH)]->Play();
 		}
-	}
 
-	if (hudManagerScript) {
-		hudManagerScript->SetCooldownRetreival(HUDManager::Cooldowns::FANG_SKILL_1);
+		if (hudManagerScript) {
+			hudManagerScript->SetCooldownRetreival(HUDManager::Cooldowns::FANG_SKILL_1);
+		}
 	}
-
 }
 
 void Fang::Dash() {
@@ -239,22 +238,20 @@ bool Fang::CanEMP() {
 }
 
 void Fang::CheckCoolDowns(bool noCooldownMode) {
-	if (!fangLaser) return;
-
 	//Combat
 	if (aiming) {
-		if (!fangLaser->IsActive()) {
+		if (fangLaser && !fangLaser->IsActive()) {
 			fangLaser->Enable();
 		}
 		timeWithoutCombat += Time::GetDeltaTime();
-		if (timeWithoutCombat >= aimTime) {
+		if (timeWithoutCombat >= aimTime || GameController::IsGameplayBlocked()) {
 			aiming = false;
 			transitioning = 0;
 			timeWithoutCombat = aimTime;
 		}
 	}
 	else {
-		if (fangLaser->IsActive()) {
+		if (fangLaser && fangLaser->IsActive()) {
 			fangLaser->Disable();
 		}
 	}
@@ -486,7 +483,7 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 				InitDash();
 			}
 			if (!dashing && !EMP->IsActive()) {
-				if (GetInputBool(InputActions::SHOOT, useGamepad)) {
+				if (GetInputBool(InputActions::SHOOT, useGamepad) && !GameController::IsGameplayBlocked()) {
 					timeWithoutCombat = 0.f;
 					aiming = true;
 					decelerating = 0;
@@ -495,7 +492,7 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 			}
 
 			Dash();
-			if (!GetInputBool(InputActions::SHOOT, useGamepad)) {
+			if (!GetInputBool(InputActions::SHOOT, useGamepad) || dashing || EMP->IsActive() || ultimateOn || GameController::IsGameplayBlocked()) {
 				if (shooting) {
 					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 					shooting = false;

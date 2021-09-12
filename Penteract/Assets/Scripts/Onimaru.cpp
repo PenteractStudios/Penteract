@@ -220,15 +220,14 @@ float Onimaru::GetRealShieldCooldown() {
 
 void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 	//aimingLaser
-	if (!onimaruLaser)return;
 
 	if (shooting) {
-		if (!onimaruLaser->IsActive()) {
+		if (onimaruLaser && !onimaruLaser->IsActive()) {
 			onimaruLaser->Enable();
 		}
 	}
 	else {
-		if (onimaruLaser->IsActive()) {
+		if (onimaruLaser && onimaruLaser->IsActive()) {
 			onimaruLaser->Disable();
 		}
 	}
@@ -510,7 +509,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 		if (!ultimateOn) {
 			
 			if (GetInputBool(InputActions::ABILITY_1, useGamepad)) {
-				if (!shield->GetIsActive() && shield->CanUse()) {
+				if (!shield->GetIsActive() && shield->CanUse() && !blastInUse) {
 					InitShield();
 				}
 			}
@@ -549,7 +548,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 		}
 
 		if (shooting) {
-			if (!GetInputBool(InputActions::SHOOT, useGamepad)) {
+			if (!GetInputBool(InputActions::SHOOT, useGamepad) || GameController::IsGameplayBlocked()) {
 				shooting = false;
 				if (compAnimation) {
 					if (shield->GetIsActive()) {
