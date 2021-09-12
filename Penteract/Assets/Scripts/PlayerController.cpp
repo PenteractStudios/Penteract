@@ -112,7 +112,7 @@ EXPOSE_MEMBERS(PlayerController) {
 GENERATE_BODY_IMPL(PlayerController);
 
 void PlayerController::Start() {
-	playerFang.Init(fangUID, fangTrailDashUID, fangLeftGunUID, fangRightGunUID, fangRightBulletUID, fangLeftBulletUID, fangLaserUID, cameraUID, HUDManagerObjectUID, fangDashDamageUID, EMPUID, EMPEffectsUID, fangUltimateUID, fangUltimateVFXUID);
+	playerFang.Init(fangUID, fangParticleDashUID, fangLeftGunUID, fangRightGunUID, fangRightBulletUID, fangLeftBulletUID, fangLaserUID, cameraUID, HUDManagerObjectUID, fangDashDamageUID, EMPUID, EMPEffectsUID, fangUltimateUID, fangUltimateVFXUID);
 	playerOnimaru.Init(onimaruUID, onimaruLaserUID, onimaruBulletUID, onimaruGunUID, onimaruRightHandUID, onimaruShieldUID, onimaruUltimateBulletUID, onimaruBlastEffectsUID, cameraUID, HUDManagerObjectUID);
 
 	GameObject* HUDManagerGO = GameplaySystems::GetGameObject(HUDManagerObjectUID);

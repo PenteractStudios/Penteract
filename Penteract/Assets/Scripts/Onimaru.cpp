@@ -524,7 +524,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 					if (!shooting) {
 						shooting = true;
 						if (bullet) {
-							bullet->Play();
+							bullet->PlayChildParticles();
 							bullet->SetParticlesPerSecond(float2(attackSpeed, attackSpeed));
 						}
 						if (compAnimation) {

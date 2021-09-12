@@ -164,7 +164,7 @@ void Fang::GetHit(float damage_) {
 void Fang::InitDash() {
 	if (CanDash()) {
 		hasDashed = true;
-		if (dashParticle) dashParticle->Play();
+		if (dashParticle) dashParticle->PlayChildParticles();
 		if (dash && level1Upgrade) dash->Enable();
 		if (movementInputDirection != MovementDirection::NONE) {
 			dashDirection = GetDirection();
@@ -341,7 +341,7 @@ void Fang::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 			if (fangAudios[static_cast<int>(FANG_AUDIOS::SHOOT)]) {
 				fangAudios[static_cast<int>(FANG_AUDIOS::SHOOT)]->Play();
 			}
-			bullet->Play();
+			bullet->PlayChildParticles();
 		}
 		bullet = nullptr;
 	}
