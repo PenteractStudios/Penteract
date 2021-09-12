@@ -32,9 +32,6 @@ public:
 	/* Dissolve UID */
 	UID dissolveMaterialGOUID = 0;
 
-	/* Laser Door UID */
-	UID laserDoorLightUID = 0;
-
 public:
 	void Start() override;
 	void Update() override;
