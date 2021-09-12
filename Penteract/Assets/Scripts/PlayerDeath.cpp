@@ -48,12 +48,16 @@ void PlayerDeath::Update() {
 		}
 
 		if (getLaserHit) {
+			if (!lastFrameLaserHit && getLaserHit) laserHitCooldownTimer = laserHitCooldown;
 			laserHitCooldownTimer += Time::GetDeltaTime();
 			if (laserHitCooldownTimer > laserHitCooldown) {
 				laserHitCooldownTimer = 0.0f;
 				if (playerController) playerController->TakeDamage(laserBeamTaken);
 				getLaserHit = false;
 			}
+			lastFrameLaserHit = true;
+		} else {
+			lastFrameLaserHit = false;
 		}
 
 		if (timerFireDamage <= cooldownFireDamage) {
