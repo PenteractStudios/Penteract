@@ -560,7 +560,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 							compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 						}
 					}
-					if (bullet) bullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
+					if (bullet) bullet->StopChildParticles();
 				}
 			}
 		}
