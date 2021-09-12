@@ -240,7 +240,8 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 			bool hitTaken = false;
 			if (collidedWith.name == "FangBullet") {
 				hitTaken = true;
-				GameplaySystems::DestroyGameObject(&collidedWith);
+				ParticleHit(collidedWith, particle, playerController->playerFang);
+				//GameplaySystems::DestroyGameObject(&collidedWith);
 				rangerGruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
 			}
 			else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
