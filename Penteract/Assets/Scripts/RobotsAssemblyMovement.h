@@ -23,6 +23,8 @@ public:
 
 	float distanceBetweenStops = 5.f;
 	float stopTime = 1.f;
+	float startToSlowDownAt = 2.f;
+	bool activateSlowDown = false;
 
 private:
 	GameObject* robotsLine = nullptr;
@@ -36,5 +38,6 @@ private:
 	float stopTimer = 0.f;
 
 	bool robotsStopped = false;
+	bool slowedDown = false;
 };
 
