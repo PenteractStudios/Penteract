@@ -26,6 +26,7 @@ public:
 	void OnAnimationFinished() override;
 
 	UID laserTargetUID = 0;
+	UID laserWarningUID = 0;
 
 	float coolDownOnTimer = 0.0f;
 	float coolDownOn = 2.0f;
@@ -40,6 +41,7 @@ private:
 	TurretState currentState = TurretState::IDLE_START;
 
 	GameObject* laserObject = nullptr;
+	GameObject* laserWarning = nullptr;
 
 	const std::string states[5] = { "Startup", "Shoot", "End", "StartUpIdle", "EndIdle"};
 

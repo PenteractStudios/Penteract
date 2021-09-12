@@ -2,8 +2,6 @@
 
 #include "Scripting/Script.h"
 
-#define CHARGING_DURATION 1.f
-
 class ComponentAnimation;
 
 class LasersGenerator : public Script
@@ -24,6 +22,7 @@ public:
 	void Init();
 
 	UID laserTargetUID = 0;
+	UID laserWarningUID = 0;
 	UID pairGeneratorUID = 0;
 
 	float coolDownOnTimer = 0.0f;
@@ -32,6 +31,8 @@ public:
 	float coolDownOffTimer = 0.0f;
 	float coolDownOff = 2.0f;
 
+	float chargingDuration = 1.f;
+
 private:
 
 	ComponentAnimation* animationComp = nullptr;
@@ -39,6 +40,7 @@ private:
 	GeneratorState currentState = GeneratorState::IDLE;
 
 	GameObject* laserObject = nullptr;
+	GameObject* laserWarning = nullptr;
 	LasersGenerator* pairScript = nullptr;
 
 	bool beingUsed = false;
