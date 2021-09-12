@@ -44,7 +44,7 @@ void PlayerDeath::Start() {
 void PlayerDeath::Update() {
 	if (player) {
 		if (playerController) {
-			dead = playerController->IsPlayerDead();
+			dead = playerController->IsActiveCharacterDead();
 		}
 
 		if (getLaserHit) {
@@ -68,9 +68,12 @@ void PlayerDeath::Update() {
 
 void PlayerDeath::OnAnimationFinished() {
 	if (dead) {
-		//TODO call GameOver in GameOverUIController (this should be referenced)
-		if (gameOverController) {
-			gameOverController->GameOver();
+		if (playerController) {
+			if (playerController->IsPlayerDead()) {
+				OnLoseConditionMet();
+			} else {
+				playerController->OnCharacterDeath();
+			}
 		}
 	} else {
 		if (!playerController)return;
@@ -89,8 +92,7 @@ void PlayerDeath::OnAnimationSecondaryFinished() {
 			if (animation->GetCurrentState() && animation->GetCurrentStateSecondary()) {
 				if (animation->GetCurrentStateSecondary()->name == LEFT_SHOT) {
 					animation->SendTriggerSecondary(playerController->playerFang.states[10] + animation->GetCurrentState()->name);
-				}
-				else if (animation->GetCurrentStateSecondary()->name == RIGHT_SHOT) {
+				} else if (animation->GetCurrentStateSecondary()->name == RIGHT_SHOT) {
 					animation->SendTriggerSecondary(playerController->playerFang.states[11] + animation->GetCurrentState()->name);
 				}
 			}
@@ -116,18 +118,27 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 	} else if (collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") { //meleegrunt
 		if (playerController) playerController->TakeDamage(meleeDamageTaken);
 		collidedWith.Disable();
-	}
-	else if (collidedWith.name == "Barrel") {
-		if(playerController) playerController->TakeDamage(barrelDamageTaken);
+	} else if (collidedWith.name == "Barrel") {
+		if (playerController) playerController->TakeDamage(barrelDamageTaken);
 		collidedWith.Disable();
-	}
-	else if (collidedWith.name == "LaserBeam") {
+	} else if (collidedWith.name == "LaserBeam") {
 		getLaserHit = true;
-	}
-	else if (collidedWith.name == "FireTile") {
+	} else if (collidedWith.name == "FireTile") {
 		if (fireDamageActive) {
 			if (playerController) playerController->TakeDamage(fireDamageTaken);
 			fireDamageActive = false;
+		}
+	}
+}
+
+void PlayerDeath::OnLoseConditionMet() {
+	if (gameOverController) {
+			gameOverController->GameOver();
+	} else{
+		if (sceneTransition) {
+			sceneTransition->StartTransition();
+		} else {
+			if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 		}
 	}
 }
