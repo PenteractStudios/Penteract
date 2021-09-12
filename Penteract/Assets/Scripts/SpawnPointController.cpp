@@ -85,7 +85,7 @@ void SpawnPointController::Update() {
 			
 			unlockStarted = false;
 			
-			if (!mustKeepOpen) {
+			if (!mustKeepOpen) {			// Perform light animation
 				SetLightIntensity(initialDoorLight, isClosing ? initialDoorLightStartIntensity : 0.0f);
 				SetLightIntensity(finalDoorLight, isClosing ? finalDoorLightStartIntensity : 0.0f);
 			}
@@ -94,7 +94,7 @@ void SpawnPointController::Update() {
 		else {
 			currentUnlockTime += Time::GetDeltaTime();
 
-			if (!mustKeepOpen) {
+			if (!mustKeepOpen) {			// Perform light animation
 				float initialDoorNewIntensity = isClosing ? initialDoorLightStartIntensity * (currentUnlockTime / timerToUnlock) : initialDoorLightStartIntensity * (1 - (currentUnlockTime / timerToUnlock));
 				float finalDoorNewIntensity = isClosing ? finalDoorLightStartIntensity * (currentUnlockTime / timerToUnlock) : finalDoorLightStartIntensity * (1 - (currentUnlockTime / timerToUnlock));
 				SetLightIntensity(initialDoorLight, initialDoorNewIntensity);
