@@ -135,6 +135,7 @@ public:
 	void SetCooldownRetreival(Cooldowns cooldown);
 	void StartUsingSkill(Cooldowns cooldown);
 	void StopUsingSkill(Cooldowns cooldown);
+
 private:
 
 	PlayerController* playerController = nullptr;
@@ -149,6 +150,7 @@ private:
 	ComponentImage* switchGlowImage = nullptr;
 	float switchTimer = 0.0f;
 	bool abilityCoolDownsRetreived[static_cast<int>(Cooldowns::TOTAL)] = { false,false,false,false,false,false,false };
+	bool switchSkillActivated = false;
 
 	// Health HUD
 	GameObject* fangHealthParent = nullptr;

@@ -8,8 +8,7 @@
 class ComponentAudioSource;
 class ComponentSelectable;
 
-class SwapPanels : public Script
-{
+class SwapPanels : public Script {
 	GENERATE_BODY(SwapPanels);
 
 public:
@@ -18,7 +17,7 @@ public:
 	void Update() override;
 	void OnButtonClick() override;
 	void PlayAudio(UIAudio type);
-
+	void DoSwapPanels();
 public:
 	UID targetUID;
 	UID currentUID;
