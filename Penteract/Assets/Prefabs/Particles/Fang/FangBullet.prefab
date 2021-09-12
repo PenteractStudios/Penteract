@@ -42,7 +42,7 @@
                 ],
                 "LifeRM": 0,
                 "Life": [
-                    0.20000000298023225,
+                    0.25,
                     5.0
                 ],
                 "LifeCurve": [
@@ -93,7 +93,7 @@
                 ],
                 "SpeedRM": 0,
                 "Speed": [
-                    50.0,
+                    60.0,
                     100.0
                 ],
                 "SpeedCurve": [
@@ -761,7 +761,7 @@
                     },
                     {
                         "Type": "Particle",
-                        "Active": false,
+                        "Active": true,
                         "DrawGizmo": true,
                         "Duration": 0.10000000149011612,
                         "Looping": false,
@@ -1463,7 +1463,7 @@
                     },
                     {
                         "Type": "Particle",
-                        "Active": false,
+                        "Active": true,
                         "DrawGizmo": true,
                         "Duration": 0.10000000149011612,
                         "Looping": false,
@@ -2186,7 +2186,7 @@
                     },
                     {
                         "Type": "Particle",
-                        "Active": false,
+                        "Active": true,
                         "DrawGizmo": true,
                         "Duration": 0.10000000149011612,
                         "Looping": false,
@@ -2895,7 +2895,7 @@
                     },
                     {
                         "Type": "Particle",
-                        "Active": false,
+                        "Active": true,
                         "DrawGizmo": true,
                         "Duration": 0.10000000149011612,
                         "Looping": false,
@@ -3597,7 +3597,7 @@
                     },
                     {
                         "Type": "Particle",
-                        "Active": false,
+                        "Active": true,
                         "DrawGizmo": true,
                         "Duration": 0.10000000149011612,
                         "Looping": false,
@@ -4299,7 +4299,7 @@
                     },
                     {
                         "Type": "Particle",
-                        "Active": false,
+                        "Active": true,
                         "DrawGizmo": true,
                         "Duration": 0.10000000149011612,
                         "Looping": false,
@@ -5001,7 +5001,7 @@
                     },
                     {
                         "Type": "Particle",
-                        "Active": false,
+                        "Active": true,
                         "DrawGizmo": true,
                         "Duration": 0.10000000149011612,
                         "Looping": false,
