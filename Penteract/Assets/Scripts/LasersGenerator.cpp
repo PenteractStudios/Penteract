@@ -8,7 +8,9 @@ EXPOSE_MEMBERS(LasersGenerator) {
     MEMBER(MemberType::FLOAT, coolDownOnTimer),
     MEMBER(MemberType::FLOAT, coolDownOff),
     MEMBER(MemberType::FLOAT, coolDownOffTimer),
+    MEMBER(MemberType::FLOAT, chargingDuration),
     MEMBER(MemberType::GAME_OBJECT_UID, laserTargetUID),
+    MEMBER(MemberType::GAME_OBJECT_UID, laserWarningUID),
     MEMBER(MemberType::GAME_OBJECT_UID, pairGeneratorUID)
 };
 
@@ -30,6 +32,11 @@ void LasersGenerator::Start() {
     if (laserObject) {
         laserObject->Disable();
     }
+
+    laserWarning = GameplaySystems::GetGameObject(laserWarningUID);
+    if (laserWarning) {
+        laserWarning->Disable();
+    }
 }
 
 void LasersGenerator::Update() {
@@ -43,6 +50,11 @@ void LasersGenerator::Update() {
             if (coolDownOffTimer > coolDownOff) {
                 coolDownOffTimer = 0;
                 currentState = GeneratorState::START;
+                if (laserWarning) {
+                    laserWarning->Enable();
+                    ComponentParticleSystem* laserWarningVFX = laserWarning->GetComponent<ComponentParticleSystem>();
+                    if (laserWarningVFX) laserWarningVFX->PlayChildParticles();
+                }
                 pairScript->beingUsed = true;
                 if (!beingUsed) {
                     animationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::IDLE)] + states[static_cast<unsigned int>(GeneratorState::START)]);
@@ -54,9 +66,9 @@ void LasersGenerator::Update() {
         }
         break;
     case GeneratorState::START:
-        if (chargingTimer <= CHARGING_DURATION) {
+        if (chargingTimer <= chargingDuration) {
             chargingTimer += Time::GetDeltaTime();
-            if (chargingTimer > CHARGING_DURATION) {
+            if (chargingTimer > chargingDuration) {
                 chargingTimer = 0.f;
                 currentState = GeneratorState::SHOOT;
             }
