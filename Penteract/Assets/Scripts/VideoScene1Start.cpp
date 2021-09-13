@@ -26,7 +26,7 @@ void VideoScene1Start::Start() {
 
 void VideoScene1Start::Update() {
 
-    if (componentVideo->HasVideoFinished() && componentVideo->IsActive()) {
+    if ((componentVideo->HasVideoFinished() && componentVideo->IsActive()) || Input::GetKeyCodeDown(Input::KEYCODE::KEY_F12)) {
         Time::ResumeGame();
         componentVideo->Stop();
         GameController::SetVideoActive(false);
