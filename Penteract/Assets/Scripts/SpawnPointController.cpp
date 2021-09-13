@@ -17,9 +17,7 @@ EXPOSE_MEMBERS(SpawnPointController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, gameObjectActivatedOnCombatEndUID),
 	MEMBER(MemberType::FLOAT, timerToUnlock),
 	MEMBER_SEPARATOR("Dissolve material reference in placeholders"),
-	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID),
-	MEMBER_SEPARATOR("Laser Door Light Gameobject reference"),
-	MEMBER(MemberType::GAME_OBJECT_UID, laserDoorLightUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID)
 };
 
 GENERATE_BODY_IMPL(SpawnPointController);

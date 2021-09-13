@@ -566,44 +566,8 @@
                     ]
                 ],
                 "NumberColorsTrail": 2,
-                "SubEmitters": [
-                    {
-                        "GameObjectUID": 10565530096948873936,
-                        "EmitterType": 2,
-                        "EmitProbability": 1.0
-                    },
-                    {
-                        "GameObjectUID": 4387068057921452382,
-                        "EmitterType": 2,
-                        "EmitProbability": 1.0
-                    },
-                    {
-                        "GameObjectUID": 1205496039588769664,
-                        "EmitterType": 2,
-                        "EmitProbability": 1.0
-                    },
-                    {
-                        "GameObjectUID": 13363354263328282984,
-                        "EmitterType": 2,
-                        "EmitProbability": 1.0
-                    },
-                    {
-                        "GameObjectUID": 6081686774601995147,
-                        "EmitterType": 2,
-                        "EmitProbability": 1.0
-                    },
-                    {
-                        "GameObjectUID": 14180099405851153792,
-                        "EmitterType": 2,
-                        "EmitProbability": 1.0
-                    },
-                    {
-                        "GameObjectUID": 3189176923015985065,
-                        "EmitterType": 2,
-                        "EmitProbability": 1.0
-                    }
-                ],
-                "SubEmittersNumber": 7,
+                "SubEmitters": null,
+                "SubEmittersNumber": 0,
                 "HasLights": false,
                 "LightGameObjectUID": 0,
                 "LightsRatio": 0.0,

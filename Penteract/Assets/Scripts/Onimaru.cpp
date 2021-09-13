@@ -275,7 +275,7 @@ void Onimaru::OnDeath() {
 }
 
 bool Onimaru::CanSwitch() const {
-	return isAlive && ultimateTimeRemaining <= 0 && !ultimateOn && !IsShielding() && !blastInUse && !GameController::IsGameplayBlocked();
+	return isAlive && ultimateTimeRemaining <= 0 && !ultimateOn && !IsShielding() && !blastInUse && (!GameController::IsGameplayBlocked() || GameController::IsSwitchTutorialActive());
 }
 
 void Onimaru::OnAnimationSecondaryFinished() {
