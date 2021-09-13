@@ -12,9 +12,11 @@ EXPOSE_MEMBERS(SpawnPointController) {
 	MEMBER(MemberType::BOOL, unlocksInitialDoor),
 	MEMBER(MemberType::BOOL, isInitiallyLocked),
 	MEMBER(MemberType::BOOL, isLastDoor),
+	MEMBER_SEPARATOR("Activated/Deactivated GameObject Refs"),
 	MEMBER(MemberType::GAME_OBJECT_UID, initialDoorUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, finalDoorUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, gameObjectActivatedOnCombatEndUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, gameObjectDeactivatedOnCombatEndUID),
 	MEMBER(MemberType::FLOAT, timerToUnlock),
 	MEMBER_SEPARATOR("Dissolve material reference in placeholders"),
 	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID)
@@ -33,6 +35,7 @@ void SpawnPointController::Start() {
 	finalDoor = GameplaySystems::GetGameObject(finalDoorUID);
 
 	gameObjectActivatedOnCombatEnd = GameplaySystems::GetGameObject(gameObjectActivatedOnCombatEndUID);
+	gameObjectDeactivatedOnCombatEnd = GameplaySystems::GetGameObject(gameObjectDeactivatedOnCombatEndUID);
 
 	unsigned int i = 0;
 	for (GameObject* child : gameObject->GetChildren()) {
@@ -110,6 +113,8 @@ void SpawnPointController::OnCollision(GameObject& collidedWith, float3 collisio
 	if (initialDoor && !initialDoor->IsActive()) initialDoor->Enable();
 	if (finalDoor && !finalDoor->IsActive()) finalDoor->Enable();
 	if (gameObjectActivatedOnCombatEnd) gameObjectActivatedOnCombatEnd->Disable();
+	if (gameObjectDeactivatedOnCombatEnd) gameObjectDeactivatedOnCombatEnd->Enable();
+
 	ComponentBoxCollider* boxCollider = gameObject->GetComponent<ComponentBoxCollider>();
 	if (boxCollider) boxCollider->Disable();
 
@@ -132,6 +137,7 @@ void SpawnPointController::OpenDoor() {
 		}
 
 		if (gameObjectActivatedOnCombatEnd) gameObjectActivatedOnCombatEnd->Enable();
+		if (gameObjectDeactivatedOnCombatEnd) gameObjectDeactivatedOnCombatEnd->Disable();
 
 		if (!unlockStarted) ResetUnlockAnimation();
 		if (!isLastDoor) mustKeepOpen = true;
