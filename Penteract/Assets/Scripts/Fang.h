@@ -90,7 +90,8 @@ public:
 	//Ultimate
 	int ultimateCooldown = 2;
 	float ultimateMovementSpeed = 4.0f;
-	
+	bool isUltimate = false;
+
 private:
 
 	//Dash
@@ -150,6 +151,7 @@ private:
 	void Shoot() override;
 	void PlayAnimation();
 
+	void ResetIsInCombatValues();
 	void ActiveUltimate();
 	bool CanUltimate();
 };
