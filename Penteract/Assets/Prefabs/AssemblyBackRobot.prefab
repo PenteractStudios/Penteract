@@ -33,14 +33,14 @@
             {
                 "Type": "MeshRenderer",
                 "Active": true,
-                "MeshID": 10753930685535392920,
-                "MaterialID": 12619700680028482018
+                "MeshID": 2582520154438189510,
+                "MaterialID": 7680388105646881983
             },
             {
                 "Type": "MeshRenderer",
-                "Active": true,
-                "MeshID": 5737909821303765975,
-                "MaterialID": 3822444955872523626
+                "Active": false,
+                "MeshID": 0,
+                "MaterialID": 7680388105646881983
             },
             {
                 "Type": "BoundingBox",
