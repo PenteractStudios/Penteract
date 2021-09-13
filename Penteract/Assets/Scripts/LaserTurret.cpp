@@ -8,7 +8,8 @@ EXPOSE_MEMBERS(LaserTurret) {
     MEMBER(MemberType::FLOAT, coolDownOnTimer),
     MEMBER(MemberType::FLOAT, coolDownOff),
     MEMBER(MemberType::FLOAT, coolDownOffTimer),
-    MEMBER(MemberType::GAME_OBJECT_UID, laserTargetUID)
+    MEMBER(MemberType::GAME_OBJECT_UID, laserTargetUID),
+    MEMBER(MemberType::GAME_OBJECT_UID, laserWarningUID)
 };
 
 GENERATE_BODY_IMPL(LaserTurret);
@@ -26,6 +27,11 @@ void LaserTurret::Start() {
         laserObject->Disable();
     }
 
+    laserWarning = GameplaySystems::GetGameObject(laserWarningUID);
+    if (laserWarning) {
+        laserWarning->Disable();
+    }
+
 }
 
 void LaserTurret::Update() {
@@ -40,6 +46,11 @@ void LaserTurret::Update() {
             if (coolDownOffTimer > coolDownOff) {
                 coolDownOffTimer = 0;
                 currentState = TurretState::START;
+                if (laserWarning) {
+                    laserWarning->Enable();
+                    ComponentParticleSystem* laserWarningVFX = laserWarning->GetComponent<ComponentParticleSystem>();
+                    if (laserWarningVFX) laserWarningVFX->PlayChildParticles();
+                }
                 animationComp->SendTrigger(states[static_cast<unsigned int>(TurretState::IDLE_START)] + states[static_cast<unsigned int>(TurretState::START)]);
             }
         }

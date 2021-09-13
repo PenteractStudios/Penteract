@@ -118,6 +118,9 @@ private:
 
 	bool blastInUse = false;
 	bool shooting = false;
+	//Shoot
+	float shootAceleration = 0.0f;
+	float minimAtackSpeed = 0.0f;
 
 	//Laser Aim
 	GameObject* onimaruLaser = nullptr;

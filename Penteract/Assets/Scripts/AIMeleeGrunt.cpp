@@ -8,7 +8,6 @@
 #include "EnemySpawnPoint.h"
 #include "HUDController.h"
 #include "AIMovement.h"
-#include "WinLose.h"
 #include "Onimaru.h"
 
 #include <math.h>
@@ -18,7 +17,6 @@
 EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, materialsUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, damageMaterialPlaceHolderUID),
 		MEMBER_SEPARATOR("Enemy stats"),
@@ -28,7 +26,6 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 		MEMBER(MemberType::INT, gruntCharacter.fallingSpeed),
 		MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
 		MEMBER(MemberType::FLOAT, gruntCharacter.attackRange),
-		MEMBER(MemberType::FLOAT, gruntCharacter.timeToDie),
 		MEMBER(MemberType::FLOAT, gruntCharacter.barrelDamageTaken),
 		MEMBER_SEPARATOR("Push variables"),
 		MEMBER(MemberType::FLOAT, gruntCharacter.pushBackDistance),
@@ -75,14 +72,6 @@ void AIMeleeGrunt::Start() {
 
 	if (fang) {
 		playerDeath = GET_SCRIPT(fang, PlayerDeath);
-	}
-
-	
-
-	GameObject* winLose = GameplaySystems::GetGameObject(winConditionUID);
-
-	if (winLose) {
-		winLoseScript = GET_SCRIPT(winLose, WinLose);
 	}
 
 	agent = GetOwner().GetComponent<ComponentAgent>();
@@ -157,7 +146,7 @@ void AIMeleeGrunt::Update() {
 		if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
 			timeSinceLastHurt += Time::GetDeltaTime();
 			if (timeSinceLastHurt > hurtFeedbackTimeDuration) {
-				componentMeshRenderer->materialId = defaultMaterialID;
+				SetMaterial(defaultMaterialID);
 			}
 		}
 	}
@@ -259,8 +248,7 @@ void AIMeleeGrunt::Update() {
 	}
 
 	if (gruntCharacter.destroying) {
-		if (!killSent && winLoseScript != nullptr) {
-			winLoseScript->IncrementDeadEnemies();
+		if (!killSent) {
 			if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
 			killSent = true;
 
@@ -273,10 +261,7 @@ void AIMeleeGrunt::Update() {
 				}
 			}
 		}
-		if (gruntCharacter.timeToDie > 0) {
-			gruntCharacter.timeToDie -= Time::GetDeltaTime();
-		}
-		else {
+		if (componentMeshRenderer && componentMeshRenderer->HasDissolveAnimationFinished()) {
 			if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
 			GameplaySystems::DestroyGameObject(&GetOwner());
 		}
@@ -333,7 +318,7 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 			bool hitTaken = false;
 			if (collidedWith.name == "FangBullet") {
 				hitTaken = true;
-				GameplaySystems::DestroyGameObject(&collidedWith);
+				ParticleHit(collidedWith, particle, playerController->playerFang);
 				gruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
 			}else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
 				hitTaken = true;
@@ -366,12 +351,14 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 			}
 
 			if (collidedWith.name == "EMP") {
-				if (animation->GetCurrentState()) {
-					animation->SendTrigger(animation->GetCurrentState()->name + "StunStart");
+				if (state != AIState::STUNNED) {
+					if (animation->GetCurrentState()) {
+						animation->SendTrigger(animation->GetCurrentState()->name + "StunStart");
+					}
+					agent->RemoveAgentFromCrowd();
+					stunTimeRemaining = stunDuration;
+					state = AIState::STUNNED;
 				}
-				agent->RemoveAgentFromCrowd();
-				stunTimeRemaining = stunDuration;
-				state = AIState::STUNNED;
 			}
 		}
 	}
@@ -540,19 +527,16 @@ void AIMeleeGrunt::PlayerHit() {
 
 void AIMeleeGrunt::PlayHitMaterialEffect()
 {
-	if (!dissolveAlreadyStarted && componentMeshRenderer) {
-		if (damageMaterialID != 0) {
-			componentMeshRenderer->materialId = damageMaterialID;
-		}
+	if (!dissolveAlreadyStarted) {
+		SetMaterial(damageMaterialID);
 	}
 }
 
 void AIMeleeGrunt::UpdateDissolveTimer() {
 	if (dissolveAlreadyStarted && !dissolveAlreadyPlayed) {
 		if (currentDissolveTime >= dissolveTimerToStart) {
-			if (componentMeshRenderer && dissolveMaterialID != 0) {
-				componentMeshRenderer->materialId = dissolveMaterialID;
-				componentMeshRenderer->PlayDissolveAnimation();
+			if (dissolveMaterialID != 0) {
+				SetMaterial(dissolveMaterialID, true);
 			}
 			dissolveAlreadyPlayed = true;
 		}
@@ -592,6 +576,17 @@ void AIMeleeGrunt::SetRandomMaterial()
 						mesh.materialId = materials[position];
 					}
 				}
+			}
+		}
+	}
+}
+
+void AIMeleeGrunt::SetMaterial(UID newMaterialID, bool needToPlayDissolve) {
+	if (newMaterialID > 0 && GetOwner().GetChildren().size() > 0) {
+		for (ComponentMeshRenderer& mesh : GetOwner().GetChildren()[0]->GetComponents<ComponentMeshRenderer>()) {
+			mesh.materialId = newMaterialID;
+			if (needToPlayDissolve) {
+				mesh.PlayDissolveAnimation();
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 #include "GameController.h"
 
 #include "GameObject.h"
+#include "PlayerController.h"
 #include "Modules/ModuleCamera.h"
 #include "GameplaySystems.h"
 #include "StatsDisplayer.h"
@@ -38,7 +39,9 @@ void GameController::Start() {
 	transitionFinished = false;
 	isGameplayBlocked = false;
 	switchTutorialActive = false;
-	switchTutorialReached = false;
+
+	if (PlayerController::currentLevel == 1) switchTutorialReached = false;
+	else switchTutorialReached = true;
 
 	gameCamera = GameplaySystems::GetGameObject(gameCameraUID);
 	godCamera = GameplaySystems::GetGameObject(godCameraUID);
@@ -90,7 +93,7 @@ void GameController::Update() {
 		}
 	}
 
-	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)) {
+	if ((Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)) && !isVideoActive) {
 		if (isPaused) {
 			PauseController::SetIsPause(false);
 			ResumeGame();
@@ -273,6 +276,11 @@ bool const GameController::IsSwitchTutorialReached() {
 
 void GameController::ReachSwitchTutorial(bool isReached) {
 	switchTutorialReached = isReached;
+}
+
+void GameController::SetVideoActive(bool isActived)
+{
+	isVideoActive = isActived;
 }
 
 void GameController::DoTransition() {

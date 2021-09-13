@@ -7,7 +7,6 @@
 #include "AIMovement.h"
 #include "RangerProjectileScript.h"
 #include "EnemySpawnPoint.h"
-#include "WinLose.h"
 #include "Onimaru.h"
 
 #include "GameObject.h"
@@ -30,7 +29,6 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
-	MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
 	MEMBER_SEPARATOR("Enemy stats"),
@@ -38,7 +36,6 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.lifePoints),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
-	MEMBER(MemberType::FLOAT, rangerGruntCharacter.timeToDie),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.barrelDamageTaken),
 	MEMBER_SEPARATOR("Push variables"),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackDistance),
@@ -163,11 +160,6 @@ void RangedAI::Start() {
 		++i;
 	}
 
-	GameObject* winConditionGo = GameplaySystems::GetGameObject(winConditionUID);
-	if (winConditionGo) {
-		winLoseScript = GET_SCRIPT(winConditionGo, WinLose);
-	}
-
 	enemySpawnPointScript = GET_SCRIPT(GetOwner().GetParent(), EnemySpawnPoint);
 
 	pushBackRealDistance = rangerGruntCharacter.pushBackDistance;
@@ -240,7 +232,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 			bool hitTaken = false;
 			if (collidedWith.name == "FangBullet") {
 				hitTaken = true;
-				GameplaySystems::DestroyGameObject(&collidedWith);
+				ParticleHit(collidedWith, particle, playerController->playerFang);
 				rangerGruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
 			}
 			else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
@@ -379,8 +371,6 @@ void RangedAI::EnterState(AIState newState) {
 		}
 		break;
 	case AIState::DEATH:
-
-		if (winLoseScript) winLoseScript->IncrementDeadEnemies();
 		if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
 		if (playerController) {
 			if (playerController->playerOnimaru.characterGameObject->IsActive()) {
@@ -516,10 +506,8 @@ void RangedAI::UpdateState() {
 			dissolveAlreadyStarted = true;
 		}
 		if (rangerGruntCharacter.destroying) {
-			if (rangerGruntCharacter.timeToDie > 0) {
-				rangerGruntCharacter.timeToDie -= Time::GetDeltaTime();
-			}
-			else {
+			if (meshRenderer && meshRenderer->HasDissolveAnimationFinished()) {
+				if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
 				GameplaySystems::DestroyGameObject(&GetOwner());
 			}
 		}

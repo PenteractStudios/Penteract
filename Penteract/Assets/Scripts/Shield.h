@@ -3,6 +3,7 @@
 #include "Scripting/Script.h"
 
 class PlayerController;
+class ComponentAudioSource;
 
 class Shield : public Script
 {
@@ -34,5 +35,6 @@ public:
 
 private:
 	bool isActive = false;
+	ComponentAudioSource* audio;
 
 };

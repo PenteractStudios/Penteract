@@ -30,6 +30,7 @@ public:
 	static void ActivateSwitchTutorial(bool isFinished);	// Setter for switchTutorialActive
 	static bool const IsSwitchTutorialReached();			// Getter for switchTutorialReached
 	static void ReachSwitchTutorial(bool isReached);		// Setter for switchTutorialReached
+	static void SetVideoActive(bool isActived);				// Setter for 
 	
 
 public:
@@ -88,6 +89,7 @@ private:
 	static inline bool isGameplayBlocked = false;		// isGameplayBlocked is used to stop the gameplay without pausing the game itself. When true, all entities will remain in an IDLE state, and player input will be mostly ignored.
 	static inline bool switchTutorialActive = false;	// This overrides the previous bool on Fang's 'CanSwitch()', used when the Switch Tutorial appears.
 	static inline bool switchTutorialReached = false;	// This blocks the Switch skill until the player reaches the Switch Tutorial dialogues.
+	static inline bool isVideoActive = false;	// isVideoActive is used for know if any video is Active and then block pause menu.
 
 };
 

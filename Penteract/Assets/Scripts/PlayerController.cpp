@@ -47,7 +47,6 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, playerFang.dashSpeed),
 	MEMBER(MemberType::FLOAT, playerFang.dashDuration),
 	MEMBER(MemberType::FLOAT, playerFang.dashDamage),
-	MEMBER(MemberType::FLOAT, playerFang.trailDashOffsetDuration),
 	MEMBER(MemberType::FLOAT, playerFang.EMPRadius),
 	MEMBER(MemberType::FLOAT, playerFang.EMPCooldown),
 	MEMBER(MemberType::FLOAT, playerFang.normalOrientationSpeed),
@@ -64,7 +63,7 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fangLaserUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerFang.lookAtPointUID),
 	MEMBER_SEPARATOR("Fang Abilities"),
-	MEMBER(MemberType::GAME_OBJECT_UID, fangTrailDashUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangParticleDashUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUltimateUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUltimateVFXUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, EMPUID),
@@ -114,7 +113,7 @@ EXPOSE_MEMBERS(PlayerController) {
 GENERATE_BODY_IMPL(PlayerController);
 
 void PlayerController::Start() {
-	playerFang.Init(fangUID, fangTrailDashUID, fangLeftGunUID, fangRightGunUID, fangRightBulletUID, fangLeftBulletUID, fangLaserUID, cameraUID, HUDManagerObjectUID, fangDashDamageUID, EMPUID, EMPEffectsUID, fangUltimateUID, fangUltimateVFXUID);
+	playerFang.Init(fangUID, fangParticleDashUID, fangLeftGunUID, fangRightGunUID, fangRightBulletUID, fangLeftBulletUID, fangLaserUID, cameraUID, HUDManagerObjectUID, fangDashDamageUID, EMPUID, EMPEffectsUID, fangUltimateUID, fangUltimateVFXUID);
 	playerOnimaru.Init(onimaruUID, onimaruLaserUID, onimaruBulletUID, onimaruGunUID, onimaruRightHandUID, onimaruShieldUID, onimaruUltimateBulletUID, onimaruBlastEffectsUID, cameraUID, HUDManagerObjectUID);
 
 	GameObject* HUDManagerGO = GameplaySystems::GetGameObject(HUDManagerObjectUID);
@@ -183,11 +182,7 @@ void PlayerController::SetNoCooldown(bool status) {
 }
 //Switch
 bool PlayerController::CanSwitch() {
-	if (playerFang.characterGameObject->IsActive()) {
-		return !switchInCooldown && playerOnimaru.CanSwitch() && playerFang.CanSwitch() && !playerFang.ultimateOn;
-	} else {
-		return !switchInCooldown && playerOnimaru.CanSwitch() && playerFang.CanSwitch();
-	}
+	return !switchInCooldown && playerOnimaru.CanSwitch() && playerFang.CanSwitch();
 }
 
 void PlayerController::ResetSwitchStatus() {
@@ -233,6 +228,9 @@ void PlayerController::SwitchCharacter() {
 		if (noCooldownMode) switchInProgress = false;
 		if (sCollider) sCollider->Disable();
 		switchFirstHit = true;
+
+		if (GameController::IsSwitchTutorialActive()) GameController::ActivateSwitchTutorial(false);
+
 	} else {
 		if (playSwitchParticles) {
 			if (switchEffects) {
