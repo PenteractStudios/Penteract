@@ -594,14 +594,6 @@ void RangedAI::ActualShot() {
 
 		float offsetY = (box->GetWorldAABB().minPoint.y + box->GetWorldAABB().maxPoint.y) / 4;
 		shootTrailPrefab->PlayChildParticles();
-		/*GameObject* projectileInstance(GameplaySystems::Instantiate(shootTrailPrefab, GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + float3(0, offsetY, 0), Quat(0, 0, 0, 0)));
-
-		if (projectileInstance) {
-			RangerProjectileScript* rps = GET_SCRIPT(projectileInstance, RangerProjectileScript);
-			if (rps && ownerTransform) {
-				rps->SetRangerDirection(ownerTransform->GetGlobalRotation());
-			}
-		}*/
 	}
 
 	attackTimePool = 1.0f / attackSpeed;
