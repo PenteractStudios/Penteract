@@ -15,13 +15,16 @@ public:
 	void FadeIn();
 	void Stop();
 	bool IsPlaying() const;
+
 public:
 	float fadeDuration = 0.5f;
 	UID blackImageObjUID = 0;
 	bool fadeInOnStart = false;
+
 private:
 	void UpdateBlackImage();
 	void Play();
+
 private:
 	enum class FadeState { IDLE, FADE_IN, FADE_OUT };
 	FadeState fadeState = FadeState::IDLE;
