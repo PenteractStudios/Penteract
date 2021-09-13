@@ -172,7 +172,7 @@ void Fang::InitDash() {
 			dashDirection = facePointDir;
 		}
 
-		if (dashParticle)dashParticle->PlayChildParticles(); 
+		if (dashParticle)dashParticle->PlayChildParticles();
 
 		dashCooldownRemaining = dashCooldown;
 		dashRemaining = dashDuration;
@@ -224,7 +224,7 @@ void Fang::ActivateEMP() {
 }
 
 bool Fang::CanEMP() {
-	return !EMP->IsActive() && !EMPInCooldown && !dashing && !GameController::IsGameplayBlocked();
+	return !EMP->IsActive() && !EMPInCooldown && !dashing && !ultimateOn && !GameController::IsGameplayBlocked();
 }
 
 void Fang::CheckCoolDowns(bool noCooldownMode) {
@@ -239,8 +239,7 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 			transitioning = 0;
 			timeWithoutCombat = aimTime;
 		}
-	}
-	else {
+	} else {
 		if (fangLaser && fangLaser->IsActive()) {
 			fangLaser->Disable();
 		}
@@ -454,7 +453,7 @@ void Fang::ActiveUltimate() {
 }
 
 bool Fang::CanUltimate() {
-	return ultimateCooldownRemaining >= ultimateCooldown && !ultimateOn && !GameController::IsGameplayBlocked();
+	return !dashing && !EMP->IsActive() && ultimateCooldownRemaining >= ultimateCooldown && !ultimateOn && !GameController::IsGameplayBlocked();
 }
 
 void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
