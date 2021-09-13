@@ -20,8 +20,8 @@ EXPOSE_MEMBERS(CameraController) {
 	MEMBER_SEPARATOR("Shaker Control"),
 	MEMBER(MemberType::FLOAT, shakeTotalTime),
 	MEMBER(MemberType::FLOAT, shakeTimer),
-	MEMBER(MemberType::FLOAT, shakeMultiplier)
-
+	MEMBER(MemberType::FLOAT, shakeMultiplier),
+	MEMBER(MemberType::BOOL, useAimingCamera),
 };
 
 GENERATE_BODY_IMPL(CameraController);
@@ -50,7 +50,7 @@ void CameraController::Update() {
 	float3 smoothedPosition = desiredPosition;
 
 	if (useSmoothCamera) {
-		if (playerController->playerFang.isAiming()) {
+		if (playerController->playerFang.isAiming() && useAimingCamera) {
 			float2 mousePosition = Input::GetMousePositionNormalized();
 
 			if (mousePosition.x > 0.75) { aimingPositionX = aimingDistance; } else if (mousePosition.x < -0.75) { aimingPositionX = -aimingDistance; } else { aimingPositionX = 0.0f; }
