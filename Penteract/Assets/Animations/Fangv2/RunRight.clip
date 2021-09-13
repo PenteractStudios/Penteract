@@ -9,11 +9,11 @@
     "KeyEventClip": [
         {
             "KeyFrame": 128,
-            "Name": "LeftStep"
+            "Name": "FootstepLeft"
         },
         {
             "KeyFrame": 138,
-            "Name": "RightStep"
+            "Name": "FootstepRight"
         }
     ]
 }

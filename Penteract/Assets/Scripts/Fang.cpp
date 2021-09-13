@@ -42,12 +42,10 @@ void Fang::Init(UID fangUID, UID dashParticleUID, UID leftGunUID, UID rightGunUI
 		rightBulletAux = GameplaySystems::GetGameObject(rightBulletUID);
 		if (rightBulletAux) {
 			rightBullet = rightBulletAux->GetComponent<ComponentParticleSystem>();
-
 		}
 		leftBulletAux = GameplaySystems::GetGameObject(leftBulletUID);
 		if (leftBulletAux) {
 			leftBullet = leftBulletAux->GetComponent<ComponentParticleSystem>();
-
 		}
 		if (compAnimation) {
 			currentState = compAnimation->GetCurrentState();
@@ -61,8 +59,6 @@ void Fang::Init(UID fangUID, UID dashParticleUID, UID leftGunUID, UID rightGunUI
 		if (HUDManagerGO) {
 			hudManagerScript = GET_SCRIPT(HUDManagerGO, HUDManager);
 		}
-
-
 
 		if (characterGameObject) {
 			characterGameObject->GetComponent<ComponentCapsuleCollider>()->Enable();
@@ -200,7 +196,6 @@ void Fang::Dash() {
 	}
 }
 
-
 bool Fang::CanDash() {
 	return isAlive && !dashing && !dashInCooldown && !EMP->IsActive() && !ultimateOn && !GameController::IsGameplayBlocked();
 }
@@ -219,7 +214,6 @@ void Fang::ActivateEMP() {
 		if (hudManagerScript) {
 			hudManagerScript->SetCooldownRetreival(HUDManager::Cooldowns::FANG_SKILL_2);
 		}
-
 	}
 }
 
@@ -230,8 +224,12 @@ bool Fang::CanEMP() {
 void Fang::CheckCoolDowns(bool noCooldownMode) {
 	//Combat
 	if (aiming) {
-		if (fangLaser && !fangLaser->IsActive()) {
-			fangLaser->Enable();
+		if (!isUltimate && !EMP->IsActive()) {
+			if (fangLaser && !fangLaser->IsActive()) {
+				fangLaser->Enable();
+			}
+		} else {
+			fangLaser->Disable();
 		}
 		timeWithoutCombat += Time::GetDeltaTime();
 		if (timeWithoutCombat >= aimTime || GameController::IsGameplayBlocked()) {
@@ -299,13 +297,13 @@ void Fang::OnAnimationFinished() {
 			} else if (compAnimation->GetCurrentState()->name == states[static_cast<int>(FANG_STATES::ULTIMATE)]) {
 				compAnimation->SendTrigger(states[static_cast<int>(FANG_STATES::ULTIMATE)] + states[idle]);
 				ultimateOn = false;
+				isUltimate = false;
 				movementSpeed = normalMovementSpeed;
 				ultimateScript->EndUltimate();
 
 				if (hudManagerScript) {
 					hudManagerScript->StopUsingSkill(HUDManager::Cooldowns::FANG_SKILL_3);
 				}
-
 			}
 		}
 	}
@@ -433,7 +431,7 @@ void Fang::ActiveUltimate() {
 		ultimateInCooldown = true;
 		if (ultimateVFX) ultimateVFX->PlayChildParticles();
 		ultimateScript->StartUltimate();
-
+		isUltimate = true;
 		if (hudManagerScript) {
 			hudManagerScript->StartUsingSkill(HUDManager::Cooldowns::FANG_SKILL_3);
 		}
@@ -447,8 +445,6 @@ void Fang::ActiveUltimate() {
 		if (hudManagerScript) {
 			hudManagerScript->SetCooldownRetreival(HUDManager::Cooldowns::FANG_SKILL_3);
 		}
-
-
 	}
 }
 
@@ -458,7 +454,6 @@ bool Fang::CanUltimate() {
 
 void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 	if (isAlive) {
-
 		if (ultimateOn) {
 			ultimateTimeRemaining -= Time::GetDeltaTime();
 			if (ultimateTimeRemaining <= 0) {
@@ -472,12 +467,15 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 			if (GetInputBool(InputActions::ABILITY_1, useGamepad) && !EMP->IsActive() && !ultimateOn) {
 				InitDash();
 			}
+
 			if (!dashing && !EMP->IsActive()) {
 				if (GetInputBool(InputActions::SHOOT, useGamepad) && !GameController::IsGameplayBlocked()) {
-					timeWithoutCombat = 0.f;
-					aiming = true;
-					decelerating = 0;
+					ResetIsInCombatValues();
 					Shoot();
+				}
+				
+				if (ultimateOn) {
+					ResetIsInCombatValues();
 				}
 			}
 
@@ -487,7 +485,6 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 					shooting = false;
 				}
-
 			}
 			if (GetInputBool(InputActions::ABILITY_2, useGamepad) && !ultimateOn) {
 				ActivateEMP();
@@ -502,4 +499,10 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 		movementInputDirection = MovementDirection::NONE;
 	}
 	PlayAnimation();
+}
+
+void Fang::ResetIsInCombatValues() {
+	timeWithoutCombat = 0.f;
+	aiming = true;
+	decelerating = 0;
 }

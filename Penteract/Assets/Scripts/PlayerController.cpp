@@ -182,11 +182,7 @@ void PlayerController::SetNoCooldown(bool status) {
 }
 //Switch
 bool PlayerController::CanSwitch() {
-	if (playerFang.characterGameObject->IsActive()) {
-		return !switchInCooldown && playerOnimaru.CanSwitch() && playerFang.CanSwitch() && !playerFang.ultimateOn;
-	} else {
-		return !switchInCooldown && playerOnimaru.CanSwitch() && playerFang.CanSwitch();
-	}
+	return !switchInCooldown && playerOnimaru.CanSwitch() && playerFang.CanSwitch();
 }
 
 void PlayerController::ResetSwitchStatus() {
@@ -203,8 +199,6 @@ void PlayerController::SwitchCharacter() {
 	if (!playerFang.characterGameObject) return;
 	if (!playerOnimaru.characterGameObject) return;
 	bool doVisualSwitch = currentSwitchDelay < switchDelay ? false : true;
-
-	if (GameController::IsSwitchTutorialActive()) GameController::ActivateSwitchTutorial(false);
 
 	if (hudManagerScript) {
 		hudManagerScript->StartCharacterSwitch();
@@ -234,6 +228,9 @@ void PlayerController::SwitchCharacter() {
 		if (noCooldownMode) switchInProgress = false;
 		if (sCollider) sCollider->Disable();
 		switchFirstHit = true;
+
+		if (GameController::IsSwitchTutorialActive()) GameController::ActivateSwitchTutorial(false);
+
 	} else {
 		if (playSwitchParticles) {
 			if (switchEffects) {
