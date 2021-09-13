@@ -61,7 +61,7 @@
             },
             {
                 "Type": "Script",
-                "Active": true,
+                "Active": false,
                 "Script": 6803541990823883369,
                 "Values": null
             },
@@ -86,14 +86,14 @@
                         "Value": 40.0
                     },
                     {
-                        "Name": "hurtFeedbackTimeDuration",
-                        "Type": "Float",
-                        "Value": 0.10000000149011612
-                    },
-                    {
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
                         "Value": 9835691270176894595
+                    },
+                    {
+                        "Name": "hurtFeedbackTimeDuration",
+                        "Type": "Float",
+                        "Value": 0.10000000149011612
                     },
                     {
                         "Name": "fangUID",
