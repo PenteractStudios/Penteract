@@ -1,6 +1,7 @@
 #include "GameController.h"
 
 #include "GameObject.h"
+#include "PlayerController.h"
 #include "Modules/ModuleCamera.h"
 #include "GameplaySystems.h"
 #include "StatsDisplayer.h"
@@ -38,7 +39,9 @@ void GameController::Start() {
 	transitionFinished = false;
 	isGameplayBlocked = false;
 	switchTutorialActive = false;
-	switchTutorialReached = false;
+
+	if (PlayerController::currentLevel == 1) switchTutorialReached = false;
+	else switchTutorialReached = true;
 
 	gameCamera = GameplaySystems::GetGameObject(gameCameraUID);
 	godCamera = GameplaySystems::GetGameObject(godCameraUID);
