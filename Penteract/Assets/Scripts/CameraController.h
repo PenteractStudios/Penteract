@@ -26,6 +26,7 @@ public:
 	float cameraOffsetX = 0.f;
 	float aimingDistance = 0.f;
 	bool useSmoothCamera = true;
+	bool useAimingCamera = true;
 	float aimingCameraSpeed = 1.0f;
 	float smoothCameraSpeed = 5.0f;
 	UID playerControllerObjUID = 0;

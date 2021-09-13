@@ -10,6 +10,7 @@ class ComponentAgent;
 class ComponentAudioSource;
 class ComponentAnimation;
 class ComponentMeshRenderer;
+class ComponentParticleSystem;
 class ComponentTransform;
 class ResourcePrefab;
 class HUDController;
@@ -71,12 +72,13 @@ public:
 	UID playerMeshUIDOnimaru = 0;	//Reference to player Fang mesh holding Gameobject UID, used for raycasting if onimaru is active
 	UID meshUID1 = 0;				//Second mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID meshUID2 = 0;				//Third mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
-	UID trailPrefabUID = 0;			//Reference to projectile prefab UID , for shooting
+	UID weaponUID = 0;				//Reference to projectile prefab UID , for shooting
 	UID fangUID = 0;
 
-	ResourcePrefab* shootTrailPrefab = nullptr; //Reference to projectile prefab , for shooting
+	ComponentParticleSystem* shootTrailPrefab = nullptr; //Reference to projectile prefab , for shooting
 	GameObject* player = nullptr;				//Reference to player main Gameobject, used to check distances
 	GameObject* fang = nullptr;
+	GameObject* weapon = nullptr;
 
 	PlayerController* playerController = nullptr; //Reference to player script, used to check distances
 
