@@ -64,10 +64,10 @@ void SceneTransition::Update() {
 				transform2D->SetPosition(float3(0.f, transform2D->GetPosition().y + (1.f * speedTransition), 0.f));
 				finishedTransition = transform2D->GetPosition().y == CENTER_POSITION;
 			} else if (transitionMove == static_cast<int>(TransitionMove::FADE_OUT)) {
-				image2D->SetColor(float4(image2D->GetColor().xyz(), image2D->GetColor().w + (FADE_SPEED * speedTransition)));
+				image2D->SetColor(float4(image2D->GetColor().xyz(), Clamp(image2D->GetColor().w + (FADE_SPEED * speedTransition), 0.0f, 1.0f)));
 				finishedTransition = image2D->GetColor().w >= FULL_OPACITY;
 			} else if (transitionMove == static_cast<int>(TransitionMove::FADE_IN)) {
-				image2D->SetColor(float4(image2D->GetColor().xyz(), image2D->GetColor().w - (FADE_SPEED * speedTransition)));
+				image2D->SetColor(float4(image2D->GetColor().xyz(), Clamp(image2D->GetColor().w - (FADE_SPEED * speedTransition), 0.0f, 1.0f)));
 				finishedTransition = image2D->GetColor().w <= FULL_TRANSPARENCY;
 			}
 		}
