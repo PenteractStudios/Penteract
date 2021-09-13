@@ -16,6 +16,7 @@ public:
 
 public:
 	UID gameControllerUID = 0;
+	UID winConditionUID = 0;
 
 private:
 	bool hasOpenedDialog = false;
