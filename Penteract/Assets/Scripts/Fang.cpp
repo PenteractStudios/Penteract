@@ -164,8 +164,7 @@ void Fang::InitDash() {
 		if (movementInputDirection != MovementDirection::NONE) {
 			dashDirection = GetDirection();
 			dashMovementDirection = movementInputDirection;
-		}
-		else {
+		} else {
 			dashDirection = facePointDir;
 		}
 
@@ -229,8 +228,7 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 			if (fangLaser && !fangLaser->IsActive()) {
 				fangLaser->Enable();
 			}
-		}
-		else {
+		} else {
 			fangLaser->Disable();
 		}
 		timeWithoutCombat += Time::GetDeltaTime();
@@ -251,8 +249,7 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 			dashCooldownRemaining = 0.f;
 			dashInCooldown = false;
 			dashMovementDirection = MovementDirection::NONE;
-		}
-		else {
+		} else {
 			dashCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
@@ -266,8 +263,7 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 				if (dash->IsActive()) dash->Disable();
 			}
 			agent->SetMaxSpeed(movementSpeed);
-		}
-		else {
+		} else {
 			dashRemaining -= Time::GetDeltaTime();
 		}
 	}
@@ -277,8 +273,7 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 		if (noCooldownMode || EMPCooldownRemaining <= 0.f) {
 			EMPCooldownRemaining = 0.f;
 			EMPInCooldown = false;
-		}
-		else {
+		} else {
 			EMPCooldownRemaining -= Time::GetDeltaTime();
 		}
 	}
@@ -299,8 +294,7 @@ void Fang::OnAnimationFinished() {
 			if (compAnimation->GetCurrentState()->name == states[static_cast<int>(FANG_STATES::EMP)]) {
 				compAnimation->SendTrigger(states[static_cast<int>(FANG_STATES::EMP)] + states[idle]);
 				EMP->Disable();
-			}
-			else if (compAnimation->GetCurrentState()->name == states[static_cast<int>(FANG_STATES::ULTIMATE)]) {
+			} else if (compAnimation->GetCurrentState()->name == states[static_cast<int>(FANG_STATES::ULTIMATE)]) {
 				compAnimation->SendTrigger(states[static_cast<int>(FANG_STATES::ULTIMATE)] + states[idle]);
 				ultimateOn = false;
 				isUltimate = false;
@@ -322,8 +316,7 @@ void Fang::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 			if (fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_RIGHT)]) {
 				fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_RIGHT)]->Play();
 			}
-		}
-		else if (std::strcmp(eventName, "FootstepLeft") == 0) {
+		} else if (std::strcmp(eventName, "FootstepLeft") == 0) {
 			if (fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_LEFT)]) {
 				fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_LEFT)]->Play();
 			}
@@ -332,8 +325,7 @@ void Fang::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 	case StateMachineEnum::SECONDARY:
 		if (std::strcmp(eventName, "LeftShot") == 0) {
 			bullet = leftBullet;
-		}
-		else if (std::strcmp(eventName, "RightShot") == 0) {
+		} else if (std::strcmp(eventName, "RightShot") == 0) {
 			bullet = rightBullet;
 		}
 		break;
@@ -400,8 +392,7 @@ void Fang::PlayAnimation() {
 			if (compAnimation->GetCurrentState()->name != states[static_cast<int>(FANG_STATES::ULTIMATE)]) {
 				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::ULTIMATE)]);
 			}
-		}
-		else if (movementInputDirection == MovementDirection::NONE) {
+		} else if (movementInputDirection == MovementDirection::NONE) {
 			if (!isAlive) {
 				if (compAnimation->GetCurrentState()->name != states[static_cast<int>(FANG_STATES::DEATH)]) {
 					compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::DEATH)]);
@@ -409,13 +400,11 @@ void Fang::PlayAnimation() {
 						compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(FANG_STATES::DEATH)]);
 					}
 				}
-			}
-			else {
+			} else {
 				if (compAnimation->GetCurrentState()->name == states[static_cast<int>(FANG_STATES::SPRINT)]) {
 					compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::DRIFT)]);
 					decelerating = true;
-				}
-				else if (!decelerating) {
+				} else if (!decelerating) {
 					if (compAnimation->GetCurrentState()->name != states[idle] && compAnimation->GetCurrentState()->name != states[static_cast<int>(FANG_STATES::EMP)]) {
 						compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[idle]);
 					}
@@ -424,8 +413,7 @@ void Fang::PlayAnimation() {
 					compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::EMP)]);
 				}
 			}
-		}
-		else {
+		} else {
 			if (compAnimation->GetCurrentState()->name != states[aiming ? (GetMouseDirectionState() + dashAnimation) : static_cast<int>(FANG_STATES::SPRINT)]) {
 				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[aiming ? (GetMouseDirectionState() + dashAnimation) : static_cast<int>(FANG_STATES::SPRINT)]);
 				ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentState()->clipUid);
@@ -479,12 +467,15 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 			if (GetInputBool(InputActions::ABILITY_1, useGamepad) && !EMP->IsActive() && !ultimateOn) {
 				InitDash();
 			}
+
 			if (!dashing && !EMP->IsActive()) {
 				if (GetInputBool(InputActions::SHOOT, useGamepad) && !GameController::IsGameplayBlocked()) {
-					timeWithoutCombat = 0.f;
-					aiming = true;
-					decelerating = 0;
+					ResetIsInCombatValues();
 					Shoot();
+				}
+				
+				if (ultimateOn) {
+					ResetIsInCombatValues();
 				}
 			}
 
@@ -503,10 +494,15 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 				ActiveUltimate();
 			}
 		}
-	}
-	else {
+	} else {
 		if (agent) agent->RemoveAgentFromCrowd();
 		movementInputDirection = MovementDirection::NONE;
 	}
 	PlayAnimation();
+}
+
+void Fang::ResetIsInCombatValues() {
+	timeWithoutCombat = 0.f;
+	aiming = true;
+	decelerating = 0;
 }
