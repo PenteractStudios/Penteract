@@ -95,7 +95,6 @@ void Barrel::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 				timerDestroyActivated = true;
 			}
 
-			GameplaySystems::DestroyGameObject(&collidedWith);
 			ComponentSphereCollider* thisCollider = GetOwner().GetComponent<ComponentSphereCollider>();
 			thisCollider->Disable();
 		}

@@ -8,17 +8,17 @@
 #include "EnemySpawnPoint.h"
 #include "HUDController.h"
 #include "AIMovement.h"
-#include "WinLose.h"
 #include "Onimaru.h"
 
 #include <math.h>
+#include <random>
+
 
 EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, materialsUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, damageMaterialPlaceHolderUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, defaultMaterialPlaceHolderUID),
 		MEMBER_SEPARATOR("Enemy stats"),
 		MEMBER(MemberType::FLOAT, gruntCharacter.lifePoints),
 		MEMBER(MemberType::FLOAT, gruntCharacter.movementSpeed),
@@ -74,14 +74,6 @@ void AIMeleeGrunt::Start() {
 		playerDeath = GET_SCRIPT(fang, PlayerDeath);
 	}
 
-
-
-	GameObject* winLose = GameplaySystems::GetGameObject(winConditionUID);
-
-	if (winLose) {
-		winLoseScript = GET_SCRIPT(winLose, WinLose);
-	}
-
 	agent = GetOwner().GetComponent<ComponentAgent>();
 	if (agent) {
 		agent->SetMaxSpeed(gruntCharacter.movementSpeed);
@@ -124,14 +116,6 @@ void AIMeleeGrunt::Start() {
 		}
 	}
 
-	gameObject = GameplaySystems::GetGameObject(defaultMaterialPlaceHolderUID);
-	if (gameObject) {
-		ComponentMeshRenderer* meshRenderer = gameObject->GetComponent<ComponentMeshRenderer>();
-		if (meshRenderer) {
-			defaultMaterialID = meshRenderer->materialId;
-		}
-	}
-
 	gameObject = &GetOwner();
 	if (gameObject) {
 		// Workaround get the first children - Create a Prefab overrides childs IDs
@@ -142,6 +126,8 @@ void AIMeleeGrunt::Start() {
 	}
 
 	pushBackRealDistance = gruntCharacter.pushBackDistance;
+	SetRandomMaterial();
+
 }
 
 void AIMeleeGrunt::Update() {
@@ -160,7 +146,7 @@ void AIMeleeGrunt::Update() {
 		if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
 			timeSinceLastHurt += Time::GetDeltaTime();
 			if (timeSinceLastHurt > hurtFeedbackTimeDuration) {
-				componentMeshRenderer->materialId = defaultMaterialID;
+				SetMaterial(defaultMaterialID);
 			}
 		}
 	}
@@ -262,8 +248,7 @@ void AIMeleeGrunt::Update() {
 	}
 
 	if (gruntCharacter.destroying) {
-		if (!killSent && winLoseScript != nullptr) {
-			winLoseScript->IncrementDeadEnemies();
+		if (!killSent) {
 			if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
 			killSent = true;
 
@@ -280,6 +265,10 @@ void AIMeleeGrunt::Update() {
 			if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
 			GameplaySystems::DestroyGameObject(&GetOwner());
 		}
+	}
+
+	if (!gruntCharacter.isAlive) {
+		Death();
 	}
 }
 
@@ -329,7 +318,7 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 			bool hitTaken = false;
 			if (collidedWith.name == "FangBullet") {
 				hitTaken = true;
-				GameplaySystems::DestroyGameObject(&collidedWith);
+				ParticleHit(collidedWith, particle, playerController->playerFang);
 				gruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
 			}else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
 				hitTaken = true;
@@ -370,10 +359,6 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 				state = AIState::STUNNED;
 			}
 		}
-
-		if (!gruntCharacter.isAlive) {
-			Death();
-		}
 	}
 }
 
@@ -390,10 +375,6 @@ void AIMeleeGrunt::EnableBlastPushBack() {
 			if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
 			PlayHitMaterialEffect();
 			timeSinceLastHurt = 0.0f;
-
-			if (!gruntCharacter.isAlive) {
-				Death();
-			}
 		}
 	}
 }
@@ -519,20 +500,22 @@ void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const cha
 }
 
 void AIMeleeGrunt::Death()
-{
-	if (animation->GetCurrentState() && state != AIState::DEATH){
-		std::string changeState = animation->GetCurrentState()->name + "Death";
-		deathType = 1 + rand() % 2;
-		std::string deathTypeStr = std::to_string(deathType);
-		animation->SendTrigger(changeState + deathTypeStr);
+{	
+	if (!GameController::IsGameplayBlocked()) {
+		if (animation->GetCurrentState() && state != AIState::DEATH) {
+			std::string changeState = animation->GetCurrentState()->name + "Death";
+			deathType = 1 + rand() % 2;
+			std::string deathTypeStr = std::to_string(deathType);
+			animation->SendTrigger(changeState + deathTypeStr);
 
-		if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
-		ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
-		if (collider) collider->Disable();
+			if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
+			ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
+			if (collider) collider->Disable();
 
-		agent->RemoveAgentFromCrowd();
-		if (gruntCharacter.beingPushed) gruntCharacter.beingPushed = false;
-		state = AIState::DEATH;
+			agent->RemoveAgentFromCrowd();
+			if (gruntCharacter.beingPushed) gruntCharacter.beingPushed = false;
+			state = AIState::DEATH;
+		}
 	}
 }
 
@@ -542,24 +525,67 @@ void AIMeleeGrunt::PlayerHit() {
 
 void AIMeleeGrunt::PlayHitMaterialEffect()
 {
-	if (!dissolveAlreadyStarted && componentMeshRenderer) {
-		if (damageMaterialID != 0) {
-			componentMeshRenderer->materialId = damageMaterialID;
-		}
+	if (!dissolveAlreadyStarted) {
+		SetMaterial(damageMaterialID);
 	}
 }
 
 void AIMeleeGrunt::UpdateDissolveTimer() {
 	if (dissolveAlreadyStarted && !dissolveAlreadyPlayed) {
 		if (currentDissolveTime >= dissolveTimerToStart) {
-			if (componentMeshRenderer && dissolveMaterialID != 0) {
-				componentMeshRenderer->materialId = dissolveMaterialID;
-				componentMeshRenderer->PlayDissolveAnimation();
+			if (dissolveMaterialID != 0) {
+				SetMaterial(dissolveMaterialID, true);
 			}
 			dissolveAlreadyPlayed = true;
 		}
 		else {
 			currentDissolveTime += Time::GetDeltaTime();
+		}
+	}
+}
+
+void AIMeleeGrunt::SetRandomMaterial()
+{
+	GameObject* materialsHolder = GameplaySystems::GetGameObject(materialsUID);
+
+	if (materialsHolder) {
+		std::vector<UID> materials;
+		for (const auto& child : materialsHolder->GetChildren()) {
+			ComponentMeshRenderer* meshRenderer = child->GetComponent<ComponentMeshRenderer>();
+			if (meshRenderer && meshRenderer->materialId) {
+				materials.push_back(meshRenderer->materialId);
+			}
+		}
+
+		
+		if (!materials.empty()) {
+			//Random distribution it cant be saved into global 
+			std::random_device rd;  //Will be used to obtain a seed for the random number engine
+			std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+			std::uniform_int_distribution<int> distrib(1, materials.size());
+
+			int position = distrib(gen)-1;
+
+			for (auto& child : GetOwner().GetChildren()) {
+				if (child->HasComponent<ComponentMeshRenderer>()) {
+					defaultMaterialID = materials[position];
+
+					for (auto& mesh : child->GetComponents<ComponentMeshRenderer>()) {
+						mesh.materialId = materials[position];
+					}
+				}
+			}
+		}
+	}
+}
+
+void AIMeleeGrunt::SetMaterial(UID newMaterialID, bool needToPlayDissolve) {
+	if (newMaterialID > 0 && GetOwner().GetChildren().size() > 0) {
+		for (ComponentMeshRenderer& mesh : GetOwner().GetChildren()[0]->GetComponents<ComponentMeshRenderer>()) {
+			mesh.materialId = newMaterialID;
+			if (needToPlayDissolve) {
+				mesh.PlayDissolveAnimation();
+			}
 		}
 	}
 }

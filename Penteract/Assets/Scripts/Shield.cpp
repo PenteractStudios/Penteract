@@ -5,6 +5,7 @@
 #include "PlayerController.h"
 #include "RangerProjectileScript.h"
 #include "Components/Physics/ComponentSphereCollider.h"
+#include "Components/ComponentAudioSource.h"
 #include "Math/float3.h"
 
 EXPOSE_MEMBERS(Shield) {
@@ -21,6 +22,7 @@ void Shield::Start() {
 	currentAvailableCharges = maxCharges;
 	GameObject* playerGO = GameplaySystems::GetGameObject(playerUID);
 	if (playerGO) playerController = GET_SCRIPT(playerGO, PlayerController);
+	audio = GetOwner().GetComponent<ComponentAudioSource>();
 }
 
 void Shield::Update() {}
@@ -35,7 +37,7 @@ void Shield::FadeShield() {
 
 void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 	if ((collidedWith.name == "RangerProjectile" || collidedWith.name == "MeleePunch") && isActive && playerController) {
-		if (playerController->playerOnimaru.level1Upgrade && collidedWith.name == "RangerProjectile") {
+		if (playerController->playerOnimaru.level1Upgrade && collidedWith.name == "RangerProjectile") {		// Reflect projectile
 			ComponentSphereCollider* sCollider = collidedWith.GetComponent<ComponentSphereCollider>();
 			if (!sCollider) return;
 			RangerProjectileScript* rps = GET_SCRIPT(&collidedWith, RangerProjectileScript);
@@ -58,5 +60,9 @@ void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 			GameplaySystems::DestroyGameObject(&collidedWith);
 		}
 		currentAvailableCharges--;
+		
+		if (audio) {		// Play hit effect
+			audio->Play();
+		}
 	}
 }
