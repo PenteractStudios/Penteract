@@ -204,6 +204,8 @@ void PlayerController::SwitchCharacter() {
 	if (!playerOnimaru.characterGameObject) return;
 	bool doVisualSwitch = currentSwitchDelay < switchDelay ? false : true;
 
+	if (GameController::IsSwitchTutorialActive()) GameController::ActivateSwitchTutorial(false);
+
 	if (hudManagerScript) {
 		hudManagerScript->StartCharacterSwitch();
 		hudManagerScript->StartUsingSkill(HUDManager::Cooldowns::SWITCH_SKILL);
