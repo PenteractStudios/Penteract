@@ -9,7 +9,7 @@
 #define FADE_SPEED 0.001f
 #define CENTER_POSITION 0.f
 #define ALPHA_TRANSPARENCY 255.f
-#define FULL_OPACY 1.f
+#define FULL_OPACITY 1.f
 #define FULL_TRANSPARENCY 0.f
 
 EXPOSE_MEMBERS(SceneTransition) {
@@ -63,10 +63,10 @@ void SceneTransition::Update() {
 			} else if (transitionMove == static_cast<int>(TransitionMove::BOTTOM_TO_TOP)) {
 				transform2D->SetPosition(float3(0.f, transform2D->GetPosition().y + (1.f * speedTransition), 0.f));
 				finishedTransition = transform2D->GetPosition().y == CENTER_POSITION;
-			} else if (transitionMove == static_cast<int>(TransitionMove::FADE_IN)) {
-				image2D->SetColor(float4(image2D->GetColor().xyz(), image2D->GetColor().w + (FADE_SPEED * speedTransition)));
-				finishedTransition = image2D->GetColor().w >= FULL_OPACY;
 			} else if (transitionMove == static_cast<int>(TransitionMove::FADE_OUT)) {
+				image2D->SetColor(float4(image2D->GetColor().xyz(), image2D->GetColor().w + (FADE_SPEED * speedTransition)));
+				finishedTransition = image2D->GetColor().w >= FULL_OPACITY;
+			} else if (transitionMove == static_cast<int>(TransitionMove::FADE_IN)) {
 				image2D->SetColor(float4(image2D->GetColor().xyz(), image2D->GetColor().w - (FADE_SPEED * speedTransition)));
 				finishedTransition = image2D->GetColor().w <= FULL_TRANSPARENCY;
 			}
