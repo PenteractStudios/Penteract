@@ -75,7 +75,7 @@ public:
 public:
 	// ------- Contructors ------- //
 	Onimaru() {};
-	void Init(UID onimaruUID = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0, UID shieldUID = 0, UID onimaruTransformForUltimateProjectileOriginUID = 0, UID onimaruBlastEffectsUID = 0, UID cameraUID = 0, UID HUDManagerObjectUID = 0);
+	void Init(UID onimaruUID = 0, UID onimaruLaser = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0, UID shieldUID = 0, UID onimaruTransformForUltimateProjectileOriginUID = 0, UID onimaruBlastEffectsUID = 0, UID cameraUID = 0, UID HUDManagerObjectUID = 0);
 	void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockRotation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	bool CanSwitch() const override;
@@ -120,6 +120,12 @@ private:
 
 	bool blastInUse = false;
 	bool shooting = false;
+	//Shoot
+	float shootAceleration = 0.0f;
+	float minimAtackSpeed = 0.0f;
+
+	//Laser Aim
+	GameObject* onimaruLaser = nullptr;
 
 	// Blast ability
 	float currentBlastDuration = 0.f;

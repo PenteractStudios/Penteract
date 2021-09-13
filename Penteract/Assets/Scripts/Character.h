@@ -18,9 +18,10 @@ public:
 	void Recover(int recoveryLife_);
 
 	void SetTotalLifePoints(int totalLifePoints_);
-	float GetTotalLifePoints() const;
 	void SetDamageHit(float damageHit_);
 
+	float GetTotalLifePoints() const;
+	bool IsFullHealth()const;
 public:
 
 	bool isAlive = true;

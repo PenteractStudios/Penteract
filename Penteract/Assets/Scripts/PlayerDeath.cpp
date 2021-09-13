@@ -5,6 +5,7 @@
 
 #include "PlayerController.h"
 #include "SceneTransition.h"
+#include "GameOverUIController.h"
 
 #define LEFT_SHOT "LeftShot"
 #define RIGHT_SHOT "RightShot"
@@ -21,7 +22,8 @@ EXPOSE_MEMBERS(PlayerDeath) {
 	MEMBER(MemberType::FLOAT, laserHitCooldownTimer),
 	MEMBER(MemberType::FLOAT, fireDamageTaken),
 	MEMBER(MemberType::FLOAT, cooldownFireDamage),
-	MEMBER(MemberType::GAME_OBJECT_UID, transitionUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, transitionUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, gameOverUID)
 };
 
 GENERATE_BODY_IMPL(PlayerDeath);
@@ -33,20 +35,30 @@ void PlayerDeath::Start() {
 		transitionGO = GameplaySystems::GetGameObject(transitionUID);
 		if (transitionGO) sceneTransition = GET_SCRIPT(transitionGO, SceneTransition);
 	}
+	GameObject* gameOverGO = GameplaySystems::GetGameObject(gameOverUID);
+
+	if (gameOverGO)gameOverController = GET_SCRIPT(gameOverGO, GameOverUIController);
+
+	laserHitCooldownTimer = laserHitCooldown;
 }
 
 void PlayerDeath::Update() {
 	if (player) {
 		if (playerController) {
-			dead = playerController->IsPlayerDead();
+			dead = playerController->IsActiveCharacterDead();
 		}
 
-		if (laserHitCooldownTimer <= laserHitCooldown) {
+		if (getLaserHit) {
+			if (!lastFrameLaserHit && getLaserHit) laserHitCooldownTimer = laserHitCooldown;
 			laserHitCooldownTimer += Time::GetDeltaTime();
 			if (laserHitCooldownTimer > laserHitCooldown) {
 				laserHitCooldownTimer = 0.0f;
-				getLaserHit = true;
+				if (playerController) playerController->TakeDamage(laserBeamTaken);
+				getLaserHit = false;
 			}
+			lastFrameLaserHit = true;
+		} else {
+			lastFrameLaserHit = false;
 		}
 
 		if (timerFireDamage <= cooldownFireDamage) {
@@ -61,19 +73,18 @@ void PlayerDeath::Update() {
 
 void PlayerDeath::OnAnimationFinished() {
 	if (dead) {
-		if (sceneTransition) {
-			sceneTransition->StartTransition();
+		if (playerController) {
+			if (playerController->IsPlayerDead()) {
+				OnLoseConditionMet();
+			} else {
+				playerController->OnCharacterDeath();
+			}
 		}
-		else {
-			if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
-		}
-	}
-	else {
+	} else {
 		if (!playerController)return;
 		if (playerController->playerFang.characterGameObject->IsActive()) {
 			playerController->playerFang.OnAnimationFinished();
-		}
-		else {
+		} else {
 			playerController->playerOnimaru.OnAnimationFinished();
 		}
 	}
@@ -82,17 +93,9 @@ void PlayerDeath::OnAnimationFinished() {
 void PlayerDeath::OnAnimationSecondaryFinished() {
 	if (playerController) {
 		if (playerController->playerFang.IsActive()) {
-			ComponentAnimation* animation = playerController->playerFang.compAnimation;
-			if (animation->GetCurrentState() && animation->GetCurrentStateSecondary()) {
-				if (animation->GetCurrentStateSecondary()->name == LEFT_SHOT) {
-					animation->SendTriggerSecondary(playerController->playerFang.states[10] + animation->GetCurrentState()->name);
-				}
-				else if (animation->GetCurrentStateSecondary()->name == RIGHT_SHOT) {
-					animation->SendTriggerSecondary(playerController->playerFang.states[11] + animation->GetCurrentState()->name);
-				}
-			}
+			playerController->playerFang.OnAnimationSecondaryFinished();
 		}
-		else {
+		else if(playerController->playerOnimaru.IsActive()) {
 			playerController->playerOnimaru.OnAnimationSecondaryFinished();
 		}
 	}
@@ -118,17 +121,23 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 		if(playerController) playerController->TakeDamage(barrelDamageTaken);
 		collidedWith.Disable();
 	} else if (collidedWith.name == "LaserBeam") {
-		if (getLaserHit) {
-			if (playerController) playerController->TakeDamage(laserBeamTaken);
-			getLaserHit = false;
-		}
-	} else if (collidedWith.name == "DukeProjectile") {
-		if (playerController) playerController->TakeDamage(dukeDamageTaken);
-	}
-	else if (collidedWith.name == "FireTile") {
+		getLaserHit = true;
+	} else if (collidedWith.name == "FireTile") {
 		if (fireDamageActive) {
 			if (playerController) playerController->TakeDamage(fireDamageTaken);
 			fireDamageActive = false;
+		}
+	}
+}
+
+void PlayerDeath::OnLoseConditionMet() {
+	if (gameOverController) {
+			gameOverController->GameOver();
+	} else{
+		if (sceneTransition) {
+			sceneTransition->StartTransition();
+		} else {
+			if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 		}
 	}
 }
