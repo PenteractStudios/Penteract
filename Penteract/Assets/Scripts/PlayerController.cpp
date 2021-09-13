@@ -182,7 +182,7 @@ void PlayerController::SetNoCooldown(bool status) {
 }
 //Switch
 bool PlayerController::CanSwitch() {
-	return !switchInCooldown && playerOnimaru.CanSwitch() && playerFang.CanSwitch() && !playerFang.ultimateOn;
+	return !switchInCooldown && playerOnimaru.CanSwitch() && playerFang.CanSwitch();
 }
 
 void PlayerController::ResetSwitchStatus() {
