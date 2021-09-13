@@ -62,7 +62,7 @@
                     {
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
-                        "Value": 13245266970739911193
+                        "Value": 15261592491771467264
                     },
                     {
                         "Name": "att2AttackSpeed",
@@ -92,7 +92,7 @@
                     {
                         "Name": "fangUID",
                         "Type": "GameObjectUID",
-                        "Value": 10867745004971701011
+                        "Value": 18423563680655226216
                     },
                     {
                         "Name": "damageMaterialPlaceHolderUID",
@@ -123,6 +123,16 @@
                         "Name": "groundPosition",
                         "Type": "Float",
                         "Value": 0.0
+                    },
+                    {
+                        "Name": "materialsUID",
+                        "Type": "GameObjectUID",
+                        "Value": 16502326001645675377
+                    },
+                    {
+                        "Name": "dissolveTimerToStart",
+                        "Type": "Float",
+                        "Value": 0.5
                     }
                 ]
             },
@@ -293,13 +303,13 @@
                         "Type": "MeshRenderer",
                         "Active": true,
                         "MeshID": 8162125314749612365,
-                        "MaterialID": 4886769671297062398
+                        "MaterialID": 6324482706962870118
                     },
                     {
                         "Type": "MeshRenderer",
                         "Active": true,
                         "MeshID": 1860498927682383532,
-                        "MaterialID": 4886769671297062398
+                        "MaterialID": 6324482706962870118
                     },
                     {
                         "Type": "BoundingBox",
