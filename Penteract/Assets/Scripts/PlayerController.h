@@ -87,6 +87,8 @@ public:
 	UID EMPEffectsUID = 0;
 	UID fangUltimateUID = 0;
 	UID fangUltimateVFXUID = 0;
+	UID fangRightFootVFX = 0;
+	UID fangLeftFootVFX = 0;
 
 	//Onimaru
 	UID onimaruUID = 0;
@@ -98,6 +100,9 @@ public:
 	UID onimaruBlastEffectsUID = 0;
 	UID onimaruUltimateBulletUID = 0;
 	UID onimaruLaserUID = 0;
+	UID onimaruRightFootVFX = 0;
+	UID onimaruLeftFootVFX = 0;
+
 	//HUD
 	UID HUDManagerObjectUID = 0;
 	float fangRecoveryRate = 1.0f;

@@ -318,16 +318,18 @@ void Onimaru::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* ev
 			if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_RIGHT)]) {
 				onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_RIGHT)]->Play();
 			}
+			if (rightFootstepsVFX) rightFootstepsVFX->PlayChildParticles();
 		}
 		else if (std::strcmp(eventName, "FootstepLeft")) {
 			if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_LEFT)]) {
 				onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_LEFT)]->Play();
 			}
+			if (leftFootstepsVFX) leftFootstepsVFX->PlayChildParticles();
 		}
 	}
 }
 
-void Onimaru::Init(UID onimaruUID, UID onimaruLaserUID, UID onimaruBulletUID, UID onimaruGunUID, UID onimaruRightHandUID, UID shieldUID, UID onimaruUltimateBulletUID, UID onimaruBlastEffectsUID, UID cameraUID, UID HUDManagerObjectUID) {
+void Onimaru::Init(UID onimaruUID, UID onimaruLaserUID, UID onimaruBulletUID, UID onimaruGunUID, UID onimaruRightHandUID, UID shieldUID, UID onimaruUltimateBulletUID, UID onimaruBlastEffectsUID, UID cameraUID, UID HUDManagerObjectUID, UID rightFootVFX, UID leftFootVFX) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(onimaruUID);
 	if (characterGameObject && characterGameObject->GetParent()) {
@@ -401,6 +403,12 @@ void Onimaru::Init(UID onimaruUID, UID onimaruLaserUID, UID onimaruBulletUID, UI
 
 	GameObject* blastParticlesGO = GameplaySystems::GetGameObject(onimaruBlastEffectsUID);
 	if (blastParticlesGO) blastParticles = blastParticlesGO->GetComponent<ComponentParticleSystem>();
+
+	GameObject* leftFootVFXGO = GameplaySystems::GetGameObject(leftFootVFX);
+	if (leftFootVFXGO) leftFootstepsVFX = leftFootVFXGO->GetComponent<ComponentParticleSystem>();
+
+	GameObject* rightFootVFXGO = GameplaySystems::GetGameObject(rightFootVFX);
+	if (rightFootVFXGO) rightFootstepsVFX = rightFootVFXGO->GetComponent<ComponentParticleSystem>();
 
 	if (characterGameObject) characterGameObject->Disable();
 }
