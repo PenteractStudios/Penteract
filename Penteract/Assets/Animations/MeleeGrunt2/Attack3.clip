@@ -16,20 +16,32 @@
             "Name": "RightBladeDamageOff"
         },
         {
+            "KeyFrame": 486,
+            "Name": "LeftBladeDamageOn"
+        },
+        {
             "KeyFrame": 510,
             "Name": "RightBladeDamageOff"
         },
         {
-            "KeyFrame": 486,
-            "Name": "LeftBladeDamageOn"
+            "KeyFrame": 496,
+            "Name": "LeftBladeDamageOff"
         },
         {
             "KeyFrame": 504,
             "Name": "RightBladeDamageOn"
         },
         {
-            "KeyFrame": 496,
-            "Name": "LeftBladeDamageOff"
+            "KeyFrame": 482,
+            "Name": "FootstepRight"
+        },
+        {
+            "KeyFrame": 493,
+            "Name": "FootstepLeft"
+        },
+        {
+            "KeyFrame": 511,
+            "Name": "FootstepRight"
         }
     ]
 }
