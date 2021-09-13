@@ -488,9 +488,7 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 					shooting = false;
 				}
-				if (!compAnimation->GetCurrentStateSecondary() || compAnimation->GetCurrentStateSecondary()->name != "IdleAim") {
-					transitioning = 0;
-				}
+
 			}
 			if (GetInputBool(InputActions::ABILITY_2, useGamepad) && !ultimateOn) {
 				ActivateEMP();
