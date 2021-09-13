@@ -8,17 +8,17 @@
 #include "EnemySpawnPoint.h"
 #include "HUDController.h"
 #include "AIMovement.h"
-#include "WinLose.h"
 #include "Onimaru.h"
 
 #include <math.h>
+#include <random>
+
 
 EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, materialsUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, damageMaterialPlaceHolderUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, defaultMaterialPlaceHolderUID),
 		MEMBER_SEPARATOR("Enemy stats"),
 		MEMBER(MemberType::FLOAT, gruntCharacter.lifePoints),
 		MEMBER(MemberType::FLOAT, gruntCharacter.movementSpeed),
@@ -26,7 +26,7 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 		MEMBER(MemberType::INT, gruntCharacter.fallingSpeed),
 		MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
 		MEMBER(MemberType::FLOAT, gruntCharacter.attackRange),
-		MEMBER(MemberType::FLOAT, gruntCharacter.timeToDie),
+		MEMBER(MemberType::FLOAT, gruntCharacter.barrelDamageTaken),
 		MEMBER_SEPARATOR("Push variables"),
 		MEMBER(MemberType::FLOAT, gruntCharacter.pushBackDistance),
 		MEMBER(MemberType::FLOAT, gruntCharacter.pushBackSpeed),
@@ -74,14 +74,6 @@ void AIMeleeGrunt::Start() {
 		playerDeath = GET_SCRIPT(fang, PlayerDeath);
 	}
 
-	
-
-	GameObject* winLose = GameplaySystems::GetGameObject(winConditionUID);
-
-	if (winLose) {
-		winLoseScript = GET_SCRIPT(winLose, WinLose);
-	}
-
 	agent = GetOwner().GetComponent<ComponentAgent>();
 	if (agent) {
 		agent->SetMaxSpeed(gruntCharacter.movementSpeed);
@@ -124,14 +116,6 @@ void AIMeleeGrunt::Start() {
 		}
 	}
 
-	gameObject = GameplaySystems::GetGameObject(defaultMaterialPlaceHolderUID);
-	if (gameObject) {
-		ComponentMeshRenderer* meshRenderer = gameObject->GetComponent<ComponentMeshRenderer>();
-		if (meshRenderer) {
-			defaultMaterialID = meshRenderer->materialId;
-		}
-	}
-
 	gameObject = &GetOwner();
 	if (gameObject) {
 		// Workaround get the first children - Create a Prefab overrides childs IDs
@@ -142,6 +126,8 @@ void AIMeleeGrunt::Start() {
 	}
 
 	pushBackRealDistance = gruntCharacter.pushBackDistance;
+	SetRandomMaterial();
+
 }
 
 void AIMeleeGrunt::Update() {
@@ -160,7 +146,7 @@ void AIMeleeGrunt::Update() {
 		if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
 			timeSinceLastHurt += Time::GetDeltaTime();
 			if (timeSinceLastHurt > hurtFeedbackTimeDuration) {
-				componentMeshRenderer->materialId = defaultMaterialID;
+				SetMaterial(defaultMaterialID);
 			}
 		}
 	}
@@ -209,7 +195,7 @@ void AIMeleeGrunt::Update() {
 		movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), speedToUse, true);
 		if (movementScript->CharacterInAttackRange(player, gruntCharacter.attackRange)) {
 			int random = std::rand() % 100;
-			if (random < att1AbilityChance) { 
+			if (random < att1AbilityChance) {
 				attackNumber = 1;
 				attackSpeed = att1AttackSpeed;
 				attackMovementSpeed = att1MovementSpeedWhileAttacking;
@@ -232,8 +218,8 @@ void AIMeleeGrunt::Update() {
 		}
 		break;
 	case AIState::ATTACK:
-		if (track) { 
-			movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition()); 
+		if (track) {
+			movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
 		}
 		if (attackStep) {
 			movementScript->Seek(state, ownerTransform->GetGlobalPosition() + ownerTransform->GetFront()*10, attackMovementSpeed, false);
@@ -262,8 +248,7 @@ void AIMeleeGrunt::Update() {
 	}
 
 	if (gruntCharacter.destroying) {
-		if (!killSent && winLoseScript != nullptr) {
-			winLoseScript->IncrementDeadEnemies();
+		if (!killSent) {
 			if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
 			killSent = true;
 
@@ -276,13 +261,14 @@ void AIMeleeGrunt::Update() {
 				}
 			}
 		}
-		if (gruntCharacter.timeToDie > 0) {
-			gruntCharacter.timeToDie -= Time::GetDeltaTime();
-		}
-		else {
+		if (componentMeshRenderer && componentMeshRenderer->HasDissolveAnimationFinished()) {
 			if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
 			GameplaySystems::DestroyGameObject(&GetOwner());
 		}
+	}
+
+	if (!gruntCharacter.isAlive) {
+		Death();
 	}
 }
 
@@ -332,7 +318,7 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 			bool hitTaken = false;
 			if (collidedWith.name == "FangBullet") {
 				hitTaken = true;
-				GameplaySystems::DestroyGameObject(&collidedWith);
+				ParticleHit(collidedWith, particle, playerController->playerFang);
 				gruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
 			}else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
 				hitTaken = true;
@@ -348,7 +334,7 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 			}
 			else if (collidedWith.name == "Barrel") {
 				hitTaken = true;
-				gruntCharacter.GetHit(playerDeath->barrelDamageTaken);
+				gruntCharacter.GetHit(gruntCharacter.barrelDamageTaken);
 			}
 			else if (collidedWith.name == "DashDamage" && playerController->playerFang.level1Upgrade) {
 				hitTaken = true;
@@ -365,17 +351,15 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 			}
 
 			if (collidedWith.name == "EMP") {
-				if (animation->GetCurrentState()) {
-					animation->SendTrigger(animation->GetCurrentState()->name + "StunStart");
+				if (state != AIState::STUNNED) {
+					if (animation->GetCurrentState()) {
+						animation->SendTrigger(animation->GetCurrentState()->name + "StunStart");
+					}
+					agent->RemoveAgentFromCrowd();
+					stunTimeRemaining = stunDuration;
+					state = AIState::STUNNED;
 				}
-				agent->RemoveAgentFromCrowd();
-				stunTimeRemaining = stunDuration;
-				state = AIState::STUNNED;
 			}
-		}
-
-		if (!gruntCharacter.isAlive) {
-			Death();
 		}
 	}
 }
@@ -393,10 +377,6 @@ void AIMeleeGrunt::EnableBlastPushBack() {
 			if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
 			PlayHitMaterialEffect();
 			timeSinceLastHurt = 0.0f;
-
-			if (!gruntCharacter.isAlive) {
-				Death();
-			}
 		}
 	}
 }
@@ -454,7 +434,7 @@ void AIMeleeGrunt::CalculatePushBackRealDistance() {
 
 	float3 finalPos = enemyPos + direction * gruntCharacter.pushBackDistance;
 	float3 resultPos = { 0,0,0 };
-	
+
 	Navigation::Raycast(enemyPos, finalPos, hitResult, resultPos);
 
 	if (hitResult) {
@@ -523,19 +503,21 @@ void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const cha
 
 void AIMeleeGrunt::Death()
 {	
-	if (animation->GetCurrentState() && state != AIState::DEATH){
-		std::string changeState = animation->GetCurrentState()->name + "Death";
-		deathType = 1 + rand() % 2;
-		std::string deathTypeStr = std::to_string(deathType);
-		animation->SendTrigger(changeState + deathTypeStr);
+	if (!GameController::IsGameplayBlocked()) {
+		if (animation->GetCurrentState() && state != AIState::DEATH) {
+			std::string changeState = animation->GetCurrentState()->name + "Death";
+			deathType = 1 + rand() % 2;
+			std::string deathTypeStr = std::to_string(deathType);
+			animation->SendTrigger(changeState + deathTypeStr);
 
-		if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
-		ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
-		if (collider) collider->Disable();
+			if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
+			ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
+			if (collider) collider->Disable();
 
-		agent->RemoveAgentFromCrowd();
-		if (gruntCharacter.beingPushed) gruntCharacter.beingPushed = false;
-		state = AIState::DEATH;
+			agent->RemoveAgentFromCrowd();
+			if (gruntCharacter.beingPushed) gruntCharacter.beingPushed = false;
+			state = AIState::DEATH;
+		}
 	}
 }
 
@@ -545,24 +527,67 @@ void AIMeleeGrunt::PlayerHit() {
 
 void AIMeleeGrunt::PlayHitMaterialEffect()
 {
-	if (!dissolveAlreadyStarted && componentMeshRenderer) {
-		if (damageMaterialID != 0) {
-			componentMeshRenderer->materialId = damageMaterialID;
-		}
+	if (!dissolveAlreadyStarted) {
+		SetMaterial(damageMaterialID);
 	}
 }
 
 void AIMeleeGrunt::UpdateDissolveTimer() {
 	if (dissolveAlreadyStarted && !dissolveAlreadyPlayed) {
 		if (currentDissolveTime >= dissolveTimerToStart) {
-			if (componentMeshRenderer && dissolveMaterialID != 0) {
-				componentMeshRenderer->materialId = dissolveMaterialID;
-				componentMeshRenderer->PlayDissolveAnimation();
+			if (dissolveMaterialID != 0) {
+				SetMaterial(dissolveMaterialID, true);
 			}
 			dissolveAlreadyPlayed = true;
 		}
 		else {
 			currentDissolveTime += Time::GetDeltaTime();
+		}
+	}
+}
+
+void AIMeleeGrunt::SetRandomMaterial()
+{
+	GameObject* materialsHolder = GameplaySystems::GetGameObject(materialsUID);
+
+	if (materialsHolder) {
+		std::vector<UID> materials;
+		for (const auto& child : materialsHolder->GetChildren()) {
+			ComponentMeshRenderer* meshRenderer = child->GetComponent<ComponentMeshRenderer>();
+			if (meshRenderer && meshRenderer->materialId) {
+				materials.push_back(meshRenderer->materialId);
+			}
+		}
+
+		
+		if (!materials.empty()) {
+			//Random distribution it cant be saved into global 
+			std::random_device rd;  //Will be used to obtain a seed for the random number engine
+			std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+			std::uniform_int_distribution<int> distrib(1, materials.size());
+
+			int position = distrib(gen)-1;
+
+			for (auto& child : GetOwner().GetChildren()) {
+				if (child->HasComponent<ComponentMeshRenderer>()) {
+					defaultMaterialID = materials[position];
+
+					for (auto& mesh : child->GetComponents<ComponentMeshRenderer>()) {
+						mesh.materialId = materials[position];
+					}
+				}
+			}
+		}
+	}
+}
+
+void AIMeleeGrunt::SetMaterial(UID newMaterialID, bool needToPlayDissolve) {
+	if (newMaterialID > 0 && GetOwner().GetChildren().size() > 0) {
+		for (ComponentMeshRenderer& mesh : GetOwner().GetChildren()[0]->GetComponents<ComponentMeshRenderer>()) {
+			mesh.materialId = newMaterialID;
+			if (needToPlayDissolve) {
+				mesh.PlayDissolveAnimation();
+			}
 		}
 	}
 }

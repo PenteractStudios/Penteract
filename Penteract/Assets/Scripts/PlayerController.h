@@ -44,7 +44,9 @@ public:
 	int GetOverPowerMode();
 	float GetOnimaruMaxHealth() const;
 	float GetFangMaxHealth() const;
-	bool IsPlayerDead() { return !playerFang.isAlive || !playerOnimaru.isAlive; }
+	bool IsPlayerDead();
+	bool IsActiveCharacterDead() { return (playerFang.characterGameObject->IsActive() && !playerFang.isAlive) || (playerOnimaru.characterGameObject->IsActive() && !playerOnimaru.isAlive); }
+	bool AreBothCharactersAlive() { return playerFang.isAlive && playerOnimaru.isAlive; }
 	void TakeDamage(float damage);
 	static void SetUseGamepad(bool useGamepad_);
 
@@ -53,7 +55,8 @@ public:
 
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
 	void ObtainUpgradeCell();
-
+	void OnCharacterDeath();
+	void OnCharacterResurrect();
 public:
 	//Debug
 	bool invincibleMode = false;
@@ -72,13 +75,14 @@ public:
 
 	//Fang
 	UID fangUID = 0;
-	UID fangTrailDashUID = 0;
+	UID fangParticleDashUID = 0;
 	UID fangDashDamageUID = 0;
 	UID fangTrailGunUID = 0;
 	UID fangLeftGunUID = 0;
 	UID fangRightGunUID = 0;
 	UID fangLeftBulletUID = 0;
 	UID fangRightBulletUID = 0;
+	UID fangLaserUID = 0;
 	UID EMPUID = 0;
 	UID EMPEffectsUID = 0;
 	UID fangUltimateUID = 0;
@@ -93,7 +97,7 @@ public:
 	UID onimaruShieldUID = 0;
 	UID onimaruBlastEffectsUID = 0;
 	UID onimaruUltimateBulletUID = 0;
-
+	UID onimaruLaserUID = 0;
 	//HUD
 	UID HUDManagerObjectUID = 0;
 	float fangRecoveryRate = 1.0f;

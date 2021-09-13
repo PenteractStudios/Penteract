@@ -13,7 +13,7 @@ class LaserTurret : public Script
 		SHOOT,
 		END,
 		IDLE_START,
-		IDLE_END
+		SHOOTING_END
 	};
 
 public:
@@ -26,6 +26,7 @@ public:
 	void OnAnimationFinished() override;
 
 	UID laserTargetUID = 0;
+	UID laserWarningUID = 0;
 
 	float coolDownOnTimer = 0.0f;
 	float coolDownOn = 2.0f;
@@ -37,9 +38,10 @@ private:
 
 
 	ComponentAnimation* animationComp = nullptr;
-	TurretState currentState = TurretState::START;
-	
+	TurretState currentState = TurretState::IDLE_START;
+
 	GameObject* laserObject = nullptr;
+	GameObject* laserWarning = nullptr;
 
 	const std::string states[5] = { "Startup", "Shoot", "End", "StartUpIdle", "EndIdle"};
 

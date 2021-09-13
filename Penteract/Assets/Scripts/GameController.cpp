@@ -1,9 +1,11 @@
 #include "GameController.h"
 
 #include "GameObject.h"
+#include "PlayerController.h"
 #include "Modules/ModuleCamera.h"
 #include "GameplaySystems.h"
 #include "StatsDisplayer.h"
+#include "PauseController.h"
 
 #include "Math/float3x3.h"
 #include "Geometry/frustum.h"
@@ -37,6 +39,9 @@ void GameController::Start() {
 	transitionFinished = false;
 	isGameplayBlocked = false;
 	switchTutorialActive = false;
+
+	if (PlayerController::currentLevel == 1) switchTutorialReached = false;
+	else switchTutorialReached = true;
 
 	gameCamera = GameplaySystems::GetGameObject(gameCameraUID);
 	godCamera = GameplaySystems::GetGameObject(godCameraUID);
@@ -88,11 +93,13 @@ void GameController::Update() {
 		}
 	}
 
-	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)) {
+	if ((Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)) && !isVideoActive) {
 		if (isPaused) {
+			PauseController::SetIsPause(false);
 			ResumeGame();
 		}
 		else {
+			PauseController::SetIsPause(true);
 			PauseGame();
 		}
 	}
@@ -247,24 +254,33 @@ void GameController::ResumeGame() {
 	isGameplayBlocked = false;
 }
 
-bool const GameController::IsGameplayBlocked()
-{
+bool const GameController::IsGameplayBlocked() {
 	return isGameplayBlocked;
 }
 
-void GameController::BlockGameplay(bool blockIt)
-{
+void GameController::BlockGameplay(bool blockIt) {
 	isGameplayBlocked = blockIt;
 }
 
-bool const GameController::IsSwitchTutorialActive()
-{
+bool const GameController::IsSwitchTutorialActive() {
 	return switchTutorialActive;
 }
 
-void GameController::ActivateSwitchTutorial(bool isFinished)
-{
+void GameController::ActivateSwitchTutorial(bool isFinished) {
 	switchTutorialActive = isFinished;
+}
+
+bool const GameController::IsSwitchTutorialReached() {
+	return switchTutorialReached;
+}
+
+void GameController::ReachSwitchTutorial(bool isReached) {
+	switchTutorialReached = isReached;
+}
+
+void GameController::SetVideoActive(bool isActived)
+{
+	isVideoActive = isActived;
 }
 
 void GameController::DoTransition() {

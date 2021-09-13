@@ -21,12 +21,12 @@
     "NormalStrength": 1.0,
     "EmissiveColor": [
         1.0,
-        1.0,
-        1.0,
+        0.23460203409194947,
+        0.1764705777168274,
         0.0
     ],
-    "EmissiveMap": 6964769319253172906,
-    "Emissive": 7.5,
+    "EmissiveMap": 0,
+    "Emissive": 10.0,
     "AmbientOcclusionMap": 8577542510342636200,
     "Smoothness": 1.0,
     "HasSmoothnessInAlphaChannel": true,
@@ -37,5 +37,16 @@
     "Offset": [
         0.0,
         0.0
-    ]
+    ],
+    "DissolveScale": 0.0,
+    "DissolveOffset": [
+        0.0,
+        0.0
+    ],
+    "DissolveDuration": 0.0,
+    "DissolveEdgeSize": 0.0,
+    "VolumetricLightIntensity": 0.0,
+    "VolumetricLightAttenuationExponent": 0.0,
+    "IsSoft": false,
+    "SoftRange": 0.0
 }

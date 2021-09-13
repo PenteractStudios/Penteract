@@ -1,5 +1,6 @@
 #include "HUDManager.h"
 #include "PlayerController.h";
+#include "GameController.h"
 #include "Components/UI/ComponentTransform2D.h"
 #include "Components/UI/ComponentImage.h"
 #include "ImageColorFader.h"
@@ -20,23 +21,31 @@
 
 #define HIERARCHY_INDEX_ULTIMATE_ABILITY_DECOR_FILL 8
 
-#define HIERARCHY_INDEX_SWITCH_ABILITY_FILL 1
-#define HIERARCHY_INDEX_SWITCH_ABILITY_DURATION_FILL 2
-#define HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_WHITE 3
-#define HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_GLOW 4
-#define HIERARCHY_INDEX_SWITCH_ABILITY_EFFECT 5
-#define HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE 7
-#define HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL 8
+#define HIERARCHY_INDEX_SWITCH_ABILITY_GREEN_EFFECT 0
+#define HIERARCHY_INDEX_SWITCH_ABILITY_FILL 2
+#define HIERARCHY_INDEX_SWITCH_ABILITY_DURATION_FILL 3
+#define HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_WHITE 4
+#define HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_GLOW 5
+#define HIERARCHY_INDEX_SWITCH_ABILITY_EFFECT 6
+#define HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE 8
+#define HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL 9
+
+#define SWITCH_SKILL_HIERARCHY_NUM_CHILDREN 10
 
 #define HIERARCHY_INDEX_HEALTH_BACKGROUND 0
 #define HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK 1
 #define HIERARCHY_INDEX_HEALTH_FILL 2
 #define HIERARCHY_INDEX_HEALTH_OVERLAY 3
-#define HIERARCHY_INDEX_HEALTH_TEXT 4
 
-#define HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP 0
-#define HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN 1
-#define HIERARCHY_INDEX_SWITCH_HEALTH_FILL 2
+#define HIERARCHY_INDEX_SWITCH_HEALTH_STROKE 0
+#define HIERARCHY_INDEX_SWITCH_HEALTH_FILL 1
+
+#define HIERARCHY_INDEX_HUD_LEFT_SIDE 0
+#define HIERARCHY_INDEX_HUD_RIGHT_SIDE 1
+
+#define HEALTH_HIERARCHY_NUM_CHILDREN 4
+#define HUD_HIT_FEEDBACK_SIDES 2
+#define SWITCH_HEALTH_HIERARCHY_NUM_CHILDREN 2
 
 EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerObjectUID),
@@ -50,7 +59,9 @@ EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, switchHealthParentUID),
 	MEMBER(MemberType::FLOAT, lostHealthFeedbackAlpha),
 	MEMBER_SEPARATOR("HUD Sides"),
-	MEMBER(MemberType::GAME_OBJECT_UID, sidesHUDParentUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, sidesHUDParentUID),
+	MEMBER(MemberType::FLOAT, criticalHealthPercentage),
+	MEMBER(MemberType::STRING, shieldObjName)
 };
 
 GENERATE_BODY_IMPL(HUDManager);
@@ -66,10 +77,12 @@ void HUDManager::Start() {
 	fangSkillParent = GameplaySystems::GetGameObject(fangSkillParentUID);
 	onimaruSkillParent = GameplaySystems::GetGameObject(onimaruSkillParentUID);
 	switchSkillParent = GameplaySystems::GetGameObject(switchSkillParentUID);
+	switchSkillActivated = false;
 
 	if (fangSkillParent && onimaruSkillParent && switchSkillParent) {
 		skillsFang = fangSkillParent->GetChildren();
 		skillsOni = onimaruSkillParent->GetChildren();
+		switchSkillParent->Disable();
 
 		//Vector used later to avoid a flicker on first swtich
 		std::vector<ComponentTransform2D*>oniTransforms;
@@ -110,7 +123,7 @@ void HUDManager::Start() {
 		if (switchSkillParent) {
 			std::vector<GameObject*> switchChildren = switchSkillParent->GetChildren();
 
-			if (switchChildren.size() < HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL) return;
+			if (switchChildren.size() != SWITCH_SKILL_HIERARCHY_NUM_CHILDREN) return;
 
 			switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_WHITE]->Disable();
 			switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_GLOW]->Enable();
@@ -118,6 +131,7 @@ void HUDManager::Start() {
 			if (switchGlowImage) {
 				switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 0.0f));
 			}
+			switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_GREEN_EFFECT]->Disable();
 
 		}
 
@@ -146,8 +160,8 @@ void HUDManager::Start() {
 	if (switchHealthParent) {
 		switchHealthChildren = switchHealthParent->GetChildren();
 
-		if (switchHealthChildren.size() == 3) {
-			ComponentTransform2D* transform = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentTransform2D>();
+		if (switchHealthChildren.size() == SWITCH_HEALTH_HIERARCHY_NUM_CHILDREN) {
+			ComponentTransform2D* transform = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE]->GetComponent<ComponentTransform2D>();
 			if (transform) originalStrokeSize = transform->GetSize();
 			transform = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_FILL]->GetComponent<ComponentTransform2D>();
 			if (transform) originalFillPos = transform->GetPosition();
@@ -158,21 +172,33 @@ void HUDManager::Start() {
 
 	if (sidesHUDParent) {
 		sidesHUDChildren = sidesHUDParent->GetChildren();
+		InitializeHUDSides();
 	}
 }
 
 void HUDManager::Update() {
+	// This checks for when the Switch tutorial is reached.When this happens, switch is activated and Player will be able to switch from then on.
+	if (GameController::IsSwitchTutorialReached() && !switchSkillActivated) {
+		if (switchSkillParent) {
+			if (!switchSkillParent->IsActive()) {
+				switchSkillParent->Enable();
+				switchSkillActivated = true;
+			}
+		}
+	}
+
 	ManageSwitch();
 	if (playingLostHealthFeedback) PlayLostHealthFeedback();
+	if (playingHitEffect) PlayHitEffect();
 }
 
 void HUDManager::UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown, float fangUltimateRemainingNormalizedValue, float oniUltimateRemainingNormalizedValue) {
 	cooldowns[static_cast<int>(Cooldowns::FANG_SKILL_1)] = fangCooldown1;
 	cooldowns[static_cast<int>(Cooldowns::FANG_SKILL_2)] = fangCooldown2;
-	cooldowns[static_cast<int>(Cooldowns::FANG_SKILL_3)] = fangUltimateRemainingNormalizedValue == 0 ? fangCooldown3 : 1.0f;
+	cooldowns[static_cast<int>(Cooldowns::FANG_SKILL_3)] = fangUltimateRemainingNormalizedValue == 0 ? fangCooldown3 : 0.99f;
 	cooldowns[static_cast<int>(Cooldowns::ONIMARU_SKILL_1)] = onimaruCooldown1;
 	cooldowns[static_cast<int>(Cooldowns::ONIMARU_SKILL_2)] = onimaruCooldown2;
-	cooldowns[static_cast<int>(Cooldowns::ONIMARU_SKILL_3)] = oniUltimateRemainingNormalizedValue == 0 ? onimaruCooldown3 : 1.0f;
+	cooldowns[static_cast<int>(Cooldowns::ONIMARU_SKILL_3)] = oniUltimateRemainingNormalizedValue == 0 ? onimaruCooldown3 : 0.99f;
 	cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] = switchCooldown;
 
 	if (onimaruObj && fangObj && fangSkillParent && onimaruSkillParent) {
@@ -190,7 +216,7 @@ void HUDManager::UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2,
 
 void HUDManager::UpdateHealth(float fangHealth, float onimaruHealth) {
 	if (!fangObj || !onimaruObj || !playerController) return;
-	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
+	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
 	if (switchState == SwitchState::IDLE) StartLostHealthFeedback(); // Temporary hack
 
@@ -205,22 +231,20 @@ void HUDManager::UpdateHealth(float fangHealth, float onimaruHealth) {
 		}
 	}
 
-	ComponentText* healthText = nullptr;
-	healthText = fangObj->IsActive() ? fangHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>() : onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
-	if (healthText) {
-		healthText->SetText(std::to_string((int)health));
-	}
-
 	if (fangObj->IsActive()) fangPreviousHealth = fangHealth;
 	else onimaruPreviousHealth = onimaruHealth;
 
 	if (switchState != SwitchState::IDLE) ResetLostHealthFeedback();
 
+	if (!criticalHealthWarning && health <= maxHealth * (criticalHealthPercentage / 100.f)) ShowCriticalHealthWarning();
+
+	playingHitEffect = true;
+	hitEffectTimer = 0.0f;
 }
 
 void HUDManager::HealthRegeneration(float health) {
 	if (!fangObj || !onimaruObj || !playerController) return;
-	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
+	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
 	float maxHealth = fangObj->IsActive() ? playerController->GetOnimaruMaxHealth() : playerController->GetFangMaxHealth();
 
@@ -231,13 +255,6 @@ void HUDManager::HealthRegeneration(float health) {
 		if (healthFill->IsFill()) {
 			healthFill->SetFillValue(health / maxHealth);
 		}
-	}
-
-	// Set current health text
-	ComponentText* healthText = nullptr;
-	healthText = fangObj->IsActive() ? onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>() : fangHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
-	if (healthText) {
-		healthText->SetText(std::to_string((int)health));
 	}
 
 	// Set health lost fill bar to current health
@@ -254,21 +271,34 @@ void HUDManager::HealthRegeneration(float health) {
 }
 
 void HUDManager::StartCharacterSwitch() {
+	if (!fangObj || !playerController) return;
 	switchTimer = 0;
 	switchState = SwitchState::PRE_COLLAPSE;
 	if (switchSkillParent) {
 		std::vector<GameObject*> switchChildren = switchSkillParent->GetChildren();
 		if (switchChildren.size() > HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL - 1) {
-			switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_WHITE]->Enable();
-
-			switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_GLOW]->Enable();
-
 			if (switchGlowImage) {
-				switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 1.0f));
+				if (playerController && playerController->AreBothCharactersAlive()) {
+					switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 1.0f));
+					switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_WHITE]->Enable();
+					switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_GLOW]->Enable();
+				}
 			}
+
+			switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_GREEN_EFFECT]->Enable();
 		}
 	}
 	if (playingLostHealthFeedback) StopLostHealthFeedback();
+		
+	// Check if the new character needs the health warning
+
+	float health = fangObj->IsActive() ? onimaruPreviousHealth : fangPreviousHealth;
+	float maxHealth = fangObj->IsActive() ? playerController->GetOnimaruMaxHealth() : playerController->GetFangMaxHealth();
+
+	if (health > maxHealth * (criticalHealthPercentage / 100.f)) {
+		if (criticalHealthWarning) HideCriticalHealthWarning();
+	}
+	else if (!criticalHealthWarning) ShowCriticalHealthWarning();
 }
 
 void HUDManager::SetCooldownRetreival(Cooldowns cooldown) {
@@ -284,6 +314,14 @@ void HUDManager::StartUsingSkill(Cooldowns cooldown) {
 void HUDManager::StopUsingSkill(Cooldowns cooldown) {
 	if (cooldown != Cooldowns::SWITCH_SKILL)
 		SetPictoState(cooldown, cooldowns[static_cast<int>(cooldown)] < 1.0f ? PictoState::UNAVAILABLE : PictoState::AVAILABLE);
+}
+
+void HUDManager::OnCharacterDeath() {
+	abilityCoolDownsRetreived[static_cast<int>(Cooldowns::SWITCH_SKILL)] = false;
+}
+
+void HUDManager::OnCharacterResurrect() {
+
 }
 
 void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
@@ -331,15 +369,6 @@ void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 					fillImage->SetFillValue(cooldowns[skill]);
 				}
 			}
-
-			//GameObject* textParent = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_KEY_FILL];
-
-			//if (textParent) {
-			//	text = textParent->GetChild(1)->GetComponent<ComponentText>();
-			//	if (text) {
-			//		text->SetFontColor(cooldowns[skill] < 1 ? buttonTextColorNotAvailable : buttonTextColorAvailable);
-			//	}
-			//}
 
 			if (textFill) {
 				textFill->SetColor(cooldowns[skill] < 1 ? buttonColorNotAvailable : buttonColorAvailable);
@@ -426,7 +455,7 @@ void HUDManager::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canv
 
 					if (cooldown == Cooldowns::ONIMARU_SKILL_1) {
 						if (onimaruObj) {
-							GameObject* shieldObj = onimaruObj->GetChild("Shield");
+							GameObject* shieldObj = onimaruObj->GetChild(shieldObjName.c_str());
 							if (shieldObj) {
 								if (!shieldObj->IsActive()) {
 									ef = GET_SCRIPT(children[HIERARCHY_INDEX_ABILITY_EFFECT], AbilityRefeshFX);
@@ -438,8 +467,12 @@ void HUDManager::AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canv
 					}
 				} else {
 					//Switch skill
-					ef = GET_SCRIPT(skills[HIERARCHY_INDEX_SWITCH_ABILITY_EFFECT], AbilityRefeshFX);
-					//pef = GET_SCRIPT(canvas->GetChild(HIERARCHY_INDEX_SWAP_ABILITY_EFFECT), AbilityRefreshEffectProgressBar);
+
+					if (playerController) {
+						if (playerController->AreBothCharactersAlive()) {
+							ef = GET_SCRIPT(skills[HIERARCHY_INDEX_SWITCH_ABILITY_EFFECT], AbilityRefeshFX);
+						}
+					}
 				}
 
 				if (ef) {
@@ -485,7 +518,7 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 
 	std::vector<GameObject*> children = switchSkillParent->GetChildren();
 
-	if (children.size() < HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL) return;
+	if (children.size() != SWITCH_SKILL_HIERARCHY_NUM_CHILDREN) return;
 
 	ComponentImage* fillColor = children[HIERARCHY_INDEX_SWITCH_ABILITY_FILL]->GetComponent<ComponentImage>();
 	ComponentImage* image = children[HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE]->GetComponent<ComponentImage>();
@@ -502,7 +535,13 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 
 	if (fillColor && image) {
 		fillColor->SetFillValue(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
-		fillColor->SetColor(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1 ? float4(switchSkillColorNotAvailable.xyz(), 0.3f + cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]) : switchSkillColorAvailable);
+		if (playerController) {
+			if (playerController->AreBothCharactersAlive()) {
+				fillColor->SetColor(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1 ? float4(switchSkillColorNotAvailable.xyz(), 0.3f + cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]) : switchSkillColorAvailable);
+			} else {
+				fillColor->SetColor(switchSkillColorDeadCharacter);
+			}
+		}
 	}
 
 	AbilityCoolDownEffectCheck(Cooldowns::SWITCH_SKILL, switchSkillParent);
@@ -518,9 +557,10 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 }
 
 void HUDManager::ManageSwitch() {
-	if (!fangSkillParent || !onimaruSkillParent || !fangHealthParent || !onimaruHealthParent || !switchHealthParent || !fangObj || !onimaruObj) return;
+	if (!fangSkillParent || !onimaruSkillParent || !switchSkillParent || !fangHealthParent || !onimaruHealthParent || !switchHealthParent || !fangObj || !onimaruObj) return;
 	if (skillsFang.size() != 3 || skillsOni.size() != 3) return;
-	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
+	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
+	if (switchHealthChildren.size() != SWITCH_HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
 	ComponentTransform2D* transform2D = nullptr;
 	ComponentTransform2D* health = nullptr;
@@ -534,7 +574,7 @@ void HUDManager::ManageSwitch() {
 	ComponentTransform2D* switchHealthFillTransform2D = nullptr;
 
 	if (switchShadeTransform) {
-		if (switchState != SwitchState::IDLE || cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] >= 1.0f) {
+		if ((switchState != SwitchState::IDLE || cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] >= 1.0f) && playerController && playerController->AreBothCharactersAlive()) {
 			Quat rotToAdd;
 			rotToAdd.SetFromAxisAngle(float4(0, 0, 1, 1), Time::GetDeltaTime() * rotationSpeed);
 			switchShadeTransform->SetRotation(rotToAdd * switchShadeTransform->GetGlobalRotation());
@@ -569,24 +609,29 @@ void HUDManager::ManageSwitch() {
 		break;
 	case SwitchState::PRE_COLLAPSE:
 
-		//TODO make glow happen
-		//TODO activate white effect under picto 
-
 		if (switchTimer > switchPreCollapseMovementTime) {
 			switchTimer = switchPreCollapseMovementTime;
 		}
 
+		//Glow should only update if both characters are alive
 		if (switchGlowImage) {
-			switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 1 - Clamp(switchTimer / switchPreCollapseMovementTime, 0.0f, 0.7f)));
+			if (playerController && playerController->AreBothCharactersAlive()) {
+				switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 1 - Clamp(switchTimer / switchPreCollapseMovementTime, 0.0f, 0.7f)));
+			}
 		}
 
 		ManageSwitchPreCollapseState(fangSkillParent->IsActive() ? fangSkillParent : onimaruSkillParent, fangSkillParent->IsActive() ? skillsFang : skillsOni);
+		ManageSwitchGreenEffect(true, switchPreCollapseMovementTime);
 
 
 
 		if (switchTimer == switchPreCollapseMovementTime) {
+
+			//Glow should only update if both characters are alive
 			if (switchGlowImage) {
-				switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 0));
+				if (playerController && playerController->AreBothCharactersAlive()) {
+					switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 0));
+				}
 			}
 			switchState = SwitchState::COLLAPSE;
 			switchTimer = 0;
@@ -600,11 +645,15 @@ void HUDManager::ManageSwitch() {
 			switchTimer = switchCollapseMovementTime;
 		}
 
+		//Glow should only update if both characters are alive
 		if (switchGlowImage) {
-			switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 1 - Clamp01(0.7f + switchTimer / switchPreCollapseMovementTime)));
+			if (playerController && playerController->AreBothCharactersAlive()) {
+				switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 1 - Clamp01(0.7f + switchTimer / switchPreCollapseMovementTime)));
+			}
 		}
 
 		ManageSwitchCollapseState(fangSkillParent->IsActive() ? fangSkillParent : onimaruSkillParent, fangSkillParent->IsActive() ? skillsFang : skillsOni);
+		ManageSwitchGreenEffect(false, switchCollapseMovementTime);
 
 		//Health handling
 
@@ -613,8 +662,6 @@ void HUDManager::ManageSwitch() {
 			backgroundImage = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
 			fillImage = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
 			overlayImage = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
-			healthText = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
-			switchHealthStroke = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->GetComponent<ComponentImage>();
 
 			if (health) {
 				health->SetPosition(float3::Lerp(originalOnimaruHealthPosition + float3(healthOffset, 0, 0), originalOnimaruHealthPosition, switchTimer / switchCollapseMovementTime));
@@ -624,13 +671,13 @@ void HUDManager::ManageSwitch() {
 			backgroundImage = fangHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
 			fillImage = fangHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
 			overlayImage = fangHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
-			healthText = fangHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
-			switchHealthStroke = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentImage>();
 
 			if (health) {
 				health->SetPosition(float3::Lerp(originalFangHealthPosition, originalFangHealthPosition - float3(healthOffset, 0, 0), switchTimer / switchCollapseMovementTime));
 			}
 		}
+
+		switchHealthStroke = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE]->GetComponent<ComponentImage>();
 
 
 		if (backgroundImage) {
@@ -643,10 +690,6 @@ void HUDManager::ManageSwitch() {
 
 		if (overlayImage) {
 			overlayImage->SetColor(float4::Lerp(healthOverlayColor, healthOverlayColorInBackground, switchTimer / switchCollapseMovementTime));
-		}
-
-		if (healthText) {
-			healthText->SetFontColor(float4::Lerp(healthTextColor, healthTextColorInBackground, switchTimer / switchCollapseMovementTime));
 		}
 
 		if (switchHealthStroke) {
@@ -669,11 +712,8 @@ void HUDManager::ManageSwitch() {
 				onimaruSkillParent->Disable();
 			}
 			if (switchHealthFillTransform2D) {
-				switchHealthStrokeTransform2D = fangObj->IsActive() ? switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentTransform2D>() : switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->GetComponent<ComponentTransform2D>();
-				if (switchHealthStrokeTransform2D) {
-					if (!fangObj->IsActive()) switchHealthFillTransform2D->SetPosition(switchHealthStrokeTransform2D->GetPosition());
-					else switchHealthFillTransform2D->SetPosition(originalFillPos);
-				}
+				if (!fangObj->IsActive()) switchHealthFillTransform2D->SetPosition(float3(originalFillPos.x, originalFillPos.y - originalStrokeSize.y, originalFillPos.z));
+				else switchHealthFillTransform2D->SetPosition(originalFillPos);
 			}
 			switchTimer = 0;
 		}
@@ -687,17 +727,17 @@ void HUDManager::ManageSwitch() {
 		}
 		if (switchHealthStrokeGrowing) {
 			float delta = switchTimer / switchBarGrowShrinkTime;
-			float scale = Lerp(1, 2, delta);
-			switchHealthStrokeTransform2D = fangObj->IsActive() ? switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->GetComponent<ComponentTransform2D>() : switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentTransform2D>();
+			float2 size = float2::Lerp(originalStrokeSize, float2(originalStrokeSize.x, originalStrokeSize.y * 2), delta);
+			switchHealthStrokeTransform2D = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE]->GetComponent<ComponentTransform2D>();
 			if (switchHealthStrokeTransform2D) {
-				switchHealthStrokeTransform2D->SetScale(float3(1, scale, 1));
+				switchHealthStrokeTransform2D->SetSize(size);
 			}
 		} else if (switchHealthStrokeShrinking) {
 			float delta = switchTimer / switchBarGrowShrinkTime;
-			float scale = Lerp(2, 1, delta);
-			switchHealthStrokeTransform2D = fangObj->IsActive() ? switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentTransform2D>() : switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->GetComponent<ComponentTransform2D>();
+			float2 size = float2::Lerp(float2(originalStrokeSize.x, originalStrokeSize.y * 2), originalStrokeSize, delta);
+			switchHealthStrokeTransform2D = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE]->GetComponent<ComponentTransform2D>();
 			if (switchHealthStrokeTransform2D) {
-				switchHealthStrokeTransform2D->SetScale(float3(1, scale, 1));
+				switchHealthStrokeTransform2D->SetSize(size);
 			}
 		}
 
@@ -705,34 +745,17 @@ void HUDManager::ManageSwitch() {
 			if (switchHealthStrokeGrowing) {
 				switchHealthStrokeGrowing = false;
 				switchHealthStrokeShrinking = true;
-				ComponentTransform2D* transform = nullptr;
-
-				switchHealthStroke = fangObj->IsActive() ? switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentImage>() : switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->GetComponent<ComponentImage>();
-				if (fangObj->IsActive()) {
-					switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->Enable();
-					transform = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentTransform2D>();
-					if (transform) transform->SetScale(float3(1, 2, 1));
-					if (switchHealthStroke) switchHealthStroke->SetColor(healthSwitchStrokeChangingColor);
-					transform = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->GetComponent<ComponentTransform2D>();
-					if (transform) transform->SetScale(float3(1, 1, 1));
-					switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->Disable();
-				} else {
-					switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->Enable();
-					transform = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->GetComponent<ComponentTransform2D>();
-					if (transform) transform->SetScale(float3(1, 2, 1));
-					if (switchHealthStroke) switchHealthStroke->SetColor(healthSwitchStrokeChangingColor);
-					transform = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentTransform2D>();
-					if (transform) transform->SetScale(float3(1, 1, 1));
-					switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->Disable();
-				}
-				//switchHealthStrokeTransform2D->SetPivot(float2(0, 0)); Need to expose function in engine
 
 			} else if (switchHealthStrokeShrinking) {
 				switchHealthStrokeGrowing = true;
 				switchHealthStrokeShrinking = false;
-				//switchHealthStrokeTransform2D->SetPivot(float2(1, 1));
+
 				switchState = SwitchState::DEPLOY;
 			}
+
+			if (fangObj->IsActive()) switchHealthStrokeTransform2D->SetPivot(float2(1, 1));
+			else switchHealthStrokeTransform2D->SetPivot(float2(0, 0));
+
 			switchTimer = 0;
 		}
 		break;
@@ -797,13 +820,13 @@ void HUDManager::ManageSwitch() {
 			}
 		}
 
+		ManageSwitchGreenEffect(true, switchDeployMovementTime);
+
 		if (fangObj->IsActive()) {
 			health = fangHealthParent->GetComponent<ComponentTransform2D>();
 			backgroundImage = fangHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
 			fillImage = fangHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
 			overlayImage = fangHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
-			healthText = fangHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
-			switchHealthStroke = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_UP]->GetComponent<ComponentImage>();
 
 			if (health) {
 				health->SetPosition(float3::Lerp(originalFangHealthPosition - float3(healthOffset, 0, 0), originalFangHealthPosition, switchTimer / switchCollapseMovementTime));
@@ -813,13 +836,13 @@ void HUDManager::ManageSwitch() {
 			backgroundImage = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
 			fillImage = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
 			overlayImage = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
-			healthText = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
-			switchHealthStroke = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE_DOWN]->GetComponent<ComponentImage>();
 
 			if (health) {
 				health->SetPosition(float3::Lerp(originalOnimaruHealthPosition, originalOnimaruHealthPosition + float3(healthOffset, 0, 0), switchTimer / switchCollapseMovementTime));
 			}
 		}
+
+		switchHealthStroke = switchHealthChildren[HIERARCHY_INDEX_SWITCH_HEALTH_STROKE]->GetComponent<ComponentImage>();
 
 		if (backgroundImage) {
 			backgroundImage->SetColor(float4::Lerp(healthBarBackgroundColorInBackground, healthBarBackgroundColor, switchTimer / switchCollapseMovementTime));
@@ -831,10 +854,6 @@ void HUDManager::ManageSwitch() {
 
 		if (overlayImage) {
 			overlayImage->SetColor(float4::Lerp(healthOverlayColorInBackground, healthOverlayColor, switchTimer / switchCollapseMovementTime));
-		}
-
-		if (healthText) {
-			healthText->SetFontColor(float4::Lerp(healthTextColorInBackground, healthTextColor, switchTimer / switchCollapseMovementTime));
 		}
 
 		if (switchHealthStroke) {
@@ -876,16 +895,30 @@ void HUDManager::ManageSwitch() {
 			}
 		}
 
+		ManageSwitchGreenEffect(false, switchPreCollapseMovementTime);
+
 		if (switchTimer == switchPostDeployMovementTime) {
 			switchState = SwitchState::IDLE;
 
 			std::vector<GameObject*> switchChildren = switchSkillParent->GetChildren();
 			if (switchChildren.size() > HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL - 1) {
 				switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_IN_USE_WHITE]->Disable();
+				switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_GREEN_EFFECT]->Disable();
 			}
 
-			SetPictoState(Cooldowns::SWITCH_SKILL, PictoState::UNAVAILABLE);
+			//IN_USE pictoState is black colored, which, in case of having a dead character, works perfectly
+			if (playerController && playerController->AreBothCharactersAlive()) {
+				SetPictoState(Cooldowns::SWITCH_SKILL, PictoState::UNAVAILABLE);
+			} else {
+				SetPictoState(Cooldowns::SWITCH_SKILL, PictoState::IN_USE);
+			}
+
 			switchTimer = 0;
+		}
+
+		//Reset glow just in case a character was dead and glowEffect was interrupted
+		if (switchGlowImage) {
+			switchGlowImage->SetColor(float4(1.0f, 1.0f, 1.0f, 0.0f));
 		}
 
 		break;
@@ -900,9 +933,61 @@ void HUDManager::PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns cooldown)
 	}
 }
 
+void HUDManager::PlayHitEffect() {
+	if (sidesHUDChildren.size() != HUD_HIT_FEEDBACK_SIDES) return;
+
+	if (hitEffectTimer > hitEffectTotalTime) {
+		hitEffectTimer = hitEffectTotalTime;
+	}
+
+	float4 initialHitColor = criticalHealthWarning ? float4(sideHitColor.x, sideHitColor.y, sideHitColor.z, sideHitColor.w * 2) : sideHitColor;
+	float4 finalHitColor = criticalHealthWarning ? sideHitColor : sideNormalColor;
+
+	for (GameObject* side : sidesHUDChildren) {
+		ComponentImage* sideImage = side->GetComponent<ComponentImage>();
+		if (sideImage) sideImage->SetColor(float4::Lerp(initialHitColor, finalHitColor, hitEffectTimer / hitEffectTotalTime));
+	}
+
+	if (hitEffectTimer >= hitEffectTotalTime) {
+		hitEffectTimer = 0.f;
+		playingHitEffect = false;
+
+		for (GameObject* side : sidesHUDChildren) {
+			ComponentImage* sideImage = side->GetComponent<ComponentImage>();
+			if (sideImage) sideImage->SetColor(float4::Lerp(initialHitColor, finalHitColor, 1.0f));
+		}
+
+	} else {
+		hitEffectTimer += Time::GetDeltaTime();
+	}
+
+}
+
+void HUDManager::ShowCriticalHealthWarning() {
+	if (sidesHUDChildren.size() != HUD_HIT_FEEDBACK_SIDES) return;
+
+	for (GameObject* side : sidesHUDChildren) {
+		ComponentImage* sideImage = side->GetComponent<ComponentImage>();
+		if (sideImage) sideImage->SetColor(float4(sideHitColor.x, sideHitColor.y, sideHitColor.z, sideHitColor.w));
+	}
+
+	criticalHealthWarning = true;
+}
+
+void HUDManager::HideCriticalHealthWarning() {
+	if (sidesHUDChildren.size() != HUD_HIT_FEEDBACK_SIDES) return;
+
+	for (GameObject* side : sidesHUDChildren) {
+		ComponentImage* sideImage = side->GetComponent<ComponentImage>();
+		if (sideImage) sideImage->SetColor(sideNormalColor);
+	}
+
+	criticalHealthWarning = false;
+}
+
 void HUDManager::PlayLostHealthFeedback() {
 	if (!fangObj || !onimaruObj || !fangHealthParent || !onimaruHealthParent) return;
-	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
+	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
 	if (lostHealthTimer > lostHealthFeedbackTotalTime) {
 		lostHealthTimer = lostHealthFeedbackTotalTime;
@@ -925,7 +1010,7 @@ void HUDManager::PlayLostHealthFeedback() {
 
 void HUDManager::StartLostHealthFeedback() {
 	if (!fangObj || !onimaruObj || !fangHealthParent || !onimaruHealthParent) return;
-	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
+	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
 	lostHealthTimer = 0.f;
 
@@ -943,7 +1028,7 @@ void HUDManager::StartLostHealthFeedback() {
 
 void HUDManager::StopLostHealthFeedback() {
 	if (!fangObj || !onimaruObj || !fangHealthParent || !onimaruHealthParent || !playerController) return;
-	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
+	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
 	playingLostHealthFeedback = false;
 
@@ -953,7 +1038,7 @@ void HUDManager::StopLostHealthFeedback() {
 void HUDManager::ResetLostHealthFeedback() {
 	// We don't need to check for null because it's called from a function that already checks them but just in case it's called from anywhere else
 	if (!fangObj || !onimaruObj || !fangHealthParent || !onimaruHealthParent || !playerController) return;
-	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
+	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
 	float maxHealth = fangObj->IsActive() ? playerController->GetFangMaxHealth() : playerController->GetOnimaruMaxHealth();
 	ComponentImage* lostHealth = nullptr;
@@ -1047,7 +1132,7 @@ void HUDManager::SetPictoState(Cooldowns cooldown, PictoState newState) {
 
 void HUDManager::GetAllHealthColors() {
 	if (!fangHealthParent || !onimaruHealthParent) return;
-	if (fangHealthChildren.size() != 5 || onimaruHealthChildren.size() != 5) return;
+	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
 	// Get background color in background
 	ComponentImage* image = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
@@ -1061,10 +1146,6 @@ void HUDManager::GetAllHealthColors() {
 	image = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
 	if (image) healthOverlayColorInBackground = image->GetColor();
 
-	// Get health text color in background
-	ComponentText* healthText = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
-	if (healthText) healthTextColorInBackground = healthText->GetFontColor();
-
 	// Get main background color
 	image = fangHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
 	if (image) healthBarBackgroundColor = image->GetColor();
@@ -1076,11 +1157,6 @@ void HUDManager::GetAllHealthColors() {
 	// Get main overlay color
 	image = fangHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
 	if (image) healthOverlayColor = image->GetColor();
-
-	// Get main health text color
-	healthText = fangHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
-	if (healthText) healthTextColor = healthText->GetFontColor();
-
 
 	// Get lost feedback colors
 	image = fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
@@ -1117,18 +1193,6 @@ void HUDManager::InitializeHealth() {
 
 	onimaruPreviousHealth = healthValue;
 
-	ComponentText* healthText = fangHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
-	healthValue = playerController->GetFangMaxHealth();
-	if (healthText) {
-		healthText->SetText(std::to_string((int)healthValue));
-	}
-
-	healthText = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_TEXT]->GetComponent<ComponentText>();
-	healthValue = playerController->GetOnimaruMaxHealth();
-	if (healthText) {
-		healthText->SetText(std::to_string((int)healthValue));
-	}
-
 	// Set initial lost health bar
 	ComponentImage* healthLost = fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
 	healthValue = 1.f;
@@ -1148,6 +1212,26 @@ void HUDManager::InitializeHealth() {
 			healthLost->SetFillValue(healthValue / healthValue);
 		}
 		healthLost->SetColor(healthLostFeedbackFillBarFinalColor);
+	}
+}
+
+void HUDManager::InitializeHUDSides() {
+	if (sidesHUDChildren.size() == HUD_HIT_FEEDBACK_SIDES) {
+		// Get normal color 
+		GameObject* leftSide = sidesHUDChildren[HIERARCHY_INDEX_HUD_LEFT_SIDE];
+		ComponentImage* sideImage = nullptr;
+		if (leftSide) {
+			sideImage = leftSide->GetComponent<ComponentImage>();
+			if (sideImage) sideNormalColor = sideImage->GetColor();
+		}
+
+		// Get hit color and set it to normal
+		GameObject* rightSide = sidesHUDChildren[HIERARCHY_INDEX_HUD_RIGHT_SIDE];
+		if (rightSide) {
+			sideImage = rightSide->GetComponent<ComponentImage>();
+			if (sideImage) sideHitColor = sideImage->GetColor();
+			sideImage->SetColor(sideNormalColor);
+		}
 	}
 }
 
@@ -1179,5 +1263,18 @@ void HUDManager::ManageSwitchCollapseState(GameObject* skillsParent, const std::
 			transform2D->SetPosition(float3::Lerp(cooldownTransformOriginalPositions[i] + float3(switchExtraOffset + i * 10.0f, 0, 0), cooldownTransformOriginalPositions[static_cast<int>(Cooldowns::SWITCH_SKILL)], switchTimer / switchCollapseMovementTime));
 		}
 
+	}
+}
+
+void HUDManager::ManageSwitchGreenEffect(bool growing, float timer) {
+	std::vector<GameObject*> switchSkillChildren = switchSkillParent->GetChildren();
+
+	if (switchSkillChildren.size() == SWITCH_SKILL_HIERARCHY_NUM_CHILDREN) {
+		float xInitialScale = growing ? 0.5f : 1;
+		float xFinalScale = growing ? 1 : 0.5f;
+		ComponentTransform2D* transform2D = switchSkillChildren[HIERARCHY_INDEX_SWITCH_ABILITY_GREEN_EFFECT]->GetComponent<ComponentTransform2D>();
+		if (transform2D) {
+			transform2D->SetScale(float3::Lerp(float3(xInitialScale, 1.f, 1.f), float3(xFinalScale,1,1), switchTimer / timer));
+		}
 	}
 }

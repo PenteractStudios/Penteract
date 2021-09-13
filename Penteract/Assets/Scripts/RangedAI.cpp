@@ -7,7 +7,6 @@
 #include "AIMovement.h"
 #include "RangerProjectileScript.h"
 #include "EnemySpawnPoint.h"
-#include "WinLose.h"
 #include "Onimaru.h"
 
 #include "GameObject.h"
@@ -19,16 +18,17 @@
 #include "Components/ComponentMeshRenderer.h"
 #include "Resources/ResourcePrefab.h"
 //clang-format off
+#include <random>
 
 #define HIERARCHY_POSITION_WEAPON 2
 #define HIERARCHY_POSITION_BACKPACK 3
 
 EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, materialsUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
-	MEMBER(MemberType::GAME_OBJECT_UID, winConditionUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
 	MEMBER_SEPARATOR("Enemy stats"),
@@ -36,7 +36,7 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.lifePoints),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
-	MEMBER(MemberType::FLOAT, rangerGruntCharacter.timeToDie),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.barrelDamageTaken),
 	MEMBER_SEPARATOR("Push variables"),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackDistance),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackSpeed),
@@ -75,9 +75,6 @@ void RangedAI::Start() {
 		ComponentBoundingBox* bb = meshObj->GetComponent<ComponentBoundingBox>();
 		bbCenter = (bb->GetLocalMinPointAABB() + bb->GetLocalMaxPointAABB()) / 2;
 		meshRenderer = meshObj->GetComponent<ComponentMeshRenderer>();
-		if (meshRenderer) {
-			noDmgMaterialID = meshRenderer->materialId;
-		}
 	}
 
 	int numChildren = GetOwner().GetChildren().size();
@@ -163,14 +160,10 @@ void RangedAI::Start() {
 		++i;
 	}
 
-	GameObject* winConditionGo = GameplaySystems::GetGameObject(winConditionUID);
-	if (winConditionGo) {
-		winLoseScript = GET_SCRIPT(winConditionGo, WinLose);
-	}
-
 	enemySpawnPointScript = GET_SCRIPT(GetOwner().GetParent(), EnemySpawnPoint);
 
 	pushBackRealDistance = rangerGruntCharacter.pushBackDistance;
+	SetRandomMaterial();
 }
 
 void RangedAI::OnAnimationFinished() {
@@ -239,7 +232,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 			bool hitTaken = false;
 			if (collidedWith.name == "FangBullet") {
 				hitTaken = true;
-				GameplaySystems::DestroyGameObject(&collidedWith);
+				ParticleHit(collidedWith, particle, playerController->playerFang);
 				rangerGruntCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
 			}
 			else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
@@ -255,7 +248,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
 			}
 			else if (collidedWith.name == "Barrel") {
-				rangerGruntCharacter.GetHit(playerDeath->barrelDamageTaken);
+				rangerGruntCharacter.GetHit(rangerGruntCharacter.barrelDamageTaken);
 				hitTaken = true;
 			}
 			else if (collidedWith.name == "DashDamage" && playerController->playerFang.level1Upgrade) {
@@ -275,16 +268,8 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 			if (collidedWith.name == "EMP") {
 				if (agent) agent->RemoveAgentFromCrowd();
 				stunTimeRemaining = stunDuration;
-				ChangeState(AIState::STUNNED);
+				if(state != AIState::STUNNED) ChangeState(AIState::STUNNED);
 			}
-		}
-
-		if (!rangerGruntCharacter.isAlive) {
-			ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
-			if (collider) collider->Disable();
-			if (rangerGruntCharacter.beingPushed) DisableBlastPushBack();
-			ChangeState(AIState::DEATH);
-			if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
 		}
 	}
 }
@@ -300,7 +285,7 @@ void RangedAI::Update() {
 			}
 		}
 	}
-	
+
 	UpdateDissolveTimer();
 
 	if (!GetOwner().IsActive()) return;
@@ -327,6 +312,15 @@ void RangedAI::Update() {
 			rangerGruntCharacter.slowedDown = false;
 		}
 		currentSlowedDownTime += Time::GetDeltaTime();
+	}
+
+	if (!rangerGruntCharacter.isAlive && state != AIState::DEATH && !GameController::IsGameplayBlocked()) {
+		PlayAudio(AudioType::DEATH);
+		ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
+		if (collider) collider->Disable();
+		if (rangerGruntCharacter.beingPushed) DisableBlastPushBack();
+		ChangeState(AIState::DEATH);
+		if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
 	}
 
 	UpdateState();
@@ -372,19 +366,11 @@ void RangedAI::EnterState(AIState newState) {
 		if (shot) {
 			animation->SendTriggerSecondary("ShootBeginStun");
 		}
-		if (state == AIState::IDLE) {
-			animation->SendTrigger("IdleBeginStun");
-		}
-		else if (state == AIState::RUN) {
-			animation->SendTrigger("RunForwardBeginStun");
-		}
-		else if (state == AIState::FLEE) {
-			animation->SendTrigger("RunBackwardBeginStun");
+		if (animation->GetCurrentState()) {
+			animation->SendTrigger(animation->GetCurrentState()->name + "BeginStun");
 		}
 		break;
 	case AIState::DEATH:
-
-		if (winLoseScript) winLoseScript->IncrementDeadEnemies();
 		if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
 		if (playerController) {
 			if (playerController->playerOnimaru.characterGameObject->IsActive()) {
@@ -398,8 +384,10 @@ void RangedAI::EnterState(AIState newState) {
 		if (shot) {
 			animation->SendTriggerSecondary("ShootDeath");
 		}
-		animation->SendTrigger(animation->GetCurrentState()->name + "Death");
-		PlayAudio(AudioType::DEATH);
+		std::string changeState = animation->GetCurrentState()->name + "Death";
+		deathType = 1 + rand() % 2;
+		std::string deathTypeStr = std::to_string(deathType);
+		animation->SendTrigger(changeState + deathTypeStr);
 		agent->RemoveAgentFromCrowd();
 		state = AIState::DEATH;
 		break;
@@ -441,12 +429,8 @@ void RangedAI::UpdateState() {
 						break;
 					}
 
-					if (FindsRayToPlayer(false)) {
-						OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
-					}
-					else {
-						ChangeState(AIState::RUN);
-					}
+					OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
+
 				} else {
 					if (animation->GetCurrentState()->name != "Idle") animation->SendTrigger(animation->GetCurrentState()->name + "Idle");
 				}
@@ -458,7 +442,7 @@ void RangedAI::UpdateState() {
 			if (aiMovement->CharacterInSight(player, rangerGruntCharacter.searchRadius)) {
 				OrientateTo(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
 
-				if (!CharacterInRange(player, rangerGruntCharacter.attackRange - approachOffset, true) || !FindsRayToPlayer(false)) {
+				if (!CharacterInRange(player, rangerGruntCharacter.attackRange - approachOffset, true)) {
 					if (!aiMovement->CharacterInSight(player, fleeingRange)) {
 						if (aiMovement) aiMovement->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), static_cast<int>(speedToUse), false);
 					}
@@ -497,6 +481,7 @@ void RangedAI::UpdateState() {
 				else { //Staying in same position
 					if (animation->GetCurrentState() && animation->GetCurrentState()->name != "Idle") animation->SendTrigger(animation->GetCurrentState()->name + "Idle");
 					currentFleeingUpdateTime += Time::GetDeltaTime();
+					aiMovement->Stop();
 				}
 			}
 
@@ -521,10 +506,8 @@ void RangedAI::UpdateState() {
 			dissolveAlreadyStarted = true;
 		}
 		if (rangerGruntCharacter.destroying) {
-			if (rangerGruntCharacter.timeToDie > 0) {
-				rangerGruntCharacter.timeToDie -= Time::GetDeltaTime();
-			}
-			else {
+			if (meshRenderer && meshRenderer->HasDissolveAnimationFinished()) {
+				if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
 				GameplaySystems::DestroyGameObject(&GetOwner());
 			}
 		}
@@ -641,14 +624,6 @@ void RangedAI::EnableBlastPushBack() {
 			PlayAudio(AudioType::HIT);
 			PlayHitMaterialEffect();
 			timeSinceLastHurt = 0.0f;
-
-			if (!rangerGruntCharacter.isAlive) {
-				ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
-				if (collider) collider->Disable();
-				if (rangerGruntCharacter.beingPushed) DisableBlastPushBack();
-				ChangeState(AIState::DEATH);
-				if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
-			}
 		}
 	}
 }
@@ -680,7 +655,7 @@ void RangedAI::ShootPlayerInRange() {
 		shot = true;
 
 		if (animation) {
-			if (animation->GetCurrentState()) animation->SendTriggerSecondary(animation->GetCurrentState()->name + "Shoot");
+			if (animation->GetCurrentState() && animation->GetCurrentState()->name != "Shoot") animation->SendTriggerSecondary(animation->GetCurrentState()->name + "Shoot");
 		}
 
 		actualShotTimer = actualShotMaxTime;
@@ -762,6 +737,42 @@ void RangedAI::UpdateDissolveTimer() {
 		}
 		else {
 			currentDissolveTime += Time::GetDeltaTime();
+		}
+	}
+}
+
+void RangedAI::SetRandomMaterial()
+{
+	GameObject* materialsHolder = GameplaySystems::GetGameObject(materialsUID);
+
+	if (materialsHolder) {
+		std::vector<UID> materials;
+
+		for (const auto& child : materialsHolder->GetChildren()) {
+			ComponentMeshRenderer* meshRenderer = child->GetComponent<ComponentMeshRenderer>();
+			if (meshRenderer && meshRenderer->materialId) {
+				materials.push_back(meshRenderer->materialId);
+			}
+		}
+
+		
+		if (!materials.empty()) {
+			//Random distribution it cant be saved into global 
+			std::random_device rd;  //Will be used to obtain a seed for the random number engine
+			std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+			std::uniform_int_distribution<int> distrib(1, materials.size());
+
+			int position = distrib(gen)-1;
+			noDmgMaterialID = materials[position];
+
+			for (auto& child : GetOwner().GetChildren()) {
+				if (child->HasComponent<ComponentMeshRenderer>()) {
+
+					for (auto& mesh : child->GetComponents<ComponentMeshRenderer>()) {
+						mesh.materialId = materials[position];
+					}
+				}
+			}
 		}
 	}
 }

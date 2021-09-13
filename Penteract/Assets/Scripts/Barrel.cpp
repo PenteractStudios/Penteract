@@ -20,7 +20,7 @@ GENERATE_BODY_IMPL(Barrel);
 
 void Barrel::Start() {
 	barrel = GameplaySystems::GetGameObject(barrelUID);
-	
+
 	GameObject* barrelColliderAux = GameplaySystems::GetGameObject(sphereColliderUID);
 	if (barrelColliderAux) {
 		barrelCollider = barrelColliderAux;
@@ -87,17 +87,18 @@ void Barrel::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 		if (pSystem) pSystem->KillParticle(p);
-		
-		if ( collidedWith.name == "FangBullet" || collidedWith.name == "OnimaruBullet"  ) {
+
+		if ( collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet" || collidedWith.name == "OnimaruBullet"  ) {
 
 			if (!timerDestroyActivated) {
 				startTimerToDestroy = true;
 				timerDestroyActivated = true;
 			}
-			
-			GameplaySystems::DestroyGameObject(&collidedWith);
+
+			ComponentSphereCollider* thisCollider = GetOwner().GetComponent<ComponentSphereCollider>();
+			thisCollider->Disable();
 		}
 
 	}
-	
+
 }
