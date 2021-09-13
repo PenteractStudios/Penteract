@@ -1,5 +1,5 @@
 {
-    "ShaderType": 1,
+    "ShaderType": 2,
     "RenderingMode": 0,
     "DiffuseColor": [
         1.0,
@@ -16,7 +16,7 @@
     ],
     "SpecularMap": 1651518428303075233,
     "Metalness": 0.0,
-    "MetallicMap": 0,
+    "MetallicMap": 1651518428303075233,
     "NormalMap": 15364367410121682940,
     "NormalStrength": 1.0,
     "EmissiveColor": [

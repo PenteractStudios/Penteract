@@ -88,7 +88,7 @@
                     {
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
-                        "Value": 13245266970739911193
+                        "Value": 15261592491771467264
                     },
                     {
                         "Name": "hurtFeedbackTimeDuration",
@@ -98,17 +98,17 @@
                     {
                         "Name": "fangUID",
                         "Type": "GameObjectUID",
-                        "Value": 10867745004971701011
+                        "Value": 18423563680655226216
                     },
                     {
                         "Name": "playerMeshUIDOnimaru",
                         "Type": "GameObjectUID",
-                        "Value": 5886485799688726575
+                        "Value": 9971304947552615086
                     },
                     {
                         "Name": "playerMeshUIDFang",
                         "Type": "GameObjectUID",
-                        "Value": 9001344908920413971
+                        "Value": 10355956403025383967
                     },
                     {
                         "Name": "winConditionUID",
@@ -134,6 +134,16 @@
                         "Name": "groundPosition",
                         "Type": "Float",
                         "Value": 0.0
+                    },
+                    {
+                        "Name": "materialsUID",
+                        "Type": "GameObjectUID",
+                        "Value": 6824303515534715053
+                    },
+                    {
+                        "Name": "dissolveTimerToStart",
+                        "Type": "Float",
+                        "Value": 0.5
                     }
                 ]
             },
