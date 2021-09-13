@@ -5,11 +5,8 @@
 #include "Components/UI/ComponentImage.h"
 
 EXPOSE_MEMBERS(CanvasFader) {
-	// Add members here to expose them to the engine. Example:
-	// MEMBER(MemberType::BOOL, exampleMember1),
-	// MEMBER(MemberType::PREFAB_RESOURCE_UID, exampleMember2),
-	// MEMBER(MemberType::GAME_OBJECT_UID, exampleMember3)
-	MEMBER(MemberType::GAME_OBJECT_UID, blackImageObjUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, blackImageObjUID),
+	MEMBER(MemberType::BOOL, fadeInOnStart)
 };
 
 GENERATE_BODY_IMPL(CanvasFader);
@@ -19,6 +16,10 @@ void CanvasFader::Start() {
 	if (blackImageObj) {
 		blackImage = blackImageObj->GetComponent<ComponentImage>();
 	}
+
+	if (fadeInOnStart) {
+		FadeIn();
+	}
 }
 
 void CanvasFader::Update() {
@@ -26,11 +27,15 @@ void CanvasFader::Update() {
 }
 
 void CanvasFader::FadeIn() {
+	if (!blackImage)return;
+	blackImage->SetColor(float4(blackImage->GetColor().xyz(), 1.0f));
 	Play();
 	fadeState = FadeState::FADE_IN;
 }
 
 void CanvasFader::FadeOut() {
+	if (!blackImage)return;
+	blackImage->SetColor(float4(blackImage->GetColor().xyz(), 0.0f));
 	Play();
 	fadeState = FadeState::FADE_OUT;
 }

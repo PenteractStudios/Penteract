@@ -18,7 +18,7 @@ public:
 public:
 	float fadeDuration = 0.5f;
 	UID blackImageObjUID = 0;
-
+	bool fadeInOnStart = false;
 private:
 	void UpdateBlackImage();
 	void Play();
