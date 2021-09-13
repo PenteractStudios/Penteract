@@ -86,7 +86,7 @@ public:
 	GameObject* EMP = nullptr;
 	float EMPRadius = 5.f;
 	float EMPCooldown = 7.f;
-	bool isEMP = false;
+
 	//Ultimate
 	int ultimateCooldown = 2;
 	float ultimateMovementSpeed = 4.0f;
@@ -151,6 +151,7 @@ private:
 	void Shoot() override;
 	void PlayAnimation();
 
+	void ResetIsInCombatValues();
 	void ActiveUltimate();
 	bool CanUltimate();
 };
