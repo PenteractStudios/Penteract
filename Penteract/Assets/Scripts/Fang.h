@@ -59,7 +59,7 @@ public:
 	float GetRealEMPCooldown();
 	float GetRealUltimateCooldown();
 	void IncreaseUltimateCounter();
-	void Init(UID fangUID = 0, UID dashParticleUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID laserUID = 0, UID cameraUID = 0, UID HUDManagerObjectUID = 0, UID dashUID = 0, UID EMPUID = 0, UID EMPEffectsUID = 0, UID fangUltimateUID = 0, UID ultimateVFXUID = 0);
+	void Init(UID fangUID = 0, UID dashParticleUID = 0, UID leftGunUID = 0, UID rightGunUID = 0, UID rightBulletUID = 0, UID leftBulletUID = 0, UID laserUID = 0, UID cameraUID = 0, UID HUDManagerObjectUID = 0, UID dashUID = 0, UID EMPUID = 0, UID EMPEffectsUID = 0, UID fangUltimateUID = 0, UID ultimateVFXUID = 0, UID rightFootVFX = 0, UID leftFootVFX = 0);
 	bool IsVulnerable() const override;
 
 public:
@@ -124,6 +124,10 @@ private:
 
 	//Movement
 	MovementDirection dashMovementDirection = MovementDirection::NONE;
+
+	//Movement VFX
+	ComponentParticleSystem* rightFootstepsVFX = nullptr;
+	ComponentParticleSystem* leftFootstepsVFX = nullptr;
 
 	//HUD
 	HUDManager* hudManagerScript = nullptr;
