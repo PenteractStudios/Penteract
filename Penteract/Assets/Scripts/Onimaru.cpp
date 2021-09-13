@@ -202,7 +202,7 @@ bool Onimaru::IsVulnerable() const {
 
 float Onimaru::GetNormalizedRemainingUltimateTime() const {
 	if (ultimateOn) {
-		if (ultimateTimeRemaining == 0.0f) {
+		if (ultimateTimeRemaining <= 0.0f) {
 			return 1.0f;
 		}
 		else {
@@ -260,8 +260,12 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 		if (shieldCooldownRemainingCharge <= 0.f) {
 			shield->IncreaseCharge();
 			shieldCooldownRemainingCharge = shield->GetChargeCooldown();
-		}
-		else {
+			if (!shield->NeedsRecharging()) {
+				if (hudManagerScript) {
+					hudManagerScript->SetCooldownRetreival(HUDManager::Cooldowns::ONIMARU_SKILL_1);
+				}
+			}
+		} else {
 			shieldCooldownRemainingCharge -= Time::GetDeltaTime();
 		}
 	}

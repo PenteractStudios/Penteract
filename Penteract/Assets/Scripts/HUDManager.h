@@ -98,11 +98,9 @@ public:
 	float4 healthBarBackgroundColorInBackground = float4(0.f / 255.f, 40.f / 255.f, 60.f / 255.f, 30.f / 255.f);
 	float4 healthFillBarColorInBackground = float4(255.f / 255.f, 0.f / 255.f, 0.f / 255.f, 30.f / 255.f);
 	float4 healthOverlayColorInBackground = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 100.f / 255.f);
-	float4 healthTextColorInBackground = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 50.f / 255.f);
 	float4 healthBarBackgroundColor = float4(0.f / 255.f, 40.f / 255.f, 60.f / 255.f, 220.f / 255.f);
 	float4 healthFillBarColor = float4(255.f / 255.f, 0.f / 255.f, 0.f / 255.f, 255.f / 255.f);
 	float4 healthOverlayColor = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 255.f / 255.f);
-	float4 healthTextColor = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 178.f / 255.f);
 
 	// Health lost feedback
 	float4 healthLostFeedbackFillBarInitialColor = float4(0.f / 255.f, 177.f / 255.f, 227.f / 255.f, 204.f / 255.f);
@@ -124,9 +122,12 @@ public:
 
 	std::vector<GameObject*> sidesHUDChildren;
 
-	float4 normalSideColor = float4(103.f / 255.f, 180.f / 255.f, 169.f / 255.f, 30.f / 255.f);
-	float4 hitSideColor = float4(248.f / 255.f, 47.f / 255.f, 47.f / 255.f, 30.f / 255.f);
+	float4 sideNormalColor = float4(103.f / 255.f, 180.f / 255.f, 169.f / 255.f, 30.f / 255.f);
+	float4 sideHitColor = float4(248.f / 255.f, 47.f / 255.f, 47.f / 255.f, 30.f / 255.f);
 
+	float criticalHealthPercentage = 15.f;
+
+	std::string shieldObjName = "VFXShield";
 public:
 	void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown, float fangUltimateRemainingNormalizedValue, float oniUltimateRemainingNormalizedValue);
 	void UpdateHealth(float fangHealth, float onimaruHealth);
@@ -172,9 +173,13 @@ private:
 	float onimaruPreviousHealth = 0.f;
 
 	bool playingLostHealthFeedback = false;
-
 	float lostHealthTimer = 0.0f;
 	float lostHealthFeedbackTotalTime = 1.0f;
+
+	bool playingHitEffect = false;
+	float hitEffectTimer = 0.0f;
+	float hitEffectTotalTime = 1.0f;
+	bool criticalHealthWarning = false;
 
 	// HUD sides
 	GameObject* sidesHUDParent = nullptr;
@@ -188,6 +193,9 @@ private:
 	void ManageSwitch();	//This method manages visual effects regarding the Switching of characters (UI WISE) as well 
 							//as the color changin and rotation of the picto for the switch icon
 	void PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns cooldown);
+	void PlayHitEffect();
+	void ShowCriticalHealthWarning();
+	void HideCriticalHealthWarning();
 	void PlayLostHealthFeedback();
 	void StartLostHealthFeedback();
 	void StopLostHealthFeedback();
@@ -197,9 +205,12 @@ private:
 	void GetAllHealthColors();
 
 	void InitializeHealth();
+	void InitializeHUDSides();
 
 	void ManageSwitchPreCollapseState(GameObject* activeParent, const std::vector<GameObject*>& skills);
 	void ManageSwitchCollapseState(GameObject* activeParent, const std::vector<GameObject*>& skills);
+
+	void ManageSwitchGreenEffect(bool growing, float timer);
 
 };
 
