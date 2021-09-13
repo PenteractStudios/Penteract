@@ -110,6 +110,11 @@
                         "Value": 10.0
                     },
                     {
+                        "Name": "hurtFeedbackTimeDuration",
+                        "Type": "Float",
+                        "Value": 0.10000000149011612
+                    },
+                    {
                         "Name": "att1AttackSpeed",
                         "Type": "Float",
                         "Value": 1.5
@@ -123,6 +128,11 @@
                         "Name": "materialsUID",
                         "Type": "GameObjectUID",
                         "Value": 10596722692876370451
+                    },
+                    {
+                        "Name": "dissolveTimerToStart",
+                        "Type": "Float",
+                        "Value": 0.699999988079071
                     }
                 ]
             },
@@ -293,13 +303,13 @@
                         "Type": "MeshRenderer",
                         "Active": true,
                         "MeshID": 8162125314749612365,
-                        "MaterialID": 4886769671297062398
+                        "MaterialID": 6324482706962870118
                     },
                     {
                         "Type": "MeshRenderer",
                         "Active": true,
                         "MeshID": 1860498927682383532,
-                        "MaterialID": 4886769671297062398
+                        "MaterialID": 6324482706962870118
                     },
                     {
                         "Type": "BoundingBox",
