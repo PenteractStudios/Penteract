@@ -3,6 +3,7 @@
 #include "Scripting/Script.h"
 
 class GameObject;
+class SceneTransition;
 
 class WinCondition : public Script {
 	GENERATE_BODY(WinCondition);
@@ -14,7 +15,8 @@ public:
 
 public:
 	UID sceneUID = 0;
-
+	UID transitionUID = 0;
 private:
 	GameObject* gameObject = nullptr;
+	SceneTransition* sceneTransition = nullptr;
 };
