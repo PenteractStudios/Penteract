@@ -32,7 +32,7 @@ private:
 	bool* currentTilesPattern = nullptr;
 	bool* nextTilesPattern = nullptr;
 
-	bool* sequentialPattern = nullptr;
+	std::vector<TilesPattern> sequentialPatterns;
 
 	bool* pattern1 = nullptr;
 	bool* pattern2 = nullptr;

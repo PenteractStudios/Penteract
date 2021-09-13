@@ -20,17 +20,17 @@ void FloorIsLava::Start() {
 	tiles = GetOwner().GetChildren();		
 	
 	if (container == "corridor") {
-		sequentialPattern = corridorPatterns[0];
+		sequentialPatterns = corridorPatterns;
 	}
 	else if (container == "arena") {
-		pattern1 = arenaPattern1;
-		pattern2 = arenaPattern2;
-		pattern3 = arenaPattern3;
+		pattern1 = arenaPattern1.pattern;
+		pattern2 = arenaPattern2.pattern;
+		pattern3 = arenaPattern3.pattern;
 	}
 	else if (container == "boss") {
-		pattern1 = bossPattern1;
-		pattern2 = bossPattern2;
-		pattern3 = bossPattern3;
+		pattern1 = bossPattern1.pattern;
+		pattern2 = bossPattern2.pattern;
+		pattern3 = bossPattern3.pattern;
 	}
 	
 	timeRemainingWarning = timeWarning;	
@@ -41,12 +41,18 @@ void FloorIsLava::Update() {
 	//select a random corridor and arena pattern
 	if (patternFinished) {
 		if (sequential) {
-			currentTilesPattern = &sequentialPattern[sequentialCount];
+			currentTilesPattern = sequentialPatterns[sequentialCount].pattern;
 			++sequentialCount;
-			if (sequentialCount > CORRIDOR_PATTERNS) {
+			if (sequentialCount >= CORRIDOR_PATTERNS) {
 				sequentialCount = 0;
 			}		
-			nextTilesPattern = &sequentialPattern[sequentialCount];
+
+
+
+			nextTilesPattern = sequentialPatterns[sequentialCount].pattern;
+
+
+
 			
 		}
 		else {
@@ -57,6 +63,7 @@ void FloorIsLava::Update() {
 			SetPattern(currentPattern, currentTilesPattern);
 			SetPattern(nextPattern, nextTilesPattern);
 		}
+		patternFinished = false;
 	}
 	
 	if (warningActive) {
