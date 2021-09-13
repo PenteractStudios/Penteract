@@ -948,9 +948,15 @@ void HUDManager::PlayHitEffect() {
 		if (sideImage) sideImage->SetColor(float4::Lerp(initialHitColor, finalHitColor, hitEffectTimer / hitEffectTotalTime));
 	}
 
-	if (hitEffectTimer == hitEffectTotalTime) {
+	if (hitEffectTimer >= hitEffectTotalTime) {
 		hitEffectTimer = 0.f;
 		playingHitEffect = false;
+
+		for (GameObject* side : sidesHUDChildren) {
+			ComponentImage* sideImage = side->GetComponent<ComponentImage>();
+			if (sideImage) sideImage->SetColor(float4::Lerp(initialHitColor, finalHitColor, 1.0f));
+		}
+
 	} else {
 		hitEffectTimer += Time::GetDeltaTime();
 	}
