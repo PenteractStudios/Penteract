@@ -62,6 +62,7 @@ public:
 
 	void TransitionUIElementsColor(bool appearing = true, bool mustLerp = true);	// Subfunction of 'ActivateDialogue()'. Defines the color transitions of the dialogue window.
 	void RetrieveUIComponents(GameObject* current);									// This function gets all UI components of the active dialogue window. The color transitions will be aplied to all of them.
+	bool HasActiveDialogue();
 
 	void PlayOpeningAudio();
 public:

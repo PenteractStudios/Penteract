@@ -16,7 +16,6 @@ class HUDController;
 class PlayerController;
 class PlayerDeath;
 class AIMovement;
-class WinLose;
 class EnemySpawnPoint;
 
 class RangedAI : public Script {
@@ -63,6 +62,7 @@ private:
 	void PlayHitMaterialEffect();													// Changes material hit
 	void UpdateDissolveTimer();														// If the currentDissolveTime is reached, Plays animation
 	void ParticleHit(GameObject& collidedWith, void* particle, Player& player);
+	void SetRandomMaterial();
 
 public:
 	Enemy rangerGruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 5.f, 5.f, 3.f, 2.f); //Enemy class instance (for shared values)
@@ -73,8 +73,6 @@ public:
 	UID meshUID2 = 0;				//Third mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID trailPrefabUID = 0;			//Reference to projectile prefab UID , for shooting
 	UID fangUID = 0;
-
-	UID winConditionUID = 0;
 
 	ResourcePrefab* shootTrailPrefab = nullptr; //Reference to projectile prefab , for shooting
 	GameObject* player = nullptr;				//Reference to player main Gameobject, used to check distances
@@ -110,6 +108,7 @@ public:
 	UID dissolveMaterialObj = 0;		//Reference to dissolve material holding gameobject UID, used to be set whenever Ai has been recently hurt
 	UID dissolveMaterialID = 0;			//Reference to dissolve material, used to be set whenever Ai has been recently hurt
 	float dissolveTimerToStart = 0.0f;	//Timer until the dissolve animation is played
+	UID materialsUID = 0;				//Reference to materials placeholder for random
 
 private:
 
@@ -118,8 +117,6 @@ private:
 	AIMovement* aiMovement = nullptr;	//Reference to movement holding script
 	AIState state = AIState::START;		//AI State
 	float3 bbCenter = float3(0, 0, 0);	//Bounding box center, to generate an offset for raycasting
-
-	WinLose* winLoseScript = nullptr;
 
 	bool shot = false;					//Bool used to make sure shooting event happens only once whenever attackTimePool is low enough
 

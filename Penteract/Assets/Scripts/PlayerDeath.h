@@ -18,7 +18,7 @@ public:
 	void OnAnimationSecondaryFinished() override;
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
-
+	void OnLoseConditionMet();
 public:
 
 	UID playerUID = 0;
@@ -46,6 +46,7 @@ private:
 	SceneTransition* sceneTransition = nullptr;
 	GameOverUIController* gameOverController = nullptr;
 	bool getLaserHit = false;
+	bool lastFrameLaserHit = false;
 	float timerFireDamage = 0.f;
 	bool fireDamageActive = false;
 

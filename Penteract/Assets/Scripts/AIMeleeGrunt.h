@@ -17,7 +17,6 @@ class HUDController;
 class PlayerController;
 class PlayerDeath;
 class AIMovement;
-class WinLose;
 class EnemySpawnPoint;
 
 class AIMeleeGrunt : public Script {
@@ -49,9 +48,9 @@ public:
 public:
 
 	UID playerUID = 0;
-	UID winConditionUID = 0;
 	UID meleePunchUID = 0;
 	UID fangUID = 0;
+	UID materialsUID = 0;
 	// Hit feedback
 	UID defaultMaterialPlaceHolderUID = 0;
 	UID damageMaterialPlaceHolderUID = 0;
@@ -66,7 +65,6 @@ public:
 	GameObject* fang = nullptr;
 	GameObject* spawn = nullptr;
 	ComponentAgent* agent = nullptr;
-	WinLose* winLoseScript = nullptr;
 
 	Enemy gruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 5.f, 5.f, 3.f, 2.f);
 	bool killSent = false;
@@ -143,4 +141,6 @@ private:
 	void ParticleHit(GameObject& collidedWith, void* particle, Player& player);
 	void PlayHitMaterialEffect();
 	void UpdateDissolveTimer();
+	void SetRandomMaterial();
+	void SetMaterial(UID newMaterialID, bool needToPlayDissolve = false);
 };
