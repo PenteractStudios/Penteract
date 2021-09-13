@@ -16,8 +16,8 @@ EXPOSE_MEMBERS(SceneTransition) {
 	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, transitionUID),
 	MEMBER(MemberType::INT, transitionMove),
-		MEMBER(MemberType::FLOAT, speedTransition),
-		MEMBER(MemberType::INT, levelNum)
+	MEMBER(MemberType::FLOAT, speedTransition),
+	MEMBER(MemberType::INT, levelNum)
 };
 
 GENERATE_BODY_IMPL(SceneTransition);

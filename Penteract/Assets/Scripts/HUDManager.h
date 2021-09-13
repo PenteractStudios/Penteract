@@ -59,6 +59,7 @@ public:
 	float4 skillPictoColorNotAvailable = float4(0.f / 255.f, 177.f / 255.f, 227.f / 255.f, 255.f / 255.f);
 	float4 skillPictoColorInUse = float4(0.f / 255.f, 40.f / 255.f, 60.f / 255.f, 255.f / 255.f);
 
+	float4 switchSkillColorDeadCharacter = float4(255.0f / 255.f, 0.0f / 255.f, 0.0f / 255.f, 255.0f / 255.f);
 	float4 switchSkillColorNotAvailable = float4(133.f / 255.f, 243.f / 255.f, 196.f / 255.f, 150.f / 255.f);
 	float4 switchSkillColorAvailable = float4(133.f / 255.f, 243.f / 255.f, 196.f / 255.f, 255.f / 255.f);
 
@@ -134,6 +135,9 @@ public:
 	void SetCooldownRetreival(Cooldowns cooldown);
 	void StartUsingSkill(Cooldowns cooldown);
 	void StopUsingSkill(Cooldowns cooldown);
+	void OnCharacterDeath();
+	void OnCharacterResurrect();
+
 private:
 
 	PlayerController* playerController = nullptr;
@@ -148,6 +152,7 @@ private:
 	ComponentImage* switchGlowImage = nullptr;
 	float switchTimer = 0.0f;
 	bool abilityCoolDownsRetreived[static_cast<int>(Cooldowns::TOTAL)] = { false,false,false,false,false,false,false };
+	bool switchSkillActivated = false;
 
 	// Health HUD
 	GameObject* fangHealthParent = nullptr;
