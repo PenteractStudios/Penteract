@@ -68,8 +68,6 @@ void RangedAI::Start() {
 	ownerTransform = GetOwner().GetComponent<ComponentTransform>();
 	fangMeshObj = GameplaySystems::GetGameObject(playerMeshUIDFang);
 	onimaruMeshObj = GameplaySystems::GetGameObject(playerMeshUIDOnimaru);
-
-	weapon = GameplaySystems::GetGameObject(weaponUID);
 	
 	weapon = GetOwner().GetChild("Weapon")->GetChild("WeaponParticles");
 	if (weapon) {
