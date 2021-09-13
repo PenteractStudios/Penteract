@@ -17,6 +17,7 @@ public:
 public:
 	UID objectToEnableUID = 0;
 	UID objectToDisableUID = 0;
+	bool disableTrigger = false;
 
 private:
 	GameObject* objectToEnable = nullptr;

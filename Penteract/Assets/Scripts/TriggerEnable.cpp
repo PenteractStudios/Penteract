@@ -7,7 +7,8 @@ EXPOSE_MEMBERS(TriggerEnable) {
     // MEMBER(MemberType::BOOL, exampleMember1),
     // MEMBER(MemberType::PREFAB_RESOURCE_UID, exampleMember2),
     MEMBER(MemberType::GAME_OBJECT_UID, objectToEnableUID),
-    MEMBER(MemberType::GAME_OBJECT_UID, objectToDisableUID)
+    MEMBER(MemberType::GAME_OBJECT_UID, objectToDisableUID),
+    MEMBER(MemberType::BOOL, disableTrigger)
 };
 
 GENERATE_BODY_IMPL(TriggerEnable);
@@ -25,5 +26,6 @@ void TriggerEnable::OnCollision(GameObject& collidedWith, float3 collisionNormal
 {
     if (objectToEnable) objectToEnable->Enable();
     if (objectToDisable) objectToDisable->Disable();
+    if (disableTrigger) GetOwner().Disable();
 }
 
