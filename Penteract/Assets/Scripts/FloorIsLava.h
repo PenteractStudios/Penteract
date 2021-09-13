@@ -21,6 +21,8 @@ public:
 	float timeTilesActive = 10.f;
 	float timeWarning = 3.f;
 
+	bool sequential = false;
+
 private:
 	std::vector<GameObject*> tiles;
 
@@ -29,6 +31,8 @@ private:
 
 	bool* currentTilesPattern = nullptr;
 	bool* nextTilesPattern = nullptr;
+
+	std::vector<TilesPattern> sequentialPatterns;
 
 	bool* pattern1 = nullptr;
 	bool* pattern2 = nullptr;
@@ -47,7 +51,7 @@ private:
 	bool firstTimeWarning = true;
 	bool firstTimeFireActive = true;
 
-	
+	int sequentialCount = 0;
 
 private:
 	void SetPattern(int pattern, bool*& boolPattern);
