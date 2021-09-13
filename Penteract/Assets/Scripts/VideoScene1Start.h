@@ -14,6 +14,9 @@ public:
 	void Start() override;
 	void Update() override;
 
+public:
+	UID canvasFaderUID = 0;
+
 private:
 	ComponentVideo* componentVideo = nullptr;
 	GameObject* parent = nullptr;

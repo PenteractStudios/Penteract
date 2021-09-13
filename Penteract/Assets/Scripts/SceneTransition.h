@@ -6,8 +6,7 @@ class GameObject;
 class ComponentTransform2D;
 class ComponentImage;
 
-class SceneTransition : public Script
-{
+class SceneTransition : public Script {
 	GENERATE_BODY(SceneTransition);
 
 public:
@@ -32,7 +31,7 @@ public:
 	UID transitionUID = 0;
 
 	int transitionMove = static_cast<int>(TransitionMove::LEFT_TO_RIGHT);
-	float speedTransition = 20;
+	float speedTransition = 700.0f;
 	int levelNum = 0;
 
 private:

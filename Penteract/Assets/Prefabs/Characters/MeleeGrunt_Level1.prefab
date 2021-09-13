@@ -65,6 +65,11 @@
                         "Value": 9835691270176894595
                     },
                     {
+                        "Name": "rightBladeColliderUID",
+                        "Type": "GameObjectUID",
+                        "Value": 12119067485365247026
+                    },
+                    {
                         "Name": "att2AttackSpeed",
                         "Type": "Float",
                         "Value": 1.5
@@ -75,19 +80,14 @@
                         "Value": 826311568033082909
                     },
                     {
-                        "Name": "rightBladeColliderUID",
+                        "Name": "leftBladeColliderUID",
                         "Type": "GameObjectUID",
-                        "Value": 12119067485365247026
+                        "Value": 114993121818193807
                     },
                     {
                         "Name": "winConditionUID",
                         "Type": "GameObjectUID",
                         "Value": 16579210181260590797
-                    },
-                    {
-                        "Name": "leftBladeColliderUID",
-                        "Type": "GameObjectUID",
-                        "Value": 114993121818193807
                     },
                     {
                         "Name": "fangUID",
@@ -110,6 +110,11 @@
                         "Value": 10.0
                     },
                     {
+                        "Name": "hurtFeedbackTimeDuration",
+                        "Type": "Float",
+                        "Value": 0.10000000149011612
+                    },
+                    {
                         "Name": "att1AttackSpeed",
                         "Type": "Float",
                         "Value": 1.5
@@ -118,6 +123,16 @@
                         "Name": "dissolveMaterialObj",
                         "Type": "GameObjectUID",
                         "Value": 76536311638176447
+                    },
+                    {
+                        "Name": "materialsUID",
+                        "Type": "GameObjectUID",
+                        "Value": 10596722692876370451
+                    },
+                    {
+                        "Name": "dissolveTimerToStart",
+                        "Type": "Float",
+                        "Value": 0.699999988079071
                     }
                 ]
             },
@@ -288,13 +303,13 @@
                         "Type": "MeshRenderer",
                         "Active": true,
                         "MeshID": 8162125314749612365,
-                        "MaterialID": 4886769671297062398
+                        "MaterialID": 6324482706962870118
                     },
                     {
                         "Type": "MeshRenderer",
                         "Active": true,
                         "MeshID": 1860498927682383532,
-                        "MaterialID": 4886769671297062398
+                        "MaterialID": 6324482706962870118
                     },
                     {
                         "Type": "BoundingBox",
