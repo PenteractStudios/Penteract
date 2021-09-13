@@ -278,7 +278,6 @@ void Onimaru::OnDeath() {
 		}
 	}
 	ultimateOn = blastInUse = false;
-	ultimateBullet->StopChildParticles();
 }
 
 bool Onimaru::CanSwitch() const {
