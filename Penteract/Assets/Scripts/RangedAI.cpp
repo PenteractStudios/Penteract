@@ -44,7 +44,6 @@ EXPOSE_MEMBERS(RangedAI) {
 		MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownTime),
 		MEMBER(MemberType::FLOAT, attackSpeed),
 		MEMBER(MemberType::FLOAT, fleeingRange),
-		MEMBER(MemberType::GAME_OBJECT_UID, weaponUID),
 		MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
 		MEMBER(MemberType::FLOAT, timeSinceLastHurt),
 		MEMBER(MemberType::FLOAT, approachOffset), //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
