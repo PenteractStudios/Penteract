@@ -138,7 +138,7 @@ void HUDManager::Start() {
 		onimaruSkillParent->Disable();
 
 		int i = 0;
-		for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
+		for (ComponentAudioSource& src : GetOwner().GetParent()->GetComponents<ComponentAudioSource>()) {
 			if (i < static_cast<int>(HUDManagerAudio::TOTAL)) audios[i] = &src;
 			++i;
 		}
