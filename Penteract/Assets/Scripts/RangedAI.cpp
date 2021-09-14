@@ -85,13 +85,19 @@ void RangedAI::Start() {
 		GameObject* weaponGO = GetOwner().GetChildren()[HIERARCHY_POSITION_WEAPON];
 		if (weaponGO) {
 			weaponMeshRenderer = weaponGO->GetComponent<ComponentMeshRenderer>();
+			if (weaponMeshRenderer) {
+				weaponMaterialID = weaponMeshRenderer->materialId;
+			}
 		}
 	}
 
 	if (numChildren > HIERARCHY_POSITION_BACKPACK) {
 		GameObject* backpackGO = GetOwner().GetChildren()[HIERARCHY_POSITION_BACKPACK];
 		if (backpackGO) {
-			backPackMeshRenderer = backpackGO->GetComponent<ComponentMeshRenderer>();
+			backpackMeshRenderer = backpackGO->GetComponent<ComponentMeshRenderer>();
+			if (backpackMeshRenderer) {
+				backpackMaterialID = backpackMeshRenderer->materialId;
+			}
 		}
 	}
 
@@ -99,7 +105,7 @@ void RangedAI::Start() {
 	if (damagedObj) {
 		ComponentMeshRenderer* dmgMeshRenderer = damagedObj->GetComponent<ComponentMeshRenderer>();
 		if (dmgMeshRenderer) {
-			damagedMaterialID = dmgMeshRenderer->materialId;
+			damageMaterialID = dmgMeshRenderer->materialId;
 		}
 	}
 
@@ -283,7 +289,9 @@ void RangedAI::Update() {
 		if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
 			timeSinceLastHurt += Time::GetDeltaTime();
 			if (timeSinceLastHurt > hurtFeedbackTimeDuration) {
-				meshRenderer->materialId = noDmgMaterialID;
+				SetMaterial(meshRenderer, defaultMaterialID);
+				SetMaterial(backpackMeshRenderer, backpackMaterialID);
+				SetMaterial(weaponMeshRenderer, weaponMaterialID);
 			}
 		}
 	}
@@ -699,10 +707,10 @@ void RangedAI::CalculatePushBackRealDistance() {
 
 void RangedAI::PlayHitMaterialEffect()
 {
-	if (!dissolveAlreadyStarted && meshRenderer) {
-		if (damagedMaterialID != 0) {
-			meshRenderer->materialId = damagedMaterialID;
-		}
+	if (!dissolveAlreadyStarted) {
+		SetMaterial(meshRenderer, damageMaterialID);
+		SetMaterial(backpackMeshRenderer, damageMaterialID);
+		SetMaterial(weaponMeshRenderer, damageMaterialID);
 	}
 }
 
@@ -720,9 +728,9 @@ void RangedAI::UpdateDissolveTimer() {
 					weaponMeshRenderer->PlayDissolveAnimation();
 				}
 
-				if (backPackMeshRenderer) {
-					backPackMeshRenderer->materialId = dissolveMaterialID;
-					backPackMeshRenderer->PlayDissolveAnimation();
+				if (backpackMeshRenderer) {
+					backpackMeshRenderer->materialId = dissolveMaterialID;
+					backpackMeshRenderer->PlayDissolveAnimation();
 				}
 			}
 			dissolveAlreadyPlayed = true;
@@ -735,11 +743,11 @@ void RangedAI::UpdateDissolveTimer() {
 
 void RangedAI::SetRandomMaterial()
 {
+	if (!meshRenderer) return;
 	GameObject* materialsHolder = GameplaySystems::GetGameObject(materialsUID);
 
 	if (materialsHolder) {
 		std::vector<UID> materials;
-
 		for (const auto& child : materialsHolder->GetChildren()) {
 			ComponentMeshRenderer* meshRenderer = child->GetComponent<ComponentMeshRenderer>();
 			if (meshRenderer && meshRenderer->materialId) {
@@ -747,22 +755,25 @@ void RangedAI::SetRandomMaterial()
 			}
 		}
 
+
 		if (!materials.empty()) {
-			//Random distribution it cant be saved into global
+			//Random distribution it cant be saved into global 
 			std::random_device rd;  //Will be used to obtain a seed for the random number engine
 			std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
 			std::uniform_int_distribution<int> distrib(1, materials.size());
 
 			int position = distrib(gen) - 1;
-			noDmgMaterialID = materials[position];
+			meshRenderer->materialId = materials[position];
+			defaultMaterialID = materials[position];
+		}
+	}
+}
 
-			for (auto& child : GetOwner().GetChildren()) {
-				if (child->HasComponent<ComponentMeshRenderer>()) {
-					for (auto& mesh : child->GetComponents<ComponentMeshRenderer>()) {
-						mesh.materialId = materials[position];
-					}
-				}
-			}
+void RangedAI::SetMaterial(ComponentMeshRenderer* mesh, UID newMaterialID, bool needToPlayDissolve) {
+	if (newMaterialID > 0 && mesh) {
+		mesh->materialId = newMaterialID;
+		if (needToPlayDissolve) {
+			mesh->PlayDissolveAnimation();
 		}
 	}
 }

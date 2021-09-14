@@ -64,6 +64,8 @@ private:
 	void UpdateDissolveTimer();														// If the currentDissolveTime is reached, Plays animation
 	void ParticleHit(GameObject& collidedWith, void* particle, Player& player);
 	void SetRandomMaterial();
+	void SetMaterial(ComponentMeshRenderer* mesh, UID newMaterialID, bool needToPlayDissolve = false);
+
 
 public:
 	Enemy rangerGruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 5.f, 5.f, 3.f, 2.f); //Enemy class instance (for shared values)
@@ -92,8 +94,10 @@ public:
 	GameObject* meshObjForFrustumPresenceCheck2 = nullptr;	//Third mesh for checking frustum presence (if not inside frustum shooting won't happen), this being null will make it always return true
 
 	UID dmgMaterialObj = 0;		//Reference to damaged material holding gameobject UID, used to be set whenever Ai has been recently hurt
-	UID noDmgMaterialID = 0;	//Reference to not damaged material UID, used to be set whenever Ai has been recently hurt but it is hurt no more
-	UID damagedMaterialID = 0;	//Reference to damaged material, used to be set whenever Ai has been recently hurt
+	UID defaultMaterialID = 0;	//Reference to not damaged material UID, used to be set whenever Ai has been recently hurt but it is hurt no more
+	UID backpackMaterialID = 0;	//Reference to not damaged material UID, used to be set whenever Ai has been recently hurt but it is hurt no more
+	UID weaponMaterialID = 0;	//Reference to not damaged material UID, used to be set whenever Ai has been recently hurt but it is hurt no more
+	UID damageMaterialID = 0;	//Reference to damaged material, used to be set whenever Ai has been recently hurt
 
 	ComponentAgent* agent = nullptr;	//Reference to Agent component, for navigation
 
@@ -132,7 +136,7 @@ private:
 	float actualShotTimer = -1.0f;			//Timer that counts down the seconds to match shooting animation with projectile creation
 
 	ComponentMeshRenderer* meshRenderer = nullptr;	//Reference to a meshRendererComponent, used for material setting on hurt
-	ComponentMeshRenderer* backPackMeshRenderer = nullptr;
+	ComponentMeshRenderer* backpackMeshRenderer = nullptr;
 	ComponentMeshRenderer* weaponMeshRenderer = nullptr;
 
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr }; //Array of ints used to play audios
