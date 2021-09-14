@@ -6,6 +6,7 @@ class PlayerController;
 class ComponentTransform2D;
 class ComponentImage;
 class AbilityRefeshFX;
+class ComponentAudioSource;
 
 class HUDManager : public Script {
 	GENERATE_BODY(HUDManager);
@@ -41,6 +42,9 @@ public:
 		UNAVAILABLE,
 		IN_USE
 	};
+
+	enum class HUDManagerAudio { CRITICAL_HEALTH, COOLDOWN_RECOVER, TOTAL };
+	ComponentAudioSource* audios[static_cast<int>(HUDManagerAudio::TOTAL)] = { nullptr };
 
 	UID playerObjectUID = 0;
 
