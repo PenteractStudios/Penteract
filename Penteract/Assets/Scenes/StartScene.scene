@@ -8046,7 +8046,7 @@
                                             0.0,
                                             0.0,
                                             0.0,
-                                            0.0
+                                            1.0
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
@@ -8070,6 +8070,11 @@
                                                 "Name": "blackImageObjUID",
                                                 "Type": "GameObjectUID",
                                                 "Value": 17695041365782035885
+                                            },
+                                            {
+                                                "Name": "fadeInOnStart",
+                                                "Type": "Bool",
+                                                "Value": true
                                             }
                                         ]
                                     }
