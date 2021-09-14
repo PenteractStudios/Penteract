@@ -1,16 +1,17 @@
 #include "StateMachineManager.h"
-#include <Application.h>
-#include <Modules/ModuleResources.h>
+
+#include "Animation/Transition.h"
+#include "Application.h"
 #include "Modules/ModuleTime.h"
-#include <Resources/ResourceStateMachine.h>
-#include "Transition.h"
-#include <Utils/UID.h>
-#include <Utils/Logging.h>
+#include "Modules/ModuleResources.h"
+#include "Resources/ResourceStateMachine.h"
+#include "Utils/UID.h"
+#include "Utils/Logging.h"
 #include "GameObject.h"
 #include "Components/ComponentAnimation.h"
 
 bool StateMachineManager::Contains(std::list<AnimationInterpolation>& animationInterpolations, const UID& id) {
-	for (const auto element : animationInterpolations) {
+	for (const auto &element : animationInterpolations) {
 		if (element.state->id == id) return true;
 	}
 	return false;
@@ -122,12 +123,12 @@ bool StateMachineManager::CalculateAnimation(GameObject* gameObject, const GameO
 		return result;
 	}
 
-	ResourceClip* clip = App->resources->GetResource<ResourceClip>(currentState.clipUid);	
+	ResourceClip* clip = App->resources->GetResource<ResourceClip>(currentState.clipUid);
 	if (!clip) {
 		return result;
 	}
 	int currentSample = AnimationController::GetCurrentSample(*clip, (*currentTimeStates)[currentState.id]);
-	
+
 	//Checking for transition between states
 	if ((*animationInterpolations).size() > 1) {
 		result = AnimationController::InterpolateTransitions((*animationInterpolations).begin(), (*animationInterpolations), *owner.GetRootBone(), *gameObject, position, rotation, componentAnimation);
