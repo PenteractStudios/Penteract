@@ -95,6 +95,11 @@
                         "Value": 3676940907943335204
                     },
                     {
+                        "Name": "gruntCharacter.lifePoints",
+                        "Type": "Float",
+                        "Value": 10.0
+                    },
+                    {
                         "Name": "damageMaterialPlaceHolderUID",
                         "Type": "GameObjectUID",
                         "Value": 6162056736887938687
