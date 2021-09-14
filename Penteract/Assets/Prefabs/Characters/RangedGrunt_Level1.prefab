@@ -86,14 +86,14 @@
                         "Value": 40.0
                     },
                     {
-                        "Name": "hurtFeedbackTimeDuration",
-                        "Type": "Float",
-                        "Value": 0.10000000149011612
-                    },
-                    {
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
                         "Value": 9835691270176894595
+                    },
+                    {
+                        "Name": "hurtFeedbackTimeDuration",
+                        "Type": "Float",
+                        "Value": 0.10000000149011612
                     },
                     {
                         "Name": "fangUID",
@@ -1905,7 +1905,7 @@
                                 ],
                                 "SpeedRM": 0,
                                 "Speed": [
-                                    20.0,
+                                    15.0,
                                     20.0
                                 ],
                                 "SpeedCurve": [

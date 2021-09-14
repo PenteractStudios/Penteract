@@ -65,6 +65,11 @@
                         "Value": 9835691270176894595
                     },
                     {
+                        "Name": "rightBladeColliderUID",
+                        "Type": "GameObjectUID",
+                        "Value": 12119067485365247026
+                    },
+                    {
                         "Name": "att2AttackSpeed",
                         "Type": "Float",
                         "Value": 1.5
@@ -75,9 +80,9 @@
                         "Value": 826311568033082909
                     },
                     {
-                        "Name": "rightBladeColliderUID",
+                        "Name": "leftBladeColliderUID",
                         "Type": "GameObjectUID",
-                        "Value": 12119067485365247026
+                        "Value": 114993121818193807
                     },
                     {
                         "Name": "winConditionUID",
@@ -85,9 +90,9 @@
                         "Value": 16579210181260590797
                     },
                     {
-                        "Name": "leftBladeColliderUID",
-                        "Type": "GameObjectUID",
-                        "Value": 114993121818193807
+                        "Name": "gruntCharacter.lifePoints",
+                        "Type": "Float",
+                        "Value": 10.0
                     },
                     {
                         "Name": "fangUID",
@@ -107,17 +112,17 @@
                     {
                         "Name": "gruntCharacter.movementSpeed",
                         "Type": "Float",
-                        "Value": 10.0
-                    },
-                    {
-                        "Name": "att1AttackSpeed",
-                        "Type": "Float",
-                        "Value": 1.5
+                        "Value": 7.0
                     },
                     {
                         "Name": "hurtFeedbackTimeDuration",
                         "Type": "Float",
                         "Value": 0.10000000149011612
+                    },
+                    {
+                        "Name": "att1AttackSpeed",
+                        "Type": "Float",
+                        "Value": 1.5
                     },
                     {
                         "Name": "dissolveMaterialObj",
