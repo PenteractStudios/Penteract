@@ -370,7 +370,7 @@ bool Fang::CanShoot() {
 	return !shooting && !ultimateOn && !compAnimation->GetCurrentStateSecondary() && !GameController::IsGameplayBlocked();
 }
 
-bool Fang::isAiming() {
+bool Fang::IsAiming() {
 	return aiming;
 }
 
