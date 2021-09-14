@@ -95,11 +95,9 @@ void GameController::Update() {
 
 	if ((Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)) && !isVideoActive) {
 		if (isPaused) {
-			PauseController::SetIsPause(false);
 			ResumeGame();
 		}
 		else {
-			PauseController::SetIsPause(true);
 			PauseGame();
 		}
 	}
@@ -300,7 +298,9 @@ void GameController::DoTransition() {
 
 void GameController::ClearPauseMenus() {
 	if (pauseCanvas) {
+		PauseController::SetIsPause(false);
 		pauseCanvas->Disable();
+		
 	}
 
 	if (settingsCanvas) {
@@ -334,6 +334,7 @@ void GameController::EnablePauseMenus()
 	}
 
 	if (pauseCanvas) {
+		PauseController::SetIsPause(true);
 		pauseCanvas->Enable();
 	}
 
