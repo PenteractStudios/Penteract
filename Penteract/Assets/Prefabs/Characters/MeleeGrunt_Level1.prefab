@@ -133,6 +133,11 @@
                         "Name": "dissolveTimerToStart",
                         "Type": "Float",
                         "Value": 0.699999988079071
+                    },
+                    {
+                        "Name": "dissolveMaterialWeaponObj",
+                        "Type": "GameObjectUID",
+                        "Value": 10785697960858358950
                     }
                 ]
             },

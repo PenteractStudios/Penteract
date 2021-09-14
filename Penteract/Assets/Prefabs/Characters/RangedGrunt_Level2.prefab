@@ -86,14 +86,14 @@
                         "Value": 40.0
                     },
                     {
-                        "Name": "hurtFeedbackTimeDuration",
-                        "Type": "Float",
-                        "Value": 0.10000000149011612
-                    },
-                    {
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
                         "Value": 15261592491771467264
+                    },
+                    {
+                        "Name": "hurtFeedbackTimeDuration",
+                        "Type": "Float",
+                        "Value": 0.10000000149011612
                     },
                     {
                         "Name": "fangUID",
@@ -131,19 +131,24 @@
                         "Value": 4907272388478101881
                     },
                     {
-                        "Name": "materialsUID",
-                        "Type": "GameObjectUID",
-                        "Value": 6824303515534715053
-                    },
-                    {
                         "Name": "groundPosition",
                         "Type": "Float",
                         "Value": 0.0
                     },
                     {
+                        "Name": "materialsUID",
+                        "Type": "GameObjectUID",
+                        "Value": 6824303515534715053
+                    },
+                    {
                         "Name": "dissolveTimerToStart",
                         "Type": "Float",
                         "Value": 0.5
+                    },
+                    {
+                        "Name": "timeSinceLastHurt",
+                        "Type": "Float",
+                        "Value": 0.10000000149011612
                     }
                 ]
             },

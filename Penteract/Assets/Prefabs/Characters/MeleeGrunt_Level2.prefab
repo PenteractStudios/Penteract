@@ -110,6 +110,11 @@
                         "Value": 10.0
                     },
                     {
+                        "Name": "hurtFeedbackTimeDuration",
+                        "Type": "Float",
+                        "Value": 0.10000000149011612
+                    },
+                    {
                         "Name": "att1AttackSpeed",
                         "Type": "Float",
                         "Value": 1.5
@@ -133,6 +138,11 @@
                         "Name": "dissolveTimerToStart",
                         "Type": "Float",
                         "Value": 0.5
+                    },
+                    {
+                        "Name": "dissolveMaterialWeaponObj",
+                        "Type": "GameObjectUID",
+                        "Value": 280368342242484680
                     }
                 ]
             },

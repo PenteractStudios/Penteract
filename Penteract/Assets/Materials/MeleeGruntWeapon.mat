@@ -1,5 +1,5 @@
 {
-    "ShaderType": 2,
+    "ShaderType": 4,
     "RenderingMode": 0,
     "DiffuseColor": [
         1.0,
@@ -38,13 +38,13 @@
         0.0,
         0.0
     ],
-    "DissolveScale": 0.0,
+    "DissolveScale": 4.0,
     "DissolveOffset": [
         0.0,
         0.0
     ],
-    "DissolveDuration": 0.0,
-    "DissolveEdgeSize": 0.0,
+    "DissolveDuration": 1.0,
+    "DissolveEdgeSize": 0.10000000149011612,
     "VolumetricLightIntensity": 0.0,
     "VolumetricLightAttenuationExponent": 0.0,
     "IsSoft": false,
