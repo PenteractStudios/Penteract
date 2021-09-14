@@ -717,22 +717,11 @@ void RangedAI::PlayHitMaterialEffect()
 void RangedAI::UpdateDissolveTimer() {
 	if (dissolveAlreadyStarted && !dissolveAlreadyPlayed) {
 		if (currentDissolveTime >= dissolveTimerToStart) {
-			if (dissolveMaterialID != 0) {
-				if (meshRenderer) {
-					meshRenderer->materialId = dissolveMaterialID;
-					meshRenderer->PlayDissolveAnimation();
-				}
 
-				if (weaponMeshRenderer) {
-					weaponMeshRenderer->materialId = dissolveMaterialID;
-					weaponMeshRenderer->PlayDissolveAnimation();
-				}
+			SetMaterial(meshRenderer, dissolveMaterialID, true);
+			SetMaterial(weaponMeshRenderer, dissolveMaterialID, true);
+			SetMaterial(backpackMeshRenderer, dissolveMaterialID, true);
 
-				if (backpackMeshRenderer) {
-					backpackMeshRenderer->materialId = dissolveMaterialID;
-					backpackMeshRenderer->PlayDissolveAnimation();
-				}
-			}
 			dissolveAlreadyPlayed = true;
 		}
 		else {
