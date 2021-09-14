@@ -6,7 +6,7 @@
         }
     ],
     "Flip": false,
-    "Wrap": 2,
+    "Wrap": 0,
     "MinFilter": 5,
     "MagFilter": 1
 }

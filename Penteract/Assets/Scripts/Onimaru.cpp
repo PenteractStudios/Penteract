@@ -271,6 +271,11 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 	}
 }
 
+bool Onimaru::IsAiming() const
+{
+	return aiming;
+}
+
 void Onimaru::OnDeath() {
 	if (compAnimation == nullptr) return;
 	if (compAnimation->GetCurrentState()) {
