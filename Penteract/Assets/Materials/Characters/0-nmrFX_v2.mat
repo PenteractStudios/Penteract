@@ -1,6 +1,8 @@
 {
     "ShaderType": 3,
     "RenderingMode": 1,
+    "CastShadows": true,
+    "ShadowType": 1,
     "DiffuseColor": [
         1.0,
         1.0,
