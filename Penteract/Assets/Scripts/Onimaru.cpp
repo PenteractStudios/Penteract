@@ -282,6 +282,7 @@ void Onimaru::OnDeath() {
 		}
 	}
 	ultimateOn = blastInUse = false;
+	shield->SetIsActive(false);
 }
 
 bool Onimaru::CanSwitch() const {
