@@ -86,14 +86,14 @@
                         "Value": 40.0
                     },
                     {
-                        "Name": "playerUID",
-                        "Type": "GameObjectUID",
-                        "Value": 15261592491771467264
-                    },
-                    {
                         "Name": "hurtFeedbackTimeDuration",
                         "Type": "Float",
                         "Value": 0.10000000149011612
+                    },
+                    {
+                        "Name": "playerUID",
+                        "Type": "GameObjectUID",
+                        "Value": 15261592491771467264
                     },
                     {
                         "Name": "fangUID",
@@ -131,14 +131,14 @@
                         "Value": 4907272388478101881
                     },
                     {
-                        "Name": "groundPosition",
-                        "Type": "Float",
-                        "Value": 0.0
-                    },
-                    {
                         "Name": "materialsUID",
                         "Type": "GameObjectUID",
                         "Value": 6824303515534715053
+                    },
+                    {
+                        "Name": "groundPosition",
+                        "Type": "Float",
+                        "Value": 0.0
                     },
                     {
                         "Name": "dissolveTimerToStart",
@@ -151,7 +151,7 @@
                 "Type": "AudioSource",
                 "Active": true,
                 "Pitch": 1.0,
-                "Gain": 0.10000000149011612,
+                "Gain": 0.20000000298023225,
                 "Mute": false,
                 "Looping": false,
                 "PlayOnAwake": false,
@@ -187,8 +187,8 @@
                 "Type": "AudioSource",
                 "Active": true,
                 "Pitch": 1.0,
-                "Gain": 1.0,
-                "Mute": true,
+                "Gain": 0.30000001192092898,
+                "Mute": false,
                 "Looping": false,
                 "PlayOnAwake": false,
                 "AudioClipId": 5583254593256726173,
@@ -205,8 +205,8 @@
                 "Type": "AudioSource",
                 "Active": true,
                 "Pitch": 1.0,
-                "Gain": 1.0,
-                "Mute": true,
+                "Gain": 0.30000001192092898,
+                "Mute": false,
                 "Looping": false,
                 "PlayOnAwake": false,
                 "AudioClipId": 16630848835753496155,
@@ -223,11 +223,11 @@
                 "Type": "AudioSource",
                 "Active": true,
                 "Pitch": 1.0,
-                "Gain": 0.3499999940395355,
+                "Gain": 0.25,
                 "Mute": false,
                 "Looping": false,
                 "PlayOnAwake": false,
-                "AudioClipId": 7710092202102288136,
+                "AudioClipId": 14797407959954530087,
                 "SpatialBlend": 0,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
