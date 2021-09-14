@@ -3,6 +3,7 @@
 #include "Scripting/Script.h"
 
 class GameObject;
+class FactoryDoors;
 
 class BridgeDoorButton : public Script
 {
@@ -19,6 +20,6 @@ public:
 
 private:
 	GameObject* gameObject = nullptr;
-	Script* script = nullptr;
+	FactoryDoors* script = nullptr;
 };
 
