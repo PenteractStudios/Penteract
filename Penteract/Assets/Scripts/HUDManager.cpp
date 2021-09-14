@@ -137,6 +137,12 @@ void HUDManager::Start() {
 
 		onimaruSkillParent->Disable();
 
+		int i = 0;
+		for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
+			if (i < static_cast<int>(HUDManagerAudio::TOTAL)) audios[i] = &src;
+			++i;
+		}
+
 	}
 
 	fangHealthParent = GameplaySystems::GetGameObject(fangHealthParentUID);
@@ -289,7 +295,7 @@ void HUDManager::StartCharacterSwitch() {
 		}
 	}
 	if (playingLostHealthFeedback) StopLostHealthFeedback();
-		
+
 	// Check if the new character needs the health warning
 
 	float health = fangObj->IsActive() ? onimaruPreviousHealth : fangPreviousHealth;
@@ -297,8 +303,7 @@ void HUDManager::StartCharacterSwitch() {
 
 	if (health > maxHealth * (criticalHealthPercentage / 100.f)) {
 		if (criticalHealthWarning) HideCriticalHealthWarning();
-	}
-	else if (!criticalHealthWarning) ShowCriticalHealthWarning();
+	} else if (!criticalHealthWarning) ShowCriticalHealthWarning();
 }
 
 void HUDManager::SetCooldownRetreival(Cooldowns cooldown) {
@@ -931,6 +936,10 @@ void HUDManager::PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns cooldown)
 	if (effect != nullptr) {
 		effect->PlayEffect();
 	}
+
+	if (audios[static_cast<int>(HUDManagerAudio::COOLDOWN_RECOVER)]) {
+		audios[static_cast<int>(HUDManagerAudio::COOLDOWN_RECOVER)]->Play();
+	}
 }
 
 void HUDManager::PlayHitEffect() {
@@ -971,6 +980,9 @@ void HUDManager::ShowCriticalHealthWarning() {
 		if (sideImage) sideImage->SetColor(float4(sideHitColor.x, sideHitColor.y, sideHitColor.z, sideHitColor.w));
 	}
 
+	if (audios[static_cast<int>(HUDManagerAudio::CRITICAL_HEALTH)]) {
+		audios[static_cast<int>(HUDManagerAudio::CRITICAL_HEALTH)]->Play();
+	}
 	criticalHealthWarning = true;
 }
 
@@ -980,6 +992,11 @@ void HUDManager::HideCriticalHealthWarning() {
 	for (GameObject* side : sidesHUDChildren) {
 		ComponentImage* sideImage = side->GetComponent<ComponentImage>();
 		if (sideImage) sideImage->SetColor(sideNormalColor);
+	}
+
+
+	if (audios[static_cast<int>(HUDManagerAudio::CRITICAL_HEALTH)]) {
+		audios[static_cast<int>(HUDManagerAudio::CRITICAL_HEALTH)]->Stop();
 	}
 
 	criticalHealthWarning = false;
@@ -1274,7 +1291,7 @@ void HUDManager::ManageSwitchGreenEffect(bool growing, float timer) {
 		float xFinalScale = growing ? 1 : 0.5f;
 		ComponentTransform2D* transform2D = switchSkillChildren[HIERARCHY_INDEX_SWITCH_ABILITY_GREEN_EFFECT]->GetComponent<ComponentTransform2D>();
 		if (transform2D) {
-			transform2D->SetScale(float3::Lerp(float3(xInitialScale, 1.f, 1.f), float3(xFinalScale,1,1), switchTimer / timer));
+			transform2D->SetScale(float3::Lerp(float3(xInitialScale, 1.f, 1.f), float3(xFinalScale, 1, 1), switchTimer / timer));
 		}
 	}
 }
