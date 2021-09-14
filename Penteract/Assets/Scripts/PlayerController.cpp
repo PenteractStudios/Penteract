@@ -108,6 +108,8 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER_SEPARATOR("Switch settings"),
 	MEMBER(MemberType::FLOAT, switchDelay),
 	MEMBER(MemberType::FLOAT, switchCooldown),
+	MEMBER(MemberType::FLOAT, switchDamage),
+	MEMBER(MemberType::FLOAT, switchSphereRadius),
 	MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
 	MEMBER_SEPARATOR("Debug settings"),
 	MEMBER(MemberType::BOOL, debugGetHit),
