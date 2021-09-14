@@ -36,8 +36,8 @@ void Shield::FadeShield() {
 }
 
 void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
-	if ((collidedWith.name == "RangerProjectile" || collidedWith.name == "MeleePunch") && isActive && playerController) {
-		if (playerController->playerOnimaru.level1Upgrade && collidedWith.name == "RangerProjectile") {		// Reflect projectile
+	if ((collidedWith.name == "WeaponParticles" || collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") && isActive && playerController) {
+		if (playerController->playerOnimaru.level1Upgrade && collidedWith.name == "WeaponParticles") {		// Reflect projectile
 			ComponentSphereCollider* sCollider = collidedWith.GetComponent<ComponentSphereCollider>();
 			if (!sCollider) return;
 			RangerProjectileScript* rps = GET_SCRIPT(&collidedWith, RangerProjectileScript);
@@ -57,10 +57,15 @@ void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 			}
 
 		} else {
-			GameplaySystems::DestroyGameObject(&collidedWith);
+			if (!particle) {
+				collidedWith.Disable();
+			}
+			ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+			ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+			if (pSystem) pSystem->KillParticle(p);
 		}
 		currentAvailableCharges--;
-		
+
 		if (audio) {		// Play hit effect
 			audio->Play();
 		}
