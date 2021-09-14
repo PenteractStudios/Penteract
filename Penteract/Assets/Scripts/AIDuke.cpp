@@ -112,9 +112,12 @@ void AIDuke::Update() {
 				movementScript->Stop();
 			} else {
 				if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(dukeCharacter.movementSpeed);
-				float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
-				movementScript->Orientate(dir);
-				dukeCharacter.ShootAndMove(dir);
+				if (player) {
+					float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
+					dir.y = 0.0f;
+					movementScript->Orientate(dir);
+					dukeCharacter.ShootAndMove(dir);
+				}
 			}
 			break;
 		case DukeState::MELEE_ATTACK:

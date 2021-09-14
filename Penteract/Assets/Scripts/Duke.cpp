@@ -2,15 +2,14 @@
 
 #include "RangerProjectileScript.h"
 
-#include <random>
 #include <string>
 
-std::random_device rd;
-std::minstd_rand gen(rd());
 std::uniform_real_distribution<> rng(-1.0f, 1.0f);
 
 void Duke::Init(UID dukeUID, UID playerUID, UID bulletPrefabUID)
 {
+	gen = std::minstd_rand(rd());
+
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(dukeUID);
 	player = GameplaySystems::GetGameObject(playerUID);
@@ -26,6 +25,7 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletPrefabUID)
 		}
 
 		if (agent) {
+			agent->AddAgentToCrowd();
 			agent->SetMaxSpeed(movementSpeed);
 			agent->SetMaxAcceleration(MAX_ACCELERATION);
 		}
