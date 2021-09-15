@@ -305,6 +305,15 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 			hitTaken = true;
 			dukeCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
 		}
+		else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
+			hitTaken = true;
+			if (!particle) return;
+			ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+			ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+			if (pSystem) pSystem->KillParticle(p);
+			hitTaken = true;
+			dukeCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
+		}
 		else if (collidedWith.name == "OnimaruBullet") {
 			if (!particle) return;
 			ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;

@@ -135,6 +135,8 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 			if (playerController) playerController->TakeDamage(fireDamageTaken);
 			fireDamageActive = false;
 		}
+	} else if (collidedWith.name == "DukeProjectile") {
+		if (playerController) playerController->TakeDamage(rangedDamageTaken);
 	}
 }
 
