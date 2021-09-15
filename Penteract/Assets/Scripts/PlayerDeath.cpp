@@ -112,7 +112,7 @@ void PlayerDeath::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char
 }
 
 void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
-	if (collidedWith.name == "RangerProjectile") {
+	if (collidedWith.name == "RangerProjectile" || collidedWith.name == "DukeProjectile") {
 		if(playerController) playerController->TakeDamage(rangedDamageTaken);
 	} else if (collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") { //meleegrunt
 		if(playerController) playerController->TakeDamage(meleeDamageTaken);
