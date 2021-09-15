@@ -68,6 +68,10 @@ const char* GetComponentTypeName(ComponentType type) {
 		return "Agent";
 	case ComponentType::OBSTACLE:
 		return "Obstacle";
+	case ComponentType::FOG:
+		return "Fog";
+	case ComponentType::VIDEO:
+		return "Video";
 	default:
 		LOG("Component of type %i hasn't been registered in GetComponentTypeName.", (unsigned) type);
 		assert(false); // ERROR: Component type not registered
@@ -136,6 +140,10 @@ ComponentType GetComponentTypeFromName(const char* name) {
 		return ComponentType::AGENT;
 	} else if (strcmp(name, "Obstacle") == 0) {
 		return ComponentType::OBSTACLE;
+	} else if (strcmp(name, "Fog") == 0) {
+		return ComponentType::FOG;
+	} else if (strcmp(name, "Video") == 0) {
+		return ComponentType::VIDEO;
 	} else {
 		LOG("No component of name %s exists.", (unsigned) name);
 		assert(false); // ERROR: Invalid name

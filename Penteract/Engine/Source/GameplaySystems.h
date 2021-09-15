@@ -6,6 +6,7 @@
 #include "Modules/ModuleResources.h"
 #include "Modules/ModuleWindow.h"
 #include "Modules/ModuleRender.h"
+#include "Modules/ModuleProject.h"
 #include "Components/ComponentCamera.h"
 #include "Components/ComponentScript.h"
 #include "Utils/Logging.h"
@@ -30,6 +31,8 @@ namespace GameplaySystems {
 	TESSERACT_ENGINE_API GameObject* GetGameObject(const char* name);
 	TESSERACT_ENGINE_API GameObject* GetGameObject(UID id);
 	template<typename T> TESSERACT_ENGINE_API T* GetResource(UID id);
+	template<typename T> TESSERACT_ENGINE_API T GetGlobalVariable(const char* name, const T& defaultValue);
+	template<typename T> TESSERACT_ENGINE_API void SetGlobalVariable(const char* name, const T& value);
 	TESSERACT_ENGINE_API void SetRenderCamera(ComponentCamera* camera);
 	TESSERACT_ENGINE_API void DestroyGameObject(GameObject* gameObject);
 
@@ -46,6 +49,7 @@ namespace GameplaySystems {
 
 		return nullptr;
 	}
+
 }; // namespace GameplaySystems
 
 namespace Debug {
@@ -437,6 +441,7 @@ namespace Input {
 	TESSERACT_ENGINE_API const float3 GetMouseWorldPosition();
 	TESSERACT_ENGINE_API const float2 GetMousePositionNormalized();
 	TESSERACT_ENGINE_API float2 GetMousePosition();
+	TESSERACT_ENGINE_API float GetMouseWheelMotion();
 	TESSERACT_ENGINE_API bool GetKeyCodeDown(KEYCODE keycode);
 	TESSERACT_ENGINE_API bool GetKeyCodeUp(KEYCODE keycode);
 	TESSERACT_ENGINE_API bool GetKeyCodeRepeat(KEYCODE keycode);
@@ -447,6 +452,7 @@ namespace Input {
 	TESSERACT_ENGINE_API bool GetControllerButtonUp(SDL_GameControllerButton button, int playerID);
 	TESSERACT_ENGINE_API bool GetControllerButton(SDL_GameControllerButton button, int playerID);
 	TESSERACT_ENGINE_API float GetControllerAxisValue(SDL_GameControllerAxis axis, int playerID);
+	TESSERACT_ENGINE_API void StartControllerVibration(int playerID, float strength, float duration);
 	TESSERACT_ENGINE_API bool IsGamepadConnected(int playerID);
 }; // namespace Input
 
@@ -468,6 +474,7 @@ namespace Screen {
 	TESSERACT_ENGINE_API void SetCurrentDisplayMode(unsigned index);
 	TESSERACT_ENGINE_API void SetSize(int width, int height);
 	TESSERACT_ENGINE_API void SetBrightness(float brightness);
+	TESSERACT_ENGINE_API void SetCursor(UID cursorID, int widthCursor, int heightCursor);
 
 	TESSERACT_ENGINE_API WindowMode GetWindowMode();
 	TESSERACT_ENGINE_API bool GetMaximized();
@@ -489,6 +496,11 @@ namespace Screen {
 	TESSERACT_ENGINE_API const float GetBloomThreshold();
 	TESSERACT_ENGINE_API void SetBloomThreshold(float value);
 
+	TESSERACT_ENGINE_API const bool IsChromaticAberrationActive();
+	TESSERACT_ENGINE_API void SetChromaticAberration(bool value);
+	TESSERACT_ENGINE_API const float GetChromaticAberrationStrength();
+	TESSERACT_ENGINE_API void SetChromaticAberrationStrength(float value);
+
 }; // namespace Screen
 
 namespace SceneManager {
@@ -502,7 +514,7 @@ namespace Physics {
 	TESSERACT_ENGINE_API void UpdateRigidbody(Component* collider);
 	TESSERACT_ENGINE_API void RemoveRigidbody(Component* collider);
 
-}
+} // namespace Physics
 
 namespace Colors {
 	TESSERACT_ENGINE_API float3 Red();
@@ -523,3 +535,7 @@ namespace Audio {
 namespace UserInterface {
 	TESSERACT_ENGINE_API ComponentEventSystem* GetCurrentEventSystem();
 }; // namespace UserInterface
+
+namespace Navigation {
+	TESSERACT_ENGINE_API void Raycast(float3 startPosition, float3 targetPosition, bool& hitResult, float3& hitPosition);
+}

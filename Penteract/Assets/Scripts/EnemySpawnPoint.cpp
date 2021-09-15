@@ -4,9 +4,9 @@
 #include "PlayerController.h"
 #include "GameplaySystems.h"
 #include "GameObject.h"
-#include "WinLose.h"
 
 EXPOSE_MEMBERS(EnemySpawnPoint) {
+	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::FLOAT, xAxisPos),
 	MEMBER(MemberType::FLOAT, zAxisPos),
 	MEMBER(MemberType::INT, offset),
@@ -20,7 +20,6 @@ EXPOSE_MEMBERS(EnemySpawnPoint) {
 	MEMBER(MemberType::INT, fourthWaveRangeAmount),
 	MEMBER(MemberType::INT, fifthWaveMeleeAmount),
 	MEMBER(MemberType::INT, fifthWaveRangeAmount),
-	MEMBER(MemberType::GAME_OBJECT_UID, playerUID)
 };
 
 GENERATE_BODY_IMPL(EnemySpawnPoint);
@@ -43,6 +42,7 @@ void EnemySpawnPoint::Start() {
 	if (spawnPointControllerScript) {
 		meleeEnemyPrefab = spawnPointControllerScript->GetMeleePrefab();
 		rangeEnemyPrefab = spawnPointControllerScript->GetRangePrefab();
+		spawnPointControllerScript->SetCurrentEnemyAmount(index, amountOfEnemies);
 	}
 
 	GameObject* player = GameplaySystems::GetGameObject(playerUID);
@@ -64,16 +64,17 @@ void EnemySpawnPoint::Update() {
 		/* Stop the spawn until all the wave enemies die */
 		spawn = false;
 		waveRemainingEnemies = std::get<0>(*it) + std::get<1>(*it);
+		spawnPointControllerScript->SetCurrentEnemyAmount(index, waveRemainingEnemies);
 	}
 
 	/* Condition to spawn the next wave */
-	if (waveRemainingEnemies == 0) {
+	if (waveRemainingEnemies == 0 && spawnPointControllerScript->CanSpawn()) {
 		spawn = true;
 		if (it != enemies.end()) {
 			it++;
 		}
 		else {
-			if (spawnPointControllerScript) spawnPointControllerScript->OpenDoor();
+			spawnPointControllerScript->SetEnemySpawnStatus(index, false);
 		}
 	}
 }
@@ -81,6 +82,7 @@ void EnemySpawnPoint::Update() {
 /* Called each time an enemy dies */
 void EnemySpawnPoint::UpdateRemainingEnemies() {
 	waveRemainingEnemies--;
+	spawnPointControllerScript->SetCurrentEnemyAmount(index, waveRemainingEnemies);
 }
 
 void EnemySpawnPoint::RenderEnemy(EnemyType type, unsigned int amount) {

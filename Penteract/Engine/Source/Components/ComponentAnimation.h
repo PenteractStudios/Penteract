@@ -1,16 +1,17 @@
 #pragma once
 
-#include "Application.h"
 #include "Component.h"
-#include "AnimationController.h"
-#include "AnimationInterpolation.h"
-#include "State.h"
+#include "Application.h"
 #include "Modules/ModuleResources.h"
+#include "Animation/State.h"
+#include "Animation/StateMachineEnum.h"
+#include "Animation/AnimationController.h"
+#include "Animation/AnimationInterpolation.h"
 #include "Resources/ResourceStateMachine.h"
+#include "Resources/ResourceClip.h"
 #include "Utils/UID.h"
-#include <string>
-#include "StateMachineEnum.h"
 
+#include <string>
 #include <unordered_map>
 
 class GameObject;
@@ -52,6 +53,12 @@ public:
 	UID stateMachineResourceUIDSecondary = 0;
 	State currentStatePrincipal;
 	State currentStateSecondary;
+	std::unordered_map<UID, std::unordered_map<unsigned int, EventClip>> listClipsKeyEvents;
+	std::unordered_map<UID, unsigned int> listClipsCurrentEventKeyFrames;
+	std::list<AnimationInterpolation> animationInterpolationsPrincipal; //List of the current interpolations between states
+	std::list<AnimationInterpolation> animationInterpolationsSecondary; //List of the current interpolations between states
+	std::unordered_map<UID, float> currentTimeStatesPrincipal;
+	std::unordered_map<UID, float> currentTimeStatesSecondary;
 
 private:
 	void UpdateAnimations(GameObject* gameObject);
@@ -60,9 +67,4 @@ private:
 	bool loadedResourceStateMachine = false;
 	bool loadedResourceStateMachineSecondary = false;
 
-private:
-	std::list<AnimationInterpolation> animationInterpolationsPrincipal; //List of the current interpolations between states
-	std::list<AnimationInterpolation> animationInterpolationsSecondary; //List of the current interpolations between states
-	std::unordered_map<UID, float> currentTimeStatesPrincipal;
-	std::unordered_map<UID, float> currentTimeStatesSecondary;
 };

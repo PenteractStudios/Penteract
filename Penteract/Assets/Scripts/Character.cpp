@@ -29,3 +29,11 @@ void Character::SetTotalLifePoints(int totalLifePoints_) {
 void Character::SetDamageHit(float damageHit_) {
 	damageHit = damageHit_;
 }
+
+float Character::GetTotalLifePoints() const {
+	return totalLifePoints;
+}
+
+bool Character::IsFullHealth() const {
+	return lifePoints == totalLifePoints;
+}

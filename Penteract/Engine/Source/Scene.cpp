@@ -2,11 +2,14 @@
 
 #include "GameObject.h"
 #include "Application.h"
+#include "Modules/ModuleTime.h"
 #include "Modules/ModuleEditor.h"
-#include "Modules/ModuleResources.h"
+#include "Modules/ModuleRender.h"
 #include "Modules/ModulePhysics.h"
 #include "Modules/ModuleTime.h"
+#include "Modules/ModuleWindow.h"
 #include "Resources/ResourceMesh.h"
+#include "Modules/ModuleResources.h"
 #include "Utils/Logging.h"
 
 #include "Utils/Leaks.h"
@@ -44,6 +47,8 @@ Scene::Scene(unsigned numGameObjects) {
 	capsuleColliderComponents.Allocate(numGameObjects);
 	agentComponents.Allocate(numGameObjects);
 	obstacleComponents.Allocate(numGameObjects);
+	fogComponents.Allocate(numGameObjects);
+	videoComponents.Allocate(numGameObjects);
 }
 
 void Scene::ClearScene() {
@@ -51,9 +56,13 @@ void Scene::ClearScene() {
 	root = nullptr;
 	quadtree.Clear();
 	SetNavMesh(0);
+	SetCursor(0);
 
 	assert(gameObjects.Count() == 0); // There should be no GameObjects outside the scene hierarchy
 	gameObjects.Clear();			  // This looks redundant, but it resets the free list so that GameObject order is mantained when saving/loading
+
+	staticShadowCasters.clear();
+	dynamicShadowCasters.clear();
 }
 
 void Scene::RebuildQuadtree() {
@@ -102,7 +111,7 @@ void Scene::DestroyGameObject(GameObject* gameObject) {
 	if (gameObject->isInQuadtree) {
 		quadtree.Remove(gameObject);
 	}
-	
+
 	bool selected = App->editor->selectedGameObject == gameObject;
 	if (selected) App->editor->selectedGameObject = nullptr;
 
@@ -177,6 +186,10 @@ Component* Scene::GetComponentByTypeAndId(ComponentType type, UID componentId) {
 		return agentComponents.Find(componentId);
 	case ComponentType::OBSTACLE:
 		return obstacleComponents.Find(componentId);
+	case ComponentType::FOG:
+		return fogComponents.Find(componentId);
+	case ComponentType::VIDEO:
+		return videoComponents.Find(componentId);
 	default:
 		LOG("Component of type %i hasn't been registered in Scene::GetComponentByTypeAndId.", (unsigned) type);
 		assert(false);
@@ -246,6 +259,10 @@ Component* Scene::CreateComponentByTypeAndId(GameObject* owner, ComponentType ty
 		return agentComponents.Obtain(componentId, owner, componentId, owner->IsActive());
 	case ComponentType::OBSTACLE:
 		return obstacleComponents.Obtain(componentId, owner, componentId, owner->IsActive());
+	case ComponentType::FOG:
+		return fogComponents.Obtain(componentId, owner, componentId, owner->IsActive());
+	case ComponentType::VIDEO:
+		return videoComponents.Obtain(componentId, owner, componentId, owner->IsActive());
 	default:
 		LOG("Component of type %i hasn't been registered in Scene::CreateComponentByTypeAndId.", (unsigned) type);
 		assert(false);
@@ -313,9 +330,6 @@ void Scene::RemoveComponentByTypeAndId(ComponentType type, UID componentId) {
 		scriptComponents.Release(componentId);
 		break;
 	case ComponentType::PARTICLE:
-		for (ComponentParticleSystem& ps : particleComponents) {
-			ps.DestroyParticlesColliders();
-		}
 		particleComponents.Release(componentId);
 		break;
 	case ComponentType::TRAIL:
@@ -350,6 +364,12 @@ void Scene::RemoveComponentByTypeAndId(ComponentType type, UID componentId) {
 		break;
 	case ComponentType::OBSTACLE:
 		obstacleComponents.Release(componentId);
+		break;
+	case ComponentType::FOG:
+		fogComponents.Release(componentId);
+		break;
+	case ComponentType::VIDEO:
+		videoComponents.Release(componentId);
 		break;
 	default:
 		LOG("Component of type %i hasn't been registered in Scene::RemoveComponentByTypeAndId.", (unsigned) type);
@@ -441,6 +461,67 @@ std::vector<float> Scene::GetNormals() {
 	return result;
 }
 
+const std::vector<GameObject*>& Scene::GetStaticShadowCasters() const {
+	return staticShadowCasters;
+}
+
+const std::vector<GameObject*>& Scene::GetDynamicShadowCasters() const {
+	return dynamicShadowCasters;
+}
+
+bool Scene::InsideFrustumPlanes(const FrustumPlanes& planes, const GameObject* go) {
+	
+	ComponentBoundingBox* boundingBox = go->GetComponent<ComponentBoundingBox>();
+	if (boundingBox && planes.CheckIfInsideFrustumPlanes(boundingBox->GetWorldAABB(), boundingBox->GetWorldOBB())) {
+		return true;
+	}
+	return false;
+}
+
+std::vector<GameObject*> Scene::GetCulledMeshes(const FrustumPlanes& planes, const int mask) {
+	std::vector<GameObject*> meshes;
+
+	for (ComponentMeshRenderer componentMR : meshRendererComponents) {
+
+		GameObject *go = &componentMR.GetOwner();
+
+		Mask& maskGo = go->GetMask();
+
+		if ((maskGo.bitMask & mask) != 0) {
+			if (InsideFrustumPlanes(planes, go)) {
+				meshes.push_back(go);
+			}
+		}
+
+	}
+
+	return meshes;
+}
+
+std::vector<GameObject*> Scene::GetStaticCulledShadowCasters(const FrustumPlanes& planes) {
+	std::vector<GameObject*> meshes;
+
+	for (GameObject* go : staticShadowCasters) {
+		if (InsideFrustumPlanes(planes, go)) {
+			meshes.push_back(go);
+		}
+	}
+
+	return meshes;
+}
+
+std::vector<GameObject*> Scene::GetDynamicCulledShadowCasters(const FrustumPlanes& planes) {
+	std::vector<GameObject*> meshes;
+
+	for (GameObject* go : dynamicShadowCasters) {
+		if (InsideFrustumPlanes(planes, go)) {
+			meshes.push_back(go);
+		}
+	}
+
+	return meshes;
+}
+
 void Scene::SetNavMesh(UID navMesh) {
 	if (navMeshId != 0) {
 		App->resources->DecreaseReferenceCount(navMeshId);
@@ -455,4 +536,80 @@ void Scene::SetNavMesh(UID navMesh) {
 
 UID Scene::GetNavMesh() {
 	return navMeshId;
+}
+
+void Scene::RemoveStaticShadowCaster(const GameObject* go) {
+	auto it = std::find(staticShadowCasters.begin(), staticShadowCasters.end(), go);
+
+	if (it == staticShadowCasters.end()) return;
+
+	staticShadowCasters.erase(it);
+
+	App->renderer->lightFrustumStatic.Invalidate();
+}
+
+void Scene::AddStaticShadowCaster(GameObject* go) {
+	auto it = std::find(staticShadowCasters.begin(), staticShadowCasters.end(), go);
+
+	if (it != staticShadowCasters.end()) return;
+
+	staticShadowCasters.push_back(go);
+
+	App->renderer->lightFrustumStatic.Invalidate();
+}
+
+void Scene::RemoveDynamicShadowCaster(const GameObject* go) {
+	auto it = std::find(dynamicShadowCasters.begin(), dynamicShadowCasters.end(), go);
+
+	if (it == dynamicShadowCasters.end()) return;
+
+	dynamicShadowCasters.erase(it);
+
+	App->renderer->lightFrustumDynamic.Invalidate();
+}
+
+void Scene::AddDynamicShadowCaster(GameObject* go) {
+	auto it = std::find(dynamicShadowCasters.begin(), dynamicShadowCasters.end(), go);
+
+	if (it != dynamicShadowCasters.end()) return;
+
+	dynamicShadowCasters.push_back(go);
+
+	App->renderer->lightFrustumDynamic.Invalidate();
+}
+
+void Scene::SetCursor(UID cursor) {
+	if (cursorId != 0) {
+		App->resources->DecreaseReferenceCount(cursorId);
+	}
+
+	cursorId = cursor;
+
+	if (cursor != 0) {
+		App->resources->IncreaseReferenceCount(cursor);
+	}
+	App->window->SetCursor(cursorId, widthCursor, heightCursor);
+#if GAME
+	App->window->ActivateCursor(true);
+#endif
+}
+
+UID Scene::GetCursor() {
+	return cursorId;
+}
+
+void Scene::SetCursorWidth(int width) {
+	widthCursor = width;
+}
+
+int Scene::GetCursorWidth() {
+	return widthCursor;
+}
+
+void Scene::SetCursorHeight(int height) {
+	heightCursor = height;
+}
+
+int Scene::GetCursorHeight() {
+	return heightCursor;
 }

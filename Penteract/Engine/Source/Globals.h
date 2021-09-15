@@ -57,15 +57,19 @@ enum class UpdateStatus {
 #define WAV_AUDIO_EXTENSION ".wav"
 #define OGG_AUDIO_EXTENSION ".ogg"
 
+#define MP4_VIDEO_EXTENSION ".mp4"
+
 #define STATE_MACHINE_EXTENSION ".stma"
 #define ANIMATION_CLIP_EXTENSION ".clip"
 
 #define TEMP_SCENE_FILE_NAME "_scene_autosave.temp"
+#define CONFIGURATION_FILE_NAME "config.json"
 
 // Configuration -----------
 #define GLSL_VERSION "#version 460"
 #define POINT_LIGHTS 32
 #define SPOT_LIGHTS 8
+#define CASCADE_FRUSTUMS 10
 
 // Threads
 #define TIME_BETWEEN_RESOURCE_UPDATES_MS 300

@@ -12,7 +12,9 @@ public:
 	void OnButtonClick()override;
 
 public:
-	
+
 	UID sceneUID = 0;
+	int levelNum = 0;
+	UID gameControllerUID = 0;
 };
 

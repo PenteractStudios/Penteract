@@ -3,8 +3,6 @@
 #include "Globals.h"
 #include "Application.h"
 #include "GameObject.h"
-#include "Utils/Logging.h"
-#include "Utils/Random.h"
 #include "Components/ComponentMeshRenderer.h"
 #include "Components/ComponentBoundingBox.h"
 #include "Components/ComponentTransform.h"
@@ -15,7 +13,6 @@
 #include "Components/ComponentBillboard.h"
 #include "Components/ComponentSkyBox.h"
 #include "Components/ComponentLight.h"
-#include "Modules/ModuleInput.h"
 #include "Modules/ModuleWindow.h"
 #include "Modules/ModuleCamera.h"
 #include "Modules/ModuleDebugDraw.h"
@@ -25,9 +22,10 @@
 #include "Modules/ModulePrograms.h"
 #include "Modules/ModuleEvents.h"
 #include "Modules/ModuleUserInterface.h"
-#include "Modules/ModuleTime.h"
 #include "Modules/ModuleNavigation.h"
 #include "Resources/ResourceMesh.h"
+#include "Utils/Logging.h"
+#include "Utils/Random.h"
 #include "TesseractEvent.h"
 
 #include "Geometry/AABB.h"
@@ -37,24 +35,16 @@
 #include "GL/glew.h"
 #include "SDL.h"
 #include "Brofiler.h"
-
-#include "Utils/Leaks.h"
 #include <string>
 #include <math.h>
 #include <vector>
 
-static std::vector<float> ssaoGaussKernel;
-
-static std::vector<float> smallGaussKernel;
-static std::vector<float> mediumGaussKernel;
-static std::vector<float> largeGaussKernel;
-
 float defIntGaussian(const float x, const float mu, const float sigma) {
-	return 0.5 * erf((x - mu) / (sqrt(2) * sigma));
+	return 0.5f * erf((x - mu) / (sqrtf(2) * sigma));
 }
 
 void gaussianKernel(const int kernelSize, const float sigma, const float mu, const float step, std::vector<float>& coeff) {
-	const float end = 0.5*kernelSize;
+	const float end = 0.5f * kernelSize;
 	const float start = -end;
 	float sum = 0;
 	float x = start;
@@ -71,10 +61,9 @@ void gaussianKernel(const int kernelSize, const float sigma, const float mu, con
 
 	//normalize
 	sum = 1 / sum;
-	for (int i = 0; i < coeff.size(); ++i) {
+	for (unsigned int i = 0u; i < coeff.size(); ++i) {
 		coeff[i] *= sum;
 	}
-
 }
 
 // clang-format off
@@ -226,28 +215,32 @@ bool ModuleRender::Init() {
 
 	glGenTextures(1, &renderTexture);
 	glGenTextures(1, &outputTexture);
+	glGenTextures(1, &depthsMSTexture);
 	glGenTextures(1, &positionsMSTexture);
 	glGenTextures(1, &normalsMSTexture);
+	glGenTextures(1, &depthsTexture);
 	glGenTextures(1, &positionsTexture);
 	glGenTextures(1, &normalsTexture);
-	glGenTextures(1, &depthMapTexture);
+	glGenTextures(NUM_CASCADES_FRUSTUM, depthMapStaticTextures);
+	glGenTextures(NUM_CASCADES_FRUSTUM, depthMapDynamicTextures);
 	glGenTextures(1, &ssaoTexture);
 	glGenTextures(1, &auxBlurTexture);
 	glGenTextures(2, colorTextures);
 	glGenTextures(2, bloomBlurTextures);
-
-	glGenRenderbuffers(1, &depthBuffer);
+	glGenTextures(1, &bloomCombineTexture);
 
 	glGenFramebuffers(1, &renderPassBuffer);
 	glGenFramebuffers(1, &depthPrepassBuffer);
 	glGenFramebuffers(1, &depthPrepassTextureConversionBuffer);
-	glGenFramebuffers(1, &depthMapTextureBuffer);
+	glGenFramebuffers(NUM_CASCADES_FRUSTUM, depthMapStaticTextureBuffers);
+	glGenFramebuffers(NUM_CASCADES_FRUSTUM, depthMapDynamicTextureBuffers);
 	glGenFramebuffers(1, &ssaoTextureBuffer);
 	glGenFramebuffers(1, &ssaoBlurTextureBufferH);
 	glGenFramebuffers(1, &ssaoBlurTextureBufferV);
 	glGenFramebuffers(1, &colorCorrectionBuffer);
 	glGenFramebuffers(1, &hdrFramebuffer);
-	glGenFramebuffers(6, bloomBlurFramebuffers);
+	glGenFramebuffers(12, bloomBlurFramebuffers);
+	glGenFramebuffers(5, bloomCombineFramebuffers);
 
 	ViewportResized(App->window->GetWidth(), App->window->GetHeight());
 	UpdateFramebuffers();
@@ -303,7 +296,6 @@ bool ModuleRender::Init() {
 }
 
 void ModuleRender::ClassifyGameObjects() {
-	shadowGameObjects.clear();
 	opaqueGameObjects.clear();
 	transparentGameObjects.clear();
 
@@ -315,13 +307,9 @@ void ModuleRender::ClassifyGameObjects() {
 		gameObject.flag = false;
 		if (gameObject.isInQuadtree) continue;
 
-		if ((gameObject.GetMask().bitMask & static_cast<int>(MaskType::CAST_SHADOWS)) != 0) {
-			shadowGameObjects.push_back(&gameObject);
-		}
-
 		const AABB& gameObjectAABB = boundingBox.GetWorldAABB();
 		const OBB& gameObjectOBB = boundingBox.GetWorldOBB();
-		if (CheckIfInsideFrustum(gameObjectAABB, gameObjectOBB)) {
+		if (App->camera->GetFrustumPlanes().CheckIfInsideFrustumPlanes(gameObjectAABB, gameObjectOBB)) {
 			if ((gameObject.GetMask().bitMask & static_cast<int>(MaskType::TRANSPARENT)) == 0) {
 				opaqueGameObjects.push_back(&gameObject);
 			} else {
@@ -345,12 +333,16 @@ void ModuleRender::ConvertDepthPrepassTextures() {
 	glUniform1i(convertProgram->samplesNumberLocation, msaaActive ? msaaSamplesNumber[static_cast<int>(msaaSampleType)] : msaaSampleSingle);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, positionsMSTexture);
-	glUniform1i(convertProgram->positionsLocation, 0);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, depthsMSTexture);
+	glUniform1i(convertProgram->depthsLocation, 0);
 
 	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, positionsMSTexture);
+	glUniform1i(convertProgram->positionsLocation, 1);
+
+	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, normalsMSTexture);
-	glUniform1i(convertProgram->normalsLocation, 1);
+	glUniform1i(convertProgram->normalsLocation, 2);
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 }
@@ -402,7 +394,7 @@ void ModuleRender::BlurSSAOTexture(bool horizontal) {
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
-void ModuleRender::ExecuteColorCorrection(bool horizontal) {
+void ModuleRender::ExecuteColorCorrection() {
 	ProgramColorCorrection* colorCorrectionProgram = App->programs->colorCorrection;
 	if (colorCorrectionProgram == nullptr) return;
 
@@ -410,41 +402,56 @@ void ModuleRender::ExecuteColorCorrection(bool horizontal) {
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, colorTextures[0]);
-	glUniform1i(colorCorrectionProgram->textureSceneLocation, 0);
+	glUniform1i(colorCorrectionProgram->sceneTextureLocation, 0);
 
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, bloomBlurTextures[!horizontal]);
-	glUniform1i(colorCorrectionProgram->bloomBlurLocation, 1);
-	glUniform1i(colorCorrectionProgram->hasBloomBlurLocation, bloomActive ? 1 : 0);
+	glBindTexture(GL_TEXTURE_2D, bloomBlurTextures[0]);
+	glUniform1i(colorCorrectionProgram->bloomTextureLocation, 1);
+	glUniform1i(colorCorrectionProgram->hasBloomLocation, bloomActive ? 1 : 0);
 
 	glUniform1f(colorCorrectionProgram->bloomIntensityLocation, bloomIntensity);
 
-	float totalWeight = std::max(bloomSmallWeight + bloomMediumWeight + bloomLargeWeight, FLT_EPSILON);
-	glUniform1f(colorCorrectionProgram->smallWeightLocation, bloomSmallWeight / totalWeight);
-	glUniform1f(colorCorrectionProgram->mediumWeightLocation, bloomMediumWeight / totalWeight);
-	glUniform1f(colorCorrectionProgram->largeWeightLocation, bloomLargeWeight / totalWeight);
-
-	glUniform1i(colorCorrectionProgram->smallMipLevelLocation, gaussSmallMipLevel);
-	glUniform1i(colorCorrectionProgram->mediumMipLevelLocation, gaussMediumMipLevel);
-	glUniform1i(colorCorrectionProgram->largeMipLevelLocation, gaussLargeMipLevel);
+	glUniform1i(colorCorrectionProgram->hasChromaticAberrationLocation, chromaticAberrationActive ? 1 : 0);
+	glUniform1f(colorCorrectionProgram->chromaticAberrationStrengthLocation, chromaticAberrationStrength);
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
-void ModuleRender::BlurBloomTexture(bool horizontal, bool firstTime, const std::vector<float>& kernel, int kernelRadius, int textureLevel) {
+void ModuleRender::BlurBloomTexture(unsigned bloomTexture, bool horizontal, const std::vector<float>& kernel, int kernelRadius, int textureLevel) {
 	ProgramBlur* bloomBlurProgram = App->programs->blur;
 	if (bloomBlurProgram == nullptr) return;
 
 	glUseProgram(bloomBlurProgram->program);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, firstTime ? colorTextures[1] : bloomBlurTextures[!horizontal]);
+	glBindTexture(GL_TEXTURE_2D, bloomTexture);
 	glUniform1i(bloomBlurProgram->inputTextureLocation, 0);
 	glUniform1i(bloomBlurProgram->textureLevelLocation, textureLevel);
 
 	glUniform1fv(bloomBlurProgram->kernelLocation, kernelRadius + 1, &kernel[0]);
 	glUniform1i(bloomBlurProgram->kernelRadiusLocation, kernelRadius + 1);
 	glUniform1i(bloomBlurProgram->horizontalLocation, horizontal ? 1 : 0);
+
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+}
+
+void ModuleRender::BloomCombine(unsigned bloomTexture, int bloomTextureLevel, int brightTextureLevel, float bloomWeight) {
+	ProgramBloomCombine* bloomCombineProgram = App->programs->bloomCombine;
+	if (bloomCombineProgram == nullptr) return;
+
+	glUseProgram(bloomCombineProgram->program);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, colorTextures[1]);
+	glUniform1i(bloomCombineProgram->brightLevelLocation, 0);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, bloomTexture);
+	glUniform1i(bloomCombineProgram->bloomTextureLocation, 1);
+
+	glUniform1i(bloomCombineProgram->brightLevelLocation, brightTextureLevel);
+	glUniform1i(bloomCombineProgram->bloomLevelLocation, bloomTextureLevel);
+	glUniform1f(bloomCombineProgram->bloomWeightLocation, bloomWeight);
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 }
@@ -469,7 +476,7 @@ void ModuleRender::DrawScene() {
 	glUseProgram(drawScene->program);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, renderTexture);
-	glUniform1i(drawScene->textureSceneLocation, 0);
+	glUniform1i(drawScene->sceneTextureLocation, 0);
 	glUniform1f(drawScene->bloomThresholdLocation, bloomThreshold);
 	glUniform1i(drawScene->samplesNumberLocation, msaaActive ? msaaSamplesNumber[static_cast<int>(msaaSampleType)] : msaaSampleSingle);
 	glUniform1i(drawScene->bloomActiveLocation, bloomActive);
@@ -485,7 +492,11 @@ bool ModuleRender::Start() {
 UpdateStatus ModuleRender::PreUpdate() {
 	BROFILER_CATEGORY("ModuleRender - PreUpdate", Profiler::Color::Green)
 
-	lightFrustum.ReconstructFrustum();
+	lightFrustumStatic.UpdateFrustums();
+	lightFrustumStatic.ReconstructFrustum(ShadowCasterType::STATIC);
+
+	lightFrustumDynamic.UpdateFrustums();
+	lightFrustumDynamic.ReconstructFrustum(ShadowCasterType::DYNAMIC);
 
 #if GAME
 	App->camera->ViewportResized(App->window->GetWidth(), App->window->GetHeight());
@@ -504,21 +515,40 @@ UpdateStatus ModuleRender::Update() {
 
 	ClassifyGameObjects();
 
-	// Shadow Pass
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapTextureBuffer);
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glEnable(GL_DEPTH_TEST);
-	glDepthMask(GL_TRUE);
-	glDepthFunc(GL_LESS);
-	glClear(GL_DEPTH_BUFFER_BIT);
-
-	for (GameObject* gameObject : shadowGameObjects) {
-		DrawGameObjectShadowPass(gameObject);
+	// Shadow Pass Static
+	for (unsigned int i = 0; i < NUM_CASCADES_FRUSTUM; ++i) {
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapStaticTextureBuffers[i]);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glEnable(GL_DEPTH_TEST);
+		glDepthMask(GL_TRUE);
+		glDepthFunc(GL_LESS);
+		glClear(GL_DEPTH_BUFFER_BIT);
+	
+		for (GameObject* gameObject : App->scene->scene->GetStaticShadowCasters()) {
+			DrawGameObjectShadowPass(gameObject, i, ShadowCasterType::STATIC);
+		}
+	
 	}
+	
+	// Shadow Pass Dynamic
+	for (unsigned int i = 0; i < NUM_CASCADES_FRUSTUM; ++i) {
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapDynamicTextureBuffers[i]);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glEnable(GL_DEPTH_TEST);
+		glDepthMask(GL_TRUE);
+		glDepthFunc(GL_LESS);
+		glClear(GL_DEPTH_BUFFER_BIT);
+
+		for (GameObject* gameObject : App->scene->scene->GetDynamicShadowCasters()) {
+			DrawGameObjectShadowPass(gameObject, i, ShadowCasterType::DYNAMIC);
+		}
+
+	}
+	
 
 	// Depth Prepass
 	glBindFramebuffer(GL_FRAMEBUFFER, depthPrepassBuffer);
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glEnable(GL_DEPTH_TEST);
 	glDepthMask(GL_TRUE);
 	glDepthFunc(GL_LESS);
@@ -530,15 +560,17 @@ UpdateStatus ModuleRender::Update() {
 
 	// Depth Prepass texture conversion
 	glBindFramebuffer(GL_FRAMEBUFFER, depthPrepassTextureConversionBuffer);
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glDisable(GL_DEPTH_TEST);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
+	glDepthFunc(GL_ALWAYS);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	ConvertDepthPrepassTextures();
 
 	// SSAO pass
 	glBindFramebuffer(GL_FRAMEBUFFER, ssaoTextureBuffer);
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glEnable(GL_DEPTH_TEST);
 	glDepthMask(GL_FALSE);
 	glDepthFunc(GL_LESS);
@@ -550,7 +582,7 @@ UpdateStatus ModuleRender::Update() {
 
 	// SSAO horitontal blur
 	glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurTextureBufferH);
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glDisable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -560,7 +592,7 @@ UpdateStatus ModuleRender::Update() {
 
 	// SSAO vertical blur
 	glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurTextureBufferV);
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glDisable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -577,6 +609,24 @@ UpdateStatus ModuleRender::Update() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	// Debug textures
+	if (drawNormalsTexture) {
+		DrawTexture(normalsTexture);
+
+		// Render to screen
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, renderPassBuffer);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, colorCorrectionBuffer);
+		glBlitFramebuffer(0, 0, static_cast<int>(viewportSize.x), static_cast<int>(viewportSize.y), 0, 0, static_cast<int>(viewportSize.x), static_cast<int>(viewportSize.y), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		return UpdateStatus::CONTINUE;
+	}
+	if (drawPositionsTexture) {
+		DrawTexture(positionsTexture);
+
+		// Render to screen
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, renderPassBuffer);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, colorCorrectionBuffer);
+		glBlitFramebuffer(0, 0, static_cast<int>(viewportSize.x), static_cast<int>(viewportSize.y), 0, 0, static_cast<int>(viewportSize.x), static_cast<int>(viewportSize.y), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		return UpdateStatus::CONTINUE;
+	}
 	if (drawSSAOTexture) {
 		DrawTexture(ssaoTexture);
 
@@ -587,7 +637,10 @@ UpdateStatus ModuleRender::Update() {
 		return UpdateStatus::CONTINUE;
 	}
 	if (drawDepthMapTexture) {
-		DrawTexture(depthMapTexture);
+		assert(drawDepthMapTexture && indexDepthMapTexture < NUM_CASCADES_FRUSTUM);
+
+		if (shadowCasterType == ShadowCasterType::STATIC) DrawTexture(depthMapStaticTextures[indexDepthMapTexture]);
+		else DrawTexture(depthMapDynamicTextures[indexDepthMapTexture]);
 
 		// Render to screen
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, renderPassBuffer);
@@ -608,6 +661,14 @@ UpdateStatus ModuleRender::Update() {
 	}
 	glDepthFunc(GL_LEQUAL);
 
+	// Draw Fog
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	for (ComponentFog& fog : scene->fogComponents) {
+		if (fog.IsActive()) fog.Draw();
+	}
+	glDisable(GL_BLEND);
+
 	// Draw Transparent
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -626,7 +687,6 @@ UpdateStatus ModuleRender::Update() {
 	for (ComponentTrail& trail : scene->trailComponents) {
 		if (trail.IsActive()) trail.Draw();
 	}
-
 
 	// Draw Gizmos
 	glEnable(GL_DEPTH_TEST);
@@ -686,7 +746,7 @@ UpdateStatus ModuleRender::Update() {
 
 		// Draw debug draw Light Frustum
 		if (drawLightFrustumGizmo) {
-			lightFrustum.DrawGizmos();
+			lightFrustumStatic.DrawGizmos();
 		}
 	}
 
@@ -701,43 +761,116 @@ UpdateStatus ModuleRender::Update() {
 	DrawScene();
 
 	// Bloom blur
-	bool horizontal = true, firstIteration = true;
+	bool horizontal = true;
 	if (bloomActive) {
 		glBindTexture(GL_TEXTURE_2D, colorTextures[1]);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		for (unsigned int i = 0; i < 2 * bloomQuality; i++) {
-			int width = static_cast<int>(viewportSize.x);
-			int height = static_cast<int>(viewportSize.y);
-			glViewport(0, 0, width / (1 << gaussSmallMipLevel), height / (1 << gaussSmallMipLevel));
+		int width = static_cast<int>(viewportSize.x);
+		int height = static_cast<int>(viewportSize.y);
 
+		glViewport(0, 0, width / (1 << gaussVeryLargeMipLevel), height / (1 << gaussVeryLargeMipLevel));
+
+		for (unsigned int i = 0; i < 2; i++) {
 			glBindFramebuffer(GL_FRAMEBUFFER, bloomBlurFramebuffers[horizontal]);
 			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			glDisable(GL_DEPTH_TEST);
 			glClear(GL_COLOR_BUFFER_BIT);
-			BlurBloomTexture(horizontal, firstIteration, smallGaussKernel, gaussSmallKernelRadius, gaussSmallMipLevel);
+			BlurBloomTexture(horizontal ? colorTextures[1] : bloomBlurTextures[1], horizontal, bloomGaussKernel, gaussBloomKernelRadius, gaussVeryLargeMipLevel);
 
-			glViewport(0, 0, width / (1<< gaussMediumMipLevel), height / (1<< gaussMediumMipLevel));
+			horizontal = !horizontal;
+		}
 
+		glViewport(0, 0, width / (1 << gaussLargeMipLevel), height / (1 << gaussLargeMipLevel));
+
+		glBindFramebuffer(GL_FRAMEBUFFER, bloomCombineFramebuffers[0]);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glDisable(GL_DEPTH_TEST);
+		glClear(GL_COLOR_BUFFER_BIT);
+		BloomCombine(bloomBlurTextures[0], gaussVeryLargeMipLevel, gaussLargeMipLevel, bloomVeryLargeWeight);
+
+		for (unsigned int i = 0; i < 2; i++) {
 			glBindFramebuffer(GL_FRAMEBUFFER, bloomBlurFramebuffers[2 + horizontal]);
 			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			glDisable(GL_DEPTH_TEST);
 			glClear(GL_COLOR_BUFFER_BIT);
-			BlurBloomTexture(horizontal, firstIteration, mediumGaussKernel, gaussMediumKernelRadius, gaussMediumMipLevel);
+			BlurBloomTexture(horizontal ? bloomCombineTexture : bloomBlurTextures[1], horizontal, bloomGaussKernel, gaussBloomKernelRadius, gaussLargeMipLevel);
 
-			glViewport(0, 0, width / (1 << gaussLargeMipLevel), height / (1 << gaussLargeMipLevel));
+			horizontal = !horizontal;
+		}
 
+		glViewport(0, 0, width / (1 << gaussMediumMipLevel), height / (1 << gaussMediumMipLevel));
+
+		glBindFramebuffer(GL_FRAMEBUFFER, bloomCombineFramebuffers[1]);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glDisable(GL_DEPTH_TEST);
+		glClear(GL_COLOR_BUFFER_BIT);
+		BloomCombine(bloomBlurTextures[0], gaussLargeMipLevel, gaussMediumMipLevel, bloomLargeWeight);
+
+		for (unsigned int i = 0; i < 2; i++) {
 			glBindFramebuffer(GL_FRAMEBUFFER, bloomBlurFramebuffers[4 + horizontal]);
 			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			glDisable(GL_DEPTH_TEST);
 			glClear(GL_COLOR_BUFFER_BIT);
-			BlurBloomTexture(horizontal, firstIteration, largeGaussKernel, gaussLargeKernelRadius, gaussLargeMipLevel);
+			BlurBloomTexture(horizontal ? bloomCombineTexture : bloomBlurTextures[1], horizontal, bloomGaussKernel, gaussBloomKernelRadius, gaussMediumMipLevel);
 
 			horizontal = !horizontal;
-			if (firstIteration) firstIteration = false;
 		}
 
-		glViewport(0, 0, static_cast<int>(viewportSize.x), static_cast<int>(viewportSize.y));
+		glViewport(0, 0, width / (1 << gaussSmallMipLevel), height / (1 << gaussSmallMipLevel));
+
+		glBindFramebuffer(GL_FRAMEBUFFER, bloomCombineFramebuffers[2]);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glDisable(GL_DEPTH_TEST);
+		glClear(GL_COLOR_BUFFER_BIT);
+		BloomCombine(bloomBlurTextures[0], gaussMediumMipLevel, gaussSmallMipLevel, bloomMediumWeight);
+
+		for (unsigned int i = 0; i < 2; i++) {
+			glBindFramebuffer(GL_FRAMEBUFFER, bloomBlurFramebuffers[6 + horizontal]);
+			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+			glDisable(GL_DEPTH_TEST);
+			glClear(GL_COLOR_BUFFER_BIT);
+			BlurBloomTexture(horizontal ? bloomCombineTexture : bloomBlurTextures[1], horizontal, bloomGaussKernel, gaussBloomKernelRadius, gaussSmallMipLevel);
+
+			horizontal = !horizontal;
+		}
+
+		glViewport(0, 0, width / (1 << gaussVerySmallMipLevel), height / (1 << gaussVerySmallMipLevel));
+
+		glBindFramebuffer(GL_FRAMEBUFFER, bloomCombineFramebuffers[3]);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glDisable(GL_DEPTH_TEST);
+		glClear(GL_COLOR_BUFFER_BIT);
+		BloomCombine(bloomBlurTextures[0], gaussSmallMipLevel, gaussVerySmallMipLevel, bloomSmallWeight);
+
+		for (unsigned int i = 0; i < 2; i++) {
+			glBindFramebuffer(GL_FRAMEBUFFER, bloomBlurFramebuffers[8 + horizontal]);
+			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+			glDisable(GL_DEPTH_TEST);
+			glClear(GL_COLOR_BUFFER_BIT);
+			BlurBloomTexture(horizontal ? bloomCombineTexture : bloomBlurTextures[1], horizontal, bloomGaussKernel, gaussBloomKernelRadius, gaussVerySmallMipLevel);
+
+			horizontal = !horizontal;
+		}
+
+		glViewport(0, 0, width, height);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, bloomCombineFramebuffers[4]);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glDisable(GL_DEPTH_TEST);
+		glClear(GL_COLOR_BUFFER_BIT);
+		BloomCombine(bloomBlurTextures[0], gaussVerySmallMipLevel, 0, bloomVerySmallWeight);
+
+		for (unsigned int i = 0; i < 2; i++) {
+			glBindFramebuffer(GL_FRAMEBUFFER, bloomBlurFramebuffers[10 + horizontal]);
+			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+			glDisable(GL_DEPTH_TEST);
+			glClear(GL_COLOR_BUFFER_BIT);
+			BlurBloomTexture(horizontal ? bloomCombineTexture : bloomBlurTextures[1], horizontal, bloomGaussKernel, gaussBloomKernelRadius, 0);
+
+			horizontal = !horizontal;
+		}
+
 	}
 
 	// Color correction
@@ -745,8 +878,7 @@ UpdateStatus ModuleRender::Update() {
 	glClearColor(gammaClearColor.x, gammaClearColor.y, gammaClearColor.z, 1.0f);
 	glDisable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT);
-
-	ExecuteColorCorrection(horizontal);
+	ExecuteColorCorrection();
 
 	// Render to screen
 #if GAME
@@ -777,28 +909,32 @@ bool ModuleRender::CleanUp() {
 
 	glDeleteTextures(1, &renderTexture);
 	glDeleteTextures(1, &outputTexture);
+	glDeleteTextures(1, &depthsMSTexture);
 	glDeleteTextures(1, &positionsMSTexture);
 	glDeleteTextures(1, &normalsMSTexture);
+	glDeleteTextures(1, &depthsTexture);
 	glDeleteTextures(1, &positionsTexture);
 	glDeleteTextures(1, &normalsTexture);
-	glDeleteTextures(1, &depthMapTexture);
+	glDeleteTextures(NUM_CASCADES_FRUSTUM, depthMapStaticTextures);
+	glDeleteTextures(NUM_CASCADES_FRUSTUM, depthMapDynamicTextures);
 	glDeleteTextures(1, &ssaoTexture);
 	glDeleteTextures(1, &auxBlurTexture);
 	glDeleteTextures(2, colorTextures);
 	glDeleteTextures(2, bloomBlurTextures);
-
-	glDeleteRenderbuffers(1, &depthBuffer);
+	glDeleteTextures(1, &bloomCombineTexture);
 
 	glDeleteFramebuffers(1, &renderPassBuffer);
 	glDeleteFramebuffers(1, &depthPrepassBuffer);
 	glDeleteFramebuffers(1, &depthPrepassTextureConversionBuffer);
-	glDeleteFramebuffers(1, &depthMapTextureBuffer);
+	glDeleteFramebuffers(NUM_CASCADES_FRUSTUM, depthMapStaticTextureBuffers);
+	glDeleteFramebuffers(NUM_CASCADES_FRUSTUM, depthMapDynamicTextureBuffers);
 	glDeleteFramebuffers(1, &ssaoTextureBuffer);
 	glDeleteFramebuffers(1, &ssaoBlurTextureBufferH);
 	glDeleteFramebuffers(1, &ssaoBlurTextureBufferV);
 	glDeleteFramebuffers(1, &colorCorrectionBuffer);
 	glDeleteFramebuffers(1, &hdrFramebuffer);
-	glDeleteFramebuffers(6, bloomBlurFramebuffers);
+	glDeleteFramebuffers(12, bloomBlurFramebuffers);
+	glDeleteFramebuffers(5, bloomCombineFramebuffers);
 
 	return true;
 }
@@ -823,14 +959,12 @@ void ModuleRender::ReceiveEvent(TesseractEvent& ev) {
 void ModuleRender::UpdateFramebuffers() {
 	unsigned msaaSamples = msaaActive ? msaaSamplesNumber[static_cast<int>(msaaSampleType)] : msaaSampleSingle;
 
-	// Depth buffer
-	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
-	glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, GL_DEPTH24_STENCIL8, static_cast<int>(viewportSize.x), static_cast<int>(viewportSize.y));
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
 	// Depth prepass buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, depthPrepassBuffer);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
+
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, depthsMSTexture);
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, msaaSamples, GL_DEPTH24_STENCIL8, static_cast<int>(viewportSize.x), static_cast<int>(viewportSize.y), GL_TRUE);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, depthsMSTexture, 0);
 
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, positionsMSTexture);
 	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, msaaSamples, GL_RGB16F, static_cast<int>(viewportSize.x), static_cast<int>(viewportSize.y), GL_TRUE);
@@ -840,11 +974,19 @@ void ModuleRender::UpdateFramebuffers() {
 	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, msaaSamples, GL_RGB16F, static_cast<int>(viewportSize.x), static_cast<int>(viewportSize.y), GL_TRUE);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D_MULTISAMPLE, normalsMSTexture, 0);
 
-	GLuint drawBuffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
-	glDrawBuffers(2, drawBuffers);
+	GLuint drawBuffers2[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+	glDrawBuffers(2, drawBuffers2);
 
 	// Depth prepass texture conversion buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, depthPrepassTextureConversionBuffer);
+
+	glBindTexture(GL_TEXTURE_2D, depthsTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, static_cast<int>(viewportSize.x), static_cast<int>(viewportSize.y), 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthsTexture, 0);
 
 	glBindTexture(GL_TEXTURE_2D, positionsTexture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, static_cast<int>(viewportSize.x), static_cast<int>(viewportSize.y), 0, GL_RGB, GL_FLOAT, NULL);
@@ -862,18 +1004,34 @@ void ModuleRender::UpdateFramebuffers() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, normalsTexture, 0);
 
-	glDrawBuffers(2, drawBuffers);
+	glDrawBuffers(2, drawBuffers2);
 
 	// Shadow buffer
-	glBindFramebuffer(GL_FRAMEBUFFER, depthMapTextureBuffer);
 
-	glBindTexture(GL_TEXTURE_2D, depthMapTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, static_cast<int>(viewportSize.x), static_cast<int>(viewportSize.y), 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMapTexture, 0);
+	for (unsigned int i = 0; i < NUM_CASCADES_FRUSTUM; ++i) {
+
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapStaticTextureBuffers[i]);
+		
+		glBindTexture(GL_TEXTURE_2D, depthMapStaticTextures[i]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, static_cast<int>(viewportSize.x * lightFrustumStatic.GetSubFrustums()[i].multiplier), static_cast<int>(viewportSize.y * lightFrustumStatic.GetSubFrustums()[i].multiplier), 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMapStaticTextures[i], 0);
+
+
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapDynamicTextureBuffers[i]);
+
+		glBindTexture(GL_TEXTURE_2D, depthMapDynamicTextures[i]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, static_cast<int>(viewportSize.x * lightFrustumDynamic.GetSubFrustums()[i].multiplier), static_cast<int>(viewportSize.y * lightFrustumDynamic.GetSubFrustums()[i].multiplier), 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMapDynamicTextures[i], 0);
+
+	}
 
 	glDrawBuffer(GL_NONE);
 
@@ -913,7 +1071,9 @@ void ModuleRender::UpdateFramebuffers() {
 
 	// Render buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, renderPassBuffer);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
+
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, depthsMSTexture);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, depthsMSTexture, 0);
 
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, renderTexture);
 	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, msaaSamples, GL_RGB16F, static_cast<int>(viewportSize.x), static_cast<int>(viewportSize.y), GL_TRUE);
@@ -940,10 +1100,10 @@ void ModuleRender::UpdateFramebuffers() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, colorTextures[1], 0);
 
-	unsigned int attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+	unsigned int attachments[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
 	glDrawBuffers(2, attachments);
 
-	// Bloom buffers
+	// Bloom blur buffers
 	for (unsigned int i = 0; i < 2; i++) {
 		glBindTexture(GL_TEXTURE_2D, bloomBlurTextures[i]);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, static_cast<int>(viewportSize.x), static_cast<int>(viewportSize.y), 0, GL_RGB, GL_FLOAT, NULL);
@@ -957,38 +1117,65 @@ void ModuleRender::UpdateFramebuffers() {
 	for (unsigned int i = 0; i < 2; i++) {
 		glBindFramebuffer(GL_FRAMEBUFFER, bloomBlurFramebuffers[i]);
 		glBindTexture(GL_TEXTURE_2D, bloomBlurTextures[i]);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, bloomBlurTextures[i], gaussSmallMipLevel);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, bloomBlurTextures[i], gaussVeryLargeMipLevel);
 	}
 
 	for (unsigned int i = 0; i < 2; i++) {
 		glBindFramebuffer(GL_FRAMEBUFFER, bloomBlurFramebuffers[2 + i]);
 		glBindTexture(GL_TEXTURE_2D, bloomBlurTextures[i]);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, bloomBlurTextures[i], gaussMediumMipLevel);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, bloomBlurTextures[i], gaussLargeMipLevel);
 	}
 
 	for (unsigned int i = 0; i < 2; i++) {
 		glBindFramebuffer(GL_FRAMEBUFFER, bloomBlurFramebuffers[4 + i]);
 		glBindTexture(GL_TEXTURE_2D, bloomBlurTextures[i]);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, bloomBlurTextures[i], gaussLargeMipLevel);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, bloomBlurTextures[i], gaussMediumMipLevel);
 	}
 
+	for (unsigned int i = 0; i < 2; i++) {
+		glBindFramebuffer(GL_FRAMEBUFFER, bloomBlurFramebuffers[6 + i]);
+		glBindTexture(GL_TEXTURE_2D, bloomBlurTextures[i]);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, bloomBlurTextures[i], gaussSmallMipLevel);
+	}
+
+	for (unsigned int i = 0; i < 2; i++) {
+		glBindFramebuffer(GL_FRAMEBUFFER, bloomBlurFramebuffers[8 + i]);
+		glBindTexture(GL_TEXTURE_2D, bloomBlurTextures[i]);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, bloomBlurTextures[i], gaussVerySmallMipLevel);
+	}
+
+	for (unsigned int i = 0; i < 2; i++) {
+		glBindFramebuffer(GL_FRAMEBUFFER, bloomBlurFramebuffers[10 + i]);
+		glBindTexture(GL_TEXTURE_2D, bloomBlurTextures[i]);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, bloomBlurTextures[i], 0);
+	}
+
+	// Bloom combine buffers
+	glBindTexture(GL_TEXTURE_2D, bloomCombineTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, static_cast<int>(viewportSize.x), static_cast<int>(viewportSize.y), 0, GL_RGB, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, bloomCombineFramebuffers[0]);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, bloomCombineTexture, gaussLargeMipLevel);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, bloomCombineFramebuffers[1]);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, bloomCombineTexture, gaussMediumMipLevel);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, bloomCombineFramebuffers[2]);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, bloomCombineTexture, gaussSmallMipLevel);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, bloomCombineFramebuffers[3]);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, bloomCombineTexture, gaussVerySmallMipLevel);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, bloomCombineFramebuffers[4]);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, bloomCombineTexture, 0);
+
 	// Compute Gaussian kernels
-	gaussSmallKernelRadius = roundf(viewportSize.y * 0.002f);
-	gaussMediumKernelRadius = roundf(viewportSize.y * 0.004f);
-	gaussLargeKernelRadius = roundf(viewportSize.y * 0.008f);
-	float term = Ln(1e5 / sqrt(2 * pi));
-	float sigma1 = gaussSmallKernelRadius * gaussSmallKernelRadius / 2.0f;
-	float sigma2 = gaussMediumKernelRadius * gaussMediumKernelRadius / 2.0f;
-	float sigma3 = gaussLargeKernelRadius * gaussLargeKernelRadius / 2.0f;
-	sigma1 = sqrt(sigma1 / (term - Ln(sigma1)));
-	sigma2 = sqrt(sigma2 / (term - Ln(sigma2)));
-	sigma3 = sqrt(sigma3 / (term - Ln(sigma3)));
-	smallGaussKernel.clear();
-	mediumGaussKernel.clear();
-	largeGaussKernel.clear();
-	gaussianKernel(2 * gaussSmallKernelRadius + 1, sigma1, 0.f, 1.f, smallGaussKernel);
-	gaussianKernel(2 * gaussMediumKernelRadius + 1, sigma2, 0.f, 1.f, mediumGaussKernel);
-	gaussianKernel(2 * gaussLargeKernelRadius + 1, sigma3, 0.f, 1.f, largeGaussKernel);
+	ComputeBloomGaussianKernel();
 
 	// Color correction buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, colorCorrectionBuffer);
@@ -1005,6 +1192,15 @@ void ModuleRender::UpdateFramebuffers() {
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
 		LOG("ERROR: Framebuffer is not complete!");
 	}
+}
+
+void ModuleRender::ComputeBloomGaussianKernel() {
+	gaussBloomKernelRadius = (int) roundf(viewportSize.y * 0.008f * bloomSizeMultiplier);
+	float term = Ln(1e5f / sqrt(2 * pi));
+	float sigma = gaussBloomKernelRadius * gaussBloomKernelRadius / 2.0f;
+	sigma = sqrt(sigma / (term - Ln(sigma)));
+	bloomGaussKernel.clear();
+	gaussianKernel(2 * gaussBloomKernelRadius + 1, sigma, 0.f, 1.f, bloomGaussKernel);
 }
 
 void ModuleRender::SetVSync(bool vsync) {
@@ -1054,24 +1250,48 @@ void ModuleRender::ToggleDrawLightFrustumGizmo() {
 void ModuleRender::UpdateShadingMode(const char* shadingMode) {
 	drawDepthMapTexture = false;
 	drawSSAOTexture = false;
+	drawNormalsTexture = false;
+	drawPositionsTexture = false;
+
+	std::string strShadingMode = shadingMode;
 
 	if (strcmp(shadingMode, "Shaded") == 0) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	} else if (strcmp(shadingMode, "Wireframe") == 0) {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	} else if (strcmp(shadingMode, "Depth") == 0) {
-		drawDepthMapTexture = true;
 	} else if (strcmp(shadingMode, "Ambient Occlusion") == 0) {
 		drawSSAOTexture = true;
+	} else if (strcmp(shadingMode, "Normals") == 0) {
+		drawNormalsTexture = true;
+	} else if (strcmp(shadingMode, "Positions") == 0) {
+		drawPositionsTexture = true;
+	} else if (strShadingMode.find("StaticDepth") != std::string::npos) {
+		for (unsigned int i = 0; i < NUM_CASCADES_FRUSTUM; ++i) {
+			std::string str = "StaticDepth " + std::to_string(i);
+			if (strcmp(shadingMode, str.c_str()) == 0) {
+				drawDepthMapTexture = true;
+				indexDepthMapTexture = i;
+				shadowCasterType = ShadowCasterType::STATIC;
+			}
+		}
+	} else if (strShadingMode.find("DynamicDepth") != std::string::npos) {
+		for (unsigned int i = 0; i < NUM_CASCADES_FRUSTUM; ++i) {
+			std::string str = "DynamicDepth " + std::to_string(i);
+			if (strcmp(shadingMode, str.c_str()) == 0) {
+				drawDepthMapTexture = true;
+				indexDepthMapTexture = i;
+				shadowCasterType = ShadowCasterType::DYNAMIC;
+			}
+		}
 	}
 }
 
-float4x4 ModuleRender::GetLightViewMatrix() const {
-	return lightFrustum.GetFrustum().ViewMatrix();
+float4x4 ModuleRender::GetLightViewMatrix(unsigned int i, ShadowCasterType lightFrustumType) const {
+	return (lightFrustumType == ShadowCasterType::STATIC) ? lightFrustumStatic.GetOrthographicFrustum(i).ViewMatrix() : lightFrustumDynamic.GetOrthographicFrustum(i).ViewMatrix();
 }
 
-float4x4 ModuleRender::GetLightProjectionMatrix() const {
-	return lightFrustum.GetFrustum().ProjectionMatrix();
+float4x4 ModuleRender::GetLightProjectionMatrix(unsigned int i, ShadowCasterType lightFrustumType) const {
+	return (lightFrustumType == ShadowCasterType::STATIC) ? lightFrustumStatic.GetOrthographicFrustum(i).ProjectionMatrix() : lightFrustumDynamic.GetOrthographicFrustum(i).ProjectionMatrix();
 }
 
 int ModuleRender::GetCulledTriangles() const {
@@ -1114,7 +1334,7 @@ void ModuleRender::DrawQuadtreeRecursive(const Quadtree<GameObject>::Node& node,
 
 void ModuleRender::ClassifyGameObjectsFromQuadtree(const Quadtree<GameObject>::Node& node, const AABB2D& aabb) {
 	AABB aabb3d = AABB({aabb.minPoint.x, -1000000.0f, aabb.minPoint.y}, {aabb.maxPoint.x, 1000000.0f, aabb.maxPoint.y});
-	if (CheckIfInsideFrustum(aabb3d, OBB(aabb3d))) {
+	if (App->camera->GetFrustumPlanes().CheckIfInsideFrustumPlanes(aabb3d, OBB(aabb3d))) {
 		if (node.IsBranch()) {
 			vec2d center = aabb.minPoint + (aabb.maxPoint - aabb.minPoint) * 0.5f;
 
@@ -1144,11 +1364,7 @@ void ModuleRender::ClassifyGameObjectsFromQuadtree(const Quadtree<GameObject>::N
 					const AABB& gameObjectAABB = boundingBox->GetWorldAABB();
 					const OBB& gameObjectOBB = boundingBox->GetWorldOBB();
 
-					if ((gameObject->GetMask().bitMask & static_cast<int>(MaskType::CAST_SHADOWS)) != 0) {
-						shadowGameObjects.push_back(gameObject);
-					}
-
-					if (CheckIfInsideFrustum(gameObjectAABB, gameObjectOBB)) {
+					if (App->camera->GetFrustumPlanes().CheckIfInsideFrustumPlanes(gameObjectAABB, gameObjectOBB)) {
 						if ((gameObject->GetMask().bitMask & static_cast<int>(MaskType::TRANSPARENT)) == 0) {
 							opaqueGameObjects.push_back(gameObject);
 						} else {
@@ -1164,51 +1380,6 @@ void ModuleRender::ClassifyGameObjectsFromQuadtree(const Quadtree<GameObject>::N
 			}
 		}
 	}
-}
-
-bool ModuleRender::CheckIfInsideFrustum(const AABB& aabb, const OBB& obb) {
-	float3 points[8] {
-		obb.pos - obb.r.x * obb.axis[0] - obb.r.y * obb.axis[1] - obb.r.z * obb.axis[2],
-		obb.pos - obb.r.x * obb.axis[0] - obb.r.y * obb.axis[1] + obb.r.z * obb.axis[2],
-		obb.pos - obb.r.x * obb.axis[0] + obb.r.y * obb.axis[1] - obb.r.z * obb.axis[2],
-		obb.pos - obb.r.x * obb.axis[0] + obb.r.y * obb.axis[1] + obb.r.z * obb.axis[2],
-		obb.pos + obb.r.x * obb.axis[0] - obb.r.y * obb.axis[1] - obb.r.z * obb.axis[2],
-		obb.pos + obb.r.x * obb.axis[0] - obb.r.y * obb.axis[1] + obb.r.z * obb.axis[2],
-		obb.pos + obb.r.x * obb.axis[0] + obb.r.y * obb.axis[1] - obb.r.z * obb.axis[2],
-		obb.pos + obb.r.x * obb.axis[0] + obb.r.y * obb.axis[1] + obb.r.z * obb.axis[2]};
-
-	const FrustumPlanes& frustumPlanes = App->camera->GetFrustumPlanes();
-	for (const Plane& plane : frustumPlanes.planes) {
-		// check box outside/inside of frustum
-		int out = 0;
-		for (int i = 0; i < 8; i++) {
-			out += (plane.normal.Dot(points[i]) - plane.d > 0 ? 1 : 0);
-		}
-		if (out == 8) return false;
-	}
-
-	// check frustum outside/inside box
-	int out;
-	out = 0;
-	for (int i = 0; i < 8; i++) out += ((frustumPlanes.points[i].x > aabb.MaxX()) ? 1 : 0);
-	if (out == 8) return false;
-	out = 0;
-	for (int i = 0; i < 8; i++) out += ((frustumPlanes.points[i].x < aabb.MinX()) ? 1 : 0);
-	if (out == 8) return false;
-	out = 0;
-	for (int i = 0; i < 8; i++) out += ((frustumPlanes.points[i].y > aabb.MaxY()) ? 1 : 0);
-	if (out == 8) return false;
-	out = 0;
-	for (int i = 0; i < 8; i++) out += ((frustumPlanes.points[i].y < aabb.MinY()) ? 1 : 0);
-	if (out == 8) return false;
-	out = 0;
-	for (int i = 0; i < 8; i++) out += ((frustumPlanes.points[i].z > aabb.MaxZ()) ? 1 : 0);
-	if (out == 8) return false;
-	out = 0;
-	for (int i = 0; i < 8; i++) out += ((frustumPlanes.points[i].z < aabb.MinZ()) ? 1 : 0);
-	if (out == 8) return false;
-
-	return true;
 }
 
 void ModuleRender::DrawGameObject(GameObject* gameObject) {
@@ -1240,13 +1411,13 @@ void ModuleRender::DrawGameObjectDepthPrepass(GameObject* gameObject) {
 	}
 }
 
-void ModuleRender::DrawGameObjectShadowPass(GameObject* gameObject) {
+void ModuleRender::DrawGameObjectShadowPass(GameObject* gameObject, unsigned int i, ShadowCasterType lightFrustumType) {
 	ComponentView<ComponentMeshRenderer> meshes = gameObject->GetComponents<ComponentMeshRenderer>();
 	ComponentTransform* transform = gameObject->GetComponent<ComponentTransform>();
 	assert(transform);
 
 	for (ComponentMeshRenderer& mesh : meshes) {
-		mesh.DrawShadow(transform->GetGlobalMatrix());
+		mesh.DrawShadow(transform->GetGlobalMatrix(), i, lightFrustumType);
 	}
 }
 
@@ -1287,7 +1458,7 @@ const float2 ModuleRender::GetViewportSize() {
 bool ModuleRender::ObjectInsideFrustum(GameObject* gameObject) {
 	ComponentBoundingBox* boundingBox = gameObject->GetComponent<ComponentBoundingBox>();
 	if (boundingBox) {
-		return CheckIfInsideFrustum(boundingBox->GetWorldAABB(), boundingBox->GetWorldOBB());
+		return App->camera->GetFrustumPlanes().CheckIfInsideFrustumPlanes(boundingBox->GetWorldAABB(), boundingBox->GetWorldOBB());
 	}
 	return false;
 }

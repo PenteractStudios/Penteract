@@ -7,11 +7,11 @@
 #include "Modules/ModuleFiles.h"
 #include "Modules/ModuleEvents.h"
 #include "Modules/ModuleTime.h"
+#include "Components/ComponentScript.h"
+#include "Scripting/PropertyMap.h"
 #include "Utils/Logging.h"
 #include "Utils/Buffer.h"
-#include "Utils/UID.h"
 #include "Utils/FileDialog.h"
-#include "Scripting/Script.h"
 #include "Scene.h"
 
 #include <Windows.h>
@@ -390,6 +390,8 @@ namespace Tesseract {
 bool ModuleProject::Init() {
 	Factory::CreateContext();
 
+	gameState = new PropertyMap();
+
 #if GAME
 	UnloadGameCodeDLL();
 	if (!LoadGameCodeDLL("Penteract.dll")) {
@@ -419,6 +421,7 @@ UpdateStatus ModuleProject::Update() {
 bool ModuleProject::CleanUp() {
 	UnloadGameCodeDLL();
 	Factory::DestroyContext();
+	RELEASE(gameState);
 	return true;
 }
 
@@ -502,9 +505,9 @@ void ModuleProject::CreateMSVCProject(const char* path, const char* name, const 
 	std::string enginePath = FileDialog::GetFileFolder(FileDialog::GetAbsolutePath("").c_str());
 
 #ifdef _DEBUG
-	std::string result = fmt::format(project, name, UIDProject, "../../Project/Source/", "../../Project/Libs/MathGeoLib", "../../Project/Libs/SDL/include", "../../Project/Libs/rapidjson/include", "../../Project/Libs/OpenAL-soft/include", "../../Project/Libs/Bullet/include", "../../Project/Libs/recastnavigation-1.5.1", enginePath);
+	std::string result = fmt::format(project, name, UIDProject, "../../Project/Source/", "../../Project/Libs/MathGeoLib", "../../Project/Libs/SDL/include", "../../Project/Libs/rapidjson/include", "../../Project/Libs/OpenAL-soft/include", "../../Project/Libs/Bullet/include", "../../Project/Libs/recastnavigation-1.5.1", "../../Project/Libs/imgui", "../../Project/Libs/libav/include", enginePath);
 #else
-	std::string result = fmt::format(project, name, UIDProject, "../Engine/Source/", "../Engine/Libs/MathGeoLib", "../Engine/Libs/SDL/include", "../Engine/Libs/rapidjson/include", "../Engine/Libs/OpenAL-soft/include", "../Engine/Libs/Bullet/include", "../Engine/Libs/recastnavigation-1.5.1", enginePath);
+	std::string result = fmt::format(project, name, UIDProject, "../Engine/Source/", "../Engine/Libs/MathGeoLib", "../Engine/Libs/SDL/include", "../Engine/Libs/rapidjson/include", "../Engine/Libs/OpenAL-soft/include", "../Engine/Libs/Bullet/include", "../Engine/Libs/recastnavigation-1.5.1", "../Engine/Libs/imgui", "../Engine/Libs/libav/include", enginePath);
 #endif
 
 	App->files->Save(path, result.data(), result.size());
@@ -659,6 +662,10 @@ void ModuleProject::CompileProject(Configuration config) {
 
 bool ModuleProject::IsGameLoaded() const {
 	return gameCodeDLL != nullptr;
+}
+
+PropertyMap* ModuleProject::GetGameState() const {
+	return gameState;
 }
 
 bool ModuleProject::LoadGameCodeDLL(const char* path) {

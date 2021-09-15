@@ -4,11 +4,8 @@
 #include "Application.h"
 #include "GameObject.h"
 #include "Modules/ModuleEditor.h"
-#include "Modules/ModuleInput.h"
-#include "Modules/ModuleCamera.h"
 #include "Modules/ModuleRender.h"
 
-#include "Math/float3x3.h"
 #include "SDL.h"
 
 #include "Utils/Leaks.h"
@@ -82,6 +79,10 @@ void ComponentTransform::InvalidateHierarchy() {
 		if (boundingBox) boundingBox->Invalidate();
 
 		for (GameObject* child : GetOwner().GetChildren()) {
+			if ((child->GetMask().bitMask & static_cast<int>(MaskType::CAST_SHADOWS)) != 0) {
+				App->renderer->lightFrustumStatic.Invalidate();
+				App->renderer->lightFrustumDynamic.Invalidate();
+			}
 			ComponentTransform* childTransform = child->GetComponent<ComponentTransform>();
 			if (childTransform != nullptr) {
 				childTransform->InvalidateHierarchy();
@@ -113,7 +114,7 @@ void ComponentTransform::SetPosition(float3 position_) {
 	position = position_;
 	InvalidateHierarchy();
 	if ((GetOwner().GetMask().bitMask & static_cast<int>(MaskType::CAST_SHADOWS)) != 0) {
-		App->renderer->lightFrustum.Invalidate();
+		App->renderer->lightFrustumDynamic.Invalidate();
 	}
 }
 
@@ -122,7 +123,7 @@ void ComponentTransform::SetRotation(Quat rotation_) {
 	localEulerAngles = rotation_.ToEulerXYZ().Mul(RADTODEG);
 	InvalidateHierarchy();
 	if ((GetOwner().GetMask().bitMask & static_cast<int>(MaskType::CAST_SHADOWS)) != 0 || GetOwner().HasComponent<ComponentLight>()) {
-		App->renderer->lightFrustum.Invalidate();
+		App->renderer->lightFrustumDynamic.Invalidate();
 	}
 }
 
@@ -131,7 +132,7 @@ void ComponentTransform::SetRotation(float3 rotation_) {
 	localEulerAngles = rotation_;
 	InvalidateHierarchy();
 	if ((GetOwner().GetMask().bitMask & static_cast<int>(MaskType::CAST_SHADOWS)) != 0 || GetOwner().HasComponent<ComponentLight>()) {
-		App->renderer->lightFrustum.Invalidate();
+		App->renderer->lightFrustumDynamic.Invalidate();
 	}
 }
 
@@ -139,7 +140,7 @@ void ComponentTransform::SetScale(float3 scale_) {
 	scale = scale_;
 	InvalidateHierarchy();
 	if ((GetOwner().GetMask().bitMask & static_cast<int>(MaskType::CAST_SHADOWS)) != 0) {
-		App->renderer->lightFrustum.Invalidate();
+		App->renderer->lightFrustumDynamic.Invalidate();
 	}
 }
 
@@ -152,7 +153,7 @@ void ComponentTransform::SetTRS(float4x4& newTransform_) {
 	localEulerAngles = rotation.ToEulerXYZ().Mul(RADTODEG);
 	InvalidateHierarchy();
 	if ((GetOwner().GetMask().bitMask & static_cast<int>(MaskType::CAST_SHADOWS)) != 0 || GetOwner().HasComponent<ComponentLight>()) {
-		App->renderer->lightFrustum.Invalidate();
+		App->renderer->lightFrustumDynamic.Invalidate();
 	}
 }
 

@@ -3,6 +3,7 @@
 #include "Utils/PoolMap.h"
 #include "Utils/Quadtree.h"
 #include "Utils/UID.h"
+#include "Rendering/FrustumPlanes.h"
 #include "Components/ComponentTransform.h"
 #include "Components/ComponentMeshRenderer.h"
 #include "Components/ComponentBoundingBox.h"
@@ -12,13 +13,15 @@
 #include "Components/UI/ComponentCanvas.h"
 #include "Components/UI/ComponentCanvasRenderer.h"
 #include "Components/UI/ComponentImage.h"
+#include "Components/UI/ComponentVideo.h"
 #include "Components/UI/ComponentTransform2D.h"
 #include "Components/UI/ComponentEventSystem.h"
 #include "Components/UI/ComponentButton.h"
 #include "Components/UI/ComponentToggle.h"
 #include "Components/UI/ComponentText.h"
 #include "Components/UI/ComponentSlider.h"
-#include "Components/ComponentBoundingBox2D.h"
+#include "Components/UI/ComponentProgressBar.h"
+#include "Components/UI/ComponentBoundingBox2D.h"
 #include "Components/ComponentSkybox.h"
 #include "Components/ComponentTrail.h"
 #include "Components/ComponentParticleSystem.h"
@@ -26,12 +29,12 @@
 #include "Components/ComponentAnimation.h"
 #include "Components/ComponentAudioListener.h"
 #include "Components/ComponentAudioSource.h"
-#include "Components/UI/ComponentProgressBar.h"
 #include "Components/Physics/ComponentSphereCollider.h"
 #include "Components/Physics/ComponentBoxCollider.h"
 #include "Components/Physics/ComponentCapsuleCollider.h"
 #include "Components/ComponentAgent.h"
 #include "Components/ComponentObstacle.h"
+#include "Components/ComponentFog.h"
 
 class GameObject;
 
@@ -61,8 +64,30 @@ public:
 	std::vector<int> GetTriangles();  // Gets all the triangles from the MeshRenderer Components only if the ResourceMesh is found and the GameObject is Static
 	std::vector<float> GetNormals();
 
+	std::vector<GameObject*> GetCulledMeshes(const FrustumPlanes& planes, const int mask); // Gets all the game objects inside the given frustum
+	std::vector<GameObject*> GetStaticCulledShadowCasters(const FrustumPlanes& planes); // Gets all the shadow casters game objects inside the given frustum
+	std::vector<GameObject*> GetDynamicCulledShadowCasters(const FrustumPlanes& planes);	   // Gets all the shadow casters game objects inside the given frustum
+
 	void SetNavMesh(UID navMesh);
 	UID GetNavMesh();
+
+	void RemoveStaticShadowCaster(const GameObject* go);
+	void AddStaticShadowCaster(GameObject* go);
+
+	void RemoveDynamicShadowCaster(const GameObject* go);
+	void AddDynamicShadowCaster(GameObject* go);
+	
+	const std::vector<GameObject*>& GetStaticShadowCasters() const; 
+	const std::vector<GameObject*>& GetDynamicShadowCasters() const;
+
+	void SetCursor(UID cursor);
+	UID GetCursor();
+
+	void SetCursorWidth(int width);
+	int GetCursorWidth();
+	void SetCursorHeight(int height);
+	int GetCursorHeight();
+
 
 public:
 	GameObject* root = nullptr;				// GameObject Root. Parent of everything and god among gods (Game Object Deity) :D.
@@ -103,6 +128,8 @@ public:
 	PoolMap<UID, ComponentCapsuleCollider> capsuleColliderComponents;
 	PoolMap<UID, ComponentAgent> agentComponents;
 	PoolMap<UID, ComponentObstacle> obstacleComponents;
+	PoolMap<UID, ComponentFog> fogComponents;
+	PoolMap<UID, ComponentVideo> videoComponents;
 
 	// ---- Quadtree Parameters ---- //
 	Quadtree<GameObject> quadtree;
@@ -112,6 +139,18 @@ public:
 
 	// ---- Nav Mesh ID parameters ---- //
 	UID navMeshId = 0;
+
+	// ---- Cursor parameters ---- //
+	UID cursorId = 0;
+	int widthCursor = 30;
+	int heightCursor = 30;
+
+private:
+	bool InsideFrustumPlanes(const FrustumPlanes& planes, const GameObject* go); 
+
+private:
+	std::vector<GameObject*> staticShadowCasters;
+	std::vector<GameObject*> dynamicShadowCasters;
 };
 
 template<class T>

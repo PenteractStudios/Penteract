@@ -1,25 +1,20 @@
 #include "ComponentImage.h"
 
-#include "GameObject.h"
-#include "Components/UI/ComponentTransform2D.h"
 #include "Application.h"
+#include "GameObject.h"
 #include "Modules/ModulePrograms.h"
 #include "Modules/ModuleCamera.h"
 #include "Modules/ModuleRender.h"
 #include "Modules/ModuleEditor.h"
 #include "Modules/ModuleResources.h"
-#include "Modules/ModuleTime.h"
 #include "Modules/ModuleUserInterface.h"
-#include "Panels/PanelScene.h"
+#include "Components/UI/ComponentTransform2D.h"
 #include "Resources/ResourceTexture.h"
-#include "FileSystem/TextureImporter.h"
 #include "FileSystem/JsonValue.h"
-
 #include "Utils/ImGuiUtils.h"
+
 #include "Math/TransformOps.h"
-#include "imgui.h"
 #include "GL/glew.h"
-#include "debugdraw.h"
 
 #include "Utils/Leaks.h"
 
@@ -28,6 +23,8 @@
 #define JSON_TAG_ALPHATRANSPARENCY "AlphaTransparency"
 #define JSON_TAG_IS_FILL "IsFill"
 #define JSON_TAG_FILL_VALUE "FillValue"
+#define JSON_TAG_TEXTURE_OFFSET "Offset"
+#define JSON_TAG_TEXTURE_TILING "Tiling"
 
 ComponentImage::~ComponentImage() {
 	//TODO DECREASE REFERENCE COUNT OF SHADER AND TEXTURE, MAYBE IN A NEW COMPONENT::CLEANUP?
@@ -64,6 +61,20 @@ void ComponentImage::OnEditorUpdate() {
 		RebuildFillQuadVBO();
 	}
 
+	float oldTextureOffset[2] = {textureOffset.x, textureOffset.y};
+
+	if (ImGui::DragFloat2("Offset", oldTextureOffset, 0.1f, -10000.0f, 10000.0f, "%.2f")) {
+		textureOffset.x = oldTextureOffset[0];
+		textureOffset.y = oldTextureOffset[1];
+	}
+
+	float oldTextureTiling[2] = {textureTiling.x, textureTiling.y};
+
+	if (ImGui::DragFloat2("Tiling", oldTextureTiling, 0.1f, -10000.0f, 10000.0f, "%.2f")) {
+		textureTiling.x = oldTextureTiling[0];
+		textureTiling.y = oldTextureTiling[1];
+	}
+
 	UID oldID = textureID;
 	ImGui::ResourceSlot<ResourceTexture>("texture", &textureID);
 
@@ -97,6 +108,14 @@ void ComponentImage::Save(JsonValue jComponent) const {
 	jComponent[JSON_TAG_ALPHATRANSPARENCY] = alphaTransparency;
 	jComponent[JSON_TAG_IS_FILL] = isFill;
 	jComponent[JSON_TAG_FILL_VALUE] = fillVal;
+
+	JsonValue jOffset = jComponent[JSON_TAG_TEXTURE_OFFSET];
+	jOffset[0] = textureOffset.x;
+	jOffset[1] = textureOffset.y;
+
+	JsonValue jTiling = jComponent[JSON_TAG_TEXTURE_TILING];
+	jTiling[0] = textureTiling.x;
+	jTiling[1] = textureTiling.y;
 }
 
 void ComponentImage::Load(JsonValue jComponent) {
@@ -112,6 +131,15 @@ void ComponentImage::Load(JsonValue jComponent) {
 	alphaTransparency = jComponent[JSON_TAG_ALPHATRANSPARENCY];
 	isFill = jComponent[JSON_TAG_IS_FILL];
 	fillVal = jComponent[JSON_TAG_FILL_VALUE];
+
+	JsonValue jOffset = jComponent[JSON_TAG_TEXTURE_OFFSET];
+	textureOffset.Set(jOffset[0], jOffset[1]);
+
+	JsonValue jTiling = jComponent[JSON_TAG_TEXTURE_TILING];
+	float2 tilingToSet = float2::zero;
+
+	tilingToSet.Set(jTiling[0], jTiling[1]);
+	textureTiling.Set(tilingToSet.x == 0 ? 1 : tilingToSet.x, tilingToSet.y == 0 ? 1 : tilingToSet.y);
 }
 
 float4 ComponentImage::GetMainColor() const {
@@ -187,6 +215,9 @@ void ComponentImage::Draw(ComponentTransform2D* transform) const {
 	glUniformMatrix4fv(imageUIProgram->projLocation, 1, GL_TRUE, proj.ptr());
 	glUniformMatrix4fv(imageUIProgram->modelLocation, 1, GL_TRUE, modelMatrix.ptr());
 
+	glUniform2fv(imageUIProgram->offsetLocation, 1, textureOffset.ptr());
+	glUniform2fv(imageUIProgram->tilingLocation, 1, textureTiling.ptr());
+
 	glActiveTexture(GL_TEXTURE0);
 	glUniform1i(imageUIProgram->diffuseLocation, 0);
 	glUniform4fv(imageUIProgram->inputColorLocation, 1, GetMainColor().ptr());
@@ -236,6 +267,22 @@ bool ComponentImage::HasAlphaTransparency() const {
 
 void ComponentImage::SetAlphaTransparency(bool alphaTransparency_) {
 	alphaTransparency = alphaTransparency_;
+}
+
+float2 ComponentImage::GetTextureOffset() const {
+	return textureOffset;
+}
+
+void ComponentImage::SetTextureOffset(float2 textureOffset_) {
+	textureOffset = textureOffset_;
+}
+
+float2 ComponentImage::GetTextureTiling() const {
+	return textureTiling;
+}
+
+void ComponentImage::SetTextureTiling(float2 tiling_) {
+	textureTiling = tiling_;
 }
 
 void ComponentImage::RebuildFillQuadVBO() {

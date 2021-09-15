@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Components/Component.h"
+
 #include "Components/UI/ComponentTransform2D.h"
 
-#include "Math/float3.h"
+#include "Math/float4.h"
 
 #include <array>
 #include <vector>
@@ -46,6 +47,7 @@ private:
 	float fontSize = 24.0f;					 // Font size
 	float4 color = float4::one;				 // Color of the font
 	float lineHeight = 16.0f;				 // Line height
+	float letterSpacing = 0.0f;				 // Space between letters
 	int textAlignment = TextAlignment::LEFT; // Horizontal Alignment
 
 	unsigned int vbo = 0; // VBO of the text

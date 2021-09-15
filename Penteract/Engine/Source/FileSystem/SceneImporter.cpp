@@ -3,7 +3,6 @@
 #include "Application.h"
 #include "GameObject.h"
 #include "Utils/Logging.h"
-#include "Utils/MSTimer.h"
 #include "Utils/FileDialog.h"
 #include "FileSystem/TextureImporter.h"
 #include "Resources/ResourceScene.h"
@@ -21,7 +20,6 @@
 #include "Scripting/Script.h"
 #include "ImporterCommon.h"
 
-#include "rapidjson/document.h"
 #include "rapidjson/prettywriter.h"
 #include "rapidjson/error/en.h"
 
@@ -34,6 +32,9 @@
 #define JSON_TAG_GAME_CAMERA "GameCamera"
 #define JSON_TAG_AMBIENTLIGHT "AmbientLight"
 #define JSON_TAG_NAVMESH "NavMesh"
+#define JSON_TAG_CURSOR "Cursor"
+#define JSON_TAG_CURSOR_WIDTH "CursorWidth"
+#define JSON_TAG_CURSOR_HEIGHT "CursorHeight"
 
 bool SceneImporter::ImportScene(const char* filePath, JsonValue jMeta) {
 	// Timer to measure importing a scene
@@ -138,6 +139,11 @@ void SceneImporter::LoadScene(const char* filePath) {
 	// NavMesh
 	scene->SetNavMesh(jScene[JSON_TAG_NAVMESH]);
 
+	// Cursor
+	scene->SetCursorHeight(jScene[JSON_TAG_CURSOR_HEIGHT]);
+	scene->SetCursorWidth(jScene[JSON_TAG_CURSOR_WIDTH]);
+	scene->SetCursor(jScene[JSON_TAG_CURSOR]);
+
 	unsigned timeMs = timer.Stop();
 	LOG("Scene loaded in %ums.", timeMs);
 }
@@ -168,6 +174,11 @@ bool SceneImporter::SaveScene(const char* filePath) {
 
 	// NavMesh
 	jScene[JSON_TAG_NAVMESH] = scene->navMeshId;
+
+	// Cursor
+	jScene[JSON_TAG_CURSOR] = scene->cursorId;
+	jScene[JSON_TAG_CURSOR_HEIGHT] = scene->heightCursor;
+	jScene[JSON_TAG_CURSOR_WIDTH] = scene->widthCursor;
 
 	// Save GameObjects
 	JsonValue jRoot = jScene[JSON_TAG_ROOT];

@@ -23,6 +23,8 @@ public:
 	void Load(JsonValue jComponent) override;
 
 	void UpdateLight();
+	TESSERACT_ENGINE_API void SetIntensity(float newIntensity);
+	TESSERACT_ENGINE_API float GetIntensity() const;
 
 public:
 	LightType lightType = LightType::DIRECTIONAL; // Defines the type of the light from one in the LightType enum.
@@ -31,11 +33,10 @@ public:
 	float3 color = {1.0f, 1.0f, 1.0f};			  // RGB color that will be reflected in the objects.
 
 	// -------- Attenuation -------- //
-	// Inital default values to rise 100 meters.
 	float intensity = 1.0f;
-	float kc = 1.0f;		//Keep in one to avoid having denominator less than 1
-	float kl = 0.045f;
-	float kq = 0.0075f;
+	float radius = 1.0f;
+	bool useCustomFalloff = false;
+	float falloffExponent = 1.0f;
 	float innerAngle = pi / 12;
 	float outerAngle = pi / 6;
 };

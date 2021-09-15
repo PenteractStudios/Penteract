@@ -3,25 +3,23 @@
 #include "Globals.h"
 #include "Application.h"
 #include "GameObject.h"
-#include "FileSystem/SceneImporter.h"
-#include "FileSystem/PrefabImporter.h"
-#include "Utils/FileDialog.h"
 #include "Modules/ModuleWindow.h"
 #include "Modules/ModuleRender.h"
 #include "Modules/ModuleScene.h"
-#include "Modules/ModuleUserInterface.h"
 #include "Modules/ModuleFiles.h"
 #include "Modules/ModuleProject.h"
 #include "Modules/ModuleEvents.h"
 #include "Modules/ModuleNavigation.h"
 #include "Modules/ModuleTime.h"
-#include "TesseractEvent.h"
+#include "FileSystem/SceneImporter.h"
+#include "FileSystem/PrefabImporter.h"
 #include "FileSystem/MaterialImporter.h"
 #include "FileSystem/NavMeshImporter.h"
 #include "Navigation/NavMesh.h"
+#include "Utils/FileDialog.h"
+#include "TesseractEvent.h"
 
 #include "ImGuizmo.h"
-#include "imgui.h"
 #include "imgui_internal.h"
 #include "imgui_utils.h"
 #include "imgui_impl_sdl.h"
@@ -121,6 +119,7 @@ bool ModuleEditor::Init() {
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
@@ -512,4 +511,15 @@ void ModuleEditor::OnMouseClicked() {
 void ModuleEditor::OnMouseReleased() {
 	TesseractEvent mouseEvent = TesseractEvent(TesseractEventType::MOUSE_RELEASED);
 	App->events->AddEvent(mouseEvent);
+}
+
+void ModuleEditor::HelpMarker(const char* text) {
+	ImGui::TextDisabled("(?)");
+	if (ImGui::IsItemHovered()) {
+		ImGui::BeginTooltip();
+		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+		ImGui::TextUnformatted(text);
+		ImGui::PopTextWrapPos();
+		ImGui::EndTooltip();
+	}
 }

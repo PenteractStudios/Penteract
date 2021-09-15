@@ -10,6 +10,9 @@
 #include "Modules/ModuleScene.h"
 #include "Modules/ModuleProject.h"
 #include "Modules/ModulePrograms.h"
+#include "Modules/ModuleWindow.h"
+#include "Modules/ModuleScene.h"
+#include "Scene.h"
 
 #include "imgui_internal.h"
 #include "IconsFontAwesome5.h"
@@ -32,10 +35,10 @@ void PanelControlEditor::Update() {
 
 	if (ImGui::Begin(windowName.c_str(), &enabled, flags)) {
 		// Control Bar
-		if (!App->input->GetMouseButton(SDL_BUTTON_RIGHT)) {
-			if (App->input->GetKey(SDL_SCANCODE_W)) currentGuizmoOperation = ImGuizmo::TRANSLATE; // W key
-			if (App->input->GetKey(SDL_SCANCODE_E)) currentGuizmoOperation = ImGuizmo::ROTATE;
-			if (App->input->GetKey(SDL_SCANCODE_R)) currentGuizmoOperation = ImGuizmo::SCALE; // R key
+		if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KeyState::KS_IDLE) {
+			if (App->input->GetKey(SDL_SCANCODE_W) != KeyState::KS_IDLE) currentGuizmoOperation = ImGuizmo::TRANSLATE; // W key
+			if (App->input->GetKey(SDL_SCANCODE_E) != KeyState::KS_IDLE) currentGuizmoOperation = ImGuizmo::ROTATE;
+			if (App->input->GetKey(SDL_SCANCODE_R) != KeyState::KS_IDLE) currentGuizmoOperation = ImGuizmo::SCALE; // R key
 		}
 
 		std::string translate = std::string(ICON_FA_ARROWS_ALT);
@@ -100,15 +103,18 @@ void PanelControlEditor::Update() {
 			// Play / Pause / Step buttons
 			if (App->time->HasGameStarted()) {
 				if (ImGui::Button(stop.c_str())) {
+					App->window->ActivateCursor(false);
 					App->events->AddEvent(TesseractEvent(TesseractEventType::PRESSED_STOP));
 				}
 				ImGui::SameLine();
 				if (App->time->IsGameRunning()) {
 					if (ImGui::Button(pause.c_str())) {
+						App->window->ActivateCursor(false);
 						App->events->AddEvent(TesseractEvent(TesseractEventType::PRESSED_PAUSE));
 					}
 				} else {
 					if (ImGui::Button(play.c_str())) {
+						App->window->ActivateCursor(true);
 						App->events->AddEvent(TesseractEvent(TesseractEventType::PRESSED_RESUME));
 					}
 				}
@@ -121,11 +127,15 @@ void PanelControlEditor::Update() {
 						App->project->CompileProject(Configuration::RELEASE_EDITOR);
 #endif // _DEBUG
 					}
+					Scene* scene = App->scene->scene;
+					App->window->SetCursor(scene->GetCursor(), scene->GetCursorWidth(), scene->GetCursorHeight());
+					App->window->ActivateCursor(true);
 					App->events->AddEvent(TesseractEvent(TesseractEventType::PRESSED_PLAY));
 				}
 			}
 			ImGui::SameLine();
 			if (ImGui::Button(step.c_str())) {
+				App->window->ActivateCursor(false);
 				App->events->AddEvent(TesseractEvent(TesseractEventType::PRESSED_STEP));
 			}
 			ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
@@ -155,9 +165,8 @@ void PanelControlEditor::Update() {
 			ImGui::PopItemWidth();
 			ImGui::EndMenuBar();
 		}
-
-		ImGui::End();
 	}
+	ImGui::End();
 }
 
 ImGuizmo::OPERATION PanelControlEditor::GetImGuizmoOperation() const {

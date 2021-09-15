@@ -1,15 +1,14 @@
 #include "ComponentCanvasRenderer.h"
 
+#include "GameObject.h"
 #include "Components/UI/ComponentImage.h"
 #include "Components/UI/ComponentText.h"
 #include "Components/UI/ComponentCanvas.h"
 #include "Components/UI/ComponentTransform2D.h"
-#include "Modules/ModuleTime.h"
-#include "Modules/ModuleRender.h"
-#include "Modules/ModuleUserInterface.h"
-#include "GameObject.h"
+
 
 #include "debugdraw.h"
+
 #include "Utils/Leaks.h"
 
 void ComponentCanvasRenderer::Save(JsonValue jComponent) const {
@@ -32,6 +31,11 @@ void ComponentCanvasRenderer::Render(const GameObject* gameObject) const {
 		ComponentText* componentText = gameObject->GetComponent<ComponentText>();
 		if (componentText != nullptr && componentText->IsActive()) {
 			componentText->Draw(transform2D);
+		}
+
+		ComponentVideo* componentVideo = gameObject->GetComponent<ComponentVideo>();
+		if (componentVideo != nullptr && componentVideo->IsActive()) {
+			componentVideo->Draw(transform2D);
 		}
 	}
 }

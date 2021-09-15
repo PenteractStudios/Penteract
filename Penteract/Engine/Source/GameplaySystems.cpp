@@ -15,8 +15,11 @@
 #include "Modules/ModuleCamera.h"
 #include "Modules/ModuleAudio.h"
 #include "Modules/ModuleUserInterface.h"
+#include "Modules/ModuleNavigation.h"
 #include "Resources/ResourcePrefab.h"
 #include "Resources/ResourceMaterial.h"
+#include "Resources/ResourceClip.h"
+#include "Scripting/PropertyMap.h"
 #include "FileSystem/SceneImporter.h"
 #include "Utils/Logging.h"
 #include "TesseractEvent.h"
@@ -55,6 +58,47 @@ T* GameplaySystems::GetResource(UID id) {
 
 template TESSERACT_ENGINE_API ResourcePrefab* GameplaySystems::GetResource<ResourcePrefab>(UID id);
 template TESSERACT_ENGINE_API ResourceMaterial* GameplaySystems::GetResource<ResourceMaterial>(UID id);
+template TESSERACT_ENGINE_API ResourceClip* GameplaySystems::GetResource<ResourceClip>(UID id);
+
+template<typename T>
+T GameplaySystems::GetGlobalVariable(const char* name, const T& defaultValue) {
+	return App->project->GetGameState()->Get<T>(name, defaultValue);
+}
+
+template TESSERACT_ENGINE_API bool GameplaySystems::GetGlobalVariable<bool>(const char* name, const bool& defaultValue);
+template TESSERACT_ENGINE_API char GameplaySystems::GetGlobalVariable<char>(const char* name, const char& defaultValue);
+template TESSERACT_ENGINE_API unsigned char GameplaySystems::GetGlobalVariable<unsigned char>(const char* name, const unsigned char& defaultValue);
+template TESSERACT_ENGINE_API short GameplaySystems::GetGlobalVariable<short>(const char* name, const short& defaultValue);
+template TESSERACT_ENGINE_API unsigned short GameplaySystems::GetGlobalVariable<unsigned short>(const char* name, const unsigned short& defaultValue);
+template TESSERACT_ENGINE_API int GameplaySystems::GetGlobalVariable<int>(const char* name, const int& defaultValue);
+template TESSERACT_ENGINE_API unsigned int GameplaySystems::GetGlobalVariable<unsigned int>(const char* name, const unsigned int& defaultValue);
+template TESSERACT_ENGINE_API long long GameplaySystems::GetGlobalVariable<long long>(const char* name, const long long& defaultValue);
+template TESSERACT_ENGINE_API unsigned long long GameplaySystems::GetGlobalVariable<unsigned long long>(const char* name, const unsigned long long& defaultValue);
+template TESSERACT_ENGINE_API float GameplaySystems::GetGlobalVariable<float>(const char* name, const float& defaultValue);
+template TESSERACT_ENGINE_API double GameplaySystems::GetGlobalVariable<double>(const char* name, const double& defaultValue);
+template TESSERACT_ENGINE_API std::string GameplaySystems::GetGlobalVariable<std::string>(const char* name, const std::string& defaultValue);
+template TESSERACT_ENGINE_API float2 GameplaySystems::GetGlobalVariable<float2>(const char* name, const float2& defaultValue);
+template TESSERACT_ENGINE_API float3 GameplaySystems::GetGlobalVariable<float3>(const char* name, const float3& defaultValue);
+
+template<typename T>
+void GameplaySystems::SetGlobalVariable(const char* name, const T& value) {
+	App->project->GetGameState()->Set<T>(name, value);
+}
+
+template TESSERACT_ENGINE_API void GameplaySystems::SetGlobalVariable<bool>(const char* name, const bool& value);
+template TESSERACT_ENGINE_API void GameplaySystems::SetGlobalVariable<char>(const char* name, const char& value);
+template TESSERACT_ENGINE_API void GameplaySystems::SetGlobalVariable<unsigned char>(const char* name, const unsigned char& value);
+template TESSERACT_ENGINE_API void GameplaySystems::SetGlobalVariable<short>(const char* name, const short& value);
+template TESSERACT_ENGINE_API void GameplaySystems::SetGlobalVariable<unsigned short>(const char* name, const unsigned short& value);
+template TESSERACT_ENGINE_API void GameplaySystems::SetGlobalVariable<int>(const char* name, const int& value);
+template TESSERACT_ENGINE_API void GameplaySystems::SetGlobalVariable<unsigned int>(const char* name, const unsigned int& value);
+template TESSERACT_ENGINE_API void GameplaySystems::SetGlobalVariable<long long>(const char* name, const long long& value);
+template TESSERACT_ENGINE_API void GameplaySystems::SetGlobalVariable<unsigned long long>(const char* name, const unsigned long long& value);
+template TESSERACT_ENGINE_API void GameplaySystems::SetGlobalVariable<float>(const char* name, const float& value);
+template TESSERACT_ENGINE_API void GameplaySystems::SetGlobalVariable<double>(const char* name, const double& value);
+template TESSERACT_ENGINE_API void GameplaySystems::SetGlobalVariable<std::string>(const char* name, const std::string& value);
+template TESSERACT_ENGINE_API void GameplaySystems::SetGlobalVariable<float2>(const char* name, const float2& value);
+template TESSERACT_ENGINE_API void GameplaySystems::SetGlobalVariable<float3>(const char* name, const float3& value);
 
 void GameplaySystems::SetRenderCamera(ComponentCamera* camera) {
 	App->camera->ChangeActiveCamera(camera, true);
@@ -165,23 +209,27 @@ void Time::ResumeGame() {
 const int JOYSTICK_MAX_VALUE = 32767;
 
 bool Input::GetMouseButtonDown(int button) {
-	return App->input->GetMouseButtons()[button] == KS_DOWN;
+	return App->input->GetMouseButtons()[button] == KeyState::KS_DOWN;
 }
 
 bool Input::GetMouseButtonUp(int button) {
-	return App->input->GetMouseButtons()[button] == KS_UP;
+	return App->input->GetMouseButtons()[button] == KeyState::KS_UP;
 }
 
 bool Input::GetMouseButtonRepeat(int button) {
-	return App->input->GetMouseButtons()[button] == KS_REPEAT;
+	return App->input->GetMouseButtons()[button] == KeyState::KS_REPEAT;
 }
 
 bool Input::GetMouseButton(int button) {
-	return App->input->GetMouseButtons()[button];
+	return App->input->GetMouseButtons()[button] == KeyState::KS_IDLE ? false : true;
 }
 
 const float2& Input::GetMouseMotion() {
 	return App->input->GetMouseMotion();
+}
+
+float Input::GetMouseWheelMotion() {
+	return App->input->GetMouseWheelMotion();
 }
 
 const float3 Input::GetMouseWorldPosition() {
@@ -214,40 +262,46 @@ const float2 Input::GetMousePositionNormalized() {
 }
 
 bool Input::GetKeyCodeDown(KEYCODE keycode) {
-	return App->input->GetKeyboard()[keycode] == KS_DOWN;
+	return App->input->GetKeyboard()[keycode] == KeyState::KS_DOWN;
 }
 
 bool Input::GetKeyCodeUp(KEYCODE keycode) {
-	return App->input->GetKeyboard()[keycode] == KS_UP;
+	return App->input->GetKeyboard()[keycode] == KeyState::KS_UP;
 }
 
 bool Input::GetKeyCodeRepeat(KEYCODE keycode) {
-	return App->input->GetKeyboard()[keycode] == KS_REPEAT;
+	return App->input->GetKeyboard()[keycode] == KeyState::KS_REPEAT;
 }
 
 bool Input::GetKeyCode(KEYCODE keycode) {
-	return App->input->GetKeyboard()[keycode];
+	return App->input->GetKeyboard()[keycode] == KeyState::KS_IDLE? false : true;
 }
 
 bool Input::GetControllerButtonDown(SDL_GameControllerButton button, int playerID) {
 	PlayerController* player = App->input->GetPlayerController(playerID);
-	return player ? player->gameControllerButtons[button] == KS_DOWN : false;
+	return player ? player->gameControllerButtons[button] == KeyState::KS_DOWN : false;
 }
 
 bool Input::GetControllerButtonUp(SDL_GameControllerButton button, int playerID) {
 	PlayerController* player = App->input->GetPlayerController(playerID);
-	return player ? player->gameControllerButtons[button] == KS_UP : false;
+	return player ? player->gameControllerButtons[button] == KeyState::KS_UP : false;
 }
 
 bool Input::GetControllerButton(SDL_GameControllerButton button, int playerID) {
 	PlayerController* player = App->input->GetPlayerController(playerID);
-	return player ? player->gameControllerButtons[button] == KS_REPEAT : false;
+	return player ? player->gameControllerButtons[button] == KeyState::KS_REPEAT : false;
 }
 
 float Input::GetControllerAxisValue(SDL_GameControllerAxis axis, int playerID) {
 	PlayerController* player = App->input->GetPlayerController(playerID);
 
 	return player ? player->gameControllerAxises[axis] / JOYSTICK_MAX_VALUE : 0.0f;
+}
+
+void Input::StartControllerVibration(int playerID, float strength, float duration) {
+	PlayerController* player = App->input->GetPlayerController(playerID);
+	if (player == nullptr) return;
+	player->StartSimpleControllerVibration(strength, duration);
 }
 
 bool Input::IsGamepadConnected(int index) {
@@ -388,6 +442,10 @@ void Screen::SetBrightness(float brightness) {
 	App->window->SetBrightness(brightness);
 }
 
+void Screen::SetCursor(UID cursorID, int widthCursor, int heightCursor) {
+	App->window->SetCursor(cursorID, widthCursor, heightCursor);
+}
+
 WindowMode Screen::GetWindowMode() {
 	return App->window->GetWindowMode();
 }
@@ -458,6 +516,22 @@ void Screen::SetBloomThreshold(float value) {
 	App->renderer->bloomThreshold = value;
 }
 
+const bool Screen::IsChromaticAberrationActive() {
+	return App->renderer->chromaticAberrationActive;
+}
+
+void Screen::SetChromaticAberration(bool value) {
+	App->renderer->chromaticAberrationActive = value;
+}
+
+const float Screen::GetChromaticAberrationStrength() {
+	return App->renderer->chromaticAberrationStrength;
+}
+
+void Screen::SetChromaticAberrationStrength(float value) {
+	App->renderer->chromaticAberrationStrength = value;
+}
+
 // --------- Camera --------- //
 
 bool Camera::CheckObjectInsideFrustum(GameObject* gameObject) {
@@ -472,4 +546,10 @@ void Audio::StopAllSources() {
 
 ComponentEventSystem* UserInterface::GetCurrentEventSystem() {
 	return App->userInterface->GetCurrentEventSystem();
+}
+
+void Navigation::Raycast(float3 startPosition, float3 targetPosition, bool& hitResult, float3& hitPosition) {
+	if (App->navigation != nullptr) {
+		App->navigation->Raycast(startPosition, targetPosition, hitResult, hitPosition);
+	}
 }

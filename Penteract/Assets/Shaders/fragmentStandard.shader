@@ -4,16 +4,25 @@
 #define EPSILON 1e-5
 #define POINT_LIGHTS 32
 #define SPOT_LIGHTS 8
+#define MAX_CASCADES 10
 
 in vec3 fragNormal;
 in mat3 TBN;
 in vec3 fragPos;
 in vec2 uv;
-in vec4 fragPosLight;
+
+// Cascade Shadow Mapping
+in vec4 fragPosLightStatic[MAX_CASCADES];
+in vec4 fragPosLightDynamic[MAX_CASCADES];
+flat in unsigned int cascadesCount;
+
 out vec4 outColor;
 
 // Depth Map
-uniform sampler2D depthMapTexture;
+uniform sampler2D depthMapTexturesStatic[MAX_CASCADES];
+uniform sampler2D depthMapTexturesDynamic[MAX_CASCADES];
+uniform float farPlaneDistancesStatic[MAX_CASCADES];
+uniform float farPlaneDistancesDynamic[MAX_CASCADES];
 
 // SSAO texture
 uniform sampler2D ssaoTexture;
@@ -34,6 +43,7 @@ uniform float normalStrength;
 uniform float smoothness;
 uniform sampler2D emissiveMap;
 uniform int hasEmissiveMap;
+uniform vec4 emissiveColor;
 uniform float emissiveIntensity;
 uniform sampler2D ambientOcclusionMap;
 uniform int hasAmbientOcclusionMap;
@@ -42,10 +52,12 @@ uniform vec2 tiling;
 uniform vec2 offset;
 
 // IBL
+uniform int hasIBL;
 uniform samplerCube diffuseIBL;
 uniform samplerCube prefilteredIBL;
 uniform sampler2D environmentBRDF;
 uniform int prefilteredIBLNumLevels;
+uniform float strengthIBL;
 
 struct AmbientLight
 {
@@ -65,9 +77,9 @@ struct PointLight
 	vec3 pos;
 	vec3 color;
 	float intensity;
-	float kc;
-	float kl;
-	float kq;
+	float radius;
+	int useCustomFalloff;
+	float falloffExponent;
 };
 
 struct SpotLight
@@ -76,9 +88,9 @@ struct SpotLight
 	vec3 direction;
 	vec3 color;
 	float intensity;
-	float kc;
-	float kl;
-	float kq;
+	float radius;
+	int useCustomFalloff;
+	float falloffExponent;
 	float innerAngle;
 	float outerAngle;
 };
@@ -115,17 +127,26 @@ vec4 GetDiffuse(vec2 tiledUV)
 
 vec4 GetEmissive(vec2 tiledUV)
 {
-    return hasEmissiveMap * SRGBA(texture(emissiveMap, tiledUV)) * emissiveIntensity;
+    //return hasEmissiveMap * SRGBA(texture(emissiveMap, tiledUV)) * emissiveIntensity;
+	return (hasEmissiveMap * SRGBA(texture(emissiveMap, tiledUV)) * emissiveColor + (1 - hasEmissiveMap) * SRGBA(emissiveColor)) * emissiveIntensity;
 }
 
 vec3 GetAmbientLight(in vec3 R, in vec3 normal, in vec3 viewDir, in vec3 Cd, in vec3 F0, float roughness)
 {
-	float NV = max(dot(fragNormal, viewDir), 0.0) + EPSILON;
-	vec3 irradiance = texture(diffuseIBL, normal).rgb;
-	vec3 radiance = textureLod(prefilteredIBL, R, roughness * prefilteredIBLNumLevels).rgb;
-	vec2 fab = texture(environmentBRDF, vec2(NV, roughness)).rg;
-	vec3 diffuse = (Cd * (1 - F0));
-	return diffuse * irradiance + radiance * (F0 * fab.x + fab.y);
+	if (hasIBL == 1)
+	{
+		float NV = max(dot(fragNormal, viewDir), 0.0) + EPSILON;
+		vec3 irradiance = texture(diffuseIBL, normal).rgb;
+		vec3 radiance = textureLod(prefilteredIBL, R, roughness * prefilteredIBLNumLevels).rgb;
+		vec2 fab = texture(environmentBRDF, vec2(NV, roughness)).rg;
+		vec3 diffuse = (Cd * (1 - F0));
+		return (diffuse * irradiance + radiance * (F0 * fab.x + fab.y)) * strengthIBL;
+	}
+	else
+	{
+		vec3 diffuse = (Cd * (1 - F0));
+		return diffuse * light.ambient.color;
+	}
 }
 
 vec3 GetOccludedAmbientLight(in vec3 R, in vec3 normal, in vec3 viewDir, in vec3 Cd, in vec3 F0, float roughness, vec2 tiledUV)
@@ -147,6 +168,30 @@ vec3 GetNormal(vec2 tiledUV)
     return normalize(TBN * normal);
 }
 
+unsigned int DepthMapIndexStatic(){
+
+	for(unsigned int i = 0; i < cascadesCount; ++i){
+
+		if(fragPosLightStatic[i].z < farPlaneDistancesStatic[i]) return i;
+
+	}
+
+	return cascadesCount - 1;
+
+}
+
+unsigned int DepthMapIndexDynamic(){
+
+	for(unsigned int i = 0; i < cascadesCount; ++i){
+
+		if(fragPosLightDynamic[i].z < farPlaneDistancesDynamic[i]) return i;
+
+	}
+
+	return cascadesCount - 1;
+
+}
+
 float Shadow(vec4 lightPos, vec3 normal, vec3 lightDirection, sampler2D shadowMap) {
 
 	vec3 projCoords;
@@ -164,7 +209,7 @@ float Shadow(vec4 lightPos, vec3 normal, vec3 lightDirection, sampler2D shadowMa
 	}
 
     float currentDepth = projCoords.z;
-	float bias = max(0.05 * (1 - dot(normal, lightDirection)), 0.005);
+	float bias = min(0.05 * (1 - dot(normal, lightDirection)), 0.005);
 
 	float shadow = 0.0;
 
@@ -172,7 +217,7 @@ float Shadow(vec4 lightPos, vec3 normal, vec3 lightDirection, sampler2D shadowMa
 	for(int x = -1; x <= 1; ++x){
 		for(int y = -1; y <= 1; ++y){
 			float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x,y) * texelSize).r;
-			shadow += currentDepth > pcfDepth ? 1.0 : 0.0;
+			shadow += currentDepth > pcfDepth + bias ? 1.0 : 0.0;
 		}
 	}
 
@@ -232,7 +277,9 @@ vec3 ProcessDirectionalLight(DirLight directional, vec3 fragNormal, vec3 viewDir
 vec3 ProcessPointLight(PointLight point, vec3 fragNormal, vec3 viewDir, vec3 Cd, vec3 F0, float roughness)
 {
 	float pointDistance = length(point.pos - fragPos);
-	float distAttenuation = 1.0 / (point.kc + point.kl * pointDistance + point.kq * pointDistance * pointDistance);
+	float falloffExponent = point.useCustomFalloff * point.falloffExponent + (1 - point.useCustomFalloff) * 4.0;
+	float distAttenuation = clamp(1.0 - pow(pointDistance / point.radius, falloffExponent), 0.0, 1.0);
+	distAttenuation = point.useCustomFalloff * distAttenuation + (1 - point.useCustomFalloff) * distAttenuation * distAttenuation / (pointDistance * pointDistance + 1.0);
 
 	vec3 pointDir = normalize(point.pos - fragPos);
 
@@ -253,7 +300,9 @@ vec3 ProcessPointLight(PointLight point, vec3 fragNormal, vec3 viewDir, vec3 Cd,
 vec3 ProcessSpotLight(SpotLight spot, vec3 fragNormal, vec3 viewDir, vec3 Cd, vec3 F0, float roughness)
 {
 	float spotDistance = length(spot.pos - fragPos);
-	float distAttenuation = 1.0 / (spot.kc + spot.kl * spotDistance + spot.kq * spotDistance * spotDistance);
+	float falloffExponent = spot.useCustomFalloff * spot.falloffExponent + (1 - spot.useCustomFalloff) * 4.0;
+	float distAttenuation = clamp(1.0 - pow(spotDistance / spot.radius, falloffExponent), 0.0, 1.0);
+	distAttenuation = spot.useCustomFalloff * distAttenuation + (1 - spot.useCustomFalloff) * distAttenuation * distAttenuation / (spotDistance * spotDistance + 1.0);
 
 	vec3 spotDir = normalize(spot.pos - fragPos);
 
@@ -312,7 +361,12 @@ void main()
     vec3 R = reflect(-viewDir, normal);
     vec3 colorAccumulative = GetOccludedAmbientLight(R, normal, viewDir, Cd, F0, roughness, tiledUV);
 
-	float shadow = Shadow(fragPosLight, normal,  normalize(light.directional.direction), depthMapTexture);
+	unsigned int indexS = DepthMapIndexStatic();
+	unsigned int indexD = DepthMapIndexDynamic();
+	float shadowS = Shadow(fragPosLightStatic[indexS], normal,  normalize(light.directional.direction), depthMapTexturesStatic[indexS]);
+	float shadowD = Shadow(fragPosLightDynamic[indexD], normal,  normalize(light.directional.direction), depthMapTexturesDynamic[indexD]);
+
+	float shadow = max(min(shadowD, 1), shadowS);
 
 	// Directional Light
 	if (light.directional.isActive == 1)
@@ -333,9 +387,12 @@ void main()
 	}
 
     // Emission
-    colorAccumulative += GetEmissive(tiledUV).rgb;
+	colorAccumulative = Dissolve(vec4(colorAccumulative, 1.0), tiledUV, false).rgb + Dissolve(GetEmissive(tiledUV), tiledUV, true).rgb;
 
-    outColor = vec4(colorAccumulative, colorDiffuse.a);
+	vec4 finalColor = vec4(colorAccumulative, colorDiffuse.a);
+
+	// Add dissolve	effect
+	outColor = finalColor;
 }
 
 --- fragMainSpecular
@@ -360,7 +417,12 @@ void main()
     vec3 R = reflect(-viewDir, normal);
     vec3 colorAccumulative = GetOccludedAmbientLight(R, normal, viewDir, colorDiffuse.rgb, colorSpecular.rgb, roughness, tiledUV);
 
-	float shadow = Shadow(fragPosLight, normal, normalize(light.directional.direction), depthMapTexture);
+	unsigned int indexS = DepthMapIndexStatic();
+	unsigned int indexD = DepthMapIndexDynamic();
+	float shadowS = Shadow(fragPosLightStatic[indexS], normal,  normalize(light.directional.direction), depthMapTexturesStatic[indexS]);
+	float shadowD = Shadow(fragPosLightDynamic[indexD], normal,  normalize(light.directional.direction), depthMapTexturesDynamic[indexD]);
+
+	float shadow = max(min(shadowD, 1), shadowS);
 
     // Directional Light
     if (light.directional.isActive == 1)
