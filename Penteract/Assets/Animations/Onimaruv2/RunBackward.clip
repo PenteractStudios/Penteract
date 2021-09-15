@@ -4,7 +4,16 @@
     "BeginIndex": 344,
     "EndIndex": 384,
     "Loop": true,
-    "Speed": 1.600000023841858,
+    "Speed": 1.0,
     "FrameRate": 0.041615165770053866,
-    "KeyEventClip": null
+    "KeyEventClip": [
+        {
+            "KeyFrame": 364,
+            "Name": "FootstepRight"
+        },
+        {
+            "KeyFrame": 383,
+            "Name": "FootstepLeft"
+        }
+    ]
 }

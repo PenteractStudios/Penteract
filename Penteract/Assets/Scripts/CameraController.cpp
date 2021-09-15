@@ -4,6 +4,9 @@
 #include "GameController.h"
 #include "Components/ComponentTransform.h"
 
+#include "Geometry/LineSegment.h"
+#include "Geometry/Plane.h"
+
 #define PI 3.14159
 
 
@@ -20,14 +23,15 @@ EXPOSE_MEMBERS(CameraController) {
 	MEMBER_SEPARATOR("Shaker Control"),
 	MEMBER(MemberType::FLOAT, shakeTotalTime),
 	MEMBER(MemberType::FLOAT, shakeTimer),
-	MEMBER(MemberType::FLOAT, shakeMultiplier)
-
+	MEMBER(MemberType::FLOAT, shakeMultiplier),
+	MEMBER(MemberType::BOOL, useAimingCamera),
 };
 
 GENERATE_BODY_IMPL(CameraController);
 
 void CameraController::Start() {
 	transform = GetOwner().GetComponent<ComponentTransform>();
+	camera = GetOwner().GetComponent<ComponentCamera>();
 	GameObject* playerControllerObj = GameplaySystems::GetGameObject(playerControllerObjUID);
 	if (playerControllerObj) {
 		playerController = GET_SCRIPT(playerControllerObj, PlayerController);
@@ -41,23 +45,18 @@ void CameraController::Start() {
 }
 
 void CameraController::Update() {
+	if (playerController == nullptr || transform == nullptr || camera == nullptr) return;
 
-	if (playerController == nullptr || transform == nullptr) return;
 	float3 playerGlobalPos = playerController->playerFang.playerMainTransform->GetGlobalPosition();
-
 	float3 desiredPosition = playerGlobalPos + float3(cameraOffsetX, cameraOffsetY, cameraOffsetZ);
-
 	float3 smoothedPosition = desiredPosition;
 
 	if (useSmoothCamera) {
-		if (playerController->playerFang.isAiming()) {
+		if (useAimingCamera && (playerController->playerFang.IsAiming() || playerController->playerOnimaru.IsAiming())) {
 			float2 mousePosition = Input::GetMousePositionNormalized();
-
-			if (mousePosition.x > 0.75) { aimingPositionX = aimingDistance; } else if (mousePosition.x < -0.75) { aimingPositionX = -aimingDistance; } else { aimingPositionX = 0.0f; }
-
-			if (mousePosition.y > 0.75) { aimingPositionZ = -aimingDistance; } else if (mousePosition.y < -0.75) { aimingPositionZ = aimingDistance; } else { aimingPositionZ = 0.0f; }
-
-			aimingPosition = playerGlobalPos + float3(cameraOffsetX + aimingPositionX, cameraOffsetY, cameraOffsetZ + aimingPositionZ);
+			LineSegment ray = camera->frustum.UnProjectLineSegment(mousePosition.x, mousePosition.y);
+			Plane p = Plane(playerGlobalPos, float3(0, 1, 0));
+			float3 aimingPosition = playerGlobalPos + (p.ClosestPoint(ray) - playerGlobalPos) * aimingDistance + float3(cameraOffsetX, cameraOffsetY, cameraOffsetZ);
 
 			smoothedPosition = float3::Lerp(transform->GetGlobalPosition(), aimingPosition, aimingCameraSpeed * Time::GetDeltaTime());
 

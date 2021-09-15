@@ -5,5 +5,15 @@
     "EndIndex": 258,
     "Loop": true,
     "Speed": 1.0,
-    "FrameRate": 0.041615165770053866
+    "FrameRate": 0.041615165770053866,
+    "KeyEventClip": [
+        {
+            "KeyFrame": 238,
+            "Name": "FootstepRight"
+        },
+        {
+            "KeyFrame": 257,
+            "Name": "FootstepLeft"
+        }
+    ]
 }

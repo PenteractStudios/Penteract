@@ -94,9 +94,8 @@ void DialogueManager::Start() {
 	// ----- DIALOGUES INIT -----
 	// LEVEL 1 - UPGRADES
 	dialoguesArray[0] = Dialogue(DialogueWindow::UPGRADES1, true, "", &dialoguesArray[1]);
-	dialoguesArray[1] = Dialogue(DialogueWindow::ONIMARU, true, "Hey Fang, look at this.", &dialoguesArray[2]);
-	dialoguesArray[2] = Dialogue(DialogueWindow::FANG, true, "Hmm...\nIt looks like Milibot has\nbeen researching in some\nnew technologies...", &dialoguesArray[3]);
-	dialoguesArray[3] = Dialogue(DialogueWindow::FANG, true, "I might be able to\nseize its power\nfor ourselves if we find\na couple more.", nullptr);
+	dialoguesArray[1] = Dialogue(DialogueWindow::FANG, true, "Hmm...\nIt looks like Milibot has\nbeen researching in some\nnew technologies...", &dialoguesArray[2]);
+	dialoguesArray[2] = Dialogue(DialogueWindow::FANG, true, "I might be able to\nseize its power\nfor ourselves if we find\na couple more.", nullptr);
 
 	dialoguesArray[4] = Dialogue(DialogueWindow::UPGRADES2, true, "", nullptr);
 
@@ -142,6 +141,13 @@ void DialogueManager::Start() {
 	dialoguesArray[32] = Dialogue(DialogueWindow::DOOR, true, "Fine...\nI'll open the elevator.\nBut this time it's on you.\nI'm taking\nno responsibility.", &dialoguesArray[33]);
 	dialoguesArray[33] = Dialogue(DialogueWindow::ONIMARU, true, "Thanks, Door.", &dialoguesArray[34]);
 	dialoguesArray[34] = Dialogue(DialogueWindow::DOOR, true, "Take care in there\nsweethearts!\nDon't get hurt!", nullptr);
+
+	// LEVEL 2 - UPGRADES
+	dialoguesArray[35] = Dialogue(DialogueWindow::UPGRADES1, true, "", nullptr);
+
+	dialoguesArray[38] = Dialogue(DialogueWindow::UPGRADES2, true, "", nullptr);
+
+	dialoguesArray[41] = Dialogue(DialogueWindow::UPGRADES3, true, "", nullptr);
 }
 
 void DialogueManager::Update() {
@@ -387,15 +393,19 @@ void DialogueManager::CloseDialogue(Dialogue* dialogue) {
 void DialogueManager::ActivatePowerUpDialogue() {
 	int obtainedPowerUps = playerControllerScript ? playerControllerScript->obtainedUpgradeCells : 0;
 	int nextDialogue;
+
 	switch (obtainedPowerUps) {
 	case 1:
-		nextDialogue = 0;
+		if (playerControllerScript->currentLevel == 1) nextDialogue = 0;
+		else nextDialogue = 35;
 		break;
 	case 2:
-		nextDialogue = 4;
+		if (playerControllerScript->currentLevel == 1) nextDialogue = 4;
+		else nextDialogue = 38;
 		break;
 	case 3:
-		nextDialogue = 5;
+		if (playerControllerScript->currentLevel == 1) nextDialogue = 5;
+		else nextDialogue = 41;
 		break;
 	default:
 		return;

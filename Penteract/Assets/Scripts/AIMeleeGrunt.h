@@ -55,6 +55,7 @@ public:
 	UID defaultMaterialPlaceHolderUID = 0;
 	UID damageMaterialPlaceHolderUID = 0;
 	UID defaultMaterialID = 0;
+	UID bladesMaterialID = 0;
 	UID damageMaterialID = 0;
 
 	UID rightBladeColliderUID = 0;
@@ -75,9 +76,11 @@ public:
 
 	float groundPosition = 3.0f;
 
-	UID dissolveMaterialObj = 0;		//Reference to dissolve material holding gameobject UID, used to be set whenever Ai has been recently hurt
-	UID dissolveMaterialID = 0;			//Reference to dissolve material, used to be set whenever Ai has been recently hurt
-	float dissolveTimerToStart = 0.0f;	//Timer until the dissolve animation is played
+	UID dissolveMaterialObj = 0;			//Reference to dissolve material holding gameobject UID, used to be set whenever Ai has been recently hurt
+	UID dissolveMaterialID = 0;				//Reference to dissolve material, used to be set whenever Ai has been recently hurt
+	UID dissolveMaterialWeaponObj = 0;		//Reference to weapon dissolve material holding gameobject UID, used to be set whenever Ai has been recently hurt
+	UID dissolveMaterialWeaponID = 0;		//Reference to weapon dissolve material, used to be set whenever Ai has been recently hurt
+	float dissolveTimerToStart = 0.0f;		//Timer until the dissolve animation is played
 
 	//Attack1
 	float att1AttackSpeed = 1.f;
@@ -120,6 +123,8 @@ private:
 
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
 	ComponentMeshRenderer* componentMeshRenderer = nullptr;
+	ComponentMeshRenderer* componentMeshRendererLeftBlade = nullptr;
+	ComponentMeshRenderer* componentMeshRendererRightBlade = nullptr;
 
 	float timeSinceLastHurt = 0.5f;
 	GameObject* rightBladeCollider = nullptr;
@@ -142,5 +147,5 @@ private:
 	void PlayHitMaterialEffect();
 	void UpdateDissolveTimer();
 	void SetRandomMaterial();
-	void SetMaterial(UID newMaterialID, bool needToPlayDissolve = false);
+	void SetMaterial(ComponentMeshRenderer* mesh, UID newMaterialID, bool needToPlayDissolve = false);
 };

@@ -4,6 +4,7 @@
 #include "GameplaySystems.h"
 #include "Components/UI/ComponentImage.h"
 #include "Components/UI/ComponentText.h"
+#include "Components/ComponentAudioSource.h"
 
 //TODO MAKE BUTTONS DO WHAT THEY SAY THEY DO
 //TODO MAKE BACKGROUND ANIMATED
@@ -138,7 +139,10 @@ void GameOverUIController::GameOver() {
 			scrollingBackgroundImageOriginalColor = scrollingBackgroundImage->GetColor();
 			SetColors(0);
 		}
-
+	}
+	ComponentAudioSource* audio = GetOwner().GetParent()->GetComponent<ComponentAudioSource>();
+	if (audio && audio->IsPlaying()) {
+		audio->Stop();
 	}
 }
 

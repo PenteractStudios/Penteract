@@ -6,7 +6,7 @@
 #include "CameraController.h"
 #include "UltimateFang.h"
 
-void Fang::Init(UID fangUID, UID dashParticleUID, UID leftGunUID, UID rightGunUID, UID rightBulletUID, UID leftBulletUID, UID laserUID, UID cameraUID, UID HUDManagerObjectUID, UID dashUID, UID EMPUID, UID EMPEffectsUID, UID fangUltimateUID, UID ultimateVFXUID) {
+void Fang::Init(UID fangUID, UID dashParticleUID, UID leftGunUID, UID rightGunUID, UID rightBulletUID, UID leftBulletUID, UID laserUID, UID cameraUID, UID HUDManagerObjectUID, UID dashUID, UID EMPUID, UID EMPEffectsUID, UID fangUltimateUID, UID ultimateVFXUID, UID rightFootVFX, UID leftFootVFX) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(fangUID);
 	if (characterGameObject && characterGameObject->GetParent()) {
@@ -121,6 +121,12 @@ void Fang::Init(UID fangUID, UID dashParticleUID, UID leftGunUID, UID rightGunUI
 
 	GameObject* ultimateVFXGO = GameplaySystems::GetGameObject(ultimateVFXUID);
 	if (ultimateVFXGO) ultimateVFX = ultimateVFXGO->GetComponent<ComponentParticleSystem>();
+
+	GameObject* leftFootVFXGO = GameplaySystems::GetGameObject(leftFootVFX);
+	if (leftFootVFXGO) leftFootstepsVFX = leftFootVFXGO->GetComponent<ComponentParticleSystem>();
+
+	GameObject* rightFootVFXGO = GameplaySystems::GetGameObject(rightFootVFX);
+	if (rightFootVFXGO) rightFootstepsVFX = rightFootVFXGO->GetComponent<ComponentParticleSystem>();
 }
 
 bool Fang::IsVulnerable() const {
@@ -168,7 +174,11 @@ void Fang::InitDash() {
 			dashDirection = facePointDir;
 		}
 
-		if (dashParticle)dashParticle->PlayChildParticles();
+		if (dashParticle) {
+			Quat rotation = Quat::RotateFromTo(float3(0.0f, 1.0f, 0.0f), dashDirection);
+			dashParticle->GetOwner().GetComponent<ComponentTransform>()->SetGlobalRotation(rotation);
+			dashParticle->PlayChildParticles();
+		}
 
 		dashCooldownRemaining = dashCooldown;
 		dashRemaining = dashDuration;
@@ -316,10 +326,12 @@ void Fang::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 			if (fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_RIGHT)]) {
 				fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_RIGHT)]->Play();
 			}
+			if (rightFootstepsVFX) rightFootstepsVFX->PlayChildParticles();
 		} else if (std::strcmp(eventName, "FootstepLeft") == 0) {
 			if (fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_LEFT)]) {
 				fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_LEFT)]->Play();
 			}
+			if (leftFootstepsVFX) leftFootstepsVFX->PlayChildParticles();
 		}
 		break;
 	case StateMachineEnum::SECONDARY:
@@ -358,7 +370,7 @@ bool Fang::CanShoot() {
 	return !shooting && !ultimateOn && !compAnimation->GetCurrentStateSecondary() && !GameController::IsGameplayBlocked();
 }
 
-bool Fang::isAiming() {
+bool Fang::IsAiming() {
 	return aiming;
 }
 

@@ -15,7 +15,6 @@ EXPOSE_MEMBERS(PlayerDeath) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::FLOAT, rangedDamageTaken),
 	MEMBER(MemberType::FLOAT, meleeDamageTaken),
-	MEMBER(MemberType::FLOAT, dukeDamageTaken),
 	MEMBER(MemberType::FLOAT, barrelDamageTaken),
 	MEMBER(MemberType::FLOAT, laserBeamTaken),
 	MEMBER(MemberType::FLOAT, laserHitCooldown),
@@ -112,13 +111,22 @@ void PlayerDeath::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char
 }
 
 void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
-	if (collidedWith.name == "RangerProjectile" || collidedWith.name == "DukeProjectile") {
-		if(playerController) playerController->TakeDamage(rangedDamageTaken);
+	if (collidedWith.name == "WeaponParticles") {
+		if (!particle) return;
+		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+		if (pSystem) pSystem->KillParticle(p);
+		if (playerController) playerController->TakeDamage(rangedDamageTaken);
 	} else if (collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") { //meleegrunt
-		if(playerController) playerController->TakeDamage(meleeDamageTaken);
+		if (playerController) {
+			float3 onimaruFront = -playerController->playerOnimaru.playerMainTransform->GetFront();
+			if (!(playerController->playerOnimaru.IsShielding() && collisionNormal.Dot(onimaruFront) > 0.f)) {
+				playerController->TakeDamage(meleeDamageTaken);
+			}
+		}
 		collidedWith.Disable();
 	} else if (collidedWith.name == "Barrel") {
-		if(playerController) playerController->TakeDamage(barrelDamageTaken);
+		if (playerController) playerController->TakeDamage(barrelDamageTaken);
 		collidedWith.Disable();
 	} else if (collidedWith.name == "LaserBeam") {
 		getLaserHit = true;

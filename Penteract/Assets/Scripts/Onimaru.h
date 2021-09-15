@@ -75,9 +75,10 @@ public:
 public:
 	// ------- Contructors ------- //
 	Onimaru() {};
-	void Init(UID onimaruUID = 0, UID onimaruLaser = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0, UID shieldUID = 0, UID onimaruTransformForUltimateProjectileOriginUID = 0, UID onimaruBlastEffectsUID = 0, UID cameraUID = 0, UID HUDManagerObjectUID = 0);
+	void Init(UID onimaruUID = 0, UID onimaruLaser = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0, UID shieldUID = 0, UID onimaruTransformForUltimateProjectileOriginUID = 0, UID onimaruBlastEffectsUID = 0, UID cameraUID = 0, UID HUDManagerObjectUID = 0, UID rightFootVFX = 0, UID leftFootVFX = 0);
 	void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockRotation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
+	bool IsAiming() const;
 	bool CanSwitch() const override;
 	void OnAnimationFinished() override;
 	void GetHit(float damage_) override;
@@ -140,6 +141,9 @@ private:
 	//Audio
 	ComponentAudioSource* onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::TOTAL)] = { nullptr };
 
+	//Movement VFX
+	ComponentParticleSystem* rightFootstepsVFX = nullptr;
+	ComponentParticleSystem* leftFootstepsVFX = nullptr;
 
 	std::vector<GameObject*> enemiesInMap;
 

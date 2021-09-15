@@ -62,7 +62,7 @@
                     {
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
-                        "Value": 13245266970739911193
+                        "Value": 15261592491771467264
                     },
                     {
                         "Name": "att2AttackSpeed",
@@ -90,9 +90,14 @@
                         "Value": 114993121818193807
                     },
                     {
+                        "Name": "gruntCharacter.lifePoints",
+                        "Type": "Float",
+                        "Value": 10.0
+                    },
+                    {
                         "Name": "fangUID",
                         "Type": "GameObjectUID",
-                        "Value": 10867745004971701011
+                        "Value": 18423563680655226216
                     },
                     {
                         "Name": "damageMaterialPlaceHolderUID",
@@ -107,12 +112,17 @@
                     {
                         "Name": "gruntCharacter.movementSpeed",
                         "Type": "Float",
-                        "Value": 10.0
+                        "Value": 7.0
                     },
                     {
                         "Name": "att1AttackSpeed",
                         "Type": "Float",
                         "Value": 1.5
+                    },
+                    {
+                        "Name": "hurtFeedbackTimeDuration",
+                        "Type": "Float",
+                        "Value": 0.10000000149011612
                     },
                     {
                         "Name": "dissolveMaterialObj",
@@ -123,6 +133,21 @@
                         "Name": "groundPosition",
                         "Type": "Float",
                         "Value": 0.0
+                    },
+                    {
+                        "Name": "materialsUID",
+                        "Type": "GameObjectUID",
+                        "Value": 16502326001645675377
+                    },
+                    {
+                        "Name": "dissolveTimerToStart",
+                        "Type": "Float",
+                        "Value": 0.5
+                    },
+                    {
+                        "Name": "dissolveMaterialWeaponObj",
+                        "Type": "GameObjectUID",
+                        "Value": 280368342242484680
                     }
                 ]
             },
@@ -146,7 +171,7 @@
                 "Type": "AudioSource",
                 "Active": true,
                 "Pitch": 1.0,
-                "Gain": 0.10000000149011612,
+                "Gain": 0.20000000298023225,
                 "Mute": false,
                 "Looping": false,
                 "PlayOnAwake": false,
@@ -164,7 +189,7 @@
                 "Type": "AudioSource",
                 "Active": true,
                 "Pitch": 1.0,
-                "Gain": 0.6000000238418579,
+                "Gain": 0.75,
                 "Mute": false,
                 "Looping": false,
                 "PlayOnAwake": false,
@@ -182,8 +207,8 @@
                 "Type": "AudioSource",
                 "Active": true,
                 "Pitch": 1.0,
-                "Gain": 1.0,
-                "Mute": true,
+                "Gain": 0.30000001192092898,
+                "Mute": false,
                 "Looping": false,
                 "PlayOnAwake": false,
                 "AudioClipId": 696444000373430212,
@@ -200,8 +225,8 @@
                 "Type": "AudioSource",
                 "Active": true,
                 "Pitch": 1.0,
-                "Gain": 1.0,
-                "Mute": true,
+                "Gain": 0.30000001192092898,
+                "Mute": false,
                 "Looping": false,
                 "PlayOnAwake": false,
                 "AudioClipId": 4050726513787811743,
@@ -218,11 +243,11 @@
                 "Type": "AudioSource",
                 "Active": true,
                 "Pitch": 1.0,
-                "Gain": 0.3499999940395355,
+                "Gain": 0.25,
                 "Mute": false,
                 "Looping": false,
                 "PlayOnAwake": false,
-                "AudioClipId": 3690225030639504746,
+                "AudioClipId": 15029013734740556823,
                 "SpatialBlend": 0,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
@@ -293,13 +318,13 @@
                         "Type": "MeshRenderer",
                         "Active": true,
                         "MeshID": 8162125314749612365,
-                        "MaterialID": 4886769671297062398
+                        "MaterialID": 6324482706962870118
                     },
                     {
                         "Type": "MeshRenderer",
                         "Active": true,
                         "MeshID": 1860498927682383532,
-                        "MaterialID": 4886769671297062398
+                        "MaterialID": 6324482706962870118
                     },
                     {
                         "Type": "BoundingBox",

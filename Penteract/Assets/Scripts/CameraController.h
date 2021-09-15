@@ -4,6 +4,7 @@
 
 class PlayerController;
 class ComponentTransform;
+class ComponentCamera;
 
 class CameraController : public Script {
 	GENERATE_BODY(CameraController);
@@ -24,13 +25,15 @@ public:
 	float cameraOffsetY = 0.f;
 	float cameraOffsetZ = 0.f;
 	float cameraOffsetX = 0.f;
-	float aimingDistance = 0.f;
+	float aimingDistance = 0.25f;
 	bool useSmoothCamera = true;
+	bool useAimingCamera = true;
 	float aimingCameraSpeed = 1.0f;
 	float smoothCameraSpeed = 5.0f;
 	UID playerControllerObjUID = 0;
 	PlayerController* playerController = nullptr;
 	ComponentTransform* transform = nullptr;
+	ComponentCamera* camera = nullptr;
 	float shakeTotalTime = 1.0f;
 	float shakeTimer = 0.0f;
 	float shakeMultiplier = 0.2f;

@@ -69,6 +69,8 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, EMPUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, EMPEffectsUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangDashDamageUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangRightFootVFX),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangLeftFootVFX),
 	MEMBER_SEPARATOR("Onimaru Stats"),
 	MEMBER(MemberType::FLOAT, playerOnimaru.lifePoints),
 	MEMBER(MemberType::FLOAT, playerOnimaru.normalMovementSpeed),
@@ -101,9 +103,13 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruShieldUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruBlastEffectsUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruUltimateBulletUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruRightFootVFX),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruLeftFootVFX),
 	MEMBER_SEPARATOR("Switch settings"),
 	MEMBER(MemberType::FLOAT, switchDelay),
 	MEMBER(MemberType::FLOAT, switchCooldown),
+	MEMBER(MemberType::FLOAT, switchDamage),
+	MEMBER(MemberType::FLOAT, switchSphereRadius),
 	MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
 	MEMBER_SEPARATOR("Debug settings"),
 	MEMBER(MemberType::BOOL, debugGetHit),
@@ -113,8 +119,8 @@ EXPOSE_MEMBERS(PlayerController) {
 GENERATE_BODY_IMPL(PlayerController);
 
 void PlayerController::Start() {
-	playerFang.Init(fangUID, fangParticleDashUID, fangLeftGunUID, fangRightGunUID, fangRightBulletUID, fangLeftBulletUID, fangLaserUID, cameraUID, HUDManagerObjectUID, fangDashDamageUID, EMPUID, EMPEffectsUID, fangUltimateUID, fangUltimateVFXUID);
-	playerOnimaru.Init(onimaruUID, onimaruLaserUID, onimaruBulletUID, onimaruGunUID, onimaruRightHandUID, onimaruShieldUID, onimaruUltimateBulletUID, onimaruBlastEffectsUID, cameraUID, HUDManagerObjectUID);
+	playerFang.Init(fangUID, fangParticleDashUID, fangLeftGunUID, fangRightGunUID, fangRightBulletUID, fangLeftBulletUID, fangLaserUID, cameraUID, HUDManagerObjectUID, fangDashDamageUID, EMPUID, EMPEffectsUID, fangUltimateUID, fangUltimateVFXUID, fangRightFootVFX, fangLeftFootVFX);
+	playerOnimaru.Init(onimaruUID, onimaruLaserUID, onimaruBulletUID, onimaruGunUID, onimaruRightHandUID, onimaruShieldUID, onimaruUltimateBulletUID, onimaruBlastEffectsUID, cameraUID, HUDManagerObjectUID, onimaruRightFootVFX, onimaruLeftFootVFX);
 
 	GameObject* HUDManagerGO = GameplaySystems::GetGameObject(HUDManagerObjectUID);
 	if (HUDManagerGO) {
