@@ -32,6 +32,9 @@ public:
 	UID cafeteriaDoorUID = 0;
 	UID bridgeDoorUID = 0;
 
+	/* Dialog triggers */
+	UID dialogTriggersUID = 0;
+
 public:
 	void Start() override;
 	void Update() override;
@@ -63,6 +66,9 @@ private:
 	GameObject* plazaDoor = nullptr;
 	GameObject* cafeteriaDoor = nullptr;
 	GameObject* bridgeDoor = nullptr;
+
+	/* Dialog triggers */
+	GameObject* dialogTriggers = nullptr;
 
 	/* Door array to keep previous state */
 	std::vector <std::pair<GameObject*, bool>> doorPreviousStates;
