@@ -44,7 +44,7 @@ public:
 public:
 	UID dukeUID = 0;
 	UID playerUID = 0;
-	UID bulletPrefabUID = 0;
+	UID bulletUID = 0;
 
 	GameObject* duke = nullptr;
 	GameObject* player = nullptr;

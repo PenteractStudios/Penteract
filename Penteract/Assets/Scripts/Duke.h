@@ -4,6 +4,8 @@
 
 #include <random>
 
+class ComponentParticleSystem;
+
 enum class DukeState {
 	BASIC_BEHAVIOUR,
 	MELEE_ATTACK,
@@ -51,7 +53,7 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletPrefabUID);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void ShieldShoot();
@@ -67,14 +69,13 @@ public:
 	float searchRadius = 8.f;
 	float attackRange = 2.0f;
 	float attackSpeed = 0.5f;
-	int attackFlurry = 3;
+	int attackBurst = 3;
+	float timeInterBurst = 1.0f;
 	float timeToDie = 5.f;
 	float pushBackDistance = 5.f;
 	float pushBackSpeed = 5.f;
 	float barrelDamageTaken = 3.f;
 	float moveChangeEvery = 2.0f;
-
-	ResourcePrefab* bulletPrefab = nullptr; // Reference to projectile prefab , for shooting
 
 	DukeState state = DukeState::BASIC_BEHAVIOUR;
 	bool criticalMode = false;
@@ -90,8 +91,10 @@ private:
 	float3 perpendicular;
 	float movementTimer = 0.f;
 	float movementChangeThreshold = 2.0f;
+
+	// Shooting
 	float attackTimePool = 0.f;
-	int attackFlurryCounter = 0;
+	ComponentParticleSystem* bullet = nullptr;
 
 	GameObject* meshObj = nullptr;	//Main mesh for Getting MeshRenderer reference and checking frustum presence (if not inside frustum shooting won't happen)
 
