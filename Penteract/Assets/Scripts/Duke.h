@@ -61,6 +61,7 @@ public:
 	void Charge(DukeState nextState);
 	void CallTroops();
 	void Shoot();
+	void ThrowBarrels();
 
 public:
 	float damageBullet = 1.f;

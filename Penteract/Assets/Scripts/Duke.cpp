@@ -4,6 +4,8 @@
 
 #include <string>
 
+#define RNG_SCALE 1.3f
+
 std::uniform_real_distribution<> rng(-1.0f, 1.0f);
 
 void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID)
@@ -111,8 +113,13 @@ void Duke::Shoot()
 			if (!meshObj) return;
 			bullet->PlayChildParticles();
 		}
-		attackTimePool = (attackBurst / attackSpeed) + timeInterBurst + rng(gen);
+		attackTimePool = (attackBurst / attackSpeed) + timeInterBurst + rng(gen) * RNG_SCALE;
 		// Animation
 	}
 	Debug::Log("PIUM!");
+}
+
+void Duke::ThrowBarrels()
+{
+	Debug::Log("Here, barrel in your face!");
 }

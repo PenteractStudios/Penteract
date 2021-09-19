@@ -149,6 +149,16 @@ void AIDuke::Update() {
 		case DukeState::CHARGE:
             dukeCharacter.Charge(DukeState::BASIC_BEHAVIOUR);
 			break;
+		case DukeState::STUNNED:
+			if (stunTimeRemaining <= 0.f) {
+				stunTimeRemaining = 0.f;
+				dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
+				//animation->SendTrigger("StunStunEnd");
+			}
+			else {
+				stunTimeRemaining -= Time::GetDeltaTime();
+			}
+			break;
 		default:
 			break;
 		}
@@ -173,10 +183,10 @@ void AIDuke::Update() {
 			currentShieldCooldown = 0.f;
 		}
 		else {
-			troopsCounter -= 0.033;
+			troopsCounter -= 0.0063;
 			float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
 			movementScript->Orientate(dir);
-			dukeCharacter.Shoot();
+			dukeCharacter.ThrowBarrels();
 		}
 		break;
 	case Phase::PHASE3:
@@ -197,7 +207,8 @@ void AIDuke::Update() {
 				dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 			}
 		}
-		if (dukeCharacter.state != DukeState::BULLET_HELL && player && !dukeCharacter.criticalMode &&
+		if (dukeCharacter.state != DukeState::BULLET_HELL && dukeCharacter.state != DukeState::STUNNED &&
+			player && !dukeCharacter.criticalMode &&
 			movementScript->CharacterInAttackRange(player, dukeCharacter.attackRange)) {
 			dukeCharacter.state = DukeState::MELEE_ATTACK;
 			movementScript->Stop();
@@ -235,6 +246,16 @@ void AIDuke::Update() {
 					currentBulletHellCooldown = 0.f;
 					currentBulletHellActiveTime = 0.f;
 					dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
+				}
+				break;
+			case DukeState::STUNNED:
+				if (stunTimeRemaining <= 0.f) {
+					stunTimeRemaining = 0.f;
+					dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
+					//animation->SendTrigger("StunStunEnd");
+				}
+				else {
+					stunTimeRemaining -= Time::GetDeltaTime();
 				}
 				break;
 			default:
@@ -278,6 +299,16 @@ void AIDuke::Update() {
 			case DukeState::MELEE_ATTACK:
 				dukeCharacter.MeleeAttack();
 				dukeCharacter.state = DukeState::SHOOT_SHIELD;
+				break;
+			case DukeState::STUNNED:
+				if (stunTimeRemaining <= 0.f) {
+					stunTimeRemaining = 0.f;
+					dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
+					//animation->SendTrigger("StunStunEnd");
+				}
+				else {
+					stunTimeRemaining -= Time::GetDeltaTime();
+				}
 				break;
 			default:
 				break;
@@ -346,7 +377,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 			timeSinceLastHurt = 0.0f;*/
 		}
 
-		if (collidedWith.name == "EMP") {
+		if (collidedWith.name == "EMP" && dukeCharacter.state != DukeState::INVULNERABLE && !dukeCharacter.criticalMode) {
 			/*if (state == AIState::ATTACK) {
 				animation->SendTrigger("IdleBeginStun");
 				animation->SendTriggerSecondary("AttackBeginStun");
