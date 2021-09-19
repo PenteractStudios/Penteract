@@ -29,7 +29,7 @@ public:
 	float droneSeparationHorizontal = 1.0f;
 	float droneSeparationDepth = 1.0f;
 	float droneSeparationVertical = 1.0f;
-
+	float droneRadiusFormation = 2.0f;
 
 private:
 	void RecalculateFormations();
@@ -47,10 +47,7 @@ private:
 	std::vector<AttackDroneBehavior*> dronesScripts;
 
 	// Formation
-
 	DronesFormation formation = DronesFormation::LINE;
-
-	//std::vector<float3> lineFormation;
 	std::vector<std::vector<float3>> formationsOffsetPositions;
 
 };

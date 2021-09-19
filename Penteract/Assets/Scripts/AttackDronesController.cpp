@@ -6,6 +6,8 @@
 #include "Components/ComponentTransform.h"
 #include "AttackDroneBehavior.h"
 
+#define PI 3.14159
+
 EXPOSE_MEMBERS(AttackDronesController) {
     MEMBER(MemberType::GAME_OBJECT_UID, dronesListUID)
 };
@@ -57,6 +59,7 @@ void AttackDronesController::SetDronesFormation(DronesFormation newFormation) {
 void AttackDronesController::RecalculateFormations() {
     if (dronesScripts.size() == 0) return;
 
+    formationsOffsetPositions.clear();
     formationsOffsetPositions.resize(static_cast<int>(DronesFormation::COUNT));
 
     formationsOffsetPositions[0] = GenerateLineFormation();
@@ -87,8 +90,7 @@ std::vector<float3> AttackDronesController::GenerateLineFormation() {
     return result;
 }
 
-std::vector<float3> AttackDronesController::GenerateArrowFormation()
-{
+std::vector<float3> AttackDronesController::GenerateArrowFormation() {
     int size = dronesScripts.size();
     std::vector<float3> result(size);
 
@@ -108,7 +110,16 @@ std::vector<float3> AttackDronesController::GenerateArrowFormation()
     return result;
 }
 
-std::vector<float3> AttackDronesController::GenerateCircleFormation()
-{
-    return std::vector<float3>();
+std::vector<float3> AttackDronesController::GenerateCircleFormation() {
+    int size = dronesScripts.size();
+    std::vector<float3> result(size);
+
+    for (int i = 0; i < size; ++i) {
+        float theta = ((PI * 2) / size);
+        float angle = (theta * i);
+
+        result[i] = float3(cos(angle), 0, sin(angle)) * droneRadiusFormation;
+    }
+
+    return result;
 }
