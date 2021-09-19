@@ -14,7 +14,8 @@ public:
 	enum class DronesFormation {
 		LINE,
 		ARROW,
-		CIRCLE
+		CIRCLE,
+		COUNT
 	};
 
 	void Start() override;
@@ -25,11 +26,18 @@ public:
 public:
 	UID dronesListUID = 0;
 
-	float droneSeparation = 1.0f;
+	float droneSeparationHorizontal = 1.0f;
+	float droneSeparationDepth = 1.0f;
+	float droneSeparationVertical = 1.0f;
+
 
 private:
 	void RecalculateFormations();
 	void RepositionDrones();
+
+	std::vector<float3> GenerateLineFormation();
+	std::vector<float3> GenerateArrowFormation();
+	std::vector<float3> GenerateCircleFormation();
 
 private:
 	ComponentTransform* transform = nullptr;
@@ -42,7 +50,8 @@ private:
 
 	DronesFormation formation = DronesFormation::LINE;
 
-	std::vector<float3> lineFormation;
+	//std::vector<float3> lineFormation;
+	std::vector<std::vector<float3>> formationsOffsetPositions;
 
 };
 
