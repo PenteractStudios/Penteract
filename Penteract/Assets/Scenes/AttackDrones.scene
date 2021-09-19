@@ -1,0 +1,741 @@
+{
+    "QuadtreeBounds": [
+        -1000.0,
+        -1000.0,
+        1000.0,
+        1000.0
+    ],
+    "QuadtreeMaxDepth": 4,
+    "QuadtreeElementsPerNode": 200,
+    "GameCamera": 10941594937127748644,
+    "AmbientLight": [
+        0.25,
+        0.25,
+        0.25
+    ],
+    "NavMesh": 0,
+    "Cursor": 0,
+    "CursorHeight": 30,
+    "CursorWidth": 30,
+    "Root": {
+        "Id": 11102465029695323775,
+        "Name": "Scene",
+        "Active": true,
+        "Static": false,
+        "ActiveHierarchy": true,
+        "RootBoneId": 0,
+        "Mask": 0,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Id": 13916664508535156009,
+                "Active": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "LocalEulerAngles": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            }
+        ],
+        "Children": [
+            {
+                "Id": 50047519455546227,
+                "Name": "Directional Light",
+                "Active": true,
+                "Static": false,
+                "ActiveHierarchy": true,
+                "RootBoneId": 0,
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Id": 16500138005665525727,
+                        "Active": true,
+                        "Position": [
+                            0.0,
+                            300.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.7071068286895752,
+                            0.0,
+                            0.0,
+                            0.7071068286895752
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            90.00000762939453,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Light",
+                        "Id": 16959864449680274441,
+                        "Active": true,
+                        "LightType": 0,
+                        "Color": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "Intensity": 1.0,
+                        "Radius": 1.0,
+                        "UseCustomFalloff": false,
+                        "FalloffExponent": 1.0,
+                        "InnerAngle": 0.2617993950843811,
+                        "OuterAngle": 0.5235987901687622
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Id": 13620717985390765168,
+                "Name": "Game Camera",
+                "Active": true,
+                "Static": false,
+                "ActiveHierarchy": true,
+                "RootBoneId": 0,
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Id": 13256356388010381803,
+                        "Active": true,
+                        "Position": [
+                            2.0,
+                            3.0,
+                            -5.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Camera",
+                        "Id": 6199115292181746911,
+                        "Active": true,
+                        "Frustum": {
+                            "Pos": [
+                                2.0,
+                                3.0,
+                                -5.0
+                            ],
+                            "Up": [
+                                0.0,
+                                1.0,
+                                0.0
+                            ],
+                            "Front": [
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "NearPlaneDistance": 0.10000000149011612,
+                            "FarPlaneDistance": 2000.0,
+                            "HorizontalFov": 1.9456424713134766,
+                            "VerticalFov": 1.3113912343978882
+                        }
+                    },
+                    {
+                        "Type": "Skybox",
+                        "Id": 13576891438762866342,
+                        "Active": true,
+                        "Shader": 0,
+                        "Skybox": 0,
+                        "Strength": 1.0
+                    },
+                    {
+                        "Type": "AudioListener",
+                        "Id": 11731128636087443369,
+                        "Active": true,
+                        "Gain": 1.0,
+                        "ModelIndex": 2,
+                        "DistanceModel": 2,
+                        "Clamped": true
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Id": 1563033224022377960,
+                "Name": "AttackDronesController",
+                "Active": true,
+                "Static": false,
+                "ActiveHierarchy": true,
+                "RootBoneId": 0,
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Id": 742606398750808819,
+                        "Active": true,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.19146907329559327
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    }
+                ],
+                "Children": [
+                    {
+                        "Id": 8321317275693073137,
+                        "Name": "AttackDrone",
+                        "Active": true,
+                        "Static": false,
+                        "ActiveHierarchy": true,
+                        "RootBoneId": 0,
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Id": 8729063576113412230,
+                                "Active": true,
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    0.10000000149011612,
+                                    0.10000000149011612,
+                                    0.10000000149011612
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "MeshRenderer",
+                                "Id": 6276565445913570274,
+                                "Active": true,
+                                "MeshID": 3372544751270605688,
+                                "MaterialID": 16102959236735944607
+                            },
+                            {
+                                "Type": "BoundingBox",
+                                "Id": 12727014518111431642,
+                                "Active": true,
+                                "LocalBoundingBox": [
+                                    -2.6257340908050539,
+                                    -2.6209895610809328,
+                                    -2.6419196128845217,
+                                    2.641207456588745,
+                                    2.645951986312866,
+                                    2.6250219345092775
+                                ]
+                            },
+                            {
+                                "Type": "Script",
+                                "Id": 17055790909608697991,
+                                "Active": true,
+                                "Script": 1876770804236283211,
+                                "Values": [
+                                    {
+                                        "Name": "droneSpeed",
+                                        "Type": "Float",
+                                        "Value": 8.0
+                                    },
+                                    {
+                                        "Name": "dronesControllerUID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 6566111114958319643
+                                    }
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Id": 13913159114513038234,
+                        "Name": "AttackDrone",
+                        "Active": true,
+                        "Static": false,
+                        "ActiveHierarchy": true,
+                        "RootBoneId": 0,
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Id": 11788244907991765516,
+                                "Active": true,
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    0.10000000149011612,
+                                    0.10000000149011612,
+                                    0.10000000149011612
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "MeshRenderer",
+                                "Id": 3726685533396861227,
+                                "Active": true,
+                                "MeshID": 3372544751270605688,
+                                "MaterialID": 16102959236735944607
+                            },
+                            {
+                                "Type": "BoundingBox",
+                                "Id": 6304201830377923431,
+                                "Active": true,
+                                "LocalBoundingBox": [
+                                    -2.6257340908050539,
+                                    -2.6209895610809328,
+                                    -2.6419196128845217,
+                                    2.641207456588745,
+                                    2.645951986312866,
+                                    2.6250219345092775
+                                ]
+                            },
+                            {
+                                "Type": "Script",
+                                "Id": 4174679777542965998,
+                                "Active": true,
+                                "Script": 1876770804236283211,
+                                "Values": [
+                                    {
+                                        "Name": "droneSpeed",
+                                        "Type": "Float",
+                                        "Value": 8.0
+                                    },
+                                    {
+                                        "Name": "dronesControllerUID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 6566111114958319643
+                                    }
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Id": 7664294007067458595,
+                        "Name": "AttackDrone",
+                        "Active": true,
+                        "Static": false,
+                        "ActiveHierarchy": true,
+                        "RootBoneId": 0,
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Id": 11013287559426012654,
+                                "Active": true,
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    0.10000000149011612,
+                                    0.10000000149011612,
+                                    0.10000000149011612
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "MeshRenderer",
+                                "Id": 13003140268399243695,
+                                "Active": true,
+                                "MeshID": 3372544751270605688,
+                                "MaterialID": 16102959236735944607
+                            },
+                            {
+                                "Type": "BoundingBox",
+                                "Id": 11136308634926035151,
+                                "Active": true,
+                                "LocalBoundingBox": [
+                                    -2.6257340908050539,
+                                    -2.6209895610809328,
+                                    -2.6419196128845217,
+                                    2.641207456588745,
+                                    2.645951986312866,
+                                    2.6250219345092775
+                                ]
+                            },
+                            {
+                                "Type": "Script",
+                                "Id": 4903028358726325542,
+                                "Active": true,
+                                "Script": 1876770804236283211,
+                                "Values": [
+                                    {
+                                        "Name": "dronesControllerUID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 6566111114958319643
+                                    },
+                                    {
+                                        "Name": "droneSpeed",
+                                        "Type": "Float",
+                                        "Value": 8.0
+                                    }
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Id": 11864967612172978051,
+                        "Name": "AttackDrone",
+                        "Active": true,
+                        "Static": false,
+                        "ActiveHierarchy": true,
+                        "RootBoneId": 0,
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Id": 14771822235875214015,
+                                "Active": true,
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    0.10000000149011612,
+                                    0.10000000149011612,
+                                    0.10000000149011612
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "MeshRenderer",
+                                "Id": 5199527529867350680,
+                                "Active": true,
+                                "MeshID": 3372544751270605688,
+                                "MaterialID": 16102959236735944607
+                            },
+                            {
+                                "Type": "BoundingBox",
+                                "Id": 13733626203335980012,
+                                "Active": true,
+                                "LocalBoundingBox": [
+                                    -2.6257340908050539,
+                                    -2.6209895610809328,
+                                    -2.6419196128845217,
+                                    2.641207456588745,
+                                    2.645951986312866,
+                                    2.6250219345092775
+                                ]
+                            },
+                            {
+                                "Type": "Script",
+                                "Id": 241311225385201805,
+                                "Active": true,
+                                "Script": 1876770804236283211,
+                                "Values": [
+                                    {
+                                        "Name": "droneSpeed",
+                                        "Type": "Float",
+                                        "Value": 8.0
+                                    },
+                                    {
+                                        "Name": "dronesControllerUID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 6566111114958319643
+                                    }
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Id": 14899542916193298036,
+                        "Name": "AttackDrone",
+                        "Active": true,
+                        "Static": false,
+                        "ActiveHierarchy": true,
+                        "RootBoneId": 0,
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Id": 12643146884865176314,
+                                "Active": true,
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    0.10000000149011612,
+                                    0.10000000149011612,
+                                    0.10000000149011612
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "MeshRenderer",
+                                "Id": 14978697639487004804,
+                                "Active": true,
+                                "MeshID": 3372544751270605688,
+                                "MaterialID": 16102959236735944607
+                            },
+                            {
+                                "Type": "BoundingBox",
+                                "Id": 13053835484034845582,
+                                "Active": true,
+                                "LocalBoundingBox": [
+                                    -2.6257340908050539,
+                                    -2.6209895610809328,
+                                    -2.6419196128845217,
+                                    2.641207456588745,
+                                    2.645951986312866,
+                                    2.6250219345092775
+                                ]
+                            },
+                            {
+                                "Type": "Script",
+                                "Id": 5077439867253654131,
+                                "Active": true,
+                                "Script": 1876770804236283211,
+                                "Values": [
+                                    {
+                                        "Name": "dronesControllerUID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 6566111114958319643
+                                    },
+                                    {
+                                        "Name": "droneSpeed",
+                                        "Type": "Float",
+                                        "Value": 8.0
+                                    }
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Id": 5527287150001300181,
+                        "Name": "AttackDrone",
+                        "Active": true,
+                        "Static": false,
+                        "ActiveHierarchy": true,
+                        "RootBoneId": 0,
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Id": 275167627245915930,
+                                "Active": true,
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    0.10000000149011612,
+                                    0.10000000149011612,
+                                    0.10000000149011612
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "MeshRenderer",
+                                "Id": 2513203372383158267,
+                                "Active": true,
+                                "MeshID": 3372544751270605688,
+                                "MaterialID": 16102959236735944607
+                            },
+                            {
+                                "Type": "BoundingBox",
+                                "Id": 9536002362306164065,
+                                "Active": true,
+                                "LocalBoundingBox": [
+                                    -2.6257340908050539,
+                                    -2.6209895610809328,
+                                    -2.6419196128845217,
+                                    2.641207456588745,
+                                    2.645951986312866,
+                                    2.6250219345092775
+                                ]
+                            },
+                            {
+                                "Type": "Script",
+                                "Id": 7313645390473810863,
+                                "Active": true,
+                                "Script": 1876770804236283211,
+                                "Values": [
+                                    {
+                                        "Name": "droneSpeed",
+                                        "Type": "Float",
+                                        "Value": 8.0
+                                    },
+                                    {
+                                        "Name": "dronesControllerUID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 6566111114958319643
+                                    }
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    }
+                ]
+            },
+            {
+                "Id": 6566111114958319643,
+                "Name": "Boss",
+                "Active": true,
+                "Static": false,
+                "ActiveHierarchy": true,
+                "RootBoneId": 0,
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Id": 12271583354506858446,
+                        "Active": true,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            -0.9333834648132324
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Script",
+                        "Id": 6300215720325717121,
+                        "Active": true,
+                        "Script": 5635317775784383995,
+                        "Values": [
+                            {
+                                "Name": "dronesListUID",
+                                "Type": "GameObjectUID",
+                                "Value": 1563033224022377960
+                            }
+                        ]
+                    }
+                ],
+                "Children": null
+            }
+        ]
+    }
+}
