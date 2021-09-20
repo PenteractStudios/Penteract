@@ -36,7 +36,7 @@ void VideoScene1Start::Start() {
 
 void VideoScene1Start::Update() {
 
-    if ((componentVideo->HasVideoFinished() && componentVideo->IsActive()) || Input::GetKeyCodeDown(Input::KEYCODE::KEY_F12)) {
+    if ((componentVideo->HasVideoFinished() && componentVideo->IsActive()) || Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE)) {
         Time::ResumeGame();
         componentVideo->Stop();
         GameController::SetVideoActive(false);
@@ -52,7 +52,7 @@ void VideoScene1Start::Update() {
             }
         }
 
-        // When the video finishes, pen the initial dialogue directly
+        // When the video finishes, open the initial dialogue directly
         if (dialogueManagerScript) {
             if (dialogueID < sizeof(dialogueManagerScript->dialoguesArray) / sizeof(dialogueManagerScript->dialoguesArray[0])
                 && &dialogueManagerScript->dialoguesArray[dialogueID] != nullptr) {
