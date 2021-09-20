@@ -2,18 +2,19 @@
 #include "GameController.h"
 #include "GameplaySystems.h"
 #include "GameObject.h"
+#include "PlayerController.h"
 #include "Components/ComponentTransform.h"
 
 EXPOSE_MEMBERS(CheckpointManager) {
 
 	MEMBER(MemberType::GAME_OBJECT_UID, avatarUID),
-		MEMBER(MemberType::FLOAT, distanceThreshold),
-		MEMBER(MemberType::FLOAT, timeBetweenChecks),
-		MEMBER(MemberType::FLOAT3, checkpointPosition1),
-		MEMBER(MemberType::FLOAT3, checkpointPosition2),
-		MEMBER(MemberType::FLOAT3, checkpointPosition3),
-		MEMBER(MemberType::FLOAT3, checkpointPosition4),
-		MEMBER(MemberType::FLOAT3, checkpointPosition5)
+	MEMBER(MemberType::FLOAT, distanceThreshold),
+	MEMBER(MemberType::FLOAT, timeBetweenChecks),
+	MEMBER(MemberType::FLOAT3, checkpointPosition1),
+	MEMBER(MemberType::FLOAT3, checkpointPosition2),
+	MEMBER(MemberType::FLOAT3, checkpointPosition3),
+	MEMBER(MemberType::FLOAT3, checkpointPosition4),
+	MEMBER(MemberType::FLOAT3, checkpointPosition5)
 };
 
 GENERATE_BODY_IMPL(CheckpointManager);
@@ -48,22 +49,25 @@ void CheckpointManager::Start() {
 	if (!avatarObj) return;
 	ComponentTransform* transform = avatarObj->GetComponent<ComponentTransform>();
 
-	if (!transform) return;
+	playerScript = GET_SCRIPT(avatarObj, PlayerController);
+	if (!playerScript) return;
+	agent = playerScript->playerFang.agent;
 
+	if (!transform) return;
 	transform->SetGlobalPosition(runtimeCheckpointPositions[checkpoint]);
 
-
+	/*if (!agent) return;
+	agent->SetMoveTarget(runtimeCheckpointPositions[checkpoint], false);*/
 }
 
 void CheckpointManager::CheckDistanceWithCheckpoints() {
-	if (!avatarObj)return;
+	if (!avatarObj) return;
 	int checkPointCloseEnough = -1;
 	ComponentTransform* transform = avatarObj->GetComponent<ComponentTransform>();
 	for (int i = 0; i < N_CHECKPOINTS && checkPointCloseEnough == -1; i++) {
 		if (runtimeCheckpointPositions[i].Distance(transform->GetGlobalPosition()) < distanceThreshold) {
 			checkPointCloseEnough = i;
 			checkpoint = i;
-
 		}
 	}
 
@@ -96,7 +100,9 @@ void CheckpointManager::Update() {
 			ComponentTransform* transform = avatarObj->GetComponent<ComponentTransform>();
 			if (!transform) return;
 			checkpoint = checkpointToSet;
-			transform->SetGlobalPosition(runtimeCheckpointPositions[checkpointToSet]);
+			transform->SetPosition(runtimeCheckpointPositions[checkpoint]);
+			if (!agent) return;
+			agent->SetMoveTarget(runtimeCheckpointPositions[checkpoint], false);
 		}
 	}
 	/////////////////////////////////////Debug function (GODMODE?)/////////////////////////////////////////

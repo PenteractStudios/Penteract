@@ -8,7 +8,9 @@
 extern int checkpoint;
 
 class ComponentAudioSource;
+class ComponentAgent;
 class ComponentSelectable;
+class PlayerController;
 
 /// <summary>
 /// This class should only have an instance on a particular scene, it will check the player's position every X seconds
@@ -28,13 +30,16 @@ public:
 public:
 	UID avatarUID;
 	GameObject* avatarObj;
+	PlayerController* playerScript = nullptr;
 	float3 checkpointPosition1, checkpointPosition2, checkpointPosition3, checkpointPosition4, checkpointPosition5;
 	float distanceThreshold, timeBetweenChecks, timeBetweenChecksCounter;
 
+	static int actualCheckpoint;
 private:
 	void CheckDistanceWithCheckpoints();
 
 private:
+	ComponentAgent* agent = nullptr;
 	float3 runtimeCheckpointPositions[N_CHECKPOINTS];
 	bool playHoveredAudio = true;
 	ComponentSelectable* selectable = nullptr;
