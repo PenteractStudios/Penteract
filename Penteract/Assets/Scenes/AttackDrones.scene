@@ -7,7 +7,7 @@
     ],
     "QuadtreeMaxDepth": 4,
     "QuadtreeElementsPerNode": 200,
-    "GameCamera": 10941594937127748644,
+    "GameCamera": 1758851575579653722,
     "AmbientLight": [
         0.25,
         0.25,
@@ -730,6 +730,16 @@
                                 "Name": "dronesListUID",
                                 "Type": "GameObjectUID",
                                 "Value": 1563033224022377960
+                            },
+                            {
+                                "Name": "dronesParentUID",
+                                "Type": "GameObjectUID",
+                                "Value": 1563033224022377960
+                            },
+                            {
+                                "Name": "dronePrefabUID",
+                                "Type": "PrefabResourceUID",
+                                "Value": 18197049813737982253
                             }
                         ]
                     }
