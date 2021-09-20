@@ -91,25 +91,37 @@ void EnemySpawnPoint::RenderEnemy(EnemyType type, unsigned int amount) {
 		GameObject* go = GameplaySystems::GetGameObject(prefabUID);
 		ComponentTransform* goTransform = go->GetComponent<ComponentTransform>();
 		if (go) {
-			ComponentBoundingBox* goBounds = nullptr;
-			for (auto& child : go->GetChildren()) {
-				if (child->HasComponent<ComponentMeshRenderer>()) {
-					goBounds = child->GetComponent<ComponentBoundingBox>();
-					break;
-				}
-			}
-			if (goTransform && goBounds) {
-				/* Spawn range enemies in the back */
-				float3 newPosition = float3(0, 0, type == EnemyType::RANGE ? zAxisPos : 0);
-				float newXval = goBounds->GetLocalMaxPointAABB().x - abs(goBounds->GetLocalMinPointAABB().x);
-				newXval = newXval < 1.f ? 1.f : newXval;
-				newPosition.x += xAxisPos * offset * newXval;
-				goTransform->SetPosition(newPosition);
-				/* After an enemy is spawned at a certain location th next one with be next to it */
-				xAxisPos++;
-			}
+			// ComponentBoundingBox* goBounds = nullptr;
+			// for (auto& child : go->GetChildren()) {
+			// 	if (child->HasComponent<ComponentMeshRenderer>()) {
+			// 		goBounds = child->GetComponent<ComponentBoundingBox>();
+			// 		break;
+			// 	}
+			// }
+			// if (goTransform && goBounds) {
+			// 	/* Spawn range enemies in the back */
+			// 	float3 newPosition = float3(0, 0, type == EnemyType::RANGE ? zAxisPos : 0);
+			// 	float newXval = goBounds->GetLocalMaxPointAABB().x - abs(goBounds->GetLocalMinPointAABB().x);
+			// 	newXval = newXval < 1.f ? 1.f : newXval;
+			// 	newPosition.x += xAxisPos * offset * newXval;
+			// 	goTransform->SetPosition(newPosition);
+			// 	/* After an enemy is spawned at a certain location th next one with be next to it */
+			// 	xAxisPos++;
+			// }
+				goTransform->SetPosition(EnemyLocation(amount, i));
 
 			if (playerScript) playerScript->AddEnemyInMap(go);
 		}
 	}
+}
+
+float3 EnemySpawnPoint::EnemyLocation(int N, int k) {
+	/*
+		([N / 2] - k) * d - ((N + 1) % 2) * d / 2
+		N : amount of enemies
+		k : current enemy
+		d : separation distance 
+	*/
+	int d = 2;
+	return float3(((N/2 - k) * d - ((N + 1)%2) * d/2), 0, 0);
 }
