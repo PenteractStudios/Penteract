@@ -41,6 +41,9 @@ public:
 	void OnAnimationSecondaryFinished() override;
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
 
+private:
+	void ParticleHit(GameObject& collidedWith, void* particle, Player& player);
+
 public:
 	UID dukeUID = 0;
 	UID playerUID = 0;

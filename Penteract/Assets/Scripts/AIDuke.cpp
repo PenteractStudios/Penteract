@@ -76,6 +76,7 @@ void AIDuke::Update() {
 			lifeThreshold -= 0.1;
 			dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 			Debug::Log("Phase3");
+			dukeCharacter.criticalMode = true;
 			// Phase change VFX? and anim?
 			return;
 		} else if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints() &&
@@ -90,7 +91,6 @@ void AIDuke::Update() {
 			dukeCharacter.CallTroops();
 			dukeCharacter.state = DukeState::INVULNERABLE;
 			dukeCharacter.isShielding = false;
-			dukeCharacter.criticalMode = true;
 			break;
 		}
 
@@ -106,6 +106,7 @@ void AIDuke::Update() {
 				dukeCharacter.agent->SetMaxSpeed(dukeCharacter.chargeSpeed);
 				dukeCharacter.state = DukeState::CHARGE;
 			} else if (currentShieldCooldown >= shieldCooldown) {
+				dukeCharacter.isShielding = true;
 				dukeCharacter.state = DukeState::SHOOT_SHIELD;
 				movementScript->Stop();
 			} else if (player && movementScript->CharacterInAttackRange(player, dukeCharacter.attackRange)) {
@@ -200,6 +201,7 @@ void AIDuke::Update() {
 			lifeThreshold -= 0.1f;
 			if (!dukeCharacter.criticalMode) {
 				dukeCharacter.CallTroops();
+				dukeCharacter.isShielding = true;
 				dukeCharacter.state = DukeState::SHOOT_SHIELD;
 				movementScript->Stop();
 			}
@@ -287,6 +289,7 @@ void AIDuke::Update() {
 				currentAbilityChangeCooldown += Time::GetDeltaTime();
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
 					currentAbilityChangeCooldown = 0.f;
+					dukeCharacter.isShielding = true;
 					dukeCharacter.state = DukeState::SHOOT_SHIELD;
 					movementScript->Stop();
 				} else {
@@ -298,6 +301,7 @@ void AIDuke::Update() {
 				break;
 			case DukeState::MELEE_ATTACK:
 				dukeCharacter.MeleeAttack();
+				dukeCharacter.isShielding = true;
 				dukeCharacter.state = DukeState::SHOOT_SHIELD;
 				break;
 			case DukeState::STUNNED:
@@ -336,35 +340,21 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 			GameplaySystems::DestroyGameObject(&collidedWith);
 			hitTaken = true;
 			dukeCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
-		}
-		else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
+		} else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
 			hitTaken = true;
-			if (!particle) return;
-			ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
-			ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
-			if (pSystem) pSystem->KillParticle(p);
+			ParticleHit(collidedWith, particle, playerController->playerFang);
+		} else if (collidedWith.name == "OnimaruBullet") {
 			hitTaken = true;
-			dukeCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
-		}
-		else if (collidedWith.name == "OnimaruBullet") {
-			if (!particle) return;
-			ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
-			ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
-			if (pSystem) pSystem->KillParticle(p);
+			ParticleHit(collidedWith, particle, playerController->playerOnimaru);
+		} else if (collidedWith.name == "OnimaruBulletUltimate") {
 			hitTaken = true;
-			dukeCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
-		}
-		else if (collidedWith.name == "OnimaruBulletUltimate") {
-			if (!particle) return;
-			ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
-			ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
-			if (pSystem) pSystem->KillParticle(p);
-			hitTaken = true;
-			dukeCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
-		}
-		else if (collidedWith.name == "Barrel") {
+			ParticleHit(collidedWith, particle, playerController->playerOnimaru);
+		} else if (collidedWith.name == "Barrel") {
 			hitTaken = true;
 			dukeCharacter.GetHit(dukeCharacter.barrelDamageTaken);
+		} else if (collidedWith.name == "DashDamage" && playerController->playerFang.level1Upgrade) {
+			hitTaken = true;
+			dukeCharacter.GetHit(playerController->playerFang.dashDamage + playerController->GetOverPowerMode());
 		}
 
 		if (hitTaken) {
@@ -377,7 +367,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 			timeSinceLastHurt = 0.0f;*/
 		}
 
-		if (collidedWith.name == "EMP" && dukeCharacter.state != DukeState::INVULNERABLE && !dukeCharacter.criticalMode) {
+		if (collidedWith.name == "EMP" && dukeCharacter.state != DukeState::INVULNERABLE && !dukeCharacter.criticalMode && !dukeCharacter.isShielding) {
 			/*if (state == AIState::ATTACK) {
 				animation->SendTrigger("IdleBeginStun");
 				animation->SendTriggerSecondary("AttackBeginStun");
@@ -449,5 +439,19 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 		agent->RemoveAgentFromCrowd();
 		if (gruntCharacter.beingPushed) gruntCharacter.beingPushed = false;*/
 		dukeCharacter.state = DukeState::DEATH;
+	}
+}
+
+void AIDuke::ParticleHit(GameObject& collidedWith, void* particle, Player& player)
+{
+	if (!particle) return;
+	ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+	if (pSystem) pSystem->KillParticle(p);
+	if (dukeCharacter.state == DukeState::STUNNED && player.level2Upgrade) {
+		dukeCharacter.GetHit(player.damageHit + playerController->GetOverPowerMode()*2);
+	}
+	else {
+		dukeCharacter.GetHit(player.damageHit + playerController->GetOverPowerMode());
 	}
 }
