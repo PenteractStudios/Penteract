@@ -47,15 +47,7 @@ void CheckpointManager::Start() {
 	runtimeCheckpointPositions[4] = checkpointPosition5;
 
 	if (!avatarObj) return;
-	ComponentTransform* transform = avatarObj->GetComponent<ComponentTransform>();
-
 	playerScript = GET_SCRIPT(avatarObj, PlayerController);
-
-	if (!transform) return;
-	transform->SetGlobalPosition(runtimeCheckpointPositions[checkpoint]);
-
-	/*if (!agent) return;
-	agent->SetMoveTarget(runtimeCheckpointPositions[checkpoint], false);*/
 }
 
 void CheckpointManager::CheckDistanceWithCheckpoints() {
@@ -77,9 +69,16 @@ void CheckpointManager::Update() {
 		timeBetweenChecksCounter = 0;
 	}
 
-	if (!playerScript) return;
-	if (!agent) {
-		agent = playerScript->playerFang.agent;
+	if (dirty) {
+		dirty = false;
+		if (!avatarObj) return;
+		ComponentTransform* transform = avatarObj->GetComponent<ComponentTransform>();
+		if (!playerScript) return;
+		agent = playerScript->playerFang.agent; // The first time to load the game (always be Fang)
+		if (!agent && !transform) return;
+		agent->RemoveAgentFromCrowd();
+		transform->SetGlobalPosition(runtimeCheckpointPositions[checkpoint]);
+		agent->AddAgentToCrowd();
 	}
 
 	/////////////////////////////////////Debug function (GODMODE?)/////////////////////////////////////////
@@ -101,9 +100,14 @@ void CheckpointManager::Update() {
 		if (checkpointToSet > -1) {
 			if (!avatarObj) return;
 			ComponentTransform* transform = avatarObj->GetComponent<ComponentTransform>();
-			if (!agent) return;
+			if (!playerScript) return;
+			if (playerScript->playerFang.characterGameObject->IsActive()) {
+				agent = playerScript->playerFang.agent;
+			} else {
+				agent = playerScript->playerOnimaru.agent;
+			}
+			if (!agent && !transform) return;
 			agent->RemoveAgentFromCrowd();
-			if (!transform) return;
 			checkpoint = checkpointToSet;
 			transform->SetPosition(runtimeCheckpointPositions[checkpoint]);
 			agent->AddAgentToCrowd();
