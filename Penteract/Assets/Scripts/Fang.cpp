@@ -314,6 +314,8 @@ void Fang::OnAnimationFinished() {
 				if (hudManagerScript) {
 					hudManagerScript->StopUsingSkill(HUDManager::Cooldowns::FANG_SKILL_3);
 				}
+			} else if (compAnimation->GetCurrentState()->name == states[static_cast<int>(FANG_STATES::DRIFT)]) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::IDLE)]);
 			}
 		}
 	}
