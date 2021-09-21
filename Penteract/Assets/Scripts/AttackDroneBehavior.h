@@ -16,10 +16,8 @@ public:
 	void Reposition(float3 newPosition);
 	void SetPositionOffset(float3 newOffset);
 
-
 public:
 	UID dronesControllerUID = 0;
-	float repositionTime = 0.3f;
 	float droneSpeed = 8.0f;
 
 private:

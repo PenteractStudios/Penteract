@@ -33,6 +33,8 @@ public:
 	float droneSeparationDepth = 1.0f;
 	float droneSeparationVertical = 1.0f;
 	float droneRadiusFormation = 2.0f;
+	float droneVerticalOffset = 2.0f;
+	float separationFromCenter = 1.0f;
 
 private:
 	void RecalculateFormations();
@@ -41,6 +43,8 @@ private:
 	std::vector<float3> GenerateLineFormation();
 	std::vector<float3> GenerateArrowFormation();
 	std::vector<float3> GenerateCircleFormation();
+
+	float GetVerticalOffset() const;
 
 private:
 	ComponentTransform* transform = nullptr;
