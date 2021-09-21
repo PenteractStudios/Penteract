@@ -50,8 +50,6 @@ void CheckpointManager::Start() {
 	ComponentTransform* transform = avatarObj->GetComponent<ComponentTransform>();
 
 	playerScript = GET_SCRIPT(avatarObj, PlayerController);
-	if (!playerScript) return;
-	agent = playerScript->playerFang.agent;
 
 	if (!transform) return;
 	transform->SetGlobalPosition(runtimeCheckpointPositions[checkpoint]);
@@ -79,6 +77,11 @@ void CheckpointManager::Update() {
 		timeBetweenChecksCounter = 0;
 	}
 
+	if (!playerScript) return;
+	if (!agent) {
+		agent = playerScript->playerFang.agent;
+	}
+
 	/////////////////////////////////////Debug function (GODMODE?)/////////////////////////////////////////
 	/////////////////////////////////////Debug function (GODMODE?)/////////////////////////////////////////
 	if (Debug::IsGodModeOn()) {
@@ -98,11 +101,12 @@ void CheckpointManager::Update() {
 		if (checkpointToSet > -1) {
 			if (!avatarObj) return;
 			ComponentTransform* transform = avatarObj->GetComponent<ComponentTransform>();
+			if (!agent) return;
+			agent->RemoveAgentFromCrowd();
 			if (!transform) return;
 			checkpoint = checkpointToSet;
 			transform->SetPosition(runtimeCheckpointPositions[checkpoint]);
-			if (!agent) return;
-			agent->SetMoveTarget(runtimeCheckpointPositions[checkpoint], false);
+			agent->AddAgentToCrowd();
 		}
 	}
 	/////////////////////////////////////Debug function (GODMODE?)/////////////////////////////////////////
