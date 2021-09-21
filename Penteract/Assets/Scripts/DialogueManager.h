@@ -31,13 +31,14 @@ public:
 
 	struct Dialogue {
 		Dialogue() {};
-		Dialogue(DialogueWindow character_, bool isBlocking_, const char* text_, Dialogue* nextDialogue_, InputActions closeButton_ = InputActions::INTERACT) : character(character_), isBlocking(isBlocking_), text(text_), nextDialogue(nextDialogue_), closeButton(closeButton_) {};
+		Dialogue(DialogueWindow character_, bool isBlocking_, const char* text_, Dialogue* nextDialogue_, bool twoPersonDialogue_ = false, InputActions closeButton_ = InputActions::INTERACT) : character(character_), isBlocking(isBlocking_), text(text_), nextDialogue(nextDialogue_), twoPersonDialogue(twoPersonDialogue_), closeButton(closeButton_) {};
 
 		DialogueWindow character = DialogueWindow::NONE;	// Indirect reference to which dialogue window gameObject must be opened.
 		const char* text = nullptr;							// Text shown in the dialogue (only for 1,2,3 & 4. Should be empty for Tutorials and Upgrades).
 		Dialogue* nextDialogue = nullptr;					// Pointer to the next Dialogue in 'dialoguesArray', that will come out after this one.
 		bool isBlocking = false;							// Whether or not this dialogue window should pause the gameplay.
 		InputActions closeButton = InputActions::INTERACT;	// Definition of the button that will close this dialogue.
+		bool twoPersonDialogue = false;						// Defines if 2 characers appear in the screen during a dialogue. Used to center the camera to both caracters.
 	};
 
 	enum class AudioDialogue {
@@ -105,13 +106,14 @@ public:
 	CameraController* cameraControllerScript = nullptr;
 
 	// ----- TRANSITION CONFIG ----- //
-	float3 dialogueStartPosition = float3(0, 0, 0); // "Closed" position of the dialogue windows.
-	float3 dialogueEndPosition = float3(0, 0, 0);	// "Open" position of the dialogue windows.
-	float3 tutorialStartPosition = float3(0, 0, 0);	// "Closed" position of the tutorial and upgrades windows.
-	float3 tutorialEndPosition = float3(0, 0, 0);	// "Open" position of the tutorial and upgrades windows.
-	float appearAnimationTime = .5f;				// Duration time of the "Open transition".
-	float disappearAnimationTime = .5f;				// Duration time of the "Close transition".
-	float3 newCameraPosition = float3(0, 0, 0);		// Zoomed position of the camera when a dialogue is opened.
+	float3 dialogueStartPosition = float3(0, 0, 0);		// "Closed" position of the dialogue windows.
+	float3 dialogueEndPosition = float3(0, 0, 0);		// "Open" position of the dialogue windows.
+	float3 tutorialStartPosition = float3(0, 0, 0);		// "Closed" position of the tutorial and upgrades windows.
+	float3 tutorialEndPosition = float3(0, 0, 0);		// "Open" position of the tutorial and upgrades windows.
+	float appearAnimationTime = .5f;					// Duration time of the "Open transition".
+	float disappearAnimationTime = .5f;					// Duration time of the "Close transition".
+	float3 zoomedCameraPosition = float3(0, 0, 0);		// Zoomed position of the camera when a dialogue is opened.
+	float3 twoPersonCameraPosition = float3(0, 0, 0);	// Zoomed position of the camera when a dialogue with two characters on the scene is opened.
 
 	// ------ FLASH TRANSITION ----- //
 	UID flashUID = 0;

@@ -33,7 +33,8 @@ EXPOSE_MEMBERS(DialogueManager) {
 	MEMBER(MemberType::FLOAT3, tutorialEndPosition),
 	MEMBER(MemberType::FLOAT, appearAnimationTime),
 	MEMBER(MemberType::FLOAT, disappearAnimationTime),
-	MEMBER(MemberType::FLOAT3, newCameraPosition),
+	MEMBER(MemberType::FLOAT3, zoomedCameraPosition),
+	MEMBER(MemberType::FLOAT3, twoPersonCameraPosition),
 	MEMBER_SEPARATOR("Transition Configuration"),
 	MEMBER(MemberType::GAME_OBJECT_UID, flashUID),
 	MEMBER(MemberType::FLOAT, flashTime),
@@ -106,22 +107,21 @@ void DialogueManager::Start() {
 	dialoguesArray[8] = Dialogue(DialogueWindow::ONIMARU, true, "I am not sure about this\nFang... But OK.\nI trust you.", nullptr);
 
 	// LEVEL 1 - START
-	dialoguesArray[9] = Dialogue(DialogueWindow::DUKE, true, "Who do you think you are\nyou son of a...", &dialoguesArray[10]);
-	dialoguesArray[10] = Dialogue(DialogueWindow::DUKE, true, "...Fang.\nIt's been a while!\nWhat do you think\nabout this plating,\nimpressive huh?", &dialoguesArray[11]);
-	dialoguesArray[11] = Dialogue(DialogueWindow::DUKE, true, "You would be unstoppable\nif you hadn't left.\nSo,\nyou decided to come back?", &dialoguesArray[12]);
-	dialoguesArray[12] = Dialogue(DialogueWindow::FANG, true, "You wish.\nI'm here to kill you.\nRewarded 50 million\nand the pleasure of\ndoing it myself.", &dialoguesArray[13]);
-	dialoguesArray[13] = Dialogue(DialogueWindow::DUKE, true, "I made you what you are,\neven if you hate it!\nPart of you is mine,\nand you should\nbe more grateful.", &dialoguesArray[14]);
-	dialoguesArray[14] = Dialogue(DialogueWindow::DUKE, true, "But well... Let's see how\nan outdated pile of junk\nlike you performs against\nmy latest designs...\nSecurity!", nullptr);
+	dialoguesArray[9] = Dialogue(DialogueWindow::DUKE, true, "Who do you think you are\nyou son of a...", &dialoguesArray[10], true);
+	dialoguesArray[10] = Dialogue(DialogueWindow::DUKE, true, "...Fang.\nIt's been a while!\nHave you finally\ndecided to come back?", &dialoguesArray[11], true);
+	dialoguesArray[11] = Dialogue(DialogueWindow::FANG, true, "You wish.\nI'm here to kill you.\nA 5 million reward\nand the pleasure of\ndoing it myself.", &dialoguesArray[12], true);
+	dialoguesArray[12] = Dialogue(DialogueWindow::DUKE, true, "I made you what you are,\neven if you hate it!\nPart of you is mine,\nand you should be grateful.", &dialoguesArray[13], true);
+	dialoguesArray[13] = Dialogue(DialogueWindow::DUKE, true, "But well... Let's see how\nan outdated pile of junk\nlike you performs against\nmy latest designs...", &dialoguesArray[14], true);
+	dialoguesArray[14] = Dialogue(DialogueWindow::DUKE, true, "SECURITY!!", nullptr, true);
 
 	// LEVEL 1 - FANG TUTORIAL
-	dialoguesArray[15] = Dialogue(DialogueWindow::ONIMARU, true, "He is running away!\nDon't let him escape!", &dialoguesArray[16]);
-	dialoguesArray[16] = Dialogue(DialogueWindow::TUTO_FANG, true, "", &dialoguesArray[17]);
-	dialoguesArray[17] = Dialogue(DialogueWindow::TUTO_FANG_ULTI, true, "", nullptr);
+	dialoguesArray[15] = Dialogue(DialogueWindow::TUTO_FANG, true, "", &dialoguesArray[16]);
+	dialoguesArray[16] = Dialogue(DialogueWindow::TUTO_FANG_ULTI, true, "", nullptr);
 
 	// LEVEL 1 - SWAP DIALOGUE + ONIMARU TUTORIAL
 	dialoguesArray[18] = Dialogue(DialogueWindow::FANG, true, "Onimaru,\nget the repair bots\nready...\nI'm gonna need a break.", &dialoguesArray[19]);
 	dialoguesArray[19] = Dialogue(DialogueWindow::ONIMARU, true, "Roger.\nInitialising Matter-Switch.", &dialoguesArray[20]);
-	dialoguesArray[20] = Dialogue(DialogueWindow::TUTO_SWAP, true, "", &dialoguesArray[21], InputActions::SWITCH);
+	dialoguesArray[20] = Dialogue(DialogueWindow::TUTO_SWAP, true, "", &dialoguesArray[21], false, InputActions::SWITCH);
 	dialoguesArray[21] = Dialogue(DialogueWindow::ONIMARU, true, "Long hallways\nis where I perform best.\nWatch how it is done.", &dialoguesArray[22]);
 	dialoguesArray[22] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "", &dialoguesArray[23]);
 	dialoguesArray[23] = Dialogue(DialogueWindow::TUTO_ONIMARU_ULTI, true, "", nullptr);
@@ -261,7 +261,11 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 
 		// Camera Zoom In
 		if (cameraControllerScript) {
-			cameraControllerScript->ChangeCameraOffset(newCameraPosition.x, newCameraPosition.y, newCameraPosition.z);
+			if (activeDialogue->twoPersonDialogue) {
+				cameraControllerScript->ChangeCameraOffset(twoPersonCameraPosition.x, twoPersonCameraPosition.y, twoPersonCameraPosition.z);
+			} else {
+				cameraControllerScript->ChangeCameraOffset(zoomedCameraPosition.x, zoomedCameraPosition.y, zoomedCameraPosition.z);
+			}
 		}
 	} else {
 		activeDialogueObject = nullptr;

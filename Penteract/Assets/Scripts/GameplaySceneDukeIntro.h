@@ -23,6 +23,10 @@ public:
 	UID encounterPlazaUID = 0;
 	UID videoUID = 0;
 
+	float3 dukeRunTowards = float3(-70.f, 3.f, 0.f);
+	float dukeSpeed = 3.f;
+	float dukeDisappearDistance = 45.f;
+
 private:
 	GameObject* duke1 = nullptr;
 	GameObject* player = nullptr;

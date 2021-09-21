@@ -32,6 +32,7 @@ void VideoScene1Start::Start() {
         GameController::SetVideoActive(true);
     }
     Time::PauseGame();
+    GameController::BlockGameplay(true);
 }
 
 void VideoScene1Start::Update() {

@@ -7,15 +7,22 @@
 #include "Components/UI/ComponentVideo.h"
 
 EXPOSE_MEMBERS(GameplaySceneDukeIntro) {
+    MEMBER_SEPARATOR("Object Refs"),
     MEMBER(MemberType::GAME_OBJECT_UID, duke1UID),
     MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
     MEMBER(MemberType::GAME_OBJECT_UID, encounterPlazaUID),
-    MEMBER(MemberType::GAME_OBJECT_UID, videoUID)
+    MEMBER(MemberType::GAME_OBJECT_UID, videoUID),
+    MEMBER_SEPARATOR("Duke Controller"),
+    MEMBER(MemberType::FLOAT3, dukeRunTowards),
+    MEMBER(MemberType::FLOAT, dukeSpeed),
+    MEMBER(MemberType::FLOAT, dukeDisappearDistance)
 };
 
 GENERATE_BODY_IMPL(GameplaySceneDukeIntro);
 
 void GameplaySceneDukeIntro::Start() {
+
+    // TODO: Duke is a placeholder for the real duke. The prefab or a part of it should be used instead to be congruent with the other duke instances in the game
     duke1 = GameplaySystems::GetGameObject(duke1UID);
     movementScript = GET_SCRIPT(duke1, AIMovement);
     player = GameplaySystems::GetGameObject(playerUID);
@@ -27,8 +34,8 @@ void GameplaySceneDukeIntro::Start() {
 
     dukeAgent = duke1->GetComponent<ComponentAgent>();
     if (dukeAgent) {
-        dukeAgent->SetMaxSpeed(3.0f); // TODO: this should be taken from Duke AI script
-        dukeAgent->SetMaxAcceleration(9999);
+        dukeAgent->SetMaxSpeed(dukeSpeed);
+        dukeAgent->SetMaxAcceleration(AIMovement::maxAcceleration);
         dukeAgent->SetAgentObstacleAvoidance(true);
         dukeAgent->AddAgentToCrowd();
     }
@@ -40,13 +47,13 @@ void GameplaySceneDukeIntro::Update() {
     if (GameController::IsGameplayBlocked()) return;
 
     // Make Duke move away
-    movementScript->Seek(state, float3(-70.f, 3.f, 0.f), dukeAgent->GetMaxSpeed(), true); // TODO: magic number for final position
+    movementScript->Seek(state, dukeRunTowards, dukeAgent->GetMaxSpeed(), true);
 
     // Enable encounter 1
     if (encounterPlaza && !encounterPlaza->IsActive()) encounterPlaza->Enable();
 
     // on finish:
-    if (!movementScript->CharacterInSight(player, 45.f)) { // TODO: magic number for searchDistance
+    if (!movementScript->CharacterInSight(player, dukeDisappearDistance)) {
         dukeAgent->RemoveAgentFromCrowd();
         duke1->Disable();
         GetOwner().Disable();
