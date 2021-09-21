@@ -38,7 +38,7 @@ public:
 		Dialogue* nextDialogue = nullptr;					// Pointer to the next Dialogue in 'dialoguesArray', that will come out after this one.
 		bool isBlocking = false;							// Whether or not this dialogue window should pause the gameplay.
 		InputActions closeButton = InputActions::INTERACT;	// Definition of the button that will close this dialogue.
-		bool twoPersonDialogue = false;						// Defines if 2 characers appear in the screen during a dialogue. Used to center the camera to both caracters.
+		bool twoPersonDialogue = false;						// Defines if 2 characters appear in the screen during a dialogue. Used to center the camera to both caracters.
 	};
 
 	enum class AudioDialogue {

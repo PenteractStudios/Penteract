@@ -3,7 +3,6 @@
 #include "GameObject.h"
 #include "GameplaySystems.h"
 #include "Components/ComponentTransform.h"
-#include "AIMovement.h"
 
 int AIMovement::maxAcceleration = 9999;
 
