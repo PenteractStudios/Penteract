@@ -2,13 +2,15 @@
 
 #include "AIMovement.h"
 #include "PlayerController.h"
+#include "DukeShield.h"
 #include <string>
 
 EXPOSE_MEMBERS(AIDuke) {
 	MEMBER_SEPARATOR("Objects UIDs"),
-    MEMBER(MemberType::GAME_OBJECT_UID, dukeUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dukeUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, bulletPrefabUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, shieldObjUID),
 
 	MEMBER_SEPARATOR("Duke Atributes"),
 	MEMBER(MemberType::FLOAT, dukeCharacter.lifePoints),
@@ -29,12 +31,16 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::FLOAT, shieldCooldown),
 	MEMBER(MemberType::FLOAT, shieldActiveTime),
 	MEMBER(MemberType::FLOAT, bulletHellCooldown),
-    MEMBER(MemberType::FLOAT, bulletHellActiveTime),
+	MEMBER(MemberType::FLOAT, bulletHellActiveTime),
 	MEMBER(MemberType::FLOAT, abilityChangeCooldown),
 
 	MEMBER_SEPARATOR("Particles UIDs"),
 
-	MEMBER_SEPARATOR("Prefabs UIDs")
+	MEMBER_SEPARATOR("Prefabs UIDs"),
+
+	MEMBER_SEPARATOR("Debug"),
+	MEMBER(MemberType::BOOL, toggleShield)
+
 };
 
 GENERATE_BODY_IMPL(AIDuke);
@@ -51,12 +57,29 @@ void AIDuke::Start() {
 
 	// Init Duke character
 	dukeCharacter.Init(dukeUID, playerUID, bulletPrefabUID);
+
+	GameObject* shieldObj = GameplaySystems::GetGameObject(shieldObjUID);
+	if (shieldObj) {
+		dukeShield = GET_SCRIPT(shieldObj, DukeShield);
+	}
 }
 
 void AIDuke::Update() {
 	std::string life = std::to_string(dukeCharacter.lifePoints);
 	life = "Life points: " + life;
 	Debug::Log(life.c_str());
+
+	if (toggleShield) {
+		toggleShield = false;
+		if (dukeShield) {
+			if (!dukeShield->GetIsActive()) {
+				dukeShield->InitShield();
+			} else {
+				dukeShield->FadeShield();
+			}
+		}
+	}
+
 	switch (phase) {
 	case Phase::PHASE1:
 		currentShieldCooldown += Time::GetDeltaTime();
@@ -93,8 +116,7 @@ void AIDuke::Update() {
 			break;
 		}
 
-		switch (dukeCharacter.state)
-		{
+		switch (dukeCharacter.state) {
 		case DukeState::BASIC_BEHAVIOUR:
 			if (currentBulletHellCooldown >= bulletHellCooldown) {
 				dukeCharacter.state = DukeState::BULLET_HELL;
@@ -146,13 +168,13 @@ void AIDuke::Update() {
 			}
 			break;
 		case DukeState::CHARGE:
-            dukeCharacter.Charge(DukeState::BASIC_BEHAVIOUR);
+			dukeCharacter.Charge(DukeState::BASIC_BEHAVIOUR);
 			break;
 		default:
 			break;
 		}
 
-	break;
+		break;
 	case Phase::PHASE2:
 		Debug::Log("PHASE2");
 		if (!activeLasers && dukeCharacter.lifePoints < lasersThreshold * dukeCharacter.GetTotalLifePoints()) {
@@ -170,8 +192,7 @@ void AIDuke::Update() {
 			dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 			currentBulletHellCooldown = 0.f;
 			currentShieldCooldown = 0.f;
-		}
-		else {
+		} else {
 			troopsCounter -= 0.033;
 			float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
 			movementScript->Orientate(dir);
@@ -191,8 +212,7 @@ void AIDuke::Update() {
 				dukeCharacter.CallTroops();
 				dukeCharacter.state = DukeState::SHOOT_SHIELD;
 				movementScript->Stop();
-			}
-			else {
+			} else {
 				dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 			}
 		}
@@ -212,8 +232,7 @@ void AIDuke::Update() {
 					dukeCharacter.agent->SetMoveTarget(dukeCharacter.chargeTarget);
 					dukeCharacter.agent->SetMaxSpeed(dukeCharacter.chargeSpeed);
 					dukeCharacter.state = DukeState::CHARGE;
-				}
-				else {
+				} else {
 					if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(dukeCharacter.movementSpeed);
 					float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
 					movementScript->Orientate(dir);
@@ -240,8 +259,7 @@ void AIDuke::Update() {
 				break;
 			}
 		} else {
-			switch (dukeCharacter.state)
-			{
+			switch (dukeCharacter.state) {
 			case DukeState::SHOOT_SHIELD:
 				movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
 				dukeCharacter.ShieldShoot();
@@ -287,16 +305,13 @@ void AIDuke::Update() {
 	}
 }
 
-void AIDuke::OnAnimationFinished()
-{
+void AIDuke::OnAnimationFinished() {
 }
 
-void AIDuke::OnAnimationSecondaryFinished()
-{
+void AIDuke::OnAnimationSecondaryFinished() {
 }
 
-void AIDuke::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle)
-{
+void AIDuke::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 	if (dukeCharacter.isAlive && playerController) {
 		bool hitTaken = false;
 		if (collidedWith.name == "FangBullet") {
@@ -304,8 +319,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 			GameplaySystems::DestroyGameObject(&collidedWith);
 			hitTaken = true;
 			dukeCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
-		}
-		else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
+		} else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
 			hitTaken = true;
 			if (!particle) return;
 			ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
@@ -313,24 +327,21 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 			if (pSystem) pSystem->KillParticle(p);
 			hitTaken = true;
 			dukeCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
-		}
-		else if (collidedWith.name == "OnimaruBullet") {
+		} else if (collidedWith.name == "OnimaruBullet") {
 			if (!particle) return;
 			ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 			ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 			if (pSystem) pSystem->KillParticle(p);
 			hitTaken = true;
 			dukeCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
-		}
-		else if (collidedWith.name == "OnimaruBulletUltimate") {
+		} else if (collidedWith.name == "OnimaruBulletUltimate") {
 			if (!particle) return;
 			ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 			ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 			if (pSystem) pSystem->KillParticle(p);
 			hitTaken = true;
 			dukeCharacter.GetHit(playerController->playerOnimaru.damageHit + playerController->GetOverPowerMode());
-		}
-		else if (collidedWith.name == "Barrel") {
+		} else if (collidedWith.name == "Barrel") {
 			hitTaken = true;
 			dukeCharacter.GetHit(dukeCharacter.barrelDamageTaken);
 		}
