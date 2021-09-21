@@ -35,6 +35,9 @@ void AttackDronesController::Start() {
 void AttackDronesController::Update() {
     float3 newCurrentPosition = transform->GetGlobalPosition();
 
+    RecalculateFormations();
+    RepositionDrones();
+
     if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_I)) {
         SetDronesFormation(DronesFormation::LINE);
     }
@@ -129,12 +132,12 @@ std::vector<float3> AttackDronesController::GenerateLineFormation() {
 
     for (int i = 0; i < size / 2; ++i) {
         float xSeparation = -((size / 2) - i) * droneSeparationHorizontal;
-        result[i] = float3(xSeparation, 0, 0);
+        result[i] = float3x3::RotateY(transform->GetGlobalRotation().ToEulerXZY().z) * float3(xSeparation, 0, 0);       // The value of Z is the correct angle since ToEulerXYZ decomposes it into 180,Y,180.
     }
 
     for (int i = (size / 2); i < size; ++i) {
         float xSeparation = (i - (size / 2)) * droneSeparationHorizontal;
-        result[i] = float3(xSeparation, 0, 0);
+        result[i] = float3x3::RotateY(transform->GetGlobalRotation().ToEulerXZY().z) * float3(xSeparation, 0, 0);       // The value of Z is the correct angle since ToEulerXYZ decomposes it into 180,Y,180.
     }
 
     return result;
@@ -148,13 +151,13 @@ std::vector<float3> AttackDronesController::GenerateArrowFormation() {
         float xSeparation = -((size / 2) - i) * droneSeparationHorizontal;
         float zSeparation = -((size / 2) - i) * droneSeparationDepth;
 
-        result[i] = float3(xSeparation, 0, zSeparation);
+        result[i] = float3x3::RotateY(transform->GetGlobalRotation().ToEulerXZY().z) * float3(xSeparation, 0, zSeparation);
     }
 
     for (int i = (size / 2); i < size; ++i) {
         float xSeparation = (i - (size / 2)) * droneSeparationHorizontal;
         float zSeparation = -(i - (size / 2)) * droneSeparationDepth;
-        result[i] = float3(xSeparation, 0, zSeparation);
+        result[i] = float3x3::RotateY(transform->GetGlobalRotation().ToEulerXZY().z) * float3(xSeparation, 0, zSeparation);
     }
 
     return result;
