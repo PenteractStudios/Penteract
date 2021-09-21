@@ -2,9 +2,9 @@
     "Name": "Ultimate",
     "AnimationUID": 5614041873872763134,
     "BeginIndex": 740,
-    "EndIndex": 879,
+    "EndIndex": 864,
     "Loop": false,
-    "Speed": 1.0,
+    "Speed": 1.25,
     "FrameRate": 0.03329545259475708,
     "KeyEventClip": [
         {

@@ -350,6 +350,7 @@ void Onimaru::Init(UID onimaruUID, UID onimaruLaserUID, UID onimaruBulletUID, UI
 		}
 		shieldingMaxSpeed = normalMovementSpeed / 2;
 		movementSpeed = normalMovementSpeed;
+
 		if (agent) {
 			agent->SetMaxSpeed(movementSpeed);
 			agent->SetMaxAcceleration(MAX_ACCELERATION);
@@ -417,6 +418,8 @@ void Onimaru::Init(UID onimaruUID, UID onimaruLaserUID, UID onimaruBulletUID, UI
 	if (rightFootVFXGO) rightFootstepsVFX = rightFootVFXGO->GetComponent<ComponentParticleSystem>();
 
 	if (characterGameObject) characterGameObject->Disable();
+	aiming = true;
+
 }
 
 void Onimaru::OnAnimationFinished() {
@@ -481,6 +484,7 @@ void Onimaru::FadeShield() {
 	shield->FadeShield();
 
 	movementSpeed = normalMovementSpeed;
+
 	if (agent) agent->SetMaxSpeed(movementSpeed);
 
 	if (!shooting) {
