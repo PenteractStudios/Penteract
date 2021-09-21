@@ -42,6 +42,7 @@ void GameController::Start() {
 
 	if (PlayerController::currentLevel == 1) switchTutorialReached = false;
 	else switchTutorialReached = true;
+	switchTutorialReached = true;
 
 	gameCamera = GameplaySystems::GetGameObject(gameCameraUID);
 	godCamera = GameplaySystems::GetGameObject(godCameraUID);
@@ -300,7 +301,7 @@ void GameController::ClearPauseMenus() {
 	if (pauseCanvas) {
 		PauseController::SetIsPause(false);
 		pauseCanvas->Disable();
-		
+
 	}
 
 	if (settingsCanvas) {

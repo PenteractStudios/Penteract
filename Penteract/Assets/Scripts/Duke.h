@@ -75,13 +75,18 @@ public:
 	float timeToDie = 5.f;
 	float pushBackDistance = 5.f;
 	float pushBackSpeed = 5.f;
+	float slowedDownSpeed = 3.f;
+	float slowedDownTime = 2.f;
 	float barrelDamageTaken = 3.f;
 	float moveChangeEvery = 2.0f;
 
 	DukeState state = DukeState::BASIC_BEHAVIOUR;
 	bool criticalMode = false;
 
+	// Effects' states
 	bool isShielding = false;
+	bool beingPushed = false;
+	bool slowedDown = false;
 
 	float3 chargeTarget;
 

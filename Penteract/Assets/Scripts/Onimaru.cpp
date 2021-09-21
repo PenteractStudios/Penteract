@@ -8,6 +8,7 @@
 #include "OnimaruBullet.h"
 #include "AIMeleeGrunt.h"
 #include "RangedAI.h"
+#include "AIDuke.h"
 
 #include "Shield.h"
 
@@ -71,7 +72,8 @@ void Onimaru::Blast() {
 		for (GameObject* enemy : enemiesInMap) {
 			AIMeleeGrunt* meleeScript = GET_SCRIPT(enemy, AIMeleeGrunt);
 			RangedAI* rangedScript = GET_SCRIPT(enemy, RangedAI);
-			if (rangedScript || meleeScript) {
+			AIDuke* dukeScript = GET_SCRIPT(enemy, AIDuke);
+			if (rangedScript || meleeScript || dukeScript) {
 				if (rightHand && playerMainTransform) {
 					float3 onimaruRightArmPos = rightHand->GetGlobalPosition();
 					float3 enemyPos = enemy->GetComponent<ComponentTransform>()->GetGlobalPosition();
@@ -85,6 +87,7 @@ void Onimaru::Blast() {
 						if (angle <= blastAngle / 2.0f) {
 							if (meleeScript) meleeScript->EnableBlastPushBack();
 							else if (rangedScript) rangedScript->EnableBlastPushBack();
+							else if (dukeScript) dukeScript->EnableBlastPushBack();
 						}
 					}
 					else {
@@ -93,6 +96,9 @@ void Onimaru::Blast() {
 						}
 						else if (rangedScript) {
 							if (!rangedScript->IsBeingPushed()) rangedScript->DisableBlastPushBack();
+						}
+						else if (dukeScript) {
+							if (!dukeScript->IsBeingPushed()) dukeScript->DisableBlastPushBack();
 						}
 					}
 				}
@@ -538,7 +544,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 					InitShield();
 				}
 			}
-			
+
 			if (shield->GetIsActive()) {
 				shieldBeingUsed += Time::GetDeltaTime();
 			}

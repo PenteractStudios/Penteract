@@ -23,7 +23,9 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::INT, dukeCharacter.attackBurst),
 	MEMBER(MemberType::FLOAT, dukeCharacter.timeInterBurst),
 	MEMBER(MemberType::FLOAT, dukeCharacter.pushBackDistance),
-	MEMBER(MemberType::FLOAT, dukeCharacter.pushBackSpeed),
+    MEMBER(MemberType::FLOAT, dukeCharacter.pushBackSpeed),
+	MEMBER(MemberType::FLOAT, dukeCharacter.slowedDownTime),
+	MEMBER(MemberType::FLOAT, dukeCharacter.slowedDownSpeed),
 	MEMBER(MemberType::FLOAT, dukeCharacter.moveChangeEvery),
 
 	MEMBER_SEPARATOR("Duke Abilities Variables"),
@@ -45,6 +47,7 @@ void AIDuke::Start() {
 	player = GameplaySystems::GetGameObject(playerUID);
 	if (player) {
 		playerController = GET_SCRIPT(player, PlayerController);
+		if (playerController) playerController->AddEnemyInMap(duke);
 	}
 	movementScript = GET_SCRIPT(&GetOwner(), AIMovement);
 
@@ -160,6 +163,9 @@ void AIDuke::Update() {
 				stunTimeRemaining -= Time::GetDeltaTime();
 			}
 			break;
+		case DukeState::PUSHED:
+			UpdatePushBackPosition();
+			break;
 		default:
 			break;
 		}
@@ -194,6 +200,7 @@ void AIDuke::Update() {
 		if (dukeCharacter.lifePoints <= 0.f) {
 			// TODO: Init victory sequence
 			Debug::Log("Ugh...I'm...Dead...");
+			if (playerController) playerController->RemoveEnemyFromMap(duke);
 			GameplaySystems::DestroyGameObject(duke);
 		}
 		if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints()) {
@@ -260,6 +267,9 @@ void AIDuke::Update() {
 					stunTimeRemaining -= Time::GetDeltaTime();
 				}
 				break;
+			case DukeState::PUSHED:
+				UpdatePushBackPosition();
+				break;
 			default:
 				break;
 			}
@@ -313,6 +323,9 @@ void AIDuke::Update() {
 				else {
 					stunTimeRemaining -= Time::GetDeltaTime();
 				}
+				break;
+			case DukeState::PUSHED:
+				UpdatePushBackPosition();
 				break;
 			default:
 				break;
@@ -378,7 +391,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 			else if (state == AIState::RUN) {
 				animation->SendTrigger("RunBeginStun");
 			}*/
-			dukeCharacter.agent->RemoveAgentFromCrowd();
+			movementScript->Stop();
 			stunTimeRemaining = stunDuration;
 			dukeCharacter.state = DukeState::STUNNED;
 		}
@@ -439,6 +452,78 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 		agent->RemoveAgentFromCrowd();
 		if (gruntCharacter.beingPushed) gruntCharacter.beingPushed = false;*/
 		dukeCharacter.state = DukeState::DEATH;
+	}
+}
+
+void AIDuke::EnableBlastPushBack() {
+	if (dukeCharacter.state != DukeState::INVULNERABLE) {
+		dukeCharacter.beingPushed = true;
+		dukeCharacter.state = DukeState::PUSHED;
+		//if (animation->GetCurrentState()) animation->SendTrigger(animation->GetCurrentState()->name + "Hurt");
+		CalculatePushBackRealDistance();
+		// Damage
+		if (playerController->playerOnimaru.level2Upgrade) {
+			dukeCharacter.GetHit(playerController->playerOnimaru.blastDamage + playerController->GetOverPowerMode());
+
+			//if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
+			//PlayHitMaterialEffect();
+			//timeSinceLastHurt = 0.0f;
+		}
+	}
+}
+
+void AIDuke::DisableBlastPushBack() {
+	if (dukeCharacter.state != DukeState::INVULNERABLE) {
+		dukeCharacter.beingPushed = false;
+		//if (animation->GetCurrentState()) animation->SendTrigger(animation->GetCurrentState()->name + "Idle");
+		dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
+	}
+}
+
+bool AIDuke::IsBeingPushed() const {
+	return dukeCharacter.beingPushed;
+}
+
+void AIDuke::CalculatePushBackRealDistance() {
+	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
+
+	float3 direction = (enemyPos - playerPos).Normalized();
+
+	bool hitResult = false;
+
+	float3 finalPos = enemyPos + direction * dukeCharacter.pushBackDistance;
+	float3 resultPos = { 0,0,0 };
+
+	Navigation::Raycast(enemyPos, finalPos, hitResult, resultPos);
+
+	if (hitResult) {
+		pushBackRealDistance = resultPos.Distance(enemyPos) - 1; // Should be agent radius but it's not exposed
+	}
+}
+
+void AIDuke::UpdatePushBackPosition() {
+	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
+	float3 initialPos = enemyPos;
+
+	float3 direction = (enemyPos - playerPos).Normalized();
+
+	if (dukeCharacter.agent) {
+		enemyPos += direction * dukeCharacter.pushBackSpeed * Time::GetDeltaTime();
+		dukeCharacter.agent->SetMoveTarget(enemyPos, false);
+		dukeCharacter.agent->SetMaxSpeed(dukeCharacter.pushBackSpeed);
+		float distance = enemyPos.Distance(initialPos);
+		currentPushBackDistance += distance;
+
+		if (currentPushBackDistance >= pushBackRealDistance) {
+			dukeCharacter.agent->SetMaxSpeed(dukeCharacter.slowedDownSpeed);
+			DisableBlastPushBack();
+			dukeCharacter.slowedDown = true;
+			currentPushBackDistance = 0.f;
+			currentSlowedDownTime = 0.f;
+			pushBackRealDistance = dukeCharacter.pushBackDistance;
+		}
 	}
 }
 
