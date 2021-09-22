@@ -56,6 +56,7 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID)
 		}
 	}
 	movementChangeThreshold = moveChangeEvery;
+	distanceCorrectionThreshold = distanceCorrectEvery;
 }
 
 void Duke::ShootAndMove(const float3& playerDirection)
@@ -65,11 +66,14 @@ void Duke::ShootAndMove(const float3& playerDirection)
 	if (movementTimer >= movementChangeThreshold) {
 		perpendicular = playerDirection.Cross(float3(0, 1, 0));
 		perpendicular = perpendicular * rng(gen);
-		perpendicular += playerDirection.Normalized() * (playerDirection.Length() - searchRadius);
-		std::string p = perpendicular.ToString();
-		Debug::Log(p.c_str());
 		movementChangeThreshold = moveChangeEvery + rng(gen);
 		movementTimer = 0.f;
+	}
+	distanceCorrectionTimer += Time::GetDeltaTime();
+	if (distanceCorrectionTimer >= distanceCorrectionThreshold) {
+		perpendicular += playerDirection.Normalized() * (playerDirection.Length() - searchRadius);
+		distanceCorrectionThreshold = distanceCorrectEvery + rng(gen);
+		distanceCorrectionTimer = 0.f;
 	}
 	agent->SetMoveTarget(dukeTransform->GetGlobalPosition() + perpendicular);
 	Shoot();
