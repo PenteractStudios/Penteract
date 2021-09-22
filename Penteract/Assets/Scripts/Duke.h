@@ -5,6 +5,7 @@
 #include <random>
 
 class ComponentParticleSystem;
+class ResourcePrefab;
 
 enum class DukeState {
 	BASIC_BEHAVIOUR,
@@ -53,7 +54,7 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletUID);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void ShieldShoot();
@@ -103,6 +104,8 @@ private:
 	ComponentParticleSystem* bullet = nullptr;
 
 	GameObject* meshObj = nullptr;	//Main mesh for Getting MeshRenderer reference and checking frustum presence (if not inside frustum shooting won't happen)
+
+	ResourcePrefab* barrel = nullptr;
 
 	//Audios
 	ComponentAudioSource* dukeAudios[static_cast<int>(DUKE_AUDIOS::TOTAL)] = { nullptr };

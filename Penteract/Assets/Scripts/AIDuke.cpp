@@ -8,7 +8,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER_SEPARATOR("Objects UIDs"),
     MEMBER(MemberType::GAME_OBJECT_UID, dukeUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, bulletUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, bulletUID),	
 
 	MEMBER_SEPARATOR("Duke Atributes"),
 	MEMBER(MemberType::FLOAT, dukeCharacter.lifePoints),
@@ -37,7 +37,8 @@ EXPOSE_MEMBERS(AIDuke) {
 
 	MEMBER_SEPARATOR("Particles UIDs"),
 
-	MEMBER_SEPARATOR("Prefabs UIDs")
+	MEMBER_SEPARATOR("Prefabs UIDs"),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, barrelUID),
 };
 
 GENERATE_BODY_IMPL(AIDuke);
@@ -54,7 +55,7 @@ void AIDuke::Start() {
 	ownerTransform = GetOwner().GetComponent<ComponentTransform>();
 
 	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID, bulletUID);
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID);
 }
 
 void AIDuke::Update() {
