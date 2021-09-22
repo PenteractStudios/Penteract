@@ -77,6 +77,7 @@ public:
 	float slowedDownTime = 2.f;
 	float barrelDamageTaken = 3.f;
 	float moveChangeEvery = 2.0f;
+	float distanceCorrectEvery = 2.0f;
 
 	DukeState state = DukeState::BASIC_BEHAVIOUR;
 	bool criticalMode = false;
@@ -95,6 +96,8 @@ private:
 	float3 perpendicular;
 	float movementTimer = 0.f;
 	float movementChangeThreshold = 2.0f;
+	float distanceCorrectionTimer = 0.f;
+	float distanceCorrectionThreshold = 2.0f;
 
 	// Shooting
 	float attackTimePool = 0.f;

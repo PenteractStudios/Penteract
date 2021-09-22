@@ -97,7 +97,7 @@
                     {
                         "Name": "dukeCharacter.moveChangeEvery",
                         "Type": "Float",
-                        "Value": 1.5
+                        "Value": 1.899999976158142
                     },
                     {
                         "Name": "dukeCharacter.searchRadius",
@@ -133,6 +133,11 @@
                         "Name": "dukeCharacter.pushBackSpeed",
                         "Type": "Float",
                         "Value": 6.0
+                    },
+                    {
+                        "Name": "dukeCharacter.distanceCorrectEvery",
+                        "Type": "Float",
+                        "Value": 1.0
                     }
                 ]
             },
