@@ -44,7 +44,6 @@ public:
 		, timeToDie(timeToDie_)
 		, pushBackDistance(pushBackDistance_)
 		, pushBackSpeed(pushBackSpeed_)
-		, damageBullet(damageBullet_)
 		, damageCharge(damageCharge_) {
 		lifePoints = lifePoints_;
 		movementSpeed = movementSpeed_;
@@ -64,7 +63,6 @@ public:
 	void ThrowBarrels();
 
 public:
-	float damageBullet = 1.f;
 	float damageCharge = 1.f;
 	float chargeSpeed = 5.f;
 	float searchRadius = 8.f;
