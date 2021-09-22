@@ -91,6 +91,7 @@ void AIDuke::Update() {
 			lifeThreshold -= 0.1;
 			activeFireTiles = false;
 			Debug::Log("Fire tiles disabled");
+			movementScript->Stop();
 			dukeCharacter.CallTroops();
 			dukeCharacter.state = DukeState::INVULNERABLE;
 			dukeCharacter.isShielding = false;
