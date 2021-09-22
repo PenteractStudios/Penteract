@@ -138,17 +138,19 @@ std::vector<float3> AttackDronesController::GenerateLineFormation() {
     int size = dronesScripts.size();
     std::vector<float3> result(size);
 
+    float shiftOffset = size % 2 == 0 ? droneSeparationHorizontal / 2 : 0;
+
     for (int i = 0; i < size / 2; ++i) {
         float xSeparation = -((size / 2) - i) * droneSeparationHorizontal;
-       
-        result[i] = float3x3::RotateY(transform->GetGlobalRotation().ToEulerXZY().z) * float3(xSeparation, 0.0f, separationFromCenter);       // The value of Z is the correct angle since ToEulerXYZ decomposes it into 180,Y,180.
+        
+        result[i] = float3x3::RotateY(transform->GetGlobalRotation().ToEulerXZY().z) * float3(xSeparation + shiftOffset, 0.0f, separationFromCenter);       // The value of Z is the correct angle since ToEulerXYZ decomposes it into 180,Y,180.
         result[i] += float3(0.0f, GetVerticalOffset(), 0.0f);
     }
 
     for (int i = (size / 2); i < size; ++i) {
         float xSeparation = (i - (size / 2)) * droneSeparationHorizontal;
         
-        result[i] = float3x3::RotateY(transform->GetGlobalRotation().ToEulerXZY().z) * float3(xSeparation, 0.0f, separationFromCenter);       // The value of Z is the correct angle since ToEulerXYZ decomposes it into 180,Y,180.
+        result[i] = float3x3::RotateY(transform->GetGlobalRotation().ToEulerXZY().z) * float3(xSeparation + shiftOffset, 0.0f, separationFromCenter);       // The value of Z is the correct angle since ToEulerXYZ decomposes it into 180,Y,180.
         result[i] += float3(0.0f, GetVerticalOffset(), 0.0f);
     }
 
