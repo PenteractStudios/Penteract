@@ -104,16 +104,16 @@ void DialogueManager::Start() {
 	dialoguesArray[7] = Dialogue(DialogueWindow::ONIMARU, true, "Upgrade complete.\n All systems ready.", nullptr);
 
 	// LEVEL 1 - START
-	dialoguesArray[10] = Dialogue(DialogueWindow::DUKE, true, "Fang...\nMy favorite assassin.", &dialoguesArray[11]);
-	dialoguesArray[11] = Dialogue(DialogueWindow::DUKE, true, "After all these years\nyou finally came back.\nHoping to join Milibot again?", &dialoguesArray[12]);
-	dialoguesArray[12] = Dialogue(DialogueWindow::FANG, true, "You wish.\nI'm here to kill you.\nFor 50 million\nand the pleasure of\ndoing it myself.", &dialoguesArray[13]);
-	dialoguesArray[13] = Dialogue(DialogueWindow::DUKE, true, "I made you what you are\nand you should\nbe grateful.", &dialoguesArray[14]);
-	dialoguesArray[14] = Dialogue(DialogueWindow::DUKE, true, "Let's see how\nyou perform against\nmy latest designs...\nSecurity!", nullptr);
+	dialoguesArray[9] = Dialogue(DialogueWindow::DUKE, true, "Fang...\nMy favorite assassin.", &dialoguesArray[10]);
+	dialoguesArray[10] = Dialogue(DialogueWindow::DUKE, true, "After all these years\nyou finally came back.\nHoping to join Milibot again?", &dialoguesArray[11]);
+	dialoguesArray[11] = Dialogue(DialogueWindow::FANG, true, "You wish.\nI'm here to kill you.\nA 5 million reward\nand the pleasure of\ndoing it myself.", &dialoguesArray[12]);
+	dialoguesArray[12] = Dialogue(DialogueWindow::DUKE, true, "I made you what you are,\neven if you hate it!\nYou should\nbe more grateful.", &dialoguesArray[13]);
+	dialoguesArray[13] = Dialogue(DialogueWindow::DUKE, true, "Let's see how\nyou perform against\nmy latest designs...", &dialoguesArray[14]);
+	dialoguesArray[14] = Dialogue(DialogueWindow::DUKE, true, "SECURITY!!", nullptr);
 
 	// LEVEL 1 - FANG TUTORIAL
-	dialoguesArray[15] = Dialogue(DialogueWindow::ONIMARU, true, "He's running away!\nDon't let him escape!", &dialoguesArray[16]);
-	dialoguesArray[16] = Dialogue(DialogueWindow::TUTO_FANG, true, "", &dialoguesArray[17]);
-	dialoguesArray[17] = Dialogue(DialogueWindow::TUTO_FANG_ULTI, true, "", nullptr);
+	dialoguesArray[15] = Dialogue(DialogueWindow::TUTO_FANG, true, "", &dialoguesArray[16]);
+	dialoguesArray[16] = Dialogue(DialogueWindow::TUTO_FANG_ULTI, true, "", nullptr);
 
 	// LEVEL 1 - SWAP DIALOGUE + ONIMARU TUTORIAL
 	dialoguesArray[18] = Dialogue(DialogueWindow::FANG, true, "Onimaru,\nget the repair bots ready.\nI'm gonna need a break.", &dialoguesArray[19]);
@@ -132,9 +132,11 @@ void DialogueManager::Start() {
 	//dialoguesArray[27] = Dialogue(DialogueWindow::ONIMARU, false, "He is going to the Milibot factory.\nWho knows what weapons he is hiding in there...\nOr maybe he is just testing us again.", nullptr);
 
 	// LEVEL 1 - FINAL
-	dialoguesArray[28] = Dialogue(DialogueWindow::DOOR, true, "Hi there!\n Haven't seen you\nin a while!", &dialoguesArray[29]);
+	dialoguesArray[28] = Dialogue(DialogueWindow::DOOR, true, "Oh hello guys!\nWhere have you been?\nI haven't seen you\nin a while!", &dialoguesArray[29]);
 	dialoguesArray[29] = Dialogue(DialogueWindow::ONIMARU, true, "5 years to be exact.\nOpen up, Dory.\nWe need to come in.", &dialoguesArray[32]);
-	dialoguesArray[32] = Dialogue(DialogueWindow::DOOR, true, "Fine...\nBut only because\nyou guys were always\nnice to me.", &dialoguesArray[33]);
+	dialoguesArray[30] = Dialogue(DialogueWindow::DOOR, true, "Aw' I'm sorry.\nSeems like Duke\nrevoked your access.\nI don't understand\nwhy though...", &dialoguesArray[31]);
+	dialoguesArray[31] = Dialogue(DialogueWindow::FANG, true, "Come on...\nWe are friends right?\nJust pretend you\nmalfunctioned or something,\nwe won't tell.", &dialoguesArray[32]);
+	dialoguesArray[32] = Dialogue(DialogueWindow::DOOR, true, "Fine...\nI'll open the elevator.\nBut this time it's on you.\nI'm taking\nno responsibility.", &dialoguesArray[33]);
 	dialoguesArray[33] = Dialogue(DialogueWindow::ONIMARU, true, "Thanks, Dory.", &dialoguesArray[34]);
 	dialoguesArray[34] = Dialogue(DialogueWindow::DOOR, true, "Be careful in there\nsweethearts!\nDon't get hurt!", nullptr);
 
