@@ -6,6 +6,7 @@
 #include "RangerProjectileScript.h"
 #include "Components/Physics/ComponentSphereCollider.h"
 #include "Components/ComponentAudioSource.h"
+#include "Components/ComponentAgent.h"
 #include "Math/float3.h"
 
 EXPOSE_MEMBERS(Shield) {
@@ -37,7 +38,7 @@ void Shield::FadeShield() {
 
 void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 	if ((collidedWith.name == "WeaponParticles" || collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") && isActive && playerController) {
-		
+
 		if (!particle) {
 			collidedWith.Disable();
 		} else {
@@ -65,11 +66,19 @@ void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 				}*/
 			}
 		}
-		
+
 		currentAvailableCharges--;
 
 		if (audio) {		// Play hit effect
 			audio->Play();
+		}
+	} else if (collidedWith.name == "MeleeGrunt" || collidedWith.name == "RangedGrunt") {
+		ComponentAgent* agent = collidedWith.GetComponent<ComponentAgent>();
+		if (agent) {
+			agent->RemoveAgentFromCrowd();
+			float3 actualPenDistance = -penetrationDistance.ProjectTo(collisionNormal);
+			collidedWith.GetComponent<ComponentTransform>()->SetGlobalPosition(collidedWith.GetComponent<ComponentTransform>()->GetGlobalPosition() + actualPenDistance);
+			agent->AddAgentToCrowd();
 		}
 	}
 }
