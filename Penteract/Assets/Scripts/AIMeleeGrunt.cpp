@@ -50,6 +50,7 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 		MEMBER(MemberType::INT, att3AbilityChance),
 		MEMBER_SEPARATOR("Dissolve properties"),
 		MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialObj),
+		MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialWeaponObj),
 		MEMBER(MemberType::FLOAT, dissolveTimerToStart)
 };
 
@@ -108,6 +109,7 @@ void AIMeleeGrunt::Start() {
 		}
 	}
 
+	// Body reference
 	GameObject* dissolveObj = GameplaySystems::GetGameObject(dissolveMaterialObj);
 	if (dissolveObj) {
 		ComponentMeshRenderer* dissolveMeshRenderer = dissolveObj->GetComponent<ComponentMeshRenderer>();
@@ -116,18 +118,39 @@ void AIMeleeGrunt::Start() {
 		}
 	}
 
+	// Weapon reference
+	dissolveObj = GameplaySystems::GetGameObject(dissolveMaterialWeaponObj);
+	if (dissolveObj) {
+		ComponentMeshRenderer* dissolveMeshRenderer = dissolveObj->GetComponent<ComponentMeshRenderer>();
+		if (dissolveMeshRenderer) {
+			dissolveMaterialWeaponID = dissolveMeshRenderer->materialId;
+		}
+	}
+
 	gameObject = &GetOwner();
 	if (gameObject) {
 		// Workaround get the first children - Create a Prefab overrides childs IDs
 		gameObject = gameObject->GetChildren()[0];
 		if (gameObject) {
-			componentMeshRenderer = gameObject->GetComponent<ComponentMeshRenderer>();
+			// Since we are not getting a vector of Components, this is the only workarround possible
+			// !! IMPORTANT !! if the order of meshes changes, this will have to be reviewed
+			int meshCount = 0;
+			for (ComponentMeshRenderer& mesh : gameObject->GetComponents<ComponentMeshRenderer>()) {
+				if (meshCount == 0) componentMeshRenderer = &mesh;					// Body mesh
+				else if (meshCount == 1) componentMeshRendererLeftBlade = &mesh;	// Left blade
+				else if (meshCount == 2) componentMeshRendererRightBlade = &mesh;	// Right blade
+				else break;
+				meshCount++;
+			}
+
+			if (componentMeshRendererLeftBlade) {
+				bladesMaterialID = componentMeshRendererLeftBlade->materialId;
+			}
 		}
 	}
 
 	pushBackRealDistance = gruntCharacter.pushBackDistance;
 	SetRandomMaterial();
-
 }
 
 void AIMeleeGrunt::Update() {
@@ -146,7 +169,9 @@ void AIMeleeGrunt::Update() {
 		if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
 			timeSinceLastHurt += Time::GetDeltaTime();
 			if (timeSinceLastHurt > hurtFeedbackTimeDuration) {
-				SetMaterial(defaultMaterialID);
+				SetMaterial(componentMeshRenderer, defaultMaterialID);
+				SetMaterial(componentMeshRendererLeftBlade, bladesMaterialID);
+				SetMaterial(componentMeshRendererRightBlade, bladesMaterialID);
 			}
 		}
 	}
@@ -345,6 +370,39 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 				gruntCharacter.GetHit(playerController->playerOnimaru.shieldReboundedDamage + playerController->GetOverPowerMode());
 				GameplaySystems::DestroyGameObject(&collidedWith);
 			}
+			else if (collidedWith.name == "VFXShield") {
+				if (state == AIState::RUN) {
+					int random = std::rand() % 100;
+					if (random < att1AbilityChance) {
+						attackNumber = 1;
+						attackSpeed = att1AttackSpeed;
+						attackMovementSpeed = att1MovementSpeedWhileAttacking;
+					}
+					else if (random < att1AbilityChance + att2AbilityChance) {
+						attackNumber = 2;
+						attackSpeed = att2AttackSpeed;
+						attackMovementSpeed = att2MovementSpeedWhileAttacking;
+					}
+					else {
+						attackNumber = 3;
+						attackSpeed = att3AttackSpeed;
+						attackMovementSpeed = att3MovementSpeedWhileAttacking;
+					}
+
+					animation->SendTrigger("WalkForwardAttack" + std::to_string(attackNumber));
+					movementScript->SetClipSpeed(animation->GetCurrentState()->clipUid, attackSpeed);
+					if (audios[static_cast<int>(AudioType::ATTACK)]) audios[static_cast<int>(AudioType::ATTACK)]->Play();
+					state = AIState::ATTACK;
+				}
+			}
+			else if (collidedWith.name == "Impenetrable") {
+				if (agent) {
+					agent->RemoveAgentFromCrowd();
+					float3 actualPenDistance = penetrationDistance.ProjectTo(collisionNormal);
+					GetOwner().GetComponent<ComponentTransform>()->SetGlobalPosition(GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + actualPenDistance);
+					agent->AddAgentToCrowd();
+				}
+			}
 
 			if (hitTaken) {
 				PlayHit();
@@ -502,7 +560,7 @@ void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const cha
 }
 
 void AIMeleeGrunt::Death()
-{	
+{
 	if (!GameController::IsGameplayBlocked()) {
 		if (animation->GetCurrentState() && state != AIState::DEATH) {
 			std::string changeState = animation->GetCurrentState()->name + "Death";
@@ -528,7 +586,9 @@ void AIMeleeGrunt::PlayerHit() {
 void AIMeleeGrunt::PlayHitMaterialEffect()
 {
 	if (!dissolveAlreadyStarted) {
-		SetMaterial(damageMaterialID);
+		SetMaterial(componentMeshRenderer, damageMaterialID);
+		SetMaterial(componentMeshRendererLeftBlade, damageMaterialID);
+		SetMaterial(componentMeshRendererRightBlade, damageMaterialID);
 	}
 }
 
@@ -536,7 +596,9 @@ void AIMeleeGrunt::UpdateDissolveTimer() {
 	if (dissolveAlreadyStarted && !dissolveAlreadyPlayed) {
 		if (currentDissolveTime >= dissolveTimerToStart) {
 			if (dissolveMaterialID != 0) {
-				SetMaterial(dissolveMaterialID, true);
+				SetMaterial(componentMeshRenderer, dissolveMaterialID, true);
+				SetMaterial(componentMeshRendererLeftBlade, dissolveMaterialWeaponID, true);
+				SetMaterial(componentMeshRendererRightBlade, dissolveMaterialWeaponID, true);
 			}
 			dissolveAlreadyPlayed = true;
 		}
@@ -548,6 +610,7 @@ void AIMeleeGrunt::UpdateDissolveTimer() {
 
 void AIMeleeGrunt::SetRandomMaterial()
 {
+	if (!componentMeshRenderer) return;
 	GameObject* materialsHolder = GameplaySystems::GetGameObject(materialsUID);
 
 	if (materialsHolder) {
@@ -559,35 +622,25 @@ void AIMeleeGrunt::SetRandomMaterial()
 			}
 		}
 
-		
+
 		if (!materials.empty()) {
-			//Random distribution it cant be saved into global 
+			//Random distribution it cant be saved into global
 			std::random_device rd;  //Will be used to obtain a seed for the random number engine
 			std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
 			std::uniform_int_distribution<int> distrib(1, materials.size());
 
 			int position = distrib(gen)-1;
-
-			for (auto& child : GetOwner().GetChildren()) {
-				if (child->HasComponent<ComponentMeshRenderer>()) {
-					defaultMaterialID = materials[position];
-
-					for (auto& mesh : child->GetComponents<ComponentMeshRenderer>()) {
-						mesh.materialId = materials[position];
-					}
-				}
-			}
+			componentMeshRenderer->materialId = materials[position];
+			defaultMaterialID = materials[position];
 		}
 	}
 }
 
-void AIMeleeGrunt::SetMaterial(UID newMaterialID, bool needToPlayDissolve) {
-	if (newMaterialID > 0 && GetOwner().GetChildren().size() > 0) {
-		for (ComponentMeshRenderer& mesh : GetOwner().GetChildren()[0]->GetComponents<ComponentMeshRenderer>()) {
-			mesh.materialId = newMaterialID;
-			if (needToPlayDissolve) {
-				mesh.PlayDissolveAnimation();
-			}
+void AIMeleeGrunt::SetMaterial(ComponentMeshRenderer* mesh, UID newMaterialID, bool needToPlayDissolve) {
+	if (newMaterialID > 0 && mesh) {
+		mesh->materialId = newMaterialID;
+		if (needToPlayDissolve) {
+			mesh->PlayDissolveAnimation();
 		}
 	}
 }

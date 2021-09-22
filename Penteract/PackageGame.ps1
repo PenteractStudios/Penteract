@@ -22,4 +22,4 @@ Copy-Item -Path "../LICENSE" -Destination "${PackageDir}/${LicensesDir}/${Engine
 Copy-Item -Path "*.dll" -Destination "${PackageDir}" -Force -Recurse
 Copy-Item -Path "${ReleaseDir}/${GameProjectName}.dll" -Destination "${PackageDir}" -Force -Recurse
 Copy-Item -Path "${EngineSourceDir}/${EngineName}.exe" -Destination "${PackageDir}" -Force -Recurse
-Compress-Archive -Path "${PackageDir}/*" -DestinationPath "${OutDir}/${GameName}_${Version}.zip" -Force
+Copy-Item -Path "config.json" -Destination "${PackageDir}" -Force -Recurse

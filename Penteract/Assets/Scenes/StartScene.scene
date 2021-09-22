@@ -166,7 +166,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 200.0,
-                            "HorizontalFov": 1.5153104066848755,
+                            "HorizontalFov": 1.5318384170532227,
                             "VerticalFov": 1.0
                         }
                     },
@@ -561,14 +561,14 @@
                                                 "Type": "Image",
                                                 "Id": 4666030001373830128,
                                                 "Active": true,
-                                                "TextureId": 9432744914188400914,
+                                                "TextureId": 9466386056112899117,
                                                 "Color": [
                                                     1.0,
                                                     1.0,
                                                     1.0,
                                                     1.0
                                                 ],
-                                                "AlphaTransparency": false,
+                                                "AlphaTransparency": true,
                                                 "IsFill": false,
                                                 "FillValue": 0.0,
                                                 "Offset": [
@@ -1450,14 +1450,14 @@
                                                         "Script": 10048554049739023339,
                                                         "Values": [
                                                             {
-                                                                "Name": "controllerObjUID",
-                                                                "Type": "GameObjectUID",
-                                                                "Value": 2149423061758228828
-                                                            },
-                                                            {
                                                                 "Name": "fadeToBlackObjectUID",
                                                                 "Type": "GameObjectUID",
                                                                 "Value": 17695041365782035885
+                                                            },
+                                                            {
+                                                                "Name": "controllerObjUID",
+                                                                "Type": "GameObjectUID",
+                                                                "Value": 2149423061758228828
                                                             },
                                                             {
                                                                 "Name": "sceneUID",
@@ -3836,14 +3836,14 @@
                                                 "Value": 9693072970663710125
                                             },
                                             {
-                                                "Name": "loopingTitleObjUID",
-                                                "Type": "GameObjectUID",
-                                                "Value": 6739931987885618446
-                                            },
-                                            {
                                                 "Name": "blackImageObjUID",
                                                 "Type": "GameObjectUID",
                                                 "Value": 17695041365782035885
+                                            },
+                                            {
+                                                "Name": "loopingTitleObjUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 6739931987885618446
                                             },
                                             {
                                                 "Name": "glitchTitleObjUID",
@@ -3862,12 +3862,12 @@
                                         "Id": 5271169571327707211,
                                         "Active": true,
                                         "Pitch": 1.0,
-                                        "Gain": 1.0,
+                                        "Gain": 0.10000000149011612,
                                         "Mute": false,
                                         "Looping": false,
                                         "PlayOnAwake": false,
-                                        "AudioClipId": 0,
-                                        "SpatialBlend": 1,
+                                        "AudioClipId": 6834645009129902300,
+                                        "SpatialBlend": 0,
                                         "SourceType": 0,
                                         "InnerAngle": 90.0,
                                         "OuterAngle": 180.0,
@@ -3881,12 +3881,12 @@
                                         "Id": 13943588374866549648,
                                         "Active": true,
                                         "Pitch": 1.0,
-                                        "Gain": 1.0,
+                                        "Gain": 0.10000000149011612,
                                         "Mute": false,
                                         "Looping": false,
                                         "PlayOnAwake": false,
-                                        "AudioClipId": 0,
-                                        "SpatialBlend": 1,
+                                        "AudioClipId": 6834645009129902300,
+                                        "SpatialBlend": 0,
                                         "SourceType": 0,
                                         "InnerAngle": 90.0,
                                         "OuterAngle": 180.0,
@@ -8046,7 +8046,7 @@
                                             0.0,
                                             0.0,
                                             0.0,
-                                            0.0
+                                            1.0
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
@@ -8070,6 +8070,11 @@
                                                 "Name": "blackImageObjUID",
                                                 "Type": "GameObjectUID",
                                                 "Value": 17695041365782035885
+                                            },
+                                            {
+                                                "Name": "fadeInOnStart",
+                                                "Type": "Bool",
+                                                "Value": true
                                             }
                                         ]
                                     }
@@ -8338,7 +8343,7 @@
                                                 "Type": "Image",
                                                 "Id": 6892019489415189833,
                                                 "Active": true,
-                                                "TextureId": 9432744914188400914,
+                                                "TextureId": 9466386056112899117,
                                                 "Color": [
                                                     1.0,
                                                     1.0,
@@ -14203,7 +14208,7 @@
                                                 "Type": "Image",
                                                 "Id": 11257670884080864422,
                                                 "Active": true,
-                                                "TextureId": 9432744914188400914,
+                                                "TextureId": 9466386056112899117,
                                                 "Color": [
                                                     1.0,
                                                     1.0,
@@ -20785,7 +20790,7 @@
                                                 "Type": "Image",
                                                 "Id": 4642391617205141124,
                                                 "Active": true,
-                                                "TextureId": 9432744914188400914,
+                                                "TextureId": 9466386056112899117,
                                                 "Color": [
                                                     1.0,
                                                     1.0,
@@ -25780,7 +25785,7 @@
                                                 "Type": "Image",
                                                 "Id": 2898122869170592368,
                                                 "Active": true,
-                                                "TextureId": 9432744914188400914,
+                                                "TextureId": 9466386056112899117,
                                                 "Color": [
                                                     1.0,
                                                     1.0,
@@ -27525,14 +27530,14 @@
                                                                                 "Value": 5283034992592177512
                                                                             },
                                                                             {
-                                                                                "Name": "fadeToBlackObjectUID",
-                                                                                "Type": "GameObjectUID",
-                                                                                "Value": 17695041365782035885
-                                                                            },
-                                                                            {
                                                                                 "Name": "controllerObjUID",
                                                                                 "Type": "GameObjectUID",
                                                                                 "Value": 2149423061758228828
+                                                                            },
+                                                                            {
+                                                                                "Name": "fadeToBlackObjectUID",
+                                                                                "Type": "GameObjectUID",
+                                                                                "Value": 17695041365782035885
                                                                             },
                                                                             {
                                                                                 "Name": "sceneUID",
@@ -28047,14 +28052,14 @@
                                                                         "Script": 10048554049739023339,
                                                                         "Values": [
                                                                             {
-                                                                                "Name": "fadeToBlackObjectUID",
-                                                                                "Type": "GameObjectUID",
-                                                                                "Value": 17695041365782035885
-                                                                            },
-                                                                            {
                                                                                 "Name": "controllerObjUID",
                                                                                 "Type": "GameObjectUID",
                                                                                 "Value": 2149423061758228828
+                                                                            },
+                                                                            {
+                                                                                "Name": "fadeToBlackObjectUID",
+                                                                                "Type": "GameObjectUID",
+                                                                                "Value": 17695041365782035885
                                                                             },
                                                                             {
                                                                                 "Name": "checkpointNum",
@@ -28584,14 +28589,14 @@
                                                                                 "Value": 2
                                                                             },
                                                                             {
-                                                                                "Name": "controllerObjUID",
-                                                                                "Type": "GameObjectUID",
-                                                                                "Value": 2149423061758228828
-                                                                            },
-                                                                            {
                                                                                 "Name": "fadeToBlackObjectUID",
                                                                                 "Type": "GameObjectUID",
                                                                                 "Value": 17695041365782035885
+                                                                            },
+                                                                            {
+                                                                                "Name": "controllerObjUID",
+                                                                                "Type": "GameObjectUID",
+                                                                                "Value": 2149423061758228828
                                                                             },
                                                                             {
                                                                                 "Name": "swapPanelsObjUID",
@@ -29116,14 +29121,14 @@
                                                                                 "Value": 3
                                                                             },
                                                                             {
-                                                                                "Name": "controllerObjUID",
-                                                                                "Type": "GameObjectUID",
-                                                                                "Value": 2149423061758228828
-                                                                            },
-                                                                            {
                                                                                 "Name": "fadeToBlackObjectUID",
                                                                                 "Type": "GameObjectUID",
                                                                                 "Value": 17695041365782035885
+                                                                            },
+                                                                            {
+                                                                                "Name": "controllerObjUID",
+                                                                                "Type": "GameObjectUID",
+                                                                                "Value": 2149423061758228828
                                                                             },
                                                                             {
                                                                                 "Name": "swapPanelsObjUID",
@@ -29648,14 +29653,14 @@
                                                                                 "Value": 4
                                                                             },
                                                                             {
-                                                                                "Name": "controllerObjUID",
-                                                                                "Type": "GameObjectUID",
-                                                                                "Value": 2149423061758228828
-                                                                            },
-                                                                            {
                                                                                 "Name": "fadeToBlackObjectUID",
                                                                                 "Type": "GameObjectUID",
                                                                                 "Value": 17695041365782035885
+                                                                            },
+                                                                            {
+                                                                                "Name": "controllerObjUID",
+                                                                                "Type": "GameObjectUID",
+                                                                                "Value": 2149423061758228828
                                                                             },
                                                                             {
                                                                                 "Name": "swapPanelsObjUID",
@@ -32503,8 +32508,8 @@
                 ]
             },
             {
-                "Id": 13025999119372003325,
-                "Name": "AudioController",
+                "Id": 4879798246088481908,
+                "Name": "AudioControllerStartScene",
                 "Active": true,
                 "Static": false,
                 "ActiveHierarchy": true,
@@ -32513,7 +32518,7 @@
                 "Components": [
                     {
                         "Type": "Transform",
-                        "Id": 11341155666513997532,
+                        "Id": 18029694198335748549,
                         "Active": true,
                         "Position": [
                             0.0,
@@ -32539,14 +32544,14 @@
                     },
                     {
                         "Type": "AudioSource",
-                        "Id": 15762849361944929010,
+                        "Id": 11490110529413337309,
                         "Active": true,
                         "Pitch": 1.0,
-                        "Gain": 0.30000001192092898,
+                        "Gain": 0.5,
                         "Mute": false,
                         "Looping": true,
-                        "PlayOnAwake": false,
-                        "AudioClipId": 12026735492238304694,
+                        "PlayOnAwake": true,
+                        "AudioClipId": 4486674095867853081,
                         "SpatialBlend": 0,
                         "SourceType": 0,
                         "InnerAngle": 90.0,
@@ -32555,19 +32560,6 @@
                         "RolloffFactor": 1.0,
                         "ReferenceDistance": 10.0,
                         "MaxDistance": 30.0
-                    },
-                    {
-                        "Type": "Script",
-                        "Id": 11040302854968678752,
-                        "Active": true,
-                        "Script": 7262376774633688575,
-                        "Values": [
-                            {
-                                "Name": "audioSourceUID",
-                                "Type": "GameObjectUID",
-                                "Value": 13025999119372003325
-                            }
-                        ]
                     }
                 ],
                 "Children": null
