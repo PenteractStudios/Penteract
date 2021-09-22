@@ -15,6 +15,7 @@ EXPOSE_MEMBERS(PlayerDeath) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::FLOAT, rangedDamageTaken),
 	MEMBER(MemberType::FLOAT, meleeDamageTaken),
+	MEMBER(MemberType::FLOAT, dukeDamageTaken),
 	MEMBER(MemberType::FLOAT, barrelDamageTaken),
 	MEMBER(MemberType::FLOAT, laserBeamTaken),
 	MEMBER(MemberType::FLOAT, laserHitCooldown),
@@ -136,7 +137,11 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 			fireDamageActive = false;
 		}
 	} else if (collidedWith.name == "DukeProjectile") {
-		if (playerController) playerController->TakeDamage(rangedDamageTaken);
+		if (!particle) return;
+		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+		if (pSystem) pSystem->KillParticle(p);
+		if (playerController) playerController->TakeDamage(dukeDamageTaken);
 	}
 }
 

@@ -12,6 +12,7 @@ class ComponentMeshRenderer;
 class ResourcePrefab;
 class HUDController;
 class PlayerController;
+class Player;
 //class PlayerDeath;
 class AIMovement;
 
@@ -40,11 +41,19 @@ public:
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
+	void EnableBlastPushBack();
+	void DisableBlastPushBack();
+	bool IsBeingPushed() const;
+
+private:
+	void CalculatePushBackRealDistance();
+	void UpdatePushBackPosition();
+	void ParticleHit(GameObject& collidedWith, void* particle, Player& player);
 
 public:
 	UID dukeUID = 0;
 	UID playerUID = 0;
-	UID bulletPrefabUID = 0;
+	UID bulletUID = 0;
 
 	GameObject* duke = nullptr;
 	GameObject* player = nullptr;
@@ -94,5 +103,10 @@ private:
 	bool phase2Reached = false;
 
 	float stunTimeRemaining = 0.f;
+
+	// Onimaru blast effect
+	float currentPushBackDistance = 0.f;
+	float currentSlowedDownTime = 0.f;
+	float pushBackRealDistance = 0.f;
 };
 
