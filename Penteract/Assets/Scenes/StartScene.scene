@@ -166,7 +166,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 200.0,
-                            "HorizontalFov": 1.5411467552185059,
+                            "HorizontalFov": 1.5400962829589844,
                             "VerticalFov": 1.0
                         }
                     },
@@ -7982,9 +7982,9 @@
                             {
                                 "Id": 17695041365782035885,
                                 "Name": "Black",
-                                "Active": false,
+                                "Active": true,
                                 "Static": false,
-                                "ActiveHierarchy": false,
+                                "ActiveHierarchy": true,
                                 "RootBoneId": 0,
                                 "Mask": 0,
                                 "Components": [
