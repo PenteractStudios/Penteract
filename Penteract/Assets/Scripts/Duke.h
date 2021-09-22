@@ -45,7 +45,6 @@ public:
 		, timeToDie(timeToDie_)
 		, pushBackDistance(pushBackDistance_)
 		, pushBackSpeed(pushBackSpeed_)
-		, damageBullet(damageBullet_)
 		, damageCharge(damageCharge_) {
 		lifePoints = lifePoints_;
 		movementSpeed = movementSpeed_;
@@ -65,7 +64,6 @@ public:
 	void ThrowBarrels();
 
 public:
-	float damageBullet = 1.f;
 	float damageCharge = 1.f;
 	float chargeSpeed = 5.f;
 	float searchRadius = 8.f;
@@ -80,6 +78,7 @@ public:
 	float slowedDownTime = 2.f;
 	float barrelDamageTaken = 3.f;
 	float moveChangeEvery = 2.0f;
+	float distanceCorrectEvery = 2.0f;
 
 	DukeState state = DukeState::BASIC_BEHAVIOUR;
 	bool criticalMode = false;
@@ -98,6 +97,8 @@ private:
 	float3 perpendicular;
 	float movementTimer = 0.f;
 	float movementChangeThreshold = 2.0f;
+	float distanceCorrectionTimer = 0.f;
+	float distanceCorrectionThreshold = 2.0f;
 
 	// Shooting
 	float attackTimePool = 0.f;
