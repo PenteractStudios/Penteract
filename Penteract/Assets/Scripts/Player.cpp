@@ -209,7 +209,7 @@ bool Player::GetInputBool(InputActions action, bool useGamepad) {
 		if (useGamepad && Input::IsGamepadConnected(0)) {
 			return Input::GetControllerButton(Input::SDL_CONTROLLER_BUTTON_A, 0);
 		} else {
-			return Input::GetKeyCodeDown(Input::KEYCODE::KEY_F);
+			return Input::GetKeyCodeDown(Input::KEYCODE::KEY_SPACE);
 		}
 	case InputActions::AIM:
 		if (useGamepad && Input::IsGamepadConnected(0)) {
