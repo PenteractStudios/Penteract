@@ -103,6 +103,8 @@ float3 EnemySpawnPoint::EnemyLocation(int N, int k, int z) {
 		k : current enemy
 		d : separation distance 
 		z : enemy position in the z axis
+
+		kudos to Pol for the formula
 	*/
 	int d = 2;
 	return float3(((N/2 - k) * d - ((N + 1)%2) * d/2), 0, z);
