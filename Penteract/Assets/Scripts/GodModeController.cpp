@@ -23,7 +23,9 @@ EXPOSE_MEMBERS(GodModeController) {
 	/* Level Doors */
 	MEMBER(MemberType::GAME_OBJECT_UID, plazaDoorUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, cafeteriaDoorUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, bridgeDoorUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, bridgeDoorUID),
+	/* Dialog triggers */
+	MEMBER(MemberType::GAME_OBJECT_UID, dialogTriggersUID)
 };
 
 GENERATE_BODY_IMPL(GodModeController);
@@ -48,6 +50,9 @@ void GodModeController::Start() {
 	plazaDoor = GameplaySystems::GetGameObject(plazaDoorUID);
 	cafeteriaDoor = GameplaySystems::GetGameObject(cafeteriaDoorUID);
 	bridgeDoor = GameplaySystems::GetGameObject(bridgeDoorUID);
+
+	/* Dialog triggers */
+	dialogTriggers = GameplaySystems::GetGameObject(dialogTriggersUID);
 
 	doorPreviousStates.emplace_back(plazaDoor, plazaDoor ? plazaDoor->IsActive() : false);
 	doorPreviousStates.emplace_back(cafeteriaDoor, cafeteriaDoor ? cafeteriaDoor->IsActive() : false);
@@ -105,6 +110,14 @@ void GodModeController::OnChildToggle(unsigned int index, bool isChecked) {
 		break;
 	case 3:
 		if (isChecked) {
+			if (dialogTriggers) dialogTriggers->Enable();
+		}
+		else {
+			if (dialogTriggers) dialogTriggers->Disable();
+		}
+		break;
+	case 4:
+		if (isChecked) {
 			if (toggles[index + 1]->IsChecked()) {
 				toggles[index + 1]->SetChecked(false);
 			}
@@ -116,7 +129,7 @@ void GodModeController::OnChildToggle(unsigned int index, bool isChecked) {
 			toggles[index]->SetChecked(true);
 		}
 		break;
-	case 4:
+	case 5:
 		if (isChecked) {
 			if (toggles[index - 1]->IsChecked()) {
 				toggles[index - 1]->SetChecked(false);
@@ -130,7 +143,7 @@ void GodModeController::OnChildToggle(unsigned int index, bool isChecked) {
 			toggles[index]->SetChecked(true);
 		}
 		break;
-	case 5:
+	case 6:
 		if (isChecked) {
 			if (playerControllerScript) playerControllerScript->SetOverpower(true);
 		}
@@ -138,7 +151,7 @@ void GodModeController::OnChildToggle(unsigned int index, bool isChecked) {
 			if (playerControllerScript) playerControllerScript->SetOverpower(false);
 		}
 		break;
-	case 6:
+	case 7:
 		if (isChecked) {
 			if (playerControllerScript) playerControllerScript->SetNoCooldown(true);
 		}
@@ -146,7 +159,7 @@ void GodModeController::OnChildToggle(unsigned int index, bool isChecked) {
 			if (playerControllerScript) playerControllerScript->SetNoCooldown(false);
 		}
 		break;
-	case 7:
+	case 8:
 		if (isChecked) {
 			if (playerControllerScript) playerControllerScript->SetInvincible(true);
 		}
