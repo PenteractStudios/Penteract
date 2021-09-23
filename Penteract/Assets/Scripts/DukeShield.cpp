@@ -10,25 +10,19 @@
 #include "Math/float3.h"
 
 EXPOSE_MEMBERS(DukeShield) {
-	MEMBER(MemberType::INT, maxCharges),
-		MEMBER(MemberType::FLOAT, chargeCooldown),
-		MEMBER(MemberType::GAME_OBJECT_UID, dukeUID),
-		MEMBER_SEPARATOR("Debug only"),
-		MEMBER(MemberType::INT, currentAvailableCharges),
-		MEMBER(MemberType::FLOAT, shieldMaxScale),
-		MEMBER(MemberType::FLOAT, growthSpeed),
-		MEMBER(MemberType::FLOAT, fadeSpeed),
-		MEMBER(MemberType::FLOAT, growthThreshold),
-		MEMBER(MemberType::FLOAT, fadeThreshold)
-
-
+	MEMBER(MemberType::GAME_OBJECT_UID, dukeUID),
+	MEMBER_SEPARATOR("Debug only"),
+	MEMBER(MemberType::FLOAT, shieldMaxScale),
+	MEMBER(MemberType::FLOAT, growthSpeed),
+	MEMBER(MemberType::FLOAT, fadeSpeed),
+	MEMBER(MemberType::FLOAT, growthThreshold),
+	MEMBER(MemberType::FLOAT, fadeThreshold)
 
 };
 
 GENERATE_BODY_IMPL(DukeShield);
 
 void DukeShield::Start() {
-	currentAvailableCharges = maxCharges;
 	GameObject* dukeGO = GameplaySystems::GetGameObject(dukeUID);
 	if (dukeGO) duke = GET_SCRIPT(dukeGO, AIDuke);
 	audio = GetOwner().GetComponent<ComponentAudioSource>();
@@ -87,8 +81,6 @@ void DukeShield::OnCollision(GameObject& collidedWith, float3 collisionNormal, f
 			if (pSystem) pSystem->KillParticle(p);
 			Debug::Log("Kill");
 		}
-
-		currentAvailableCharges--;
 
 		if (audio) {		// Play hit effect
 			audio->Play();
