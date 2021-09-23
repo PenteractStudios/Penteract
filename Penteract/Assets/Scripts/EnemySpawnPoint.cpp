@@ -7,9 +7,6 @@
 
 EXPOSE_MEMBERS(EnemySpawnPoint) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-	MEMBER(MemberType::FLOAT, xAxisPos),
-	MEMBER(MemberType::FLOAT, zAxisPos),
-	MEMBER(MemberType::INT, offset),
 	MEMBER(MemberType::INT, firstWaveMeleeAmount),
 	MEMBER(MemberType::INT, firstWaveRangeAmount),
 	MEMBER(MemberType::INT, secondWaveMeleeAmount),
@@ -27,6 +24,7 @@ GENERATE_BODY_IMPL(EnemySpawnPoint);
 void EnemySpawnPoint::Start() {
 	/* Owner */
 	gameObject = &GetOwner();
+	gameObjectTransform = gameObject->GetComponent<ComponentTransform>();
 
 	/* Load the wave config into the enemy vector */
 	enemies.emplace_back(firstWaveMeleeAmount, firstWaveRangeAmount);
@@ -45,21 +43,22 @@ void EnemySpawnPoint::Start() {
 		spawnPointControllerScript->SetCurrentEnemyAmount(index, amountOfEnemies);
 	}
 
-	GameObject* player = GameplaySystems::GetGameObject(playerUID);
+	player = GameplaySystems::GetGameObject(playerUID);
 	if (player) {
 		playerScript = GET_SCRIPT(player, PlayerController);
 	}
+
+	if (gameObject->HasChildren()) gameObject->GetChild("Arrow")->Disable();
 }
 
 void EnemySpawnPoint::Update() {
-	if (!gameObject->IsActive() || !meleeEnemyPrefab || !rangeEnemyPrefab) return;
+	if (!gameObject->IsActive() || !meleeEnemyPrefab || !rangeEnemyPrefab || !player) return;
 
 	if (it != enemies.end() && spawn) {
 		RenderEnemy(EnemyType::MELEE, std::get<0>(*it));
-
-		/* Reset the X pos of the enemy spawn location */
-		xAxisPos = 0;
 		RenderEnemy(EnemyType::RANGE, std::get<1>(*it));
+		/* Rotate the spawn point to the player location */
+		LookAtPlayer(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - gameObjectTransform->GetGlobalPosition());
 
 		/* Stop the spawn until all the wave enemies die */
 		spawn = false;
@@ -91,37 +90,25 @@ void EnemySpawnPoint::RenderEnemy(EnemyType type, unsigned int amount) {
 		GameObject* go = GameplaySystems::GetGameObject(prefabUID);
 		ComponentTransform* goTransform = go->GetComponent<ComponentTransform>();
 		if (go) {
-			// ComponentBoundingBox* goBounds = nullptr;
-			// for (auto& child : go->GetChildren()) {
-			// 	if (child->HasComponent<ComponentMeshRenderer>()) {
-			// 		goBounds = child->GetComponent<ComponentBoundingBox>();
-			// 		break;
-			// 	}
-			// }
-			// if (goTransform && goBounds) {
-			// 	/* Spawn range enemies in the back */
-			// 	float3 newPosition = float3(0, 0, type == EnemyType::RANGE ? zAxisPos : 0);
-			// 	float newXval = goBounds->GetLocalMaxPointAABB().x - abs(goBounds->GetLocalMinPointAABB().x);
-			// 	newXval = newXval < 1.f ? 1.f : newXval;
-			// 	newPosition.x += xAxisPos * offset * newXval;
-			// 	goTransform->SetPosition(newPosition);
-			// 	/* After an enemy is spawned at a certain location th next one with be next to it */
-			// 	xAxisPos++;
-			// }
-				goTransform->SetPosition(EnemyLocation(amount, i));
-
+			goTransform->SetPosition(EnemyLocation(amount, i, type == EnemyType::MELEE ? 0 : -2));
 			if (playerScript) playerScript->AddEnemyInMap(go);
 		}
 	}
 }
 
-float3 EnemySpawnPoint::EnemyLocation(int N, int k) {
+float3 EnemySpawnPoint::EnemyLocation(int N, int k, int z) {
 	/*
 		([N / 2] - k) * d - ((N + 1) % 2) * d / 2
 		N : amount of enemies
 		k : current enemy
 		d : separation distance 
+		z : enemy position in the z axis
 	*/
 	int d = 2;
-	return float3(((N/2 - k) * d - ((N + 1)%2) * d/2), 0, 0);
+	return float3(((N/2 - k) * d - ((N + 1)%2) * d/2), 0, z);
+}
+
+void EnemySpawnPoint::LookAtPlayer(const float3& direction) {
+	Quat newRotation = Quat::LookAt(float3(0, 0, 1), direction.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
+	gameObjectTransform->SetGlobalRotation(newRotation);
 }
