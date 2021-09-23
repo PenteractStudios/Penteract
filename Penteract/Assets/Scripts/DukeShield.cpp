@@ -60,6 +60,7 @@ void DukeShield::InitShield() {
 	GetOwner().Enable();
 	shieldState = ShieldState::GROWING;
 	isActive = true;
+	transform->SetScale(float3(0.01f));
 }
 
 void DukeShield::FadeShield() {
@@ -73,13 +74,11 @@ void DukeShield::OnCollision(GameObject& collidedWith, float3 collisionNormal, f
 		&& isActive && duke) {
 
 		if (!particle) {
-			Debug::Log("Disable");
 			collidedWith.Disable();
 		} else {
 			ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 			ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 			if (pSystem) pSystem->KillParticle(p);
-			Debug::Log("Kill");
 		}
 
 		if (audio) {		// Play hit effect

@@ -23,7 +23,7 @@ public:
 
 	UID dukeUID = 0;
 	AIDuke* duke = nullptr;
-	float shieldMaxScale = 1.2f;
+	float shieldMaxScale = 0.9f;
 	float growthSpeed = 2.0f;
 	float fadeSpeed = 4.0f;
 	float growthThreshold = 0.05f;
