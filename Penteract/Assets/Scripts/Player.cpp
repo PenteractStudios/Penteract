@@ -29,7 +29,7 @@ bool Player::CanShoot() {
 	return !shootingOnCooldown;
 }
 
-MovementDirection Player::GetControllerMovementDirection(bool useGamepad) const {
+MovementDirection Player::GetControllerMovementDirection(bool useGamepad) {
 	float2 leftAxisInput = GetInputFloat2(InputActions::MOVEMENT, useGamepad);
 	MovementDirection md = MovementDirection::NONE;
 
@@ -124,7 +124,7 @@ void Player::MoveTo() {
 	agent->SetMoveTarget(newPosition, false);
 }
 
-MovementDirection Player::GetInputMovementDirection(bool useGamepad) const {
+MovementDirection Player::GetInputMovementDirection(bool useGamepad) {
 	MovementDirection md = GetControllerMovementDirection(useGamepad);
 	return md;
 }
@@ -224,8 +224,9 @@ bool Player::GetInputBool(InputActions action, bool useGamepad) {
 	}
 }
 
-float2 Player::GetInputFloat2(InputActions action, bool useGamepad) const {
-	float2 result = float2(0, 0);
+float2 Player::GetInputFloat2(InputActions action, bool useGamepad) {
+	result = float2(0, 0);
+
 	switch (action) {
 	case InputActions::MOVEMENT:
 		if (useGamepad && Input::IsGamepadConnected(0)) {
@@ -233,15 +234,19 @@ float2 Player::GetInputFloat2(InputActions action, bool useGamepad) const {
 			result.y = Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_LEFTY, 0);
 		} else {
 			if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_D) || Input::GetKeyCodeRepeat(Input::KEYCODE::KEY_D)) {
+				Debug::Log("1");
 				result.x = 1;
 			} else if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_A) || Input::GetKeyCodeRepeat(Input::KEYCODE::KEY_A)) {
 				result.x = -1;
+				Debug::Log("2");
 			}
 
 			if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_S) || Input::GetKeyCodeRepeat(Input::KEYCODE::KEY_S)) {
 				result.y = 1;
+				Debug::Log("2");
 			} else if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_W) || Input::GetKeyCodeRepeat(Input::KEYCODE::KEY_W)) {
 				result.y = -1;
+				Debug::Log("4");
 			}
 		}
 		break;
@@ -251,6 +256,7 @@ float2 Player::GetInputFloat2(InputActions action, bool useGamepad) const {
 			result.y = Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_RIGHTY, 0);
 		} else {
 			//Mouse handling
+			Debug::Log("Aqui");
 			float2 mousePos = Input::GetMousePositionNormalized();
 			LineSegment ray = lookAtMouseCameraComp->frustum.UnProjectLineSegment(mousePos.x, mousePos.y);
 			float3 planeTransform = lookAtMousePlanePosition;
@@ -262,7 +268,6 @@ float2 Player::GetInputFloat2(InputActions action, bool useGamepad) const {
 	default:
 		return float2(0, 0);
 	}
-
 	return result;
 }
 

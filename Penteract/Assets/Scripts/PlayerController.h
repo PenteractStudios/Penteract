@@ -102,6 +102,7 @@ public:
 	UID onimaruLaserUID = 0;
 	UID onimaruRightFootVFX = 0;
 	UID onimaruLeftFootVFX = 0;
+	UID onimaruWeaponUID = 0;
 
 	//HUD
 	UID HUDManagerObjectUID = 0;

@@ -8,7 +8,7 @@
 #include "OnimaruBullet.h"
 #include "AIMeleeGrunt.h"
 #include "RangedAI.h"
-
+#include "Geometry/LineSegment.h"
 #include "Shield.h"
 
 bool Onimaru::CanShoot() {
@@ -34,6 +34,7 @@ void Onimaru::GetHit(float damage_) {
 			if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::DEATH)]) onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::DEATH)]->Play();
 			OnDeath();
 		}
+		
 	}
 }
 
@@ -213,6 +214,56 @@ float Onimaru::GetNormalizedRemainingUltimateTime() const {
 	return 0.0f;
 }
 
+void Onimaru::UpdateWeaponRotation()
+{
+
+	float2 mousePos = Input::GetMousePositionNormalized();
+	LineSegment ray = lookAtMouseCameraComp->frustum.UnProjectLineSegment(mousePos.x, mousePos.y);
+	float3 planeTransform = lookAtMousePlanePosition;
+	Plane p = Plane(planeTransform, float3(0, 1, 0));
+	weaponPointDir = float3(0, 0, 0);
+	weaponPointDir = (p.ClosestPoint(ray) - (weaponTransform->GetGlobalPosition()));
+
+
+	//Debug::Log(std::to_string(weaponPointDir.x).c_str());
+	if (weaponPointDir.x == 0 && weaponPointDir.z == 0) return;
+	Quat quat = weaponTransform->GetGlobalRotation();
+
+	float angle = Atan2(weaponPointDir.x, weaponPointDir.z);
+	Quat rotation = quat.RotateAxisAngle(float3(0, 1, 0), angle);
+
+	float orientationSpeedToUse = orientationSpeed;
+
+	if (orientationSpeedToUse == -1) {
+		weaponTransform->SetGlobalRotation(rotation);
+	}
+	else {
+		float3 aux2 = weaponTransform->GetFront();
+		aux2.y = 0;
+
+		weaponPointDir.Normalize();
+
+		angle = weaponPointDir.AngleBetween(aux2);
+		float3 cross = Cross(aux2, weaponPointDir.Normalized());
+		float dot = Dot(cross, float3(0, 1, 0));
+		float multiplier = 1.0f;
+
+		if (dot < 0) {
+			angle *= -1;
+			multiplier = -1;
+		}
+
+		if (Abs(angle) > DEGTORAD * orientationThreshold) {
+			Quat rotationToAdd = Quat::Lerp(quat, rotation, Time::GetDeltaTime() * orientationSpeed);
+			weaponTransform->SetGlobalRotation(rotationToAdd);
+
+		}
+		else {
+			weaponTransform->SetGlobalRotation(rotation);
+		}
+	}
+}
+
 float Onimaru::GetRealShieldCooldown() {
 	if (shield == nullptr || shieldGO == nullptr) return 0.0f;
 	float realShieldCooldown = 1.0f;
@@ -335,7 +386,7 @@ void Onimaru::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* ev
 	}
 }
 
-void Onimaru::Init(UID onimaruUID, UID onimaruLaserUID, UID onimaruBulletUID, UID onimaruGunUID, UID onimaruRightHandUID, UID shieldUID, UID onimaruUltimateBulletUID, UID onimaruBlastEffectsUID, UID cameraUID, UID HUDManagerObjectUID, UID rightFootVFX, UID leftFootVFX) {
+void Onimaru::Init(UID onimaruUID,UID onimaruWeapon, UID onimaruLaserUID, UID onimaruBulletUID, UID onimaruGunUID, UID onimaruRightHandUID, UID shieldUID, UID onimaruUltimateBulletUID, UID onimaruBlastEffectsUID, UID cameraUID, UID HUDManagerObjectUID, UID rightFootVFX, UID leftFootVFX) {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(onimaruUID);
 	if (characterGameObject && characterGameObject->GetParent()) {
@@ -403,6 +454,9 @@ void Onimaru::Init(UID onimaruUID, UID onimaruLaserUID, UID onimaruBulletUID, UI
 			i++;
 		}
 	}
+
+	GameObject* onimaruWeaponAux = GameplaySystems::GetGameObject(onimaruWeapon);
+	if (onimaruWeaponAux) weaponTransform = onimaruWeaponAux->GetComponent<ComponentTransform>();
 
 	GameObject* rightHandGO = GameplaySystems::GetGameObject(onimaruRightHandUID);
 	if (rightHandGO) rightHand = rightHandGO->GetComponent<ComponentTransform>();
@@ -623,6 +677,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 		Blast();
 	}
 	PlayAnimation();
+	UpdateWeaponRotation();
 }
 
 float Onimaru::GetRealUltimateCooldown() {
