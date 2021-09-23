@@ -4,6 +4,8 @@
 
 #include <random>
 
+class ComponentParticleSystem;
+
 enum class DukeState {
 	BASIC_BEHAVIOUR,
 	MELEE_ATTACK,
@@ -42,7 +44,6 @@ public:
 		, timeToDie(timeToDie_)
 		, pushBackDistance(pushBackDistance_)
 		, pushBackSpeed(pushBackSpeed_)
-		, damageBullet(damageBullet_)
 		, damageCharge(damageCharge_) {
 		lifePoints = lifePoints_;
 		movementSpeed = movementSpeed_;
@@ -51,7 +52,7 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletPrefabUID);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void ShieldShoot();
@@ -59,27 +60,32 @@ public:
 	void Charge(DukeState nextState);
 	void CallTroops();
 	void Shoot();
+	void ThrowBarrels();
 
 public:
-	float damageBullet = 1.f;
 	float damageCharge = 1.f;
 	float chargeSpeed = 5.f;
 	float searchRadius = 8.f;
 	float attackRange = 2.0f;
 	float attackSpeed = 0.5f;
-	int attackFlurry = 3;
+	int attackBurst = 3;
+	float timeInterBurst = 1.0f;
 	float timeToDie = 5.f;
 	float pushBackDistance = 5.f;
 	float pushBackSpeed = 5.f;
+	float slowedDownSpeed = 3.f;
+	float slowedDownTime = 2.f;
 	float barrelDamageTaken = 3.f;
 	float moveChangeEvery = 2.0f;
-
-	ResourcePrefab* bulletPrefab = nullptr; // Reference to projectile prefab , for shooting
+	float distanceCorrectEvery = 2.0f;
 
 	DukeState state = DukeState::BASIC_BEHAVIOUR;
 	bool criticalMode = false;
 
+	// Effects' states
 	bool isShielding = false;
+	bool beingPushed = false;
+	bool slowedDown = false;
 
 	float3 chargeTarget;
 
@@ -90,8 +96,12 @@ private:
 	float3 perpendicular;
 	float movementTimer = 0.f;
 	float movementChangeThreshold = 2.0f;
+	float distanceCorrectionTimer = 0.f;
+	float distanceCorrectionThreshold = 2.0f;
+
+	// Shooting
 	float attackTimePool = 0.f;
-	int attackFlurryCounter = 0;
+	ComponentParticleSystem* bullet = nullptr;
 
 	GameObject* meshObj = nullptr;	//Main mesh for Getting MeshRenderer reference and checking frustum presence (if not inside frustum shooting won't happen)
 

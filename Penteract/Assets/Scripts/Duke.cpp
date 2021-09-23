@@ -4,16 +4,29 @@
 
 #include <string>
 
+#define RNG_SCALE 1.3f
+
 std::uniform_real_distribution<> rng(-1.0f, 1.0f);
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletPrefabUID)
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID)
 {
 	gen = std::minstd_rand(rd());
 
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(dukeUID);
 	player = GameplaySystems::GetGameObject(playerUID);
-	bulletPrefab = GameplaySystems::GetResource<ResourcePrefab>(bulletPrefabUID);
+
+	GameObject* bulletGO = GameplaySystems::GetGameObject(bulletUID);
+	if (bulletGO) {
+		bullet = bulletGO->GetComponent<ComponentParticleSystem>();
+		if (bullet) {
+			bullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
+			bullet->Play();
+			bullet->SetMaxParticles(attackBurst);
+			bullet->SetParticlesPerSecond(float2(attackSpeed, attackSpeed));
+			bullet->SetDuration(attackBurst / attackSpeed);
+		}
+	}
 
 	if (characterGameObject) {
 		meshObj = characterGameObject->GetChildren()[0];
@@ -43,6 +56,7 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletPrefabUID)
 		}
 	}
 	movementChangeThreshold = moveChangeEvery;
+	distanceCorrectionThreshold = distanceCorrectEvery;
 }
 
 void Duke::ShootAndMove(const float3& playerDirection)
@@ -52,11 +66,14 @@ void Duke::ShootAndMove(const float3& playerDirection)
 	if (movementTimer >= movementChangeThreshold) {
 		perpendicular = playerDirection.Cross(float3(0, 1, 0));
 		perpendicular = perpendicular * rng(gen);
-		perpendicular += playerDirection.Normalized() * (playerDirection.Length() - searchRadius);
-		std::string p = perpendicular.ToString();
-		Debug::Log(p.c_str());
 		movementChangeThreshold = moveChangeEvery + rng(gen);
 		movementTimer = 0.f;
+	}
+	distanceCorrectionTimer += Time::GetDeltaTime();
+	if (distanceCorrectionTimer >= distanceCorrectionThreshold) {
+		perpendicular += playerDirection.Normalized() * (playerDirection.Length() - searchRadius);
+		distanceCorrectionThreshold = distanceCorrectEvery + rng(gen);
+		distanceCorrectionTimer = 0.f;
 	}
 	agent->SetMoveTarget(dukeTransform->GetGlobalPosition() + perpendicular);
 	Shoot();
@@ -96,27 +113,17 @@ void Duke::Shoot()
 {
 	attackTimePool -= Time::GetDeltaTime();
 	if (attackTimePool <= 0) {
-		if (bulletPrefab) {
+		if (bullet) {
 			if (!meshObj) return;
-
-			ComponentBoundingBox* box = meshObj->GetComponent<ComponentBoundingBox>();
-
-			float offsetY = (box->GetWorldAABB().minPoint.y + box->GetWorldAABB().maxPoint.y) / 4;
-
-			GameObject* projectileInstance(GameplaySystems::Instantiate(bulletPrefab, characterGameObject->GetComponent<ComponentTransform>()->GetGlobalPosition() + float3(0, offsetY, 0), Quat(0, 0, 0, 0)));
-
-			if (projectileInstance) {
-				RangerProjectileScript* rps = GET_SCRIPT(projectileInstance, RangerProjectileScript);
-				if (rps && dukeTransform) {
-					rps->SetRangerDirection(dukeTransform->GetGlobalRotation());
-				}
-			}
+			bullet->PlayChildParticles();
 		}
-		attackTimePool = 1.0f / (attackFlurry*attackSpeed);
-		if (++attackFlurryCounter == attackFlurry) {
-			attackTimePool = 1.0f / attackSpeed;
-			attackFlurryCounter = 0;
-		}
+		attackTimePool = (attackBurst / attackSpeed) + timeInterBurst + rng(gen) * RNG_SCALE;
+		// Animation
 	}
 	Debug::Log("PIUM!");
+}
+
+void Duke::ThrowBarrels()
+{
+	Debug::Log("Here, barrel in your face!");
 }
