@@ -394,6 +394,11 @@
                         "Script": 17837163582535891834,
                         "Values": [
                             {
+                                "Name": "doorObstacleUID",
+                                "Type": "GameObjectUID",
+                                "Value": 3686065482970400856
+                            },
+                            {
                                 "Name": "bridgeDoorUID",
                                 "Type": "GameObjectUID",
                                 "Value": 7484947424681902563
@@ -407,8 +412,58 @@
                                 "Name": "fireBridgeUID",
                                 "Type": "GameObjectUID",
                                 "Value": 5623290770547259036
+                            },
+                            {
+                                "Name": "laserDoorObstacleUID",
+                                "Type": "GameObjectUID",
+                                "Value": 12871032089420108905
                             }
                         ]
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "Bridge Door Obstacle",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            0.2800617218017578,
+                            -2.339170455932617,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.7071068286895752,
+                            0.0,
+                            0.7071068286895752
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            90.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Obstacle",
+                        "Active": true,
+                        "Size": [
+                            8.399999618530274,
+                            3.25,
+                            3.950000047683716
+                        ],
+                        "ObstacleType": 2,
+                        "DrawGizmo": false
                     }
                 ],
                 "Children": null

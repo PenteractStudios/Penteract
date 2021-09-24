@@ -14,6 +14,8 @@ public:
 	UID bridgeDoorUID = 0;
 	UID fireBridgeUID = 0;
 	UID fireArenaUID = 0;
+	UID doorObstacleUID = 0;
+	UID laserDoorObstacleUID = 0;
 
 public:
 
@@ -23,6 +25,8 @@ public:
 
 private:
 	GameObject* gameObject = nullptr;
+	GameObject* doorObstacle = nullptr;
+	GameObject* laserDoorObstacle = nullptr;
 	FactoryDoors* doorScript = nullptr;
 	FloorIsLava* bridgeTilesScript = nullptr;
 	FloorIsLava* arenaTilesScript = nullptr;
