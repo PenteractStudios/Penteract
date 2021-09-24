@@ -1,0 +1,100 @@
+{
+    "Root": {
+        "Name": "Laser Railing Big 1",
+        "Active": true,
+        "RootBoneName": "",
+        "Mask": 16,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Active": true,
+                "Position": [
+                    0.1999947726726532,
+                    2.2063584327697756,
+                    58.44099426269531
+                ],
+                "Rotation": [
+                    -0.4999999403953552,
+                    -0.5,
+                    0.5000000596046448,
+                    0.5
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "LocalEulerAngles": [
+                    -90.0,
+                    -90.0,
+                    0.0
+                ]
+            },
+            {
+                "Type": "MeshRenderer",
+                "Active": true,
+                "MeshID": 3653493380438483050,
+                "MaterialID": 5908343676609694695
+            },
+            {
+                "Type": "BoundingBox",
+                "Active": true,
+                "LocalBoundingBox": [
+                    -1.631958246231079,
+                    -3.0000007152557375,
+                    9.360620083498361e-7,
+                    1.6319599151611329,
+                    3.0,
+                    0.0000020089455574634487
+                ]
+            }
+        ],
+        "Children": [
+            {
+                "Name": "Laser Door Obstacle",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            -1.5872265100479127,
+                            0.0,
+                            0.3542265295982361
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Obstacle",
+                        "Active": true,
+                        "Size": [
+                            2.799999952316284,
+                            1.0,
+                            2.0
+                        ],
+                        "ObstacleType": 2,
+                        "DrawGizmo": false
+                    }
+                ],
+                "Children": null
+            }
+        ]
+    }
+}

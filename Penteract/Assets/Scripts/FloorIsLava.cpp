@@ -47,15 +47,8 @@ void FloorIsLava::Update() {
 			++sequentialCount;
 			if (sequentialCount >= CORRIDOR_PATTERNS) {
 				sequentialCount = 0;
-			}		
-
-
-
-			nextTilesPattern = sequentialPatterns[sequentialCount].pattern;
-
-
-
-			
+			}	
+			nextTilesPattern = sequentialPatterns[sequentialCount].pattern;			
 		}
 		else {
 			currentPattern = nextPattern;
@@ -152,10 +145,6 @@ void FloorIsLava::UpdateWarningTiles(bool activate)
 					if (animation) {
 						animation->SendTrigger("ClosedOpening");
 					}
-					//tiles[i].activate warning particles
-				}
-				else {
-					//tiles[i].deactivate warning particles
 				}
 			}			
 		}
