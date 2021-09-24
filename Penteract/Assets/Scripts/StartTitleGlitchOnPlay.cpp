@@ -10,7 +10,7 @@
 #include "GameplaySystems.h"
 #include "GameObject.h"
 #include "CanvasFader.h"
-
+#include "VideoScene1Start.h"
 
 EXPOSE_MEMBERS(StartTitleGlitchOnPlay) {
 	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
@@ -99,6 +99,7 @@ void StartTitleGlitchOnPlay::OnButtonClick() {
 }
 
 void StartTitleGlitchOnPlay::DoTransition() {
+	VideoScene1Start::cameFromStartScene = true;
 	checkpoint = checkpointNum;
 	if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 	if (levelNum == 2) {
