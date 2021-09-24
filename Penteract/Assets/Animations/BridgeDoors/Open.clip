@@ -1,9 +1,9 @@
 {
     "Name": "Open",
     "AnimationUID": 8390922743207586870,
-    "BeginIndex": 90,
-    "EndIndex": 90,
-    "Loop": true,
+    "BeginIndex": 89,
+    "EndIndex": 89,
+    "Loop": false,
     "Speed": 1.0,
     "FrameRate": 0.04120370373129845
 }

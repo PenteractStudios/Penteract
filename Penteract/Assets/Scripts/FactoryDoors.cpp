@@ -15,15 +15,6 @@ void FactoryDoors::Update() {
 	
 }
 
-void FactoryDoors::OnAnimationFinished()
-{
-	if (animation) {
-		if (animation->GetCurrentState()->name == "Opening") {
-			animation->SendTrigger("OpeningOpen");
-		}
-	}
-}
-
 void FactoryDoors::Open() {
 	if (animation) animation->SendTrigger("ClosedOpening");
 }
