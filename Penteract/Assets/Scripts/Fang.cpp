@@ -369,7 +369,7 @@ float Fang::GetRealUltimateCooldown() {
 }
 
 bool Fang::CanShoot() {
-	return !shooting && !ultimateOn && !compAnimation->GetCurrentStateSecondary() && !GameController::IsGameplayBlocked();
+	return !shooting && !ultimateOn && !compAnimation->GetCurrentStateSecondary() && !GameController::IsGameplayBlocked() && !switchInProgress;
 }
 
 bool Fang::IsAiming() {
@@ -463,7 +463,7 @@ void Fang::ActiveUltimate() {
 }
 
 bool Fang::CanUltimate() {
-	return !dashing && !EMP->IsActive() && ultimateCooldownRemaining >= ultimateCooldown && !ultimateOn && !GameController::IsGameplayBlocked();
+	return !dashing && !EMP->IsActive() && ultimateCooldownRemaining >= ultimateCooldown && !ultimateOn && !GameController::IsGameplayBlocked() && !switchInProgress;
 }
 
 void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {

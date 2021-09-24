@@ -435,7 +435,7 @@ bool Onimaru::CanShield() const {
 }
 
 bool Onimaru::CanUltimate() const {
-	return !blastInUse && !IsShielding() && ultimateChargePoints >= ultimateChargePointsTotal && !GameController::IsGameplayBlocked();
+	return !blastInUse && !IsShielding() && ultimateChargePoints >= ultimateChargePointsTotal && !GameController::IsGameplayBlocked() && !switchInProgress;
 }
 
 bool Onimaru::UltimateStarted() const {
