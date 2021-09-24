@@ -130,7 +130,7 @@ void Duke::ThrowBarrels()
 {
 	Debug::Log("Here, barrel in your face!");
 
-	float height = 10.0f;
+	float height = 15.0f;
 	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
 
 	//Instantiate barrel and play animation throw barrels for Duke and the barrel

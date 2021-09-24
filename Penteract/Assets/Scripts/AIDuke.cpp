@@ -33,6 +33,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::FLOAT, bulletHellCooldown),
     MEMBER(MemberType::FLOAT, bulletHellActiveTime),
 	MEMBER(MemberType::FLOAT, abilityChangeCooldown),
+	MEMBER(MemberType::FLOAT, throwBarrelTimer),
 
 	MEMBER_SEPARATOR("Particles UIDs"),
 
@@ -58,6 +59,10 @@ void AIDuke::Start() {
 }
 
 void AIDuke::Update() {
+	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_B)) { // TODO remove only for test
+		dukeCharacter.ThrowBarrels();
+	}
+
 	std::string life = std::to_string(dukeCharacter.lifePoints);
 	life = "Life points: " + life;
 	Debug::Log(life.c_str());
@@ -194,7 +199,11 @@ void AIDuke::Update() {
 			troopsCounter -= 0.0063;
 			float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
 			movementScript->Orientate(dir);
-			dukeCharacter.ThrowBarrels();
+			throwBarrelTimer -= Time::GetDeltaTime();
+			if (throwBarrelTimer <= 0) {
+				dukeCharacter.ThrowBarrels();
+				throwBarrelTimer = 5;
+			}
 		}
 		break;
 	case Phase::PHASE3:

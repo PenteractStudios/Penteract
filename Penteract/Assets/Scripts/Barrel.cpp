@@ -5,39 +5,41 @@
 #include "Components/ComponentParticleSystem.h"
 
 EXPOSE_MEMBERS(Barrel) {
-	// Add members here to expose them to the engine. Example:
-	MEMBER(MemberType::GAME_OBJECT_UID, barrelUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, sphereColliderUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, particlesUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, particlesForTimerUID),
+		// Add members here to expose them to the engine. Example:
 		MEMBER(MemberType::FLOAT, timeToDestroy),
-		MEMBER(MemberType::FLOAT, timerToDestroy)
+		MEMBER(MemberType::FLOAT, timeWillDoDamage),
+		MEMBER(MemberType::FLOAT, timerToDestroy),
+		MEMBER(MemberType::BOOL, onFloor),
+		MEMBER(MemberType::FLOAT, forceOfFall)
 
 };
 
 GENERATE_BODY_IMPL(Barrel);
 
 void Barrel::Start() {
-	barrel = GameplaySystems::GetGameObject(barrelUID);
+	barrel = &GetOwner();
+	parentTransform = barrel->GetParent()->GetComponent<ComponentTransform>();
 
-	GameObject* barrelColliderAux = GameplaySystems::GetGameObject(sphereColliderUID);
+	barrelMesh = barrel->GetParent()->GetChild("BarrelMesh");
+
+	GameObject* barrelColliderAux = barrel->GetParent()->GetChild("Barrel");
 	if (barrelColliderAux) {
 		barrelCollider = barrelColliderAux;
 		barrelCollider->Disable();
 	}
 
-	GameObject* cameraAux = GameplaySystems::GetGameObject(cameraUID);
+	GameObject* cameraAux = GameplaySystems::GetGameObject("Game Camera"); 
 	if (cameraAux) {
 		cameraController = GET_SCRIPT(cameraAux, CameraController);
 	}
-	GameObject* particleAux = GameplaySystems::GetGameObject(particlesUID);
+
+	GameObject* particleAux = barrel->GetParent()->GetChild("ShockWaveGround");
 	if (particleAux) {
 		particles = particleAux->GetComponent<ComponentParticleSystem>();
 		audio = particleAux->GetComponent<ComponentAudioSource>();
 	}
 
-	GameObject* particleForTimerAux = GameplaySystems::GetGameObject(particlesForTimerUID);
+	GameObject* particleForTimerAux = barrel->GetParent()->GetChild("BarrelWarning");
 	if (particleForTimerAux) {
 		particlesForTimer = particleForTimerAux->GetComponent<ComponentParticleSystem>();
 		audioForTimer = particleForTimerAux->GetComponent<ComponentAudioSource>();
@@ -64,11 +66,18 @@ void Barrel::Update() {
 		isHit = false;
 		if(particles) particles->PlayChildParticles();
 		if(audio) audio->Play();
-		if(barrel) barrel->Disable();
+		if(barrelMesh) barrelMesh->Disable();
 		destroy = true;
+		if(cameraController) cameraController->StartShake();
 	}
 
 	if (destroy) {
+		if (timeWillDoDamage > 0) {
+			timeWillDoDamage -= Time::GetDeltaTime();
+		}
+		else {
+			if (barrelCollider) barrelCollider->Disable();
+		}
 
 		if (timeToDestroy > 0) {
 			timeToDestroy -= Time::GetDeltaTime();
@@ -79,6 +88,18 @@ void Barrel::Update() {
 		}
 	}
 
+	if (!onFloor) {
+		float3 barrelPos = parentTransform->GetGlobalPosition();
+		if (barrelPos.y > 3) {
+			barrelPos += float3(0, -forceOfFall, 0);
+			parentTransform->SetGlobalPosition(barrelPos);
+		}
+		else {
+			startTimerToDestroy = true;
+			timerDestroyActivated = true;
+			onFloor = true;
+		}
+	}
 }
 
 void Barrel::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle)

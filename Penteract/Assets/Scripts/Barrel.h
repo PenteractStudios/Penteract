@@ -5,6 +5,7 @@
 class ComponentSphereCollider;
 class ComponentParticleSystem;
 class ComponentAudioSource;
+class ComponentTransform;
 
 class CameraController;
 class ResourcePrefab;
@@ -31,14 +32,22 @@ public:
 	ComponentParticleSystem* particles = nullptr;
 	ComponentParticleSystem* particlesForTimer = nullptr;
 	GameObject* barrel = nullptr;
+	GameObject* barrelMesh = nullptr;
 	ComponentAudioSource* audio = nullptr;
 	ComponentAudioSource* audioForTimer = nullptr;
 	bool isHit = false;
 	bool destroy = false;
 	float timeToDestroy = 1.0f;
+	float timeWillDoDamage = 0.5f;
 
 	float timerToDestroy = 3.0f;
 	float currentTimerToDestroy = 0.0f;
 	bool startTimerToDestroy = false;
 	bool timerDestroyActivated = false;
+
+	bool onFloor = true;	//Boolean to say if the barrel is on the ground (normal behavior) or is thrown by the boos
+	float forceOfFall = 0.25f;
+
+private:
+	ComponentTransform* parentTransform = nullptr;
 };

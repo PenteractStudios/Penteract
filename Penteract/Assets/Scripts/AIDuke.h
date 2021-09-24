@@ -77,6 +77,8 @@ public:
 
 	float troopsCounter = 5;
 
+	float throwBarrelTimer = 5;
+
 private:
 
 	ComponentTransform* ownerTransform = nullptr;
