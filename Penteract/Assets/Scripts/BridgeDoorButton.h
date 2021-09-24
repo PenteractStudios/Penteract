@@ -4,6 +4,7 @@
 
 class GameObject;
 class FactoryDoors;
+class FloorIsLava;
 
 class BridgeDoorButton : public Script
 {
@@ -11,6 +12,8 @@ class BridgeDoorButton : public Script
 
 public:
 	UID bridgeDoorUID = 0;
+	UID fireBridgeUID = 0;
+	UID fireArenaUID = 0;
 
 public:
 
@@ -20,6 +23,8 @@ public:
 
 private:
 	GameObject* gameObject = nullptr;
-	FactoryDoors* script = nullptr;
+	FactoryDoors* doorScript = nullptr;
+	FloorIsLava* bridgeTilesScript = nullptr;
+	FloorIsLava* arenaTilesScript = nullptr;
 };
 

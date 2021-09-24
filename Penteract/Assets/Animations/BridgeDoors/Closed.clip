@@ -1,9 +1,9 @@
 {
     "Name": "Closed",
-    "AnimationUID": 8457229863829890647,
+    "AnimationUID": 8390922743207586870,
     "BeginIndex": 0,
     "EndIndex": 0,
-    "Loop": false,
+    "Loop": true,
     "Speed": 1.0,
     "FrameRate": 0.04120370373129845
 }

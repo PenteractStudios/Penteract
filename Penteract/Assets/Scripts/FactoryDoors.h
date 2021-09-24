@@ -10,6 +10,7 @@ class FactoryDoors : public Script {
 public:
 	void Start() override;
 	void Update() override;
+	void OnAnimationFinished() override;
 	void Open();
 
 private:

@@ -33,8 +33,8 @@
             {
                 "Type": "Animation",
                 "Active": true,
-                "StateMachinePrincipalId": 18006369786990119517,
-                "StateMachineSecondaryId": 11053393929250116096
+                "StateMachinePrincipalId": 13658619514034805053,
+                "StateMachineSecondaryId": 8127031876454331549
             },
             {
                 "Type": "Script",
@@ -181,278 +181,6 @@
                         ]
                     },
                     {
-                        "Name": "rightFrontUpLight",
-                        "Active": true,
-                        "RootBoneName": "",
-                        "Mask": 0,
-                        "Components": [
-                            {
-                                "Type": "Transform",
-                                "Active": true,
-                                "Position": [
-                                    16.679458618164064,
-                                    20.263755798339845,
-                                    1.0700533390045167
-                                ],
-                                "Rotation": [
-                                    0.056584153324365619,
-                                    0.7100858688354492,
-                                    -0.055750180035829547,
-                                    0.6996200680732727
-                                ],
-                                "Scale": [
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                ],
-                                "LocalEulerAngles": [
-                                    95.35658264160156,
-                                    80.84858703613281,
-                                    -95.28878021240235
-                                ]
-                            }
-                        ],
-                        "Children": null
-                    },
-                    {
-                        "Name": "leftFrontUpLight",
-                        "Active": true,
-                        "RootBoneName": "",
-                        "Mask": 0,
-                        "Components": [
-                            {
-                                "Type": "Transform",
-                                "Active": true,
-                                "Position": [
-                                    -9.36230182647705,
-                                    24.440624237060548,
-                                    1.4616854190826417
-                                ],
-                                "Rotation": [
-                                    0.056584153324365619,
-                                    0.7100858688354492,
-                                    -0.055750180035829547,
-                                    0.6996200680732727
-                                ],
-                                "Scale": [
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                ],
-                                "LocalEulerAngles": [
-                                    95.35658264160156,
-                                    80.84858703613281,
-                                    -95.28878021240235
-                                ]
-                            }
-                        ],
-                        "Children": null
-                    },
-                    {
-                        "Name": "rightFrontDownLight",
-                        "Active": true,
-                        "RootBoneName": "",
-                        "Mask": 0,
-                        "Components": [
-                            {
-                                "Type": "Transform",
-                                "Active": true,
-                                "Position": [
-                                    17.367883682250978,
-                                    -0.8272912502288818,
-                                    1.010362982749939
-                                ],
-                                "Rotation": [
-                                    0.056584153324365619,
-                                    0.7100858688354492,
-                                    -0.055750180035829547,
-                                    0.6996200680732727
-                                ],
-                                "Scale": [
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                ],
-                                "LocalEulerAngles": [
-                                    95.35658264160156,
-                                    80.84858703613281,
-                                    -95.28878021240235
-                                ]
-                            }
-                        ],
-                        "Children": null
-                    },
-                    {
-                        "Name": "leftFrontDownLight",
-                        "Active": true,
-                        "RootBoneName": "",
-                        "Mask": 0,
-                        "Components": [
-                            {
-                                "Type": "Transform",
-                                "Active": true,
-                                "Position": [
-                                    -16.6837100982666,
-                                    4.655307769775391,
-                                    1.5225014686584473
-                                ],
-                                "Rotation": [
-                                    0.056584153324365619,
-                                    0.7100858688354492,
-                                    -0.055750180035829547,
-                                    0.6996200680732727
-                                ],
-                                "Scale": [
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                ],
-                                "LocalEulerAngles": [
-                                    95.35658264160156,
-                                    80.84858703613281,
-                                    -95.28878021240235
-                                ]
-                            }
-                        ],
-                        "Children": null
-                    },
-                    {
-                        "Name": "leftBackDownLight",
-                        "Active": true,
-                        "RootBoneName": "",
-                        "Mask": 0,
-                        "Components": [
-                            {
-                                "Type": "Transform",
-                                "Active": true,
-                                "Position": [
-                                    -16.717920303344728,
-                                    4.660794734954834,
-                                    -0.8108426928520203
-                                ],
-                                "Rotation": [
-                                    0.056584153324365619,
-                                    0.7100858688354492,
-                                    -0.055750180035829547,
-                                    0.6996200680732727
-                                ],
-                                "Scale": [
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                ],
-                                "LocalEulerAngles": [
-                                    95.35658264160156,
-                                    80.84858703613281,
-                                    -95.28878021240235
-                                ]
-                            }
-                        ],
-                        "Children": null
-                    },
-                    {
-                        "Name": "leftBackUpLight",
-                        "Active": true,
-                        "RootBoneName": "",
-                        "Mask": 0,
-                        "Components": [
-                            {
-                                "Type": "Transform",
-                                "Active": true,
-                                "Position": [
-                                    -9.396512031555176,
-                                    24.44611167907715,
-                                    -0.8716586828231812
-                                ],
-                                "Rotation": [
-                                    0.056584153324365619,
-                                    0.7100858688354492,
-                                    -0.055750180035829547,
-                                    0.6996200680732727
-                                ],
-                                "Scale": [
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                ],
-                                "LocalEulerAngles": [
-                                    95.35658264160156,
-                                    80.84858703613281,
-                                    -95.28878021240235
-                                ]
-                            }
-                        ],
-                        "Children": null
-                    },
-                    {
-                        "Name": "rightBackDownLight",
-                        "Active": true,
-                        "RootBoneName": "",
-                        "Mask": 0,
-                        "Components": [
-                            {
-                                "Type": "Transform",
-                                "Active": true,
-                                "Position": [
-                                    17.33367347717285,
-                                    -0.8218042850494385,
-                                    -1.3229811191558838
-                                ],
-                                "Rotation": [
-                                    0.056584153324365619,
-                                    0.7100858688354492,
-                                    -0.055750180035829547,
-                                    0.6996200680732727
-                                ],
-                                "Scale": [
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                ],
-                                "LocalEulerAngles": [
-                                    95.35658264160156,
-                                    80.84858703613281,
-                                    -95.28878021240235
-                                ]
-                            }
-                        ],
-                        "Children": null
-                    },
-                    {
-                        "Name": "rightBackUpLight",
-                        "Active": true,
-                        "RootBoneName": "",
-                        "Mask": 0,
-                        "Components": [
-                            {
-                                "Type": "Transform",
-                                "Active": true,
-                                "Position": [
-                                    16.645248413085939,
-                                    20.269243240356447,
-                                    -1.2632907629013062
-                                ],
-                                "Rotation": [
-                                    0.056584153324365619,
-                                    0.7100858688354492,
-                                    -0.055750180035829547,
-                                    0.6996200680732727
-                                ],
-                                "Scale": [
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                ],
-                                "LocalEulerAngles": [
-                                    95.35658264160156,
-                                    80.84858703613281,
-                                    -95.28878021240235
-                                ]
-                            }
-                        ],
-                        "Children": null
-                    },
-                    {
                         "Name": "leftDoor",
                         "Active": true,
                         "RootBoneName": "",
@@ -591,14 +319,14 @@
                     {
                         "Type": "MeshRenderer",
                         "Active": true,
-                        "MeshID": 8252078835342116952,
+                        "MeshID": 6704212611184044889,
                         "MaterialID": 7381969345662269289
                     },
                     {
                         "Type": "MeshRenderer",
                         "Active": true,
-                        "MeshID": 826168326436677577,
-                        "MaterialID": 11025066604897167022
+                        "MeshID": 1178915421083753688,
+                        "MaterialID": 7381969345662269289
                     },
                     {
                         "Type": "BoundingBox",
@@ -625,9 +353,9 @@
                         "Type": "Transform",
                         "Active": true,
                         "Position": [
-                            -3.775857925415039,
-                            6.1152119636535648,
-                            -23.680206298828126
+                            -1.1529674530029297,
+                            6.266483783721924,
+                            -23.524185180664064
                         ],
                         "Rotation": [
                             0.0,
@@ -649,8 +377,8 @@
                     {
                         "Type": "SphereCollider",
                         "Active": true,
-                        "colliderType": 3,
-                        "layerType": 1,
+                        "colliderType": 1,
+                        "layerType": 2,
                         "mass": 1.0,
                         "radius": 1.0,
                         "centerOffset": [
@@ -668,7 +396,17 @@
                             {
                                 "Name": "bridgeDoorUID",
                                 "Type": "GameObjectUID",
-                                "Value": 15107917659495834165
+                                "Value": 7484947424681902563
+                            },
+                            {
+                                "Name": "fireArenaUID",
+                                "Type": "GameObjectUID",
+                                "Value": 12889789178203051301
+                            },
+                            {
+                                "Name": "fireBridgeUID",
+                                "Type": "GameObjectUID",
+                                "Value": 5623290770547259036
                             }
                         ]
                     }

@@ -38,6 +38,8 @@ void FloorIsLava::Start() {
 
 void FloorIsLava::Update() {
 	
+	if (!started) return;
+
 	//select a random corridor and arena pattern
 	if (patternFinished) {
 		if (sequential) {
@@ -112,7 +114,17 @@ void FloorIsLava::Update() {
 
 }
 
-void FloorIsLava::SetPattern(int pattern, bool*& boolPattern)
+void FloorIsLava::StartFire()
+{
+	started = true;
+}
+
+void FloorIsLava::StopFire()
+{
+	started = false;
+}
+
+void FloorIsLava::SetPattern(int pattern, const bool*& boolPattern)
 {
 	switch (pattern)
 	{
