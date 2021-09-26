@@ -84,13 +84,7 @@ void AIMovement::Orientate(const float3& direction, float orientationSpeed, floa
 
 		if (angle < orientationThreshold) return;
 
-
 		targetRotation = Quat::RotateAxisAngle(axis, orientationSpeed * Time::GetDeltaTime()) * ownerTransform->GetGlobalRotation();
-
-		Debug::Log(std::to_string(angle).c_str());
-
-
-
 
 		//targetRotation = Quat::LookAt(float3(0, 0, 1), direction.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
 
