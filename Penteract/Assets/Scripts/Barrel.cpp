@@ -5,13 +5,13 @@
 #include "Components/ComponentParticleSystem.h"
 
 EXPOSE_MEMBERS(Barrel) {
-		// Add members here to expose them to the engine. Example:
-		MEMBER(MemberType::FLOAT, timeToDestroy),
-		MEMBER(MemberType::FLOAT, timeWillDoDamage),
-		MEMBER(MemberType::FLOAT, timerToDestroy),
-		MEMBER(MemberType::BOOL, onFloor),
-		MEMBER(MemberType::FLOAT, forceOfFall)
-
+	// Add members here to expose them to the engine. Example:
+	MEMBER(MemberType::FLOAT, timeToDestroy),
+	MEMBER(MemberType::FLOAT, timeWillDoDamage),
+	MEMBER(MemberType::FLOAT, timerToDestroy),
+	MEMBER(MemberType::BOOL, onFloor),
+	MEMBER(MemberType::FLOAT, forceOfFall),
+	MEMBER(MemberType::FLOAT, shakeMultiplier)
 };
 
 GENERATE_BODY_IMPL(Barrel);
@@ -22,8 +22,8 @@ void Barrel::Start() {
 
 	barrelMesh = barrel->GetParent()->GetChild("BarrelMesh");
 
-	GameObject* barrelColliderAux = barrel->GetParent()->GetChild("Barrel");
-	if (barrelColliderAux) {
+	barrelCollider = barrel->GetParent()->GetChild("Barrel");
+	if (barrelCollider) {
 		barrelCollider = barrelColliderAux;
 		barrelCollider->Disable();
 	}
@@ -47,14 +47,15 @@ void Barrel::Start() {
 }
 
 void Barrel::Update() {
+	if (!barrel || !barrelCollider || !cameraController || !particles || !audio || !particlesForTimer || !audioForTimer) return;
 
 	if (startTimerToDestroy && timerDestroyActivated) {
-		if (particlesForTimer) particlesForTimer->PlayChildParticles();
-		if (audioForTimer) audioForTimer->Play();
+		particlesForTimer->PlayChildParticles();
+		audioForTimer->Play();
 
 		currentTimerToDestroy += Time::GetDeltaTime();
 		if (currentTimerToDestroy >= timerToDestroy) {
-			if (audioForTimer) audioForTimer->Stop();
+			audioForTimer->Stop();
 			isHit = true;
 			startTimerToDestroy = false;
 		}
@@ -62,13 +63,13 @@ void Barrel::Update() {
 	}
 
 	if (isHit) {
-		if(barrelCollider) barrelCollider->Enable();
+		barrelCollider->Enable();
 		isHit = false;
-		if(particles) particles->PlayChildParticles();
-		if(audio) audio->Play();
-		if(barrelMesh) barrelMesh->Disable();
+		particles->PlayChildParticles();
+		audio->Play();
+		barrelMesh->Disable();
 		destroy = true;
-		if(cameraController) cameraController->StartShake();
+		cameraController->StartShake(shakeMultiplier);
 	}
 
 	if (destroy) {
@@ -84,7 +85,7 @@ void Barrel::Update() {
 		}
 		else {
 			destroy = false;
-			if(barrel) GameplaySystems::DestroyGameObject(barrel->GetParent());
+			GameplaySystems::DestroyGameObject(barrel->GetParent());
 		}
 	}
 

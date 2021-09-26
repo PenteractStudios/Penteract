@@ -44,6 +44,7 @@ public:
 	float currentTimerToDestroy = 0.0f;
 	bool startTimerToDestroy = false;
 	bool timerDestroyActivated = false;
+	float shakeMultiplier = 1.85f;
 
 	bool onFloor = true;	//Boolean to say if the barrel is on the ground (normal behavior) or is thrown by the boos
 	float forceOfFall = 0.25f;
