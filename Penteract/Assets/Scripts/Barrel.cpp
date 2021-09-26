@@ -78,7 +78,7 @@ void Barrel::Update() {
 		}
 		else {
 			destroy = false;
-			GameplaySystems::DestroyGameObject(barrel->GetParent());
+			barrel->GetParent()->Disable();
 		}
 	}
 
