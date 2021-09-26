@@ -7,13 +7,13 @@
 EXPOSE_MEMBERS(Barrel) {
 	// Add members here to expose them to the engine. Example:
 	MEMBER(MemberType::GAME_OBJECT_UID, barrelUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, sphereColliderUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, particlesUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, particlesForTimerUID),
-		MEMBER(MemberType::FLOAT, timeToDestroy),
-		MEMBER(MemberType::FLOAT, timerToDestroy)
-
+	MEMBER(MemberType::GAME_OBJECT_UID, sphereColliderUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, cameraUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, particlesUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, particlesForTimerUID),
+	MEMBER(MemberType::FLOAT, timeToDestroy),
+	MEMBER(MemberType::FLOAT, timeToDestroyCollider),
+	MEMBER(MemberType::FLOAT, timerToDestroy)
 };
 
 GENERATE_BODY_IMPL(Barrel);
@@ -21,9 +21,8 @@ GENERATE_BODY_IMPL(Barrel);
 void Barrel::Start() {
 	barrel = GameplaySystems::GetGameObject(barrelUID);
 
-	GameObject* barrelColliderAux = GameplaySystems::GetGameObject(sphereColliderUID);
-	if (barrelColliderAux) {
-		barrelCollider = barrelColliderAux;
+	barrelCollider = GameplaySystems::GetGameObject(sphereColliderUID);
+	if (barrelCollider) {
 		barrelCollider->Disable();
 	}
 
@@ -45,14 +44,15 @@ void Barrel::Start() {
 }
 
 void Barrel::Update() {
+	if (!barrel || !barrelCollider || !cameraController || !particles || !audio || !particlesForTimer || !audioForTimer) return;
 
 	if (startTimerToDestroy && timerDestroyActivated) {
-		if (particlesForTimer) particlesForTimer->PlayChildParticles();
-		if (audioForTimer) audioForTimer->Play();
+		particlesForTimer->PlayChildParticles();
+		audioForTimer->Play();
 
 		currentTimerToDestroy += Time::GetDeltaTime();
 		if (currentTimerToDestroy >= timerToDestroy) {
-			if (audioForTimer) audioForTimer->Stop();
+			audioForTimer->Stop();
 			isHit = true;
 			startTimerToDestroy = false;
 		}
@@ -60,22 +60,23 @@ void Barrel::Update() {
 	}
 
 	if (isHit) {
-		if(barrelCollider) barrelCollider->Enable();
+		barrelCollider->Enable();
 		isHit = false;
-		if(particles) particles->PlayChildParticles();
-		if(audio) audio->Play();
-		if(barrel) barrel->Disable();
+		particles->PlayChildParticles();
+		audio->Play();
+		barrel->Disable();
 		destroy = true;
 	}
 
 	if (destroy) {
 
 		if (timeToDestroy > 0) {
+			if (timeToDestroy <= timeToDestroyCollider && barrelCollider->IsActive()) barrelCollider->Disable();
 			timeToDestroy -= Time::GetDeltaTime();
 		}
 		else {
 			destroy = false;
-			if(barrel) GameplaySystems::DestroyGameObject(barrel->GetParent());
+			GameplaySystems::DestroyGameObject(barrel->GetParent());
 		}
 	}
 
