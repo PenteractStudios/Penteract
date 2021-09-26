@@ -6,6 +6,7 @@ class ComponentSphereCollider;
 class ComponentParticleSystem;
 class ComponentAudioSource;
 class ComponentTransform;
+class ComponentObstacle;
 
 class CameraController;
 class ResourcePrefab;
@@ -33,6 +34,7 @@ public:
 	ComponentParticleSystem* particlesForTimer = nullptr;
 	GameObject* barrel = nullptr;
 	GameObject* barrelMesh = nullptr;
+	ComponentObstacle* obstacle = nullptr;
 	ComponentAudioSource* audio = nullptr;
 	ComponentAudioSource* audioForTimer = nullptr;
 	bool isHit = false;

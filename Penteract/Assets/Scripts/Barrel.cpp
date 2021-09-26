@@ -3,6 +3,7 @@
 #include "Components/Physics/ComponentSphereCollider.h"
 #include "CameraController.h"
 #include "Components/ComponentParticleSystem.h"
+#include "Components/ComponentObstacle.h"
 
 EXPOSE_MEMBERS(Barrel) {
 	// Add members here to expose them to the engine. Example:
@@ -21,10 +22,13 @@ void Barrel::Start() {
 	parentTransform = barrel->GetParent()->GetComponent<ComponentTransform>();
 
 	barrelMesh = barrel->GetParent()->GetChild("BarrelMesh");
+	if (barrelMesh) {
+		obstacle = barrelMesh->GetComponent<ComponentObstacle>();
+		if(!onFloor) obstacle->Disable();
+	}
 
 	barrelCollider = barrel->GetParent()->GetChild("Barrel");
 	if (barrelCollider) {
-		barrelCollider = barrelColliderAux;
 		barrelCollider->Disable();
 	}
 
@@ -44,6 +48,8 @@ void Barrel::Start() {
 		particlesForTimer = particleForTimerAux->GetComponent<ComponentParticleSystem>();
 		audioForTimer = particleForTimerAux->GetComponent<ComponentAudioSource>();
 	}
+
+
 }
 
 void Barrel::Update() {
@@ -59,7 +65,6 @@ void Barrel::Update() {
 			isHit = true;
 			startTimerToDestroy = false;
 		}
-
 	}
 
 	if (isHit) {
@@ -90,8 +95,8 @@ void Barrel::Update() {
 	}
 
 	if (!onFloor) {
-		float3 barrelPos = parentTransform->GetGlobalPosition();
-		if (barrelPos.y > 3) {
+		if (barrelMesh->GetComponent<ComponentTransform>()->GetGlobalPosition().y > 0.25f) {
+			float3 barrelPos = parentTransform->GetGlobalPosition();
 			barrelPos += float3(0, -forceOfFall, 0);
 			parentTransform->SetGlobalPosition(barrelPos);
 		}
@@ -99,6 +104,7 @@ void Barrel::Update() {
 			startTimerToDestroy = true;
 			timerDestroyActivated = true;
 			onFloor = true;
+			obstacle->Enable();
 		}
 	}
 }
