@@ -99,7 +99,7 @@ void StartTitleGlitchOnPlay::OnButtonClick() {
 }
 
 void StartTitleGlitchOnPlay::DoTransition() {
-	VideoScene1Start::cameFromStartScene = true;
+	GameplaySystems::SetGlobalVariable(VideoScene1Start::globalVariableKeyPlayVideoScene1, true);
 	checkpoint = checkpointNum;
 	if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 	if (levelNum == 2) {

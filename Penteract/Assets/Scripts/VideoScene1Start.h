@@ -16,9 +16,8 @@ public:
 	void Update() override;
 
 public:
-	static bool cameFromStartScene;
 	UID canvasFaderUID = 0;
-
+	static const char* globalVariableKeyPlayVideoScene1;
 private: 
 	void BackToNormalGameplay();
 

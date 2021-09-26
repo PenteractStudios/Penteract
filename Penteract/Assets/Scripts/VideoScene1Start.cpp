@@ -8,7 +8,7 @@
 #include "Components/UI/ComponentVideo.h"
 #include "Components/UI/ComponentCanvas.h"
 
-bool VideoScene1Start::cameFromStartScene = false;
+const char* VideoScene1Start::globalVariableKeyPlayVideoScene1 = "CameFromMainMenu";
 
 EXPOSE_MEMBERS(VideoScene1Start) {
     MEMBER(MemberType::GAME_OBJECT_UID, canvasFaderUID)
@@ -30,11 +30,11 @@ void VideoScene1Start::Start() {
     componentVideo->SetVideoFrameSize(Screen::GetResolution().x, Screen::GetResolution().y);
 
     if (componentVideo) {
-        if (cameFromStartScene) {
+        if (GameplaySystems::GetGlobalVariable(globalVariableKeyPlayVideoScene1,true)) {
             componentVideo->Play();
             GameController::SetVideoActive(true);
             Time::PauseGame();
-            cameFromStartScene = false;
+            GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, false);
         } else {
             BackToNormalGameplay();
         }
