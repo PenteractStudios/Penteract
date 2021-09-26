@@ -149,7 +149,7 @@ bool Fang::IsInstantOrientation(bool useGamepad) const {
 void Fang::GetHit(float damage_) {
 	if (!dashing && isAlive) {
 		if (cameraController) {
-			cameraController->StartShake();
+			cameraController->StartShake(-1.f);
 		}
 
 		lifePoints -= damage_;

@@ -13,7 +13,8 @@ EXPOSE_MEMBERS(Barrel) {
 	MEMBER(MemberType::GAME_OBJECT_UID, particlesForTimerUID),
 	MEMBER(MemberType::FLOAT, timeToDestroy),
 	MEMBER(MemberType::FLOAT, timeToDestroyCollider),
-	MEMBER(MemberType::FLOAT, timerToDestroy)
+	MEMBER(MemberType::FLOAT, timerToDestroy),
+	MEMBER(MemberType::FLOAT, shakeMultiplier)
 };
 
 GENERATE_BODY_IMPL(Barrel);
@@ -66,6 +67,7 @@ void Barrel::Update() {
 		audio->Play();
 		barrel->Disable();
 		destroy = true;
+		cameraController->StartShake(shakeMultiplier);
 	}
 
 	if (destroy) {

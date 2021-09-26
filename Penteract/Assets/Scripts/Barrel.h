@@ -42,4 +42,6 @@ public:
 	float currentTimerToDestroy = 0.0f;
 	bool startTimerToDestroy = false;
 	bool timerDestroyActivated = false;
+
+	float shakeMultiplier = 0.2f;
 };
