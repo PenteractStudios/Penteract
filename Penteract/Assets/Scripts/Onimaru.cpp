@@ -517,7 +517,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 			}
 		}
 		else {
-			//Ultimate execution
+			// Ultimate execution
 			if (ultimateTimeRemaining > 0) {
 				ultimateTimeRemaining -= Time::GetDeltaTime();
 				Shoot();
