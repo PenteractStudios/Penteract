@@ -58,7 +58,9 @@ void EnemySpawnPoint::Update() {
 		RenderEnemy(EnemyType::MELEE, std::get<0>(*it));
 		RenderEnemy(EnemyType::RANGE, std::get<1>(*it));
 		/* Rotate the spawn point to the player location */
-		LookAtPlayer(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - gameObjectTransform->GetGlobalPosition());
+		float3 playerDirection = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - gameObjectTransform->GetGlobalPosition();
+		playerDirection.y = 0.f;		
+		LookAtPlayer(playerDirection);
 
 		/* Stop the spawn until all the wave enemies die */
 		spawn = false;
