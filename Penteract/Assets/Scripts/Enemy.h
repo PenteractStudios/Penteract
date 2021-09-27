@@ -2,6 +2,8 @@
 
 #include "Character.h"
 
+class PlayerController;
+
 class Enemy : public Character {
 public:
 	// ------- Contructors ------- //
@@ -27,6 +29,7 @@ public:
 	void SetSearchRadius(float searchRadius_);
 	void SetAttackRange(float attackRange_);
 	void SetTimeToDie(float timeToDie_);
+	void IncreasePlayerUltimateCharges(PlayerController* player);
 
 public:
 	int fallingSpeed = 5;

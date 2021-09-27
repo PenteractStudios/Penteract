@@ -110,6 +110,8 @@ protected:
 	float deceleration = 0.f;
 	float3 decelerationDirection = float3(0.f,0.f,0.f);
 	bool decelerating = false;
+protected:
+	bool switchInProgress = false;
 private:
 	virtual bool CanShoot();
 	void ResetSwitchStatus();
@@ -121,6 +123,5 @@ private:
 private:
 	float currentSwitchDelay = 0.f;
 	bool playSwitchParticles = true;
-	bool switchInProgress = false;
 	float switchDelay = 0.37f;
 };
