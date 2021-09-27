@@ -85,12 +85,6 @@ void Duke::MeleeAttack()
 	Debug::Log("Hooryah!");
 }
 
-void Duke::ShieldShoot()
-{
-	Shoot();
-	Debug::Log("I'm shielding while shooting at your face");
-}
-
 void Duke::BulletHell()
 {
 	Debug::Log("Bullet hell");

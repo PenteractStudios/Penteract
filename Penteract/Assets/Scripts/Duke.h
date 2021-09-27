@@ -55,7 +55,6 @@ public:
 	void Init(UID dukeUID, UID playerUID, UID bulletUID);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
-	void ShieldShoot();
 	void BulletHell();
 	void Charge(DukeState nextState);
 	void CallTroops();
