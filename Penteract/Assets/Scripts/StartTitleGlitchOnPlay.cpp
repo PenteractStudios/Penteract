@@ -12,6 +12,9 @@
 #include "CanvasFader.h"
 #include "VideoScene1Start.h"
 
+#include "GlobalVariables.h" 
+
+
 EXPOSE_MEMBERS(StartTitleGlitchOnPlay) {
 	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fadeToBlackObjectUID),
@@ -99,7 +102,9 @@ void StartTitleGlitchOnPlay::OnButtonClick() {
 }
 
 void StartTitleGlitchOnPlay::DoTransition() {
-	GameplaySystems::SetGlobalVariable(VideoScene1Start::globalVariableKeyPlayVideoScene1, true);
+
+	GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, true);
+
 	checkpoint = checkpointNum;
 	if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 	if (levelNum == 2) {

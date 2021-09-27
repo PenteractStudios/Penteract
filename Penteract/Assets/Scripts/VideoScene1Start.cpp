@@ -7,8 +7,7 @@
 #include "CanvasFader.h"
 #include "Components/UI/ComponentVideo.h"
 #include "Components/UI/ComponentCanvas.h"
-
-const char* VideoScene1Start::globalVariableKeyPlayVideoScene1 = "CameFromMainMenu";
+#include "GlobalVariables.h" 
 
 EXPOSE_MEMBERS(VideoScene1Start) {
     MEMBER(MemberType::GAME_OBJECT_UID, canvasFaderUID)

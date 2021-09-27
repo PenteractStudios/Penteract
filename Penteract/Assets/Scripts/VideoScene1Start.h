@@ -17,7 +17,6 @@ public:
 
 public:
 	UID canvasFaderUID = 0;
-	static const char* globalVariableKeyPlayVideoScene1;
 private: 
 	void BackToNormalGameplay();
 
