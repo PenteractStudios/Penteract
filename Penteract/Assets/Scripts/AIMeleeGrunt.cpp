@@ -128,9 +128,21 @@ void AIMeleeGrunt::Start() {
 	}
 
 	//EMP Feedback
-	ComponentParticleSystem* particlesAux = GetOwner().GetComponent<ComponentParticleSystem>();
-	if (particlesAux) {
-		particlesEmp = particlesAux;
+	objectEMP = GetOwner().GetChild("EmpParticles");
+	if (objectEMP) {
+		ComponentParticleSystem* particlesEmpAux = objectEMP->GetComponent<ComponentParticleSystem>();
+		if (particlesEmpAux) {
+			particlesEmp = particlesEmpAux;
+		}
+	}
+
+	//Push Feedback
+	objectPush = GetOwner().GetChild("PushParticles");
+	if (objectPush) {
+		ComponentParticleSystem* particlesPushAux = objectPush->GetComponent<ComponentParticleSystem>();
+		if (particlesPushAux) {
+			particlesPush = particlesPushAux;
+		}
 	}
 	
 	gameObject = &GetOwner();
@@ -425,6 +437,7 @@ void AIMeleeGrunt::EnableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		gruntCharacter.beingPushed = true;
 		state = AIState::PUSHED;
+		particlesPush->PlayChildParticles();
 		if (animation->GetCurrentState()) animation->SendTrigger(animation->GetCurrentState()->name + "Hurt");
 		CalculatePushBackRealDistance();
 		// Damage

@@ -117,6 +117,11 @@ public:
 
 	//EMP Stun feedback
 	ComponentParticleSystem* particlesEmp = nullptr;
+	GameObject* objectEMP = nullptr;
+
+	//Push Stun feedback
+	ComponentParticleSystem* particlesPush = nullptr;
+	GameObject* objectPush = nullptr;
 
 private:
 

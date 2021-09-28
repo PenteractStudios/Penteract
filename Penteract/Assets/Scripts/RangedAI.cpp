@@ -134,10 +134,24 @@ void RangedAI::Start() {
 		}
 	}
 
+
 	//EMP Feedback
-	ComponentParticleSystem* particlesAux = GetOwner().GetComponent<ComponentParticleSystem>();
-	if (particlesAux) {
-		particlesEmp = particlesAux;
+	objectEMP = GetOwner().GetChild("EmpParticles");
+	if (objectEMP) {
+		ComponentParticleSystem* particlesEmpAux = objectEMP->GetComponent<ComponentParticleSystem>();
+		if (particlesEmpAux) {
+			particlesEmp = particlesEmpAux;
+		}
+	}
+
+	//Push Feedback
+	objectPush = GetOwner().GetChild("PushParticles");
+
+	if (objectPush) {
+		ComponentParticleSystem* particlesPushAux = objectPush->GetComponent<ComponentParticleSystem>();
+		if (particlesPushAux) {
+			particlesPush = particlesPushAux;
+		}
 	}
 
 	fang = GameplaySystems::GetGameObject(fangUID);
@@ -616,6 +630,7 @@ void RangedAI::PlayAudio(AudioType audioType) {
 void RangedAI::EnableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		ChangeState(AIState::PUSHED);
+		particlesPush->PlayChildParticles();
 		rangerGruntCharacter.beingPushed = true;
 		CalculatePushBackRealDistance();
 		// Damage
