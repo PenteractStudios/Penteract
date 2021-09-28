@@ -53,7 +53,7 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::FLOAT, fleeingUpdateTime),
 	MEMBER_SEPARATOR("Dissolve properties"),
 	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialObj),
-	MEMBER(MemberType::FLOAT, dissolveTimerToStart)
+	MEMBER(MemberType::FLOAT, dissolveTimerToStart),
 };//clang-format on
 
 GENERATE_BODY_IMPL(RangedAI);
@@ -132,6 +132,12 @@ void RangedAI::Start() {
 		if (player) {
 			playerController = GET_SCRIPT(player, PlayerController);
 		}
+	}
+
+	//EMP Feedback
+	ComponentParticleSystem* particlesAux = GetOwner().GetComponent<ComponentParticleSystem>();
+	if (particlesAux) {
+		particlesEmp = particlesAux;
 	}
 
 	fang = GameplaySystems::GetGameObject(fangUID);
@@ -275,7 +281,10 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 			if (collidedWith.name == "EMP") {
 				if (agent) agent->RemoveAgentFromCrowd();
 				stunTimeRemaining = stunDuration;
-				if (state != AIState::STUNNED) ChangeState(AIState::STUNNED);
+				if (state != AIState::STUNNED) {
+					ChangeState(AIState::STUNNED);
+					particlesEmp->PlayChildParticles();
+				}
 			}
 		}
 	}

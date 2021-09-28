@@ -115,6 +115,9 @@ public:
 	float dissolveTimerToStart = 0.0f;	//Timer until the dissolve animation is played
 	UID materialsUID = 0;				//Reference to materials placeholder for random
 
+	//EMP Stun feedback
+	ComponentParticleSystem* particlesEmp = nullptr;
+
 private:
 
 	EnemySpawnPoint* enemySpawnPointScript = nullptr;

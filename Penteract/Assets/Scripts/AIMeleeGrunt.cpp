@@ -36,6 +36,7 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
 	MEMBER(MemberType::FLOAT, stunDuration),
 	MEMBER(MemberType::FLOAT, groundPosition),
+	MEMBER(MemberType::GAME_OBJECT_UID, particlesEMPUID),
 	MEMBER_SEPARATOR("Attack1"),
 	MEMBER(MemberType::FLOAT, att1AttackSpeed),
 	MEMBER(MemberType::FLOAT, att1MovementSpeedWhileAttacking),
@@ -127,6 +128,12 @@ void AIMeleeGrunt::Start() {
 		}
 	}
 
+	//EMP Feedback
+	ComponentParticleSystem* particlesAux = GetOwner().GetComponent<ComponentParticleSystem>();
+	if (particlesAux) {
+		particlesEmp = particlesAux;
+	}
+	
 	gameObject = &GetOwner();
 	if (gameObject) {
 		// Workaround get the first children - Create a Prefab overrides childs IDs
@@ -405,6 +412,7 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 					if (animation->GetCurrentState()) {
 						animation->SendTrigger(animation->GetCurrentState()->name + "StunStart");
 					}
+					particlesEmp->PlayChildParticles();
 					agent->RemoveAgentFromCrowd();
 					stunTimeRemaining = stunDuration;
 					state = AIState::STUNNED;
