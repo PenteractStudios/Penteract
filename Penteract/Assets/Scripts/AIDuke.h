@@ -31,7 +31,7 @@ Duke class will contain all the boss stats, Animation FSM and agent, as well as 
 of performing all the movement, abilities, animation and sound triggers when the AIDuke tells it to do so.
 */
 
-class AIDuke : public Script 
+class AIDuke : public Script
 {
 	GENERATE_BODY(AIDuke);
 

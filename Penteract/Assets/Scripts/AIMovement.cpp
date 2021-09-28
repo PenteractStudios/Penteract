@@ -77,21 +77,18 @@ void AIMovement::Orientate(const float3& direction, float orientationSpeed, floa
 
 	Quat rotation = ownerTransform->GetGlobalRotation();
 	if (orientationSpeed <= 0) {
-		targetRotation = Quat::LookAt(float3(0, 0, 1), normalizedDirection.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
+		targetRotation = Quat::LookAt(float3(0, 0, 1), normalizedDirection, float3(0, 1, 0), float3(0, 1, 0));
 		rotation = Quat::Slerp(ownerTransform->GetGlobalRotation(), targetRotation, Min(Time::GetDeltaTime() / Max(rotationSmoothness, 0.000001f), 1.0f));
 	} else {
 
 		float angle = normalizedDirection.AngleBetweenNorm(GetOwner().GetComponent<ComponentTransform>()->GetFront());
 		float3 axis = GetOwner().GetComponent<ComponentTransform>()->GetFront().Cross(normalizedDirection);
 
-
 		if (angle < orientationThreshold) return;
 
 		targetRotation = Quat::RotateAxisAngle(axis, orientationSpeed * Time::GetDeltaTime()) * ownerTransform->GetGlobalRotation();
 
 		//targetRotation = Quat::LookAt(float3(0, 0, 1), direction.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
-
-
 
 		rotation = Quat::Slerp(ownerTransform->GetGlobalRotation(), targetRotation, Min(Time::GetDeltaTime() / Max(rotationSmoothness, 0.000001f), 1.0f));
 	}
