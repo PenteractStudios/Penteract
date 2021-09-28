@@ -61,7 +61,6 @@ public:
 	UID rightBladeColliderUID = 0;
 	UID leftBladeColliderUID = 0;
 
-	ComponentParticleSystem* particlesEmp = nullptr;
 
 	GameObject* player = nullptr;
 	GameObject* fang = nullptr;
