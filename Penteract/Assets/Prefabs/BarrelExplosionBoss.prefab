@@ -9,9 +9,9 @@
                 "Type": "Transform",
                 "Active": true,
                 "Position": [
-                    -27.90470314025879,
-                    4.97737979888916,
-                    -15.876317977905274
+                    -26.48867416381836,
+                    1.999570608139038,
+                    -6.686153411865234
                 ],
                 "Rotation": [
                     0.0,
@@ -7189,6 +7189,24 @@
                         "GradientColorsLights": null,
                         "NumberColorsLights": 0,
                         "MaxLights": 0
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": true,
+                        "Pitch": 1.0,
+                        "Gain": 1.0,
+                        "Mute": false,
+                        "Looping": false,
+                        "PlayOnAwake": false,
+                        "AudioClipId": 0,
+                        "SpatialBlend": 1,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0,
+                        "RolloffFactor": 1.0,
+                        "ReferenceDistance": 10.0,
+                        "MaxDistance": 30.0
                     }
                 ],
                 "Children": [
