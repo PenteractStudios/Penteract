@@ -71,6 +71,10 @@ void AIDuke::Start() {
 }
 
 void AIDuke::Update() {
+	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_B)) { // TODO remove only for test
+		dukeCharacter.ThrowBarrels();
+	}
+
 	std::string life = std::to_string(dukeCharacter.lifePoints);
 	life = "Life points: " + life;
 	Debug::Log(life.c_str());
@@ -218,10 +222,10 @@ void AIDuke::Update() {
 			troopsCounter -= 0.0063;
 			float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
 			movementScript->Orientate(dir);
-			throwBarrelTimer -= Time::GetDeltaTime();
-			if (throwBarrelTimer <= 0) {
+			currentBarrelTimer += Time::GetDeltaTime();
+			if (currentBarrelTimer >= throwBarrelTimer) {
 				dukeCharacter.ThrowBarrels();
-				throwBarrelTimer = 5;
+				currentBarrelTimer = 0.f;
 			}
 		}
 		break;

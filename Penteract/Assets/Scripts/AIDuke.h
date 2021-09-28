@@ -104,6 +104,8 @@ private:
 
 	float currentMovingTime = 0.f;
 
+	float currentBarrelTimer = 0.f;
+
 	float lifeThreshold = 0.70f;
 	float lasersThreshold = 0.6f;
 
