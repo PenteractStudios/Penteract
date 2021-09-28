@@ -1,0 +1,793 @@
+{
+    "Root": {
+        "Name": "Encounter_Security",
+        "Active": true,
+        "RootBoneName": "",
+        "Mask": 0,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Active": true,
+                "Position": [
+                    182.7461700439453,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "LocalEulerAngles": [
+                    0.0,
+                    0.0,
+                    0.0
+                ]
+            },
+            {
+                "Type": "BoxCollider",
+                "Active": true,
+                "colliderType": 3,
+                "layerType": 1,
+                "mass": 1.0,
+                "size": [
+                    10.0,
+                    20.0,
+                    60.0
+                ],
+                "centerOffset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "freezeRotation": false
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 2391995556111871437,
+                "Values": [
+                    {
+                        "Name": "meleeEnemyPrefabUID",
+                        "Type": "PrefabResourceUID",
+                        "Value": 1840291781387796334
+                    },
+                    {
+                        "Name": "gameObjectActivatedOnCombatEndUID",
+                        "Type": "GameObjectUID",
+                        "Value": 17576231333076822729
+                    },
+                    {
+                        "Name": "finalDoorUID",
+                        "Type": "GameObjectUID",
+                        "Value": 0
+                    },
+                    {
+                        "Name": "rangeEnemyPrefabUID",
+                        "Type": "PrefabResourceUID",
+                        "Value": 6679582708807788623
+                    },
+                    {
+                        "Name": "dissolveMaterialGOUID",
+                        "Type": "GameObjectUID",
+                        "Value": 10528796661771758769
+                    },
+                    {
+                        "Name": "isLastDoor",
+                        "Type": "Bool",
+                        "Value": true
+                    },
+                    {
+                        "Name": "gameObjectDeactivatedOnCombatEndUID",
+                        "Type": "GameObjectUID",
+                        "Value": 12222814657774588965
+                    },
+                    {
+                        "Name": "isInitiallyLocked",
+                        "Type": "Bool",
+                        "Value": false
+                    },
+                    {
+                        "Name": "initialDoorUID",
+                        "Type": "GameObjectUID",
+                        "Value": 9841789898228557983
+                    },
+                    {
+                        "Name": "timerToUnlock",
+                        "Type": "Float",
+                        "Value": 1.0
+                    }
+                ]
+            }
+        ],
+        "Children": [
+            {
+                "Name": "SpawnPoint_1",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            -10.006999969482422,
+                            0.00012302398681640625,
+                            5.071000099182129
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0000001192092896,
+                            1.0,
+                            1.0000001192092896
+                        ],
+                        "LocalEulerAngles": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "Type": "Script",
+                        "Active": false,
+                        "Script": 14237604830987124740,
+                        "Values": [
+                            {
+                                "Name": "prefabId",
+                                "Type": "PrefabResourceUID",
+                                "Value": 9998956702901793097
+                            },
+                            {
+                                "Name": "amountOfEnemies",
+                                "Type": "Int",
+                                "Value": 1
+                            },
+                            {
+                                "Name": "secondWaveMeleeAmount",
+                                "Type": "Int",
+                                "Value": 4
+                            },
+                            {
+                                "Name": "offset",
+                                "Type": "Int",
+                                "Value": 2
+                            },
+                            {
+                                "Name": "winUID",
+                                "Type": "GameObjectUID",
+                                "Value": 16579210181260590797
+                            },
+                            {
+                                "Name": "prefabUID",
+                                "Type": "PrefabResourceUID",
+                                "Value": 9998956702901793097
+                            },
+                            {
+                                "Name": "firstWaveMeleeAmount",
+                                "Type": "Int",
+                                "Value": 4
+                            },
+                            {
+                                "Name": "thirdWaveMeleeAmount",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "thirdWaveRangeAmount",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "fourthWaveMeleeAmount",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "fourthWaveRangeAmount",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "fifthWaveMeleeAmount",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "fifthWaveRangeAmount",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "playerUID",
+                                "Type": "GameObjectUID",
+                                "Value": 9835691270176894595
+                            }
+                        ]
+                    }
+                ],
+                "Children": [
+                    {
+                        "Name": "Arrow",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Active": true,
+                                "Position": [
+                                    0.0,
+                                    -4.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.7071068286895752,
+                                    0.0,
+                                    0.0,
+                                    0.7071068286895752
+                                ],
+                                "Scale": [
+                                    0.04999999329447746,
+                                    0.05000000074505806,
+                                    0.04999999329447746
+                                ],
+                                "LocalEulerAngles": [
+                                    90.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "MeshRenderer",
+                                "Active": true,
+                                "MeshID": 11680097720833520893,
+                                "MaterialID": 17307564670492931985
+                            },
+                            {
+                                "Type": "BoundingBox",
+                                "Active": true,
+                                "LocalBoundingBox": [
+                                    -8.94273567199707,
+                                    -8.94273567199707,
+                                    0.0,
+                                    8.94273567199707,
+                                    8.94273567199707,
+                                    46.57417297363281
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    }
+                ]
+            },
+            {
+                "Name": "SpawnPoint_2",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            12.076000213623047,
+                            0.00012302398681640625,
+                            -8.734999656677246
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0000001192092896,
+                            1.0,
+                            1.0000001192092896
+                        ],
+                        "LocalEulerAngles": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "Type": "Script",
+                        "Active": true,
+                        "Script": 14237604830987124740,
+                        "Values": [
+                            {
+                                "Name": "prefabId",
+                                "Type": "PrefabResourceUID",
+                                "Value": 9998956702901793097
+                            },
+                            {
+                                "Name": "amountOfEnemies",
+                                "Type": "Int",
+                                "Value": 1
+                            },
+                            {
+                                "Name": "secondWaveMeleeAmount",
+                                "Type": "Int",
+                                "Value": 1
+                            },
+                            {
+                                "Name": "offset",
+                                "Type": "Int",
+                                "Value": 2
+                            },
+                            {
+                                "Name": "winUID",
+                                "Type": "GameObjectUID",
+                                "Value": 16579210181260590797
+                            },
+                            {
+                                "Name": "prefabUID",
+                                "Type": "PrefabResourceUID",
+                                "Value": 9998956702901793097
+                            },
+                            {
+                                "Name": "firstWaveMeleeAmount",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "thirdWaveMeleeAmount",
+                                "Type": "Int",
+                                "Value": 2
+                            },
+                            {
+                                "Name": "thirdWaveRangeAmount",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "fourthWaveMeleeAmount",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "fourthWaveRangeAmount",
+                                "Type": "Int",
+                                "Value": 2
+                            },
+                            {
+                                "Name": "fifthWaveMeleeAmount",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "fifthWaveRangeAmount",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "playerUID",
+                                "Type": "GameObjectUID",
+                                "Value": 9835691270176894595
+                            },
+                            {
+                                "Name": "firstWaveRangeAmount",
+                                "Type": "Int",
+                                "Value": 1
+                            },
+                            {
+                                "Name": "secondWaveRangeAmount",
+                                "Type": "Int",
+                                "Value": 2
+                            }
+                        ]
+                    }
+                ],
+                "Children": [
+                    {
+                        "Name": "Arrow",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Active": true,
+                                "Position": [
+                                    0.0,
+                                    -4.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.7071068286895752,
+                                    0.0,
+                                    0.0,
+                                    0.7071068286895752
+                                ],
+                                "Scale": [
+                                    0.04999999329447746,
+                                    0.05000000074505806,
+                                    0.04999999329447746
+                                ],
+                                "LocalEulerAngles": [
+                                    90.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "MeshRenderer",
+                                "Active": true,
+                                "MeshID": 11680097720833520893,
+                                "MaterialID": 17307564670492931985
+                            },
+                            {
+                                "Type": "BoundingBox",
+                                "Active": true,
+                                "LocalBoundingBox": [
+                                    -8.94273567199707,
+                                    -8.94273567199707,
+                                    0.0,
+                                    8.94273567199707,
+                                    8.94273567199707,
+                                    46.57417297363281
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    }
+                ]
+            },
+            {
+                "Name": "SpawnPoint_3",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            12.079000473022461,
+                            0.00012302398681640625,
+                            9.718000411987305
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0000001192092896,
+                            1.0,
+                            1.0000001192092896
+                        ],
+                        "LocalEulerAngles": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "Type": "Script",
+                        "Active": false,
+                        "Script": 14237604830987124740,
+                        "Values": [
+                            {
+                                "Name": "prefabId",
+                                "Type": "PrefabResourceUID",
+                                "Value": 9998956702901793097
+                            },
+                            {
+                                "Name": "amountOfEnemies",
+                                "Type": "Int",
+                                "Value": 1
+                            },
+                            {
+                                "Name": "secondWaveMeleeAmount",
+                                "Type": "Int",
+                                "Value": 2
+                            },
+                            {
+                                "Name": "offset",
+                                "Type": "Int",
+                                "Value": 2
+                            },
+                            {
+                                "Name": "winUID",
+                                "Type": "GameObjectUID",
+                                "Value": 16579210181260590797
+                            },
+                            {
+                                "Name": "prefabUID",
+                                "Type": "PrefabResourceUID",
+                                "Value": 9998956702901793097
+                            },
+                            {
+                                "Name": "firstWaveMeleeAmount",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "thirdWaveMeleeAmount",
+                                "Type": "Int",
+                                "Value": 2
+                            },
+                            {
+                                "Name": "thirdWaveRangeAmount",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "fourthWaveMeleeAmount",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "fourthWaveRangeAmount",
+                                "Type": "Int",
+                                "Value": 2
+                            },
+                            {
+                                "Name": "fifthWaveMeleeAmount",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "fifthWaveRangeAmount",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "playerUID",
+                                "Type": "GameObjectUID",
+                                "Value": 9835691270176894595
+                            },
+                            {
+                                "Name": "firstWaveRangeAmount",
+                                "Type": "Int",
+                                "Value": 1
+                            },
+                            {
+                                "Name": "secondWaveRangeAmount",
+                                "Type": "Int",
+                                "Value": 1
+                            }
+                        ]
+                    }
+                ],
+                "Children": [
+                    {
+                        "Name": "Arrow",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Active": true,
+                                "Position": [
+                                    0.0,
+                                    -4.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.7071068286895752,
+                                    0.0,
+                                    0.0,
+                                    0.7071068286895752
+                                ],
+                                "Scale": [
+                                    0.04999999329447746,
+                                    0.05000000074505806,
+                                    0.04999999329447746
+                                ],
+                                "LocalEulerAngles": [
+                                    90.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "MeshRenderer",
+                                "Active": true,
+                                "MeshID": 11680097720833520893,
+                                "MaterialID": 17307564670492931985
+                            },
+                            {
+                                "Type": "BoundingBox",
+                                "Active": true,
+                                "LocalBoundingBox": [
+                                    -8.94273567199707,
+                                    -8.94273567199707,
+                                    0.0,
+                                    8.94273567199707,
+                                    8.94273567199707,
+                                    46.57417297363281
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    }
+                ]
+            },
+            {
+                "Name": "SpawnPoint_4",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            24.243999481201173,
+                            0.00012302398681640625,
+                            0.17800000309944154
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0000001192092896,
+                            1.0,
+                            1.0000001192092896
+                        ],
+                        "LocalEulerAngles": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ]
+                    },
+                    {
+                        "Type": "Script",
+                        "Active": false,
+                        "Script": 14237604830987124740,
+                        "Values": [
+                            {
+                                "Name": "prefabId",
+                                "Type": "PrefabResourceUID",
+                                "Value": 9998956702901793097
+                            },
+                            {
+                                "Name": "amountOfEnemies",
+                                "Type": "Int",
+                                "Value": 1
+                            },
+                            {
+                                "Name": "secondWaveMeleeAmount",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "offset",
+                                "Type": "Int",
+                                "Value": 2
+                            },
+                            {
+                                "Name": "winUID",
+                                "Type": "GameObjectUID",
+                                "Value": 16579210181260590797
+                            },
+                            {
+                                "Name": "prefabUID",
+                                "Type": "PrefabResourceUID",
+                                "Value": 9998956702901793097
+                            },
+                            {
+                                "Name": "firstWaveMeleeAmount",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "thirdWaveMeleeAmount",
+                                "Type": "Int",
+                                "Value": 2
+                            },
+                            {
+                                "Name": "thirdWaveRangeAmount",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "fourthWaveMeleeAmount",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "fourthWaveRangeAmount",
+                                "Type": "Int",
+                                "Value": 2
+                            },
+                            {
+                                "Name": "fifthWaveMeleeAmount",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "fifthWaveRangeAmount",
+                                "Type": "Int",
+                                "Value": 0
+                            },
+                            {
+                                "Name": "playerUID",
+                                "Type": "GameObjectUID",
+                                "Value": 9835691270176894595
+                            },
+                            {
+                                "Name": "secondWaveRangeAmount",
+                                "Type": "Int",
+                                "Value": 2
+                            }
+                        ]
+                    }
+                ],
+                "Children": [
+                    {
+                        "Name": "Arrow",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Active": true,
+                                "Position": [
+                                    0.0,
+                                    -4.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.7071068286895752,
+                                    0.0,
+                                    0.0,
+                                    0.7071068286895752
+                                ],
+                                "Scale": [
+                                    0.04999999329447746,
+                                    0.05000000074505806,
+                                    0.04999999329447746
+                                ],
+                                "LocalEulerAngles": [
+                                    90.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "MeshRenderer",
+                                "Active": true,
+                                "MeshID": 11680097720833520893,
+                                "MaterialID": 17307564670492931985
+                            },
+                            {
+                                "Type": "BoundingBox",
+                                "Active": true,
+                                "LocalBoundingBox": [
+                                    -8.94273567199707,
+                                    -8.94273567199707,
+                                    0.0,
+                                    8.94273567199707,
+                                    8.94273567199707,
+                                    46.57417297363281
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    }
+                ]
+            }
+        ]
+    }
+}
