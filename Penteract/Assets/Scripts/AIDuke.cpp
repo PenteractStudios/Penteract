@@ -122,7 +122,6 @@ void AIDuke::Update() {
 				if (player) {
 					float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
 					dir.y = 0.0f;
-					dir.Normalize();
 					movementScript->Orientate(dir);
 					dukeCharacter.ShootAndMove(dir);
 				}
