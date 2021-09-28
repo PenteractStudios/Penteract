@@ -79,12 +79,12 @@ public:
 	ComponentText* dukeTextComponent = nullptr;
 	ComponentText* doorTextComponent = nullptr;
 
-	UID tutorialFangUID = 0;
+	UID tutorialFangTextUID = 0;
 	UID tutorialFangUltimateUID = 0;
 	UID tutorialOnimaruUID = 0;
 	UID tutorialOnimaruUltimateUID = 0;
 	UID tutorialSwapUID = 0;
-	GameObject* tutorialFang = nullptr;
+	ComponentText* tutorialFangTextComponent = nullptr;
 	GameObject* tutorialFangUltimate = nullptr;
 	GameObject* tutorialOnimaru = nullptr;
 	GameObject* tutorialOnimaruUltimate = nullptr;
@@ -129,6 +129,7 @@ private:
 	Dialogue* activeDialogue = nullptr;				// Pointer to dialoguesArray of the active dialogue.
 	GameObject* activeDialogueObject = nullptr;		// Pointer to the Dialogue GameObject in the scene (DialogueFang, DialogueOnimaru, DialogueDuke, Tutorials or Upgrades).
 	int obtainedPowerUps = 0;						// PowerUp counter. Increments each time the player picks up a powerUp.
+	int tutorialSkillNumber = 0;					// Skill counter. Increments each time a tutorial of each character shows, to activate the next skill icon.
 
 	// ------ TRANSITION INFO ------ //
 	float3 currentStartPosition = float3(0, 0, 0);	// Captures wether 'dialogueStartPosition' or 'tutorialStartPosition', that must be used fot the current dialogue window.

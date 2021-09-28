@@ -18,7 +18,7 @@ EXPOSE_MEMBERS(DialogueManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, dukeTextObjectUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, doorTextObjectUID),
 	MEMBER_SEPARATOR("Tutorial Objects UIDs"),
-	MEMBER(MemberType::GAME_OBJECT_UID, tutorialFangUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, tutorialFangTextUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialFangUltimateUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialOnimaruUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialOnimaruUltimateUID),
@@ -66,7 +66,11 @@ void DialogueManager::Start() {
 	}
 
 	// Get tutorials
-	tutorialFang = GameplaySystems::GetGameObject(tutorialFangUID);
+	tutorialSkillNumber = 0;
+	GameObject* fangTutorialText = GameplaySystems::GetGameObject(tutorialFangTextUID);
+	if (fangTutorialText) {
+		tutorialFangTextComponent = fangTutorialText->GetComponent<ComponentText>();
+	}
 	tutorialFangUltimate = GameplaySystems::GetGameObject(tutorialFangUltimateUID);
 	tutorialOnimaru = GameplaySystems::GetGameObject(tutorialOnimaruUID);
 	tutorialOnimaruUltimate = GameplaySystems::GetGameObject(tutorialOnimaruUltimateUID);
@@ -115,24 +119,20 @@ void DialogueManager::Start() {
 	dialoguesArray[14] = Dialogue(DialogueWindow::DUKE, true, "SECURITY!!", nullptr, true);
 
 	// LEVEL 1 - FANG TUTORIAL
-	dialoguesArray[15] = Dialogue(DialogueWindow::TUTO_FANG, true, "", &dialoguesArray[16]);
-	dialoguesArray[16] = Dialogue(DialogueWindow::TUTO_FANG_ULTI, true, "", nullptr);
+	dialoguesArray[15] = Dialogue(DialogueWindow::TUTO_FANG, true, "Move", &dialoguesArray[16]);
+	dialoguesArray[16] = Dialogue(DialogueWindow::TUTO_FANG, true, "(Hold) Shoot", nullptr);
+	dialoguesArray[17] = Dialogue(DialogueWindow::TUTO_FANG, true, "Dash", nullptr);
+	dialoguesArray[18] = Dialogue(DialogueWindow::TUTO_FANG, true, "EMP Stun Field", nullptr);
+	dialoguesArray[19] = Dialogue(DialogueWindow::TUTO_FANG_ULTI, true, "", nullptr);
 
 	// LEVEL 1 - SWAP DIALOGUE + ONIMARU TUTORIAL
-	dialoguesArray[18] = Dialogue(DialogueWindow::FANG, true, "Onimaru,\nget the repair bots\nready...\nI'm gonna need a break.", &dialoguesArray[19]);
-	dialoguesArray[19] = Dialogue(DialogueWindow::ONIMARU, true, "Roger.\nInitialising Matter-Switch.", &dialoguesArray[20]);
-	dialoguesArray[20] = Dialogue(DialogueWindow::TUTO_SWAP, true, "", &dialoguesArray[21], false, InputActions::SWITCH);
-	dialoguesArray[21] = Dialogue(DialogueWindow::ONIMARU, true, "Long hallways\nis where I perform best.\nWatch how it is done.", &dialoguesArray[22]);
-	dialoguesArray[22] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "", &dialoguesArray[23]);
-	dialoguesArray[23] = Dialogue(DialogueWindow::TUTO_ONIMARU_ULTI, true, "", nullptr);
-
-	// LEVEL 1 - PRE-TRANSPORT
-	//dialoguesArray[24] = Dialogue(DialogueWindow::ONIMARU, false, "Are you formulating any plan\nto go through Duke's plating?\nThat is a strong one, to have protected him\nfrom that headshot.", &dialoguesArray[25]);
-	//dialoguesArray[25] = Dialogue(DialogueWindow::FANG, false, "I'm formulating a plan\nto not get blown up by\nthese explosive barrels.", nullptr);
-
-	// LEVEL 1 - PRE-SECURITY
-	//dialoguesArray[26] = Dialogue(DialogueWindow::FANG, false, "I wonder why Duke is running away.\nHe seems strong enough to face us by himself...", &dialoguesArray[27]);
-	//dialoguesArray[27] = Dialogue(DialogueWindow::ONIMARU, false, "He is going to the Milibot factory.\nWho knows what weapons he is hiding in there...\nOr maybe he is just testing us again.", nullptr);
+	dialoguesArray[20] = Dialogue(DialogueWindow::FANG, true, "Onimaru,\nget the repair bots\nready...\nI'm gonna need a break.", &dialoguesArray[21]);
+	dialoguesArray[21] = Dialogue(DialogueWindow::ONIMARU, true, "Roger.\nInitialising Matter-Switch.", &dialoguesArray[22]);
+	dialoguesArray[22] = Dialogue(DialogueWindow::TUTO_SWAP, true, "", &dialoguesArray[23], false, InputActions::SWITCH);
+	dialoguesArray[23] = Dialogue(DialogueWindow::ONIMARU, true, "Long hallways\nis where I perform best.\nWatch how it is done.", &dialoguesArray[24]);
+	dialoguesArray[24] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "(Hold) Shield", &dialoguesArray[25]);
+	dialoguesArray[25] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "Pushback Blast", &dialoguesArray[26]);
+	dialoguesArray[26] = Dialogue(DialogueWindow::TUTO_ONIMARU_ULTI, true, "", nullptr);
 
 	// LEVEL 1 - FINAL
 	dialoguesArray[28] = Dialogue(DialogueWindow::DOOR, true, "Oh hello guys!\nNice fights there, right?\nWhere have you been?\nI haven't seen you\nin a while!", &dialoguesArray[29]);
@@ -153,7 +153,7 @@ void DialogueManager::Start() {
 
 void DialogueManager::Update() {
 	if (!fangTextComponent || !onimaruTextComponent || !dukeTextComponent || !doorTextComponent) return;
-	if (!tutorialFang || !tutorialOnimaru || !tutorialSwap) return;
+	if (!tutorialFangTextComponent || !tutorialOnimaru || !tutorialSwap) return;
 	if (!tutorialUpgrades1 || !tutorialUpgrades2 || !tutorialUpgrades3) return;
 	if (!player || !camera || !flash) return;
 
@@ -224,11 +224,23 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 			activeDialogueObject = doorTextComponent->GetOwner().GetParent();
 			doorTextComponent->SetText(dialogue->text);
 			break;
-		case DialogueWindow::TUTO_FANG:
-			activeDialogueObject = tutorialFang;
-			break;
+		case DialogueWindow::TUTO_FANG: {
+			activeDialogueObject = tutorialFangTextComponent->GetOwner().GetParent();
+			tutorialFangTextComponent->SetText(dialogue->text);
+			std::string skillIconName;
+			// Hide the previous skill icon (if there was one)
+			if (tutorialSkillNumber != 0) {
+				skillIconName = "Buttons" + std::to_string(tutorialSkillNumber);
+				activeDialogueObject->GetChild("Skill Buttons")->GetChild(skillIconName.c_str())->Disable();
+			}
+			// Show skill icon
+			tutorialSkillNumber++;
+			skillIconName = "Buttons" + std::to_string(tutorialSkillNumber);
+			activeDialogueObject->GetChild("Skill Buttons")->GetChild(skillIconName.c_str())->Enable();
+			break; }
 		case DialogueWindow::TUTO_FANG_ULTI:
 			activeDialogueObject = tutorialFangUltimate;
+			tutorialSkillNumber = 0;
 			break;
 		case DialogueWindow::TUTO_ONIMARU:
 			activeDialogueObject = tutorialOnimaru;
