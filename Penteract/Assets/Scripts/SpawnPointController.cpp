@@ -112,8 +112,8 @@ void SpawnPointController::OnCollision(GameObject& collidedWith, float3 collisio
 	}
 	if (initialDoor && !initialDoor->IsActive()) initialDoor->Enable();
 	if (finalDoor && !finalDoor->IsActive()) finalDoor->Enable();
-	if (gameObjectActivatedOnCombatEnd) gameObjectActivatedOnCombatEnd->Disable();
-	if (gameObjectDeactivatedOnCombatEnd) gameObjectDeactivatedOnCombatEnd->Enable();
+	if (gameObjectActivatedOnCombatEnd && gameObjectActivatedOnCombatEnd->IsActive()) gameObjectActivatedOnCombatEnd->Disable();
+	if (gameObjectDeactivatedOnCombatEnd && !gameObjectDeactivatedOnCombatEnd->IsActive()) gameObjectDeactivatedOnCombatEnd->Enable();
 
 	ComponentBoxCollider* boxCollider = gameObject->GetComponent<ComponentBoxCollider>();
 	if (boxCollider) boxCollider->Disable();
@@ -136,8 +136,8 @@ void SpawnPointController::OpenDoor() {
 			PlayDissolveAnimation(initialDoor, false);
 		}
 
-		if (gameObjectActivatedOnCombatEnd) gameObjectActivatedOnCombatEnd->Enable();
-		if (gameObjectDeactivatedOnCombatEnd) gameObjectDeactivatedOnCombatEnd->Disable();
+		if (gameObjectActivatedOnCombatEnd && !gameObjectActivatedOnCombatEnd->IsActive()) gameObjectActivatedOnCombatEnd->Enable();
+		if (gameObjectDeactivatedOnCombatEnd && gameObjectDeactivatedOnCombatEnd->IsActive()) gameObjectDeactivatedOnCombatEnd->Disable();
 
 		if (!unlockStarted) ResetUnlockAnimation();
 		if (!isLastDoor) mustKeepOpen = true;
