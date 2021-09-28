@@ -31,6 +31,8 @@ EXPOSE_MEMBERS(DialogueManager) {
 	MEMBER(MemberType::FLOAT3, dialogueEndPosition),
 	MEMBER(MemberType::FLOAT3, tutorialStartPosition),
 	MEMBER(MemberType::FLOAT3, tutorialEndPosition),
+	MEMBER(MemberType::FLOAT3, upgradeStartPosition),
+	MEMBER(MemberType::FLOAT3, upgradeEndPosition),
 	MEMBER(MemberType::FLOAT, appearAnimationTime),
 	MEMBER(MemberType::FLOAT, disappearAnimationTime),
 	MEMBER(MemberType::FLOAT3, zoomedCameraPosition),
@@ -223,20 +225,24 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 			activeDialogueObject = doorTextComponent->GetOwner().GetParent();
 			doorTextComponent->SetText(dialogue->text);
 			break;
-		case DialogueWindow::TUTO_FANG: {
+		case DialogueWindow::TUTO_FANG: 
+		{
 			activeDialogueObject = tutorialFangTextComponent->GetOwner().GetParent();
 			tutorialFangTextComponent->SetText(dialogue->text);
 			std::string skillIconName;
 			// Hide the previous skill icon (if there was one)
 			if (tutorialSkillNumber != 0) {
 				skillIconName = "Buttons" + std::to_string(tutorialSkillNumber);
-				activeDialogueObject->GetChild("Skill Buttons")->GetChild(skillIconName.c_str())->Disable();
+				GameObject* skillButtonIcon = activeDialogueObject->GetChild("Skill Buttons")->GetChild(skillIconName.c_str());
+				if (skillButtonIcon) skillButtonIcon->Disable();
 			}
 			// Show skill icon
 			tutorialSkillNumber++;
 			skillIconName = "Buttons" + std::to_string(tutorialSkillNumber);
-			activeDialogueObject->GetChild("Skill Buttons")->GetChild(skillIconName.c_str())->Enable();
-			break; }
+			GameObject* skillButtonIcon = activeDialogueObject->GetChild("Skill Buttons")->GetChild(skillIconName.c_str());
+			if (skillButtonIcon) skillButtonIcon->Enable();
+			break;
+		}
 		case DialogueWindow::TUTO_FANG_ULTI:
 			activeDialogueObject = tutorialFangUltimate;
 			tutorialSkillNumber = 0;
