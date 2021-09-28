@@ -2,6 +2,7 @@
 
 #include "Scripting/Script.h"
 
+class ComponentAudioSource;
 class ComponentAnimation;
 
 class FactoryDoors : public Script {
@@ -14,4 +15,6 @@ public:
 
 private:
 	ComponentAnimation* animation = nullptr;
+	ComponentAudioSource* audio = nullptr;
+	bool isOpen = false;
 };
