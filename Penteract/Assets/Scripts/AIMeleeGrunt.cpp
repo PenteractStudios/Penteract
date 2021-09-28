@@ -36,7 +36,6 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
 	MEMBER(MemberType::FLOAT, stunDuration),
 	MEMBER(MemberType::FLOAT, groundPosition),
-	MEMBER(MemberType::GAME_OBJECT_UID, particlesEMPUID),
 	MEMBER_SEPARATOR("Attack1"),
 	MEMBER(MemberType::FLOAT, att1AttackSpeed),
 	MEMBER(MemberType::FLOAT, att1MovementSpeedWhileAttacking),

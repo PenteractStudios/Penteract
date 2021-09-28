@@ -97,6 +97,9 @@ public:
 	float att3MovementSpeedWhileAttacking = 1.f;
 	int att3AbilityChance = 33;
 
+	//EMP Stun feedback
+	ComponentParticleSystem* particlesEmp = nullptr;
+
 private:
 	bool track = true;
 	bool attackStep = false;
