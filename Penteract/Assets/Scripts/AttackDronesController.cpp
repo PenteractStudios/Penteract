@@ -19,7 +19,11 @@ EXPOSE_MEMBERS(AttackDronesController) {
     MEMBER(MemberType::FLOAT, droneRadiusFormation),
     MEMBER(MemberType::FLOAT, droneVerticalOffset),
     MEMBER_SEPARATOR("Values from center"),
-    MEMBER(MemberType::FLOAT, separationFromCenter)
+    MEMBER(MemberType::FLOAT, separationFromCenter),
+    MEMBER_SEPARATOR("Wave settings"),
+    MEMBER(MemberType::INT, waves),
+    MEMBER(MemberType::FLOAT, timeBetweenWaves),
+    MEMBER(MemberType::FLOAT, shotDelay)
 };
 
 GENERATE_BODY_IMPL(AttackDronesController);
@@ -64,7 +68,9 @@ void AttackDronesController::Update() {
         RemoveDrone();
     }
 
-    Debug::Log(std::to_string(GetVerticalOffset()).c_str());
+    if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_B)) {
+        StartWave();
+    }
 }
 
 void AttackDronesController::SetDronesFormation(DronesFormation newFormation) {
@@ -197,4 +203,31 @@ std::vector<float3> AttackDronesController::GenerateCircleFormation() {
 
 float AttackDronesController::GetVerticalOffset() const {
     return transform->GetGlobalPosition().y + droneVerticalOffset;
+}
+
+void AttackDronesController::StartWave() {
+    if (dronesScripts.size() == 0) return;
+    
+    switch (cycle) {
+        case WaveCycle::LEFT_TO_RIGHT: {
+            float accumulatedDelay = 0.0f;
+            for (AttackDroneBehavior* drone : dronesScripts) {
+                drone->StartWave(waves, accumulatedDelay, timeBetweenWaves);
+                accumulatedDelay += shotDelay;
+            }
+            break;
+        }
+
+        case WaveCycle::RIGHT_TO_LEFT:
+            for (auto it = dronesScripts.rbegin(); it != dronesScripts.rend(); ++it) {
+                (*it)->Shoot();
+            }
+
+            break;
+
+        case WaveCycle::CENTERED:
+            break;
+    }
+
+    
 }

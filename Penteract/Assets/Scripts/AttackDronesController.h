@@ -18,6 +18,12 @@ public:
 		COUNT
 	};
 
+	enum class WaveCycle {
+		LEFT_TO_RIGHT,
+		RIGHT_TO_LEFT,
+		CENTERED
+	};
+
 	void Start() override;
 	void Update() override;
 
@@ -36,6 +42,10 @@ public:
 	float droneVerticalOffset = 2.0f;
 	float separationFromCenter = 1.0f;
 
+	int waves = 3;
+	float timeBetweenWaves = 1.0f; 
+	float shotDelay = 0.2f;
+	
 private:
 	void RecalculateFormations();
 	void RepositionDrones();
@@ -45,6 +55,8 @@ private:
 	std::vector<float3> GenerateCircleFormation();
 
 	float GetVerticalOffset() const;
+
+	void StartWave();
 
 private:
 	ComponentTransform* transform = nullptr;
@@ -57,5 +69,7 @@ private:
 	DronesFormation formation = DronesFormation::LINE;
 	std::vector<std::vector<float3>> formationsOffsetPositions;
 
+	// Wave cycle
+	WaveCycle cycle = WaveCycle::LEFT_TO_RIGHT;
 };
 

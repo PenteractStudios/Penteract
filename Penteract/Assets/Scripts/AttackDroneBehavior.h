@@ -3,6 +3,7 @@
 #include "Scripting/Script.h"
 
 class ComponentTransform;
+class ComponentParticleSystem;
 
 class AttackDroneBehavior : public Script
 {
@@ -15,6 +16,8 @@ public:
 
 	void Reposition(float3 newPosition);
 	void SetPositionOffset(float3 newOffset);
+	void Shoot();
+	void StartWave(int newWaves, float bulletDelay, float timeBetweenWaves);
 
 public:
 	UID dronesControllerUID = 0;
@@ -25,10 +28,15 @@ private:
 	ComponentTransform* dronesControllerTransform = nullptr;
 	ComponentTransform* transform = nullptr;
 
-	float currentTime = 0.0f;
+	ComponentParticleSystem* shooter = nullptr;
+
 	bool mustReposition = false;
 	float3 currentPosition = float3(0.0f, 0.0f, 0.0f);
 	float3 positionOffset = float3(0.0f, 0.0f, 0.0f);
 
+	// Shooting
+	int remainingWaves = 0;
+	float delay = 0.0f;
+	float currentTime = 0.0f;
 };
 

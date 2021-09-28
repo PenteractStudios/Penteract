@@ -54,6 +54,7 @@ void AIDuke::Start() {
 }
 
 void AIDuke::Update() {
+	return;
 	std::string life = std::to_string(dukeCharacter.lifePoints);
 	life = "Life points: " + life;
 	Debug::Log(life.c_str());
