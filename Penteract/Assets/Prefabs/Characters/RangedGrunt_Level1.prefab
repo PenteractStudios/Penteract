@@ -86,14 +86,14 @@
                         "Value": 40.0
                     },
                     {
-                        "Name": "playerUID",
-                        "Type": "GameObjectUID",
-                        "Value": 9835691270176894595
-                    },
-                    {
                         "Name": "hurtFeedbackTimeDuration",
                         "Type": "Float",
                         "Value": 0.10000000149011612
+                    },
+                    {
+                        "Name": "playerUID",
+                        "Type": "GameObjectUID",
+                        "Value": 9835691270176894595
                     },
                     {
                         "Name": "fangUID",
@@ -139,6 +139,16 @@
                         "Name": "materialsUID",
                         "Type": "GameObjectUID",
                         "Value": 9395071134806033997
+                    },
+                    {
+                        "Name": "timeSinceLastHurt",
+                        "Type": "Float",
+                        "Value": 0.10000000149011612
+                    },
+                    {
+                        "Name": "rangerGruntCharacter.lifePoints",
+                        "Type": "Float",
+                        "Value": 10.0
                     }
                 ]
             },
@@ -1900,7 +1910,7 @@
                                 ],
                                 "SpeedRM": 0,
                                 "Speed": [
-                                    20.0,
+                                    15.0,
                                     20.0
                                 ],
                                 "SpeedCurve": [

@@ -95,6 +95,11 @@
                         "Value": 3676940907943335204
                     },
                     {
+                        "Name": "gruntCharacter.lifePoints",
+                        "Type": "Float",
+                        "Value": 10.0
+                    },
+                    {
                         "Name": "damageMaterialPlaceHolderUID",
                         "Type": "GameObjectUID",
                         "Value": 6162056736887938687
@@ -102,12 +107,12 @@
                     {
                         "Name": "gruntCharacter.attackRange",
                         "Type": "Float",
-                        "Value": 3.0
+                        "Value": 3.700000047683716
                     },
                     {
                         "Name": "gruntCharacter.movementSpeed",
                         "Type": "Float",
-                        "Value": 10.0
+                        "Value": 7.0
                     },
                     {
                         "Name": "att1AttackSpeed",
@@ -133,6 +138,11 @@
                         "Name": "dissolveTimerToStart",
                         "Type": "Float",
                         "Value": 0.699999988079071
+                    },
+                    {
+                        "Name": "dissolveMaterialWeaponObj",
+                        "Type": "GameObjectUID",
+                        "Value": 10785697960858358950
                     }
                 ]
             },

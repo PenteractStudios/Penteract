@@ -52,7 +52,7 @@ public:
 	void OnAnimationSecondaryFinished() override {};
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
 	void GetHit(float damage_) override;;
-	bool isAiming();
+	bool IsAiming();
 	bool CanSwitch() const override;
 	bool IsInstantOrientation(bool useGamepad) const override;
 	float GetRealDashCooldown();

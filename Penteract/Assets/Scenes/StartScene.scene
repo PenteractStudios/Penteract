@@ -166,7 +166,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 200.0,
-                            "HorizontalFov": 1.5318384170532227,
+                            "HorizontalFov": 1.5400962829589844,
                             "VerticalFov": 1.0
                         }
                     },
@@ -1450,14 +1450,14 @@
                                                         "Script": 10048554049739023339,
                                                         "Values": [
                                                             {
-                                                                "Name": "fadeToBlackObjectUID",
-                                                                "Type": "GameObjectUID",
-                                                                "Value": 17695041365782035885
-                                                            },
-                                                            {
                                                                 "Name": "controllerObjUID",
                                                                 "Type": "GameObjectUID",
                                                                 "Value": 2149423061758228828
+                                                            },
+                                                            {
+                                                                "Name": "fadeToBlackObjectUID",
+                                                                "Type": "GameObjectUID",
+                                                                "Value": 17695041365782035885
                                                             },
                                                             {
                                                                 "Name": "sceneUID",
@@ -3836,14 +3836,14 @@
                                                 "Value": 9693072970663710125
                                             },
                                             {
-                                                "Name": "blackImageObjUID",
-                                                "Type": "GameObjectUID",
-                                                "Value": 17695041365782035885
-                                            },
-                                            {
                                                 "Name": "loopingTitleObjUID",
                                                 "Type": "GameObjectUID",
                                                 "Value": 6739931987885618446
+                                            },
+                                            {
+                                                "Name": "blackImageObjUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 17695041365782035885
                                             },
                                             {
                                                 "Name": "glitchTitleObjUID",
@@ -3862,12 +3862,12 @@
                                         "Id": 5271169571327707211,
                                         "Active": true,
                                         "Pitch": 1.0,
-                                        "Gain": 1.0,
+                                        "Gain": 0.10000000149011612,
                                         "Mute": false,
                                         "Looping": false,
                                         "PlayOnAwake": false,
-                                        "AudioClipId": 0,
-                                        "SpatialBlend": 1,
+                                        "AudioClipId": 6834645009129902300,
+                                        "SpatialBlend": 0,
                                         "SourceType": 0,
                                         "InnerAngle": 90.0,
                                         "OuterAngle": 180.0,
@@ -3881,12 +3881,12 @@
                                         "Id": 13943588374866549648,
                                         "Active": true,
                                         "Pitch": 1.0,
-                                        "Gain": 1.0,
+                                        "Gain": 0.10000000149011612,
                                         "Mute": false,
                                         "Looping": false,
                                         "PlayOnAwake": false,
-                                        "AudioClipId": 0,
-                                        "SpatialBlend": 1,
+                                        "AudioClipId": 6834645009129902300,
+                                        "SpatialBlend": 0,
                                         "SourceType": 0,
                                         "InnerAngle": 90.0,
                                         "OuterAngle": 180.0,
@@ -8046,7 +8046,7 @@
                                             0.0,
                                             0.0,
                                             0.0,
-                                            0.0
+                                            1.0
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": false,
@@ -8070,6 +8070,11 @@
                                                 "Name": "blackImageObjUID",
                                                 "Type": "GameObjectUID",
                                                 "Value": 17695041365782035885
+                                            },
+                                            {
+                                                "Name": "fadeInOnStart",
+                                                "Type": "Bool",
+                                                "Value": true
                                             }
                                         ]
                                     }
@@ -8471,7 +8476,7 @@
                                         "Children": null
                                     },
                                     {
-                                        "Id": 1140499165485507247,
+                                        "Id": 1750299738555487480,
                                         "Name": "BackgroundLeft",
                                         "Active": true,
                                         "Static": false,
@@ -8481,7 +8486,7 @@
                                         "Components": [
                                             {
                                                 "Type": "Transform",
-                                                "Id": 5667031444514438735,
+                                                "Id": 13968966603036870793,
                                                 "Active": true,
                                                 "Position": [
                                                     0.0,
@@ -8500,14 +8505,14 @@
                                                     1.0
                                                 ],
                                                 "LocalEulerAngles": [
+                                                    -0.0,
                                                     0.0,
-                                                    0.0,
-                                                    0.0
+                                                    -0.0
                                                 ]
                                             },
                                             {
                                                 "Type": "Transform2D",
-                                                "Id": 8259452585664054707,
+                                                "Id": 13215297506140180446,
                                                 "Active": true,
                                                 "Position": [
                                                     0.0,
@@ -8531,12 +8536,12 @@
                                                     0.0
                                                 ],
                                                 "Pivot": [
-                                                    0.5,
+                                                    0.0,
                                                     0.5
                                                 ],
                                                 "Size": [
-                                                    350.0,
-                                                    1080.0
+                                                    1287.0,
+                                                    2160.0
                                                 ],
                                                 "AnchorMin": [
                                                     0.0,
@@ -8551,18 +8556,18 @@
                                             },
                                             {
                                                 "Type": "CanvasRenderer",
-                                                "Id": 13332796310084141517,
+                                                "Id": 623560758914686668,
                                                 "Active": true
                                             },
                                             {
                                                 "Type": "Image",
-                                                "Id": 12511551155592190355,
+                                                "Id": 17627448223251875237,
                                                 "Active": true,
-                                                "TextureId": 13309499599055045694,
+                                                "TextureId": 16883458453625146895,
                                                 "Color": [
                                                     0.0,
-                                                    0.686274528503418,
-                                                    0.7568627595901489,
+                                                    0.2705882489681244,
+                                                    0.3490196168422699,
                                                     1.0
                                                 ],
                                                 "AlphaTransparency": true,
@@ -8581,7 +8586,7 @@
                                         "Children": null
                                     },
                                     {
-                                        "Id": 9402989623742631468,
+                                        "Id": 4590389408941644211,
                                         "Name": "BackgroundRight",
                                         "Active": true,
                                         "Static": false,
@@ -8591,7 +8596,7 @@
                                         "Components": [
                                             {
                                                 "Type": "Transform",
-                                                "Id": 12870048068840290479,
+                                                "Id": 3818513382327715721,
                                                 "Active": true,
                                                 "Position": [
                                                     0.0,
@@ -8610,25 +8615,25 @@
                                                     1.0
                                                 ],
                                                 "LocalEulerAngles": [
+                                                    -0.0,
                                                     0.0,
-                                                    0.0,
-                                                    0.0
+                                                    -0.0
                                                 ]
                                             },
                                             {
                                                 "Type": "Transform2D",
-                                                "Id": 16041584355506645617,
+                                                "Id": 3906983405380005341,
                                                 "Active": true,
                                                 "Position": [
-                                                    0.0,
+                                                    -1287.0,
                                                     0.0,
                                                     0.0
                                                 ],
                                                 "Rotation": [
                                                     0.0,
                                                     0.0,
-                                                    0.0,
-                                                    1.0
+                                                    1.0,
+                                                    -4.371138828673793e-8
                                                 ],
                                                 "Scale": [
                                                     1.0,
@@ -8638,15 +8643,15 @@
                                                 "LocalEulerAngles": [
                                                     0.0,
                                                     0.0,
-                                                    0.0
+                                                    180.0
                                                 ],
                                                 "Pivot": [
-                                                    0.5,
+                                                    1.0,
                                                     0.5
                                                 ],
                                                 "Size": [
-                                                    350.0,
-                                                    1080.0
+                                                    1287.0,
+                                                    2160.0
                                                 ],
                                                 "AnchorMin": [
                                                     1.0,
@@ -8661,18 +8666,18 @@
                                             },
                                             {
                                                 "Type": "CanvasRenderer",
-                                                "Id": 13137257834684893327,
+                                                "Id": 5916553961145674298,
                                                 "Active": true
                                             },
                                             {
                                                 "Type": "Image",
-                                                "Id": 13207504011055052999,
+                                                "Id": 17267939931560836723,
                                                 "Active": true,
-                                                "TextureId": 13858584743250670710,
+                                                "TextureId": 16883458453625146895,
                                                 "Color": [
                                                     0.0,
-                                                    0.686274528503418,
-                                                    0.7568627595901489,
+                                                    0.2705882489681244,
+                                                    0.3490196168422699,
                                                     1.0
                                                 ],
                                                 "AlphaTransparency": true,
@@ -14336,7 +14341,7 @@
                                         "Children": null
                                     },
                                     {
-                                        "Id": 14702694144085269781,
+                                        "Id": 10796119093611270149,
                                         "Name": "BackgroundLeft",
                                         "Active": true,
                                         "Static": false,
@@ -14346,7 +14351,7 @@
                                         "Components": [
                                             {
                                                 "Type": "Transform",
-                                                "Id": 6902955288745406363,
+                                                "Id": 15606547014195185923,
                                                 "Active": true,
                                                 "Position": [
                                                     0.0,
@@ -14365,14 +14370,14 @@
                                                     1.0
                                                 ],
                                                 "LocalEulerAngles": [
+                                                    -0.0,
                                                     0.0,
-                                                    0.0,
-                                                    0.0
+                                                    -0.0
                                                 ]
                                             },
                                             {
                                                 "Type": "Transform2D",
-                                                "Id": 1890122950547459229,
+                                                "Id": 11708489696481733908,
                                                 "Active": true,
                                                 "Position": [
                                                     0.0,
@@ -14396,12 +14401,12 @@
                                                     0.0
                                                 ],
                                                 "Pivot": [
-                                                    0.5,
+                                                    0.0,
                                                     0.5
                                                 ],
                                                 "Size": [
-                                                    350.0,
-                                                    1080.0
+                                                    1287.0,
+                                                    2160.0
                                                 ],
                                                 "AnchorMin": [
                                                     0.0,
@@ -14416,18 +14421,18 @@
                                             },
                                             {
                                                 "Type": "CanvasRenderer",
-                                                "Id": 14650723507432611568,
+                                                "Id": 8595038361172206650,
                                                 "Active": true
                                             },
                                             {
                                                 "Type": "Image",
-                                                "Id": 8380919159848699973,
+                                                "Id": 6068530487332716353,
                                                 "Active": true,
-                                                "TextureId": 13309499599055045694,
+                                                "TextureId": 16883458453625146895,
                                                 "Color": [
                                                     0.0,
-                                                    0.686274528503418,
-                                                    0.7568627595901489,
+                                                    0.2705882489681244,
+                                                    0.3490196168422699,
                                                     1.0
                                                 ],
                                                 "AlphaTransparency": true,
@@ -14446,7 +14451,7 @@
                                         "Children": null
                                     },
                                     {
-                                        "Id": 12163277665282132532,
+                                        "Id": 17505725833646432261,
                                         "Name": "BackgroundRight",
                                         "Active": true,
                                         "Static": false,
@@ -14456,7 +14461,7 @@
                                         "Components": [
                                             {
                                                 "Type": "Transform",
-                                                "Id": 16791999504167646989,
+                                                "Id": 11213480017593787257,
                                                 "Active": true,
                                                 "Position": [
                                                     0.0,
@@ -14475,25 +14480,25 @@
                                                     1.0
                                                 ],
                                                 "LocalEulerAngles": [
+                                                    -0.0,
                                                     0.0,
-                                                    0.0,
-                                                    0.0
+                                                    -0.0
                                                 ]
                                             },
                                             {
                                                 "Type": "Transform2D",
-                                                "Id": 6820054966732708855,
+                                                "Id": 12303755177131607811,
                                                 "Active": true,
                                                 "Position": [
-                                                    0.0,
+                                                    -1287.0,
                                                     0.0,
                                                     0.0
                                                 ],
                                                 "Rotation": [
                                                     0.0,
                                                     0.0,
-                                                    0.0,
-                                                    1.0
+                                                    1.0,
+                                                    -4.371138828673793e-8
                                                 ],
                                                 "Scale": [
                                                     1.0,
@@ -14503,15 +14508,15 @@
                                                 "LocalEulerAngles": [
                                                     0.0,
                                                     0.0,
-                                                    0.0
+                                                    180.0
                                                 ],
                                                 "Pivot": [
-                                                    0.5,
+                                                    1.0,
                                                     0.5
                                                 ],
                                                 "Size": [
-                                                    350.0,
-                                                    1080.0
+                                                    1287.0,
+                                                    2160.0
                                                 ],
                                                 "AnchorMin": [
                                                     1.0,
@@ -14526,18 +14531,18 @@
                                             },
                                             {
                                                 "Type": "CanvasRenderer",
-                                                "Id": 16207957121004277583,
+                                                "Id": 9690154221624438749,
                                                 "Active": true
                                             },
                                             {
                                                 "Type": "Image",
-                                                "Id": 847062571661856023,
+                                                "Id": 3133992795908784099,
                                                 "Active": true,
-                                                "TextureId": 13858584743250670710,
+                                                "TextureId": 16883458453625146895,
                                                 "Color": [
                                                     0.0,
-                                                    0.686274528503418,
-                                                    0.7568627595901489,
+                                                    0.2705882489681244,
+                                                    0.3490196168422699,
                                                     1.0
                                                 ],
                                                 "AlphaTransparency": true,
@@ -20918,7 +20923,7 @@
                                         "Children": null
                                     },
                                     {
-                                        "Id": 13097666067379573507,
+                                        "Id": 7315027605503882936,
                                         "Name": "BackgroundLeft",
                                         "Active": true,
                                         "Static": false,
@@ -20928,7 +20933,7 @@
                                         "Components": [
                                             {
                                                 "Type": "Transform",
-                                                "Id": 13903883771783292834,
+                                                "Id": 859394158714029704,
                                                 "Active": true,
                                                 "Position": [
                                                     0.0,
@@ -20947,14 +20952,14 @@
                                                     1.0
                                                 ],
                                                 "LocalEulerAngles": [
+                                                    -0.0,
                                                     0.0,
-                                                    0.0,
-                                                    0.0
+                                                    -0.0
                                                 ]
                                             },
                                             {
                                                 "Type": "Transform2D",
-                                                "Id": 546774158929682456,
+                                                "Id": 16709279614619234666,
                                                 "Active": true,
                                                 "Position": [
                                                     0.0,
@@ -20978,12 +20983,12 @@
                                                     0.0
                                                 ],
                                                 "Pivot": [
-                                                    0.5,
+                                                    0.0,
                                                     0.5
                                                 ],
                                                 "Size": [
-                                                    350.0,
-                                                    1080.0
+                                                    1287.0,
+                                                    2160.0
                                                 ],
                                                 "AnchorMin": [
                                                     0.0,
@@ -20998,18 +21003,18 @@
                                             },
                                             {
                                                 "Type": "CanvasRenderer",
-                                                "Id": 4946155527665610835,
+                                                "Id": 1367003420271933971,
                                                 "Active": true
                                             },
                                             {
                                                 "Type": "Image",
-                                                "Id": 18174806433841306064,
+                                                "Id": 16623739805377370889,
                                                 "Active": true,
-                                                "TextureId": 13309499599055045694,
+                                                "TextureId": 16883458453625146895,
                                                 "Color": [
                                                     0.0,
-                                                    0.686274528503418,
-                                                    0.7568627595901489,
+                                                    0.2705882489681244,
+                                                    0.3490196168422699,
                                                     1.0
                                                 ],
                                                 "AlphaTransparency": true,
@@ -21028,7 +21033,7 @@
                                         "Children": null
                                     },
                                     {
-                                        "Id": 8747367277419731002,
+                                        "Id": 5118769285037833413,
                                         "Name": "BackgroundRight",
                                         "Active": true,
                                         "Static": false,
@@ -21038,7 +21043,7 @@
                                         "Components": [
                                             {
                                                 "Type": "Transform",
-                                                "Id": 16630268108020552094,
+                                                "Id": 5876330757464856071,
                                                 "Active": true,
                                                 "Position": [
                                                     0.0,
@@ -21057,25 +21062,25 @@
                                                     1.0
                                                 ],
                                                 "LocalEulerAngles": [
+                                                    -0.0,
                                                     0.0,
-                                                    0.0,
-                                                    0.0
+                                                    -0.0
                                                 ]
                                             },
                                             {
                                                 "Type": "Transform2D",
-                                                "Id": 9210924904045146930,
+                                                "Id": 3499819012057727839,
                                                 "Active": true,
                                                 "Position": [
-                                                    0.0,
+                                                    -1287.0,
                                                     0.0,
                                                     0.0
                                                 ],
                                                 "Rotation": [
                                                     0.0,
                                                     0.0,
-                                                    0.0,
-                                                    1.0
+                                                    1.0,
+                                                    -4.371138828673793e-8
                                                 ],
                                                 "Scale": [
                                                     1.0,
@@ -21085,15 +21090,15 @@
                                                 "LocalEulerAngles": [
                                                     0.0,
                                                     0.0,
-                                                    0.0
+                                                    180.0
                                                 ],
                                                 "Pivot": [
-                                                    0.5,
+                                                    1.0,
                                                     0.5
                                                 ],
                                                 "Size": [
-                                                    350.0,
-                                                    1080.0
+                                                    1287.0,
+                                                    2160.0
                                                 ],
                                                 "AnchorMin": [
                                                     1.0,
@@ -21108,18 +21113,18 @@
                                             },
                                             {
                                                 "Type": "CanvasRenderer",
-                                                "Id": 15641907074380633354,
+                                                "Id": 13167913433941374673,
                                                 "Active": true
                                             },
                                             {
                                                 "Type": "Image",
-                                                "Id": 10442844556271231345,
+                                                "Id": 16269525821506121398,
                                                 "Active": true,
-                                                "TextureId": 13858584743250670710,
+                                                "TextureId": 16883458453625146895,
                                                 "Color": [
                                                     0.0,
-                                                    0.686274528503418,
-                                                    0.7568627595901489,
+                                                    0.2705882489681244,
+                                                    0.3490196168422699,
                                                     1.0
                                                 ],
                                                 "AlphaTransparency": true,
@@ -25913,7 +25918,7 @@
                                         "Children": null
                                     },
                                     {
-                                        "Id": 2568771208280475,
+                                        "Id": 14804791583194477339,
                                         "Name": "BackgroundLeft",
                                         "Active": true,
                                         "Static": false,
@@ -25923,7 +25928,7 @@
                                         "Components": [
                                             {
                                                 "Type": "Transform",
-                                                "Id": 10331374967124407008,
+                                                "Id": 10402806933747605769,
                                                 "Active": true,
                                                 "Position": [
                                                     0.0,
@@ -25942,14 +25947,14 @@
                                                     1.0
                                                 ],
                                                 "LocalEulerAngles": [
+                                                    -0.0,
                                                     0.0,
-                                                    0.0,
-                                                    0.0
+                                                    -0.0
                                                 ]
                                             },
                                             {
                                                 "Type": "Transform2D",
-                                                "Id": 5702422476552300817,
+                                                "Id": 3859290651151988988,
                                                 "Active": true,
                                                 "Position": [
                                                     0.0,
@@ -25973,12 +25978,12 @@
                                                     0.0
                                                 ],
                                                 "Pivot": [
-                                                    0.5,
+                                                    0.0,
                                                     0.5
                                                 ],
                                                 "Size": [
-                                                    350.0,
-                                                    1080.0
+                                                    1287.0,
+                                                    2160.0
                                                 ],
                                                 "AnchorMin": [
                                                     0.0,
@@ -25993,18 +25998,18 @@
                                             },
                                             {
                                                 "Type": "CanvasRenderer",
-                                                "Id": 3287168580894321733,
+                                                "Id": 6808710316541279755,
                                                 "Active": true
                                             },
                                             {
                                                 "Type": "Image",
-                                                "Id": 17845150718702092317,
+                                                "Id": 17885650634608259070,
                                                 "Active": true,
-                                                "TextureId": 13309499599055045694,
+                                                "TextureId": 16883458453625146895,
                                                 "Color": [
                                                     0.0,
-                                                    0.686274528503418,
-                                                    0.7568627595901489,
+                                                    0.2705882489681244,
+                                                    0.3490196168422699,
                                                     1.0
                                                 ],
                                                 "AlphaTransparency": true,
@@ -26023,7 +26028,7 @@
                                         "Children": null
                                     },
                                     {
-                                        "Id": 2132712691104649563,
+                                        "Id": 2265618584397848896,
                                         "Name": "BackgroundRight",
                                         "Active": true,
                                         "Static": false,
@@ -26033,7 +26038,7 @@
                                         "Components": [
                                             {
                                                 "Type": "Transform",
-                                                "Id": 17291842476033493730,
+                                                "Id": 7397979984844352541,
                                                 "Active": true,
                                                 "Position": [
                                                     0.0,
@@ -26052,25 +26057,25 @@
                                                     1.0
                                                 ],
                                                 "LocalEulerAngles": [
+                                                    -0.0,
                                                     0.0,
-                                                    0.0,
-                                                    0.0
+                                                    -0.0
                                                 ]
                                             },
                                             {
                                                 "Type": "Transform2D",
-                                                "Id": 3513073144531313584,
+                                                "Id": 9310983135854192252,
                                                 "Active": true,
                                                 "Position": [
-                                                    0.0,
+                                                    -1287.0,
                                                     0.0,
                                                     0.0
                                                 ],
                                                 "Rotation": [
                                                     0.0,
                                                     0.0,
-                                                    0.0,
-                                                    1.0
+                                                    1.0,
+                                                    -4.371138828673793e-8
                                                 ],
                                                 "Scale": [
                                                     1.0,
@@ -26080,15 +26085,15 @@
                                                 "LocalEulerAngles": [
                                                     0.0,
                                                     0.0,
-                                                    0.0
+                                                    180.0
                                                 ],
                                                 "Pivot": [
-                                                    0.5,
+                                                    1.0,
                                                     0.5
                                                 ],
                                                 "Size": [
-                                                    350.0,
-                                                    1080.0
+                                                    1287.0,
+                                                    2160.0
                                                 ],
                                                 "AnchorMin": [
                                                     1.0,
@@ -26103,18 +26108,18 @@
                                             },
                                             {
                                                 "Type": "CanvasRenderer",
-                                                "Id": 12251266339509308077,
+                                                "Id": 15865407724564195326,
                                                 "Active": true
                                             },
                                             {
                                                 "Type": "Image",
-                                                "Id": 7313684692980083089,
+                                                "Id": 5886851282046633455,
                                                 "Active": true,
-                                                "TextureId": 13858584743250670710,
+                                                "TextureId": 16883458453625146895,
                                                 "Color": [
                                                     0.0,
-                                                    0.686274528503418,
-                                                    0.7568627595901489,
+                                                    0.2705882489681244,
+                                                    0.3490196168422699,
                                                     1.0
                                                 ],
                                                 "AlphaTransparency": true,
@@ -27525,14 +27530,14 @@
                                                                                 "Value": 5283034992592177512
                                                                             },
                                                                             {
-                                                                                "Name": "controllerObjUID",
-                                                                                "Type": "GameObjectUID",
-                                                                                "Value": 2149423061758228828
-                                                                            },
-                                                                            {
                                                                                 "Name": "fadeToBlackObjectUID",
                                                                                 "Type": "GameObjectUID",
                                                                                 "Value": 17695041365782035885
+                                                                            },
+                                                                            {
+                                                                                "Name": "controllerObjUID",
+                                                                                "Type": "GameObjectUID",
+                                                                                "Value": 2149423061758228828
                                                                             },
                                                                             {
                                                                                 "Name": "sceneUID",
@@ -28047,14 +28052,14 @@
                                                                         "Script": 10048554049739023339,
                                                                         "Values": [
                                                                             {
-                                                                                "Name": "controllerObjUID",
-                                                                                "Type": "GameObjectUID",
-                                                                                "Value": 2149423061758228828
-                                                                            },
-                                                                            {
                                                                                 "Name": "fadeToBlackObjectUID",
                                                                                 "Type": "GameObjectUID",
                                                                                 "Value": 17695041365782035885
+                                                                            },
+                                                                            {
+                                                                                "Name": "controllerObjUID",
+                                                                                "Type": "GameObjectUID",
+                                                                                "Value": 2149423061758228828
                                                                             },
                                                                             {
                                                                                 "Name": "checkpointNum",
@@ -28584,14 +28589,14 @@
                                                                                 "Value": 2
                                                                             },
                                                                             {
-                                                                                "Name": "fadeToBlackObjectUID",
-                                                                                "Type": "GameObjectUID",
-                                                                                "Value": 17695041365782035885
-                                                                            },
-                                                                            {
                                                                                 "Name": "controllerObjUID",
                                                                                 "Type": "GameObjectUID",
                                                                                 "Value": 2149423061758228828
+                                                                            },
+                                                                            {
+                                                                                "Name": "fadeToBlackObjectUID",
+                                                                                "Type": "GameObjectUID",
+                                                                                "Value": 17695041365782035885
                                                                             },
                                                                             {
                                                                                 "Name": "swapPanelsObjUID",
@@ -29116,14 +29121,14 @@
                                                                                 "Value": 3
                                                                             },
                                                                             {
-                                                                                "Name": "fadeToBlackObjectUID",
-                                                                                "Type": "GameObjectUID",
-                                                                                "Value": 17695041365782035885
-                                                                            },
-                                                                            {
                                                                                 "Name": "controllerObjUID",
                                                                                 "Type": "GameObjectUID",
                                                                                 "Value": 2149423061758228828
+                                                                            },
+                                                                            {
+                                                                                "Name": "fadeToBlackObjectUID",
+                                                                                "Type": "GameObjectUID",
+                                                                                "Value": 17695041365782035885
                                                                             },
                                                                             {
                                                                                 "Name": "swapPanelsObjUID",
@@ -29648,14 +29653,14 @@
                                                                                 "Value": 4
                                                                             },
                                                                             {
-                                                                                "Name": "fadeToBlackObjectUID",
-                                                                                "Type": "GameObjectUID",
-                                                                                "Value": 17695041365782035885
-                                                                            },
-                                                                            {
                                                                                 "Name": "controllerObjUID",
                                                                                 "Type": "GameObjectUID",
                                                                                 "Value": 2149423061758228828
+                                                                            },
+                                                                            {
+                                                                                "Name": "fadeToBlackObjectUID",
+                                                                                "Type": "GameObjectUID",
+                                                                                "Value": 17695041365782035885
                                                                             },
                                                                             {
                                                                                 "Name": "swapPanelsObjUID",

@@ -99,9 +99,8 @@ void DialogueManager::Start() {
 	// ----- DIALOGUES INIT -----
 	// LEVEL 1 - UPGRADES
 	dialoguesArray[0] = Dialogue(DialogueWindow::UPGRADES1, true, "", &dialoguesArray[1]);
-	dialoguesArray[1] = Dialogue(DialogueWindow::ONIMARU, true, "Hey Fang, look at this.", &dialoguesArray[2]);
-	dialoguesArray[2] = Dialogue(DialogueWindow::FANG, true, "Hmm...\nIt looks like Milibot has\nbeen researching in some\nnew technologies...", &dialoguesArray[3]);
-	dialoguesArray[3] = Dialogue(DialogueWindow::FANG, true, "I might be able to\nseize its power\nfor ourselves if we find\na couple more.", nullptr);
+	dialoguesArray[1] = Dialogue(DialogueWindow::FANG, true, "Hmm...\nIt looks like Milibot has\nbeen researching in some\nnew technologies...", &dialoguesArray[2]);
+	dialoguesArray[2] = Dialogue(DialogueWindow::FANG, true, "I might be able to\nseize its power\nfor ourselves if we find\na couple more.", nullptr);
 
 	dialoguesArray[4] = Dialogue(DialogueWindow::UPGRADES2, true, "", nullptr);
 

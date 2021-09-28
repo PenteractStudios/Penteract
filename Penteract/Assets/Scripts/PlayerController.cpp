@@ -108,6 +108,8 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER_SEPARATOR("Switch settings"),
 	MEMBER(MemberType::FLOAT, switchDelay),
 	MEMBER(MemberType::FLOAT, switchCooldown),
+	MEMBER(MemberType::FLOAT, switchDamage),
+	MEMBER(MemberType::FLOAT, switchSphereRadius),
 	MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
 	MEMBER_SEPARATOR("Debug settings"),
 	MEMBER(MemberType::BOOL, debugGetHit),
@@ -439,5 +441,14 @@ void PlayerController::Update() {
 void PlayerController::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 	if (collidedWith.name == "MeleeGrunt" || collidedWith.name == "RangedGrunt") {
 		switchCollisionedGO.push_back(&collidedWith);
+		if (playerOnimaru.IsActive()) {
+			ComponentAgent* agent = collidedWith.GetComponent<ComponentAgent>();
+			if (agent) {
+				agent->RemoveAgentFromCrowd();
+				float3 actualPenDistance = -penetrationDistance.ProjectTo(collisionNormal);
+				collidedWith.GetComponent<ComponentTransform>()->SetGlobalPosition(collidedWith.GetComponent<ComponentTransform>()->GetGlobalPosition() + actualPenDistance);
+				agent->AddAgentToCrowd();
+			}
+		}
 	}
 }

@@ -144,6 +144,16 @@
                         "Name": "dissolveTimerToStart",
                         "Type": "Float",
                         "Value": 0.5
+                    },
+                    {
+                        "Name": "timeSinceLastHurt",
+                        "Type": "Float",
+                        "Value": 0.10000000149011612
+                    },
+                    {
+                        "Name": "rangerGruntCharacter.lifePoints",
+                        "Type": "Float",
+                        "Value": 10.0
                     }
                 ]
             },
@@ -1905,7 +1915,7 @@
                                 ],
                                 "SpeedRM": 0,
                                 "Speed": [
-                                    20.0,
+                                    15.0,
                                     20.0
                                 ],
                                 "SpeedCurve": [
