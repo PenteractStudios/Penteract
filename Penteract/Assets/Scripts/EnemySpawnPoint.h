@@ -10,6 +10,7 @@ class GameObject;
 class ResourcePrefab;
 class PlayerController;
 class SpawnPointController;
+class ComponentTransform;
 
 class EnemySpawnPoint : public Script {
 	GENERATE_BODY(EnemySpawnPoint);
@@ -40,19 +41,13 @@ public:
 	unsigned int fifthWaveMeleeAmount = 0;
 	unsigned int fifthWaveRangeAmount = 0;
 
-	/* Variables to place the enemies */
-	float xAxisPos = 0;
-	float zAxisPos = 4;
-
-	/* Distance between the enemies */
-	unsigned int offset = 2;
-
 	/* Player */
 	UID playerUID = 0;
 
 private:
 	/* Owner */
 	GameObject* gameObject = nullptr;
+	ComponentTransform* gameObjectTransform = nullptr;
 
 	/* Prefabs */
 	ResourcePrefab* meleeEnemyPrefab = nullptr;
@@ -84,6 +79,11 @@ private:
 	/* Index to update the spawn controller */
 	unsigned int index = 0;
 
+	/* Player reference to rotate the spawn points*/
+	GameObject* player = nullptr;
+
 private:
 	void RenderEnemy(EnemyType type, unsigned int amount);
+	float3 EnemyLocation(int amount, int k, int y);
+	void LookAtPlayer(const float3& direction);
 };
