@@ -16,42 +16,42 @@
 
 EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, materialsUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, damageMaterialPlaceHolderUID),
-		MEMBER_SEPARATOR("Enemy stats"),
-		MEMBER(MemberType::FLOAT, gruntCharacter.lifePoints),
-		MEMBER(MemberType::FLOAT, gruntCharacter.movementSpeed),
-		MEMBER(MemberType::FLOAT, gruntCharacter.damageHit),
-		MEMBER(MemberType::INT, gruntCharacter.fallingSpeed),
-		MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
-		MEMBER(MemberType::FLOAT, gruntCharacter.attackRange),
-		MEMBER(MemberType::FLOAT, gruntCharacter.barrelDamageTaken),
-		MEMBER_SEPARATOR("Push variables"),
-		MEMBER(MemberType::FLOAT, gruntCharacter.pushBackDistance),
-		MEMBER(MemberType::FLOAT, gruntCharacter.pushBackSpeed),
-		MEMBER(MemberType::FLOAT, gruntCharacter.slowedDownSpeed),
-		MEMBER(MemberType::FLOAT, gruntCharacter.slowedDownTime),
-		MEMBER_SEPARATOR("Stun variables"),
-		MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
-		MEMBER(MemberType::FLOAT, stunDuration),
-		MEMBER(MemberType::FLOAT, groundPosition),
-		MEMBER_SEPARATOR("Attack1"),
-		MEMBER(MemberType::FLOAT, att1AttackSpeed),
-		MEMBER(MemberType::FLOAT, att1MovementSpeedWhileAttacking),
-		MEMBER(MemberType::INT, att1AbilityChance),
-		MEMBER_SEPARATOR("Attack2"),
-		MEMBER(MemberType::FLOAT, att2AttackSpeed),
-		MEMBER(MemberType::FLOAT, att2MovementSpeedWhileAttacking),
-		MEMBER(MemberType::INT, att2AbilityChance),
-		MEMBER_SEPARATOR("Attack3"),
-		MEMBER(MemberType::FLOAT, att3AttackSpeed),
-		MEMBER(MemberType::FLOAT, att3MovementSpeedWhileAttacking),
-		MEMBER(MemberType::INT, att3AbilityChance),
-		MEMBER_SEPARATOR("Dissolve properties"),
-		MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialObj),
-		MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialWeaponObj),
-		MEMBER(MemberType::FLOAT, dissolveTimerToStart)
+	MEMBER(MemberType::GAME_OBJECT_UID, materialsUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, damageMaterialPlaceHolderUID),
+	MEMBER_SEPARATOR("Enemy stats"),
+	MEMBER(MemberType::FLOAT, gruntCharacter.lifePoints),
+	MEMBER(MemberType::FLOAT, gruntCharacter.movementSpeed),
+	MEMBER(MemberType::FLOAT, gruntCharacter.damageHit),
+	MEMBER(MemberType::INT, gruntCharacter.fallingSpeed),
+	MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
+	MEMBER(MemberType::FLOAT, gruntCharacter.attackRange),
+	MEMBER(MemberType::FLOAT, gruntCharacter.barrelDamageTaken),
+	MEMBER_SEPARATOR("Push variables"),
+	MEMBER(MemberType::FLOAT, gruntCharacter.pushBackDistance),
+	MEMBER(MemberType::FLOAT, gruntCharacter.pushBackSpeed),
+	MEMBER(MemberType::FLOAT, gruntCharacter.slowedDownSpeed),
+	MEMBER(MemberType::FLOAT, gruntCharacter.slowedDownTime),
+	MEMBER_SEPARATOR("Stun variables"),
+	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
+	MEMBER(MemberType::FLOAT, stunDuration),
+	MEMBER(MemberType::FLOAT, groundPosition),
+	MEMBER_SEPARATOR("Attack1"),
+	MEMBER(MemberType::FLOAT, att1AttackSpeed),
+	MEMBER(MemberType::FLOAT, att1MovementSpeedWhileAttacking),
+	MEMBER(MemberType::INT, att1AbilityChance),
+	MEMBER_SEPARATOR("Attack2"),
+	MEMBER(MemberType::FLOAT, att2AttackSpeed),
+	MEMBER(MemberType::FLOAT, att2MovementSpeedWhileAttacking),
+	MEMBER(MemberType::INT, att2AbilityChance),
+	MEMBER_SEPARATOR("Attack3"),
+	MEMBER(MemberType::FLOAT, att3AttackSpeed),
+	MEMBER(MemberType::FLOAT, att3MovementSpeedWhileAttacking),
+	MEMBER(MemberType::INT, att3AbilityChance),
+	MEMBER_SEPARATOR("Dissolve properties"),
+	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialObj),
+	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialWeaponObj),
+	MEMBER(MemberType::FLOAT, dissolveTimerToStart)
 };
 
 GENERATE_BODY_IMPL(AIMeleeGrunt);
@@ -131,7 +131,7 @@ void AIMeleeGrunt::Start() {
 	if (gameObject) {
 		// Workaround get the first children - Create a Prefab overrides childs IDs
 		gameObject = gameObject->GetChildren()[0];
-		if (gameObject) {			
+		if (gameObject) {
 			// Since we are not getting a vector of Components, this is the only workarround possible
 			// !! IMPORTANT !! if the order of meshes changes, this will have to be reviewed
 			int meshCount = 0;
@@ -268,6 +268,7 @@ void AIMeleeGrunt::Update() {
 	case AIState::DEATH:
 		if (!dissolveAlreadyStarted) {
 			dissolveAlreadyStarted = true;
+			gruntCharacter.IncreasePlayerUltimateCharges(playerController);
 		}
 		break;
 	}
@@ -276,15 +277,6 @@ void AIMeleeGrunt::Update() {
 		if (!killSent) {
 			if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
 			killSent = true;
-
-			if (playerController) {
-				if (playerController->playerOnimaru.characterGameObject->IsActive()) {
-					playerController->playerOnimaru.IncreaseUltimateCounter();
-				}
-				else if (playerController->playerFang.characterGameObject->IsActive()) {
-					playerController->playerFang.IncreaseUltimateCounter();
-				}
-			}
 		}
 		if (componentMeshRenderer && componentMeshRenderer->HasDissolveAnimationFinished()) {
 			if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
@@ -369,6 +361,39 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 				hitTaken = true;
 				gruntCharacter.GetHit(playerController->playerOnimaru.shieldReboundedDamage + playerController->GetOverPowerMode());
 				GameplaySystems::DestroyGameObject(&collidedWith);
+			}
+			else if (collidedWith.name == "VFXShield") {
+				if (state == AIState::RUN) {
+					int random = std::rand() % 100;
+					if (random < att1AbilityChance) {
+						attackNumber = 1;
+						attackSpeed = att1AttackSpeed;
+						attackMovementSpeed = att1MovementSpeedWhileAttacking;
+					}
+					else if (random < att1AbilityChance + att2AbilityChance) {
+						attackNumber = 2;
+						attackSpeed = att2AttackSpeed;
+						attackMovementSpeed = att2MovementSpeedWhileAttacking;
+					}
+					else {
+						attackNumber = 3;
+						attackSpeed = att3AttackSpeed;
+						attackMovementSpeed = att3MovementSpeedWhileAttacking;
+					}
+
+					animation->SendTrigger("WalkForwardAttack" + std::to_string(attackNumber));
+					movementScript->SetClipSpeed(animation->GetCurrentState()->clipUid, attackSpeed);
+					if (audios[static_cast<int>(AudioType::ATTACK)]) audios[static_cast<int>(AudioType::ATTACK)]->Play();
+					state = AIState::ATTACK;
+				}
+			}
+			else if (collidedWith.name == "Impenetrable") {
+				if (agent) {
+					agent->RemoveAgentFromCrowd();
+					float3 actualPenDistance = penetrationDistance.ProjectTo(collisionNormal);
+					GetOwner().GetComponent<ComponentTransform>()->SetGlobalPosition(GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + actualPenDistance);
+					agent->AddAgentToCrowd();
+				}
 			}
 
 			if (hitTaken) {
@@ -527,7 +552,7 @@ void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const cha
 }
 
 void AIMeleeGrunt::Death()
-{	
+{
 	if (!GameController::IsGameplayBlocked()) {
 		if (animation->GetCurrentState() && state != AIState::DEATH) {
 			std::string changeState = animation->GetCurrentState()->name + "Death";
@@ -589,9 +614,9 @@ void AIMeleeGrunt::SetRandomMaterial()
 			}
 		}
 
-		
+
 		if (!materials.empty()) {
-			//Random distribution it cant be saved into global 
+			//Random distribution it cant be saved into global
 			std::random_device rd;  //Will be used to obtain a seed for the random number engine
 			std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
 			std::uniform_int_distribution<int> distrib(1, materials.size());
