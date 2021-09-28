@@ -20,7 +20,7 @@ public:
 
 	void Seek(AIState state, const float3& newPosition, int speed, bool orientateToDir);
 	void Flee(AIState state, const float3& fromPosition, int speed, bool orientateToDir);
-	void Orientate(const float3& direction);
+	void Orientate(const float3& direction, float orientationSpeed = -1.0f, float orientationThreshold = 0.2f);
 	void Stop();
 	bool CharacterInSight(const GameObject* character, const float searchRadius);
 	bool CharacterInAttackRange(const GameObject* character, const float meleeRange);

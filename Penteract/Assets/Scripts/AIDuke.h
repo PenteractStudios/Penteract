@@ -79,9 +79,10 @@ public:
 
 	float troopsCounter = 5;
 
+	float orientationSpeed = 1.0f;
+	float orientationThreshold = 0.1f;
 
 	bool toggleShield = false;
-
 
 private:
 
@@ -115,5 +116,6 @@ private:
 	float currentPushBackDistance = 0.f;
 	float currentSlowedDownTime = 0.f;
 	float pushBackRealDistance = 0.f;
+
 };
 

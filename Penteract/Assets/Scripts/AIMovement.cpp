@@ -71,10 +71,31 @@ void AIMovement::Seek(AIState state, const float3& newPosition, int speed, bool 
 
 }
 
-void AIMovement::Orientate(const float3& direction) {
-		targetRotation = Quat::LookAt(float3(0, 0, 1), direction.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
-		Quat rotation = Quat::Slerp(ownerTransform->GetGlobalRotation(), targetRotation, Min(Time::GetDeltaTime() / Max(rotationSmoothness, 0.000001f), 1.0f));
-		ownerTransform->SetGlobalRotation(rotation);
+void AIMovement::Orientate(const float3& direction, float orientationSpeed, float orientationThreshold) {
+
+	float3 normalizedDirection = direction.Normalized();
+
+	Quat rotation = ownerTransform->GetGlobalRotation();
+	if (orientationSpeed <= 0) {
+		targetRotation = Quat::LookAt(float3(0, 0, 1), normalizedDirection.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
+		rotation = Quat::Slerp(ownerTransform->GetGlobalRotation(), targetRotation, Min(Time::GetDeltaTime() / Max(rotationSmoothness, 0.000001f), 1.0f));
+	} else {
+
+		float angle = normalizedDirection.AngleBetweenNorm(GetOwner().GetComponent<ComponentTransform>()->GetFront());
+		float3 axis = GetOwner().GetComponent<ComponentTransform>()->GetFront().Cross(normalizedDirection);
+
+
+		if (angle < orientationThreshold) return;
+
+		targetRotation = Quat::RotateAxisAngle(axis, orientationSpeed * Time::GetDeltaTime()) * ownerTransform->GetGlobalRotation();
+
+		//targetRotation = Quat::LookAt(float3(0, 0, 1), direction.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
+
+
+
+		rotation = Quat::Slerp(ownerTransform->GetGlobalRotation(), targetRotation, Min(Time::GetDeltaTime() / Max(rotationSmoothness, 0.000001f), 1.0f));
+	}
+	ownerTransform->SetGlobalRotation(rotation);
 }
 
 bool AIMovement::CharacterInSight(const GameObject* character, const float searchRadius) {
@@ -105,13 +126,12 @@ void AIMovement::SetClipSpeed(UID clipUID, float speed) {
 }
 
 GameObject* AIMovement::SearchReferenceInHierarchy(GameObject* root, std::string name) {
-	
+
 	if (root->name == name) {
 		return root;
 	}
 	GameObject* reference = nullptr;
-	for (GameObject* child : root->GetChildren())
-	{
+	for (GameObject* child : root->GetChildren()) {
 		reference = SearchReferenceInHierarchy(child, name);
 		if (reference != nullptr) return reference;
 
