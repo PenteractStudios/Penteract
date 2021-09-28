@@ -2,13 +2,15 @@
 
 #include "AIMovement.h"
 #include "PlayerController.h"
+#include "DukeShield.h"
 #include <string>
 
 EXPOSE_MEMBERS(AIDuke) {
 	MEMBER_SEPARATOR("Objects UIDs"),
-    MEMBER(MemberType::GAME_OBJECT_UID, dukeUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dukeUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, bulletUID),	
+	MEMBER(MemberType::GAME_OBJECT_UID, shieldObjUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, bulletUID),
 
 	MEMBER_SEPARATOR("Duke Atributes"),
 	MEMBER(MemberType::FLOAT, dukeCharacter.lifePoints),
@@ -31,7 +33,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::FLOAT, shieldCooldown),
 	MEMBER(MemberType::FLOAT, shieldActiveTime),
 	MEMBER(MemberType::FLOAT, bulletHellCooldown),
-    MEMBER(MemberType::FLOAT, bulletHellActiveTime),
+	MEMBER(MemberType::FLOAT, bulletHellActiveTime),
 	MEMBER(MemberType::FLOAT, abilityChangeCooldown),
 	MEMBER(MemberType::FLOAT, throwBarrelTimer),
 
@@ -39,6 +41,10 @@ EXPOSE_MEMBERS(AIDuke) {
 
 	MEMBER_SEPARATOR("Prefabs UIDs"),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, barrelUID),
+
+	MEMBER_SEPARATOR("Debug"),
+	MEMBER(MemberType::BOOL, toggleShield)
+
 };
 
 GENERATE_BODY_IMPL(AIDuke);
@@ -54,18 +60,32 @@ void AIDuke::Start() {
 
 	ownerTransform = GetOwner().GetComponent<ComponentTransform>();
 
+	// Debug
+	GameObject* shieldObj = GameplaySystems::GetGameObject(shieldObjUID);
+	if (shieldObj) {
+		dukeShield = GET_SCRIPT(shieldObj, DukeShield);
+	}
+
 	// Init Duke character
 	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID);
 }
 
 void AIDuke::Update() {
-	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_B)) { // TODO remove only for test
-		dukeCharacter.ThrowBarrels();
-	}
-
 	std::string life = std::to_string(dukeCharacter.lifePoints);
 	life = "Life points: " + life;
 	Debug::Log(life.c_str());
+
+	if (toggleShield) {
+		toggleShield = false;
+		if (dukeShield) {
+			if (!dukeShield->GetIsActive()) {
+				dukeShield->InitShield();
+			} else {
+				dukeShield->FadeShield();
+			}
+		}
+	}
+
 	switch (phase) {
 	case Phase::PHASE1:
 		currentShieldCooldown += Time::GetDeltaTime();
@@ -103,8 +123,7 @@ void AIDuke::Update() {
 			break;
 		}
 
-		switch (dukeCharacter.state)
-		{
+		switch (dukeCharacter.state) {
 		case DukeState::BASIC_BEHAVIOUR:
 			if (currentBulletHellCooldown >= bulletHellCooldown) {
 				dukeCharacter.state = DukeState::BULLET_HELL;
@@ -115,7 +134,7 @@ void AIDuke::Update() {
 				dukeCharacter.agent->SetMaxSpeed(dukeCharacter.chargeSpeed);
 				dukeCharacter.state = DukeState::CHARGE;
 			} else if (currentShieldCooldown >= shieldCooldown) {
-				dukeCharacter.isShielding = true;
+				dukeShield->InitShield();
 				dukeCharacter.state = DukeState::SHOOT_SHIELD;
 				movementScript->Stop();
 			} else if (player && movementScript->CharacterInAttackRange(player, dukeCharacter.attackRange)) {
@@ -137,11 +156,11 @@ void AIDuke::Update() {
 			break;
 		case DukeState::SHOOT_SHIELD:
 			movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
-			dukeCharacter.ShieldShoot();
+			dukeCharacter.Shoot();
 			currentShieldActiveTime += Time::GetDeltaTime();
 			if (currentShieldActiveTime >= shieldActiveTime) {
 				// TODO: Deactivate shield animation
-				dukeCharacter.isShielding = false;
+				dukeShield->FadeShield();
 				currentShieldCooldown = 0.f;
 				currentShieldActiveTime = 0.f;
 				dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
@@ -157,7 +176,7 @@ void AIDuke::Update() {
 			}
 			break;
 		case DukeState::CHARGE:
-            dukeCharacter.Charge(DukeState::BASIC_BEHAVIOUR);
+			dukeCharacter.Charge(DukeState::BASIC_BEHAVIOUR);
 			break;
 		case DukeState::STUNNED:
 			if (stunTimeRemaining <= 0.f) {
@@ -176,7 +195,7 @@ void AIDuke::Update() {
 			break;
 		}
 
-	break;
+		break;
 	case Phase::PHASE2:
 		Debug::Log("PHASE2");
 		if (!activeLasers && dukeCharacter.lifePoints < lasersThreshold * dukeCharacter.GetTotalLifePoints()) {
@@ -218,11 +237,10 @@ void AIDuke::Update() {
 			lifeThreshold -= 0.1f;
 			if (!dukeCharacter.criticalMode) {
 				dukeCharacter.CallTroops();
-				dukeCharacter.isShielding = true;
+				dukeShield->InitShield();
 				dukeCharacter.state = DukeState::SHOOT_SHIELD;
 				movementScript->Stop();
-			}
-			else {
+			} else {
 				dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 			}
 		}
@@ -243,8 +261,7 @@ void AIDuke::Update() {
 					dukeCharacter.agent->SetMoveTarget(dukeCharacter.chargeTarget);
 					dukeCharacter.agent->SetMaxSpeed(dukeCharacter.chargeSpeed);
 					dukeCharacter.state = DukeState::CHARGE;
-				}
-				else {
+				} else {
 					if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(dukeCharacter.movementSpeed);
 					float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
 					movementScript->Orientate(dir);
@@ -284,15 +301,14 @@ void AIDuke::Update() {
 				break;
 			}
 		} else {
-			switch (dukeCharacter.state)
-			{
+			switch (dukeCharacter.state) {
 			case DukeState::SHOOT_SHIELD:
 				movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
-				dukeCharacter.ShieldShoot();
+				dukeCharacter.Shoot();
 				currentAbilityChangeCooldown += Time::GetDeltaTime();
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
 					// TODO: Deactivate shield animation
-					dukeCharacter.isShielding = false;
+					dukeShield->FadeShield();
 					currentAbilityChangeCooldown = 0.f;
 					dukeCharacter.state = DukeState::BULLET_HELL;
 				}
@@ -309,7 +325,7 @@ void AIDuke::Update() {
 				currentAbilityChangeCooldown += Time::GetDeltaTime();
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
 					currentAbilityChangeCooldown = 0.f;
-					dukeCharacter.isShielding = true;
+					dukeShield->InitShield();
 					dukeCharacter.state = DukeState::SHOOT_SHIELD;
 					movementScript->Stop();
 				} else {
@@ -321,7 +337,7 @@ void AIDuke::Update() {
 				break;
 			case DukeState::MELEE_ATTACK:
 				dukeCharacter.MeleeAttack();
-				dukeCharacter.isShielding = true;
+				dukeShield->InitShield();
 				dukeCharacter.state = DukeState::SHOOT_SHIELD;
 				break;
 			case DukeState::STUNNED:
@@ -346,16 +362,13 @@ void AIDuke::Update() {
 	}
 }
 
-void AIDuke::OnAnimationFinished()
-{
+void AIDuke::OnAnimationFinished() {
 }
 
-void AIDuke::OnAnimationSecondaryFinished()
-{
+void AIDuke::OnAnimationSecondaryFinished() {
 }
 
-void AIDuke::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle)
-{
+void AIDuke::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 	if (dukeCharacter.isAlive && playerController) {
 		bool hitTaken = false;
 		if (collidedWith.name == "FangBullet") {

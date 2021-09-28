@@ -12,6 +12,7 @@ class ComponentMeshRenderer;
 class ResourcePrefab;
 class HUDController;
 class PlayerController;
+class DukeShield;
 class Player;
 //class PlayerDeath;
 class AIMovement;
@@ -30,7 +31,7 @@ Duke class will contain all the boss stats, Animation FSM and agent, as well as 
 of performing all the movement, abilities, animation and sound triggers when the AIDuke tells it to do so.
 */
 
-class AIDuke : public Script
+class AIDuke : public Script 
 {
 	GENERATE_BODY(AIDuke);
 
@@ -53,6 +54,7 @@ private:
 public:
 	UID dukeUID = 0;
 	UID playerUID = 0;
+	UID shieldObjUID = 0;
 	UID bulletUID = 0;
 	UID barrelUID = 0;
 
@@ -60,6 +62,7 @@ public:
 	GameObject* player = nullptr;
 
 	Duke dukeCharacter = Duke();
+	DukeShield* dukeShield = nullptr;
 
 	Phase phase = Phase::PHASE1;
 
@@ -78,6 +81,10 @@ public:
 	float troopsCounter = 5;
 
 	float throwBarrelTimer = 5;
+
+
+	bool toggleShield = false;
+
 
 private:
 
