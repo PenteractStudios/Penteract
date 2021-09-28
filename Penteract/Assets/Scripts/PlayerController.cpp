@@ -111,6 +111,8 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, switchDamage),
 	MEMBER(MemberType::FLOAT, switchSphereRadius),
 	MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
+	MEMBER_SEPARATOR("Upgrade Effect"),
+	MEMBER(MemberType::GAME_OBJECT_UID, upgradesParticlesUID),
 	MEMBER_SEPARATOR("Debug settings"),
 	MEMBER(MemberType::BOOL, debugGetHit),
 
@@ -138,6 +140,11 @@ void PlayerController::Start() {
 	}
 
 	switchEffects = GameplaySystems::GetGameObject(switchParticlesUID);
+
+	upgradeEffects = GameplaySystems::GetGameObject(upgradesParticlesUID);
+	if (upgradeEffects) {
+		upgradeParticles = upgradeEffects->GetComponent<ComponentParticleSystem>();
+	}
 
 	//Get audio sources
 	int i = 0;
@@ -372,6 +379,7 @@ void PlayerController::RemoveEnemyFromMap(GameObject* enemy) {
 void PlayerController::ObtainUpgradeCell() {
 	if (++obtainedUpgradeCells == 3) {
 		// TODO: Check whether in level1 or level2
+		if (upgradeParticles)upgradeParticles->PlayChildParticles();
 		if (currentLevel == 1) Player::level1Upgrade = true;
 		else if (currentLevel == 2) Player::level2Upgrade = true;
 	}
