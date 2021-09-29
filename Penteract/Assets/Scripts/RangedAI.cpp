@@ -297,7 +297,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 				stunTimeRemaining = stunDuration;
 				if (state != AIState::STUNNED) {
 					ChangeState(AIState::STUNNED);
-					particlesEmp->PlayChildParticles();
+					if(particlesEmp) particlesEmp->PlayChildParticles();
 				}
 			}
 		}
@@ -630,7 +630,7 @@ void RangedAI::PlayAudio(AudioType audioType) {
 void RangedAI::EnableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		ChangeState(AIState::PUSHED);
-		particlesPush->PlayChildParticles();
+		if(particlesPush) particlesPush->PlayChildParticles();
 		rangerGruntCharacter.beingPushed = true;
 		CalculatePushBackRealDistance();
 		// Damage
