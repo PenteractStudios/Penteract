@@ -370,36 +370,39 @@ void AIDuke::OnAnimationSecondaryFinished() {
 void AIDuke::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 	if (dukeCharacter.isAlive && playerController) {
 		bool hitTaken = false;
-		if (collidedWith.name == "FangBullet") {
-			if (!particle) return;
-			GameplaySystems::DestroyGameObject(&collidedWith);
-			hitTaken = true;
-			dukeCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
-		} else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
-			hitTaken = true;
-			ParticleHit(collidedWith, particle, playerController->playerFang);
-		} else if (collidedWith.name == "OnimaruBullet") {
-			hitTaken = true;
-			ParticleHit(collidedWith, particle, playerController->playerOnimaru);
-		} else if (collidedWith.name == "OnimaruBulletUltimate") {
-			hitTaken = true;
-			ParticleHit(collidedWith, particle, playerController->playerOnimaru);
-		} else if (collidedWith.name == "Barrel") {
-			//hitTaken = true;
-			//dukeCharacter.GetHit(dukeCharacter.barrelDamageTaken);
-		} else if (collidedWith.name == "DashDamage" && playerController->playerFang.level1Upgrade) {
-			hitTaken = true;
-			dukeCharacter.GetHit(playerController->playerFang.dashDamage + playerController->GetOverPowerMode());
-		}
-
-		if (hitTaken) {
-			// TODO: play audio and VFX
-			/*if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
-			if (componentMeshRenderer) {
-				if (damageMaterialID != 0) componentMeshRenderer->materialId = damageMaterialID;
+		if (dukeCharacter.state != DukeState::INVULNERABLE) {
+			if (collidedWith.name == "FangBullet") {
+				if (!particle) return;
+				GameplaySystems::DestroyGameObject(&collidedWith);
+				hitTaken = true;
+				dukeCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
+			}
+			else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
+				hitTaken = true;
+				ParticleHit(collidedWith, particle, playerController->playerFang);
+			}
+			else if (collidedWith.name == "OnimaruBullet") {
+				hitTaken = true;
+				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
+			}
+			else if (collidedWith.name == "OnimaruBulletUltimate") {
+				hitTaken = true;
+				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
+			}
+			else if (collidedWith.name == "DashDamage" && playerController->playerFang.level1Upgrade) {
+				hitTaken = true;
+				dukeCharacter.GetHit(playerController->playerFang.dashDamage + playerController->GetOverPowerMode());
 			}
 
-			timeSinceLastHurt = 0.0f;*/
+			if (hitTaken) {
+				// TODO: play audio and VFX
+				/*if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
+				if (componentMeshRenderer) {
+					if (damageMaterialID != 0) componentMeshRenderer->materialId = damageMaterialID;
+				}
+
+				timeSinceLastHurt = 0.0f;*/
+			}
 		}
 
 		if (collidedWith.name == "EMP" && dukeCharacter.state != DukeState::INVULNERABLE && dukeCharacter.state != DukeState::CHARGE) {

@@ -95,7 +95,7 @@ void Duke::BulletHell()
 
 void Duke::Charge(DukeState nextState)
 {
-	if ((dukeTransform->GetGlobalPosition() - chargeTarget).Length() <= 0.1f) {
+	if ((dukeTransform->GetGlobalPosition() - chargeTarget).Length() <= 0.2f) {
 		state = nextState;
 	}
 	Debug::Log("Electric Tackle!");
