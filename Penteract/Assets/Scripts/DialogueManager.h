@@ -80,13 +80,13 @@ public:
 	ComponentText* doorTextComponent = nullptr;
 
 	UID tutorialFangTextUID = 0;
+	UID tutorialOnimaruTextUID = 0;
 	UID tutorialFangUltimateUID = 0;
-	UID tutorialOnimaruUID = 0;
 	UID tutorialOnimaruUltimateUID = 0;
 	UID tutorialSwapUID = 0;
 	ComponentText* tutorialFangTextComponent = nullptr;
+	ComponentText* tutorialOnimaruTextComponent = nullptr;
 	GameObject* tutorialFangUltimate = nullptr;
-	GameObject* tutorialOnimaru = nullptr;
 	GameObject* tutorialOnimaruUltimate = nullptr;
 	GameObject* tutorialSwap = nullptr;
 

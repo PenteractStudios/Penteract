@@ -19,8 +19,8 @@ EXPOSE_MEMBERS(DialogueManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, doorTextObjectUID),
 	MEMBER_SEPARATOR("Tutorial Objects UIDs"),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialFangTextUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, tutorialOnimaruTextUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialFangUltimateUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, tutorialOnimaruUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialOnimaruUltimateUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialSwapUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, tutorialUpgrades1UID),
@@ -70,11 +70,12 @@ void DialogueManager::Start() {
 	// Get tutorials
 	tutorialSkillNumber = 0;
 	GameObject* fangTutorialText = GameplaySystems::GetGameObject(tutorialFangTextUID);
-	if (fangTutorialText) {
+	GameObject* onimaruTutorialText = GameplaySystems::GetGameObject(tutorialOnimaruTextUID);
+	if (fangTutorialText && onimaruTutorialText) {
 		tutorialFangTextComponent = fangTutorialText->GetComponent<ComponentText>();
+		tutorialOnimaruTextComponent = onimaruTutorialText->GetComponent<ComponentText>();
 	}
 	tutorialFangUltimate = GameplaySystems::GetGameObject(tutorialFangUltimateUID);
-	tutorialOnimaru = GameplaySystems::GetGameObject(tutorialOnimaruUID);
 	tutorialOnimaruUltimate = GameplaySystems::GetGameObject(tutorialOnimaruUltimateUID);
 	tutorialSwap = GameplaySystems::GetGameObject(tutorialSwapUID);
 	tutorialUpgrades1 = GameplaySystems::GetGameObject(tutorialUpgrades1UID);
@@ -130,9 +131,9 @@ void DialogueManager::Start() {
 	dialoguesArray[20] = Dialogue(DialogueWindow::FANG, true, "Onimaru,\nget the repair bots\nready...\nI'm gonna need a break.", &dialoguesArray[21]);
 	dialoguesArray[21] = Dialogue(DialogueWindow::ONIMARU, true, "Roger.\nInitialising Matter-Switch.", &dialoguesArray[22]);
 	dialoguesArray[22] = Dialogue(DialogueWindow::TUTO_SWAP, true, "", &dialoguesArray[23], false, InputActions::SWITCH);
-	dialoguesArray[23] = Dialogue(DialogueWindow::ONIMARU, true, "Long hallways\nis where I perform best.\nWatch how it is done.", &dialoguesArray[24]);
-	dialoguesArray[24] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "(Hold) Shield", &dialoguesArray[25]);
-	dialoguesArray[25] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "Pushback Blast", &dialoguesArray[26]);
+	dialoguesArray[23] = Dialogue(DialogueWindow::ONIMARU, true, "Long hallways\nis where I perform best.\nWatch how it is done.", nullptr);
+	dialoguesArray[24] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "(Hold) Shield", nullptr);
+	dialoguesArray[25] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "Pushback Blast", nullptr);
 	dialoguesArray[26] = Dialogue(DialogueWindow::TUTO_ONIMARU_ULTI, true, "", nullptr);
 
 	// LEVEL 1 - FINAL
@@ -154,7 +155,7 @@ void DialogueManager::Start() {
 
 void DialogueManager::Update() {
 	if (!fangTextComponent || !onimaruTextComponent || !dukeTextComponent || !doorTextComponent) return;
-	if (!tutorialFangTextComponent || !tutorialOnimaru || !tutorialSwap) return;
+	if (!tutorialFangTextComponent || !tutorialOnimaruTextComponent || !tutorialSwap) return;
 	if (!tutorialUpgrades1 || !tutorialUpgrades2 || !tutorialUpgrades3) return;
 	if (!player || !camera || !flash) return;
 
@@ -198,11 +199,17 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 
 	activeDialogue = dialogue;
 	if (dialogue) {
-		// Set the transition positions that correspond to the new active dialogue
-		if (static_cast<int>(dialogue->character) >= 5) {
+		// Set the transition positions that correspond to the new active dialogue box
+		if (static_cast<int>(dialogue->character) >= 10) {
+			// Upgrades
+			currentStartPosition = upgradeStartPosition;
+			currentEndPosition = upgradeEndPosition;
+		} else if (static_cast<int>(dialogue->character) < 10 && static_cast<int>(dialogue->character) >= 5) {
+			// Tutorials
 			currentStartPosition = tutorialStartPosition;
 			currentEndPosition = tutorialEndPosition;
-		} else {
+		}else {
+			// Dialogues
 			currentStartPosition = dialogueStartPosition;
 			currentEndPosition = dialogueEndPosition;
 		}
@@ -248,10 +255,26 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 			tutorialSkillNumber = 0;
 			break;
 		case DialogueWindow::TUTO_ONIMARU:
-			activeDialogueObject = tutorialOnimaru;
+		{
+			activeDialogueObject = tutorialOnimaruTextComponent->GetOwner().GetParent();
+			tutorialOnimaruTextComponent->SetText(dialogue->text);
+			std::string skillIconName;
+			// Hide the previous skill icon (if there was one)
+			if (tutorialSkillNumber != 0) {
+				skillIconName = "Buttons" + std::to_string(tutorialSkillNumber);
+				GameObject* skillButtonIcon = activeDialogueObject->GetChild("Skill Buttons")->GetChild(skillIconName.c_str());
+				if (skillButtonIcon) skillButtonIcon->Disable();
+			}
+			// Show skill icon
+			tutorialSkillNumber++;
+			skillIconName = "Buttons" + std::to_string(tutorialSkillNumber);
+			GameObject* skillButtonIcon = activeDialogueObject->GetChild("Skill Buttons")->GetChild(skillIconName.c_str());
+			if (skillButtonIcon) skillButtonIcon->Enable();
 			break;
+		}
 		case DialogueWindow::TUTO_ONIMARU_ULTI:
 			activeDialogueObject = tutorialOnimaruUltimate;
+			tutorialSkillNumber = 0;
 			break;
 		case DialogueWindow::TUTO_SWAP:
 			activeDialogueObject = tutorialSwap;
