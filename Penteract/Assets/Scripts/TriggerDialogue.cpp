@@ -24,12 +24,13 @@ void TriggerDialogue::Update() {}
     
 void TriggerDialogue::OnCollision(GameObject& /*collidedWith*/, float3 /*collisionNormal*/, float3 /*penetrationDistance*/, void* /*particle*/) {
 
-    if (dialogueManagerScript) {
+    if (dialogueManagerScript && !triggered) {
         if (dialogueID < sizeof(dialogueManagerScript->dialoguesArray) / sizeof(dialogueManagerScript->dialoguesArray[0])
             && &dialogueManagerScript->dialoguesArray[dialogueID] != nullptr) {
             dialogueManagerScript->PlayOpeningAudio();
             dialogueManagerScript->SetActiveDialogue(&dialogueManagerScript->dialoguesArray[dialogueID]);
             if (afterDialogCallbackScript) afterDialogCallbackScript->OpenFactoryDoors();
+            triggered = true;
         }
     }
     GetOwner().Disable();

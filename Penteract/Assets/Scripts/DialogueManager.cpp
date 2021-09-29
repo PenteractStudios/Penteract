@@ -132,8 +132,8 @@ void DialogueManager::Start() {
 	dialoguesArray[21] = Dialogue(DialogueWindow::ONIMARU, true, "Roger.\nInitialising Matter-Switch.", &dialoguesArray[22]);
 	dialoguesArray[22] = Dialogue(DialogueWindow::TUTO_SWAP, true, "", &dialoguesArray[23], false, InputActions::SWITCH);
 	dialoguesArray[23] = Dialogue(DialogueWindow::ONIMARU, true, "Long hallways\nis where I perform best.\nWatch how it is done.", nullptr);
-	dialoguesArray[24] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "(Hold) Shield", nullptr);
-	dialoguesArray[25] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "Pushback Blast", nullptr);
+	dialoguesArray[24] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "Pushback Blast", nullptr);
+	dialoguesArray[25] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "(Hold) Shield", nullptr);
 	dialoguesArray[26] = Dialogue(DialogueWindow::TUTO_ONIMARU_ULTI, true, "", nullptr);
 
 	// LEVEL 1 - FINAL
