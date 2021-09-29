@@ -127,14 +127,17 @@ void DialogueManager::Start() {
 	dialoguesArray[18] = Dialogue(DialogueWindow::TUTO_FANG, true, "EMP Stun Field", nullptr);
 	dialoguesArray[19] = Dialogue(DialogueWindow::TUTO_FANG_ULTI, true, "", nullptr);
 
-	// LEVEL 1 - SWAP DIALOGUE + ONIMARU TUTORIAL
+	// LEVEL 1 - SWAP DIALOGUE
 	dialoguesArray[20] = Dialogue(DialogueWindow::FANG, true, "Onimaru,\nget the repair bots\nready...\nI'm gonna need a break.", &dialoguesArray[21]);
 	dialoguesArray[21] = Dialogue(DialogueWindow::ONIMARU, true, "Roger.\nInitialising Matter-Switch.", &dialoguesArray[22]);
 	dialoguesArray[22] = Dialogue(DialogueWindow::TUTO_SWAP, true, "", &dialoguesArray[23], false, InputActions::SWITCH);
 	dialoguesArray[23] = Dialogue(DialogueWindow::ONIMARU, true, "Long hallways\nis where I perform best.\nWatch how it is done.", nullptr);
+
+	// LEVEL 1 - ONIMARU TUTORIAL
 	dialoguesArray[24] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "Pushback Blast", nullptr);
 	dialoguesArray[25] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "(Hold) Shield", nullptr);
-	dialoguesArray[26] = Dialogue(DialogueWindow::TUTO_ONIMARU_ULTI, true, "", nullptr);
+	dialoguesArray[26] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "Ultimate", &dialoguesArray[27]);
+	dialoguesArray[27] = Dialogue(DialogueWindow::TUTO_ONIMARU_ULTI, true, "", nullptr);
 
 	// LEVEL 1 - FINAL
 	dialoguesArray[28] = Dialogue(DialogueWindow::DOOR, true, "Oh hello guys!\nNice fights there, right?\nWhere have you been?\nI haven't seen you\nin a while!", &dialoguesArray[29]);

@@ -47,7 +47,6 @@ void VideoScene1Start::Start() {
         }
     }
 
-    Time::PauseGame();
     GameController::BlockGameplay(true);
 }
 
@@ -66,13 +65,16 @@ void VideoScene1Start::BackToNormalGameplay() {
     if (faderScript) {
         faderScript->FadeIn();
     }
+
+    GameController::BlockGameplay(false);
   
-  // When the video finishes, open the initial dialogue directly
-  if (dialogueManagerScript) {
-      if (dialogueID < sizeof(dialogueManagerScript->dialoguesArray) / sizeof(dialogueManagerScript->dialoguesArray[0])
-          && &dialogueManagerScript->dialoguesArray[dialogueID] != nullptr) {
-          dialogueManagerScript->PlayOpeningAudio();
-          dialogueManagerScript->SetActiveDialogue(&dialogueManagerScript->dialoguesArray[dialogueID]);
-      }
-  }
+    // When the video finishes, open the initial dialogue directly
+    if (dialogueManagerScript) {
+        if (dialogueID < sizeof(dialogueManagerScript->dialoguesArray) / sizeof(dialogueManagerScript->dialoguesArray[0])
+            && &dialogueManagerScript->dialoguesArray[dialogueID] != nullptr) {
+            dialogueManagerScript->PlayOpeningAudio();
+            dialogueManagerScript->SetActiveDialogue(&dialogueManagerScript->dialoguesArray[dialogueID]);
+        }
+    }
+  
 }
