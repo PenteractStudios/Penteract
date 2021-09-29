@@ -1,5 +1,6 @@
 #include "Duke.h"
 
+#include "GameplaySystems.h"
 #include "RangerProjectileScript.h"
 
 #include <string>
@@ -8,13 +9,15 @@
 
 std::uniform_real_distribution<> rng(-1.0f, 1.0f);
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID)
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID)
 {
 	gen = std::minstd_rand(rd());
 
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(dukeUID);
 	player = GameplaySystems::GetGameObject(playerUID);
+
+	barrel = GameplaySystems::GetResource<ResourcePrefab>(barrelUID);
 
 	GameObject* bulletGO = GameplaySystems::GetGameObject(bulletUID);
 	if (bulletGO) {
@@ -120,4 +123,17 @@ void Duke::Shoot()
 void Duke::ThrowBarrels()
 {
 	Debug::Log("Here, barrel in your face!");
+
+	float height = 15.0f;
+	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+
+	//Instantiate barrel and play animation throw barrels for Duke and the barrel
+	if (barrel) {
+		GameObject* auxBarrel = GameplaySystems::Instantiate(barrel, playerPos + float3(0.0f, height, 0.0f), Quat(0, 0, 0, 1));
+	}
+	/*if (auxBarrel->GetComponent<ComponentParticleSystem>()) {
+		auxBarrel->GetComponent<ComponentParticleSystem>()->Play();
+	}*/
+
+	//When animation finished, set player + random offset position and the barrel falls to this position
 }

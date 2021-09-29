@@ -56,6 +56,7 @@ public:
 	UID playerUID = 0;
 	UID shieldObjUID = 0;
 	UID bulletUID = 0;
+	UID barrelUID = 0;
 
 	GameObject* duke = nullptr;
 	GameObject* player = nullptr;
@@ -73,11 +74,11 @@ public:
 
 	float abilityChangeCooldown = 8.f;
 
-	//float movingTime = 10.f;
-
 	float stunDuration = 3.f;
 
 	float troopsCounter = 5;
+
+	float throwBarrelTimer = 5;
 
 	float orientationSpeed = 1.0f;
 	float orientationThreshold = 0.1f;
@@ -90,7 +91,6 @@ private:
 	AIMovement* movementScript = nullptr;
 
 	PlayerController* playerController = nullptr;
-	//PlayerDeath* playerDeath = nullptr;
 
 	float currentShieldCooldown = 0.f;
 	float currentShieldActiveTime = 0.f;
@@ -101,6 +101,8 @@ private:
 	float currentAbilityChangeCooldown = 0.f;
 
 	float currentMovingTime = 0.f;
+
+	float currentBarrelTimer = 0.f;
 
 	float lifeThreshold = 0.70f;
 	float lasersThreshold = 0.6f;

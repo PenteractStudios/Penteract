@@ -24,7 +24,7 @@ void Onimaru::GetHit(float damage_) {
 	//We assume that the player is always alive when this method gets called, so no need to check if character was alive before taking lives
 	if (isAlive) {
 		if (cameraController) {
-			cameraController->StartShake();
+			cameraController->StartShake(-1.f);
 		}
 
 		lifePoints -= damage_;
