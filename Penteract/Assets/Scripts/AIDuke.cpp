@@ -23,7 +23,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::INT, dukeCharacter.attackBurst),
 	MEMBER(MemberType::FLOAT, dukeCharacter.timeInterBurst),
 	MEMBER(MemberType::FLOAT, dukeCharacter.pushBackDistance),
-    MEMBER(MemberType::FLOAT, dukeCharacter.pushBackSpeed),
+	MEMBER(MemberType::FLOAT, dukeCharacter.pushBackSpeed),
 	MEMBER(MemberType::FLOAT, dukeCharacter.slowedDownTime),
 	MEMBER(MemberType::FLOAT, dukeCharacter.slowedDownSpeed),
 	MEMBER(MemberType::FLOAT, dukeCharacter.moveChangeEvery),
@@ -36,6 +36,8 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::FLOAT, bulletHellActiveTime),
 	MEMBER(MemberType::FLOAT, abilityChangeCooldown),
 	MEMBER(MemberType::FLOAT, throwBarrelTimer),
+	MEMBER(MemberType::FLOAT, orientationSpeed),
+	MEMBER(MemberType::FLOAT, orientationThreshold),
 
 	MEMBER_SEPARATOR("Particles UIDs"),
 
@@ -123,6 +125,7 @@ void AIDuke::Update() {
 			break;
 		}
 
+
 		switch (dukeCharacter.state) {
 		case DukeState::BASIC_BEHAVIOUR:
 			if (currentBulletHellCooldown >= bulletHellCooldown) {
@@ -155,7 +158,7 @@ void AIDuke::Update() {
 			dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 			break;
 		case DukeState::SHOOT_SHIELD:
-			movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
+			movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition(), orientationSpeed, orientationThreshold);
 			dukeCharacter.Shoot();
 			currentShieldActiveTime += Time::GetDeltaTime();
 			if (currentShieldActiveTime >= shieldActiveTime) {
@@ -183,8 +186,7 @@ void AIDuke::Update() {
 				stunTimeRemaining = 0.f;
 				dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 				//animation->SendTrigger("StunStunEnd");
-			}
-			else {
+			} else {
 				stunTimeRemaining -= Time::GetDeltaTime();
 			}
 			break;
@@ -213,8 +215,7 @@ void AIDuke::Update() {
 			dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 			currentBulletHellCooldown = 0.f;
 			currentShieldCooldown = 0.f;
-		}
-		else {
+		} else {
 			troopsCounter -= 0.0063;
 			float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
 			movementScript->Orientate(dir);
@@ -289,8 +290,7 @@ void AIDuke::Update() {
 					stunTimeRemaining = 0.f;
 					dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 					//animation->SendTrigger("StunStunEnd");
-				}
-				else {
+				} else {
 					stunTimeRemaining -= Time::GetDeltaTime();
 				}
 				break;
@@ -303,7 +303,7 @@ void AIDuke::Update() {
 		} else {
 			switch (dukeCharacter.state) {
 			case DukeState::SHOOT_SHIELD:
-				movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition());
+				movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition(), orientationSpeed, orientationThreshold);
 				dukeCharacter.Shoot();
 				currentAbilityChangeCooldown += Time::GetDeltaTime();
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
@@ -345,8 +345,7 @@ void AIDuke::Update() {
 					stunTimeRemaining = 0.f;
 					dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 					//animation->SendTrigger("StunStunEnd");
-				}
-				else {
+				} else {
 					stunTimeRemaining -= Time::GetDeltaTime();
 				}
 				break;
@@ -550,16 +549,14 @@ void AIDuke::UpdatePushBackPosition() {
 	}
 }
 
-void AIDuke::ParticleHit(GameObject& collidedWith, void* particle, Player& player)
-{
+void AIDuke::ParticleHit(GameObject& collidedWith, void* particle, Player& player) {
 	if (!particle) return;
 	ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 	if (pSystem) pSystem->KillParticle(p);
 	if (dukeCharacter.state == DukeState::STUNNED && player.level2Upgrade) {
-		dukeCharacter.GetHit(player.damageHit + playerController->GetOverPowerMode()*2);
-	}
-	else {
+		dukeCharacter.GetHit(player.damageHit + playerController->GetOverPowerMode() * 2);
+	} else {
 		dukeCharacter.GetHit(player.damageHit + playerController->GetOverPowerMode());
 	}
 }
