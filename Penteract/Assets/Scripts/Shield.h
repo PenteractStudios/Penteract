@@ -4,6 +4,7 @@
 
 class PlayerController;
 class ComponentAudioSource;
+class ResourcePrefab;
 
 class Shield : public Script
 {
@@ -32,6 +33,9 @@ public:
 	int currentAvailableCharges = 0;
 	UID playerUID = 0;
 	PlayerController* playerController = nullptr;
+
+	UID particlesColliderUID = 0;
+	ResourcePrefab* particlesCollider = nullptr;
 
 private:
 	bool isActive = false;

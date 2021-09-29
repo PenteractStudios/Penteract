@@ -13,6 +13,7 @@ EXPOSE_MEMBERS(Shield) {
 	MEMBER(MemberType::INT, maxCharges),
 	MEMBER(MemberType::FLOAT, chargeCooldown),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, particlesColliderUID),
 	MEMBER_SEPARATOR("Debug only"),
 	MEMBER(MemberType::INT, currentAvailableCharges)
 };
@@ -24,6 +25,7 @@ void Shield::Start() {
 	GameObject* playerGO = GameplaySystems::GetGameObject(playerUID);
 	if (playerGO) playerController = GET_SCRIPT(playerGO, PlayerController);
 	audio = GetOwner().GetComponent<ComponentAudioSource>();
+	particlesCollider = GameplaySystems::GetResource<ResourcePrefab>(particlesColliderUID);
 }
 
 void Shield::Update() {}
@@ -44,6 +46,9 @@ void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 		} else {
 			ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 			ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+			float3 position = p->position;
+			Quat rotation = GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation()  * float3x3::FromEulerXYZ(pi / 2, 0.0f, 0.0f).ToQuat();
+			if(particlesCollider)GameplaySystems::Instantiate(particlesCollider,position, rotation);
 			if (pSystem) pSystem->KillParticle(p);
 
 			if (playerController->playerOnimaru.level1Upgrade && collidedWith.name == "WeaponParticles") {		// Reflect projectile
