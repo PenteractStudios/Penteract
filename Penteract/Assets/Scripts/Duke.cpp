@@ -128,8 +128,9 @@ void Duke::ThrowBarrels()
 	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
 
 	//Instantiate barrel and play animation throw barrels for Duke and the barrel
-	GameObject* auxBarrel = GameplaySystems::Instantiate(barrel, playerPos + float3(0.0f, height, 0.0f), Quat(0, 0, 0, 1));
-
+	if (barrel) {
+		GameObject* auxBarrel = GameplaySystems::Instantiate(barrel, playerPos + float3(0.0f, height, 0.0f), Quat(0, 0, 0, 1));
+	}
 	/*if (auxBarrel->GetComponent<ComponentParticleSystem>()) {
 		auxBarrel->GetComponent<ComponentParticleSystem>()->Play();
 	}*/

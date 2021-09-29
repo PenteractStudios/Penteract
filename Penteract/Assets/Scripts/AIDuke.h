@@ -31,7 +31,7 @@ Duke class will contain all the boss stats, Animation FSM and agent, as well as 
 of performing all the movement, abilities, animation and sound triggers when the AIDuke tells it to do so.
 */
 
-class AIDuke : public Script 
+class AIDuke : public Script
 {
 	GENERATE_BODY(AIDuke);
 
@@ -74,8 +74,6 @@ public:
 
 	float abilityChangeCooldown = 8.f;
 
-	//float movingTime = 10.f;
-
 	float stunDuration = 3.f;
 
 	float troopsCounter = 5;
@@ -92,7 +90,6 @@ private:
 	AIMovement* movementScript = nullptr;
 
 	PlayerController* playerController = nullptr;
-	//PlayerDeath* playerDeath = nullptr;
 
 	float currentShieldCooldown = 0.f;
 	float currentShieldActiveTime = 0.f;

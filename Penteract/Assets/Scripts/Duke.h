@@ -83,7 +83,6 @@ public:
 	bool criticalMode = false;
 
 	// Effects' states
-	bool isShielding = false;
 	bool beingPushed = false;
 	bool slowedDown = false;
 
