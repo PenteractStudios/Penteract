@@ -54,14 +54,19 @@
                 "Script": 1876770804236283211,
                 "Values": [
                     {
+                        "Name": "droneSpeed",
+                        "Type": "Float",
+                        "Value": 8.0
+                    },
+                    {
                         "Name": "dronesControllerUID",
                         "Type": "GameObjectUID",
                         "Value": 6095729748097858087
                     },
                     {
-                        "Name": "droneSpeed",
-                        "Type": "Float",
-                        "Value": 8.0
+                        "Name": "projectilePrefabUID",
+                        "Type": "PrefabResourceUID",
+                        "Value": 6016750472932550027
                     }
                 ]
             }

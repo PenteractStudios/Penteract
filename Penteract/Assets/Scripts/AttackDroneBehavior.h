@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Scripting/Script.h"
+#include "ProjectileController.h"
 
 class ComponentTransform;
 class ComponentParticleSystem;
@@ -23,12 +24,16 @@ public:
 	UID dronesControllerUID = 0;
 	float droneSpeed = 8.0f;
 
+	UID projectilePrefabUID = 0;
+
 private:
 	GameObject* dronesController = nullptr;
 	ComponentTransform* dronesControllerTransform = nullptr;
 	ComponentTransform* transform = nullptr;
 
-	ComponentParticleSystem* shooter = nullptr;
+	//ComponentParticleSystem* shooter = nullptr;
+
+	ProjectileController shooter;
 
 	bool mustReposition = false;
 	float3 currentPosition = float3(0.0f, 0.0f, 0.0f);

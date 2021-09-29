@@ -7,13 +7,14 @@
 EXPOSE_MEMBERS(AttackDroneBehavior) {
     MEMBER(MemberType::GAME_OBJECT_UID, dronesControllerUID),
     MEMBER(MemberType::FLOAT, droneSpeed),
+    MEMBER(MemberType::PREFAB_RESOURCE_UID, projectilePrefabUID)
 };
 
 GENERATE_BODY_IMPL(AttackDroneBehavior);
 
 void AttackDroneBehavior::Start() {
     transform = GetOwner().GetComponent<ComponentTransform>();
-    shooter = GetOwner().GetComponent<ComponentParticleSystem>();
+    //shooter = GetOwner().GetComponent<ComponentParticleSystem>();
 
     dronesController = GameplaySystems::GetGameObject(dronesControllerUID);
     if (dronesController) {
@@ -39,11 +40,10 @@ void AttackDroneBehavior::SetPositionOffset(float3 newOffset) {
 }
 
 void AttackDroneBehavior::Shoot() {
-    if (remainingWaves > 0 && shooter) {        
+    if (remainingWaves > 0) {        
         if (currentTime >= delay) {
             remainingWaves--;
-            shooter->PlayChildParticles();
-            Debug::Log("hola");
+            shooter.Shoot(projectilePrefabUID, transform->GetGlobalPosition(), transform->GetGlobalRotation());
             currentTime = 0.0f;
         }
         else {
@@ -54,6 +54,7 @@ void AttackDroneBehavior::Shoot() {
 
 void AttackDroneBehavior::StartWave(int newWaves, float bulletDelay, float timeBetweenWaves) {
     remainingWaves = newWaves;
-    currentTime = timeBetweenWaves;     // Starts at the time between waves and will have to wait only for bulletDelay the first time
-    delay = bulletDelay + timeBetweenWaves;
+    currentTime = timeBetweenWaves - bulletDelay;     // Starts at the time between waves and will have to wait only for bulletDelay the first time
+    delay = timeBetweenWaves;
+    Debug::Log(std::to_string(delay).c_str());
 }
