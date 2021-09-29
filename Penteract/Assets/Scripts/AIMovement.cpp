@@ -4,7 +4,7 @@
 #include "GameplaySystems.h"
 #include "Components/ComponentTransform.h"
 
-int AIMovement::maxAcceleration = 9999;
+float AIMovement::maxAcceleration = 9999.0f;
 
 EXPOSE_MEMBERS(AIMovement) {
 	MEMBER(MemberType::FLOAT, rotationSmoothness)

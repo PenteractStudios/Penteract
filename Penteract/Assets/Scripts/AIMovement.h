@@ -28,7 +28,7 @@ public:
 	GameObject* SearchReferenceInHierarchy(GameObject* root, std::string name);
 
 public:
-	static int maxAcceleration;
+	static float maxAcceleration;
 	float rotationSmoothness = 0.2f;
 
 private:

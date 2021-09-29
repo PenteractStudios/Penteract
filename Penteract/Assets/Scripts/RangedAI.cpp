@@ -120,7 +120,7 @@ void RangedAI::Start() {
 	agent = GetOwner().GetComponent<ComponentAgent>();
 	if (agent) {
 		agent->SetMaxSpeed(rangerGruntCharacter.movementSpeed);
-		agent->SetMaxAcceleration(static_cast<float>(AIMovement::maxAcceleration));
+		agent->SetMaxAcceleration(AIMovement::maxAcceleration);
 		agent->SetAgentObstacleAvoidance(true);
 		agent->RemoveAgentFromCrowd();
 	}
