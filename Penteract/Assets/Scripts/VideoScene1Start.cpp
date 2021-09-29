@@ -26,7 +26,7 @@ void VideoScene1Start::Start() {
         }
     }
 
-    componentVideo->SetVideoFrameSize(Screen::GetResolution().x, Screen::GetResolution().y);
+    componentVideo->SetVideoFrameSize(static_cast<int>(Screen::GetResolution().x), static_cast<int>(Screen::GetResolution().y));
 
     if (componentVideo) {
         if (GameplaySystems::GetGlobalVariable(globalVariableKeyPlayVideoScene1,true)) {

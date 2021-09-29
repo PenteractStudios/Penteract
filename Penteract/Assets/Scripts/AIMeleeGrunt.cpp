@@ -78,7 +78,7 @@ void AIMeleeGrunt::Start() {
 	agent = GetOwner().GetComponent<ComponentAgent>();
 	if (agent) {
 		agent->SetMaxSpeed(gruntCharacter.movementSpeed);
-		agent->SetMaxAcceleration(AIMovement::maxAcceleration);
+		agent->SetMaxAcceleration(static_cast<float>(AIMovement::maxAcceleration));
 		agent->SetAgentObstacleAvoidance(true);
 		agent->RemoveAgentFromCrowd();
 	}
@@ -316,16 +316,16 @@ void AIMeleeGrunt::OnAnimationFinished() {
 	}
 }
 
-void AIMeleeGrunt::ParticleHit(GameObject& collidedWith, void* particle, Player& player) {
+void AIMeleeGrunt::ParticleHit(GameObject& collidedWith, void* particle, Player& player_) {
 	if (!particle) return;
 	ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 	if (pSystem) pSystem->KillParticle(p);
-	if (state == AIState::STUNNED && player.level2Upgrade) {
+	if (state == AIState::STUNNED && player_.level2Upgrade) {
 		gruntCharacter.GetHit(99);
 	}
 	else {
-		gruntCharacter.GetHit(player.damageHit + playerController->GetOverPowerMode());
+		gruntCharacter.GetHit(player_.damageHit + playerController->GetOverPowerMode());
 	}
 }
 
@@ -495,7 +495,7 @@ void AIMeleeGrunt::CalculatePushBackRealDistance() {
 void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
 	switch (stateMachineEnum)
 	{
-	case PRINCIPAL:
+	case StateMachineEnum::PRINCIPAL:
 		if (strcmp(eventName,"FootstepRight") == 0) {
 			if (audios[static_cast<int>(AudioType::FOOTSTEP_RIGHT)]) audios[static_cast<int>(AudioType::FOOTSTEP_RIGHT)]->Play();
 		}

@@ -23,7 +23,7 @@ void WinCondition::Start() {
 
 void WinCondition::Update() {}
 
-void WinCondition::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+void WinCondition::OnCollision(GameObject& /* collidedWith */, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* /* particle */) {
 	ComponentBoxCollider* boxCollider = gameObject->GetComponent<ComponentBoxCollider>();
 	if (boxCollider) boxCollider->Disable();
 

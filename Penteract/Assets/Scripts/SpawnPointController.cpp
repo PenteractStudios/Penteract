@@ -105,7 +105,7 @@ void SpawnPointController::Update() {
 	}
 }
 
-void SpawnPointController::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+void SpawnPointController::OnCollision(GameObject& /* collidedWith */, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* /* particle */) {
 	if (!gameObject) return;
 	for (GameObject* child : gameObject->GetChildren()) {
 		Component* childScript = child->GetComponent<ComponentScript>();

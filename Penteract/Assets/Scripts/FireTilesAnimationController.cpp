@@ -10,9 +10,9 @@ GENERATE_BODY_IMPL(FireTilesAnimationController);
 void FireTilesAnimationController::Start() {
 	animation = GetOwner().GetComponent<ComponentAnimation>();
 
-	GameObject* owner = &GetOwner();
+	GameObject* ownerGo = &GetOwner();
 
-	ComponentBoxCollider* bCollider = owner->GetComponent<ComponentBoxCollider>();
+	ComponentBoxCollider* bCollider = ownerGo->GetComponent<ComponentBoxCollider>();
 	if (bCollider) {
 		bCollider->Disable();
 	}
