@@ -7,6 +7,7 @@
 EXPOSE_MEMBERS(AttackDroneBehavior) {
     MEMBER(MemberType::GAME_OBJECT_UID, dronesControllerUID),
     MEMBER(MemberType::FLOAT, droneSpeed),
+    MEMBER(MemberType::FLOAT, droneRotationSpeed),
     MEMBER(MemberType::PREFAB_RESOURCE_UID, projectilePrefabUID)
 };
 
@@ -26,6 +27,7 @@ void AttackDroneBehavior::Update() {
     if (!transform || !dronesControllerTransform) return;
 
     transform->SetGlobalPosition(float3::Lerp(transform->GetGlobalPosition(), dronesControllerTransform->GetGlobalPosition() + positionOffset, Time::GetDeltaTime() * droneSpeed));
+    transform->SetGlobalRotation(Quat::Lerp(transform->GetGlobalRotation(), dronesControllerTransform->GetGlobalRotation(), Time::GetDeltaTime() * droneSpeed));
 
     Shoot();
 }

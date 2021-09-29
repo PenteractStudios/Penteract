@@ -23,6 +23,7 @@ public:
 public:
 	UID dronesControllerUID = 0;
 	float droneSpeed = 8.0f;
+	float droneRotationSpeed = 9.0f;
 
 	UID projectilePrefabUID = 0;
 
