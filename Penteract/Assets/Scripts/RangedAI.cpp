@@ -42,7 +42,8 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackSpeed),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownSpeed),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownTime),
-	MEMBER(MemberType::FLOAT, attackSpeed),
+	MEMBER(MemberType::FLOAT, minAttackSpeed),
+	MEMBER(MemberType::FLOAT, maxAttackSpeed),
 	MEMBER(MemberType::FLOAT, fleeingRange),
 	MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
 	MEMBER(MemberType::FLOAT, timeSinceLastHurt),
@@ -157,6 +158,7 @@ void RangedAI::Start() {
 		}
 	}
 
+	attackTimePool = (minAttackSpeed + 1) + (((float)rand()) / (float)RAND_MAX) * (maxAttackSpeed - (minAttackSpeed + 1));
 	aiMovement = GET_SCRIPT(&GetOwner(), AIMovement);
 
 	// TODO: ADD CHECK PLS
@@ -594,7 +596,8 @@ void RangedAI::ActualShot() {
 		shootTrailPrefab->PlayChildParticles();
 	}
 
-	attackTimePool = 1.0f / attackSpeed;
+	attackSpeed = (minAttackSpeed + 1) + (((float)rand()) / (float)RAND_MAX) * (maxAttackSpeed - (minAttackSpeed + 1));
+	attackTimePool = attackSpeed;
 	actualShotTimer = -1.0f;
 
 	PlayAudio(AudioType::SHOOT);
