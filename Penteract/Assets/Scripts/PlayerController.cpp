@@ -370,7 +370,6 @@ void PlayerController::RemoveEnemyFromMap(GameObject* enemy) {
 }
 
 void PlayerController::ObtainUpgradeCell() {
-	obtainedUpgradeCells = 2;
 	if (++obtainedUpgradeCells == 3) {
 		// TODO: Check whether in level1 or level2
 		if (currentLevel == 1) Player::level1Upgrade = true;
