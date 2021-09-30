@@ -218,14 +218,33 @@ void AttackDronesController::StartWave() {
             break;
         }
 
-        case WaveCycle::RIGHT_TO_LEFT:
-            for (auto it = dronesScripts.rbegin(); it != dronesScripts.rend(); ++it) {
-                (*it)->Shoot();
-            }
-
-            break;
+		case WaveCycle::RIGHT_TO_LEFT: {
+			float accumulatedDelay = 0.0f;
+			for (auto it = dronesScripts.rbegin(); it != dronesScripts.rend(); ++it) {
+				(*it)->StartWave(waves, accumulatedDelay, timeBetweenWaves);
+				accumulatedDelay += shotDelay;
+			}
+			break;
+		}
 
         case WaveCycle::CENTERED:
+			float orderedI = dronesScripts.size() / 2;
+			float accumulatedDelay = orderedI * shotDelay;
+			float multiplier = -1.0f;
+
+			for (int i = 0; i < dronesScripts.size(); ++i) {
+				Debug::Log(std::to_string(orderedI).c_str());
+				dronesScripts[i]->StartWave(waves, accumulatedDelay, timeBetweenWaves);
+				
+
+				if (i == dronesScripts.size() / 2) {
+					multiplier = 1.0f;
+				}
+
+				orderedI += multiplier;
+				accumulatedDelay = shotDelay * orderedI;
+			}
+
             break;
     }
 

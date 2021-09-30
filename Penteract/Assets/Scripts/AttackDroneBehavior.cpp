@@ -57,5 +57,4 @@ void AttackDroneBehavior::StartWave(int newWaves, float bulletDelay, float timeB
     remainingWaves = newWaves;
     currentTime = timeBetweenWaves - bulletDelay;     // Starts at the time between waves and will have to wait only for bulletDelay the first time
     delay = timeBetweenWaves;
-    Debug::Log(std::to_string(delay).c_str());
 }
