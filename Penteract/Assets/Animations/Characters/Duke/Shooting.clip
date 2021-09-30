@@ -5,5 +5,19 @@
     "EndIndex": 150,
     "Loop": true,
     "Speed": 1.0,
-    "FrameRate": 0.041631944477558139
+    "FrameRate": 0.041631944477558139,
+    "KeyEventClip": [
+        {
+            "KeyFrame": 136,
+            "Name": "TopGun"
+        },
+        {
+            "KeyFrame": 141,
+            "Name": "LeftGun"
+        },
+        {
+            "KeyFrame": 145,
+            "Name": "RightGun"
+        }
+    ]
 }

@@ -5,5 +5,11 @@
     "EndIndex": 476,
     "Loop": false,
     "Speed": 1.0,
-    "FrameRate": 0.041631944477558139
+    "FrameRate": 0.041631944477558139,
+    "KeyEventClip": [
+        {
+            "KeyFrame": 457,
+            "Name": "FistBump"
+        }
+    ]
 }

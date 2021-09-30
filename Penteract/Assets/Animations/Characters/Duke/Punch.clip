@@ -5,5 +5,15 @@
     "EndIndex": 220,
     "Loop": false,
     "Speed": 1.0,
-    "FrameRate": 0.041631944477558139
+    "FrameRate": 0.041631944477558139,
+    "KeyEventClip": [
+        {
+            "KeyFrame": 200,
+            "Name": "DisablePunch"
+        },
+        {
+            "KeyFrame": 192,
+            "Name": "EnablePunch"
+        }
+    ]
 }
