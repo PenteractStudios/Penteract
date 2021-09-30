@@ -12,10 +12,7 @@ EXPOSE_MEMBERS(CanvasFader) {
 GENERATE_BODY_IMPL(CanvasFader);
 
 void CanvasFader::Start() {
-	GameObject* blackImageObj = GameplaySystems::GetGameObject(blackImageObjUID);
-	if (blackImageObj) {
-		blackImage = blackImageObj->GetComponent<ComponentImage>();
-	}
+	CheckForReferences();
 
 	if (fadeInOnStart) {
 		FadeIn();
@@ -27,13 +24,16 @@ void CanvasFader::Update() {
 }
 
 void CanvasFader::FadeIn() {
-	if (!blackImage)return;
+	if (!checkedForReferences) CheckForReferences();
+	if (!blackImage) return;
+
 	blackImage->SetColor(float4(blackImage->GetColor().xyz(), 1.0f));
 	Play();
 	fadeState = FadeState::FADE_IN;
 }
 
 void CanvasFader::FadeOut() {
+	if (!checkedForReferences) CheckForReferences();
 	if (!blackImage)return;
 	blackImage->SetColor(float4(blackImage->GetColor().xyz(), 0.0f));
 	Play();
@@ -77,4 +77,12 @@ void CanvasFader::UpdateBlackImage() {
 void CanvasFader::Play() {
 	fadeTimer = 0.0f;
 	playing = true;
+}
+
+void CanvasFader::CheckForReferences() {
+	GameObject* blackImageObj = GameplaySystems::GetGameObject(blackImageObjUID);
+	if (blackImageObj) {
+		blackImage = blackImageObj->GetComponent<ComponentImage>();
+	}
+	checkedForReferences = true;
 }

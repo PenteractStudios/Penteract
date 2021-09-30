@@ -44,8 +44,7 @@ public:
 		, attackRange(attackRange_)
 		, timeToDie(timeToDie_)
 		, pushBackDistance(pushBackDistance_)
-		, pushBackSpeed(pushBackSpeed_)
-		, damageCharge(damageCharge_) {
+		, pushBackSpeed(pushBackSpeed_) {
 		lifePoints = lifePoints_;
 		movementSpeed = movementSpeed_;
 		damageHit = damageHit_;
@@ -65,7 +64,6 @@ public:
 	void ThrowBarrels();
 
 public:
-	float damageCharge = 1.f;
 	float chargeSpeed = 5.f;
 	float searchRadius = 8.f;
 	float attackRange = 2.0f;
