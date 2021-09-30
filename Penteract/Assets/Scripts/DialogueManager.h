@@ -130,7 +130,7 @@ public:
 private:
 	Dialogue* activeDialogue = nullptr;				// Pointer to dialoguesArray of the active dialogue.
 	GameObject* activeDialogueObject = nullptr;		// Pointer to the Dialogue GameObject in the scene (DialogueFang, DialogueOnimaru, DialogueDuke, Tutorials or Upgrades).
-	//int obtainedPowerUps = 0;						// PowerUp counter. Increments each time the player picks up a powerUp.
+	int obtainedPowerUps = 0;						// PowerUp counter. Increments each time the player picks up a powerUp.
 	int tutorialSkillNumber = 0;					// Skill counter. Increments each time a tutorial of each character shows, to activate the next skill icon.
 
 	// ------ TRANSITION INFO ------ //
