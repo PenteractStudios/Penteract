@@ -423,7 +423,7 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 					if (animation->GetCurrentState()) {
 						animation->SendTrigger(animation->GetCurrentState()->name + "StunStart");
 					}
-					particlesEmp->PlayChildParticles();
+					if(particlesEmp)particlesEmp->PlayChildParticles();
 					agent->RemoveAgentFromCrowd();
 					stunTimeRemaining = stunDuration;
 					state = AIState::STUNNED;
@@ -437,7 +437,7 @@ void AIMeleeGrunt::EnableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		gruntCharacter.beingPushed = true;
 		state = AIState::PUSHED;
-		particlesPush->PlayChildParticles();
+		if(particlesPush) particlesPush->PlayChildParticles();
 		if (animation->GetCurrentState()) animation->SendTrigger(animation->GetCurrentState()->name + "Hurt");
 		CalculatePushBackRealDistance();
 		// Damage
