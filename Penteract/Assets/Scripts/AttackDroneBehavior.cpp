@@ -15,7 +15,6 @@ GENERATE_BODY_IMPL(AttackDroneBehavior);
 
 void AttackDroneBehavior::Start() {
     transform = GetOwner().GetComponent<ComponentTransform>();
-    //shooter = GetOwner().GetComponent<ComponentParticleSystem>();
 
     dronesController = GameplaySystems::GetGameObject(dronesControllerUID);
     if (dronesController) {
