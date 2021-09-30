@@ -2,6 +2,7 @@
 
 #include "GameplaySystems.h"
 #include "RangerProjectileScript.h"
+#include "PlayerController.h"
 
 #include <string>
 
@@ -9,13 +10,14 @@
 
 std::uniform_real_distribution<> rng(-1.0f, 1.0f);
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID)
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID)
 {
 	gen = std::minstd_rand(rd());
 
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(dukeUID);
 	player = GameplaySystems::GetGameObject(playerUID);
+	chargeCollider = GameplaySystems::GetGameObject(chargeColliderUID);
 
 	barrel = GameplaySystems::GetResource<ResourcePrefab>(barrelUID);
 
@@ -93,12 +95,29 @@ void Duke::BulletHell()
 	Debug::Log("Bullet hell");
 }
 
-void Duke::Charge(DukeState nextState)
+void Duke::InitCharge(DukeState nextState)
 {
-	if ((dukeTransform->GetGlobalPosition() - chargeTarget).Length() <= 0.2f) {
-		state = nextState;
-	}
+	this->nextState = nextState;
+	if (chargeCollider) chargeCollider->Enable();
 	Debug::Log("Electric Tackle!");
+}
+
+void Duke::UpdateCharge(bool forceStop)
+{
+	if (forceStop || (dukeTransform->GetGlobalPosition() - chargeTarget).Length() <= 0.2f) {
+		if (chargeCollider) chargeCollider->Disable();
+		EndCharge();
+	}
+}
+
+void Duke::EndCharge()
+{
+	// Perform arm attack (either use the same or another collider as the melee attack)
+	state = nextState;
+	if (player) {
+		PlayerController* playerController = GET_SCRIPT(player, PlayerController);
+		if (playerController) playerController->playerOnimaru.shieldBeingUsed = 0.0f;
+	}
 }
 
 void Duke::CallTroops()

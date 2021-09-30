@@ -11,6 +11,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, shieldObjUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, bulletUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, chargeColliderUID),
 
 	MEMBER_SEPARATOR("Duke Atributes"),
 	MEMBER(MemberType::FLOAT, dukeCharacter.lifePoints),
@@ -69,7 +70,7 @@ void AIDuke::Start() {
 	}
 
 	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID);
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID);
 }
 
 void AIDuke::Update() {
@@ -132,24 +133,44 @@ void AIDuke::Update() {
 				dukeCharacter.state = DukeState::BULLET_HELL;
 				movementScript->Stop();
 			} else if (phase2Reached && playerController->playerOnimaru.shieldBeingUsed >= 2.0f) {
+				// If onimaru shields -> perform charge
 				dukeCharacter.chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
 				dukeCharacter.agent->SetMoveTarget(dukeCharacter.chargeTarget);
 				dukeCharacter.agent->SetMaxSpeed(dukeCharacter.chargeSpeed);
 				dukeCharacter.state = DukeState::CHARGE;
+				dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
 			} else if (currentShieldCooldown >= shieldCooldown) {
 				if (dukeShield) dukeShield->InitShield();
 				dukeCharacter.state = DukeState::SHOOT_SHIELD;
 				movementScript->Stop();
 			} else if (player && movementScript->CharacterInAttackRange(player, dukeCharacter.attackRange)) {
+				// If player too close -> perform melee attack
 				dukeCharacter.state = DukeState::MELEE_ATTACK;
 				movementScript->Stop();
 			} else {
-				if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(dukeCharacter.movementSpeed);
 				if (player) {
-					float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
-					dir.y = 0.0f;
-					movementScript->Orientate(dir);
-					dukeCharacter.ShootAndMove(dir);
+					if ((float3(0, 0, 0) - player->GetComponent<ComponentTransform>()->GetGlobalPosition()).LengthSq() <
+						(float3(0, 0, 0) - ownerTransform->GetGlobalPosition()).LengthSq()) {
+						// If player dominates the center for too long, perform charge
+						timeSinceLastCharge += Time::GetDeltaTime();
+					}
+					if (timeSinceLastCharge >= 5.0f) {
+						timeSinceLastCharge = 0.f;
+						// Charge
+						dukeCharacter.chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+						dukeCharacter.agent->SetMoveTarget(dukeCharacter.chargeTarget);
+						dukeCharacter.agent->SetMaxSpeed(dukeCharacter.chargeSpeed);
+						dukeCharacter.state = DukeState::CHARGE;
+						dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
+					}
+					else {
+						// Normal behavior
+						if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(dukeCharacter.movementSpeed);
+						float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
+						dir.y = 0.0f;
+						movementScript->Orientate(dir);
+						dukeCharacter.ShootAndMove(dir);
+					}
 				}
 			}
 			break;
@@ -179,7 +200,7 @@ void AIDuke::Update() {
 			}
 			break;
 		case DukeState::CHARGE:
-			dukeCharacter.Charge(DukeState::BASIC_BEHAVIOUR);
+			dukeCharacter.UpdateCharge();
 			break;
 		case DukeState::STUNNED:
 			if (stunTimeRemaining <= 0.f) {
@@ -262,6 +283,7 @@ void AIDuke::Update() {
 					dukeCharacter.agent->SetMoveTarget(dukeCharacter.chargeTarget);
 					dukeCharacter.agent->SetMaxSpeed(dukeCharacter.chargeSpeed);
 					dukeCharacter.state = DukeState::CHARGE;
+					dukeCharacter.InitCharge(DukeState::MELEE_ATTACK);
 				} else {
 					if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(dukeCharacter.movementSpeed);
 					float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
@@ -270,7 +292,7 @@ void AIDuke::Update() {
 				}
 				break;
 			case DukeState::CHARGE:
-				dukeCharacter.Charge(DukeState::MELEE_ATTACK);
+				dukeCharacter.UpdateCharge();
 				break;
 			case DukeState::MELEE_ATTACK:
 				dukeCharacter.MeleeAttack();
@@ -328,11 +350,32 @@ void AIDuke::Update() {
 					if (dukeShield) dukeShield->InitShield();
 					dukeCharacter.state = DukeState::SHOOT_SHIELD;
 					movementScript->Stop();
-				} else {
-					if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(dukeCharacter.movementSpeed);
-					float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
-					movementScript->Orientate(dir);
-					dukeCharacter.ShootAndMove(dir);
+				}
+				else {
+					if (player) {
+						if ((float3(0, 0, 0) - player->GetComponent<ComponentTransform>()->GetGlobalPosition()).LengthSq() <
+							(float3(0, 0, 0) - ownerTransform->GetGlobalPosition()).LengthSq()) {
+							// If player dominates the center for too long, perform charge
+							timeSinceLastCharge += Time::GetDeltaTime();
+						}
+						if (timeSinceLastCharge >= 5.0f) {
+							timeSinceLastCharge = 0.f;
+							// Charge
+							dukeCharacter.chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+							dukeCharacter.agent->SetMoveTarget(dukeCharacter.chargeTarget);
+							dukeCharacter.agent->SetMaxSpeed(dukeCharacter.chargeSpeed);
+							dukeCharacter.state = DukeState::CHARGE;
+							dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
+						}
+						else {
+							// Normal behavior
+							if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(dukeCharacter.movementSpeed);
+							float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
+							dir.y = 0.0f;
+							movementScript->Orientate(dir);
+							dukeCharacter.ShootAndMove(dir);
+						}
+					}
 				}
 				break;
 			case DukeState::MELEE_ATTACK:
