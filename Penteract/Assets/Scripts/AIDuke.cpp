@@ -15,7 +15,6 @@ EXPOSE_MEMBERS(AIDuke) {
 
 	MEMBER_SEPARATOR("Duke Atributes"),
 	MEMBER(MemberType::FLOAT, dukeCharacter.lifePoints),
-	MEMBER(MemberType::FLOAT, dukeCharacter.damageCharge),
 	MEMBER(MemberType::FLOAT, dukeCharacter.chargeSpeed),
 	MEMBER(MemberType::FLOAT, dukeCharacter.movementSpeed),
 	MEMBER(MemberType::FLOAT, dukeCharacter.searchRadius),
