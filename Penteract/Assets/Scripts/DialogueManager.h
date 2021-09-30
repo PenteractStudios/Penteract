@@ -31,13 +31,14 @@ public:
 
 	struct Dialogue {
 		Dialogue() {};
-		Dialogue(DialogueWindow character_, bool isBlocking_, const char* text_, Dialogue* nextDialogue_, InputActions closeButton_ = InputActions::INTERACT) : character(character_), isBlocking(isBlocking_), text(text_), nextDialogue(nextDialogue_), closeButton(closeButton_) {};
+		Dialogue(DialogueWindow character_, bool isBlocking_, const char* text_, Dialogue* nextDialogue_, bool twoPersonDialogue_ = false, InputActions closeButton_ = InputActions::INTERACT) : character(character_), isBlocking(isBlocking_), text(text_), nextDialogue(nextDialogue_), twoPersonDialogue(twoPersonDialogue_), closeButton(closeButton_) {};
 
 		DialogueWindow character = DialogueWindow::NONE;	// Indirect reference to which dialogue window gameObject must be opened.
 		const char* text = nullptr;							// Text shown in the dialogue (only for 1,2,3 & 4. Should be empty for Tutorials and Upgrades).
 		Dialogue* nextDialogue = nullptr;					// Pointer to the next Dialogue in 'dialoguesArray', that will come out after this one.
 		bool isBlocking = false;							// Whether or not this dialogue window should pause the gameplay.
 		InputActions closeButton = InputActions::INTERACT;	// Definition of the button that will close this dialogue.
+		bool twoPersonDialogue = false;						// Defines if 2 characters appear in the screen during a dialogue. Used to center the camera to both caracters.
 	};
 
 	enum class AudioDialogue {
@@ -55,7 +56,7 @@ public:
 
 	void SetActiveDialogue(Dialogue* dialogue, bool runAnimation = true); // Sets the dialogue window in 'dialoguesArray' that must be activated next. Stops the dialogue flow if 'dialogue = nullptr".
 
-	void ActivateDialogue(Dialogue* /* dialogue */);		// Starts the position and color "Open transition" for the active dialogue.
+	void ActivateDialogue();						// Starts the position and color "Open transition" for the active dialogue.
 	void ActivateNextDialogue(Dialogue* dialogue);	// Advances to the next linked dialogue, and determines if transitions must be done for the two dialogue windows. (It will activate Open and Close transitions if the windows are of different type)
 	void CloseDialogue(Dialogue* dialogue);			// Starts the position and color "Close transition" for the active dialogue.
 	void ActivatePowerUpDialogue();					// Calls the specific 'SetActiveDialogue()' depending on the number of upgrades collected in the level.
@@ -78,14 +79,14 @@ public:
 	ComponentText* dukeTextComponent = nullptr;
 	ComponentText* doorTextComponent = nullptr;
 
-	UID tutorialFangUID = 0;
+	UID tutorialFangTextUID = 0;
+	UID tutorialOnimaruTextUID = 0;
 	UID tutorialFangUltimateUID = 0;
-	UID tutorialOnimaruUID = 0;
 	UID tutorialOnimaruUltimateUID = 0;
 	UID tutorialSwapUID = 0;
-	GameObject* tutorialFang = nullptr;
+	ComponentText* tutorialFangTextComponent = nullptr;
+	ComponentText* tutorialOnimaruTextComponent = nullptr;
 	GameObject* tutorialFangUltimate = nullptr;
-	GameObject* tutorialOnimaru = nullptr;
 	GameObject* tutorialOnimaruUltimate = nullptr;
 	GameObject* tutorialSwap = nullptr;
 
@@ -105,13 +106,16 @@ public:
 	CameraController* cameraControllerScript = nullptr;
 
 	// ----- TRANSITION CONFIG ----- //
-	float3 dialogueStartPosition = float3(0, 0, 0); // "Closed" position of the dialogue windows.
-	float3 dialogueEndPosition = float3(0, 0, 0);	// "Open" position of the dialogue windows.
-	float3 tutorialStartPosition = float3(0, 0, 0);	// "Closed" position of the tutorial and upgrades windows.
-	float3 tutorialEndPosition = float3(0, 0, 0);	// "Open" position of the tutorial and upgrades windows.
-	float appearAnimationTime = .5f;				// Duration time of the "Open transition".
-	float disappearAnimationTime = .5f;				// Duration time of the "Close transition".
-	float3 newCameraPosition = float3(0, 0, 0);		// Zoomed position of the camera when a dialogue is opened.
+	float3 dialogueStartPosition = float3(0, 0, 0);		// "Closed" position of the dialogue windows.
+	float3 dialogueEndPosition = float3(0, 0, 0);		// "Open" position of the dialogue windows.
+	float3 tutorialStartPosition = float3(0, 0, 0);		// "Closed" position of the tutorial windows.
+	float3 tutorialEndPosition = float3(0, 0, 0);		// "Open" position of the tutorial windows.
+	float3 upgradeStartPosition = float3(0, 0, 0);		// "Closed" position of the tutorial windows.
+	float3 upgradeEndPosition = float3(0, 0, 0);		// "Open" position of the tutorial windows.
+	float appearAnimationTime = .5f;					// Duration time of the "Open transition".
+	float disappearAnimationTime = .5f;					// Duration time of the "Close transition".
+	float3 zoomedCameraPosition = float3(0, 0, 0);		// Zoomed position of the camera when a dialogue is opened.
+	float3 twoPersonCameraPosition = float3(0, 0, 0);	// Zoomed position of the camera when a dialogue with two characters on the scene is opened.
 
 	// ------ FLASH TRANSITION ----- //
 	UID flashUID = 0;
@@ -126,6 +130,7 @@ public:
 private:
 	Dialogue* activeDialogue = nullptr;				// Pointer to dialoguesArray of the active dialogue.
 	GameObject* activeDialogueObject = nullptr;		// Pointer to the Dialogue GameObject in the scene (DialogueFang, DialogueOnimaru, DialogueDuke, Tutorials or Upgrades).
+	int tutorialSkillNumber = 0;					// Skill counter. Increments each time a tutorial of each character shows, to activate the next skill icon.
 
 	// ------ TRANSITION INFO ------ //
 	float3 currentStartPosition = float3(0, 0, 0);	// Captures wether 'dialogueStartPosition' or 'tutorialStartPosition', that must be used fot the current dialogue window.
