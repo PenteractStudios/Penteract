@@ -56,7 +56,7 @@ public:
 
 	void SetActiveDialogue(Dialogue* dialogue, bool runAnimation = true); // Sets the dialogue window in 'dialoguesArray' that must be activated next. Stops the dialogue flow if 'dialogue = nullptr".
 
-	void ActivateDialogue(Dialogue* /* dialogue */);		// Starts the position and color "Open transition" for the active dialogue.
+	void ActivateDialogue();						// Starts the position and color "Open transition" for the active dialogue.
 	void ActivateNextDialogue(Dialogue* dialogue);	// Advances to the next linked dialogue, and determines if transitions must be done for the two dialogue windows. (It will activate Open and Close transitions if the windows are of different type)
 	void CloseDialogue(Dialogue* dialogue);			// Starts the position and color "Close transition" for the active dialogue.
 	void ActivatePowerUpDialogue();					// Calls the specific 'SetActiveDialogue()' depending on the number of upgrades collected in the level.
@@ -130,7 +130,6 @@ public:
 private:
 	Dialogue* activeDialogue = nullptr;				// Pointer to dialoguesArray of the active dialogue.
 	GameObject* activeDialogueObject = nullptr;		// Pointer to the Dialogue GameObject in the scene (DialogueFang, DialogueOnimaru, DialogueDuke, Tutorials or Upgrades).
-	int obtainedPowerUps = 0;						// PowerUp counter. Increments each time the player picks up a powerUp.
 	int tutorialSkillNumber = 0;					// Skill counter. Increments each time a tutorial of each character shows, to activate the next skill icon.
 
 	// ------ TRANSITION INFO ------ //

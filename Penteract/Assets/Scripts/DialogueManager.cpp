@@ -322,7 +322,7 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 	}
 }
 
-void DialogueManager::ActivateDialogue(Dialogue* /* dialogue */) {
+void DialogueManager::ActivateDialogue() {
 	runSecondaryOpen = false;
 
 	if (activeDialogueObject) {
@@ -346,7 +346,7 @@ void DialogueManager::ActivateDialogue(Dialogue* /* dialogue */) {
 
 	animationLerpTime += Time::GetDeltaTime();
 
-	if (runOpenAnimation) {
+	if (activeDialogueObject && runOpenAnimation) {
 		if (animationLerpTime < appearAnimationTime) {
 			activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(float3::Lerp(currentStartPosition, currentEndPosition, animationLerpTime / appearAnimationTime));
 			TransitionUIElementsColor(true);
