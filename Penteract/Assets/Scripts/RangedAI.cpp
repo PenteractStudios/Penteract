@@ -264,7 +264,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 /* collisionNormal *
 				hitTaken = true;
 				rangerGruntCharacter.GetHit(playerController->playerFang.dashDamage + playerController->GetOverPowerMode());
 			}
-			else if (collidedWith.name == "RangerProjectile" && playerController->playerOnimaru.level1Upgrade) {
+			else if (collidedWith.name == "WeaponParticles" && playerController->playerOnimaru.level1Upgrade) {
 				hitTaken = true;
 				rangerGruntCharacter.GetHit(playerController->playerOnimaru.shieldReboundedDamage + playerController->GetOverPowerMode());
 				GameplaySystems::DestroyGameObject(&collidedWith);
