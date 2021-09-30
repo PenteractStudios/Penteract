@@ -46,14 +46,14 @@ public:
 
 	// ------- Core Functions ------ //
 	void SetAttackSpeed(float attackSpeed_);
-	virtual void GetHit(float damage_) override;
+	virtual void GetHit(float /* damage_ */) override;
 
 	void LookAtMouse();
 	MovementDirection GetInputMovementDirection(bool useGamepad);
 	float3 GetDirection() const;
 	virtual void Shoot() {}
 	virtual void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockRotation = false);
-	virtual void CheckCoolDowns(bool noCooldownMode = false) {}
+	virtual void CheckCoolDowns(bool /* noCooldownMode = false */) {}
 	virtual bool CanSwitch() const = 0;
 
 	virtual void OnAnimationFinished() = 0;
@@ -64,11 +64,11 @@ public:
 	int GetMouseDirectionState();
 	bool IsActive();
 	static bool GetInputBool(InputActions action, bool useGamepad = false);
-	float2 GetInputFloat2(InputActions action, bool useGamepad = false);
-	void UpdateFacePointDir(bool useGamepad, bool faceToFront = false);
+	float2 GetInputFloat2(InputActions action, bool useGamepad = false) const;
+	void UpdateFacePointDir(bool useGamepad, bool faceToFront_ = false);
 	virtual void IncreaseUltimateCounter();
-	void SetClipSpeed(ResourceClip* clip, float movementSpeed) {
-		clip->speed = movementSpeed * animationSpeedFactor;
+	void SetClipSpeed(ResourceClip* clip, float speed) {
+		clip->speed = speed * animationSpeedFactor;
 	}
 
 public:
@@ -114,6 +114,8 @@ protected:
 	float deceleration = 0.f;
 	float3 decelerationDirection = float3(0.f,0.f,0.f);
 	bool decelerating = false;
+protected:
+	bool switchInProgress = false;
 private:
 	virtual bool CanShoot();
 	void ResetSwitchStatus();
@@ -125,6 +127,5 @@ private:
 private:
 	float currentSwitchDelay = 0.f;
 	bool playSwitchParticles = true;
-	bool switchInProgress = false;
 	float switchDelay = 0.37f;
 };

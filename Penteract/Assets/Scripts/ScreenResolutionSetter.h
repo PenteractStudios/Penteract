@@ -25,7 +25,7 @@ public:
 	UID textObjectID = 0;
 
 private:
-	void IncreaseResolution(int multiplier);
+	void IncreaseResolution(unsigned multiplier);
 	void UpdateResolution();
 private:
 

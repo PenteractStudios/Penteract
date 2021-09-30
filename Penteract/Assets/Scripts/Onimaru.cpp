@@ -45,7 +45,6 @@ void Onimaru::IncreaseUltimateCounter() {
 void Onimaru::Shoot() {
 	if (CanShoot()) {
 		shootingOnCooldown = true;
-		//	shooting = true;
 		attackCooldownRemaining = 1.f / attackSpeed;
 
 		//NullRef on ultimate values
@@ -489,7 +488,7 @@ bool Onimaru::CanShield() const {
 }
 
 bool Onimaru::CanUltimate() const {
-	return !blastInUse && !IsShielding() && ultimateChargePoints >= ultimateChargePointsTotal && !GameController::IsGameplayBlocked();
+	return !blastInUse && !IsShielding() && ultimateChargePoints >= ultimateChargePointsTotal && !GameController::IsGameplayBlocked() && !switchInProgress;
 }
 
 bool Onimaru::UltimateStarted() const {
@@ -558,7 +557,7 @@ void Onimaru::FadeShield() {
 	shieldGO->Disable();
 }
 
-void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
+void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */) {
 	if (shield == nullptr || shieldGO == nullptr) return;
 	if (isAlive) {
 		Player::Update(useGamepad, lockMovement, false);
@@ -571,7 +570,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 			}
 		}
 		else {
-			//Ultimate execution
+			// Ultimate execution
 			if (ultimateTimeRemaining > 0) {
 				ultimateTimeRemaining -= Time::GetDeltaTime();
 				Shoot();
@@ -582,6 +581,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 				if (ultimateTimeRemaining <= 0) {
 					FinishUltimate();
 					ultimateBullet->StopChildParticles();
+					shooting = false;
 				}
 			}
 		}
@@ -626,7 +626,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 		}
 
 		if (shooting) {
-			if (!GetInputBool(InputActions::SHOOT, useGamepad) || GameController::IsGameplayBlocked()) {
+			if (!GetInputBool(InputActions::SHOOT, useGamepad) || GameController::IsGameplayBlocked() || ultimateOn) {
 				shooting = false;
 				if (compAnimation) {
 					if (shield->GetIsActive()) {

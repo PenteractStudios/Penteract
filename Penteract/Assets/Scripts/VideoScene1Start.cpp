@@ -7,6 +7,7 @@
 #include "CanvasFader.h"
 #include "Components/UI/ComponentVideo.h"
 #include "Components/UI/ComponentCanvas.h"
+#include "GlobalVariables.h" 
 
 EXPOSE_MEMBERS(VideoScene1Start) {
     MEMBER(MemberType::GAME_OBJECT_UID, canvasFaderUID)
@@ -18,30 +19,40 @@ void VideoScene1Start::Start() {
     componentVideo = GetOwner().GetComponent<ComponentVideo>();
     parent = GetOwner().GetParent();
 
-    componentVideo->SetVideoFrameSize(Screen::GetResolution().x, Screen::GetResolution().y);
-    if (componentVideo) {
-        componentVideo->Play();
-        GameController::SetVideoActive(true);
+    if (canvasFaderUID > 0) {
+        GameObject* canvasFaderObj = GameplaySystems::GetGameObject(canvasFaderUID);
+        if (canvasFaderObj) {
+            faderScript = GET_SCRIPT(canvasFaderObj, CanvasFader);
+        }
     }
-    Time::PauseGame();
+
+    componentVideo->SetVideoFrameSize(static_cast<int>(Screen::GetResolution().x), static_cast<int>(Screen::GetResolution().y));
+
+    if (componentVideo) {
+        if (GameplaySystems::GetGlobalVariable(globalVariableKeyPlayVideoScene1,true)) {
+            componentVideo->Play();
+            GameController::SetVideoActive(true);
+            Time::PauseGame();
+            GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, false);
+        } else {
+            BackToNormalGameplay();
+        }
+    }
 }
 
 void VideoScene1Start::Update() {
 
     if ((componentVideo->HasVideoFinished() && componentVideo->IsActive()) || Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE)) {
-        Time::ResumeGame();
-        componentVideo->Stop();
-        GameController::SetVideoActive(false);
-        parent->Disable();
+        BackToNormalGameplay();
+    }
+}
 
-        if (canvasFaderUID > 0) {
-            GameObject* canvasFader = GameplaySystems::GetGameObject(canvasFaderUID);
-            if (canvasFader) {
-                CanvasFader* faderScript = GET_SCRIPT(canvasFader, CanvasFader);
-                if (faderScript) {
-                    faderScript->FadeIn();
-                }
-            }
-        }
+void VideoScene1Start::BackToNormalGameplay() {
+    Time::ResumeGame();
+    componentVideo->Stop();
+    GameController::SetVideoActive(false);
+    parent->Disable();
+    if (faderScript) {
+        faderScript->FadeIn();
     }
 }

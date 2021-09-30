@@ -274,7 +274,7 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 	}
 }
 
-void DialogueManager::ActivateDialogue(Dialogue* dialogue) {
+void DialogueManager::ActivateDialogue(Dialogue* /* dialogue */) {
 	runSecondaryOpen = false;
 
 	if (activeDialogueObject) {

@@ -106,7 +106,6 @@ private:
 	float attackMovementSpeed = 0.f;
 	float3 velocity = float3(0, 0, 0);
 	AIState state = AIState::START;
-	bool hitTaken = false;
 	ComponentAnimation* animation = nullptr;
 	ComponentTransform* ownerTransform = nullptr;
 	int damageRecieved = 0;
@@ -143,7 +142,7 @@ private:
 	void UpdatePushBackPosition();
 	void CalculatePushBackRealDistance();	// Calculates the real distance of the pushback taking into account any obstacles in the path
 	void Death();
-	void ParticleHit(GameObject& collidedWith, void* particle, Player& player);
+	void ParticleHit(GameObject& collidedWith, void* particle, Player& player_);
 	void PlayHitMaterialEffect();
 	void UpdateDissolveTimer();
 	void SetRandomMaterial();

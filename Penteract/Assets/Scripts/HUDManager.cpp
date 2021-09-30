@@ -1,5 +1,6 @@
 #include "HUDManager.h"
-#include "PlayerController.h";
+
+#include "PlayerController.h"
 #include "GameController.h"
 #include "Components/UI/ComponentTransform2D.h"
 #include "Components/UI/ComponentImage.h"
@@ -109,7 +110,7 @@ void HUDManager::Start() {
 		}
 
 		//Set onimaru abilities position to the collapsed position so as to avoid a flicker on first swtich
-		for (int i = 0; i < oniTransforms.size(); i++) {
+		for (unsigned i = 0; i < oniTransforms.size(); i++) {
 			oniTransforms[i]->SetPosition(cooldownTransformOriginalPositions[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
 		}
 
@@ -417,7 +418,7 @@ void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 }
 
 
-void HUDManager::SetRemainingDurationNormalizedValue(GameObject* canvas, int index, float normalizedValue) {
+void HUDManager::SetRemainingDurationNormalizedValue(GameObject* canvas, unsigned index, float normalizedValue) {
 	if (!canvas)return;
 	std::vector<GameObject*> children = canvas->GetChildren();
 	if (children.size() <= index) return;
@@ -572,8 +573,6 @@ void HUDManager::ManageSwitch() {
 	ComponentImage* backgroundImage = nullptr;
 	ComponentImage* fillImage = nullptr;
 	ComponentImage* overlayImage = nullptr;
-	ComponentText* healthText = nullptr;
-	ComponentImage* switchBarFillImage = nullptr;
 	ComponentImage* switchHealthStroke = nullptr;
 	ComponentTransform2D* switchHealthStrokeTransform2D = nullptr;
 	ComponentTransform2D* switchHealthFillTransform2D = nullptr;
@@ -591,7 +590,7 @@ void HUDManager::ManageSwitch() {
 		//This code handles the color grading progressively increasing and decreasing alpha
 		if (switchSkillParent) {
 			std::vector<GameObject*> children = switchSkillParent->GetChildren();
-			ComponentImage* fillImage = children[HIERARCHY_INDEX_SWITCH_ABILITY_FILL]->GetComponent<ComponentImage>();
+			fillImage = children[HIERARCHY_INDEX_SWITCH_ABILITY_FILL]->GetComponent<ComponentImage>();
 			if (fillImage) {
 
 				float delta = switchColorTimer / switchColorTotalTime;
@@ -775,14 +774,14 @@ void HUDManager::ManageSwitch() {
 
 			if (switchTimer < switchDeployMovementTime / 3) {
 				float delta = (switchTimer / (switchDeployMovementTime / 3));
-				for (int i = 0; i < skillsFang.size(); ++i) {
+				for (unsigned i = 0; i < skillsFang.size(); ++i) {
 					transform2D = skillsFang[i]->GetComponent<ComponentTransform2D>();
 					if (transform2D) {
 						transform2D->SetScale(float3::Lerp(float3(0, 0, 0), float3(1, 1, 1), delta));
 					}
 				}
 			} else {
-				for (int i = 0; i < skillsFang.size(); ++i) {
+				for (unsigned i = 0; i < skillsFang.size(); ++i) {
 					transform2D = skillsFang[i]->GetComponent<ComponentTransform2D>();
 					if (transform2D) {
 						transform2D->SetScale(float3(1, 1, 1));
@@ -790,7 +789,7 @@ void HUDManager::ManageSwitch() {
 				}
 			}
 
-			for (int i = 0; i < skillsFang.size(); ++i) {
+			for (unsigned i = 0; i < skillsFang.size(); ++i) {
 				transform2D = skillsFang[i]->GetComponent<ComponentTransform2D>();
 
 				if (transform2D) {
@@ -802,14 +801,14 @@ void HUDManager::ManageSwitch() {
 
 			if (switchTimer < switchDeployMovementTime / 3) {
 				float delta = (switchTimer / (switchDeployMovementTime / 3));
-				for (int i = 0; i < skillsOni.size(); ++i) {
+				for (unsigned i = 0; i < skillsOni.size(); ++i) {
 					transform2D = skillsOni[i]->GetComponent<ComponentTransform2D>();
 					if (transform2D) {
 						transform2D->SetScale(float3::Lerp(float3(0, 0, 0), float3(1, 1, 1), delta));
 					}
 				}
 			} else {
-				for (int i = 0; i < skillsOni.size(); ++i) {
+				for (unsigned i = 0; i < skillsOni.size(); ++i) {
 					transform2D = skillsOni[i]->GetComponent<ComponentTransform2D>();
 					if (transform2D) {
 						transform2D->SetScale(float3(1, 1, 1));
@@ -817,7 +816,7 @@ void HUDManager::ManageSwitch() {
 				}
 			}
 
-			for (int i = 0; i < skillsOni.size(); ++i) {
+			for (unsigned i = 0; i < skillsOni.size(); ++i) {
 				transform2D = skillsOni[i]->GetComponent<ComponentTransform2D>();
 				if (transform2D) {
 					transform2D->SetPosition(float3::Lerp(cooldownTransformOriginalPositions[static_cast<int>(Cooldowns::SWITCH_SKILL)], cooldownTransformOriginalPositions[i + 3] + float3(switchExtraOffset + i * 10.0f, 0, 0), switchTimer / switchDeployMovementTime));
@@ -884,7 +883,7 @@ void HUDManager::ManageSwitch() {
 		}
 
 		if (fangSkillParent->IsActive()) {
-			for (int i = 0; i < skillsFang.size(); ++i) {
+			for (unsigned i = 0; i < skillsFang.size(); ++i) {
 				transform2D = skillsFang[i]->GetComponent<ComponentTransform2D>();
 				if (transform2D) {
 					transform2D->SetPosition(float3::Lerp(cooldownTransformOriginalPositions[i] + float3(switchExtraOffset + i * 10.0f, 0, 0), cooldownTransformOriginalPositions[i], switchTimer / switchPreCollapseMovementTime));
@@ -892,7 +891,7 @@ void HUDManager::ManageSwitch() {
 
 			}
 		} else {
-			for (int i = 0; i < skillsOni.size(); ++i) {
+			for (unsigned i = 0; i < skillsOni.size(); ++i) {
 				transform2D = skillsOni[i]->GetComponent<ComponentTransform2D>();
 				if (transform2D) {
 					transform2D->SetPosition(float3::Lerp(cooldownTransformOriginalPositions[i + 3] + float3(switchExtraOffset + i * 10.0f, 0, 0), cooldownTransformOriginalPositions[i + 3], switchTimer / switchPreCollapseMovementTime));
@@ -932,7 +931,7 @@ void HUDManager::ManageSwitch() {
 	switchTimer += Time::GetDeltaTime();
 }
 
-void HUDManager::PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns cooldown) {
+void HUDManager::PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns /* cooldown */) {
 	if (effect != nullptr) {
 		effect->PlayEffect();
 	}
@@ -1070,9 +1069,9 @@ void HUDManager::ResetLostHealthFeedback() {
 	// If we have switched, we need to reset the other health lost fill bar
 	if (switchState != SwitchState::IDLE) {
 		// If X character is active, we have already swapped so we get the other one feedback bar
-		ComponentImage* lostHealth = nullptr;
+		lostHealth = nullptr;
 		lostHealth = fangObj->IsActive() ? fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>() : onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
-		float maxHealth = fangObj->IsActive() ? playerController->GetFangMaxHealth() : playerController->GetOnimaruMaxHealth();
+		maxHealth = fangObj->IsActive() ? playerController->GetFangMaxHealth() : playerController->GetOnimaruMaxHealth();
 		float feedbackHealth = fangObj->IsActive() ? fangPreviousHealth : onimaruPreviousHealth;
 
 		if (lostHealth) {
@@ -1252,8 +1251,8 @@ void HUDManager::InitializeHUDSides() {
 	}
 }
 
-void HUDManager::ManageSwitchPreCollapseState(GameObject* activeParent, const std::vector<GameObject*>& skills) {
-	for (int i = 0; i < skills.size(); ++i) {
+void HUDManager::ManageSwitchPreCollapseState(GameObject* /* activeParent */, const std::vector<GameObject*>& skills) {
+	for (unsigned i = 0; i < skills.size(); ++i) {
 		ComponentTransform2D* transform2D = skills[i]->GetComponent<ComponentTransform2D>();
 		if (transform2D) {
 			transform2D->SetPosition(float3::Lerp(cooldownTransformOriginalPositions[i], cooldownTransformOriginalPositions[i] + float3(switchExtraOffset + i * 10.0f, 0, 0), switchTimer / switchPreCollapseMovementTime));
@@ -1261,12 +1260,12 @@ void HUDManager::ManageSwitchPreCollapseState(GameObject* activeParent, const st
 	}
 }
 
-void HUDManager::ManageSwitchCollapseState(GameObject* skillsParent, const std::vector<GameObject*>& skills) {
+void HUDManager::ManageSwitchCollapseState(GameObject* /* skillsParent */, const std::vector<GameObject*>& skills) {
 	ComponentTransform2D* transform2D = nullptr;
 
 	if (switchTimer > switchCollapseMovementTime / 1.5f) {
 		float delta = (switchTimer - (switchCollapseMovementTime / 1.5f)) / (switchCollapseMovementTime / 1.5f);
-		for (int i = 0; i < skills.size(); ++i) {
+		for (unsigned i = 0; i < skills.size(); ++i) {
 			transform2D = skills[i]->GetComponent<ComponentTransform2D>();
 			if (transform2D) {
 				transform2D->SetScale(float3::Lerp(float3(1, 1, 1), float3(0, 0, 0), delta));
@@ -1274,7 +1273,7 @@ void HUDManager::ManageSwitchCollapseState(GameObject* skillsParent, const std::
 		}
 	}
 
-	for (int i = 0; i < skills.size(); ++i) {
+	for (unsigned i = 0; i < skills.size(); ++i) {
 		transform2D = skills[i]->GetComponent<ComponentTransform2D>();
 		if (transform2D) {
 			transform2D->SetPosition(float3::Lerp(cooldownTransformOriginalPositions[i] + float3(switchExtraOffset + i * 10.0f, 0, 0), cooldownTransformOriginalPositions[static_cast<int>(Cooldowns::SWITCH_SKILL)], switchTimer / switchCollapseMovementTime));
