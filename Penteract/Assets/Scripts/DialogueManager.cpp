@@ -163,7 +163,7 @@ void DialogueManager::Update() {
 	if (!player || !camera || !flash) return;
 
 	if (activeDialogue) {
-		if (runOpenAnimation) ActivateDialogue(activeDialogue);
+		if (runOpenAnimation) ActivateDialogue();
 
 		if (Player::GetInputBool(activeDialogue->closeButton, PlayerController::useGamepad) && !(runOpenAnimation || runChangeAnimation || runCloseAnimation) && activeDialogueObject) {
 			if (audios[static_cast<int>(AudioDialogue::BUTTON)]) {
