@@ -38,7 +38,7 @@ void BridgeDoorButton::Start() {
 }
 
 void BridgeDoorButton::Update() {
-	if (laserDoorObstacle->GetComponent<ComponentMeshRenderer>()->HasDissolveAnimationFinished()) {
+	if (laserDoorObstacle && laserDoorObstacle->GetComponent<ComponentMeshRenderer>()->HasDissolveAnimationFinished()) {
 		laserDoorObstacle->Disable();
 	}
 }

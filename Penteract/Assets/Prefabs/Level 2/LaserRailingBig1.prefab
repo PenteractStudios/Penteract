@@ -34,7 +34,7 @@
                 "Type": "MeshRenderer",
                 "Active": true,
                 "MeshID": 3653493380438483050,
-                "MaterialID": 5908343676609694695
+                "MaterialID": 17126452138490385022
             },
             {
                 "Type": "BoundingBox",
@@ -85,7 +85,7 @@
                         "Type": "Obstacle",
                         "Active": true,
                         "Size": [
-                            2.799999952316284,
+                            3.75,
                             1.0,
                             2.0
                         ],
