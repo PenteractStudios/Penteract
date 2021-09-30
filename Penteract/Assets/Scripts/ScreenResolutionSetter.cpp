@@ -80,8 +80,8 @@ void ScreenResolutionSetter::PlayAudio(UIAudio type) {
 	if (audios[static_cast<int>(type)]) audios[static_cast<int>(type)]->Play();
 }
 
-void ScreenResolutionSetter::IncreaseResolution(int multiplier) {
-	int newSelectedPreset = preSelectedScreenResolutionPreset + multiplier;
+void ScreenResolutionSetter::IncreaseResolution(unsigned multiplier) {
+	unsigned newSelectedPreset = preSelectedScreenResolutionPreset + multiplier;
 
 	//Avoid getting out of bounds
 	if (newSelectedPreset >= 0 && newSelectedPreset < Screen::GetNumDisplayModes()) {

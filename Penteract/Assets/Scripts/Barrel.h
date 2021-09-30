@@ -17,7 +17,7 @@ public:
 	void Start() override;
 	void Update() override;
 
-	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) override;
+	void OnCollision(GameObject& collidedWith, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* particle) override;
 
 public:
 	UID barrelUID = 0;

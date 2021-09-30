@@ -307,7 +307,7 @@ void GameController::ClearPauseMenus() {
 		std::vector<GameObject*> settingsChildren = settingsCanvas->GetChildren();
 		if (settingsChildren.size() > 0) {
 			settingsChildren[0]->Enable();		// Enables first screen of CanvasSettingsPlus
-			for (int i = 1; i < settingsChildren.size(); ++i) {
+			for (unsigned i = 1; i < settingsChildren.size(); ++i) {
 				settingsChildren[i]->Disable();
 			}
 		}

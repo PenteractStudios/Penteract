@@ -38,7 +38,7 @@ public:
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
-	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override; //This is commented until merge with collisions
+	void OnCollision(GameObject& collidedWith, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* particle = nullptr) override; //This is commented until merge with collisions
 	void ShootPlayerInRange(); //Sets in motion the shooting at the player, if found and close enough
 
 	void EnableBlastPushBack();
@@ -62,7 +62,7 @@ private:
 	void CalculatePushBackRealDistance();											// Calculates the real distance of the pushback taking into account any obstacles in the path
 	void PlayHitMaterialEffect();													// Changes material hit
 	void UpdateDissolveTimer();														// If the currentDissolveTime is reached, Plays animation
-	void ParticleHit(GameObject& collidedWith, void* particle, Player& player);
+	void ParticleHit(GameObject& collidedWith, void* particle, Player& player_);
 	void SetRandomMaterial();
 	void SetMaterial(ComponentMeshRenderer* mesh, UID newMaterialID, bool needToPlayDissolve = false);
 

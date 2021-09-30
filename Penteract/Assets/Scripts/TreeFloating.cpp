@@ -12,7 +12,7 @@ EXPOSE_MEMBERS(TreeFloating) {
 GENERATE_BODY_IMPL(TreeFloating);
 
 void TreeFloating::Start() {
-	offset = rand() % 200;
+	offset = static_cast<float>(rand() % 200);
 	trees = GameplaySystems::GetGameObject(treesUID);
 	if (trees) transform = trees->GetComponent<ComponentTransform>();
 	if (transform) initialPosition = transform->GetPosition();

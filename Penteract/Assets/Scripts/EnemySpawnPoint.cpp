@@ -109,7 +109,8 @@ float3 EnemySpawnPoint::EnemyLocation(int N, int k, int z) {
 		kudos to Pol for the formula
 	*/
 	int d = 2;
-	return float3(((N/2 - k) * d - ((N + 1)%2) * d/2), 0, z);
+	float x = static_cast<float>(((N / 2 - k) * d - ((N + 1) % 2) * d / 2));
+	return float3(x, 0.0f, static_cast<float>(z));
 }
 
 void EnemySpawnPoint::LookAtPlayer(const float3& direction) {
