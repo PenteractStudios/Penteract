@@ -92,7 +92,7 @@ public:
 	float switchColorTotalTime = 1.25f;
 	bool switchColorIncreasing = true;
 
-	float rotationSpeed = 3.1416 / 4.0f;
+	float rotationSpeed = 3.1416f / 4.0f;
 
 	// Health HUD
 	UID fangHealthParentUID = 0;
@@ -191,12 +191,12 @@ private:
 private:
 	void AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canvas);
 	void UpdateVisualCooldowns(GameObject* canvas, int startingIt); //Update visual cooldown on all abilities of a given character
-	void SetRemainingDurationNormalizedValue(GameObject* canvas, int index, float normalizedValue);
+	void SetRemainingDurationNormalizedValue(GameObject* canvas, unsigned index, float normalizedValue);
 
 	void UpdateCommonSkillVisualCooldown(); //Update visual cooldown on switch ability
 	void ManageSwitch();	//This method manages visual effects regarding the Switching of characters (UI WISE) as well 
 							//as the color changin and rotation of the picto for the switch icon
-	void PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns cooldown);
+	void PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns /* cooldown */);
 	void PlayHitEffect();
 	void ShowCriticalHealthWarning();
 	void HideCriticalHealthWarning();
@@ -211,7 +211,7 @@ private:
 	void InitializeHealth();
 	void InitializeHUDSides();
 
-	void ManageSwitchPreCollapseState(GameObject* activeParent, const std::vector<GameObject*>& skills);
+	void ManageSwitchPreCollapseState(GameObject* /* activeParent */, const std::vector<GameObject*>& skills);
 	void ManageSwitchCollapseState(GameObject* activeParent, const std::vector<GameObject*>& skills);
 
 	void ManageSwitchGreenEffect(bool growing, float timer);

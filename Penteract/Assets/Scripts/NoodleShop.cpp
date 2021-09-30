@@ -23,7 +23,7 @@ void NoodleShop::Update() {
 	
 }
 
-void NoodleShop::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+void NoodleShop::OnCollision(GameObject& /* collidedWith */, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* /* particle */) {
     if (script) {
         script->Open();
         ComponentCapsuleCollider* capsuleCollider = gameObject->GetComponent<ComponentCapsuleCollider>();

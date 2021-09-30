@@ -42,7 +42,8 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackSpeed),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownSpeed),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownTime),
-	MEMBER(MemberType::FLOAT, attackSpeed),
+	MEMBER(MemberType::FLOAT, minAttackSpeed),
+	MEMBER(MemberType::FLOAT, maxAttackSpeed),
 	MEMBER(MemberType::FLOAT, fleeingRange),
 	MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
 	MEMBER(MemberType::FLOAT, timeSinceLastHurt),
@@ -119,7 +120,7 @@ void RangedAI::Start() {
 	agent = GetOwner().GetComponent<ComponentAgent>();
 	if (agent) {
 		agent->SetMaxSpeed(rangerGruntCharacter.movementSpeed);
-		agent->SetMaxAcceleration(static_cast<float>(AIMovement::maxAcceleration));
+		agent->SetMaxAcceleration(AIMovement::maxAcceleration);
 		agent->SetAgentObstacleAvoidance(true);
 		agent->RemoveAgentFromCrowd();
 	}
@@ -157,6 +158,7 @@ void RangedAI::Start() {
 		}
 	}
 
+	attackTimePool = (minAttackSpeed + 1) + (((float)rand()) / (float)RAND_MAX) * (maxAttackSpeed - (minAttackSpeed + 1));
 	aiMovement = GET_SCRIPT(&GetOwner(), AIMovement);
 
 	// TODO: ADD CHECK PLS
@@ -212,28 +214,28 @@ void RangedAI::OnAnimationSecondaryFinished() {
 
 void RangedAI::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
 	if (stateMachineEnum == StateMachineEnum::PRINCIPAL) {
-		if (eventName == "FootstepRight") {
+		if (strcmp(eventName, "FootstepRight") == 0) {
 			if (audios[static_cast<int>(AudioType::FOOTSTEP_RIGHT)]) audios[static_cast<int>(AudioType::FOOTSTEP_RIGHT)]->Play();
 		}
-		else if (eventName == "FootstepLeft") {
+		else if (strcmp(eventName, "FootstepLeft") == 0) {
 			if (audios[static_cast<int>(AudioType::FOOTSTEP_LEFT)]) audios[static_cast<int>(AudioType::FOOTSTEP_LEFT)]->Play();
 		}
 	}
 }
-void RangedAI::ParticleHit(GameObject& collidedWith, void* particle, Player& player) {
+void RangedAI::ParticleHit(GameObject& collidedWith, void* particle, Player& player_) {
 	if (!particle) return;
 	ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 	if (pSystem) pSystem->KillParticle(p);
-	if (state == AIState::STUNNED && player.level2Upgrade) {
+	if (state == AIState::STUNNED && player_.level2Upgrade) {
 		rangerGruntCharacter.GetHit(99);
 	}
 	else {
-		rangerGruntCharacter.GetHit(player.damageHit + playerController->GetOverPowerMode());
+		rangerGruntCharacter.GetHit(player_.damageHit + playerController->GetOverPowerMode());
 	}
 }
 
-void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+void RangedAI::OnCollision(GameObject& collidedWith, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* particle) {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		if (rangerGruntCharacter.isAlive && playerController) {
 			bool hitTaken = false;
@@ -446,7 +448,7 @@ void RangedAI::UpdateState() {
 
 				if (!CharacterInRange(player, rangerGruntCharacter.attackRange - approachOffset, true)) {
 					if (!aiMovement->CharacterInSight(player, fleeingRange)) {
-						if (aiMovement) aiMovement->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), static_cast<int>(speedToUse), false);
+						if (aiMovement) aiMovement->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), speedToUse, false);
 					}
 					else {
 						ChangeState(AIState::FLEE);
@@ -472,7 +474,7 @@ void RangedAI::UpdateState() {
 				}
 				else if (currentFleeingUpdateTime >= 0 && fleeingFarAway) {   //Moving far away from player
 					currentFleeingUpdateTime -= Time::GetDeltaTime();
-					aiMovement->Seek(state, currentFleeDestination, static_cast<int>(speedToUse), false);
+					aiMovement->Seek(state, currentFleeDestination, speedToUse, false);
 
 					if (currentFleeingUpdateTime <= 0) {
 						fleeingFarAway = false;
@@ -588,13 +590,11 @@ void RangedAI::ActualShot() {
 		//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
 		if (!meshObj) return;
 
-		ComponentBoundingBox* box = meshObj->GetComponent<ComponentBoundingBox>();
-
-		float offsetY = (box->GetWorldAABB().minPoint.y + box->GetWorldAABB().maxPoint.y) / 4;
 		shootTrailPrefab->PlayChildParticles();
 	}
 
-	attackTimePool = 1.0f / attackSpeed;
+	attackSpeed = (minAttackSpeed + 1) + (((float)rand()) / (float)RAND_MAX) * (maxAttackSpeed - (minAttackSpeed + 1));
+	attackTimePool = attackSpeed;
 	actualShotTimer = -1.0f;
 
 	PlayAudio(AudioType::SHOOT);
@@ -730,9 +730,9 @@ void RangedAI::SetRandomMaterial()
 	if (materialsHolder) {
 		std::vector<UID> materials;
 		for (const auto& child : materialsHolder->GetChildren()) {
-			ComponentMeshRenderer* meshRenderer = child->GetComponent<ComponentMeshRenderer>();
-			if (meshRenderer && meshRenderer->materialId) {
-				materials.push_back(meshRenderer->materialId);
+			ComponentMeshRenderer* meshRendererChild = child->GetComponent<ComponentMeshRenderer>();
+			if (meshRendererChild && meshRendererChild->materialId) {
+				materials.push_back(meshRendererChild->materialId);
 			}
 		}
 

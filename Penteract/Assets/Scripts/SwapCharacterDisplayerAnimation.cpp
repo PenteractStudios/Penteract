@@ -116,12 +116,12 @@ void SwapCharacterDisplayerAnimation::Update() {
 	currentTime += Time::GetDeltaTime();
 }
 
-void SwapCharacterDisplayerAnimation::IncreaseOverTime(GameObject* go, float currentTime, float maxTime)
+void SwapCharacterDisplayerAnimation::IncreaseOverTime(GameObject* go, float currentTime_, float maxTime)
 {
 	if (go == nullptr) {
 		return;
 	}
-	float factor = currentTime / maxTime;
+	float factor = currentTime_ / maxTime;
 
 	ComponentImage* image = go->GetComponent<ComponentImage>();
 	if (image) {
@@ -134,16 +134,16 @@ void SwapCharacterDisplayerAnimation::IncreaseOverTime(GameObject* go, float cur
 	}
 }
 
-void SwapCharacterDisplayerAnimation::SwapAnimation(GameObject* targetCanvas, bool isMain, bool playReverse, float currentTime, float maxTime)
+void SwapCharacterDisplayerAnimation::SwapAnimation(GameObject* targetCanvas, bool isMain, bool playReverse, float currentTime_, float maxTime)
 {
 	ComponentTransform2D* transform = targetCanvas->GetComponent<ComponentTransform2D>();
 
 	if (playReverse) {
-		transform->SetScale(float3::Lerp(float3(initialScaleCanvas.x, 0, initialScaleCanvas.z), initialScaleCanvas,  currentTime / maxTime));
+		transform->SetScale(float3::Lerp(float3(initialScaleCanvas.x, 0, initialScaleCanvas.z), initialScaleCanvas, currentTime_ / maxTime));
 		transform->SetPosition(float3::Lerp(float3(transform->GetPosition().x, isMain ? positionToLerpSwapMain : positionToLerpSwapAlternative, transform->GetPosition().z), isMain ? initialPositionMainCanvas : initialPositionAlternativeCanvas, currentTime / maxTime));
 	}
 	else {
-		transform->SetScale(float3::Lerp(initialScaleCanvas, float3(initialScaleCanvas.x, 0, initialScaleCanvas.z), currentTime / maxTime));
+		transform->SetScale(float3::Lerp(initialScaleCanvas, float3(initialScaleCanvas.x, 0, initialScaleCanvas.z), currentTime_ / maxTime));
 		transform->SetPosition(float3::Lerp(isMain ? initialPositionMainCanvas : initialPositionAlternativeCanvas, float3(transform->GetPosition().x, isMain ? positionToLerpSwapMain : positionToLerpSwapAlternative, transform->GetPosition().z), currentTime / maxTime));
 	}
 }

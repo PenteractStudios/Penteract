@@ -16,10 +16,10 @@ GENERATE_BODY_IMPL(LaserTurret);
 
 void LaserTurret::Start() {
 
-    GameObject* owner = &GetOwner();
+    GameObject* ownerGo = &GetOwner();
 
-    if (owner) {
-        animationComp = owner->GetComponent<ComponentAnimation>();
+    if (ownerGo) {
+        animationComp = ownerGo->GetComponent<ComponentAnimation>();
     }
 
     laserObject = GameplaySystems::GetGameObject(laserTargetUID);

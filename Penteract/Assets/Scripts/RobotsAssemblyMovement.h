@@ -15,7 +15,7 @@ public:
 
 	UID robotType1 = 0;
 	UID robotType2 = 0;
-	int numOfRobots = 10;
+	unsigned numOfRobots = 10;
 	bool changeDirection = false;
 	float distanceBetweenRobots = 50.f;
 	float lineLenght = 160.f;

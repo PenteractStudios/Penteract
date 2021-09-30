@@ -2,7 +2,7 @@
 
 #include "PlayerController.h"
 
-void Enemy::SetFallingSpeed(int fallingSpeed_) {
+void Enemy::SetFallingSpeed(float fallingSpeed_) {
 	fallingSpeed = fallingSpeed_;
 }
 
