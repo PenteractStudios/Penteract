@@ -120,7 +120,7 @@ void AttackDronesController::RemoveDrone() {
     GameplaySystems::DestroyGameObject(droneToDestroy);
 
     RecalculateFormations();
-    RepositionDrones(); 
+    RepositionDrones();
 }
 
 void AttackDronesController::RecalculateFormations() {
@@ -228,7 +228,8 @@ void AttackDronesController::StartWave() {
 		}
 
         case WaveCycle::CENTERED:
-			float orderedI = dronesScripts.size() / 2;
+			bool hasEvenDrones = dronesScripts.size() % 2 == 0;
+			float orderedI = dronesScripts.size() / 2 - (hasEvenDrones ? 1 : 0);
 			float accumulatedDelay = orderedI * shotDelay;
 			float multiplier = -1.0f;
 
@@ -236,8 +237,12 @@ void AttackDronesController::StartWave() {
 				Debug::Log(std::to_string(orderedI).c_str());
 				dronesScripts[i]->StartWave(waves, accumulatedDelay, timeBetweenWaves);
 				
-
 				if (i == dronesScripts.size() / 2) {
+					multiplier = 1.0f;
+				}
+
+				if (hasEvenDrones && i == (dronesScripts.size() / 2)) {
+					orderedI--;
 					multiplier = 1.0f;
 				}
 
