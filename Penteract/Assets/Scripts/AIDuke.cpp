@@ -191,9 +191,11 @@ void AIDuke::Update() {
 			}
 			break;
 		case DukeState::BULLET_HELL:
+			dukeCharacter.reducedDamaged = true;
 			dukeCharacter.BulletHell();
 			currentBulletHellActiveTime += Time::GetDeltaTime();
 			if (currentBulletHellActiveTime >= bulletHellActiveTime) {
+				dukeCharacter.reducedDamaged = false;
 				currentBulletHellCooldown = 0.f;
 				currentBulletHellActiveTime = 0.f;
 				dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
@@ -299,9 +301,11 @@ void AIDuke::Update() {
 				dukeCharacter.state = DukeState::BULLET_HELL;
 				break;
 			case DukeState::BULLET_HELL:
+				dukeCharacter.reducedDamaged = true;
 				dukeCharacter.BulletHell();
 				currentBulletHellActiveTime += Time::GetDeltaTime();
 				if (currentBulletHellActiveTime >= bulletHellActiveTime) {
+					dukeCharacter.reducedDamaged = false;
 					currentBulletHellCooldown = 0.f;
 					currentBulletHellActiveTime = 0.f;
 					dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
@@ -336,9 +340,11 @@ void AIDuke::Update() {
 				}
 				break;
 			case DukeState::BULLET_HELL:
+				dukeCharacter.reducedDamaged = true;
 				dukeCharacter.BulletHell();
 				currentAbilityChangeCooldown += Time::GetDeltaTime();
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
+					dukeCharacter.reducedDamaged = false;
 					currentAbilityChangeCooldown = 0.f;
 					dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 				}
@@ -418,7 +424,8 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 				if (!particle) return;
 				GameplaySystems::DestroyGameObject(&collidedWith);
 				hitTaken = true;
-				dukeCharacter.GetHit(playerController->playerFang.damageHit + playerController->GetOverPowerMode());
+				float damage = playerController->playerFang.damageHit;
+				dukeCharacter.GetHit( dukeCharacter.reducedDamaged ? damage / 2 : damage + playerController->GetOverPowerMode());
 			}
 			else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
 				hitTaken = true;
@@ -434,7 +441,8 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 			}
 			else if (collidedWith.name == "DashDamage" && playerController->playerFang.level1Upgrade) {
 				hitTaken = true;
-				dukeCharacter.GetHit(playerController->playerFang.dashDamage + playerController->GetOverPowerMode());
+				float damage = playerController->playerFang.dashDamage;
+				dukeCharacter.GetHit(dukeCharacter.reducedDamaged ? damage / 2 : damage + playerController->GetOverPowerMode());
 			}
 
 			if (hitTaken) {
@@ -600,9 +608,10 @@ void AIDuke::ParticleHit(GameObject& collidedWith, void* particle, Player& playe
 	ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 	if (pSystem) pSystem->KillParticle(p);
+	float damage = dukeCharacter.reducedDamaged ? player.damageHit/ 2 : player.damageHit;
 	if (dukeCharacter.state == DukeState::STUNNED && player.level2Upgrade) {
-		dukeCharacter.GetHit(player.damageHit + playerController->GetOverPowerMode() * 2);
+		dukeCharacter.GetHit(damage * 2 + playerController->GetOverPowerMode());
 	} else {
-		dukeCharacter.GetHit(player.damageHit + playerController->GetOverPowerMode());
+		dukeCharacter.GetHit(damage + playerController->GetOverPowerMode());
 	}
 }

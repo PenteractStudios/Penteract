@@ -87,6 +87,7 @@ public:
 	// Effects' states
 	bool beingPushed = false;
 	bool slowedDown = false;
+	bool reducedDamaged = false;
 
 	float3 chargeTarget;
 

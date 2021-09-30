@@ -98,6 +98,7 @@ void Duke::BulletHell()
 void Duke::InitCharge(DukeState nextState)
 {
 	this->nextState = nextState;
+	reducedDamaged = true;
 	if (chargeCollider) chargeCollider->Enable();
 	Debug::Log("Electric Tackle!");
 }
@@ -114,6 +115,7 @@ void Duke::EndCharge()
 {
 	// Perform arm attack (either use the same or another collider as the melee attack)
 	state = nextState;
+	reducedDamaged = false;
 	if (player) {
 		PlayerController* playerController = GET_SCRIPT(player, PlayerController);
 		if (playerController) playerController->playerOnimaru.shieldBeingUsed = 0.0f;
