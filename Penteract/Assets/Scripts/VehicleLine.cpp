@@ -24,16 +24,19 @@ GENERATE_BODY_IMPL(VehicleLine);
 
 void VehicleLine::Start() {
 
-    vehiclesUID[0] = vehicle1;
-    vehiclesUID[1] = vehicle2;
-    vehiclesUID[2] = vehicle3;
-    vehiclesUID[3] = vehicle4;
-    vehiclesUID[4] = vehicle5;
-    vehiclesUID[5] = vehicle6;
-    vehiclesUID[6] = vehicle7;
-    vehiclesUID[7] = vehicle8;
-    vehiclesUID[8] = vehicle9;
-	
+    GameObject* go = &GetOwner();
+
+    transform = go->GetComponent<ComponentTransform>();
+
+    AddVehicle(vehicle2);
+    AddVehicle(vehicle3);
+    AddVehicle(vehicle4);
+    AddVehicle(vehicle5);
+    AddVehicle(vehicle6);
+    AddVehicle(vehicle7);
+    AddVehicle(vehicle8);
+    AddVehicle(vehicle9);
+
 }
 
 void VehicleLine::Update() {
@@ -42,25 +45,37 @@ void VehicleLine::Update() {
         while (actualVehicle == previousVehicle) {
             actualVehicle = rand() % 9;
         }
-        ResourcePrefab* prefabVehicle = GameplaySystems::GetResource<ResourcePrefab>(vehiclesUID[actualVehicle]);
-        GameObject* goVehicle = nullptr;
-        if (prefabVehicle) goVehicle = GameplaySystems::GetGameObject(prefabVehicle->BuildPrefab(&GetOwner()));
-        if(goVehicle) vehicles.push_back(goVehicle);
         timeToSpawn = timeBetweenSpawns;
         previousVehicle = actualVehicle;
     } 
     else {
         timeToSpawn -= Time::GetDeltaTime();
     }
+
     UpdateVehicles();
 	
+}
+
+void VehicleLine::AddVehicle(UID vehicleUID) {
+
+    ResourcePrefab* prefabVehicle = GameplaySystems::GetResource<ResourcePrefab>(vehicleUID);
+    GameObject* goVehicle = GameplaySystems::GetGameObject(prefabVehicle->BuildPrefab(&GetOwner()));
+    if (prefabVehicle) {
+        goVehicle = GameplaySystems::GetGameObject(prefabVehicle->BuildPrefab(&GetOwner()));
+        if (goVehicle) {
+            ComponentTransform* transform = goVehicle->GetComponent<ComponentTransform>();
+            if (transform) {
+                vehicles.emplace_back(goVehicle, transform);
+            }
+        }
+    }
 }
 
 void VehicleLine::UpdateVehicles()
 {
     int vehiclesToClear = 0;
-    for (GameObject* vehicle : vehicles) {
-        ComponentTransform* transformVehicle = vehicle->GetComponent<ComponentTransform>();
+    for (std::pair<GameObject*, ComponentTransform*> vehicle : vehicles) {
+        ComponentTransform* transformVehicle = vehicle.first->GetComponent<ComponentTransform>();
         if (!transformVehicle) return;
         float3 position = transformVehicle->GetGlobalPosition();
         float3 direction = transformVehicle->GetGlobalRotation() * float3(1, 0, 0);
@@ -68,20 +83,16 @@ void VehicleLine::UpdateVehicles()
         position += velocity * Time::GetDeltaTime();
         transformVehicle->SetGlobalPosition(position);
         if (VehicleOutsideMap(transformVehicle->GetGlobalPosition())){
-            GameplaySystems::DestroyGameObject(vehicle);
-            ++vehiclesToClear;
+            transformVehicle = vehicle.second;
         }
-    }
-    for (int i = 0; i < vehiclesToClear; ++i) {
-        vehicles.erase(vehicles.begin());
     }
     
 }
 
 bool VehicleLine::VehicleOutsideMap(const float3 posVehicle)
 {
-    if (posVehicle.x < -600 || posVehicle.x > 600) return true;
-    if (posVehicle.y < -600 || posVehicle.y > 600) return true;
-    if (posVehicle.z < -600 || posVehicle.z > 600) return true;
+    if (posVehicle.x < -limits.x || posVehicle.x > limits.x) return true;
+    if (posVehicle.y < -limits.y || posVehicle.y > limits.y) return true;
+    if (posVehicle.z < -limits.z || posVehicle.z > limits.z) return true;
     return false;
 }
