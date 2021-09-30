@@ -15,8 +15,7 @@ void Player::SetAttackSpeed(float attackSpeed_) {
 	attackSpeed = attackSpeed_;
 }
 
-void Player::GetHit(float damage_) {
-	return;
+void Player::GetHit(float /* damage_ */) {
 }
 
 void Player::ResetSwitchStatus() {
@@ -214,6 +213,7 @@ bool Player::GetInputBool(InputActions action, bool useGamepad) {
 	case InputActions::AIM:
 		if (useGamepad && Input::IsGamepadConnected(0)) {
 			//return Input::GetControllerButton(Input::SDL_CONTROLLER_BUTTON_A, 0);
+			return false;
 		}
 		else {
 			return Input::GetMouseButtonRepeat(1);
@@ -222,6 +222,7 @@ bool Player::GetInputBool(InputActions action, bool useGamepad) {
 	default:
 		return false;
 	}
+
 }
 
 float2 Player::GetInputFloat2(InputActions action, bool useGamepad) const {
@@ -266,7 +267,7 @@ float2 Player::GetInputFloat2(InputActions action, bool useGamepad) const {
 	return result;
 }
 
-void Player::UpdateFacePointDir(bool useGamepad, bool faceToFront) {
+void Player::UpdateFacePointDir(bool useGamepad, bool faceToFront_) {
 		if (useGamepad) {
 			float2 inputFloat2 = GetInputFloat2(InputActions::ORIENTATION, useGamepad);
 
@@ -274,7 +275,7 @@ void Player::UpdateFacePointDir(bool useGamepad, bool faceToFront) {
 			facePointDir.z = inputFloat2.y;
 
 		} else {
-			if (faceToFront) {
+			if (faceToFront_) {
 				float2 inputFloat2 = GetInputFloat2(InputActions::MOVEMENT, false);
 				facePointDir.x = inputFloat2.x;
 				facePointDir.z = inputFloat2.y;

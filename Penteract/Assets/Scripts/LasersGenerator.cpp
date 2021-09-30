@@ -17,11 +17,11 @@ EXPOSE_MEMBERS(LasersGenerator) {
 GENERATE_BODY_IMPL(LasersGenerator);
 
 void LasersGenerator::Start() {
-    GameObject* owner = &GetOwner();
+    GameObject* ownerGo = &GetOwner();
     GameObject* pair = GameplaySystems::GetGameObject(pairGeneratorUID);
 
-    if (owner) {
-        animationComp = owner->GetComponent<ComponentAnimation>();
+    if (ownerGo) {
+        animationComp = ownerGo->GetComponent<ComponentAnimation>();
     }
     if (pair) {
         pairAnimationComp = pair->GetComponent<ComponentAnimation>();

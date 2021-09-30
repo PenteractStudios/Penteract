@@ -23,7 +23,7 @@ public:
 
 private:
 	ComponentTransform *ownerTransform = nullptr;
-	int currentWayPoint = 0;
+	unsigned currentWayPoint = 0;
 	void CheckWayPoint();
 	void Seek(const float3 &currentPosition,const float3& newPosition);
 };
