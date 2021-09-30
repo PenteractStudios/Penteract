@@ -1,0 +1,9 @@
+{
+    "Name": "Shooting",
+    "AnimationUID": 17526336776099113957,
+    "BeginIndex": 135,
+    "EndIndex": 150,
+    "Loop": true,
+    "Speed": 1.0,
+    "FrameRate": 0.04713050276041031
+}

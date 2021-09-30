@@ -1,0 +1,9 @@
+{
+    "Name": "ChargeEnd",
+    "AnimationUID": 17526336776099113957,
+    "BeginIndex": 325,
+    "EndIndex": 355,
+    "Loop": false,
+    "Speed": 1.0,
+    "FrameRate": 0.04713050276041031
+}
