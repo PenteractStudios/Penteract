@@ -54,7 +54,7 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::FLOAT, fleeingUpdateTime),
 	MEMBER_SEPARATOR("Dissolve properties"),
 	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialObj),
-	MEMBER(MemberType::FLOAT, dissolveTimerToStart),
+	MEMBER(MemberType::FLOAT, dissolveTimerToStart)
 };//clang-format on
 
 GENERATE_BODY_IMPL(RangedAI);
