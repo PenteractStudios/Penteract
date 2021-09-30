@@ -4,6 +4,7 @@
 
 class ComponentVideo;
 class GameObject;
+class CanvasFader;
 
 class VideoScene1Start : public Script
 {
@@ -16,10 +17,12 @@ public:
 
 public:
 	UID canvasFaderUID = 0;
+private: 
+	void BackToNormalGameplay();
 
 private:
 	ComponentVideo* componentVideo = nullptr;
 	GameObject* parent = nullptr;
-
+	CanvasFader* faderScript = nullptr;
 };
 
