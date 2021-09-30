@@ -120,7 +120,7 @@ void AttackDronesController::RemoveDrone() {
     GameplaySystems::DestroyGameObject(droneToDestroy);
 
     RecalculateFormations();
-    RepositionDrones();
+    RepositionDrones(); 
 }
 
 void AttackDronesController::RecalculateFormations() {
