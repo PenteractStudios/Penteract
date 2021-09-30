@@ -55,6 +55,11 @@
                 "Script": 14370151214457210467,
                 "Values": [
                     {
+                        "Name": "toggleShield",
+                        "Type": "Bool",
+                        "Value": false
+                    },
+                    {
                         "Name": "dukeCharacter.chargeSpeed",
                         "Type": "Float",
                         "Value": 14.0
@@ -73,6 +78,11 @@
                         "Name": "playerUID",
                         "Type": "GameObjectUID",
                         "Value": 15261592491771467264
+                    },
+                    {
+                        "Name": "barrelUID",
+                        "Type": "PrefabResourceUID",
+                        "Value": 15155939258575185893
                     },
                     {
                         "Name": "shieldCooldown",
@@ -107,12 +117,12 @@
                     {
                         "Name": "abilityChangeCooldown",
                         "Type": "Float",
-                        "Value": 7.0
+                        "Value": 5.0
                     },
                     {
                         "Name": "dukeCharacter.attackSpeed",
                         "Type": "Float",
-                        "Value": 1.0
+                        "Value": 3.0
                     },
                     {
                         "Name": "bulletPrefabUID",
@@ -137,12 +147,52 @@
                     {
                         "Name": "dukeCharacter.pushBackSpeed",
                         "Type": "Float",
-                        "Value": 6.0
+                        "Value": 9.0
                     },
                     {
                         "Name": "dukeCharacter.distanceCorrectEvery",
                         "Type": "Float",
                         "Value": 1.0
+                    },
+                    {
+                        "Name": "chargeColliderUID",
+                        "Type": "GameObjectUID",
+                        "Value": 6423596394444815009
+                    },
+                    {
+                        "Name": "orientationSpeed",
+                        "Type": "Float",
+                        "Value": 10.0
+                    },
+                    {
+                        "Name": "dukeCharacter.attackBurst",
+                        "Type": "Int",
+                        "Value": 4
+                    },
+                    {
+                        "Name": "dukeCharacter.timeInterBurst",
+                        "Type": "Float",
+                        "Value": 0.800000011920929
+                    },
+                    {
+                        "Name": "dukeCharacter.slowedDownSpeed",
+                        "Type": "Float",
+                        "Value": 2.5
+                    },
+                    {
+                        "Name": "shieldActiveTime",
+                        "Type": "Float",
+                        "Value": 7.0
+                    },
+                    {
+                        "Name": "bulletHellActiveTime",
+                        "Type": "Float",
+                        "Value": 7.0
+                    },
+                    {
+                        "Name": "throwBarrelTimer",
+                        "Type": "Float",
+                        "Value": 2.5
                     }
                 ]
             },
@@ -3082,7 +3132,7 @@
                         "Position": [
                             0.0,
                             14.331000328063965,
-                            -24.0
+                            -3.549999952316284
                         ],
                         "Rotation": [
                             4.371138473402425e-8,
@@ -3126,14 +3176,14 @@
                         "layerType": 4,
                         "mass": 1.0,
                         "size": [
-                            5.400000095367432,
+                            5.599999904632568,
                             4.75,
                             0.75
                         ],
                         "centerOffset": [
                             0.0,
                             2.299999952316284,
-                            3.0
+                            3.0999999046325685
                         ],
                         "freezeRotation": false
                     },
@@ -3165,6 +3215,66 @@
                                 "Type": "Float",
                                 "Value": 0.6499999761581421
                             },
+                            {
+                                "Name": "dukeUID",
+                                "Type": "GameObjectUID",
+                                "Value": 1727168639637301665
+                            }
+                        ]
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "DukeCharge",
+                "Active": false,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": false,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "SphereCollider",
+                        "Active": false,
+                        "colliderType": 2,
+                        "layerType": 6,
+                        "mass": 1.0,
+                        "radius": 2.9100000858306886,
+                        "centerOffset": [
+                            0.0,
+                            2.0,
+                            0.20000000298023225
+                        ],
+                        "freezeRotation": false
+                    },
+                    {
+                        "Type": "Script",
+                        "Active": false,
+                        "Script": 3178110729551478458,
+                        "Values": [
                             {
                                 "Name": "dukeUID",
                                 "Type": "GameObjectUID",

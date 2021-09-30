@@ -117,6 +117,8 @@ private:
 
 	float stunTimeRemaining = 0.f;
 
+	float timeSinceLastCharge = 0.f;
+
 	// Onimaru blast effect
 	float currentPushBackDistance = 0.f;
 	float currentSlowedDownTime = 0.f;

@@ -44,8 +44,7 @@ public:
 		, attackRange(attackRange_)
 		, timeToDie(timeToDie_)
 		, pushBackDistance(pushBackDistance_)
-		, pushBackSpeed(pushBackSpeed_)
-		, damageCharge(damageCharge_) {
+		, pushBackSpeed(pushBackSpeed_) {
 		lifePoints = lifePoints_;
 		movementSpeed = movementSpeed_;
 		damageHit = damageHit_;
@@ -53,17 +52,18 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void BulletHell();
-	void Charge(DukeState nextState);
+	void InitCharge(DukeState nextState);
+	void UpdateCharge(bool forceStop = false);
+	void EndCharge();
 	void CallTroops();
 	void Shoot();
 	void ThrowBarrels();
 
 public:
-	float damageCharge = 1.f;
 	float chargeSpeed = 5.f;
 	float searchRadius = 8.f;
 	float attackRange = 2.0f;
@@ -85,11 +85,13 @@ public:
 	// Effects' states
 	bool beingPushed = false;
 	bool slowedDown = false;
+	bool reducedDamaged = false;
 
 	float3 chargeTarget;
 
 private:
 	GameObject* player = nullptr;
+	GameObject* chargeCollider = nullptr;
 	ComponentTransform* dukeTransform = nullptr;
 
 	float3 perpendicular;
@@ -109,6 +111,7 @@ private:
 	//Audios
 	ComponentAudioSource* dukeAudios[static_cast<int>(DUKE_AUDIOS::TOTAL)] = { nullptr };
 
+	DukeState nextState = DukeState::BASIC_BEHAVIOUR;
 	std::random_device rd;
 	std::minstd_rand gen;
 };

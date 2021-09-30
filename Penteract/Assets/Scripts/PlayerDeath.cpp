@@ -16,6 +16,7 @@ EXPOSE_MEMBERS(PlayerDeath) {
 	MEMBER(MemberType::FLOAT, rangedDamageTaken),
 	MEMBER(MemberType::FLOAT, meleeDamageTaken),
 	MEMBER(MemberType::FLOAT, dukeDamageTaken),
+	MEMBER(MemberType::FLOAT, dukeChargeDamageTaken),
 	MEMBER(MemberType::FLOAT, barrelDamageTaken),
 	MEMBER(MemberType::FLOAT, laserBeamTaken),
 	MEMBER(MemberType::FLOAT, laserHitCooldown),
@@ -142,6 +143,17 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 		if (pSystem) pSystem->KillParticle(p);
 		if (playerController) playerController->TakeDamage(dukeDamageTaken);
+	} else if (collidedWith.name == "DukeCharge") {
+		if (playerController) {
+			playerController->TakeDamage(dukeChargeDamageTaken);
+			// Push the player a little bit
+			float3 truePenetrationDistance = penetrationDistance.ProjectTo(collisionNormal);
+			playerController->playerFang.IsActive() ? playerController->playerFang.agent->RemoveAgentFromCrowd() : playerController->playerOnimaru.agent->RemoveAgentFromCrowd();
+			ComponentTransform* playerTransform = playerController->playerFang.playerMainTransform;
+			playerTransform->SetGlobalPosition(playerTransform->GetGlobalPosition() + 8 * truePenetrationDistance);
+			playerController->playerFang.IsActive() ? playerController->playerFang.agent->AddAgentToCrowd() : playerController->playerOnimaru.agent->AddAgentToCrowd();
+		}
+
 	}
 }
 
