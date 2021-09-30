@@ -11,6 +11,8 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, shieldObjUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, bulletUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, firstEncounterUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, secondEncounterUID),
 
 	MEMBER_SEPARATOR("Duke Atributes"),
 	MEMBER(MemberType::FLOAT, dukeCharacter.lifePoints),
@@ -61,6 +63,10 @@ void AIDuke::Start() {
 	movementScript = GET_SCRIPT(&GetOwner(), AIMovement);
 
 	ownerTransform = GetOwner().GetComponent<ComponentTransform>();
+
+	/* Encounters */
+	firstEncounter = GameplaySystems::GetGameObject(firstEncounterUID);
+	secondEncounter = GameplaySystems::GetGameObject(secondEncounterUID);
 
 	// Debug
 	GameObject* shieldObj = GameplaySystems::GetGameObject(shieldObjUID);
@@ -119,6 +125,7 @@ void AIDuke::Update() {
 			activeFireTiles = false;
 			Debug::Log("Fire tiles disabled");
 			movementScript->Stop();
+			if(firstEncounter && !firstEncounter->IsActive()) firstEncounter->Enable();
 			dukeCharacter.CallTroops();
 			dukeCharacter.state = DukeState::INVULNERABLE;
 			if (dukeShield && dukeShield->GetIsActive()) dukeShield->FadeShield();
@@ -237,6 +244,7 @@ void AIDuke::Update() {
 			dukeCharacter.criticalMode = !dukeCharacter.criticalMode;
 			lifeThreshold -= 0.1f;
 			if (!dukeCharacter.criticalMode) {
+				if(secondEncounter && !secondEncounter->IsActive()) secondEncounter->Enable();
 				dukeCharacter.CallTroops();
 				if (dukeShield) dukeShield->InitShield();
 				dukeCharacter.state = DukeState::SHOOT_SHIELD;
