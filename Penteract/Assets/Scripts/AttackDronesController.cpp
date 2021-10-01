@@ -234,14 +234,14 @@ void AttackDronesController::StartWave() {
 			float multiplier = -1.0f;
 
 			for (int i = 0; i < dronesScripts.size(); ++i) {
-				Debug::Log(std::to_string(orderedI).c_str());
+				Debug::Log(std::to_string(accumulatedDelay).c_str());
 				dronesScripts[i]->StartWave(waves, accumulatedDelay, timeBetweenWaves);
 				
 				if (i == dronesScripts.size() / 2) {
 					multiplier = 1.0f;
 				}
 
-				if (hasEvenDrones && i == (dronesScripts.size() / 2)) {
+				if (hasEvenDrones && i == (dronesScripts.size() / 2) - 1) {
 					orderedI--;
 					multiplier = 1.0f;
 				}
