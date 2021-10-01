@@ -17,6 +17,7 @@ public:
 
 	void Reposition(float3 newPosition);
 	void SetPositionOffset(float3 newOffset);
+	void SetMustForceRotation(bool mustForce);
 	void Shoot();
 	void StartWave(int newWaves, float bulletDelay, float timeBetweenWaves);
 
@@ -32,13 +33,13 @@ private:
 	ComponentTransform* dronesControllerTransform = nullptr;
 	ComponentTransform* transform = nullptr;
 
-	//ComponentParticleSystem* shooter = nullptr;
-
 	ProjectileController shooter;
 
 	bool mustReposition = false;
 	float3 currentPosition = float3(0.0f, 0.0f, 0.0f);
 	float3 positionOffset = float3(0.0f, 0.0f, 0.0f);
+
+	bool mustForceRotation = false;
 
 	// Shooting
 	int remainingWaves = 0;

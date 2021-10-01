@@ -70,6 +70,6 @@ private:
 	std::vector<std::vector<float3>> formationsOffsetPositions;
 
 	// Wave cycle
-	WaveCycle cycle = WaveCycle::CENTERED;
+	WaveCycle cycle = WaveCycle::LEFT_TO_RIGHT;
 };
 

@@ -196,6 +196,7 @@ std::vector<float3> AttackDronesController::GenerateCircleFormation() {
 
         result[i] = float3x3::RotateY(transform->GetGlobalRotation().ToEulerXZY().z) * (float3(cos(angle), 0.0f, sin(angle)) * droneRadiusFormation);
         result[i] += float3(0.0f, GetVerticalOffset(), 0.0f);
+        if (formation == DronesFormation::CIRCLE) dronesScripts[i]->SetMustForceRotation(true);
     }
 
     return result;
@@ -227,30 +228,29 @@ void AttackDronesController::StartWave() {
 			break;
 		}
 
-        case WaveCycle::CENTERED:
-			bool hasEvenDrones = dronesScripts.size() % 2 == 0;
-			float orderedI = dronesScripts.size() / 2 - (hasEvenDrones ? 1 : 0);
-			float accumulatedDelay = orderedI * shotDelay;
-			float multiplier = -1.0f;
+        case WaveCycle::CENTERED: {
+            bool hasEvenDrones = dronesScripts.size() % 2 == 0;
+            float orderedI = dronesScripts.size() / 2 - (hasEvenDrones ? 1 : 0);
+            float accumulatedDelay = orderedI * shotDelay;
+            float multiplier = -1.0f;
 
-			for (int i = 0; i < dronesScripts.size(); ++i) {
-				Debug::Log(std::to_string(accumulatedDelay).c_str());
-				dronesScripts[i]->StartWave(waves, accumulatedDelay, timeBetweenWaves);
-				
-				if (i == dronesScripts.size() / 2) {
-					multiplier = 1.0f;
-				}
+            for (int i = 0; i < dronesScripts.size(); ++i) {
+                dronesScripts[i]->StartWave(waves, accumulatedDelay, timeBetweenWaves);
 
-				if (hasEvenDrones && i == (dronesScripts.size() / 2) - 1) {
-					orderedI--;
-					multiplier = 1.0f;
-				}
+                if (i == dronesScripts.size() / 2) {
+                    multiplier = 1.0f;
+                }
 
-				orderedI += multiplier;
-				accumulatedDelay = shotDelay * orderedI;
-			}
+                if (hasEvenDrones && i == (dronesScripts.size() / 2) - 1) {
+                    orderedI--;
+                    multiplier = 1.0f;
+                }
 
+                orderedI += multiplier;
+                accumulatedDelay = shotDelay * orderedI;
+            }
             break;
+        }
     }
 
     
