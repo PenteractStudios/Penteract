@@ -438,6 +438,7 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 		}
 	}
 }
+
 void AIMeleeGrunt::EnablePushFeedback() {
 	if (timeToSrartPush < 0) {
 		pushEffectHasToStart = false;
@@ -447,6 +448,7 @@ void AIMeleeGrunt::EnablePushFeedback() {
 		timeToSrartPush -= Time::GetDeltaTime(); 
 	}
 }
+
 void AIMeleeGrunt::EnableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		gruntCharacter.beingPushed = true;
