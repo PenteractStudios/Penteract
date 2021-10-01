@@ -86,6 +86,8 @@ public:
 
 	bool toggleShield = false;
 
+	UID winSceneUID = 0;
+
 private:
 
 	ComponentTransform* ownerTransform = nullptr;
