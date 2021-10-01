@@ -162,7 +162,7 @@ void Onimaru::StartUltimate() {
 		hudManagerScript->StartUsingSkill(HUDManager::Cooldowns::ONIMARU_SKILL_3);
 	}
 
-	if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::ULTIMATE)] == nullptr) {
+	if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::ULTIMATE)] != nullptr) {
 		if (!onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::ULTIMATE)]->IsPlaying()) {
 			onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::ULTIMATE)]->Play();
 		}
