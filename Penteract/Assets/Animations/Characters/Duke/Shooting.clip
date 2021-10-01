@@ -1,0 +1,23 @@
+{
+    "Name": "Shooting",
+    "AnimationUID": 3797775895440340977,
+    "BeginIndex": 135,
+    "EndIndex": 150,
+    "Loop": true,
+    "Speed": 1.0,
+    "FrameRate": 0.041631944477558139,
+    "KeyEventClip": [
+        {
+            "KeyFrame": 136,
+            "Name": "TopGun"
+        },
+        {
+            "KeyFrame": 141,
+            "Name": "LeftGun"
+        },
+        {
+            "KeyFrame": 145,
+            "Name": "RightGun"
+        }
+    ]
+}

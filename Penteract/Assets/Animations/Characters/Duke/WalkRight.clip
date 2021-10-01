@@ -1,0 +1,19 @@
+{
+    "Name": "WalkRight",
+    "AnimationUID": 3797775895440340977,
+    "BeginIndex": 37,
+    "EndIndex": 67,
+    "Loop": true,
+    "Speed": 1.0,
+    "FrameRate": 0.041631944477558139,
+    "KeyEventClip": [
+        {
+            "KeyFrame": 52,
+            "Name": "FootstepLeft"
+        },
+        {
+            "KeyFrame": 66,
+            "Name": "FootstepRight"
+        }
+    ]
+}

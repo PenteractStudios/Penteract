@@ -1,0 +1,19 @@
+{
+    "Name": "WalkForwardNoAim",
+    "AnimationUID": 3797775895440340977,
+    "BeginIndex": 1029,
+    "EndIndex": 1059,
+    "Loop": true,
+    "Speed": 1.0,
+    "FrameRate": 0.041631944477558139,
+    "KeyEventClip": [
+        {
+            "KeyFrame": 1044,
+            "Name": "FootstepLeft"
+        },
+        {
+            "KeyFrame": 1058,
+            "Name": "FootstepRight"
+        }
+    ]
+}
