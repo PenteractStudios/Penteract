@@ -52,6 +52,9 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
 	MEMBER(MemberType::FLOAT, groundPosition),
 	MEMBER(MemberType::FLOAT, fleeingUpdateTime),
+	MEMBER_SEPARATOR("Push Random Feedback"),
+	MEMBER(MemberType::FLOAT, minTimePushEffect),
+	MEMBER(MemberType::FLOAT, maxTimePushEffect),
 	MEMBER_SEPARATOR("Dissolve properties"),
 	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialObj),
 	MEMBER(MemberType::FLOAT, dissolveTimerToStart)
@@ -358,6 +361,8 @@ void RangedAI::Update() {
 	}
 
 	UpdateState();
+	if (pushEffectHasToStart)EnablePushFeedback();
+
 }
 
 void RangedAI::EnterState(AIState newState) {
@@ -627,10 +632,21 @@ void RangedAI::PlayAudio(AudioType audioType) {
 	if (audios[static_cast<int>(audioType)]) audios[static_cast<int>(audioType)]->Play();
 }
 
+void RangedAI::EnablePushFeedback() {
+	if (timeToSrartPush < 0) {
+		pushEffectHasToStart = false;
+		if (particlesPush) particlesPush->PlayChildParticles();
+	}
+	else {
+		timeToSrartPush -= Time::GetDeltaTime();
+	}
+}
+
 void RangedAI::EnableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		ChangeState(AIState::PUSHED);
-		if(particlesPush) particlesPush->PlayChildParticles();
+		pushEffectHasToStart = true;
+		timeToSrartPush = (minTimePushEffect + 1) + (((float)rand()) / (float)RAND_MAX) * (maxTimePushEffect - (minTimePushEffect + 1));
 		rangerGruntCharacter.beingPushed = true;
 		CalculatePushBackRealDistance();
 		// Damage

@@ -41,6 +41,7 @@ public:
 	void OnCollision(GameObject& collidedWith, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* particle = nullptr) override; //This is commented until merge with collisions
 	void ShootPlayerInRange(); //Sets in motion the shooting at the player, if found and close enough
 
+	void EnablePushFeedback();
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
@@ -123,6 +124,8 @@ public:
 	//Push Stun feedback
 	ComponentParticleSystem* particlesPush = nullptr;
 	GameObject* objectPush = nullptr;
+	float maxTimePushEffect = 1.0f;
+	float minTimePushEffect = 0.0f;
 
 private:
 
@@ -161,4 +164,7 @@ private:
 	float currentDissolveTime = 0.0f;
 	bool dissolveAlreadyStarted = false;	//Used to control other material setters so it doesn't interfere with Dissolve's material
 	bool dissolveAlreadyPlayed = false;		//Controls whether the animation function has already been played (called material->PlayAnimation) or not
+
+	bool  pushEffectHasToStart = false;
+	float timeToSrartPush = 0.0f;
 };
