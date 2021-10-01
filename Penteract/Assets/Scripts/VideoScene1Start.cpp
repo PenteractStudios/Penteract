@@ -47,7 +47,7 @@ void VideoScene1Start::Start() {
         }
     }
 
-    GameController::BlockGameplay(true);
+    GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, true);
 }
 
 void VideoScene1Start::Update() {
@@ -66,7 +66,7 @@ void VideoScene1Start::BackToNormalGameplay() {
         faderScript->FadeIn();
     }
 
-    GameController::BlockGameplay(false);
+    GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, false);
   
     // When the video finishes, open the initial dialogue directly
     if (dialogueManagerScript) {

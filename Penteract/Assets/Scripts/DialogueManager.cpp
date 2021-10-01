@@ -315,7 +315,7 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 		uiComponents.clear();
 		uiColors.clear();
 		RetrieveUIComponents(activeDialogueObject);
-		GameController::BlockGameplay(dialogue->isBlocking);
+		GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, dialogue->isBlocking);
 
 		// Camera Zoom In
 		if (cameraControllerScript) {
@@ -327,7 +327,7 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 		}
 	} else {
 		activeDialogueObject = nullptr;
-		GameController::BlockGameplay(false);
+		GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, false);
 		GameController::ActivateSwitchTutorial(false);
 
 		// Camera Zoom Out

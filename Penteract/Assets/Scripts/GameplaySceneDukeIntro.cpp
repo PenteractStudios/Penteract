@@ -5,6 +5,7 @@
 #include "AIMovement.h"
 #include "Components/ComponentAgent.h"
 #include "Components/UI/ComponentVideo.h"
+#include "GlobalVariables.h"
 
 EXPOSE_MEMBERS(GameplaySceneDukeIntro) {
     MEMBER_SEPARATOR("Object Refs"),
@@ -44,7 +45,7 @@ void GameplaySceneDukeIntro::Start() {
 void GameplaySceneDukeIntro::Update() {
     if (!dukeAgent || !player || !videoIntro || !movementScript || !encounterPlaza) return;
     if (!videoIntro->HasVideoFinished()) return;
-    if (GameController::IsGameplayBlocked()) return;
+    if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) return;
 
     // Make Duke move away
     movementScript->Seek(state, dukeRunTowards, dukeAgent->GetMaxSpeed(), true);

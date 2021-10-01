@@ -38,8 +38,7 @@ void GameController::Start() {
 
 	showWireframe = false;
 	transitionFinished = false;
-	
-	isGameplayBlocked = false;
+	GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, false);
 	switchTutorialActive = false;
 
 	if (PlayerController::currentLevel == 1) {
@@ -253,8 +252,8 @@ void GameController::PauseGame() {
 	Time::PauseGame();
 	EnablePauseMenus();
 	isPaused = true;
-	if (isGameplayBlocked) gameplayWasAlreadyBlocked = true;
-	else isGameplayBlocked = true;
+	if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) gameplayWasAlreadyBlocked = true;
+	else GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, true);
 }
 
 void GameController::ResumeGame() {
@@ -262,15 +261,7 @@ void GameController::ResumeGame() {
 	ClearPauseMenus();
 	isPaused = false;
 	if (gameplayWasAlreadyBlocked) gameplayWasAlreadyBlocked = false;
-	else isGameplayBlocked = false;
-}
-
-bool const GameController::IsGameplayBlocked() {
-	return isGameplayBlocked;
-}
-
-void GameController::BlockGameplay(bool blockIt) {
-	isGameplayBlocked = blockIt;
+	else GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, false);
 }
 
 bool const GameController::IsSwitchTutorialActive() {
