@@ -1,0 +1,9 @@
+{
+    "Name": "Stun",
+    "AnimationUID": 3797775895440340977,
+    "BeginIndex": 800,
+    "EndIndex": 880,
+    "Loop": true,
+    "Speed": 1.0,
+    "FrameRate": 0.041631944477558139
+}

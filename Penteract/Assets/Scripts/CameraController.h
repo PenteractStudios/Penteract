@@ -41,8 +41,6 @@ public:
 	float aimingPositionX = 0.0f;
 	float aimingPositionZ = 0.0;
 
-	float3 aimingPosition = float3(0.0f, 0.0f, 0.0f);
-
 private:
 	float2 GetRandomPosInUnitaryCircle(float2 center);
 	float shakeMultiplierStoredValue = 0.2f;

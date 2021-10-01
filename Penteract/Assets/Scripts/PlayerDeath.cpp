@@ -112,7 +112,7 @@ void PlayerDeath::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char
 	}
 }
 
-void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 /* penetrationDistance */, void* particle) {
 	if (collidedWith.name == "WeaponParticles") {
 		if (!particle) return;
 		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;

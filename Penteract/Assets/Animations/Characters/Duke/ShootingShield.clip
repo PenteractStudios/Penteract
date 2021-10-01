@@ -1,0 +1,23 @@
+{
+    "Name": "ShootShield",
+    "AnimationUID": 3797775895440340977,
+    "BeginIndex": 151,
+    "EndIndex": 166,
+    "Loop": true,
+    "Speed": 1.0,
+    "FrameRate": 0.041631944477558139,
+    "KeyEventClip": [
+        {
+            "KeyFrame": 152,
+            "Name": "TopGun"
+        },
+        {
+            "KeyFrame": 156,
+            "Name": "LeftGun"
+        },
+        {
+            "KeyFrame": 161,
+            "Name": "RightGun"
+        }
+    ]
+}

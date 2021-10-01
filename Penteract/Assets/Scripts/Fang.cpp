@@ -466,7 +466,7 @@ bool Fang::CanUltimate() {
 	return !dashing && !EMP->IsActive() && ultimateCooldownRemaining >= ultimateCooldown && !ultimateOn && !GameController::IsGameplayBlocked() && !switchInProgress;
 }
 
-void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
+void Fang::Update(bool useGamepad, bool /* lockMovement */, bool /* lockRotation */) {
 	if (isAlive) {
 		if (ultimateOn) {
 			ultimateTimeRemaining -= Time::GetDeltaTime();

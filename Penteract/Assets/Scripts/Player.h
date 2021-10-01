@@ -45,14 +45,14 @@ public:
 
 	// ------- Core Functions ------ //
 	void SetAttackSpeed(float attackSpeed_);
-	virtual void GetHit(float damage_) override;
+	virtual void GetHit(float /* damage_ */) override;
 
 	void LookAtMouse();
 	MovementDirection GetInputMovementDirection(bool useGamepad) const;
 	float3 GetDirection() const;
 	virtual void Shoot() {}
 	virtual void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockRotation = false);
-	virtual void CheckCoolDowns(bool noCooldownMode = false) {}
+	virtual void CheckCoolDowns(bool /* noCooldownMode = false */) {}
 	virtual bool CanSwitch() const = 0;
 
 	virtual void OnAnimationFinished() = 0;
@@ -64,10 +64,10 @@ public:
 	bool IsActive();
 	static bool GetInputBool(InputActions action, bool useGamepad = false);
 	float2 GetInputFloat2(InputActions action, bool useGamepad = false) const;
-	void UpdateFacePointDir(bool useGamepad, bool faceToFront = false);
+	void UpdateFacePointDir(bool useGamepad, bool faceToFront_ = false);
 	virtual void IncreaseUltimateCounter();
-	void SetClipSpeed(ResourceClip* clip, float movementSpeed) {
-		clip->speed = movementSpeed * animationSpeedFactor;
+	void SetClipSpeed(ResourceClip* clip, float speed) {
+		clip->speed = speed * animationSpeedFactor;
 	}
 
 public:

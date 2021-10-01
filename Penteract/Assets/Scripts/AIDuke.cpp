@@ -47,7 +47,9 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, barrelUID),
 
 	MEMBER_SEPARATOR("Debug"),
-	MEMBER(MemberType::BOOL, toggleShield)
+	MEMBER(MemberType::BOOL, toggleShield),
+	MEMBER(MemberType::SCENE_RESOURCE_UID, winSceneUID),
+
 
 };
 
@@ -261,6 +263,7 @@ void AIDuke::Update() {
 			Debug::Log("Ugh...I'm...Dead...");
 			if (playerController) playerController->RemoveEnemyFromMap(duke);
 			GameplaySystems::DestroyGameObject(duke);
+			SceneManager::ChangeScene(winSceneUID); // TODO: Replace with the correct trigger (for the video or whatever)
 		}
 		if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints()) {
 			dukeCharacter.criticalMode = !dukeCharacter.criticalMode;

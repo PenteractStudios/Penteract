@@ -7,7 +7,7 @@
 #include "Geometry/LineSegment.h"
 #include "Geometry/Plane.h"
 
-#define PI 3.14159
+#define PI 3.14159f
 
 
 EXPOSE_MEMBERS(CameraController) {
@@ -105,7 +105,7 @@ float2 CameraController::GetRandomPosInUnitaryCircle(float2 center) {
 	float random2 = (static_cast<float>(rand() % 101)) / 100.0f;
 
 	float r = sqrt(random);
-	float theta = random2 * 2 * PI;
+	float theta = random2 * 2.0f * PI;
 	float x = center.x + r * cos(theta);
 	float y = center.y + r * sin(theta);
 
