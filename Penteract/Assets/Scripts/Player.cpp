@@ -1,7 +1,6 @@
 #include "Player.h"
 
 #include "CameraController.h"
-#include "GameController.h"
 #include "Geometry/Plane.h"
 #include "Geometry/Frustum.h"
 #include "Geometry/LineSegment.h"

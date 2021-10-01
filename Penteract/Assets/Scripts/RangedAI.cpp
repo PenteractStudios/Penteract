@@ -1,6 +1,5 @@
 #include "RangedAI.h"
 
-#include "GameController.h"
 #include "PlayerController.h"
 #include "PlayerDeath.h"
 #include "HUDController.h"

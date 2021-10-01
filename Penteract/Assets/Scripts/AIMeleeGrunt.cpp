@@ -2,7 +2,6 @@
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
-#include "GameController.h"
 #include "PlayerController.h"
 #include "PlayerDeath.h"
 #include "EnemySpawnPoint.h"
