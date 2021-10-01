@@ -35,10 +35,11 @@ public:
 	PlayerController* playerController = nullptr;
 
 	UID particlesColliderUID = 0;
+	UID particlesUpgradeColliderUID = 0;
+	ResourcePrefab* particlesReboundCollider = nullptr;
 	ResourcePrefab* particlesCollider = nullptr;
 
 private:
 	bool isActive = false;
-	ComponentAudioSource* audio;
-
+	ComponentAudioSource* audio = nullptr;
 };

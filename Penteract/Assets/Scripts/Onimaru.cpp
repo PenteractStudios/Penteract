@@ -162,7 +162,7 @@ void Onimaru::StartUltimate() {
 		hudManagerScript->StartUsingSkill(HUDManager::Cooldowns::ONIMARU_SKILL_3);
 	}
 
-	if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::ULTIMATE)] == nullptr) {
+	if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::ULTIMATE)] != nullptr) {
 		if (!onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::ULTIMATE)]->IsPlaying()) {
 			onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::ULTIMATE)]->Play();
 		}
@@ -503,7 +503,7 @@ void Onimaru::FadeShield() {
 	shieldGO->Disable();
 }
 
-void Onimaru::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
+void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */) {
 	if (shield == nullptr || shieldGO == nullptr) return;
 	if (isAlive) {
 		Player::Update(useGamepad, lockMovement, false);

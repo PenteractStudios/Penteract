@@ -81,7 +81,7 @@ void Barrel::Update() {
 
 }
 
-void Barrel::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle)
+void Barrel::OnCollision(GameObject& collidedWith, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* particle)
 {
 	if (particle) {
 		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;

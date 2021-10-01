@@ -316,16 +316,16 @@ void AIMeleeGrunt::OnAnimationFinished() {
 	}
 }
 
-void AIMeleeGrunt::ParticleHit(GameObject& collidedWith, void* particle, Player& player) {
+void AIMeleeGrunt::ParticleHit(GameObject& collidedWith, void* particle, Player& player_) {
 	if (!particle) return;
 	ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 	if (pSystem) pSystem->KillParticle(p);
-	if (state == AIState::STUNNED && player.level2Upgrade) {
+	if (state == AIState::STUNNED && player_.level2Upgrade) {
 		gruntCharacter.GetHit(99);
 	}
 	else {
-		gruntCharacter.GetHit(player.damageHit + playerController->GetOverPowerMode());
+		gruntCharacter.GetHit(player_.damageHit + playerController->GetOverPowerMode());
 	}
 }
 
@@ -357,10 +357,9 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 				hitTaken = true;
 				gruntCharacter.GetHit(playerController->playerFang.dashDamage + playerController->GetOverPowerMode());
 			}
-			else if (collidedWith.name == "RangerProjectile" && playerController->playerOnimaru.level1Upgrade) {
+			else if (collidedWith.name == "WeaponParticles" && playerController->playerOnimaru.level1Upgrade) {
 				hitTaken = true;
-				gruntCharacter.GetHit(playerController->playerOnimaru.shieldReboundedDamage + playerController->GetOverPowerMode());
-				GameplaySystems::DestroyGameObject(&collidedWith);
+				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
 			}
 			else if (collidedWith.name == "VFXShield") {
 				if (state == AIState::RUN) {
@@ -495,7 +494,7 @@ void AIMeleeGrunt::CalculatePushBackRealDistance() {
 void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
 	switch (stateMachineEnum)
 	{
-	case PRINCIPAL:
+	case StateMachineEnum::PRINCIPAL:
 		if (strcmp(eventName,"FootstepRight") == 0) {
 			if (audios[static_cast<int>(AudioType::FOOTSTEP_RIGHT)]) audios[static_cast<int>(AudioType::FOOTSTEP_RIGHT)]->Play();
 		}
