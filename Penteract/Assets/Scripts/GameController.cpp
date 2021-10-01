@@ -6,6 +6,7 @@
 #include "GameplaySystems.h"
 #include "StatsDisplayer.h"
 #include "PauseController.h"
+#include "GlobalVariables.h"
 
 #include "Math/float3x3.h"
 #include "Geometry/frustum.h"
@@ -37,11 +38,21 @@ void GameController::Start() {
 
 	showWireframe = false;
 	transitionFinished = false;
+	
 	isGameplayBlocked = false;
 	switchTutorialActive = false;
 
-	if (PlayerController::currentLevel == 1) switchTutorialReached = false;
-	else switchTutorialReached = true;
+	if (PlayerController::currentLevel == 1) {
+		GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, false);
+		GameplaySystems::SetGlobalVariable(globalSkill2TutorialReached, false);
+		GameplaySystems::SetGlobalVariable(globalSkill3TutorialReached, false);
+		GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, false);
+	} else {
+		GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, true);
+		GameplaySystems::SetGlobalVariable(globalSkill2TutorialReached, true);
+		GameplaySystems::SetGlobalVariable(globalSkill3TutorialReached, true);
+		GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, true);
+	}
 
 	gameCamera = GameplaySystems::GetGameObject(gameCameraUID);
 	godCamera = GameplaySystems::GetGameObject(godCameraUID);
@@ -268,14 +279,6 @@ bool const GameController::IsSwitchTutorialActive() {
 
 void GameController::ActivateSwitchTutorial(bool isFinished) {
 	switchTutorialActive = isFinished;
-}
-
-bool const GameController::IsSwitchTutorialReached() {
-	return switchTutorialReached;
-}
-
-void GameController::ReachSwitchTutorial(bool isReached) {
-	switchTutorialReached = isReached;
 }
 
 void GameController::SetVideoActive(bool isActived)

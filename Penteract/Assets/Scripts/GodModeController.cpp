@@ -4,6 +4,7 @@
 
 #include "GameplaySystems.h"
 #include "GameObject.h"
+#include "GlobalVariables.h"
 
 #include "Components/UI/ComponentToggle.h"
 
@@ -111,9 +112,24 @@ void GodModeController::OnChildToggle(unsigned int index, bool isChecked) {
 	case 3:
 		if (isChecked) {
 			if (dialogTriggers) dialogTriggers->Enable();
+			// Recover skills activation state
+			GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, skill1WasActive);
+			GameplaySystems::SetGlobalVariable(globalSkill2TutorialReached, skill2WasActive);
+			GameplaySystems::SetGlobalVariable(globalSkill3TutorialReached, skill3WasActive);
+			GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, switchWasActive);
 		}
 		else {
 			if (dialogTriggers) dialogTriggers->Disable();
+			// Store previous tutorials state
+			skill1WasActive = GameplaySystems::GetGlobalVariable(globalSkill1TutorialReached, true);
+			skill2WasActive = GameplaySystems::GetGlobalVariable(globalSkill2TutorialReached, true);
+			skill3WasActive = GameplaySystems::GetGlobalVariable(globalSkill3TutorialReached, true);
+			switchWasActive = GameplaySystems::GetGlobalVariable(globalSwitchTutorialReached, true);
+			// Activate all skills
+			GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, true);
+			GameplaySystems::SetGlobalVariable(globalSkill2TutorialReached, true);
+			GameplaySystems::SetGlobalVariable(globalSkill3TutorialReached, true);
+			GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, true);
 		}
 		break;
 	case 4:

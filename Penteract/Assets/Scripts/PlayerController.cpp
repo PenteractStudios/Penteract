@@ -9,6 +9,7 @@
 #include "OnimaruBullet.h"
 #include "SwitchParticles.h"
 #include "GameController.h"
+#include "GlobalVariables.h"
 
 #include "Math/Quat.h"
 #include "Geometry/Plane.h"
@@ -179,7 +180,7 @@ float PlayerController::GetFangMaxHealth() const {
 }
 
 bool PlayerController::IsPlayerDead() {
-	return !playerFang.isAlive && (!playerOnimaru.isAlive || !GameController::IsSwitchTutorialReached());
+	return !playerFang.isAlive && (!playerOnimaru.isAlive || GameplaySystems::GetGlobalVariable(globalSwitchTutorialReached, false));
 }
 
 void PlayerController::SetNoCooldown(bool status) {

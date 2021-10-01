@@ -5,6 +5,7 @@
 #include "HUDManager.h"
 #include "CameraController.h"
 #include "UltimateFang.h"
+#include "GlobalVariables.h"
 
 void Fang::Init(UID fangUID, UID dashParticleUID, UID leftGunUID, UID rightGunUID, UID rightBulletUID, UID leftBulletUID, UID laserUID, UID cameraUID, UID HUDManagerObjectUID, UID dashUID, UID EMPUID, UID EMPEffectsUID, UID fangUltimateUID, UID ultimateVFXUID, UID rightFootVFX, UID leftFootVFX) {
 	SetTotalLifePoints(lifePoints);
@@ -135,7 +136,7 @@ bool Fang::IsVulnerable() const {
 
 bool Fang::CanSwitch() const {
 	if (!EMP) return false;
-	return isAlive && !EMP->IsActive() && !ultimateOn && GameController::IsSwitchTutorialReached() && (!GameController::IsGameplayBlocked() || GameController::IsSwitchTutorialActive());
+	return isAlive && !EMP->IsActive() && !ultimateOn && (!GameController::IsGameplayBlocked() || GameController::IsSwitchTutorialActive()) && GameplaySystems::GetGlobalVariable(globalSwitchTutorialReached, true);
 }
 
 void Fang::IncreaseUltimateCounter() {
@@ -207,7 +208,7 @@ void Fang::Dash() {
 }
 
 bool Fang::CanDash() {
-	return isAlive && !dashing && !dashInCooldown && !EMP->IsActive() && !ultimateOn && !GameController::IsGameplayBlocked();
+	return isAlive && !dashing && !dashInCooldown && !EMP->IsActive() && !ultimateOn && !GameController::IsGameplayBlocked() && GameplaySystems::GetGlobalVariable(globalSkill1TutorialReached, true);;
 }
 
 void Fang::ActivateEMP() {
@@ -228,7 +229,7 @@ void Fang::ActivateEMP() {
 }
 
 bool Fang::CanEMP() {
-	return !EMP->IsActive() && !EMPInCooldown && !dashing && !ultimateOn && !GameController::IsGameplayBlocked();
+	return !EMP->IsActive() && !EMPInCooldown && !dashing && !ultimateOn && !GameController::IsGameplayBlocked() && GameplaySystems::GetGlobalVariable(globalSkill2TutorialReached, true);
 }
 
 void Fang::CheckCoolDowns(bool noCooldownMode) {
@@ -463,7 +464,7 @@ void Fang::ActiveUltimate() {
 }
 
 bool Fang::CanUltimate() {
-	return !dashing && !EMP->IsActive() && ultimateCooldownRemaining >= ultimateCooldown && !ultimateOn && !GameController::IsGameplayBlocked() && !switchInProgress;
+	return !dashing && !EMP->IsActive() && ultimateCooldownRemaining >= ultimateCooldown && !ultimateOn && !GameController::IsGameplayBlocked() && !switchInProgress && GameplaySystems::GetGlobalVariable(globalSkill3TutorialReached, true);
 }
 
 void Fang::Update(bool useGamepad, bool /* lockMovement */, bool /* lockRotation */) {
