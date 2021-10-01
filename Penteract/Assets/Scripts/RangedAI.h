@@ -41,6 +41,7 @@ public:
 	void OnCollision(GameObject& collidedWith, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* particle = nullptr) override; //This is commented until merge with collisions
 	void ShootPlayerInRange(); //Sets in motion the shooting at the player, if found and close enough
 
+	void DoStunned();
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;

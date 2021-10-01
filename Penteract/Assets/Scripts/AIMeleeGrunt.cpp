@@ -401,16 +401,21 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 			}
 
 			if (collidedWith.name == "EMP") {
-				if (state != AIState::STUNNED) {
-					if (animation->GetCurrentState()) {
-						animation->SendTrigger(animation->GetCurrentState()->name + "StunStart");
-					}
-					agent->RemoveAgentFromCrowd();
-					stunTimeRemaining = stunDuration;
-					state = AIState::STUNNED;
-				}
+				DoStunned();
 			}
 		}
+	}
+}
+
+void AIMeleeGrunt::DoStunned()
+{
+	if (state != AIState::STUNNED) {
+		if (animation->GetCurrentState()) {
+			animation->SendTrigger(animation->GetCurrentState()->name + "StunStart");
+		}
+		agent->RemoveAgentFromCrowd();
+		stunTimeRemaining = stunDuration;
+		state = AIState::STUNNED;
 	}
 }
 

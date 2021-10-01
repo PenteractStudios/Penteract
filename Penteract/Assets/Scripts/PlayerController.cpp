@@ -254,13 +254,13 @@ void PlayerController::SwitchCharacter() {
 				RangedAI* rangedScript = GET_SCRIPT(enemy, RangedAI);
 				if (rangedScript || meleeScript) {
 					if (meleeScript) {
-						meleeScript->EnableBlastPushBack();
+						meleeScript->DoStunned();
 						if (switchFirstHit) {
 							meleeScript->gruntCharacter.GetHit(switchDamage);
 							meleeScript->PlayHit();
 						}
 					} else if (rangedScript) {
-						rangedScript->EnableBlastPushBack();
+						rangedScript->DoStunned();
 						if (switchFirstHit) {
 							rangedScript->rangerGruntCharacter.GetHit(switchDamage);
 							rangedScript->PlayHit();
@@ -441,14 +441,5 @@ void PlayerController::Update() {
 void PlayerController::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* /* particle */) {
 	if (collidedWith.name == "MeleeGrunt" || collidedWith.name == "RangedGrunt") {
 		switchCollisionedGO.push_back(&collidedWith);
-		if (playerOnimaru.IsActive()) {
-			ComponentAgent* agent = collidedWith.GetComponent<ComponentAgent>();
-			if (agent) {
-				agent->RemoveAgentFromCrowd();
-				float3 actualPenDistance = -penetrationDistance.ProjectTo(collisionNormal);
-				collidedWith.GetComponent<ComponentTransform>()->SetGlobalPosition(collidedWith.GetComponent<ComponentTransform>()->GetGlobalPosition() + actualPenDistance);
-				agent->AddAgentToCrowd();
-			}
-		}
 	}
 }

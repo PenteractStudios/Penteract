@@ -275,9 +275,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 /* collisionNormal *
 			}
 
 			if (collidedWith.name == "EMP") {
-				if (agent) agent->RemoveAgentFromCrowd();
-				stunTimeRemaining = stunDuration;
-				if (state != AIState::STUNNED) ChangeState(AIState::STUNNED);
+				DoStunned();
 			}
 		}
 	}
@@ -602,6 +600,13 @@ void RangedAI::ActualShot() {
 
 void RangedAI::PlayAudio(AudioType audioType) {
 	if (audios[static_cast<int>(audioType)]) audios[static_cast<int>(audioType)]->Play();
+}
+
+void RangedAI::DoStunned()
+{
+	if (agent) agent->RemoveAgentFromCrowd();
+	stunTimeRemaining = stunDuration;
+	if (state != AIState::STUNNED) ChangeState(AIState::STUNNED);
 }
 
 void RangedAI::EnableBlastPushBack() {
