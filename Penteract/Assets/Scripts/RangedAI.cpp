@@ -68,7 +68,7 @@ void RangedAI::Start() {
 	ownerTransform = GetOwner().GetComponent<ComponentTransform>();
 	fangMeshObj = GameplaySystems::GetGameObject(playerMeshUIDFang);
 	onimaruMeshObj = GameplaySystems::GetGameObject(playerMeshUIDOnimaru);
-	
+
 	weapon = GetOwner().GetChild("Weapon")->GetChild("WeaponParticles");
 	if (weapon) {
 		shootTrailPrefab = weapon->GetComponent<ComponentParticleSystem>();
@@ -264,10 +264,9 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 /* collisionNormal *
 				hitTaken = true;
 				rangerGruntCharacter.GetHit(playerController->playerFang.dashDamage + playerController->GetOverPowerMode());
 			}
-			else if (collidedWith.name == "RangerProjectile" && playerController->playerOnimaru.level1Upgrade) {
+			else if (collidedWith.name == "WeaponParticles" && playerController->playerOnimaru.level1Upgrade) {
 				hitTaken = true;
-				rangerGruntCharacter.GetHit(playerController->playerOnimaru.shieldReboundedDamage + playerController->GetOverPowerMode());
-				GameplaySystems::DestroyGameObject(&collidedWith);
+				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
 			}
 
 			if (hitTaken) {
@@ -738,7 +737,7 @@ void RangedAI::SetRandomMaterial()
 
 
 		if (!materials.empty()) {
-			//Random distribution it cant be saved into global 
+			//Random distribution it cant be saved into global
 			std::random_device rd;  //Will be used to obtain a seed for the random number engine
 			std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
 			std::uniform_int_distribution<int> distrib(1, materials.size());
