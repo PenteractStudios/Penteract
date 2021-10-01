@@ -243,14 +243,16 @@ void GameController::PauseGame() {
 	Time::PauseGame();
 	EnablePauseMenus();
 	isPaused = true;
-	isGameplayBlocked = true;
+	if (isGameplayBlocked) gameplayWasAlreadyBlocked = true;
+	else isGameplayBlocked = true;
 }
 
 void GameController::ResumeGame() {
 	Time::ResumeGame();
 	ClearPauseMenus();
 	isPaused = false;
-	isGameplayBlocked = false;
+	if (gameplayWasAlreadyBlocked) gameplayWasAlreadyBlocked = false;
+	else isGameplayBlocked = false;
 }
 
 bool const GameController::IsGameplayBlocked() {
@@ -308,7 +310,7 @@ void GameController::ClearPauseMenus() {
 		std::vector<GameObject*> settingsChildren = settingsCanvas->GetChildren();
 		if (settingsChildren.size() > 0) {
 			settingsChildren[0]->Enable();		// Enables first screen of CanvasSettingsPlus
-			for (int i = 1; i < settingsChildren.size(); ++i) {
+			for (unsigned i = 1; i < settingsChildren.size(); ++i) {
 				settingsChildren[i]->Disable();
 			}
 		}

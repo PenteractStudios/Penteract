@@ -132,7 +132,7 @@ void FloorIsLava::SetPattern(int pattern, bool*& boolPattern)
 
 void FloorIsLava::UpdateWarningTiles(bool activate)
 {
-	for (int i = 0; i < tiles.size(); ++i) {
+	for (unsigned i = 0; i < tiles.size(); ++i) {
 		if (currentTilesPattern[i]) {
 			if (tiles[i]) {
 				if (activate) {
@@ -152,7 +152,7 @@ void FloorIsLava::UpdateWarningTiles(bool activate)
 
 void FloorIsLava::UpdateFireActiveTiles(bool activate)
 {
-	for (int i = 0; i < tiles.size(); ++i) {
+	for (unsigned i = 0; i < tiles.size(); ++i) {
 		if (currentTilesPattern[i]) {
 			if (tiles[i]) {
 				ComponentBoxCollider* boxCollider = tiles[i]->GetComponent<ComponentBoxCollider>();

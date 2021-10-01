@@ -15,7 +15,7 @@ void UISpriteSheetPlayer::Start() {
 
 	if (frames.size() > 0) {
 		currentFrameObj = frames[0];
-		for (int i = 0; i < frames.size(); i++) {
+		for (unsigned i = 0; i < frames.size(); i++) {
 			frames[i]->Disable();
 		}
 	}

@@ -15,9 +15,9 @@ public:
 
 	virtual void GetHit(float damage_);
 	virtual void OnDeath();
-	void Recover(int recoveryLife_);
+	void Recover(float recoveryLife_);
 
-	void SetTotalLifePoints(int totalLifePoints_);
+	void SetTotalLifePoints(float totalLifePoints_);
 	void SetDamageHit(float damageHit_);
 
 	float GetTotalLifePoints() const;
