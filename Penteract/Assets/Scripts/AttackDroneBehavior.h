@@ -36,9 +36,7 @@ private:
 	ProjectileController shooter;
 
 	bool mustReposition = false;
-	float3 currentPosition = float3(0.0f, 0.0f, 0.0f);
 	float3 positionOffset = float3(0.0f, 0.0f, 0.0f);
-
 	bool mustForceRotation = false;
 
 	// Shooting

@@ -2,6 +2,8 @@
 
 #include "Scripting/Script.h"
 
+#include "Math/Quat.h"
+
 class ComponentTransform;
 class AttackDroneBehavior;
 
@@ -61,6 +63,7 @@ private:
 private:
 	ComponentTransform* transform = nullptr;
 	float3 currentPosition = float3(0.0f, 0.0f, 0.0f);
+	Quat currentRotation = Quat(0.0f, 0.0f, 0.0f, 0.0f);
 	
 	GameObject* dronesParent = nullptr;
 	std::vector<AttackDroneBehavior*> dronesScripts;
@@ -70,6 +73,6 @@ private:
 	std::vector<std::vector<float3>> formationsOffsetPositions;
 
 	// Wave cycle
-	WaveCycle cycle = WaveCycle::LEFT_TO_RIGHT;
+	WaveCycle cycle = WaveCycle::CENTERED;
 };
 

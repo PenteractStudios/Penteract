@@ -43,7 +43,6 @@ void AttackDroneBehavior::Update() {
 
 void AttackDroneBehavior::Reposition(float3 newPosition) {
     mustReposition = true;
-    currentPosition = newPosition;
 }
 
 void AttackDroneBehavior::SetPositionOffset(float3 newOffset) {

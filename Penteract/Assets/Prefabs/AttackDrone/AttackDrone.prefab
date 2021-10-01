@@ -34,7 +34,7 @@
                 "Type": "MeshRenderer",
                 "Active": true,
                 "MeshID": 13118061275706578233,
-                "MaterialID": 16102959236735944607
+                "MaterialID": 8926476818783380088
             },
             {
                 "Type": "BoundingBox",
@@ -45,7 +45,7 @@
                     -2.6419196128845217,
                     2.641207456588745,
                     2.645951986312866,
-                    2.6250219345092775
+                    3.5900001525878908
                 ]
             },
             {
@@ -54,19 +54,14 @@
                 "Script": 1876770804236283211,
                 "Values": [
                     {
-                        "Name": "droneSpeed",
-                        "Type": "Float",
-                        "Value": 8.0
+                        "Name": "projectilePrefabUID",
+                        "Type": "PrefabResourceUID",
+                        "Value": 6016750472932550027
                     },
                     {
                         "Name": "dronesControllerUID",
                         "Type": "GameObjectUID",
                         "Value": 6095729748097858087
-                    },
-                    {
-                        "Name": "projectilePrefabUID",
-                        "Type": "PrefabResourceUID",
-                        "Value": 6016750472932550027
                     }
                 ]
             }

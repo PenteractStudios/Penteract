@@ -45,8 +45,12 @@ void AttackDronesController::Start() {
 }
 
 void AttackDronesController::Update() {
-    RecalculateFormations();
-    RepositionDrones();
+    if (!currentPosition.Equals(transform->GetGlobalPosition()) || !currentRotation.Equals(transform->GetGlobalRotation())) {
+        currentPosition = transform->GetGlobalPosition();
+
+        RecalculateFormations();
+        RepositionDrones();
+    }
 
     if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_I)) {
         SetDronesFormation(DronesFormation::LINE);
@@ -137,6 +141,7 @@ void AttackDronesController::RecalculateFormations() {
 void AttackDronesController::RepositionDrones() {
     for (int i = 0; i < dronesScripts.size(); ++i) {
         dronesScripts[i]->SetPositionOffset(formationsOffsetPositions[static_cast<int>(formation)][i]);
+        dronesScripts[i]->SetMustForceRotation(cycle == WaveCycle::CENTERED);
     }
 }
 
@@ -193,10 +198,9 @@ std::vector<float3> AttackDronesController::GenerateCircleFormation() {
     for (int i = 0; i < size; ++i) {
         float theta = ((PI * 2) / size);
         float angle = (theta * i);
-
+        
         result[i] = float3x3::RotateY(transform->GetGlobalRotation().ToEulerXZY().z) * (float3(cos(angle), 0.0f, sin(angle)) * droneRadiusFormation);
         result[i] += float3(0.0f, GetVerticalOffset(), 0.0f);
-        if (formation == DronesFormation::CIRCLE) dronesScripts[i]->SetMustForceRotation(true);
     }
 
     return result;
