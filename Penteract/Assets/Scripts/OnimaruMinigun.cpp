@@ -19,9 +19,9 @@ EXPOSE_MEMBERS(OnimaruMinigun) {
 GENERATE_BODY_IMPL(OnimaruMinigun);
 
 void OnimaruMinigun::Start() {
-	if (player) {
-		playerScript = GET_SCRIPT(player, Player);
-	}
+	//if (player) {
+	//	playerScript = GET_SCRIPT(player, Player);
+	//}
 }
 
 void OnimaruMinigun::Update() {

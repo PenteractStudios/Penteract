@@ -64,7 +64,7 @@ public:
 	int GetMouseDirectionState();
 	bool IsActive();
 	static bool GetInputBool(InputActions action, bool useGamepad = false);
-	float2 GetInputFloat2(InputActions action, bool useGamepad = false) const;
+	float2 GetInputFloat2(InputActions action, bool useGamepad = false);
 	void UpdateFacePointDir(bool useGamepad, bool faceToFront_ = false);
 	virtual void IncreaseUltimateCounter();
 	void SetClipSpeed(ResourceClip* clip, float speed) {

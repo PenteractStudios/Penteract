@@ -5,7 +5,7 @@
 class CameraController;
 class ComponentCamera;
 class ComponentTransform;
-class Player;
+//class Player;
 
 class OnimaruMinigun : public Script
 {
@@ -26,6 +26,6 @@ public:
 
 public:
 	GameObject* player = nullptr;
-	Player* player = nullptr;
+	/*Player* player = nullptr;*/
 };
 
