@@ -242,14 +242,16 @@ void GameController::PauseGame() {
 	Time::PauseGame();
 	EnablePauseMenus();
 	isPaused = true;
-	isGameplayBlocked = true;
+	if (isGameplayBlocked) gameplayWasAlreadyBlocked = true;
+	else isGameplayBlocked = true;
 }
 
 void GameController::ResumeGame() {
 	Time::ResumeGame();
 	ClearPauseMenus();
 	isPaused = false;
-	isGameplayBlocked = false;
+	if (gameplayWasAlreadyBlocked) gameplayWasAlreadyBlocked = false;
+	else isGameplayBlocked = false;
 }
 
 bool const GameController::IsGameplayBlocked() {

@@ -15,6 +15,9 @@ public:
 	void Start() override;
 	void Update() override;
 
+	void StartFire();
+	void StopFire();
+
 public:
 	std::string container = "";
 
@@ -29,14 +32,14 @@ private:
 	int nextPattern = 1;
 	int currentPattern = 1;
 
-	bool* currentTilesPattern = nullptr;
-	bool* nextTilesPattern = nullptr;
+	const bool* currentTilesPattern = nullptr;
+	const bool* nextTilesPattern = nullptr;
 
-	std::vector<TilesPattern> sequentialPatterns;
+	const TilesPattern* sequentialPatterns = nullptr;
 
-	bool* pattern1 = nullptr;
-	bool* pattern2 = nullptr;
-	bool* pattern3 = nullptr;
+	const bool* pattern1 = nullptr;
+	const bool* pattern2 = nullptr;
+	const bool* pattern3 = nullptr;
 
 	float timeRemainingTilesActive = 0.f;
 	float timeRemainingWarning = 0.f;
@@ -53,8 +56,10 @@ private:
 
 	int sequentialCount = 0;
 
+	bool started = false;
+
 private:
-	void SetPattern(int pattern, bool*& boolPattern);
+	void SetPattern(int pattern, const bool*& boolPattern);
 	void UpdateWarningTiles(bool activate);
 	void UpdateFireActiveTiles(bool activate);
 };
