@@ -24,11 +24,6 @@ public:
 	void PauseGame();
 	void ResumeGame();
 
-	static bool const IsSwitchTutorialActive();				// Getter for switchTutorialActive
-	static void ActivateSwitchTutorial(bool isFinished);	// Setter for switchTutorialActive
-	static void SetVideoActive(bool isActived);				// Setter for 
-	
-
 public:
 	UID gameCameraUID = 0;
 	UID godCameraUID = 0;
@@ -83,7 +78,5 @@ private:
 
 	bool isPaused = false;
 	bool gameplayWasAlreadyBlocked = false;				// This is used to check if the gameplay must (or not) be blocked when entering pause menu.
-	static inline bool switchTutorialActive = false;	// This overrides the previous bool on Fang's 'CanSwitch()', used when the Switch Tutorial appears.
-	static inline bool isVideoActive = false;			// isVideoActive is used for know if any video is Active and then block pause menu.
 };
 

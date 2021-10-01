@@ -39,7 +39,7 @@ void VideoScene1Start::Start() {
     if (componentVideo) {
         if (GameplaySystems::GetGlobalVariable(globalVariableKeyPlayVideoScene1,true)) {
             componentVideo->Play();
-            GameController::SetVideoActive(true);
+            GameplaySystems::SetGlobalVariable(isVideoActive, true);
             Time::PauseGame();
             GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, false);
         } else {
@@ -60,7 +60,7 @@ void VideoScene1Start::Update() {
 void VideoScene1Start::BackToNormalGameplay() {
     Time::ResumeGame();
     componentVideo->Stop();
-    GameController::SetVideoActive(false);
+    GameplaySystems::SetGlobalVariable(isVideoActive, true);
     parent->Disable();
     if (faderScript) {
         faderScript->FadeIn();

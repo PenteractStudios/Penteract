@@ -39,7 +39,7 @@ void GameController::Start() {
 	showWireframe = false;
 	transitionFinished = false;
 	GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, false);
-	switchTutorialActive = false;
+	GameplaySystems::SetGlobalVariable(globalswitchTutorialActive, false);
 
 	if (PlayerController::currentLevel == 1) {
 		GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, false);
@@ -103,7 +103,7 @@ void GameController::Update() {
 		}
 	}
 
-	if ((Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)) && !isVideoActive) {
+	if ((Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)) && !GameplaySystems::GetGlobalVariable(isVideoActive, true)) {
 		if (isPaused) {
 			ResumeGame();
 		}
@@ -262,19 +262,6 @@ void GameController::ResumeGame() {
 	isPaused = false;
 	if (gameplayWasAlreadyBlocked) gameplayWasAlreadyBlocked = false;
 	else GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, false);
-}
-
-bool const GameController::IsSwitchTutorialActive() {
-	return switchTutorialActive;
-}
-
-void GameController::ActivateSwitchTutorial(bool isFinished) {
-	switchTutorialActive = isFinished;
-}
-
-void GameController::SetVideoActive(bool isActived)
-{
-	isVideoActive = isActived;
 }
 
 void GameController::DoTransition() {

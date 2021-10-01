@@ -1,7 +1,6 @@
 #include "DialogueManager.h"
 
 #include "GameplaySystems.h"
-#include "GameController.h"
 #include "PlayerController.h"
 #include "CameraController.h"
 #include "GameObject.h"
@@ -328,7 +327,7 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 	} else {
 		activeDialogueObject = nullptr;
 		GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, false);
-		GameController::ActivateSwitchTutorial(false);
+		GameplaySystems::SetGlobalVariable(globalswitchTutorialActive, false);
 
 		// Camera Zoom Out
 		if (cameraControllerScript) {
@@ -371,7 +370,7 @@ void DialogueManager::ActivateDialogue() {
 			activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(currentEndPosition);
 			TransitionUIElementsColor(true, false);
 			if (activeDialogue->character == DialogueWindow::TUTO_SWAP) {
-				GameController::ActivateSwitchTutorial(true);
+				GameplaySystems::SetGlobalVariable(globalswitchTutorialActive, true);
 			}
 		}
 	}

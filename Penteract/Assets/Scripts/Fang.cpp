@@ -1,6 +1,5 @@
 #include "Fang.h"
 #include "GameplaySystems.h"
-#include "GameController.h"
 #include "HUDController.h"
 #include "HUDManager.h"
 #include "CameraController.h"
@@ -136,7 +135,7 @@ bool Fang::IsVulnerable() const {
 
 bool Fang::CanSwitch() const {
 	if (!EMP) return false;
-	return isAlive && !EMP->IsActive() && !ultimateOn && (!GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) || GameController::IsSwitchTutorialActive()) && GameplaySystems::GetGlobalVariable(globalSwitchTutorialReached, true);
+	return isAlive && !EMP->IsActive() && !ultimateOn && (!GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) || GameplaySystems::GetGlobalVariable(globalswitchTutorialActive, true)) && GameplaySystems::GetGlobalVariable(globalSwitchTutorialReached, true);
 }
 
 void Fang::IncreaseUltimateCounter() {

@@ -8,7 +8,6 @@
 #include "HUDManager.h"
 #include "OnimaruBullet.h"
 #include "SwitchParticles.h"
-#include "GameController.h"
 #include "GlobalVariables.h"
 
 #include "Math/Quat.h"
@@ -236,7 +235,7 @@ void PlayerController::SwitchCharacter() {
 		if (sCollider) sCollider->Disable();
 		switchFirstHit = true;
 
-		if (GameController::IsSwitchTutorialActive()) GameController::ActivateSwitchTutorial(false);
+		if (GameplaySystems::GetGlobalVariable(globalswitchTutorialActive, true)) GameplaySystems::SetGlobalVariable(globalswitchTutorialActive, false);
 
 	} else {
 		if (playSwitchParticles) {

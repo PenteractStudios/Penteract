@@ -1,6 +1,7 @@
 #pragma once
 
 constexpr const char* globalVariableKeyPlayVideoScene1 = "CameFromMainMenu";
+constexpr const char* isVideoActive = "IsVideoActive";			// isVideoActive is used to check if any video is Active and playing on the scene.
 
 constexpr const char* globalIsGameplayBlocked = "IsGameplayBlocked";	// IsGameplayBlocked is used to stop the gameplay without pausing the game itself. When true, all entities will remain in an IDLE state, and player input will be mostly ignored.
 
@@ -9,3 +10,5 @@ constexpr const char* globalSkill1TutorialReached = "Skill1Reached";	// Dash/Shi
 constexpr const char* globalSkill2TutorialReached = "Skill2Reached";	// EMP/Blast
 constexpr const char* globalSkill3TutorialReached = "Skill3Reached";	// Ultimate
 constexpr const char* globalSwitchTutorialReached = "SwitchReached";	// Switch
+constexpr const char* globalswitchTutorialActive = "IsSwitchTutorialActive";	// This overrides globalSwitchTutorialReached on Fang's 'CanSwitch()', used when the Switch Tutorial appears to allow the use of the Switch then.
+

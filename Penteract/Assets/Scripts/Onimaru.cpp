@@ -1,7 +1,6 @@
 #include "Onimaru.h"
 
 #include "GameplaySystems.h"
-#include "GameController.h"
 #include "HUDController.h"
 #include "HUDManager.h"
 #include "CameraController.h"
@@ -291,7 +290,7 @@ void Onimaru::OnDeath() {
 }
 
 bool Onimaru::CanSwitch() const {
-	return isAlive && ultimateTimeRemaining <= 0 && !ultimateOn && !IsShielding() && !blastInUse && (!GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) || GameController::IsSwitchTutorialActive());
+	return isAlive && ultimateTimeRemaining <= 0 && !ultimateOn && !IsShielding() && !blastInUse && (!GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) || GameplaySystems::GetGlobalVariable(globalswitchTutorialActive, true));
 }
 
 void Onimaru::OnAnimationSecondaryFinished() {
