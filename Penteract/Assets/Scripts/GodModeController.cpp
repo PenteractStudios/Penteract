@@ -54,6 +54,11 @@ void GodModeController::Start() {
 
 	/* Dialog triggers */
 	dialogTriggers = GameplaySystems::GetGameObject(dialogTriggersUID);
+	/* Blocked skills */
+	skill1WasActive = false;
+	skill2WasActive = false;
+	skill3WasActive = false;
+	switchWasActive = false;
 
 	doorPreviousStates.emplace_back(plazaDoor, plazaDoor ? plazaDoor->IsActive() : false);
 	doorPreviousStates.emplace_back(cafeteriaDoor, cafeteriaDoor ? cafeteriaDoor->IsActive() : false);
