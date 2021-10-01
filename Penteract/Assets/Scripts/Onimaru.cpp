@@ -251,6 +251,7 @@ void Onimaru::UpdateWeaponRotation()
 			angle *= -1;
 			multiplier = -1;
 		}
+		Debug::Log(std::to_string(angle).c_str());
 
 		if (Abs(angle) > DEGTORAD * orientationThreshold) {
 			Quat rotationToAdd = Quat::Lerp(quat, rotation, Time::GetDeltaTime() * orientationSpeed);
