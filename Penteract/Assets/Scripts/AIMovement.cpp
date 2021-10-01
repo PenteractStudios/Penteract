@@ -21,6 +21,28 @@ void AIMovement::Update() {
 
 }
 
+void AIMovement::Seek(AIState state, const float3& newPosition, int speed, bool orientateToDir) {
+	if (!ownerTransform) return;
+
+	float3 position = ownerTransform->GetGlobalPosition();
+	float3 direction = newPosition - position;
+
+	if (state == AIState::START) {
+		velocity = direction.Normalized() * static_cast<float>(speed);
+		position += velocity * Time::GetDeltaTime();
+		ownerTransform->SetGlobalPosition(position);
+	}
+	else {
+		if (agent) {
+			agent->SetMoveTarget(newPosition, true);
+			velocity = agent->GetVelocity();
+		}
+	}
+	if (state != AIState::START && orientateToDir) {
+		Orientate(velocity);
+	}
+}
+
 void AIMovement::Flee(AIState state, const float3& fromPosition, int /* speed */, bool orientateToDir) {
 
 	if (!ownerTransform || !agent) return;
@@ -45,28 +67,6 @@ void AIMovement::Stop() {
 	if (agent->CanBeRemoved()) {
 		agent->RemoveAgentFromCrowd();
 		agent->AddAgentToCrowd();
-	}
-
-}
-
-void AIMovement::Seek(AIState state, const float3& newPosition, float speed, bool orientateToDir) {
-	if (!ownerTransform) return;
-
-	float3 position = ownerTransform->GetGlobalPosition();
-	float3 direction = newPosition - position;
-
-	if (state == AIState::START) {
-		velocity = direction.Normalized() * static_cast<float>(speed);
-		position += velocity * Time::GetDeltaTime();
-		ownerTransform->SetGlobalPosition(position);
-	} else {
-		if (agent) {
-			agent->SetMoveTarget(newPosition, true);
-			velocity = agent->GetVelocity();
-		}
-	}
-	if (state != AIState::START && orientateToDir) {
-		Orientate(velocity);
 	}
 
 }
