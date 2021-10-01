@@ -229,6 +229,7 @@ void Onimaru::UpdateWeaponRotation()
 	Quat quat = weaponTransform->GetGlobalRotation();
 
 	float angle = Atan2(weaponPointDir.x, weaponPointDir.z);
+	if (shooting) angle += 20 * DEGTORAD;
 	Quat rotation = quat.RotateAxisAngle(float3(0, 1, 0), angle);
 
 	float orientationSpeedToUse = orientationSpeed;
@@ -252,7 +253,6 @@ void Onimaru::UpdateWeaponRotation()
 			multiplier = -1;
 		}
 		Debug::Log(std::to_string(angle).c_str());
-
 		if (Abs(angle) > DEGTORAD * orientationThreshold) {
 			Quat rotationToAdd = Quat::Lerp(quat, rotation, Time::GetDeltaTime() * orientationSpeed);
 			weaponTransform->SetGlobalRotation(rotationToAdd);
