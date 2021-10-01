@@ -439,7 +439,7 @@ void PlayerController::Update() {
 }
 
 void PlayerController::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* /* particle */) {
-	if (collidedWith.name == "MeleeGrunt" || collidedWith.name == "RangedGrunt") {
+	if (collidedWith.name == "MeleeGrunt" || collidedWith.name == "RangedBullet") {
 		switchCollisionedGO.push_back(&collidedWith);
 		if (playerOnimaru.IsActive()) {
 			ComponentAgent* agent = collidedWith.GetComponent<ComponentAgent>();

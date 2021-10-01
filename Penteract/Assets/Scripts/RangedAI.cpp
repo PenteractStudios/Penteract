@@ -31,6 +31,8 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
+	MEMBER_SEPARATOR("Shoot"),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, bulletUID),
 	MEMBER_SEPARATOR("Enemy stats"),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.lifePoints),
@@ -73,6 +75,8 @@ void RangedAI::Start() {
 	if (weapon) {
 		shootTrailPrefab = weapon->GetComponent<ComponentParticleSystem>();
 	}
+
+	bulletRange = GameplaySystems::GetResource<ResourcePrefab>(bulletUID);
 
 	if (meshObj) {
 		ComponentBoundingBox* bb = meshObj->GetComponent<ComponentBoundingBox>();
@@ -588,8 +592,10 @@ void RangedAI::ActualShot() {
 	if (shootTrailPrefab) {
 		//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
 		if (!meshObj) return;
-
+		GameObject* bullet = GameplaySystems::Instantiate(bulletRange, weapon->GetComponent<ComponentTransform>()->GetGlobalPosition(), weapon->GetComponent<ComponentTransform>()->GetGlobalRotation());
+		GET_SCRIPT(bullet, RangerProjectileScript)->SetRangerDirection(weapon->GetComponent<ComponentTransform>()->GetGlobalRotation());
 		shootTrailPrefab->PlayChildParticles();
+		bullet->GetComponent<ComponentParticleSystem>()->PlayChildParticles();
 	}
 
 	attackSpeed = (minAttackSpeed + 1) + (((float)rand()) / (float)RAND_MAX) * (maxAttackSpeed - (minAttackSpeed + 1));

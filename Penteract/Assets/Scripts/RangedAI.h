@@ -76,6 +76,10 @@ public:
 	UID meshUID2 = 0;				//Third mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID fangUID = 0;
 
+
+	ResourcePrefab* bulletRange = nullptr;
+	UID bulletUID = 0;
+
 	ComponentParticleSystem* shootTrailPrefab = nullptr; //Reference to projectile prefab , for shooting
 	GameObject* player = nullptr;				//Reference to player main Gameobject, used to check distances
 	GameObject* fang = nullptr;

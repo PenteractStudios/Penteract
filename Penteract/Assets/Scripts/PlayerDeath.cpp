@@ -111,10 +111,12 @@ void PlayerDeath::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char
 }
 
 void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 /* penetrationDistance */, void* particle) {
-	if (collidedWith.name == "WeaponParticles") {
+	if (collidedWith.name == "BulletRange") {
 		if (!particle) return;
+		Debug::Log("miguel");
 		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+		//GameplaySystems::DestroyGameObject(&pSystem->GetOwner());
 		if (pSystem) pSystem->KillParticle(p);
 		if (playerController) playerController->TakeDamage(rangedDamageTaken);
 	} else if (collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") { //meleegrunt

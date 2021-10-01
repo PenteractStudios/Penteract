@@ -12,13 +12,14 @@ EXPOSE_MEMBERS(RangerProjectileScript) {
 GENERATE_BODY_IMPL(RangerProjectileScript);
 
 void RangerProjectileScript::Start() {
+	GetOwner().GetComponent<ComponentParticleSystem>()->PlayChildParticles();
 }
 
 void RangerProjectileScript::Update() {
 	if (life >= 0) {
 		life -= Time::GetDeltaTime();
 		ComponentTransform* transform = GetOwner().GetComponent<ComponentTransform>();
-		float3 aux = rangerDirection * float3(0.0f, 0.0f, 1.0f);
+		float3 aux = rangerDirection * float3(0.0f, 1.0f, 0.0f);
 		aux *= speed * Time::GetDeltaTime();
 		float3 newPosition = transform->GetGlobalPosition();
 		newPosition += aux;
