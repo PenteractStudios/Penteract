@@ -428,7 +428,6 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 					if (animation->GetCurrentState()) {
 						animation->SendTrigger(animation->GetCurrentState()->name + "StunStart");
 					}
-					pushEffectHasToStart = true;
 					if(particlesEmp)particlesEmp->PlayChildParticles();
 					agent->RemoveAgentFromCrowd();
 					stunTimeRemaining = stunDuration;
