@@ -603,8 +603,8 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */
 					if (!shooting) {
 						shooting = true;
 						if (bullet) {
+							bullet->SetParticlesPerSecondChild(float2(attackSpeed, attackSpeed));
 							bullet->PlayChildParticles();
-							bullet->SetParticlesPerSecond(float2(attackSpeed, attackSpeed));
 						}
 						if (compAnimation) {
 							if (!shield->GetIsActive()) {
@@ -640,7 +640,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */
 							compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 						}
 					}
-					if (bullet) bullet->StopChildParticles();
+					if (bullet) bullet->SetParticlesPerSecondChild(float2(0.0f,0.0f));
 				}
 			}
 		}
