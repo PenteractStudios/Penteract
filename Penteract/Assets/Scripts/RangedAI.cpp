@@ -39,7 +39,7 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.barrelDamageTaken),
 	MEMBER_SEPARATOR("Push variables"),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackDistance),
-	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackSpeed),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackTime),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownSpeed),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownTime),
 	MEMBER(MemberType::FLOAT, minAttackSpeed),
@@ -661,9 +661,9 @@ void RangedAI::UpdatePushBackPosition() {
 	float3 direction = (enemyPos - playerPos).Normalized();
 
 	if (agent) {
-		enemyPos += direction * rangerGruntCharacter.pushBackSpeed * Time::GetDeltaTime();
+		enemyPos += direction * rangerGruntCharacter.pushBackTime * Time::GetDeltaTime();
 		agent->SetMoveTarget(enemyPos, false);
-		agent->SetMaxSpeed(rangerGruntCharacter.pushBackSpeed);
+		agent->SetMaxSpeed(rangerGruntCharacter.pushBackTime);
 		float distance = enemyPos.Distance(initialPos);
 		currentPushBackDistance += distance;
 

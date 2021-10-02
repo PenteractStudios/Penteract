@@ -29,7 +29,7 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::FLOAT, gruntCharacter.barrelDamageTaken),
 	MEMBER_SEPARATOR("Push variables"),
 	MEMBER(MemberType::FLOAT, gruntCharacter.pushBackDistance),
-	MEMBER(MemberType::FLOAT, gruntCharacter.pushBackSpeed),
+	MEMBER(MemberType::FLOAT, gruntCharacter.pushBackTime),
 	MEMBER(MemberType::FLOAT, gruntCharacter.slowedDownSpeed),
 	MEMBER(MemberType::FLOAT, gruntCharacter.slowedDownTime),
 	MEMBER_SEPARATOR("Stun variables"),
@@ -263,7 +263,16 @@ void AIMeleeGrunt::Update() {
 		}
 		break;
 	case AIState::PUSHED:
+		if (pushBackTimer <= gruntCharacter.pushBackTime) {
+			pushBackTimer = gruntCharacter.pushBackTime;
+		}
 		UpdatePushBackPosition();
+		if (pushBackTimer == gruntCharacter.pushBackTime) {
+			DisableBlastPushBack();
+		}
+		else {
+			pushBackTimer += Time::GetDeltaTime();
+		}
 		break;
 	case AIState::DEATH:
 		if (!dissolveAlreadyStarted) {
@@ -416,6 +425,7 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 void AIMeleeGrunt::EnableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		gruntCharacter.beingPushed = true;
+		pushBackTimer = 0.f;
 		state = AIState::PUSHED;
 		if (animation->GetCurrentState()) animation->SendTrigger(animation->GetCurrentState()->name + "Hurt");
 		CalculatePushBackRealDistance();
@@ -427,6 +437,7 @@ void AIMeleeGrunt::EnableBlastPushBack() {
 			PlayHitMaterialEffect();
 			timeSinceLastHurt = 0.0f;
 		}
+		agent->Disable();
 	}
 }
 
@@ -435,6 +446,10 @@ void AIMeleeGrunt::DisableBlastPushBack() {
 		gruntCharacter.beingPushed = false;
 		if (animation->GetCurrentState()) animation->SendTrigger(animation->GetCurrentState()->name + "Idle");
 		state = AIState::IDLE;
+		agent->Enable();
+		gruntCharacter.slowedDown = true;
+		currentPushBackDistance = 0.f;
+		currentSlowedDownTime = 0.f;
 	}
 }
 
@@ -450,44 +465,31 @@ void AIMeleeGrunt::PlayHit()
 }
 
 void AIMeleeGrunt::UpdatePushBackPosition() {
-	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
-	float3 initialPos = enemyPos;
 
-	float3 direction = (enemyPos - playerPos).Normalized();
+	Debug::Log("Updating position...");
+	ownerTransform->SetGlobalPosition(float3::Lerp(pushBackInitialPos,pushBackFinalPos, pushBackTimer / gruntCharacter.pushBackTime));
 
-	if (agent) {
-		enemyPos += direction * gruntCharacter.pushBackSpeed * Time::GetDeltaTime();
-		agent->SetMoveTarget(enemyPos, false);
-		agent->SetMaxSpeed(gruntCharacter.pushBackSpeed);
-		float distance = enemyPos.Distance(initialPos);
-		currentPushBackDistance += distance;
-
-		if (currentPushBackDistance >= pushBackRealDistance) {
-			DisableBlastPushBack();
-			gruntCharacter.slowedDown = true;
-			currentPushBackDistance = 0.f;
-			currentSlowedDownTime = 0.f;
-			pushBackRealDistance = gruntCharacter.pushBackDistance;
-		}
+	if (pushBackTimer == gruntCharacter.pushBackTime) {
+		Debug::Log("Hey");
 	}
+
 }
 
 void AIMeleeGrunt::CalculatePushBackRealDistance() {
 	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
 	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
 
-	float3 direction = (enemyPos - playerPos).Normalized();
+	pushBackDirection = (enemyPos - playerPos).Normalized();
 
 	bool hitResult = false;
-
-	float3 finalPos = enemyPos + direction * gruntCharacter.pushBackDistance;
+	pushBackInitialPos = enemyPos;
+	pushBackFinalPos = enemyPos + pushBackDirection * gruntCharacter.pushBackDistance;
 	float3 resultPos = { 0,0,0 };
 
-	Navigation::Raycast(enemyPos, finalPos, hitResult, resultPos);
+	Navigation::Raycast(enemyPos, pushBackFinalPos, hitResult, resultPos);
 
 	if (hitResult) {
-		pushBackRealDistance = resultPos.Distance(enemyPos) - 1; // Should be agent radius but it's not exposed
+		pushBackFinalPos = resultPos - pushBackDirection;
 	}
 }
 

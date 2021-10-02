@@ -15,7 +15,7 @@ public:
 		, attackRange(attackRange_)
 		, timeToDie(timeToDie_)
 		, pushBackDistance(pushBackDistance_)
-		, pushBackSpeed(pushBackSpeed_)
+		, pushBackTime(pushBackSpeed_)
 		, slowedDownSpeed(slowedDownSpeed_)
 		, slowedDownTime(slowedDownTime_) {
 		lifePoints = lifePoints_;
@@ -36,8 +36,8 @@ public:
 	float searchRadius = 10.f;
 	float attackRange = 2.0f;
 	float timeToDie = 5.f;
-	float pushBackDistance = 5.f;
-	float pushBackSpeed = 5.f;
+	float pushBackDistance = 15.f;
+	float pushBackTime = 0.2f;
 	float slowedDownSpeed = 3.f;
 	float slowedDownTime = 2.f;
 	bool destroying = false;
