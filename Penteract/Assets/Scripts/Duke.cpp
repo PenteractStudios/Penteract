@@ -158,3 +158,15 @@ void Duke::ThrowBarrels()
 
 	//When animation finished, set player + random offset position and the barrel falls to this position
 }
+
+void Duke::OnAnimationFinished()
+{
+}
+
+void Duke::OnAnimationSecondaryFinished()
+{
+}
+
+void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName)
+{
+}

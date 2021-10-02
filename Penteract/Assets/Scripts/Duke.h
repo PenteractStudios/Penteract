@@ -63,6 +63,11 @@ public:
 	void Shoot();
 	void ThrowBarrels();
 
+	// ------- Animation Functions ------ //
+	void OnAnimationFinished();
+	void OnAnimationSecondaryFinished();
+	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
+
 public:
 	float chargeSpeed = 5.f;
 	float searchRadius = 8.f;

@@ -413,9 +413,15 @@ void AIDuke::Update() {
 }
 
 void AIDuke::OnAnimationFinished() {
+	dukeCharacter.OnAnimationFinished();
 }
 
 void AIDuke::OnAnimationSecondaryFinished() {
+	dukeCharacter.OnAnimationSecondaryFinished();
+}
+
+void AIDuke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
+	dukeCharacter.OnAnimationEvent(stateMachineEnum, eventName);
 }
 
 void AIDuke::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
