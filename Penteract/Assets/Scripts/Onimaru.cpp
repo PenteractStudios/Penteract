@@ -222,16 +222,14 @@ void Onimaru::UpdateWeaponRotation()
 	Plane p = Plane(planeTransform, float3(0, 1, 0));
 	weaponPointDir = float3(0, 0, 0);
 	weaponPointDir = (p.ClosestPoint(ray) - (weaponTransform->GetGlobalPosition()));
+	float aux = p.ClosestPoint(ray).DistanceSq(weaponTransform->GetGlobalPosition());
 
-
-	//Debug::Log(std::to_string(weaponPointDir.x).c_str());
 	if (weaponPointDir.x == 0 && weaponPointDir.z == 0) return;
 	Quat quat = weaponTransform->GetGlobalRotation();
 
 	float angle = Atan2(weaponPointDir.x, weaponPointDir.z);
-	if (shooting) angle += 20 * DEGTORAD;
+	if (shooting) angle += offsetWeaponAngle * DEGTORAD;
 	Quat rotation = quat.RotateAxisAngle(float3(0, 1, 0), angle);
-
 	float orientationSpeedToUse = orientationSpeed;
 
 	if (orientationSpeedToUse == -1) {
@@ -252,11 +250,13 @@ void Onimaru::UpdateWeaponRotation()
 			angle *= -1;
 			multiplier = -1;
 		}
-		Debug::Log(std::to_string(angle).c_str());
+	
+		
 		if (Abs(angle) > DEGTORAD * orientationThreshold) {
-			Quat rotationToAdd = Quat::Lerp(quat, rotation, Time::GetDeltaTime() * orientationSpeed);
-			weaponTransform->SetGlobalRotation(rotationToAdd);
-
+			if (aux > limitAngle) {
+				Quat rotationToAdd = Quat::Lerp(quat, rotation, Time::GetDeltaTime() * orientationSpeed);
+				weaponTransform->SetGlobalRotation(rotationToAdd);
+			}
 		}
 		else {
 			weaponTransform->SetGlobalRotation(rotation);
