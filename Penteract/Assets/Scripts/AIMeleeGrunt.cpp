@@ -380,10 +380,9 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 				hitTaken = true;
 				gruntCharacter.GetHit(playerController->playerFang.dashDamage + playerController->GetOverPowerMode());
 			}
-			else if (collidedWith.name == "RangerProjectile" && playerController->playerOnimaru.level1Upgrade) {
+			else if (collidedWith.name == "WeaponParticles" && playerController->playerOnimaru.level1Upgrade) {
 				hitTaken = true;
-				gruntCharacter.GetHit(playerController->playerOnimaru.shieldReboundedDamage + playerController->GetOverPowerMode());
-				GameplaySystems::DestroyGameObject(&collidedWith);
+				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
 			}
 			else if (collidedWith.name == "VFXShield") {
 				if (state == AIState::RUN) {
