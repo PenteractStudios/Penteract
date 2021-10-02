@@ -33,8 +33,8 @@
             {
                 "Type": "Animation",
                 "Active": true,
-                "StateMachinePrincipalId": 0,
-                "StateMachineSecondaryId": 0
+                "StateMachinePrincipalId": 10997969315392612119,
+                "StateMachineSecondaryId": 7553166307221787647
             },
             {
                 "Type": "Agent",
@@ -55,6 +55,16 @@
                 "Script": 14370151214457210467,
                 "Values": [
                     {
+                        "Name": "dukeUID",
+                        "Type": "GameObjectUID",
+                        "Value": 1727168639637301665
+                    },
+                    {
+                        "Name": "dukeCharacter.lifePoints",
+                        "Type": "Float",
+                        "Value": 100.0
+                    },
+                    {
                         "Name": "toggleShield",
                         "Type": "Bool",
                         "Value": false
@@ -63,16 +73,6 @@
                         "Name": "dukeCharacter.chargeSpeed",
                         "Type": "Float",
                         "Value": 14.0
-                    },
-                    {
-                        "Name": "dukeCharacter.lifePoints",
-                        "Type": "Float",
-                        "Value": 100.0
-                    },
-                    {
-                        "Name": "dukeUID",
-                        "Type": "GameObjectUID",
-                        "Value": 1727168639637301665
                     },
                     {
                         "Name": "playerUID",
@@ -105,24 +105,24 @@
                         "Value": 4.0
                     },
                     {
-                        "Name": "dukeCharacter.moveChangeEvery",
-                        "Type": "Float",
-                        "Value": 1.899999976158142
-                    },
-                    {
                         "Name": "dukeCharacter.searchRadius",
                         "Type": "Float",
                         "Value": 12.0
                     },
                     {
-                        "Name": "abilityChangeCooldown",
+                        "Name": "dukeCharacter.moveChangeEvery",
                         "Type": "Float",
-                        "Value": 5.0
+                        "Value": 1.899999976158142
                     },
                     {
                         "Name": "dukeCharacter.attackSpeed",
                         "Type": "Float",
                         "Value": 3.0
+                    },
+                    {
+                        "Name": "abilityChangeCooldown",
+                        "Type": "Float",
+                        "Value": 5.0
                     },
                     {
                         "Name": "bulletPrefabUID",
@@ -135,14 +135,14 @@
                         "Value": 6336960488722600974
                     },
                     {
-                        "Name": "dukeCharacter.pushBackDistance",
-                        "Type": "Float",
-                        "Value": 7.0
-                    },
-                    {
                         "Name": "shieldObjUID",
                         "Type": "GameObjectUID",
                         "Value": 16913913298597001699
+                    },
+                    {
+                        "Name": "dukeCharacter.pushBackDistance",
+                        "Type": "Float",
+                        "Value": 7.0
                     },
                     {
                         "Name": "dukeCharacter.pushBackSpeed",
@@ -193,6 +193,11 @@
                         "Name": "throwBarrelTimer",
                         "Type": "Float",
                         "Value": 2.5
+                    },
+                    {
+                        "Name": "winSceneUID",
+                        "Type": "SceneResourceUID",
+                        "Value": 7141310542589317769
                     }
                 ]
             },
@@ -214,58 +219,6 @@
             }
         ],
         "Children": [
-            {
-                "Name": "DukeLP",
-                "Active": true,
-                "RootBoneName": "",
-                "Mask": 0,
-                "Components": [
-                    {
-                        "Type": "Transform",
-                        "Active": true,
-                        "Position": [
-                            0.0,
-                            75.95621490478516,
-                            0.0
-                        ],
-                        "Rotation": [
-                            -0.7071068286895752,
-                            0.0,
-                            0.0,
-                            0.7071067094802856
-                        ],
-                        "Scale": [
-                            1.0,
-                            1.0000001192092896,
-                            1.0000001192092896
-                        ],
-                        "LocalEulerAngles": [
-                            -90.00000762939453,
-                            0.0,
-                            0.0
-                        ]
-                    },
-                    {
-                        "Type": "MeshRenderer",
-                        "Active": true,
-                        "MeshID": 101529919533757449,
-                        "MaterialID": 2179567558967159318
-                    },
-                    {
-                        "Type": "BoundingBox",
-                        "Active": true,
-                        "LocalBoundingBox": [
-                            -58.588722229003909,
-                            -23.89168357849121,
-                            -76.30799865722656,
-                            71.07378387451172,
-                            23.89168357849121,
-                            76.30799102783203
-                        ]
-                    }
-                ],
-                "Children": null
-            },
             {
                 "Name": "DukeProjectile",
                 "Active": true,
@@ -3280,6 +3233,2071 @@
                                 "Type": "GameObjectUID",
                                 "Value": 1727168639637301665
                             }
+                        ]
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "Duke_Reference",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            -3.552713678800501e-15,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            0.0,
+                            -4.071110039794573e-13,
+                            0.0
+                        ]
+                    }
+                ],
+                "Children": [
+                    {
+                        "Name": "Duke_Hips",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Active": true,
+                                "Position": [
+                                    0.0,
+                                    82.99543762207031,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            }
+                        ],
+                        "Children": [
+                            {
+                                "Name": "Duke_LeftUpLeg",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform",
+                                        "Active": true,
+                                        "Position": [
+                                            9.41981315612793,
+                                            -4.4675469398498539,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.037652403116226199,
+                                            -0.020304253324866296,
+                                            -0.011115696281194687,
+                                            0.9990227818489075
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            0.9999999403953552,
+                                            0.9999999403953552
+                                        ],
+                                        "LocalEulerAngles": [
+                                            4.292259693145752,
+                                            -2.373061180114746,
+                                            -1.1860162019729615
+                                        ]
+                                    }
+                                ],
+                                "Children": [
+                                    {
+                                        "Name": "Duke_LeftLeg",
+                                        "Active": true,
+                                        "RootBoneName": "",
+                                        "Mask": 0,
+                                        "Components": [
+                                            {
+                                                "Type": "Transform",
+                                                "Active": true,
+                                                "Position": [
+                                                    6.8029584884643559,
+                                                    -31.353086471557618,
+                                                    7.620776653289795
+                                                ],
+                                                "Rotation": [
+                                                    -0.030705975368618966,
+                                                    -0.002949504181742668,
+                                                    0.009603364393115044,
+                                                    0.9994779825210571
+                                                ],
+                                                "Scale": [
+                                                    1.0,
+                                                    1.0,
+                                                    1.0
+                                                ],
+                                                "LocalEulerAngles": [
+                                                    -3.515842914581299,
+                                                    -0.3716053068637848,
+                                                    1.0896003246307374
+                                                ]
+                                            }
+                                        ],
+                                        "Children": [
+                                            {
+                                                "Name": "Duke_LeftFoot",
+                                                "Active": true,
+                                                "RootBoneName": "",
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform",
+                                                        "Active": true,
+                                                        "Position": [
+                                                            2.952090263366699,
+                                                            -40.62229537963867,
+                                                            -10.31129264831543
+                                                        ],
+                                                        "Rotation": [
+                                                            -0.011339462362229824,
+                                                            0.05795262008905411,
+                                                            0.004216072149574757,
+                                                            0.9982460141181946
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            -1.3341913223266602,
+                                                            6.638598442077637,
+                                                            0.5613556504249573
+                                                        ]
+                                                    }
+                                                ],
+                                                "Children": [
+                                                    {
+                                                        "Name": "Duke_LeftToeBase",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    3.246626138687134,
+                                                                    -0.9501342177391052,
+                                                                    20.793275833129884
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    -0.0,
+                                                                    0.0,
+                                                                    -0.0
+                                                                ]
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "Name": "Duke_RightUpLeg",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform",
+                                        "Active": true,
+                                        "Position": [
+                                            -9.41981315612793,
+                                            -4.4675469398498539,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.006513642612844706,
+                                            0.051936808973550799,
+                                            0.0037421316374093296,
+                                            0.9986221194267273
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.7270538210868836,
+                                            5.956838130950928,
+                                            0.39157718420028689
+                                        ]
+                                    }
+                                ],
+                                "Children": [
+                                    {
+                                        "Name": "Duke_RightLeg",
+                                        "Active": true,
+                                        "RootBoneName": "",
+                                        "Mask": 0,
+                                        "Components": [
+                                            {
+                                                "Type": "Transform",
+                                                "Active": true,
+                                                "Position": [
+                                                    -6.597037315368652,
+                                                    -32.063926696777347,
+                                                    5.582402229309082
+                                                ],
+                                                "Rotation": [
+                                                    0.0,
+                                                    0.0,
+                                                    0.0,
+                                                    1.0
+                                                ],
+                                                "Scale": [
+                                                    1.0,
+                                                    1.0,
+                                                    1.0
+                                                ],
+                                                "LocalEulerAngles": [
+                                                    -0.0,
+                                                    0.0,
+                                                    -0.0
+                                                ]
+                                            }
+                                        ],
+                                        "Children": [
+                                            {
+                                                "Name": "Duke_RightFoot",
+                                                "Active": true,
+                                                "RootBoneName": "",
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform",
+                                                        "Active": true,
+                                                        "Position": [
+                                                            -2.4933769702911379,
+                                                            -40.418888092041019,
+                                                            -10.804906845092774
+                                                        ],
+                                                        "Rotation": [
+                                                            -0.00651364354416728,
+                                                            -0.05193681642413139,
+                                                            -0.0037421321030706169,
+                                                            0.9986221790313721
+                                                        ],
+                                                        "Scale": [
+                                                            0.9999999403953552,
+                                                            0.9999999403953552,
+                                                            0.9999999403953552
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            -0.7718344926834106,
+                                                            -5.951222896575928,
+                                                            -0.4695277512073517
+                                                        ]
+                                                    }
+                                                ],
+                                                "Children": [
+                                                    {
+                                                        "Name": "Duke_RightToeBase",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    -3.246626138687134,
+                                                                    -0.9501342177391052,
+                                                                    20.793275833129884
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.00004189126775600016,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    -0.0,
+                                                                    0.004800385795533657,
+                                                                    -0.0
+                                                                ]
+                                                            }
+                                                        ],
+                                                        "Children": null
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "Name": "Duke_Spine1",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform",
+                                        "Active": true,
+                                        "Position": [
+                                            0.0,
+                                            17.939851760864259,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            -0.0,
+                                            0.0,
+                                            -0.0
+                                        ]
+                                    }
+                                ],
+                                "Children": [
+                                    {
+                                        "Name": "Duke_Spine2",
+                                        "Active": true,
+                                        "RootBoneName": "",
+                                        "Mask": 0,
+                                        "Components": [
+                                            {
+                                                "Type": "Transform",
+                                                "Active": true,
+                                                "Position": [
+                                                    0.0,
+                                                    18.482383728027345,
+                                                    0.0
+                                                ],
+                                                "Rotation": [
+                                                    0.0,
+                                                    0.0,
+                                                    0.0,
+                                                    1.0
+                                                ],
+                                                "Scale": [
+                                                    1.0,
+                                                    1.0,
+                                                    1.0
+                                                ],
+                                                "LocalEulerAngles": [
+                                                    -0.0,
+                                                    0.0,
+                                                    -0.0
+                                                ]
+                                            }
+                                        ],
+                                        "Children": [
+                                            {
+                                                "Name": "Duke_LeftShoulder",
+                                                "Active": true,
+                                                "RootBoneName": "",
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform",
+                                                        "Active": true,
+                                                        "Position": [
+                                                            16.790603637695314,
+                                                            6.8892388343811039,
+                                                            -6.263177871704102
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            -0.0,
+                                                            0.0,
+                                                            -0.0
+                                                        ]
+                                                    }
+                                                ],
+                                                "Children": [
+                                                    {
+                                                        "Name": "Duke_LeftArm",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    16.707807540893556,
+                                                                    -9.179422378540039,
+                                                                    2.186978340148926
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    -0.0000064165460571530279,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    -0.000735282024834305
+                                                                ]
+                                                            }
+                                                        ],
+                                                        "Children": [
+                                                            {
+                                                                "Name": "Duke_LeftForeArm",
+                                                                "Active": true,
+                                                                "RootBoneName": "",
+                                                                "Mask": 0,
+                                                                "Components": [
+                                                                    {
+                                                                        "Type": "Transform",
+                                                                        "Active": true,
+                                                                        "Position": [
+                                                                            7.656397342681885,
+                                                                            -27.75946807861328,
+                                                                            0.008884454146027565
+                                                                        ],
+                                                                        "Rotation": [
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.00003849927452392876,
+                                                                            1.0
+                                                                        ],
+                                                                        "Scale": [
+                                                                            1.0,
+                                                                            1.0,
+                                                                            1.0
+                                                                        ],
+                                                                        "LocalEulerAngles": [
+                                                                            -0.0,
+                                                                            0.0,
+                                                                            0.004411691799759865
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "Children": [
+                                                                    {
+                                                                        "Name": "Duke_LeftHand",
+                                                                        "Active": true,
+                                                                        "RootBoneName": "",
+                                                                        "Mask": 0,
+                                                                        "Components": [
+                                                                            {
+                                                                                "Type": "Transform",
+                                                                                "Active": true,
+                                                                                "Position": [
+                                                                                    6.155024528503418,
+                                                                                    -24.94138526916504,
+                                                                                    9.184952735900879
+                                                                                ],
+                                                                                "Rotation": [
+                                                                                    0.0,
+                                                                                    0.0,
+                                                                                    -0.00009624819358577952,
+                                                                                    1.0
+                                                                                ],
+                                                                                "Scale": [
+                                                                                    1.0,
+                                                                                    1.0,
+                                                                                    1.0
+                                                                                ],
+                                                                                "LocalEulerAngles": [
+                                                                                    0.0,
+                                                                                    0.0,
+                                                                                    -0.011029230430722237
+                                                                                ]
+                                                                            }
+                                                                        ],
+                                                                        "Children": [
+                                                                            {
+                                                                                "Name": "Duke_LeftHandThumb1",
+                                                                                "Active": true,
+                                                                                "RootBoneName": "",
+                                                                                "Mask": 0,
+                                                                                "Components": [
+                                                                                    {
+                                                                                        "Type": "Transform",
+                                                                                        "Active": true,
+                                                                                        "Position": [
+                                                                                            -1.7884243726730347,
+                                                                                            -0.8163787126541138,
+                                                                                            10.832395553588868
+                                                                                        ],
+                                                                                        "Rotation": [
+                                                                                            0.0,
+                                                                                            0.0,
+                                                                                            0.00012833093933295459,
+                                                                                            1.0
+                                                                                        ],
+                                                                                        "Scale": [
+                                                                                            0.9999999403953552,
+                                                                                            0.9999999403953552,
+                                                                                            1.0
+                                                                                        ],
+                                                                                        "LocalEulerAngles": [
+                                                                                            -0.0,
+                                                                                            0.0,
+                                                                                            0.014705642126500607
+                                                                                        ]
+                                                                                    }
+                                                                                ],
+                                                                                "Children": [
+                                                                                    {
+                                                                                        "Name": "Duke_LeftHandThumb2",
+                                                                                        "Active": true,
+                                                                                        "RootBoneName": "",
+                                                                                        "Mask": 0,
+                                                                                        "Components": [
+                                                                                            {
+                                                                                                "Type": "Transform",
+                                                                                                "Active": true,
+                                                                                                "Position": [
+                                                                                                    -1.5117651224136353,
+                                                                                                    -7.176336288452148,
+                                                                                                    2.7667648792266847
+                                                                                                ],
+                                                                                                "Rotation": [
+                                                                                                    0.0,
+                                                                                                    0.0,
+                                                                                                    -0.00009624819358577952,
+                                                                                                    1.0
+                                                                                                ],
+                                                                                                "Scale": [
+                                                                                                    1.0,
+                                                                                                    1.0,
+                                                                                                    1.0
+                                                                                                ],
+                                                                                                "LocalEulerAngles": [
+                                                                                                    0.0,
+                                                                                                    0.0,
+                                                                                                    -0.011029230430722237
+                                                                                                ]
+                                                                                            }
+                                                                                        ],
+                                                                                        "Children": [
+                                                                                            {
+                                                                                                "Name": "Duke_LeftHandThumb3",
+                                                                                                "Active": true,
+                                                                                                "RootBoneName": "",
+                                                                                                "Mask": 0,
+                                                                                                "Components": [
+                                                                                                    {
+                                                                                                        "Type": "Transform",
+                                                                                                        "Active": true,
+                                                                                                        "Position": [
+                                                                                                            -1.0463942289352418,
+                                                                                                            -7.1175456047058109,
+                                                                                                            1.345292568206787
+                                                                                                        ],
+                                                                                                        "Rotation": [
+                                                                                                            0.0,
+                                                                                                            0.0,
+                                                                                                            0.00004109861038159579,
+                                                                                                            1.0
+                                                                                                        ],
+                                                                                                        "Scale": [
+                                                                                                            1.0,
+                                                                                                            1.0,
+                                                                                                            1.0
+                                                                                                        ],
+                                                                                                        "LocalEulerAngles": [
+                                                                                                            -0.0,
+                                                                                                            0.0,
+                                                                                                            0.0047095539048314098
+                                                                                                        ]
+                                                                                                    }
+                                                                                                ],
+                                                                                                "Children": null
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            },
+                                                                            {
+                                                                                "Name": "Duke_LeftHandIndex1",
+                                                                                "Active": true,
+                                                                                "RootBoneName": "",
+                                                                                "Mask": 0,
+                                                                                "Components": [
+                                                                                    {
+                                                                                        "Type": "Transform",
+                                                                                        "Active": true,
+                                                                                        "Position": [
+                                                                                            1.9628801345825196,
+                                                                                            -12.288130760192871,
+                                                                                            6.449880599975586
+                                                                                        ],
+                                                                                        "Rotation": [
+                                                                                            0.0,
+                                                                                            0.0,
+                                                                                            0.00012833093933295459,
+                                                                                            1.0
+                                                                                        ],
+                                                                                        "Scale": [
+                                                                                            0.9999999403953552,
+                                                                                            0.9999999403953552,
+                                                                                            1.0
+                                                                                        ],
+                                                                                        "LocalEulerAngles": [
+                                                                                            -0.0,
+                                                                                            0.0,
+                                                                                            0.014705642126500607
+                                                                                        ]
+                                                                                    }
+                                                                                ],
+                                                                                "Children": [
+                                                                                    {
+                                                                                        "Name": "Duke_LeftHandIndex2",
+                                                                                        "Active": true,
+                                                                                        "RootBoneName": "",
+                                                                                        "Mask": 0,
+                                                                                        "Components": [
+                                                                                            {
+                                                                                                "Type": "Transform",
+                                                                                                "Active": true,
+                                                                                                "Position": [
+                                                                                                    -1.978380560874939,
+                                                                                                    -6.971251964569092,
+                                                                                                    2.0209245681762697
+                                                                                                ],
+                                                                                                "Rotation": [
+                                                                                                    0.0000017253524902116624,
+                                                                                                    0.017452405765652658,
+                                                                                                    -0.00009362169657833874,
+                                                                                                    0.9998477101325989
+                                                                                                ],
+                                                                                                "Scale": [
+                                                                                                    1.0,
+                                                                                                    1.0,
+                                                                                                    1.0
+                                                                                                ],
+                                                                                                "LocalEulerAngles": [
+                                                                                                    0.00038514923653565347,
+                                                                                                    2.0,
+                                                                                                    -0.010736613534390927
+                                                                                                ]
+                                                                                            }
+                                                                                        ],
+                                                                                        "Children": [
+                                                                                            {
+                                                                                                "Name": "Duke_LeftHandIndex3",
+                                                                                                "Active": true,
+                                                                                                "RootBoneName": "",
+                                                                                                "Mask": 0,
+                                                                                                "Components": [
+                                                                                                    {
+                                                                                                        "Type": "Transform",
+                                                                                                        "Active": true,
+                                                                                                        "Position": [
+                                                                                                            -3.273205280303955,
+                                                                                                            -5.394822120666504,
+                                                                                                            0.9803585410118103
+                                                                                                        ],
+                                                                                                        "Rotation": [
+                                                                                                            0.00000156339262957772,
+                                                                                                            -0.08715575188398361,
+                                                                                                            0.00002541101275710389,
+                                                                                                            0.9961947202682495
+                                                                                                        ],
+                                                                                                        "Scale": [
+                                                                                                            0.9999999403953552,
+                                                                                                            1.0,
+                                                                                                            0.9999999403953552
+                                                                                                        ],
+                                                                                                        "LocalEulerAngles": [
+                                                                                                            0.0004389258974697441,
+                                                                                                            -10.000000953674317,
+                                                                                                            0.0029614116065204145
+                                                                                                        ]
+                                                                                                    }
+                                                                                                ],
+                                                                                                "Children": null
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            },
+                                                                            {
+                                                                                "Name": "Duke_LeftHandMiddle1",
+                                                                                "Active": true,
+                                                                                "RootBoneName": "",
+                                                                                "Mask": 0,
+                                                                                "Components": [
+                                                                                    {
+                                                                                        "Type": "Transform",
+                                                                                        "Active": true,
+                                                                                        "Position": [
+                                                                                            2.1624813079833986,
+                                                                                            -12.414129257202149,
+                                                                                            2.8706400394439699
+                                                                                        ],
+                                                                                        "Rotation": [
+                                                                                            0.0,
+                                                                                            0.0,
+                                                                                            0.00012833093933295459,
+                                                                                            1.0
+                                                                                        ],
+                                                                                        "Scale": [
+                                                                                            0.9999999403953552,
+                                                                                            0.9999999403953552,
+                                                                                            1.0
+                                                                                        ],
+                                                                                        "LocalEulerAngles": [
+                                                                                            -0.0,
+                                                                                            0.0,
+                                                                                            0.014705642126500607
+                                                                                        ]
+                                                                                    }
+                                                                                ],
+                                                                                "Children": [
+                                                                                    {
+                                                                                        "Name": "Duke_LeftHandMiddle2",
+                                                                                        "Active": true,
+                                                                                        "RootBoneName": "",
+                                                                                        "Mask": 0,
+                                                                                        "Components": [
+                                                                                            {
+                                                                                                "Type": "Transform",
+                                                                                                "Active": true,
+                                                                                                "Position": [
+                                                                                                    -0.0335342213511467,
+                                                                                                    -8.583426475524903,
+                                                                                                    0.8628314733505249
+                                                                                                ],
+                                                                                                "Rotation": [
+                                                                                                    2.9929294598218805e-9,
+                                                                                                    0.00003109595490968786,
+                                                                                                    -0.00009624819358577952,
+                                                                                                    1.0
+                                                                                                ],
+                                                                                                "Scale": [
+                                                                                                    1.0,
+                                                                                                    1.0,
+                                                                                                    1.0
+                                                                                                ],
+                                                                                                "LocalEulerAngles": [
+                                                                                                    6.859289101157628e-7,
+                                                                                                    0.0035633340012282135,
+                                                                                                    -0.011029230430722237
+                                                                                                ]
+                                                                                            }
+                                                                                        ],
+                                                                                        "Children": [
+                                                                                            {
+                                                                                                "Name": "Duke_LeftHandMiddle3",
+                                                                                                "Active": true,
+                                                                                                "RootBoneName": "",
+                                                                                                "Mask": 0,
+                                                                                                "Components": [
+                                                                                                    {
+                                                                                                        "Type": "Transform",
+                                                                                                        "Active": true,
+                                                                                                        "Position": [
+                                                                                                            -2.470874786376953,
+                                                                                                            -5.9565205574035648,
+                                                                                                            0.6014525890350342
+                                                                                                        ],
+                                                                                                        "Rotation": [
+                                                                                                            3.59151597351115e-9,
+                                                                                                            -0.00015547977818641812,
+                                                                                                            0.00003849927452392876,
+                                                                                                            1.0
+                                                                                                        ],
+                                                                                                        "Scale": [
+                                                                                                            1.0,
+                                                                                                            1.0,
+                                                                                                            1.0
+                                                                                                        ],
+                                                                                                        "LocalEulerAngles": [
+                                                                                                            0.0000010974863471346908,
+                                                                                                            -0.01781667023897171,
+                                                                                                            0.004411692265421152
+                                                                                                        ]
+                                                                                                    }
+                                                                                                ],
+                                                                                                "Children": null
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            },
+                                                                            {
+                                                                                "Name": "Duke_LeftHandRing1",
+                                                                                "Active": true,
+                                                                                "RootBoneName": "",
+                                                                                "Mask": 0,
+                                                                                "Components": [
+                                                                                    {
+                                                                                        "Type": "Transform",
+                                                                                        "Active": true,
+                                                                                        "Position": [
+                                                                                            1.9285224676132203,
+                                                                                            -12.200223922729493,
+                                                                                            -1.0101207494735718
+                                                                                        ],
+                                                                                        "Rotation": [
+                                                                                            0.0,
+                                                                                            0.0,
+                                                                                            0.00012833093933295459,
+                                                                                            1.0
+                                                                                        ],
+                                                                                        "Scale": [
+                                                                                            0.9999999403953552,
+                                                                                            0.9999999403953552,
+                                                                                            1.0
+                                                                                        ],
+                                                                                        "LocalEulerAngles": [
+                                                                                            -0.0,
+                                                                                            0.0,
+                                                                                            0.014705642126500607
+                                                                                        ]
+                                                                                    }
+                                                                                ],
+                                                                                "Children": [
+                                                                                    {
+                                                                                        "Name": "Duke_LeftHandRing2",
+                                                                                        "Active": true,
+                                                                                        "RootBoneName": "",
+                                                                                        "Mask": 0,
+                                                                                        "Components": [
+                                                                                            {
+                                                                                                "Type": "Transform",
+                                                                                                "Active": true,
+                                                                                                "Position": [
+                                                                                                    -0.8032659292221069,
+                                                                                                    -8.416001319885254,
+                                                                                                    -0.6100335121154785
+                                                                                                ],
+                                                                                                "Rotation": [
+                                                                                                    2.993093328740315e-9,
+                                                                                                    0.00003109765748376958,
+                                                                                                    -0.00009624819358577952,
+                                                                                                    1.0
+                                                                                                ],
+                                                                                                "Scale": [
+                                                                                                    1.0,
+                                                                                                    1.0,
+                                                                                                    1.0
+                                                                                                ],
+                                                                                                "LocalEulerAngles": [
+                                                                                                    6.859664836156298e-7,
+                                                                                                    0.0035635291133075954,
+                                                                                                    -0.011029230430722237
+                                                                                                ]
+                                                                                            }
+                                                                                        ],
+                                                                                        "Children": [
+                                                                                            {
+                                                                                                "Name": "Duke_LeftHandRing3",
+                                                                                                "Active": true,
+                                                                                                "RootBoneName": "",
+                                                                                                "Mask": 0,
+                                                                                                "Components": [
+                                                                                                    {
+                                                                                                        "Type": "Transform",
+                                                                                                        "Active": true,
+                                                                                                        "Position": [
+                                                                                                            -2.357889413833618,
+                                                                                                            -5.414599895477295,
+                                                                                                            -0.3313235342502594
+                                                                                                        ],
+                                                                                                        "Rotation": [
+                                                                                                            3.591711594808089e-9,
+                                                                                                            -0.00015548827650491148,
+                                                                                                            0.00003849927452392876,
+                                                                                                            1.0
+                                                                                                        ],
+                                                                                                        "Scale": [
+                                                                                                            1.0,
+                                                                                                            1.0,
+                                                                                                            1.0
+                                                                                                        ],
+                                                                                                        "LocalEulerAngles": [
+                                                                                                            0.0000010975463737850078,
+                                                                                                            -0.017817644402384759,
+                                                                                                            0.004411692265421152
+                                                                                                        ]
+                                                                                                    }
+                                                                                                ],
+                                                                                                "Children": null
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            },
+                                                                            {
+                                                                                "Name": "Duke_LeftHandPinky1",
+                                                                                "Active": true,
+                                                                                "RootBoneName": "",
+                                                                                "Mask": 0,
+                                                                                "Components": [
+                                                                                    {
+                                                                                        "Type": "Transform",
+                                                                                        "Active": true,
+                                                                                        "Position": [
+                                                                                            1.5861177444458008,
+                                                                                            -12.052821159362793,
+                                                                                            -4.808151721954346
+                                                                                        ],
+                                                                                        "Rotation": [
+                                                                                            0.0,
+                                                                                            0.0,
+                                                                                            0.00012833093933295459,
+                                                                                            1.0
+                                                                                        ],
+                                                                                        "Scale": [
+                                                                                            0.9999999403953552,
+                                                                                            0.9999999403953552,
+                                                                                            1.0
+                                                                                        ],
+                                                                                        "LocalEulerAngles": [
+                                                                                            -0.0,
+                                                                                            0.0,
+                                                                                            0.014705642126500607
+                                                                                        ]
+                                                                                    }
+                                                                                ],
+                                                                                "Children": [
+                                                                                    {
+                                                                                        "Name": "Duke_LeftHandPinky2",
+                                                                                        "Active": true,
+                                                                                        "RootBoneName": "",
+                                                                                        "Mask": 0,
+                                                                                        "Components": [
+                                                                                            {
+                                                                                                "Type": "Transform",
+                                                                                                "Active": true,
+                                                                                                "Position": [
+                                                                                                    -1.7662742137908936,
+                                                                                                    -6.559276580810547,
+                                                                                                    -1.219712734222412
+                                                                                                ],
+                                                                                                "Rotation": [
+                                                                                                    0.0,
+                                                                                                    0.0,
+                                                                                                    -0.0001029068444040604,
+                                                                                                    1.0
+                                                                                                ],
+                                                                                                "Scale": [
+                                                                                                    1.0,
+                                                                                                    1.0,
+                                                                                                    1.0
+                                                                                                ],
+                                                                                                "LocalEulerAngles": [
+                                                                                                    0.0,
+                                                                                                    0.0,
+                                                                                                    -0.011792255565524102
+                                                                                                ]
+                                                                                            }
+                                                                                        ],
+                                                                                        "Children": [
+                                                                                            {
+                                                                                                "Name": "Duke_LeftHandPinky3",
+                                                                                                "Active": true,
+                                                                                                "RootBoneName": "",
+                                                                                                "Mask": 0,
+                                                                                                "Components": [
+                                                                                                    {
+                                                                                                        "Type": "Transform",
+                                                                                                        "Active": true,
+                                                                                                        "Position": [
+                                                                                                            -2.2603325843811037,
+                                                                                                            -4.499114036560059,
+                                                                                                            -0.8124397397041321
+                                                                                                        ],
+                                                                                                        "Rotation": [
+                                                                                                            0.0,
+                                                                                                            0.0,
+                                                                                                            0.00007179256499512121,
+                                                                                                            1.0
+                                                                                                        ],
+                                                                                                        "Scale": [
+                                                                                                            1.0,
+                                                                                                            1.0,
+                                                                                                            1.0
+                                                                                                        ],
+                                                                                                        "LocalEulerAngles": [
+                                                                                                            -0.0,
+                                                                                                            0.0,
+                                                                                                            0.008226822130382061
+                                                                                                        ]
+                                                                                                    }
+                                                                                                ],
+                                                                                                "Children": null
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        "Name": "Duke_Gun",
+                                                                        "Active": true,
+                                                                        "RootBoneName": "",
+                                                                        "Mask": 0,
+                                                                        "Components": [
+                                                                            {
+                                                                                "Type": "Transform",
+                                                                                "Active": true,
+                                                                                "Position": [
+                                                                                    17.427392959594728,
+                                                                                    -6.970004081726074,
+                                                                                    3.6148335933685304
+                                                                                ],
+                                                                                "Rotation": [
+                                                                                    0.0,
+                                                                                    0.0,
+                                                                                    -0.00003208273119525984,
+                                                                                    1.0
+                                                                                ],
+                                                                                "Scale": [
+                                                                                    1.0,
+                                                                                    1.0,
+                                                                                    1.0
+                                                                                ],
+                                                                                "LocalEulerAngles": [
+                                                                                    0.0,
+                                                                                    0.0,
+                                                                                    -0.003676410298794508
+                                                                                ]
+                                                                            }
+                                                                        ],
+                                                                        "Children": [
+                                                                            {
+                                                                                "Name": "Cannon1",
+                                                                                "Active": true,
+                                                                                "RootBoneName": "",
+                                                                                "Mask": 0,
+                                                                                "Components": [
+                                                                                    {
+                                                                                        "Type": "Transform",
+                                                                                        "Active": true,
+                                                                                        "Position": [
+                                                                                            5.370735168457031,
+                                                                                            -7.7501349449157719,
+                                                                                            2.7032971382141115
+                                                                                        ],
+                                                                                        "Rotation": [
+                                                                                            -0.13310857117176057,
+                                                                                            0.010206065140664578,
+                                                                                            0.09094984829425812,
+                                                                                            0.98686683177948
+                                                                                        ],
+                                                                                        "Scale": [
+                                                                                            1.0,
+                                                                                            1.0,
+                                                                                            1.0
+                                                                                        ],
+                                                                                        "LocalEulerAngles": [
+                                                                                            -15.34196949005127,
+                                                                                            -0.23310016095638276,
+                                                                                            10.499637603759766
+                                                                                        ]
+                                                                                    }
+                                                                                ],
+                                                                                "Children": null
+                                                                            },
+                                                                            {
+                                                                                "Name": "Cannon2",
+                                                                                "Active": true,
+                                                                                "RootBoneName": "",
+                                                                                "Mask": 0,
+                                                                                "Components": [
+                                                                                    {
+                                                                                        "Type": "Transform",
+                                                                                        "Active": true,
+                                                                                        "Position": [
+                                                                                            -0.4729565382003784,
+                                                                                            -3.360072135925293,
+                                                                                            4.128169536590576
+                                                                                        ],
+                                                                                        "Rotation": [
+                                                                                            -0.13332198560237885,
+                                                                                            0.0068788183853030209,
+                                                                                            0.0662769004702568,
+                                                                                            0.9888302683830261
+                                                                                        ],
+                                                                                        "Scale": [
+                                                                                            1.0,
+                                                                                            1.0,
+                                                                                            1.0
+                                                                                        ],
+                                                                                        "LocalEulerAngles": [
+                                                                                            -15.341974258422852,
+                                                                                            -0.23310096561908723,
+                                                                                            7.637696266174316
+                                                                                        ]
+                                                                                    }
+                                                                                ],
+                                                                                "Children": null
+                                                                            },
+                                                                            {
+                                                                                "Name": "Cannon3",
+                                                                                "Active": true,
+                                                                                "RootBoneName": "",
+                                                                                "Mask": 0,
+                                                                                "Components": [
+                                                                                    {
+                                                                                        "Type": "Transform",
+                                                                                        "Active": true,
+                                                                                        "Position": [
+                                                                                            0.1335320621728897,
+                                                                                            -9.203567504882813,
+                                                                                            0.06610479205846787
+                                                                                        ],
+                                                                                        "Rotation": [
+                                                                                            -0.13332198560237885,
+                                                                                            0.0068788183853030209,
+                                                                                            0.0662769004702568,
+                                                                                            0.9888302683830261
+                                                                                        ],
+                                                                                        "Scale": [
+                                                                                            1.0,
+                                                                                            1.0,
+                                                                                            1.0
+                                                                                        ],
+                                                                                        "LocalEulerAngles": [
+                                                                                            -15.341974258422852,
+                                                                                            -0.23310096561908723,
+                                                                                            7.637696266174316
+                                                                                        ]
+                                                                                    }
+                                                                                ],
+                                                                                "Children": null
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "Name": "Duke_RightShoulder",
+                                                "Active": true,
+                                                "RootBoneName": "",
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform",
+                                                        "Active": true,
+                                                        "Position": [
+                                                            -16.790603637695314,
+                                                            6.8892388343811039,
+                                                            -6.263177871704102
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            -0.0,
+                                                            0.0,
+                                                            -0.0
+                                                        ]
+                                                    }
+                                                ],
+                                                "Children": [
+                                                    {
+                                                        "Name": "Duke_RightArm",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    -16.707807540893556,
+                                                                    -9.179422378540039,
+                                                                    2.186978340148926
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.000020231516828062014,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    -0.0,
+                                                                    0.0,
+                                                                    0.0023183610755950214
+                                                                ]
+                                                            }
+                                                        ],
+                                                        "Children": [
+                                                            {
+                                                                "Name": "Duke_RightForeArm",
+                                                                "Active": true,
+                                                                "RootBoneName": "",
+                                                                "Mask": 0,
+                                                                "Components": [
+                                                                    {
+                                                                        "Type": "Transform",
+                                                                        "Active": true,
+                                                                        "Position": [
+                                                                            -7.657164573669434,
+                                                                            -27.75925636291504,
+                                                                            0.008884454146027565
+                                                                        ],
+                                                                        "Rotation": [
+                                                                            0.0,
+                                                                            0.0,
+                                                                            -0.00012138909369241446,
+                                                                            1.0
+                                                                        ],
+                                                                        "Scale": [
+                                                                            1.0,
+                                                                            1.0,
+                                                                            1.0
+                                                                        ],
+                                                                        "LocalEulerAngles": [
+                                                                            0.0,
+                                                                            0.0,
+                                                                            -0.01391016598790884
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "Children": [
+                                                                    {
+                                                                        "Name": "Duke_RightHand",
+                                                                        "Active": true,
+                                                                        "RootBoneName": "",
+                                                                        "Mask": 0,
+                                                                        "Components": [
+                                                                            {
+                                                                                "Type": "Transform",
+                                                                                "Active": true,
+                                                                                "Position": [
+                                                                                    -6.151578903198242,
+                                                                                    -24.942235946655275,
+                                                                                    9.184952735900879
+                                                                                ],
+                                                                                "Rotation": [
+                                                                                    0.0,
+                                                                                    0.0,
+                                                                                    0.00030347274150699377,
+                                                                                    0.9999999403953552
+                                                                                ],
+                                                                                "Scale": [
+                                                                                    1.0,
+                                                                                    1.0,
+                                                                                    1.0
+                                                                                ],
+                                                                                "LocalEulerAngles": [
+                                                                                    -0.0,
+                                                                                    0.0,
+                                                                                    0.03477541357278824
+                                                                                ]
+                                                                            }
+                                                                        ],
+                                                                        "Children": [
+                                                                            {
+                                                                                "Name": "Duke_RightHandThumb1",
+                                                                                "Active": true,
+                                                                                "RootBoneName": "",
+                                                                                "Mask": 0,
+                                                                                "Components": [
+                                                                                    {
+                                                                                        "Type": "Transform",
+                                                                                        "Active": true,
+                                                                                        "Position": [
+                                                                                            1.788198709487915,
+                                                                                            -0.8168728351593018,
+                                                                                            10.832395553588868
+                                                                                        ],
+                                                                                        "Rotation": [
+                                                                                            0.0,
+                                                                                            0.0,
+                                                                                            -0.00040463032200932503,
+                                                                                            0.9999999403953552
+                                                                                        ],
+                                                                                        "Scale": [
+                                                                                            1.0,
+                                                                                            1.0,
+                                                                                            1.0
+                                                                                        ],
+                                                                                        "LocalEulerAngles": [
+                                                                                            0.0,
+                                                                                            0.0,
+                                                                                            -0.04636722058057785
+                                                                                        ]
+                                                                                    }
+                                                                                ],
+                                                                                "Children": [
+                                                                                    {
+                                                                                        "Name": "Duke_RightHandThumb2",
+                                                                                        "Active": true,
+                                                                                        "RootBoneName": "",
+                                                                                        "Mask": 0,
+                                                                                        "Components": [
+                                                                                            {
+                                                                                                "Type": "Transform",
+                                                                                                "Active": true,
+                                                                                                "Position": [
+                                                                                                    1.5137478113174439,
+                                                                                                    -7.175918102264404,
+                                                                                                    2.7667648792266847
+                                                                                                ],
+                                                                                                "Rotation": [
+                                                                                                    0.0,
+                                                                                                    0.0,
+                                                                                                    0.00030347274150699377,
+                                                                                                    0.9999999403953552
+                                                                                                ],
+                                                                                                "Scale": [
+                                                                                                    1.0,
+                                                                                                    1.0,
+                                                                                                    1.0
+                                                                                                ],
+                                                                                                "LocalEulerAngles": [
+                                                                                                    -0.0,
+                                                                                                    0.0,
+                                                                                                    0.03477541357278824
+                                                                                                ]
+                                                                                            }
+                                                                                        ],
+                                                                                        "Children": [
+                                                                                            {
+                                                                                                "Name": "Duke_RightHandThumb3",
+                                                                                                "Active": true,
+                                                                                                "RootBoneName": "",
+                                                                                                "Mask": 0,
+                                                                                                "Components": [
+                                                                                                    {
+                                                                                                        "Type": "Transform",
+                                                                                                        "Active": true,
+                                                                                                        "Position": [
+                                                                                                            1.0454108715057374,
+                                                                                                            -7.117690086364746,
+                                                                                                            1.345292568206787
+                                                                                                        ],
+                                                                                                        "Rotation": [
+                                                                                                            0.0,
+                                                                                                            0.0,
+                                                                                                            -0.00011613490642048419,
+                                                                                                            1.0
+                                                                                                        ],
+                                                                                                        "Scale": [
+                                                                                                            1.0,
+                                                                                                            1.0,
+                                                                                                            1.0
+                                                                                                        ],
+                                                                                                        "LocalEulerAngles": [
+                                                                                                            0.0,
+                                                                                                            0.0,
+                                                                                                            -0.013308079913258553
+                                                                                                        ]
+                                                                                                    }
+                                                                                                ],
+                                                                                                "Children": null
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            },
+                                                                            {
+                                                                                "Name": "Duke_RightHandIndex1",
+                                                                                "Active": true,
+                                                                                "RootBoneName": "",
+                                                                                "Mask": 0,
+                                                                                "Components": [
+                                                                                    {
+                                                                                        "Type": "Transform",
+                                                                                        "Active": true,
+                                                                                        "Position": [
+                                                                                            -1.9662752151489258,
+                                                                                            -12.287588119506836,
+                                                                                            6.449880599975586
+                                                                                        ],
+                                                                                        "Rotation": [
+                                                                                            0.0,
+                                                                                            0.0,
+                                                                                            -0.00040463032200932503,
+                                                                                            0.9999999403953552
+                                                                                        ],
+                                                                                        "Scale": [
+                                                                                            1.0,
+                                                                                            1.0,
+                                                                                            1.0
+                                                                                        ],
+                                                                                        "LocalEulerAngles": [
+                                                                                            0.0,
+                                                                                            0.0,
+                                                                                            -0.04636722058057785
+                                                                                        ]
+                                                                                    }
+                                                                                ],
+                                                                                "Children": [
+                                                                                    {
+                                                                                        "Name": "Duke_RightHandIndex2",
+                                                                                        "Active": true,
+                                                                                        "RootBoneName": "",
+                                                                                        "Mask": 0,
+                                                                                        "Components": [
+                                                                                            {
+                                                                                                "Type": "Transform",
+                                                                                                "Active": true,
+                                                                                                "Position": [
+                                                                                                    1.980306625366211,
+                                                                                                    -6.970705032348633,
+                                                                                                    2.0209245681762697
+                                                                                                ],
+                                                                                                "Rotation": [
+                                                                                                    -0.00000529650014868821,
+                                                                                                    0.017452968284487726,
+                                                                                                    0.000303426495520398,
+                                                                                                    0.9998476505279541
+                                                                                                ],
+                                                                                                "Scale": [
+                                                                                                    1.0,
+                                                                                                    1.0,
+                                                                                                    1.0
+                                                                                                ],
+                                                                                                "LocalEulerAngles": [
+                                                                                                    -0.0012144233332946897,
+                                                                                                    2.0000641345977785,
+                                                                                                    0.034796614199876788
+                                                                                                ]
+                                                                                            }
+                                                                                        ],
+                                                                                        "Children": [
+                                                                                            {
+                                                                                                "Name": "Duke_RightHandIndex3",
+                                                                                                "Active": true,
+                                                                                                "RootBoneName": "",
+                                                                                                "Mask": 0,
+                                                                                                "Components": [
+                                                                                                    {
+                                                                                                        "Type": "Transform",
+                                                                                                        "Active": true,
+                                                                                                        "Position": [
+                                                                                                            3.196071147918701,
+                                                                                                            -5.3952860832214359,
+                                                                                                            1.2062733173370362
+                                                                                                        ],
+                                                                                                        "Rotation": [
+                                                                                                            -0.000005647450507240137,
+                                                                                                            -0.08715855330228806,
+                                                                                                            -0.00012124739441787824,
+                                                                                                            0.9961944818496704
+                                                                                                        ],
+                                                                                                        "Scale": [
+                                                                                                            0.9999999403953552,
+                                                                                                            0.9999999403953552,
+                                                                                                            1.0
+                                                                                                        ],
+                                                                                                        "LocalEulerAngles": [
+                                                                                                            -0.0018842905992642046,
+                                                                                                            -10.000323295593262,
+                                                                                                            -0.014111864380538464
+                                                                                                        ]
+                                                                                                    }
+                                                                                                ],
+                                                                                                "Children": null
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            },
+                                                                            {
+                                                                                "Name": "Duke_RightHandMiddle1",
+                                                                                "Active": true,
+                                                                                "RootBoneName": "",
+                                                                                "Mask": 0,
+                                                                                "Components": [
+                                                                                    {
+                                                                                        "Type": "Transform",
+                                                                                        "Active": true,
+                                                                                        "Position": [
+                                                                                            -2.1659111976623537,
+                                                                                            -12.413531303405762,
+                                                                                            2.8706400394439699
+                                                                                        ],
+                                                                                        "Rotation": [
+                                                                                            0.0,
+                                                                                            0.0,
+                                                                                            -0.00040463032200932503,
+                                                                                            0.9999999403953552
+                                                                                        ],
+                                                                                        "Scale": [
+                                                                                            1.0,
+                                                                                            1.0,
+                                                                                            1.0
+                                                                                        ],
+                                                                                        "LocalEulerAngles": [
+                                                                                            0.0,
+                                                                                            0.0,
+                                                                                            -0.04636722058057785
+                                                                                        ]
+                                                                                    }
+                                                                                ],
+                                                                                "Children": [
+                                                                                    {
+                                                                                        "Name": "Duke_RightHandMiddle2",
+                                                                                        "Active": true,
+                                                                                        "RootBoneName": "",
+                                                                                        "Mask": 0,
+                                                                                        "Components": [
+                                                                                            {
+                                                                                                "Type": "Transform",
+                                                                                                "Active": true,
+                                                                                                "Position": [
+                                                                                                    0.03590581566095352,
+                                                                                                    -8.583416938781739,
+                                                                                                    0.8628314733505249
+                                                                                                ],
+                                                                                                "Rotation": [
+                                                                                                    -0.00000529650014868821,
+                                                                                                    0.017452968284487726,
+                                                                                                    0.000303426495520398,
+                                                                                                    0.9998476505279541
+                                                                                                ],
+                                                                                                "Scale": [
+                                                                                                    1.0,
+                                                                                                    1.0,
+                                                                                                    1.0
+                                                                                                ],
+                                                                                                "LocalEulerAngles": [
+                                                                                                    -0.0012144233332946897,
+                                                                                                    2.0000641345977785,
+                                                                                                    0.034796614199876788
+                                                                                                ]
+                                                                                            }
+                                                                                        ],
+                                                                                        "Children": [
+                                                                                            {
+                                                                                                "Name": "Duke_RightHandMiddle3",
+                                                                                                "Active": true,
+                                                                                                "RootBoneName": "",
+                                                                                                "Mask": 0,
+                                                                                                "Components": [
+                                                                                                    {
+                                                                                                        "Type": "Transform",
+                                                                                                        "Active": true,
+                                                                                                        "Position": [
+                                                                                                            2.4475133419036867,
+                                                                                                            -5.95686149597168,
+                                                                                                            0.687444806098938
+                                                                                                        ],
+                                                                                                        "Rotation": [
+                                                                                                            -0.000005647450507240137,
+                                                                                                            -0.08715855330228806,
+                                                                                                            -0.00012124739441787824,
+                                                                                                            0.9961944818496704
+                                                                                                        ],
+                                                                                                        "Scale": [
+                                                                                                            0.9999999403953552,
+                                                                                                            0.9999999403953552,
+                                                                                                            1.0
+                                                                                                        ],
+                                                                                                        "LocalEulerAngles": [
+                                                                                                            -0.0018842905992642046,
+                                                                                                            -10.000323295593262,
+                                                                                                            -0.014111864380538464
+                                                                                                        ]
+                                                                                                    }
+                                                                                                ],
+                                                                                                "Children": null
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            },
+                                                                            {
+                                                                                "Name": "Duke_RightHandRing1",
+                                                                                "Active": true,
+                                                                                "RootBoneName": "",
+                                                                                "Mask": 0,
+                                                                                "Components": [
+                                                                                    {
+                                                                                        "Type": "Transform",
+                                                                                        "Active": true,
+                                                                                        "Position": [
+                                                                                            -1.9318933486938477,
+                                                                                            -12.199690818786621,
+                                                                                            -1.0101207494735718
+                                                                                        ],
+                                                                                        "Rotation": [
+                                                                                            0.0,
+                                                                                            0.0,
+                                                                                            -0.00040463032200932503,
+                                                                                            0.9999999403953552
+                                                                                        ],
+                                                                                        "Scale": [
+                                                                                            1.0,
+                                                                                            1.0,
+                                                                                            1.0
+                                                                                        ],
+                                                                                        "LocalEulerAngles": [
+                                                                                            0.0,
+                                                                                            0.0,
+                                                                                            -0.04636722058057785
+                                                                                        ]
+                                                                                    }
+                                                                                ],
+                                                                                "Children": [
+                                                                                    {
+                                                                                        "Name": "Duke_RightHandRing2",
+                                                                                        "Active": true,
+                                                                                        "RootBoneName": "",
+                                                                                        "Mask": 0,
+                                                                                        "Components": [
+                                                                                            {
+                                                                                                "Type": "Transform",
+                                                                                                "Active": true,
+                                                                                                "Position": [
+                                                                                                    0.8055912256240845,
+                                                                                                    -8.415779113769532,
+                                                                                                    -0.6100335121154785
+                                                                                                ],
+                                                                                                "Rotation": [
+                                                                                                    -0.00000529650014868821,
+                                                                                                    0.017452968284487726,
+                                                                                                    0.000303426495520398,
+                                                                                                    0.9998476505279541
+                                                                                                ],
+                                                                                                "Scale": [
+                                                                                                    1.0,
+                                                                                                    1.0,
+                                                                                                    1.0
+                                                                                                ],
+                                                                                                "LocalEulerAngles": [
+                                                                                                    -0.0012144233332946897,
+                                                                                                    2.0000641345977785,
+                                                                                                    0.034796614199876788
+                                                                                                ]
+                                                                                            }
+                                                                                        ],
+                                                                                        "Children": [
+                                                                                            {
+                                                                                                "Name": "Duke_RightHandRing3",
+                                                                                                "Active": true,
+                                                                                                "RootBoneName": "",
+                                                                                                "Mask": 0,
+                                                                                                "Components": [
+                                                                                                    {
+                                                                                                        "Type": "Transform",
+                                                                                                        "Active": true,
+                                                                                                        "Position": [
+                                                                                                            2.3672842979431154,
+                                                                                                            -5.414925575256348,
+                                                                                                            -0.24870871007442475
+                                                                                                        ],
+                                                                                                        "Rotation": [
+                                                                                                            -0.000005647450507240137,
+                                                                                                            -0.08715855330228806,
+                                                                                                            -0.00012124739441787824,
+                                                                                                            0.9961944818496704
+                                                                                                        ],
+                                                                                                        "Scale": [
+                                                                                                            0.9999999403953552,
+                                                                                                            0.9999999403953552,
+                                                                                                            1.0
+                                                                                                        ],
+                                                                                                        "LocalEulerAngles": [
+                                                                                                            -0.0018842905992642046,
+                                                                                                            -10.000323295593262,
+                                                                                                            -0.014111864380538464
+                                                                                                        ]
+                                                                                                    }
+                                                                                                ],
+                                                                                                "Children": null
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            },
+                                                                            {
+                                                                                "Name": "Duke_RightHandPinky1",
+                                                                                "Active": true,
+                                                                                "RootBoneName": "",
+                                                                                "Mask": 0,
+                                                                                "Components": [
+                                                                                    {
+                                                                                        "Type": "Transform",
+                                                                                        "Active": true,
+                                                                                        "Position": [
+                                                                                            -1.5894478559494019,
+                                                                                            -12.052382469177246,
+                                                                                            -4.808151721954346
+                                                                                        ],
+                                                                                        "Rotation": [
+                                                                                            0.0,
+                                                                                            0.0,
+                                                                                            -0.00040463032200932503,
+                                                                                            0.9999999403953552
+                                                                                        ],
+                                                                                        "Scale": [
+                                                                                            1.0,
+                                                                                            1.0,
+                                                                                            1.0
+                                                                                        ],
+                                                                                        "LocalEulerAngles": [
+                                                                                            0.0,
+                                                                                            0.0,
+                                                                                            -0.04636722058057785
+                                                                                        ]
+                                                                                    }
+                                                                                ],
+                                                                                "Children": [
+                                                                                    {
+                                                                                        "Name": "Duke_RightHandPinky2",
+                                                                                        "Active": true,
+                                                                                        "RootBoneName": "",
+                                                                                        "Mask": 0,
+                                                                                        "Components": [
+                                                                                            {
+                                                                                                "Type": "Transform",
+                                                                                                "Active": true,
+                                                                                                "Position": [
+                                                                                                    1.7680864334106446,
+                                                                                                    -6.558788299560547,
+                                                                                                    -1.219712734222412
+                                                                                                ],
+                                                                                                "Rotation": [
+                                                                                                    -0.000005485544988914626,
+                                                                                                    0.017452968284487726,
+                                                                                                    0.0002925964945461601,
+                                                                                                    0.9998476505279541
+                                                                                                ],
+                                                                                                "Scale": [
+                                                                                                    1.0,
+                                                                                                    1.0,
+                                                                                                    1.0
+                                                                                                ],
+                                                                                                "LocalEulerAngles": [
+                                                                                                    -0.0012144233332946897,
+                                                                                                    2.0000641345977785,
+                                                                                                    0.033555395901203158
+                                                                                                ]
+                                                                                            }
+                                                                                        ],
+                                                                                        "Children": [
+                                                                                            {
+                                                                                                "Name": "Duke_RightHandPinky3",
+                                                                                                "Active": true,
+                                                                                                "RootBoneName": "",
+                                                                                                "Mask": 0,
+                                                                                                "Components": [
+                                                                                                    {
+                                                                                                        "Type": "Transform",
+                                                                                                        "Active": true,
+                                                                                                        "Position": [
+                                                                                                            2.286846399307251,
+                                                                                                            -4.499346733093262,
+                                                                                                            -0.733077347278595
+                                                                                                        ],
+                                                                                                        "Rotation": [
+                                                                                                            -0.0000047033790906425569,
+                                                                                                            -0.08715855330228806,
+                                                                                                            -0.00006716336065437645,
+                                                                                                            0.9961944818496704
+                                                                                                        ],
+                                                                                                        "Scale": [
+                                                                                                            1.0,
+                                                                                                            1.0,
+                                                                                                            1.0
+                                                                                                        ],
+                                                                                                        "LocalEulerAngles": [
+                                                                                                            -0.0012263517128303648,
+                                                                                                            -10.000323295593262,
+                                                                                                            -0.007833050563931466
+                                                                                                        ]
+                                                                                                    }
+                                                                                                ],
+                                                                                                "Children": null
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "Name": "Duke_Neck",
+                                                "Active": true,
+                                                "RootBoneName": "",
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform",
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            18.3460750579834,
+                                                            -1.272240161895752
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            -0.0,
+                                                            0.0,
+                                                            -0.0
+                                                        ]
+                                                    }
+                                                ],
+                                                "Children": [
+                                                    {
+                                                        "Name": "Duke_Head",
+                                                        "Active": true,
+                                                        "RootBoneName": "",
+                                                        "Mask": 0,
+                                                        "Components": [
+                                                            {
+                                                                "Type": "Transform",
+                                                                "Active": true,
+                                                                "Position": [
+                                                                    0.0,
+                                                                    5.346645832061768,
+                                                                    5.236907482147217
+                                                                ],
+                                                                "Rotation": [
+                                                                    0.0,
+                                                                    0.0,
+                                                                    0.0,
+                                                                    1.0
+                                                                ],
+                                                                "Scale": [
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0
+                                                                ],
+                                                                "LocalEulerAngles": [
+                                                                    -0.0,
+                                                                    0.0,
+                                                                    -0.0
+                                                                ]
+                                                            }
+                                                        ],
+                                                        "Children": [
+                                                            {
+                                                                "Name": "Duke_Jaw",
+                                                                "Active": true,
+                                                                "RootBoneName": "",
+                                                                "Mask": 0,
+                                                                "Components": [
+                                                                    {
+                                                                        "Type": "Transform",
+                                                                        "Active": true,
+                                                                        "Position": [
+                                                                            0.0,
+                                                                            -7.828042507171631,
+                                                                            6.077612400054932
+                                                                        ],
+                                                                        "Rotation": [
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0,
+                                                                            1.0
+                                                                        ],
+                                                                        "Scale": [
+                                                                            1.0,
+                                                                            1.0,
+                                                                            1.0
+                                                                        ],
+                                                                        "LocalEulerAngles": [
+                                                                            -0.0,
+                                                                            0.0,
+                                                                            -0.0
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "Children": null
+                                                            },
+                                                            {
+                                                                "Name": "Duke_Cigar",
+                                                                "Active": true,
+                                                                "RootBoneName": "",
+                                                                "Mask": 0,
+                                                                "Components": [
+                                                                    {
+                                                                        "Type": "Transform",
+                                                                        "Active": true,
+                                                                        "Position": [
+                                                                            4.135391712188721,
+                                                                            -4.666019916534424,
+                                                                            3.791796922683716
+                                                                        ],
+                                                                        "Rotation": [
+                                                                            0.0,
+                                                                            0.0,
+                                                                            0.0,
+                                                                            1.0
+                                                                        ],
+                                                                        "Scale": [
+                                                                            1.0,
+                                                                            1.0,
+                                                                            1.0
+                                                                        ],
+                                                                        "LocalEulerAngles": [
+                                                                            -0.0,
+                                                                            0.0,
+                                                                            -0.0
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "Children": null
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "Name": "DukeLP",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            0.0,
+                            76.95332336425781,
+                            -0.94854736328125
+                        ],
+                        "Rotation": [
+                            -0.7071068286895752,
+                            -2.5121478909004596e-15,
+                            -2.5121478909004596e-15,
+                            0.7071067094802856
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0000001192092896,
+                            1.0000001192092896
+                        ],
+                        "LocalEulerAngles": [
+                            -90.00000762939453,
+                            2.4265706776348193e-20,
+                            -4.07110976874403e-13
+                        ]
+                    },
+                    {
+                        "Type": "MeshRenderer",
+                        "Active": true,
+                        "MeshID": 16214608773128207139,
+                        "MaterialID": 1478929156861354532
+                    },
+                    {
+                        "Type": "BoundingBox",
+                        "Active": true,
+                        "LocalBoundingBox": [
+                            -58.588722229003909,
+                            -23.89168357849121,
+                            -76.30799865722656,
+                            71.07378387451172,
+                            23.89168357849121,
+                            76.30799102783203
                         ]
                     }
                 ],
