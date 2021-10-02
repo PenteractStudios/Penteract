@@ -4,6 +4,7 @@
 #include "PlayerController.h"
 #include "DukeShield.h"
 #include <string>
+#include <vector>
 
 EXPOSE_MEMBERS(AIDuke) {
 	MEMBER_SEPARATOR("Objects UIDs"),
@@ -11,9 +12,11 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, shieldObjUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, bulletUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, chargeColliderUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, firstEncounterUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, secondEncounterUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, chargeColliderUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, thirdEncounterUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fourthEncounterUID),
 
 	MEMBER_SEPARATOR("Duke Atributes"),
 	MEMBER(MemberType::FLOAT, dukeCharacter.lifePoints),
@@ -67,8 +70,11 @@ void AIDuke::Start() {
 	ownerTransform = GetOwner().GetComponent<ComponentTransform>();
 
 	/* Encounters */
-	firstEncounter = GameplaySystems::GetGameObject(firstEncounterUID);
-	secondEncounter = GameplaySystems::GetGameObject(secondEncounterUID);
+	std::vector<UID> encounters;
+	encounters.push_back(firstEncounterUID);
+	encounters.push_back(secondEncounterUID);
+	encounters.push_back(thirdEncounterUID);
+	encounters.push_back(fourthEncounterUID);
 
 	// Debug
 	GameObject* shieldObj = GameplaySystems::GetGameObject(shieldObjUID);
@@ -77,13 +83,13 @@ void AIDuke::Start() {
 	}
 
 	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID);
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, encounters);
 }
 
 void AIDuke::Update() {
 	std::string life = std::to_string(dukeCharacter.lifePoints);
 	life = "Life points: " + life;
-	Debug::Log(life.c_str());
+	// Debug::Log(life.c_str());
 
 	if (toggleShield) {
 		toggleShield = false;
@@ -100,7 +106,7 @@ void AIDuke::Update() {
 	case Phase::PHASE1:
 		currentShieldCooldown += Time::GetDeltaTime();
 		if ((dukeCharacter.lifePoints < 0.85 * dukeCharacter.GetTotalLifePoints()) && !activeFireTiles) {
-			Debug::Log("BulletHell active and fire tiles on");
+			// Debug::Log("BulletHell active and fire tiles on");
 			activeFireTiles = true;
 			// TODO: signal fire tiles activation
 			currentBulletHellCooldown = 0.8 * bulletHellCooldown;
@@ -113,7 +119,7 @@ void AIDuke::Update() {
 			phase = Phase::PHASE3;
 			lifeThreshold -= 0.1;
 			dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
-			Debug::Log("Phase3");
+			// Debug::Log("Phase3");
 			dukeCharacter.criticalMode = true;
 			// Phase change VFX? and anim?
 			return;
@@ -125,9 +131,9 @@ void AIDuke::Update() {
 			// Anim + dissolve for teleportation
 			lifeThreshold -= 0.1;
 			activeFireTiles = false;
-			Debug::Log("Fire tiles disabled");
+			// Debug::Log("Fire tiles disabled");
 			movementScript->Stop();
-			if(firstEncounter && !firstEncounter->IsActive()) firstEncounter->Enable();
+			TeleportDuke();
 			dukeCharacter.CallTroops();
 			dukeCharacter.state = DukeState::INVULNERABLE;
 			if (dukeShield && dukeShield->GetIsActive()) dukeShield->FadeShield();
@@ -230,18 +236,18 @@ void AIDuke::Update() {
 
 		break;
 	case Phase::PHASE2:
-		Debug::Log("PHASE2");
+		// Debug::Log("PHASE2");
 		if (!activeLasers && dukeCharacter.lifePoints < lasersThreshold * dukeCharacter.GetTotalLifePoints()) {
 			activeLasers = true;
 			// TODO: signal lasers activation
-			Debug::Log("Lasers enabled");
+			// Debug::Log("Lasers enabled");
 		}
 
 		// TODO: Replace this for real enemy troops control
 		if (troopsCounter <= 0) {
 			troopsCounter = 5;
 			activeFireTiles = true;
-			Debug::Log("Fire tiles enabled");
+			// Debug::Log("Fire tiles enabled");
 			phase = Phase::PHASE1;
 			dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 			currentBulletHellCooldown = 0.f;
@@ -260,7 +266,7 @@ void AIDuke::Update() {
 	case Phase::PHASE3:
 		if (dukeCharacter.lifePoints <= 0.f) {
 			// TODO: Init victory sequence
-			Debug::Log("Ugh...I'm...Dead...");
+			// Debug::Log("Ugh...I'm...Dead...");
 			if (playerController) playerController->RemoveEnemyFromMap(duke);
 			GameplaySystems::DestroyGameObject(duke);
 			SceneManager::ChangeScene(winSceneUID); // TODO: Replace with the correct trigger (for the video or whatever)
@@ -269,7 +275,7 @@ void AIDuke::Update() {
 			dukeCharacter.criticalMode = !dukeCharacter.criticalMode;
 			lifeThreshold -= 0.1f;
 			if (!dukeCharacter.criticalMode) {
-				if(secondEncounter && !secondEncounter->IsActive()) secondEncounter->Enable();
+				TeleportDuke();
 				dukeCharacter.CallTroops();
 				if (dukeShield) dukeShield->InitShield();
 				dukeCharacter.state = DukeState::SHOOT_SHIELD;
@@ -623,5 +629,18 @@ void AIDuke::ParticleHit(GameObject& collidedWith, void* particle, Player& playe
 		dukeCharacter.GetHit(damage * 2 + playerController->GetOverPowerMode());
 	} else {
 		dukeCharacter.GetHit(damage + playerController->GetOverPowerMode());
+	}
+}
+
+void AIDuke::TeleportDuke() {
+	Debug::Log("Teleport");
+	if (isInPlatform) {
+		if (dukeCharacter.agent) dukeCharacter.agent->RemoveAgentFromCrowd();
+		ownerTransform->SetGlobalPosition(float3(40.0f, 0.0f, 0.0f));
+		isInPlatform = false;
+	} else {
+		ownerTransform->SetGlobalPosition(float3(0.0f, 0.0f, 0.0f));
+		if (dukeCharacter.agent) dukeCharacter.agent->AddAgentToCrowd();
+		isInPlatform = true;
 	}
 }

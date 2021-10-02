@@ -45,6 +45,7 @@ public:
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
+	void TeleportDuke();
 
 private:
 	void CalculatePushBackRealDistance();
@@ -60,6 +61,8 @@ public:
 	UID chargeColliderUID = 0;
 	UID firstEncounterUID = 0;
 	UID secondEncounterUID = 0;
+	UID thirdEncounterUID = 0;
+	UID fourthEncounterUID = 0;
 
 	GameObject* duke = nullptr;
 	GameObject* player = nullptr;
@@ -126,8 +129,6 @@ private:
 	float currentSlowedDownTime = 0.f;
 	float pushBackRealDistance = 0.f;
 
-	/* Calling the troops encounters */
-	GameObject* firstEncounter = nullptr;
-	GameObject* secondEncounter = nullptr;
+	bool isInPlatform = true;
 };
 

@@ -10,8 +10,7 @@
 
 std::uniform_real_distribution<> rng(-1.0f, 1.0f);
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID)
-{
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, std::vector<UID> encounterUIDs) {
 	gen = std::minstd_rand(rd());
 
 	SetTotalLifePoints(lifePoints);
@@ -62,10 +61,11 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 	}
 	movementChangeThreshold = moveChangeEvery;
 	distanceCorrectionThreshold = distanceCorrectEvery;
+
+	for (auto itr : encounterUIDs) encounters.push_back(GameplaySystems::GetGameObject(itr));
 }
 
-void Duke::ShootAndMove(const float3& playerDirection)
-{
+void Duke::ShootAndMove(const float3& playerDirection) {
 	// Shoot
 	movementTimer += Time::GetDeltaTime();
 	if (movementTimer >= movementChangeThreshold) {
@@ -82,37 +82,32 @@ void Duke::ShootAndMove(const float3& playerDirection)
 	}
 	agent->SetMoveTarget(dukeTransform->GetGlobalPosition() + perpendicular);
 	Shoot();
-	Debug::Log("I'm moving while shooting");
+	// Debug::Log("I'm moving while shooting");
 }
 
-void Duke::MeleeAttack()
-{
-	Debug::Log("Hooryah!");
+void Duke::MeleeAttack() {
+	// Debug::Log("Hooryah!");
 }
 
-void Duke::BulletHell()
-{
-	Debug::Log("Bullet hell");
+void Duke::BulletHell() {
+	// Debug::Log("Bullet hell");
 }
 
-void Duke::InitCharge(DukeState nextState)
-{
+void Duke::InitCharge(DukeState nextState) {
 	this->nextState = nextState;
 	reducedDamaged = true;
 	if (chargeCollider) chargeCollider->Enable();
-	Debug::Log("Electric Tackle!");
+	// Debug::Log("Electric Tackle!");
 }
 
-void Duke::UpdateCharge(bool forceStop)
-{
+void Duke::UpdateCharge(bool forceStop) {
 	if (forceStop || (dukeTransform->GetGlobalPosition() - chargeTarget).Length() <= 0.2f) {
 		if (chargeCollider) chargeCollider->Disable();
 		EndCharge();
 	}
 }
 
-void Duke::EndCharge()
-{
+void Duke::EndCharge() {
 	// Perform arm attack (either use the same or another collider as the melee attack)
 	state = nextState;
 	reducedDamaged = false;
@@ -122,13 +117,13 @@ void Duke::EndCharge()
 	}
 }
 
-void Duke::CallTroops()
-{
+void Duke::CallTroops() {
 	Debug::Log("Come, guys!");
+	if (encounters.size() > currentEncounter && encounters[currentEncounter] && !encounters[currentEncounter]->IsActive()) encounters[currentEncounter]->Enable();
+	currentEncounter++;
 }
 
-void Duke::Shoot()
-{
+void Duke::Shoot() {
 	attackTimePool -= Time::GetDeltaTime();
 	if (attackTimePool <= 0) {
 		if (bullet) {
@@ -138,12 +133,11 @@ void Duke::Shoot()
 		attackTimePool = (attackBurst / attackSpeed) + timeInterBurst + rng(gen) * RNG_SCALE;
 		// Animation
 	}
-	Debug::Log("PIUM!");
+	// Debug::Log("PIUM!");
 }
 
-void Duke::ThrowBarrels()
-{
-	Debug::Log("Here, barrel in your face!");
+void Duke::ThrowBarrels() {
+	// Debug::Log("Here, barrel in your face!");
 
 	float height = 15.0f;
 	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
