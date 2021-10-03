@@ -133,7 +133,7 @@ void AIDuke::Update() {
 			activeFireTiles = false;
 			// Debug::Log("Fire tiles disabled");
 			movementScript->Stop();
-			TeleportDuke();
+			if (isInArena) TeleportDuke(true);
 			dukeCharacter.CallTroops();
 			dukeCharacter.state = DukeState::INVULNERABLE;
 			if (dukeShield && dukeShield->GetIsActive()) dukeShield->FadeShield();
@@ -275,7 +275,7 @@ void AIDuke::Update() {
 			dukeCharacter.criticalMode = !dukeCharacter.criticalMode;
 			lifeThreshold -= 0.1f;
 			if (!dukeCharacter.criticalMode) {
-				TeleportDuke();
+				if (isInArena) TeleportDuke(true);
 				dukeCharacter.CallTroops();
 				if (dukeShield) dukeShield->InitShield();
 				dukeCharacter.state = DukeState::SHOOT_SHIELD;
@@ -638,15 +638,15 @@ void AIDuke::ParticleHit(GameObject& collidedWith, void* particle, Player& playe
 	}
 }
 
-void AIDuke::TeleportDuke() {
-	Debug::Log("Teleport");
-	if (isInPlatform) {
+void AIDuke::TeleportDuke(bool toPlatform) {
+	if (toPlatform) Debug::Log("Teleport");
+	if (toPlatform) {
 		if (dukeCharacter.agent) dukeCharacter.agent->RemoveAgentFromCrowd();
 		ownerTransform->SetGlobalPosition(float3(40.0f, 0.0f, 0.0f));
-		isInPlatform = false;
+		isInArena = false;
 	} else {
 		ownerTransform->SetGlobalPosition(float3(0.0f, 0.0f, 0.0f));
 		if (dukeCharacter.agent) dukeCharacter.agent->AddAgentToCrowd();
-		isInPlatform = true;
+		isInArena = true;
 	}
 }

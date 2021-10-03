@@ -14,20 +14,15 @@ void BossEncounterCallback::Start() {
     gameObject = &GetOwner();
 	duke = GameplaySystems::GetGameObject(dukeUID);
     if (duke) dukeScript = GET_SCRIPT(duke, AIDuke);
-    Debug::Log("Start");
 }
 
-void BossEncounterCallback::Init() {
-    Debug::Log("Init");
+void BossEncounterCallback::OnEnable() {
+    if (duke && dukeScript) dukeScript->TeleportDuke(false);
+    shouldTeleport = false;
 }
 
 void BossEncounterCallback::Update() {
-	if (duke && dukeScript) {
-        if(shouldTeleport) {
-            dukeScript->TeleportDuke();
-            shouldTeleport = false;
-        } else {
-            gameObject->Disable();
-        }
+    if (!shouldTeleport) {
+        gameObject->Disable();
     }
 }

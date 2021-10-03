@@ -10,7 +10,7 @@ class BossEncounterCallback : public Script {
 public:
 	void Start() override;
 	void Update() override;
-	void Init();
+	void OnEnable() override;
 
 public:
 	UID dukeUID = 0;
@@ -21,4 +21,3 @@ private:
 	AIDuke* dukeScript = nullptr;
 	bool shouldTeleport = true;
 };
-

@@ -46,7 +46,7 @@ public:
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
-	void TeleportDuke();
+	void TeleportDuke(bool toPlatform);
 
 private:
 	void CalculatePushBackRealDistance();
@@ -130,6 +130,6 @@ private:
 	float currentSlowedDownTime = 0.f;
 	float pushBackRealDistance = 0.f;
 
-	bool isInPlatform = true;
+	bool isInArena = true;
 };
 
