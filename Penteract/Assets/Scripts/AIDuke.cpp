@@ -193,7 +193,7 @@ void AIDuke::Update() {
 			dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 			break;
 		case DukeState::SHOOT_SHIELD:
-			movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition(), orientationSpeed, orientationThreshold);
+			if (player) movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition(), orientationSpeed, orientationThreshold);
 			dukeCharacter.Shoot();
 			currentShieldActiveTime += Time::GetDeltaTime();
 			if (currentShieldActiveTime >= shieldActiveTime) {
@@ -254,8 +254,10 @@ void AIDuke::Update() {
 			currentShieldCooldown = 0.f;
 		} else {
 			troopsCounter -= 0.0063f;
-			float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
-			movementScript->Orientate(dir);
+			if (player) {
+				float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
+				movementScript->Orientate(dir);
+			}
 			currentBarrelTimer += Time::GetDeltaTime();
 			if (currentBarrelTimer >= throwBarrelTimer) {
 				dukeCharacter.ThrowBarrels();
