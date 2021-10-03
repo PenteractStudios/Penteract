@@ -4,7 +4,7 @@
 #include "GameplaySystems.h"
 #include "Components/ComponentTransform.h"
 
-int AIMovement::maxAcceleration = 9999;
+float AIMovement::maxAcceleration = 9999.0f;
 
 EXPOSE_MEMBERS(AIMovement) {
 	MEMBER(MemberType::FLOAT, rotationSmoothness)
@@ -21,7 +21,7 @@ void AIMovement::Update() {
 
 }
 
-void AIMovement::Flee(AIState state, const float3& fromPosition, int speed, bool orientateToDir) {
+void AIMovement::Flee(AIState state, const float3& fromPosition, int /* speed */, bool orientateToDir) {
 
 	if (!ownerTransform || !agent) return;
 
@@ -49,14 +49,14 @@ void AIMovement::Stop() {
 
 }
 
-void AIMovement::Seek(AIState state, const float3& newPosition, int speed, bool orientateToDir) {
+void AIMovement::Seek(AIState state, const float3& newPosition, float speed, bool orientateToDir) {
 	if (!ownerTransform) return;
 
 	float3 position = ownerTransform->GetGlobalPosition();
 	float3 direction = newPosition - position;
 
 	if (state == AIState::START) {
-		velocity = direction.Normalized() * speed;
+		velocity = direction.Normalized() * static_cast<float>(speed);
 		position += velocity * Time::GetDeltaTime();
 		ownerTransform->SetGlobalPosition(position);
 	} else {

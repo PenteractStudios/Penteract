@@ -68,7 +68,6 @@ void AbilityRefeshFX::Update() {
 	effectTimer = Min(totalEffectTime, effectTimer + Time::GetDeltaTime());
 
 	float deltaA = effectTimer / totalEffectTime;
-	float deltaB = Min(1.0f, effectTimer * 1.2f / totalEffectTime);
 
 	//DO EFFECT
 	pictoTransform2D->SetScale(float3::Lerp(effectScaleVector, originalScaleVector, deltaA));

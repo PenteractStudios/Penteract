@@ -27,7 +27,7 @@ private:
 private:
 	float animationTimer = 0.0f;
 	std::vector<GameObject*>frames;
-	int currentFrame = 0;
+	unsigned currentFrame = 0;
 	GameObject* currentFrameObj = nullptr;
 	bool playing = false;
 };

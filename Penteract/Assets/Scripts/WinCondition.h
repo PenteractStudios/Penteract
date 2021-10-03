@@ -11,7 +11,7 @@ class WinCondition : public Script {
 public:
 	void Start() override;
 	void Update() override;
-	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
+	void OnCollision(GameObject& /* collidedWith */, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* particle = nullptr) override;
 
 public:
 	UID sceneUID = 0;

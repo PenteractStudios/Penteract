@@ -65,7 +65,7 @@ public:
 	float blastCooldown = 7.f;
 	float blastDistance = 15.f;
 	float blastAngle = 50.f;
-	float blastDelay = 0.6;
+	float blastDelay = 0.6f;
 	float blastDamage = 1.0f;
 	// Shield
 	float shieldReboundedDamage = 1.0f;

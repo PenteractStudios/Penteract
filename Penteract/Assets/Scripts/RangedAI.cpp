@@ -52,6 +52,9 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
 	MEMBER(MemberType::FLOAT, groundPosition),
 	MEMBER(MemberType::FLOAT, fleeingUpdateTime),
+	MEMBER_SEPARATOR("Push Random Feedback"),
+	MEMBER(MemberType::FLOAT, minTimePushEffect),
+	MEMBER(MemberType::FLOAT, maxTimePushEffect),
 	MEMBER_SEPARATOR("Dissolve properties"),
 	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialObj),
 	MEMBER(MemberType::FLOAT, dissolveTimerToStart)
@@ -68,7 +71,7 @@ void RangedAI::Start() {
 	ownerTransform = GetOwner().GetComponent<ComponentTransform>();
 	fangMeshObj = GameplaySystems::GetGameObject(playerMeshUIDFang);
 	onimaruMeshObj = GameplaySystems::GetGameObject(playerMeshUIDOnimaru);
-	
+
 	weapon = GetOwner().GetChild("Weapon")->GetChild("WeaponParticles");
 	if (weapon) {
 		shootTrailPrefab = weapon->GetComponent<ComponentParticleSystem>();
@@ -120,7 +123,7 @@ void RangedAI::Start() {
 	agent = GetOwner().GetComponent<ComponentAgent>();
 	if (agent) {
 		agent->SetMaxSpeed(rangerGruntCharacter.movementSpeed);
-		agent->SetMaxAcceleration(static_cast<float>(AIMovement::maxAcceleration));
+		agent->SetMaxAcceleration(AIMovement::maxAcceleration);
 		agent->SetAgentObstacleAvoidance(true);
 		agent->RemoveAgentFromCrowd();
 	}
@@ -132,6 +135,26 @@ void RangedAI::Start() {
 		player = GameplaySystems::GetGameObject("Player");
 		if (player) {
 			playerController = GET_SCRIPT(player, PlayerController);
+		}
+	}
+
+
+	//EMP Feedback
+	objectEMP = GetOwner().GetChild("EmpParticles");
+	if (objectEMP) {
+		ComponentParticleSystem* particlesEmpAux = objectEMP->GetComponent<ComponentParticleSystem>();
+		if (particlesEmpAux) {
+			particlesEmp = particlesEmpAux;
+		}
+	}
+
+	//Push Feedback
+	objectPush = GetOwner().GetChild("PushParticles");
+
+	if (objectPush) {
+		ComponentParticleSystem* particlesPushAux = objectPush->GetComponent<ComponentParticleSystem>();
+		if (particlesPushAux) {
+			particlesPush = particlesPushAux;
 		}
 	}
 
@@ -214,28 +237,28 @@ void RangedAI::OnAnimationSecondaryFinished() {
 
 void RangedAI::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
 	if (stateMachineEnum == StateMachineEnum::PRINCIPAL) {
-		if (eventName == "FootstepRight") {
+		if (strcmp(eventName, "FootstepRight") == 0) {
 			if (audios[static_cast<int>(AudioType::FOOTSTEP_RIGHT)]) audios[static_cast<int>(AudioType::FOOTSTEP_RIGHT)]->Play();
 		}
-		else if (eventName == "FootstepLeft") {
+		else if (strcmp(eventName, "FootstepLeft") == 0) {
 			if (audios[static_cast<int>(AudioType::FOOTSTEP_LEFT)]) audios[static_cast<int>(AudioType::FOOTSTEP_LEFT)]->Play();
 		}
 	}
 }
-void RangedAI::ParticleHit(GameObject& collidedWith, void* particle, Player& player) {
+void RangedAI::ParticleHit(GameObject& collidedWith, void* particle, Player& player_) {
 	if (!particle) return;
 	ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 	if (pSystem) pSystem->KillParticle(p);
-	if (state == AIState::STUNNED && player.level2Upgrade) {
+	if (state == AIState::STUNNED && player_.level2Upgrade) {
 		rangerGruntCharacter.GetHit(99);
 	}
 	else {
-		rangerGruntCharacter.GetHit(player.damageHit + playerController->GetOverPowerMode());
+		rangerGruntCharacter.GetHit(player_.damageHit + playerController->GetOverPowerMode());
 	}
 }
 
-void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+void RangedAI::OnCollision(GameObject& collidedWith, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* particle) {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		if (rangerGruntCharacter.isAlive && playerController) {
 			bool hitTaken = false;
@@ -264,10 +287,9 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 				hitTaken = true;
 				rangerGruntCharacter.GetHit(playerController->playerFang.dashDamage + playerController->GetOverPowerMode());
 			}
-			else if (collidedWith.name == "RangerProjectile" && playerController->playerOnimaru.level1Upgrade) {
+			else if (collidedWith.name == "WeaponParticles" && playerController->playerOnimaru.level1Upgrade) {
 				hitTaken = true;
-				rangerGruntCharacter.GetHit(playerController->playerOnimaru.shieldReboundedDamage + playerController->GetOverPowerMode());
-				GameplaySystems::DestroyGameObject(&collidedWith);
+				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
 			}
 
 			if (hitTaken) {
@@ -277,7 +299,10 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 			if (collidedWith.name == "EMP") {
 				if (agent) agent->RemoveAgentFromCrowd();
 				stunTimeRemaining = stunDuration;
-				if (state != AIState::STUNNED) ChangeState(AIState::STUNNED);
+				if (state != AIState::STUNNED) {
+					ChangeState(AIState::STUNNED);
+					if(particlesEmp) particlesEmp->PlayChildParticles();
+				}
 			}
 		}
 	}
@@ -335,6 +360,8 @@ void RangedAI::Update() {
 	}
 
 	UpdateState();
+	if (pushEffectHasToStart)EnablePushFeedback();
+
 }
 
 void RangedAI::EnterState(AIState newState) {
@@ -448,7 +475,7 @@ void RangedAI::UpdateState() {
 
 				if (!CharacterInRange(player, rangerGruntCharacter.attackRange - approachOffset, true)) {
 					if (!aiMovement->CharacterInSight(player, fleeingRange)) {
-						if (aiMovement) aiMovement->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), static_cast<int>(speedToUse), false);
+						if (aiMovement) aiMovement->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), speedToUse, false);
 					}
 					else {
 						ChangeState(AIState::FLEE);
@@ -474,7 +501,7 @@ void RangedAI::UpdateState() {
 				}
 				else if (currentFleeingUpdateTime >= 0 && fleeingFarAway) {   //Moving far away from player
 					currentFleeingUpdateTime -= Time::GetDeltaTime();
-					aiMovement->Seek(state, currentFleeDestination, static_cast<int>(speedToUse), false);
+					aiMovement->Seek(state, currentFleeDestination, speedToUse, false);
 
 					if (currentFleeingUpdateTime <= 0) {
 						fleeingFarAway = false;
@@ -590,9 +617,6 @@ void RangedAI::ActualShot() {
 		//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
 		if (!meshObj) return;
 
-		ComponentBoundingBox* box = meshObj->GetComponent<ComponentBoundingBox>();
-
-		float offsetY = (box->GetWorldAABB().minPoint.y + box->GetWorldAABB().maxPoint.y) / 4;
 		shootTrailPrefab->PlayChildParticles();
 	}
 
@@ -607,9 +631,21 @@ void RangedAI::PlayAudio(AudioType audioType) {
 	if (audios[static_cast<int>(audioType)]) audios[static_cast<int>(audioType)]->Play();
 }
 
+void RangedAI::EnablePushFeedback() {
+	if (timeToSrartPush < 0) {
+		pushEffectHasToStart = false;
+		if (particlesPush) particlesPush->PlayChildParticles();
+	}
+	else {
+		timeToSrartPush -= Time::GetDeltaTime();
+	}
+}
+
 void RangedAI::EnableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		ChangeState(AIState::PUSHED);
+		pushEffectHasToStart = true;
+		timeToSrartPush = (minTimePushEffect + 1) + (((float)rand()) / (float)RAND_MAX) * (maxTimePushEffect - (minTimePushEffect + 1));
 		rangerGruntCharacter.beingPushed = true;
 		CalculatePushBackRealDistance();
 		// Damage
@@ -733,15 +769,15 @@ void RangedAI::SetRandomMaterial()
 	if (materialsHolder) {
 		std::vector<UID> materials;
 		for (const auto& child : materialsHolder->GetChildren()) {
-			ComponentMeshRenderer* meshRenderer = child->GetComponent<ComponentMeshRenderer>();
-			if (meshRenderer && meshRenderer->materialId) {
-				materials.push_back(meshRenderer->materialId);
+			ComponentMeshRenderer* meshRendererChild = child->GetComponent<ComponentMeshRenderer>();
+			if (meshRendererChild && meshRendererChild->materialId) {
+				materials.push_back(meshRendererChild->materialId);
 			}
 		}
 
 
 		if (!materials.empty()) {
-			//Random distribution it cant be saved into global 
+			//Random distribution it cant be saved into global
 			std::random_device rd;  //Will be used to obtain a seed for the random number engine
 			std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
 			std::uniform_int_distribution<int> distrib(1, materials.size());

@@ -36,6 +36,9 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
 	MEMBER(MemberType::FLOAT, stunDuration),
 	MEMBER(MemberType::FLOAT, groundPosition),
+	MEMBER_SEPARATOR("Push Random Feedback"),
+	MEMBER(MemberType::FLOAT, minTimePushEffect),
+	MEMBER(MemberType::FLOAT, maxTimePushEffect),
 	MEMBER_SEPARATOR("Attack1"),
 	MEMBER(MemberType::FLOAT, att1AttackSpeed),
 	MEMBER(MemberType::FLOAT, att1MovementSpeedWhileAttacking),
@@ -127,6 +130,24 @@ void AIMeleeGrunt::Start() {
 		}
 	}
 
+	//EMP Feedback
+	objectEMP = GetOwner().GetChild("EmpParticles");
+	if (objectEMP) {
+		ComponentParticleSystem* particlesEmpAux = objectEMP->GetComponent<ComponentParticleSystem>();
+		if (particlesEmpAux) {
+			particlesEmp = particlesEmpAux;
+		}
+	}
+
+	//Push Feedback
+	objectPush = GetOwner().GetChild("PushParticles");
+	if (objectPush) {
+		ComponentParticleSystem* particlesPushAux = objectPush->GetComponent<ComponentParticleSystem>();
+		if (particlesPushAux) {
+			particlesPush = particlesPushAux;
+		}
+	}
+	
 	gameObject = &GetOwner();
 	if (gameObject) {
 		// Workaround get the first children - Create a Prefab overrides childs IDs
@@ -287,6 +308,8 @@ void AIMeleeGrunt::Update() {
 	if (!gruntCharacter.isAlive) {
 		Death();
 	}
+
+	if (pushEffectHasToStart)EnablePushFeedback();
 }
 
 void AIMeleeGrunt::OnAnimationFinished() {
@@ -316,16 +339,16 @@ void AIMeleeGrunt::OnAnimationFinished() {
 	}
 }
 
-void AIMeleeGrunt::ParticleHit(GameObject& collidedWith, void* particle, Player& player) {
+void AIMeleeGrunt::ParticleHit(GameObject& collidedWith, void* particle, Player& player_) {
 	if (!particle) return;
 	ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 	if (pSystem) pSystem->KillParticle(p);
-	if (state == AIState::STUNNED && player.level2Upgrade) {
+	if (state == AIState::STUNNED && player_.level2Upgrade) {
 		gruntCharacter.GetHit(99);
 	}
 	else {
-		gruntCharacter.GetHit(player.damageHit + playerController->GetOverPowerMode());
+		gruntCharacter.GetHit(player_.damageHit + playerController->GetOverPowerMode());
 	}
 }
 
@@ -357,10 +380,9 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 				hitTaken = true;
 				gruntCharacter.GetHit(playerController->playerFang.dashDamage + playerController->GetOverPowerMode());
 			}
-			else if (collidedWith.name == "RangerProjectile" && playerController->playerOnimaru.level1Upgrade) {
+			else if (collidedWith.name == "WeaponParticles" && playerController->playerOnimaru.level1Upgrade) {
 				hitTaken = true;
-				gruntCharacter.GetHit(playerController->playerOnimaru.shieldReboundedDamage + playerController->GetOverPowerMode());
-				GameplaySystems::DestroyGameObject(&collidedWith);
+				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
 			}
 			else if (collidedWith.name == "VFXShield") {
 				if (state == AIState::RUN) {
@@ -405,6 +427,7 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 					if (animation->GetCurrentState()) {
 						animation->SendTrigger(animation->GetCurrentState()->name + "StunStart");
 					}
+					if(particlesEmp)particlesEmp->PlayChildParticles();
 					agent->RemoveAgentFromCrowd();
 					stunTimeRemaining = stunDuration;
 					state = AIState::STUNNED;
@@ -414,10 +437,22 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 	}
 }
 
+void AIMeleeGrunt::EnablePushFeedback() {
+	if (timeToSrartPush < 0) {
+		pushEffectHasToStart = false;
+		if (particlesPush) particlesPush->PlayChildParticles();
+	}
+	else {
+		timeToSrartPush -= Time::GetDeltaTime(); 
+	}
+}
+
 void AIMeleeGrunt::EnableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		gruntCharacter.beingPushed = true;
 		state = AIState::PUSHED;
+		pushEffectHasToStart = true;
+		timeToSrartPush = (minTimePushEffect + 1) + (((float)rand()) / (float)RAND_MAX) * (maxTimePushEffect - (minTimePushEffect + 1));
 		if (animation->GetCurrentState()) animation->SendTrigger(animation->GetCurrentState()->name + "Hurt");
 		CalculatePushBackRealDistance();
 		// Damage
@@ -495,7 +530,7 @@ void AIMeleeGrunt::CalculatePushBackRealDistance() {
 void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
 	switch (stateMachineEnum)
 	{
-	case PRINCIPAL:
+	case StateMachineEnum::PRINCIPAL:
 		if (strcmp(eventName,"FootstepRight") == 0) {
 			if (audios[static_cast<int>(AudioType::FOOTSTEP_RIGHT)]) audios[static_cast<int>(AudioType::FOOTSTEP_RIGHT)]->Play();
 		}

@@ -38,9 +38,10 @@ public:
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
-	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override; //This is commented until merge with collisions
+	void OnCollision(GameObject& collidedWith, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* particle = nullptr) override; //This is commented until merge with collisions
 	void ShootPlayerInRange(); //Sets in motion the shooting at the player, if found and close enough
 
+	void EnablePushFeedback();
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
@@ -62,7 +63,7 @@ private:
 	void CalculatePushBackRealDistance();											// Calculates the real distance of the pushback taking into account any obstacles in the path
 	void PlayHitMaterialEffect();													// Changes material hit
 	void UpdateDissolveTimer();														// If the currentDissolveTime is reached, Plays animation
-	void ParticleHit(GameObject& collidedWith, void* particle, Player& player);
+	void ParticleHit(GameObject& collidedWith, void* particle, Player& player_);
 	void SetRandomMaterial();
 	void SetMaterial(ComponentMeshRenderer* mesh, UID newMaterialID, bool needToPlayDissolve = false);
 
@@ -116,6 +117,16 @@ public:
 	float dissolveTimerToStart = 0.0f;	//Timer until the dissolve animation is played
 	UID materialsUID = 0;				//Reference to materials placeholder for random
 
+	//EMP Stun feedback
+	ComponentParticleSystem* particlesEmp = nullptr;
+	GameObject* objectEMP = nullptr;
+
+	//Push Stun feedback
+	ComponentParticleSystem* particlesPush = nullptr;
+	GameObject* objectPush = nullptr;
+	float maxTimePushEffect = 1.0f;
+	float minTimePushEffect = 0.0f;
+
 private:
 
 	EnemySpawnPoint* enemySpawnPointScript = nullptr;
@@ -153,4 +164,7 @@ private:
 	float currentDissolveTime = 0.0f;
 	bool dissolveAlreadyStarted = false;	//Used to control other material setters so it doesn't interfere with Dissolve's material
 	bool dissolveAlreadyPlayed = false;		//Controls whether the animation function has already been played (called material->PlayAnimation) or not
+
+	bool  pushEffectHasToStart = false;
+	float timeToSrartPush = 0.0f;
 };
