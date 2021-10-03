@@ -39,7 +39,7 @@ public:
 	// ------- Contructors ------- //
 	Duke() {}
 
-	Duke(float lifePoints_, float movementSpeed_, float damageHit_, float damageBullet_,float damageCharge_, float searchRadius_, float attackRange_, float timeToDie_, float pushBackDistance_, float pushBackSpeed_)
+	Duke(float lifePoints_, float movementSpeed_, float damageHit_, float searchRadius_, float attackRange_, float timeToDie_, float pushBackDistance_, float pushBackSpeed_)
 		: searchRadius(searchRadius_)
 		, attackRange(attackRange_)
 		, timeToDie(timeToDie_)

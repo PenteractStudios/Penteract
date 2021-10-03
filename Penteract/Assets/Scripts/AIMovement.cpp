@@ -88,8 +88,6 @@ void AIMovement::Orientate(const float3& direction, float orientationSpeed, floa
 
 		targetRotation = Quat::RotateAxisAngle(axis, orientationSpeed * Time::GetDeltaTime()) * ownerTransform->GetGlobalRotation();
 
-		//targetRotation = Quat::LookAt(float3(0, 0, 1), direction.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
-
 		rotation = Quat::Slerp(ownerTransform->GetGlobalRotation(), targetRotation, Min(Time::GetDeltaTime() / Max(rotationSmoothness, 0.000001f), 1.0f));
 	}
 	ownerTransform->SetGlobalRotation(rotation);
