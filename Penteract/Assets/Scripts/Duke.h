@@ -95,6 +95,9 @@ public:
 	float3 chargeTarget;
 
 private:
+	void InstantiateBarrel();
+
+private:
 	GameObject* player = nullptr;
 	GameObject* chargeCollider = nullptr;
 	ComponentTransform* dukeTransform = nullptr;
