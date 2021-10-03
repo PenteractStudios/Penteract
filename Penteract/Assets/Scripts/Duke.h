@@ -113,7 +113,32 @@ private:
 
 	ResourcePrefab* barrel = nullptr;
 
-	//Audios
+	// Animations
+	enum DUKE_ANIMATION_STATES {
+		CHARGE,
+		CHARGE_END,
+		CHARGE_START,
+		PUNCH,
+		DEATH,
+		IDLE,
+		ENRAGE,
+		SHOOT,
+		PDA,
+		PUSHED,
+		SHIELD,
+		SHOOT_SHIELD,
+		STUN,
+		WALK_BACK,
+		WALK_FORWARD,
+		WALK_NO_AIM,
+		WALK_LEFT,
+		WALK_RIGHT,
+		LENGTH };
+	std::string animationStates[static_cast<int>(DUKE_ANIMATION_STATES::LENGTH)] = { "Charge", "ChargeEnd", "ChargeStart",
+		"Punch", "Death", "Idle", "Enrage", "Shooting", "PDA", "Pushed", "Shield", "ShootingShield", "Stun",
+		"WalkBack", "WalkForward", "WalkForwardNoAim", "WalkLeft", "WalkRight"};
+
+	// Audios
 	ComponentAudioSource* dukeAudios[static_cast<int>(DUKE_AUDIOS::TOTAL)] = { nullptr };
 
 	DukeState nextState = DukeState::BASIC_BEHAVIOUR;
