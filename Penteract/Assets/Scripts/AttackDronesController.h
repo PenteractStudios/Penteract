@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Scripting/Script.h"
+#include "AttackDronesPatterns.h"
 
 #include "Math/Quat.h"
 
@@ -13,22 +14,10 @@ class AttackDronesController : public Script
 
 public:
 
-	enum class DronesFormation {
-		LINE,
-		ARROW,
-		CIRCLE,
-		COUNT
-	};
-
-	enum class WaveCycle {
-		LEFT_TO_RIGHT,
-		RIGHT_TO_LEFT,
-		CENTERED
-	};
-
 	void Start() override;
 	void Update() override;
 
+	void StartBulletHell();
 	void SetDronesFormation(DronesFormation newFormation);
 	void AddDrone();
 	void RemoveDrone();
@@ -37,16 +26,16 @@ public:
 	UID dronesParentUID = 0;
 	UID dronePrefabUID = 0;
 
-	float droneSeparationHorizontal = 1.0f;
-	float droneSeparationDepth = 1.0f;
-	float droneSeparationVertical = 1.0f;
-	float droneRadiusFormation = 2.0f;
-	float droneVerticalOffset = 2.0f;
-	float separationFromCenter = 1.0f;
+	//float droneSeparationHorizontal = 1.0f;
+	//float droneSeparationDepth = 1.0f;
+	//float droneSeparationVertical = 1.0f;
+	//float droneRadiusFormation = 2.0f;
+	//float droneVerticalOffset = 2.0f;
+	//float separationFromCenter = 1.0f;
 
-	int waves = 3;
-	float timeBetweenWaves = 1.0f; 
-	float shotDelay = 0.2f;
+	//int waves = 3;
+	//float timeBetweenWaves = 1.0f; 
+	//float shotDelay = 0.2f;
 	
 private:
 	void RecalculateFormations();
@@ -74,5 +63,6 @@ private:
 
 	// Wave cycle
 	WaveCycle cycle = WaveCycle::CENTERED;
-};
 
+	AttackDronesPattern chosenPattern;
+};

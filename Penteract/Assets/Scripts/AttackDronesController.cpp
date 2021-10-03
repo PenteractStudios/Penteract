@@ -6,6 +6,8 @@
 #include "Components/ComponentTransform.h"
 #include "Resources/ResourcePrefab.h"
 #include "AttackDroneBehavior.h"
+#include "AttackDronesPatterns.h"
+#include "RandomNumberGenerator.h"
 
 #define PI 3.14159
 
@@ -13,17 +15,17 @@ EXPOSE_MEMBERS(AttackDronesController) {
     MEMBER(MemberType::GAME_OBJECT_UID, dronesParentUID),
     MEMBER(MemberType::PREFAB_RESOURCE_UID, dronePrefabUID),
     MEMBER_SEPARATOR("Drones formation values"),
-    MEMBER(MemberType::FLOAT, droneSeparationHorizontal),
-    MEMBER(MemberType::FLOAT, droneSeparationDepth),
-    MEMBER(MemberType::FLOAT, droneSeparationVertical),
-    MEMBER(MemberType::FLOAT, droneRadiusFormation),
-    MEMBER(MemberType::FLOAT, droneVerticalOffset),
-    MEMBER_SEPARATOR("Values from center"),
-    MEMBER(MemberType::FLOAT, separationFromCenter),
-    MEMBER_SEPARATOR("Wave settings"),
-    MEMBER(MemberType::INT, waves),
-    MEMBER(MemberType::FLOAT, timeBetweenWaves),
-    MEMBER(MemberType::FLOAT, shotDelay)
+    //MEMBER(MemberType::FLOAT, droneSeparationHorizontal),
+    //MEMBER(MemberType::FLOAT, droneSeparationDepth),
+    //MEMBER(MemberType::FLOAT, droneSeparationVertical),
+    //MEMBER(MemberType::FLOAT, droneRadiusFormation),
+    //MEMBER(MemberType::FLOAT, droneVerticalOffset),
+    //MEMBER_SEPARATOR("Values from center"),
+    //MEMBER(MemberType::FLOAT, separationFromCenter),
+    //MEMBER_SEPARATOR("Wave settings"),
+    //MEMBER(MemberType::INT, waves),
+    //MEMBER(MemberType::FLOAT, timeBetweenWaves),
+    //MEMBER(MemberType::FLOAT, shotDelay)
 };
 
 GENERATE_BODY_IMPL(AttackDronesController);
@@ -73,8 +75,28 @@ void AttackDronesController::Update() {
     }
 
     if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_B)) {
-        StartWave();
+        StartBulletHell();
     }
+}
+
+void AttackDronesController::StartBulletHell() {
+    if (patterns.empty()) return;
+
+    int chance = RandomNumberGenerator::GenerateInteger(1, 100);
+    Debug::Log(std::to_string(chance).c_str());
+    int accumulatedChance = 0;
+    for (AttackDronesPattern pattern : patterns) {
+        accumulatedChance += pattern.pickChance;
+        if (chance < accumulatedChance) {
+            chosenPattern = pattern;
+            break;
+        }
+    }
+
+    RecalculateFormations();
+    SetDronesFormation(chosenPattern.droneFormation);
+    RepositionDrones();
+    StartWave();
 }
 
 void AttackDronesController::SetDronesFormation(DronesFormation newFormation) {
@@ -149,19 +171,19 @@ std::vector<float3> AttackDronesController::GenerateLineFormation() {
     int size = dronesScripts.size();
     std::vector<float3> result(size);
 
-    float shiftOffset = size % 2 == 0 ? droneSeparationHorizontal / 2 : 0;
+    float shiftOffset = size % 2 == 0 ? chosenPattern.droneSeparationHorizontal / 2 : 0;
 
     for (int i = 0; i < size / 2; ++i) {
-        float xSeparation = -((size / 2) - i) * droneSeparationHorizontal;
+        float xSeparation = -((size / 2) - i) * chosenPattern.droneSeparationHorizontal;
         
-        result[i] = float3x3::RotateY(transform->GetGlobalRotation().ToEulerXZY().z) * float3(xSeparation + shiftOffset, 0.0f, separationFromCenter);       // The value of Z is the correct angle since ToEulerXYZ decomposes it into 180,Y,180.
+        result[i] = float3x3::RotateY(transform->GetGlobalRotation().ToEulerXZY().z) * float3(xSeparation + shiftOffset, 0.0f, chosenPattern.droneSeparationFromCenter);       // The value of Z is the correct angle since ToEulerXYZ decomposes it into 180,Y,180.
         result[i] += float3(0.0f, GetVerticalOffset(), 0.0f);
     }
 
     for (int i = (size / 2); i < size; ++i) {
-        float xSeparation = (i - (size / 2)) * droneSeparationHorizontal;
+        float xSeparation = (i - (size / 2)) * chosenPattern.droneSeparationHorizontal;
         
-        result[i] = float3x3::RotateY(transform->GetGlobalRotation().ToEulerXZY().z) * float3(xSeparation + shiftOffset, 0.0f, separationFromCenter);       // The value of Z is the correct angle since ToEulerXYZ decomposes it into 180,Y,180.
+        result[i] = float3x3::RotateY(transform->GetGlobalRotation().ToEulerXZY().z) * float3(xSeparation + shiftOffset, 0.0f, chosenPattern.droneSeparationFromCenter);       // The value of Z is the correct angle since ToEulerXYZ decomposes it into 180,Y,180.
         result[i] += float3(0.0f, GetVerticalOffset(), 0.0f);
     }
 
@@ -173,18 +195,18 @@ std::vector<float3> AttackDronesController::GenerateArrowFormation() {
     std::vector<float3> result(size);
 
     for (int i = 0; i < size / 2; ++i) {
-        float xSeparation = -((size / 2) - i) * droneSeparationHorizontal;
-        float zSeparation = -((size / 2) - i) * droneSeparationDepth;
+        float xSeparation = -((size / 2) - i) * chosenPattern.droneSeparationHorizontal;
+        float zSeparation = -((size / 2) - i) * chosenPattern.droneSeparationDepth;
 
-        result[i] = float3x3::RotateY(transform->GetGlobalRotation().ToEulerXZY().z) * float3(xSeparation, 0.0f, zSeparation + separationFromCenter);
+        result[i] = float3x3::RotateY(transform->GetGlobalRotation().ToEulerXZY().z) * float3(xSeparation, 0.0f, zSeparation + chosenPattern.droneSeparationFromCenter);
         result[i] += float3(0.0f, GetVerticalOffset(), 0.0f);
     }
 
     for (int i = (size / 2); i < size; ++i) {
-        float xSeparation = (i - (size / 2)) * droneSeparationHorizontal;
-        float zSeparation = -(i - (size / 2)) * droneSeparationDepth;
+        float xSeparation = (i - (size / 2)) * chosenPattern.droneSeparationHorizontal;
+        float zSeparation = -(i - (size / 2)) * chosenPattern.droneSeparationDepth;
 
-        result[i] = float3x3::RotateY(transform->GetGlobalRotation().ToEulerXZY().z) * float3(xSeparation, 0.0f, zSeparation + separationFromCenter);
+        result[i] = float3x3::RotateY(transform->GetGlobalRotation().ToEulerXZY().z) * float3(xSeparation, 0.0f, zSeparation + chosenPattern.droneSeparationFromCenter);
         result[i] += float3(0.0f, GetVerticalOffset(), 0.0f);
     }
 
@@ -199,7 +221,7 @@ std::vector<float3> AttackDronesController::GenerateCircleFormation() {
         float theta = ((PI * 2) / size);
         float angle = (theta * i);
         
-        result[i] = float3x3::RotateY(transform->GetGlobalRotation().ToEulerXZY().z) * (float3(cos(angle), 0.0f, sin(angle)) * droneRadiusFormation);
+        result[i] = float3x3::RotateY(transform->GetGlobalRotation().ToEulerXZY().z) * (float3(cos(angle), 0.0f, sin(angle)) * chosenPattern.droneRadiusFormation);
         result[i] += float3(0.0f, GetVerticalOffset(), 0.0f);
     }
 
@@ -207,7 +229,7 @@ std::vector<float3> AttackDronesController::GenerateCircleFormation() {
 }
 
 float AttackDronesController::GetVerticalOffset() const {
-    return transform->GetGlobalPosition().y + droneVerticalOffset;
+    return transform->GetGlobalPosition().y + chosenPattern.droneVerticalOffset;
 }
 
 void AttackDronesController::StartWave() {
@@ -217,8 +239,8 @@ void AttackDronesController::StartWave() {
         case WaveCycle::LEFT_TO_RIGHT: {
             float accumulatedDelay = 0.0f;
             for (AttackDroneBehavior* drone : dronesScripts) {
-                drone->StartWave(waves, accumulatedDelay, timeBetweenWaves);
-                accumulatedDelay += shotDelay;
+                drone->StartWave(chosenPattern.waves, accumulatedDelay, chosenPattern.timeBetweenWaves);
+                accumulatedDelay += chosenPattern.droneShotDelay;
             }
             break;
         }
@@ -226,8 +248,8 @@ void AttackDronesController::StartWave() {
 		case WaveCycle::RIGHT_TO_LEFT: {
 			float accumulatedDelay = 0.0f;
 			for (auto it = dronesScripts.rbegin(); it != dronesScripts.rend(); ++it) {
-				(*it)->StartWave(waves, accumulatedDelay, timeBetweenWaves);
-				accumulatedDelay += shotDelay;
+				(*it)->StartWave(chosenPattern.waves, accumulatedDelay, chosenPattern.timeBetweenWaves);
+				accumulatedDelay += chosenPattern.droneShotDelay;
 			}
 			break;
 		}
@@ -235,11 +257,11 @@ void AttackDronesController::StartWave() {
         case WaveCycle::CENTERED: {
             bool hasEvenDrones = dronesScripts.size() % 2 == 0;
             float orderedI = dronesScripts.size() / 2 - (hasEvenDrones ? 1 : 0);
-            float accumulatedDelay = orderedI * shotDelay;
+            float accumulatedDelay = orderedI * chosenPattern.droneShotDelay;
             float multiplier = -1.0f;
 
             for (int i = 0; i < dronesScripts.size(); ++i) {
-                dronesScripts[i]->StartWave(waves, accumulatedDelay, timeBetweenWaves);
+                dronesScripts[i]->StartWave(chosenPattern.waves, accumulatedDelay, chosenPattern.timeBetweenWaves);
 
                 if (i == dronesScripts.size() / 2) {
                     multiplier = 1.0f;
@@ -251,11 +273,9 @@ void AttackDronesController::StartWave() {
                 }
 
                 orderedI += multiplier;
-                accumulatedDelay = shotDelay * orderedI;
+                accumulatedDelay = chosenPattern.droneShotDelay * orderedI;
             }
             break;
         }
     }
-
-    
 }
