@@ -94,6 +94,20 @@ void AttackDronesController::StartBulletHell() {
 
     if (chance > accumulatedChance) return;     // hasn't found a pattern
 
+    int currentNumberOfDrones = dronesScripts.size();
+    int newNumberOfDrones = chosenPattern.dronesNumber;
+
+    if (currentNumberOfDrones > newNumberOfDrones) {        // Must delete drones
+        for (int i = 0; i < currentNumberOfDrones - newNumberOfDrones; ++i) {
+            RemoveDrone();
+        }
+    }
+    else if (currentNumberOfDrones < newNumberOfDrones) {
+        for (int i = 0; i < newNumberOfDrones - currentNumberOfDrones; ++i) {
+            AddDrone();
+        }
+    }
+
     RecalculateFormations();
     SetDronesFormation(chosenPattern.droneFormation);
     RepositionDrones();
