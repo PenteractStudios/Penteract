@@ -51,7 +51,7 @@ private:
 	void CalculatePushBackRealDistance();
 	void UpdatePushBackPosition();
 	void ParticleHit(GameObject& collidedWith, void* particle, Player& player);
-
+	void EnterShootShieldState();
 public:
 	UID dukeUID = 0;
 	UID playerUID = 0;
@@ -90,7 +90,11 @@ public:
 	UID winSceneUID = 0;
 
 private:
+	//Add other states here
+	enum DUKE_ANIMATION_STATES{SHIELD,SHOOT_SHIELD,LENGTH};
+	std::string animationStates[static_cast<int>(DUKE_ANIMATION_STATES::LENGTH)] = {"Shield","ShootingShield"};
 
+	ComponentAnimation* animation = nullptr;
 	ComponentTransform* ownerTransform = nullptr;
 	AIMovement* movementScript = nullptr;
 

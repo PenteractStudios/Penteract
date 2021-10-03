@@ -1,6 +1,7 @@
 #include "AIDuke.h"
 
 #include "AIMovement.h"
+#include "Components/ComponentAnimation.h"
 #include "PlayerController.h"
 #include "DukeShield.h"
 #include <string>
@@ -69,6 +70,10 @@ void AIDuke::Start() {
 	if (shieldObj) {
 		dukeShield = GET_SCRIPT(shieldObj, DukeShield);
 	}
+
+	animation = GetOwner().GetComponent <ComponentAnimation>();
+	if (animation)Debug::Log("Animation was found");
+
 
 	// Init Duke character
 	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID);
@@ -141,8 +146,7 @@ void AIDuke::Update() {
 				dukeCharacter.state = DukeState::CHARGE;
 				dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
 			} else if (currentShieldCooldown >= shieldCooldown) {
-				if (dukeShield) dukeShield->InitShield();
-				dukeCharacter.state = DukeState::SHOOT_SHIELD;
+				EnterShootShieldState();
 				movementScript->Stop();
 			} else if (player && movementScript->CharacterInAttackRange(player, dukeCharacter.attackRange)) {
 				// If player too close -> perform melee attack
@@ -185,6 +189,7 @@ void AIDuke::Update() {
 			currentShieldActiveTime += Time::GetDeltaTime();
 			if (currentShieldActiveTime >= shieldActiveTime) {
 				// TODO: Deactivate shield animation
+				if (animation)animation->SendTriggerSecondary(animation->GetCurrentStateSecondary()->name + animation->GetCurrentState()->name);
 				if (dukeShield) dukeShield->FadeShield();
 				currentShieldCooldown = 0.f;
 				currentShieldActiveTime = 0.f;
@@ -263,8 +268,7 @@ void AIDuke::Update() {
 			lifeThreshold -= 0.1f;
 			if (!dukeCharacter.criticalMode) {
 				dukeCharacter.CallTroops();
-				if (dukeShield) dukeShield->InitShield();
-				dukeCharacter.state = DukeState::SHOOT_SHIELD;
+				EnterShootShieldState();
 				movementScript->Stop();
 			} else {
 				dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
@@ -336,6 +340,7 @@ void AIDuke::Update() {
 				currentAbilityChangeCooldown += Time::GetDeltaTime();
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
 					// TODO: Deactivate shield animation
+					if (animation)animation->SendTriggerSecondary(animation->GetCurrentStateSecondary()->name+animation->GetCurrentState()->name);
 					if (dukeShield) dukeShield->FadeShield();
 					currentAbilityChangeCooldown = 0.f;
 					dukeCharacter.state = DukeState::BULLET_HELL;
@@ -355,8 +360,7 @@ void AIDuke::Update() {
 				currentAbilityChangeCooldown += Time::GetDeltaTime();
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
 					currentAbilityChangeCooldown = 0.f;
-					if (dukeShield) dukeShield->InitShield();
-					dukeCharacter.state = DukeState::SHOOT_SHIELD;
+					EnterShootShieldState();
 					movementScript->Stop();
 				}
 				else {
@@ -388,8 +392,7 @@ void AIDuke::Update() {
 				break;
 			case DukeState::MELEE_ATTACK:
 				dukeCharacter.MeleeAttack();
-				if (dukeShield) dukeShield->InitShield();
-				dukeCharacter.state = DukeState::SHOOT_SHIELD;
+				EnterShootShieldState();
 				break;
 			case DukeState::STUNNED:
 				if (stunTimeRemaining <= 0.f) {
@@ -622,4 +625,24 @@ void AIDuke::ParticleHit(GameObject& collidedWith, void* particle, Player& playe
 	} else {
 		dukeCharacter.GetHit(damage + playerController->GetOverPowerMode());
 	}
+}
+
+void AIDuke::EnterShootShieldState() {
+	if (dukeShield) {
+		dukeShield->InitShield();
+	}
+	dukeCharacter.state = DukeState::SHOOT_SHIELD;
+	//TODO animation
+
+	if (animation) {
+		if(animation->GetCurrentStateSecondary())
+			animation->SendTriggerSecondary(animation->GetCurrentStateSecondary()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT_SHIELD)]);
+		else if (animation->GetCurrentState()) {
+			animation->SendTriggerSecondary(animation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT_SHIELD)]);
+		} else {
+			Debug::Log("NoStateFound");
+		}
+
+	}
+	//movementScript->Stop();
 }
