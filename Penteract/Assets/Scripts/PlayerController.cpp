@@ -254,13 +254,13 @@ void PlayerController::SwitchCharacter() {
 				RangedAI* rangedScript = GET_SCRIPT(enemy, RangedAI);
 				if (rangedScript || meleeScript) {
 					if (meleeScript) {
-						meleeScript->DoStunned();
+						meleeScript->EnableBlastPushBack();
 						if (switchFirstHit) {
 							meleeScript->gruntCharacter.GetHit(switchDamage);
 							meleeScript->PlayHit();
 						}
 					} else if (rangedScript) {
-						rangedScript->DoStunned();
+						rangedScript->EnableBlastPushBack();
 						if (switchFirstHit) {
 							rangedScript->rangerGruntCharacter.GetHit(switchDamage);
 							rangedScript->PlayHit();
