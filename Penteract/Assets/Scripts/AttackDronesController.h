@@ -26,16 +26,7 @@ public:
 	UID dronesParentUID = 0;
 	UID dronePrefabUID = 0;
 
-	//float droneSeparationHorizontal = 1.0f;
-	//float droneSeparationDepth = 1.0f;
-	//float droneSeparationVertical = 1.0f;
-	//float droneRadiusFormation = 2.0f;
-	//float droneVerticalOffset = 2.0f;
-	//float separationFromCenter = 1.0f;
-
-	//int waves = 3;
-	//float timeBetweenWaves = 1.0f; 
-	//float shotDelay = 0.2f;
+	float bulletHellDelay = 0.5f;		// Time that needs to pass until the bullet hell starts to fire
 	
 private:
 	void RecalculateFormations();
@@ -65,4 +56,8 @@ private:
 	WaveCycle cycle = WaveCycle::CENTERED;
 
 	AttackDronesPattern chosenPattern;
+
+	// Bullet Hell shoot start
+	bool mustStartBulletHell = false;
+	float currentTime = 0.0f;
 };

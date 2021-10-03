@@ -14,18 +14,7 @@
 EXPOSE_MEMBERS(AttackDronesController) {
     MEMBER(MemberType::GAME_OBJECT_UID, dronesParentUID),
     MEMBER(MemberType::PREFAB_RESOURCE_UID, dronePrefabUID),
-    MEMBER_SEPARATOR("Drones formation values"),
-    //MEMBER(MemberType::FLOAT, droneSeparationHorizontal),
-    //MEMBER(MemberType::FLOAT, droneSeparationDepth),
-    //MEMBER(MemberType::FLOAT, droneSeparationVertical),
-    //MEMBER(MemberType::FLOAT, droneRadiusFormation),
-    //MEMBER(MemberType::FLOAT, droneVerticalOffset),
-    //MEMBER_SEPARATOR("Values from center"),
-    //MEMBER(MemberType::FLOAT, separationFromCenter),
-    //MEMBER_SEPARATOR("Wave settings"),
-    //MEMBER(MemberType::INT, waves),
-    //MEMBER(MemberType::FLOAT, timeBetweenWaves),
-    //MEMBER(MemberType::FLOAT, shotDelay)
+    MEMBER(MemberType::FLOAT, bulletHellDelay)
 };
 
 GENERATE_BODY_IMPL(AttackDronesController);
@@ -77,6 +66,16 @@ void AttackDronesController::Update() {
     if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_B)) {
         StartBulletHell();
     }
+
+    if (mustStartBulletHell) {
+        if (currentTime > bulletHellDelay) {
+            StartWave();
+            mustStartBulletHell = false;
+        }
+        else {
+            currentTime += Time::GetDeltaTime();
+        }
+    }
 }
 
 void AttackDronesController::StartBulletHell() {
@@ -87,16 +86,19 @@ void AttackDronesController::StartBulletHell() {
     int accumulatedChance = 0;
     for (AttackDronesPattern pattern : patterns) {
         accumulatedChance += pattern.pickChance;
-        if (chance < accumulatedChance) {
+        if (chance <= accumulatedChance) {
             chosenPattern = pattern;
             break;
         }
     }
 
+    if (chance > accumulatedChance) return;     // hasn't found a pattern
+
     RecalculateFormations();
     SetDronesFormation(chosenPattern.droneFormation);
     RepositionDrones();
-    StartWave();
+    mustStartBulletHell = true;
+    currentTime = 0.0f;
 }
 
 void AttackDronesController::SetDronesFormation(DronesFormation newFormation) {
