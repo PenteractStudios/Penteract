@@ -59,7 +59,7 @@ void SecurityLasersPatterns::Update() {
         std::shuffle(generators.begin(), generators.end(), g);
 
         // Set the times for this round
-        for (int i = 0; i < generators.size(); ++i) {
+        for (unsigned i = 0; i < generators.size(); ++i) {
             generators[i]->coolDownOnTimer = 0.f;
             generators[i]->coolDownOffTimer = permutationDuration - intervalDuration*i;
             generators[i]->coolDownOn = laserActiveDuration;

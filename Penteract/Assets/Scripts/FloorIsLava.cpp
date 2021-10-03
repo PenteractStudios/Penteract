@@ -38,6 +38,8 @@ void FloorIsLava::Start() {
 
 void FloorIsLava::Update() {
 	
+	if (!started) return;
+
 	//select a random corridor and arena pattern
 	if (patternFinished) {
 		if (sequential) {
@@ -45,15 +47,8 @@ void FloorIsLava::Update() {
 			++sequentialCount;
 			if (sequentialCount >= CORRIDOR_PATTERNS) {
 				sequentialCount = 0;
-			}		
-
-
-
-			nextTilesPattern = sequentialPatterns[sequentialCount].pattern;
-
-
-
-			
+			}	
+			nextTilesPattern = sequentialPatterns[sequentialCount].pattern;			
 		}
 		else {
 			currentPattern = nextPattern;
@@ -112,7 +107,17 @@ void FloorIsLava::Update() {
 
 }
 
-void FloorIsLava::SetPattern(int pattern, bool*& boolPattern)
+void FloorIsLava::StartFire()
+{
+	started = true;
+}
+
+void FloorIsLava::StopFire()
+{
+	started = false;
+}
+
+void FloorIsLava::SetPattern(int pattern, const bool*& boolPattern)
 {
 	switch (pattern)
 	{
@@ -132,7 +137,7 @@ void FloorIsLava::SetPattern(int pattern, bool*& boolPattern)
 
 void FloorIsLava::UpdateWarningTiles(bool activate)
 {
-	for (int i = 0; i < tiles.size(); ++i) {
+	for (unsigned i = 0; i < tiles.size(); ++i) {
 		if (currentTilesPattern[i]) {
 			if (tiles[i]) {
 				if (activate) {
@@ -140,10 +145,6 @@ void FloorIsLava::UpdateWarningTiles(bool activate)
 					if (animation) {
 						animation->SendTrigger("ClosedOpening");
 					}
-					//tiles[i].activate warning particles
-				}
-				else {
-					//tiles[i].deactivate warning particles
 				}
 			}			
 		}
@@ -152,7 +153,7 @@ void FloorIsLava::UpdateWarningTiles(bool activate)
 
 void FloorIsLava::UpdateFireActiveTiles(bool activate)
 {
-	for (int i = 0; i < tiles.size(); ++i) {
+	for (unsigned i = 0; i < tiles.size(); ++i) {
 		if (currentTilesPattern[i]) {
 			if (tiles[i]) {
 				ComponentBoxCollider* boxCollider = tiles[i]->GetComponent<ComponentBoxCollider>();

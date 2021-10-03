@@ -38,13 +38,13 @@ void RobotsAssemblyMovement::Start() {
 	GameObject* robot = nullptr;
 	forward = changeDirection ? -1 : 1;
 	if (robotPrefab) {
-		for (int i = 1; i < numOfRobots; ++i) {
+		for (unsigned i = 1; i < numOfRobots; ++i) {
 			robot = GameplaySystems::GetGameObject(robotPrefab->BuildPrefab(robotsLine));
 
 			if (robot) {
 				ComponentTransform* transform = robot->GetComponent<ComponentTransform>();
 				if (transform) {
-					float3 newPos = initialPos + direction * (i * distanceBetweenRobots) * forward;
+					float3 newPos = initialPos + direction * (i * distanceBetweenRobots) * static_cast<float>(forward);
 					transform->SetGlobalPosition(newPos);
 				}
 			}
@@ -70,7 +70,7 @@ void RobotsAssemblyMovement::Update() {
 			float realSpeed = slowedDown && activateSlowDown ? Lerp(speed, 0, currentDistanceBetweenStops / distanceBetweenStops) : speed;
 
 			if (initialPos.Distance(position) <= lineLenght) {
-				newPosition = position + direction * realSpeed * Time::GetDeltaTime() * forward;
+				newPosition = position + direction * realSpeed * Time::GetDeltaTime() * static_cast<float>(forward);
 			}
 			robotTransform->SetGlobalPosition(newPosition);
 		}

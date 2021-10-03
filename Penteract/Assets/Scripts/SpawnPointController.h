@@ -38,7 +38,7 @@ public:
 	void Update() override;
 
 	/* Enable the spawn points on trigger  */
-	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
+	void OnCollision(GameObject& /* collidedWith */, float3 /* collisionNormal */, float3 penetrationDistance, void* particle = nullptr) override;
 	void OpenDoor();
 
 	ResourcePrefab* GetMeleePrefab() { return meleeEnemyPrefab; };

@@ -15,7 +15,7 @@ public:
 public:
 	void Start() override;
 	void Update() override;
-	void OnToggled(bool toggled_) override;
+	void OnToggled(bool /* toggled_ */) override;
 
 private:
 	GameObject* gameObject = nullptr;

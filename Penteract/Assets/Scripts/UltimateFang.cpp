@@ -62,7 +62,7 @@ Quat UltimateFang::DirectionToQuat(float3 dir) {
 	return Quat(qx, qy, qz, qw);
 }
 
-void UltimateFang::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+void UltimateFang::OnCollision(GameObject& collidedWith, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* /* particle */) {
 	if (tickOn) {
 		if (collidedWith.name == "MeleeGrunt" || collidedWith.name == "RangedGrunt") {
 			collisionedGameObject.push_back(collidedWith);
