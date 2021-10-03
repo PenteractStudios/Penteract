@@ -153,7 +153,7 @@ void AIDuke::Update() {
 						// If player dominates the center for too long, perform charge
 						timeSinceLastCharge += Time::GetDeltaTime();
 					}
-					if (timeSinceLastCharge >= 5.0f) {
+					if (timeSinceLastCharge >= 4.0f) {
 						timeSinceLastCharge = 0.f;
 						// Charge
 						movementScript->Stop();
@@ -360,7 +360,7 @@ void AIDuke::Update() {
 							// If player dominates the center for too long, perform charge
 							timeSinceLastCharge += Time::GetDeltaTime();
 						}
-						if (timeSinceLastCharge >= 5.0f) {
+						if (timeSinceLastCharge >= 4.0f) {
 							timeSinceLastCharge = 0.f;
 							// Charge
 							dukeCharacter.chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
@@ -427,7 +427,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 				GameplaySystems::DestroyGameObject(&collidedWith);
 				hitTaken = true;
 				float damage = playerController->playerFang.damageHit;
-				dukeCharacter.GetHit( dukeCharacter.reducedDamaged ? damage / 2 : damage + playerController->GetOverPowerMode());
+				dukeCharacter.GetHit( dukeCharacter.reducedDamaged ? damage / 3 : damage + playerController->GetOverPowerMode());
 			}
 			else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
 				hitTaken = true;
@@ -444,7 +444,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 			else if (collidedWith.name == "DashDamage" && playerController->playerFang.level1Upgrade) {
 				hitTaken = true;
 				float damage = playerController->playerFang.dashDamage;
-				dukeCharacter.GetHit(dukeCharacter.reducedDamaged ? damage / 2 : damage + playerController->GetOverPowerMode());
+				dukeCharacter.GetHit(dukeCharacter.reducedDamaged ? damage / 3 : damage + playerController->GetOverPowerMode());
 			}
 
 			if (hitTaken) {
