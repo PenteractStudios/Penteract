@@ -109,7 +109,7 @@ void AIDuke::Update() {
 			// Debug::Log("BulletHell active and fire tiles on");
 			activeFireTiles = true;
 			// TODO: signal fire tiles activation
-			currentBulletHellCooldown = 0.8 * bulletHellCooldown;
+			currentBulletHellCooldown = 0.8f * bulletHellCooldown;
 		}
 		if (activeFireTiles) {
 			currentBulletHellCooldown += Time::GetDeltaTime();
@@ -117,7 +117,7 @@ void AIDuke::Update() {
 		if (dukeCharacter.lifePoints < 0.4 * dukeCharacter.GetTotalLifePoints() &&
 			dukeCharacter.state != DukeState::BULLET_HELL && dukeCharacter.state != DukeState::CHARGE) {
 			phase = Phase::PHASE3;
-			lifeThreshold -= 0.1;
+			lifeThreshold -= 0.1f;
 			dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 			// Debug::Log("Phase3");
 			dukeCharacter.criticalMode = true;
@@ -129,7 +129,7 @@ void AIDuke::Update() {
 			if (!phase2Reached) phase2Reached = true;
 			// Phase change VFX?
 			// Anim + dissolve for teleportation
-			lifeThreshold -= 0.1;
+			lifeThreshold -= 0.1f;
 			activeFireTiles = false;
 			// Debug::Log("Fire tiles disabled");
 			movementScript->Stop();
@@ -253,7 +253,7 @@ void AIDuke::Update() {
 			currentBulletHellCooldown = 0.f;
 			currentShieldCooldown = 0.f;
 		} else {
-			troopsCounter -= 0.0063;
+			troopsCounter -= 0.0063f;
 			float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
 			movementScript->Orientate(dir);
 			currentBarrelTimer += Time::GetDeltaTime();
@@ -438,7 +438,7 @@ void AIDuke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eve
 	dukeCharacter.OnAnimationEvent(stateMachineEnum, eventName);
 }
 
-void AIDuke::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, float3 /*penetrationDistance*/, void* particle) {
 	if (dukeCharacter.isAlive && playerController) {
 		bool hitTaken = false;
 		if (dukeCharacter.state != DukeState::INVULNERABLE) {

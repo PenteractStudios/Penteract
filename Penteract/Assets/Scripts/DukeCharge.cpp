@@ -21,7 +21,7 @@ void DukeCharge::Update() {
 
 }
 
-void DukeCharge::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+void DukeCharge::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, float3 /*penetrationDistance*/, void* /*particle*/) {
     if (collidedWith.name == "Fang" || collidedWith.name == "Onimaru") {
         aiDuke->dukeCharacter.UpdateCharge(true);
     }
