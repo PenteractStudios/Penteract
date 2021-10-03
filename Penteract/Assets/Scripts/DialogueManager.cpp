@@ -140,7 +140,7 @@ void DialogueManager::Start() {
 
 	// LEVEL 1 - FINAL
 	dialoguesArray[28] = Dialogue(DialogueWindow::DOOR, true, "Hello guys!\nWhere have you been?\nHaven't seen you\nin a while!", &dialoguesArray[29]);
-	dialoguesArray[29] = Dialogue(DialogueWindow::ONIMARU, true, "5 years to be exact.\nOpen up, Dory.\nWe need to come in.", &dialoguesArray[30]);
+	dialoguesArray[29] = Dialogue(DialogueWindow::ONIMARU, true, "5 years to be exact.\nOpen up, Dory.\nWe need to come in.", &dialoguesArray[32]);
 	dialoguesArray[32] = Dialogue(DialogueWindow::DOOR, true, "Fine...\nI'll open the elevator.\nBut only because\nyou guys were always\nnice to me.", &dialoguesArray[33]);
 	dialoguesArray[33] = Dialogue(DialogueWindow::ONIMARU, true, "Thanks, Dory.", &dialoguesArray[34]);
 	dialoguesArray[34] = Dialogue(DialogueWindow::DOOR, true, "Be careful in there\nsweethearts!\nDon't get hurt!", nullptr);
