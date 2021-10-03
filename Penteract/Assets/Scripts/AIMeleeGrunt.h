@@ -39,6 +39,7 @@ public:
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
 
+	void DoStunned();
 	void EnablePushFeedback();
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
