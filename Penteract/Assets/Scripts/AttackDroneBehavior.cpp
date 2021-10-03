@@ -3,12 +3,15 @@
 #include "GameplaySystems.h"
 #include "Components/ComponentTransform.h"
 #include "Components/ComponentParticleSystem.h"
+#include "RandomNumberGenerator.h"
 
 EXPOSE_MEMBERS(AttackDroneBehavior) {
     MEMBER(MemberType::GAME_OBJECT_UID, dronesControllerUID),
+    MEMBER(MemberType::PREFAB_RESOURCE_UID, projectilePrefabUID),
     MEMBER(MemberType::FLOAT, droneSpeed),
     MEMBER(MemberType::FLOAT, droneRotationSpeed),
-    MEMBER(MemberType::PREFAB_RESOURCE_UID, projectilePrefabUID)
+    MEMBER(MemberType::BOOL, droneMustHover),
+    MEMBER(MemberType::FLOAT, droneHoverAmplitude),
 };
 
 GENERATE_BODY_IMPL(AttackDroneBehavior);
@@ -20,12 +23,17 @@ void AttackDroneBehavior::Start() {
     if (dronesController) {
         dronesControllerTransform = dronesController->GetComponent<ComponentTransform>();
     }
+
+    hoverCurrentTime = RandomNumberGenerator::GenerateFloat(-1.5708, 1.5708);
 }
 
 void AttackDroneBehavior::Update() {
     if (!transform || !dronesControllerTransform) return;
 
-    transform->SetGlobalPosition(float3::Lerp(transform->GetGlobalPosition(), dronesControllerTransform->GetGlobalPosition() + positionOffset, Time::GetDeltaTime() * droneSpeed));
+    float3 hoverPosition = droneMustHover ? float3(0.0f, Sin(hoverCurrentTime) * droneHoverAmplitude, 0.f) : float3(0.0f, 0.0f, 0.0f);
+    hoverCurrentTime += Time::GetDeltaTime();
+
+    transform->SetGlobalPosition(float3::Lerp(transform->GetGlobalPosition(), dronesControllerTransform->GetGlobalPosition() + positionOffset + hoverPosition, Time::GetDeltaTime() * droneSpeed));
     
     if (mustForceRotation) {
         float3 direction = (transform->GetGlobalPosition() - dronesControllerTransform->GetGlobalPosition()).Normalized();

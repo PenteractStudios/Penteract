@@ -26,6 +26,9 @@ public:
 	float droneSpeed = 8.0f;
 	float droneRotationSpeed = 9.0f;
 
+	bool droneMustHover = true;
+	float droneHoverAmplitude = 0.1f;
+
 	UID projectilePrefabUID = 0;
 
 private:
@@ -43,5 +46,8 @@ private:
 	int remainingWaves = 0;
 	float delay = 0.0f;
 	float currentTime = 0.0f;
+
+	// Hover effect
+	float hoverCurrentTime = 0.0f;
 };
 
