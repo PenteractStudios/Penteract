@@ -53,7 +53,7 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID chargeAttackColliderUID);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void BulletHell();
@@ -97,6 +97,7 @@ public:
 private:
 	GameObject* player = nullptr;
 	GameObject* chargeCollider = nullptr;
+	GameObject* chargeAttack = nullptr;
 	ComponentTransform* dukeTransform = nullptr;
 
 	float3 perpendicular;

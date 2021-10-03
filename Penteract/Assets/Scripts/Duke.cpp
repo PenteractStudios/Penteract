@@ -10,7 +10,7 @@
 
 std::uniform_real_distribution<> rng(-1.0f, 1.0f);
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID)
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID chargeAttackColliderUID)
 {
 	gen = std::minstd_rand(rd());
 
@@ -18,6 +18,7 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 	characterGameObject = GameplaySystems::GetGameObject(dukeUID);
 	player = GameplaySystems::GetGameObject(playerUID);
 	chargeCollider = GameplaySystems::GetGameObject(chargeColliderUID);
+	chargeAttack = GameplaySystems::GetGameObject(chargeAttackColliderUID);
 
 	barrel = GameplaySystems::GetResource<ResourcePrefab>(barrelUID);
 
@@ -116,6 +117,7 @@ void Duke::UpdateCharge(bool forceStop)
 			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_END)]);
 		}
 		// Perform arm attack (either use the same or another collider as the melee attack)
+		if (chargeAttack) chargeAttack->Enable();
 		state = DukeState::CHARGE_ATTACK;
 		reducedDamaged = false;
 		if (player) {
@@ -172,6 +174,7 @@ void Duke::OnAnimationFinished()
 			if (chargeCollider) chargeCollider->Enable();
 			compAnimation->SendTrigger(currentStateName + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE)]);
 		} else if (currentStateName == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_END)]) {
+			if (chargeAttack) chargeAttack->Disable();
 			state = nextState;
 			agent->SetMaxSpeed(movementSpeed);
 			compAnimation->SendTrigger(currentStateName + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
