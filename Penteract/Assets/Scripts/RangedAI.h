@@ -42,6 +42,7 @@ public:
 	void ShootPlayerInRange(); //Sets in motion the shooting at the player, if found and close enough
 
 	void DoStunned();
+	void EnablePushFeedback();
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
@@ -117,6 +118,16 @@ public:
 	float dissolveTimerToStart = 0.0f;	//Timer until the dissolve animation is played
 	UID materialsUID = 0;				//Reference to materials placeholder for random
 
+	//EMP Stun feedback
+	ComponentParticleSystem* particlesEmp = nullptr;
+	GameObject* objectEMP = nullptr;
+
+	//Push Stun feedback
+	ComponentParticleSystem* particlesPush = nullptr;
+	GameObject* objectPush = nullptr;
+	float maxTimePushEffect = 1.0f;
+	float minTimePushEffect = 0.0f;
+
 private:
 
 	EnemySpawnPoint* enemySpawnPointScript = nullptr;
@@ -154,4 +165,7 @@ private:
 	float currentDissolveTime = 0.0f;
 	bool dissolveAlreadyStarted = false;	//Used to control other material setters so it doesn't interfere with Dissolve's material
 	bool dissolveAlreadyPlayed = false;		//Controls whether the animation function has already been played (called material->PlayAnimation) or not
+
+	bool  pushEffectHasToStart = false;
+	float timeToSrartPush = 0.0f;
 };
