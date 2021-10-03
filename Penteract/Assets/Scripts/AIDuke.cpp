@@ -135,10 +135,7 @@ void AIDuke::Update() {
 				movementScript->Stop();
 			} else if (phase2Reached && playerController->playerOnimaru.shieldBeingUsed >= 2.0f) {
 				// If onimaru shields -> perform charge
-				dukeCharacter.chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-				dukeCharacter.agent->SetMoveTarget(dukeCharacter.chargeTarget);
-				dukeCharacter.agent->SetMaxSpeed(dukeCharacter.chargeSpeed);
-				dukeCharacter.state = DukeState::CHARGE;
+				movementScript->Stop();
 				dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
 			} else if (currentShieldCooldown >= shieldCooldown) {
 				if (dukeShield) dukeShield->InitShield();
@@ -158,10 +155,7 @@ void AIDuke::Update() {
 					if (timeSinceLastCharge >= 5.0f) {
 						timeSinceLastCharge = 0.f;
 						// Charge
-						dukeCharacter.chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-						dukeCharacter.agent->SetMoveTarget(dukeCharacter.chargeTarget);
-						dukeCharacter.agent->SetMaxSpeed(dukeCharacter.chargeSpeed);
-						dukeCharacter.state = DukeState::CHARGE;
+						movementScript->Stop();
 						dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
 					}
 					else {
@@ -285,10 +279,7 @@ void AIDuke::Update() {
 				currentAbilityChangeCooldown += Time::GetDeltaTime();
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
 					currentAbilityChangeCooldown = 0.f;
-					dukeCharacter.chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-					dukeCharacter.agent->SetMoveTarget(dukeCharacter.chargeTarget);
-					dukeCharacter.agent->SetMaxSpeed(dukeCharacter.chargeSpeed);
-					dukeCharacter.state = DukeState::CHARGE;
+					movementScript->Stop();
 					dukeCharacter.InitCharge(DukeState::MELEE_ATTACK);
 				} else {
 					if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(dukeCharacter.movementSpeed);

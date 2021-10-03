@@ -97,9 +97,14 @@ void Duke::BulletHell()
 
 void Duke::InitCharge(DukeState nextState)
 {
+	chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	state = DukeState::CHARGE;
 	this->nextState = nextState;
 	reducedDamaged = true;
-	if (chargeCollider) chargeCollider->Enable();
+
+	if (compAnimation) {
+		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_START)]);
+	}
 	Debug::Log("Electric Tackle!");
 }
 
@@ -107,18 +112,16 @@ void Duke::UpdateCharge(bool forceStop)
 {
 	if (forceStop || (dukeTransform->GetGlobalPosition() - chargeTarget).Length() <= 0.2f) {
 		if (chargeCollider) chargeCollider->Disable();
-		EndCharge();
-	}
-}
-
-void Duke::EndCharge()
-{
-	// Perform arm attack (either use the same or another collider as the melee attack)
-	state = nextState;
-	reducedDamaged = false;
-	if (player) {
-		PlayerController* playerController = GET_SCRIPT(player, PlayerController);
-		if (playerController) playerController->playerOnimaru.shieldBeingUsed = 0.0f;
+		if (compAnimation) {
+			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_END)]);
+		}
+		// Perform arm attack (either use the same or another collider as the melee attack)
+		state = DukeState::CHARGE_ATTACK;
+		reducedDamaged = false;
+		if (player) {
+			PlayerController* playerController = GET_SCRIPT(player, PlayerController);
+			if (playerController) playerController->playerOnimaru.shieldBeingUsed = 0.0f;
+		}
 	}
 }
 
@@ -161,6 +164,19 @@ void Duke::ThrowBarrels()
 
 void Duke::OnAnimationFinished()
 {
+	if (compAnimation && compAnimation->GetCurrentState()) {
+		std::string currentStateName = compAnimation->GetCurrentState()->name;
+		if (currentStateName == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_START)]) {
+			agent->SetMoveTarget(chargeTarget);
+			agent->SetMaxSpeed(chargeSpeed);
+			if (chargeCollider) chargeCollider->Enable();
+			compAnimation->SendTrigger(currentStateName + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE)]);
+		} else if (currentStateName == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_END)]) {
+			state = nextState;
+			agent->SetMaxSpeed(movementSpeed);
+			compAnimation->SendTrigger(currentStateName + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
+		}
+	}
 }
 
 void Duke::OnAnimationSecondaryFinished()

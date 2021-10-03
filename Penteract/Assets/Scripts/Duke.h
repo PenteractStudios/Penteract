@@ -13,6 +13,7 @@ enum class DukeState {
 	SHOOT_SHIELD,
 	BULLET_HELL,
 	CHARGE,
+	CHARGE_ATTACK,
 	INVULNERABLE,
 	STUNNED,
 	PUSHED,
@@ -58,7 +59,6 @@ public:
 	void BulletHell();
 	void InitCharge(DukeState nextState);
 	void UpdateCharge(bool forceStop = false);
-	void EndCharge();
 	void CallTroops();
 	void Shoot();
 	void ThrowBarrels();
