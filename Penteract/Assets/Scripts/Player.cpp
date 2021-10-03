@@ -235,19 +235,15 @@ float2 Player::GetInputFloat2(InputActions action, bool useGamepad) {
 			result.y = Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_LEFTY, 0);
 		} else {
 			if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_D) || Input::GetKeyCodeRepeat(Input::KEYCODE::KEY_D)) {
-				Debug::Log("1");
 				result.x = 1;
 			} else if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_A) || Input::GetKeyCodeRepeat(Input::KEYCODE::KEY_A)) {
 				result.x = -1;
-				Debug::Log("2");
 			}
 
 			if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_S) || Input::GetKeyCodeRepeat(Input::KEYCODE::KEY_S)) {
 				result.y = 1;
-				Debug::Log("2");
 			} else if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_W) || Input::GetKeyCodeRepeat(Input::KEYCODE::KEY_W)) {
 				result.y = -1;
-				Debug::Log("4");
 			}
 		}
 		break;
@@ -257,7 +253,6 @@ float2 Player::GetInputFloat2(InputActions action, bool useGamepad) {
 			result.y = Input::GetControllerAxisValue(Input::SDL_CONTROLLER_AXIS_RIGHTY, 0);
 		} else {
 			//Mouse handling
-			Debug::Log("Aqui");
 			float2 mousePos = Input::GetMousePositionNormalized();
 			LineSegment ray = lookAtMouseCameraComp->frustum.UnProjectLineSegment(mousePos.x, mousePos.y);
 			float3 planeTransform = lookAtMousePlanePosition;

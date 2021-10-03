@@ -71,8 +71,8 @@ public:
 	float shieldingMaxSpeed = 2.0f;
 
 
-	float offsetWeaponAngle = 20.0f;
-	float limitAngle = 1.0f;
+	float offsetWeaponAngle = 14.0f;
+	float limitAngle = 10.0f;
 public:
 	// ------- Contructors ------- //
 	Onimaru() {};
