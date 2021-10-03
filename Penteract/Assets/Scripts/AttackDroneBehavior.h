@@ -29,7 +29,15 @@ public:
 	bool droneMustHover = true;
 	float droneHoverAmplitude = 0.1f;
 
+	bool droneMustRecoil = false;
+	float droneRecoilOffset = 0.1f;
+	float droneRecoilTime = 0.1f;
+
 	UID projectilePrefabUID = 0;
+
+private:
+	float3 GetHoverOffset();
+	float3 GetRecoilOffset();
 
 private:
 	GameObject* dronesController = nullptr;
@@ -49,5 +57,8 @@ private:
 
 	// Hover effect
 	float hoverCurrentTime = 0.0f;
+
+	// Recoil effect
+	float recoilCurrentTime = 0.0f;
 };
 

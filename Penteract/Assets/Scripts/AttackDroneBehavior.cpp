@@ -12,6 +12,9 @@ EXPOSE_MEMBERS(AttackDroneBehavior) {
     MEMBER(MemberType::FLOAT, droneRotationSpeed),
     MEMBER(MemberType::BOOL, droneMustHover),
     MEMBER(MemberType::FLOAT, droneHoverAmplitude),
+    MEMBER(MemberType::BOOL, droneMustRecoil),
+    MEMBER(MemberType::FLOAT, droneRecoilOffset),
+    MEMBER(MemberType::FLOAT, droneRecoilTime),
 };
 
 GENERATE_BODY_IMPL(AttackDroneBehavior);
@@ -30,10 +33,7 @@ void AttackDroneBehavior::Start() {
 void AttackDroneBehavior::Update() {
     if (!transform || !dronesControllerTransform) return;
 
-    float3 hoverPosition = droneMustHover ? float3(0.0f, Sin(hoverCurrentTime) * droneHoverAmplitude, 0.f) : float3(0.0f, 0.0f, 0.0f);
-    hoverCurrentTime += Time::GetDeltaTime();
-
-    transform->SetGlobalPosition(float3::Lerp(transform->GetGlobalPosition(), dronesControllerTransform->GetGlobalPosition() + positionOffset + hoverPosition, Time::GetDeltaTime() * droneSpeed));
+    transform->SetGlobalPosition(float3::Lerp(transform->GetGlobalPosition(), dronesControllerTransform->GetGlobalPosition() + positionOffset + GetHoverOffset() + GetRecoilOffset(), Time::GetDeltaTime() * droneSpeed));
     
     if (mustForceRotation) {
         float3 direction = (transform->GetGlobalPosition() - dronesControllerTransform->GetGlobalPosition()).Normalized();
@@ -67,6 +67,7 @@ void AttackDroneBehavior::Shoot() {
             remainingWaves--;
             shooter.Shoot(projectilePrefabUID, transform->GetGlobalPosition(), transform->GetGlobalRotation());
             currentTime = 0.0f;
+            droneMustRecoil = true;
         }
         else {
             currentTime += Time::GetDeltaTime();
@@ -78,4 +79,33 @@ void AttackDroneBehavior::StartWave(int newWaves, float bulletDelay, float timeB
     remainingWaves = newWaves;
     currentTime = timeBetweenWaves - bulletDelay;     // Starts at the time between waves and will have to wait only for bulletDelay the first time
     delay = timeBetweenWaves;
+}
+
+float3 AttackDroneBehavior::GetHoverOffset() {
+    float3 hoverPosition = float3(0.0f, 0.0f, 0.0f);
+
+    if (droneMustHover) {
+        hoverPosition = float3(0.0f, Sin(hoverCurrentTime) * droneHoverAmplitude, 0.f);
+        hoverCurrentTime += Time::GetDeltaTime();
+    }
+
+    return hoverPosition;
+}
+
+float3 AttackDroneBehavior::GetRecoilOffset() {
+    float3 recoilPosition = float3(0.0f, 0.0f, 0.0f);
+
+   /* if (droneMustRecoil) {
+        if (recoilCurrentTime > droneRecoilTime) {
+            droneMustRecoil = false;
+            recoilCurrentTime = 0.0f;
+        }
+        else {
+            recoilPosition = float3::Lerp(float3(0.0f, 0.0f, 0.0f), float3(0.0f, 0.0f, droneRecoilOffset), recoilCurrentTime / droneRecoilTime);
+
+            recoilCurrentTime += Time::GetDeltaTime();
+        }
+    }*/
+
+    return recoilPosition;
 }
