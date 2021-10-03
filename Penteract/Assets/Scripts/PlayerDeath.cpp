@@ -6,6 +6,7 @@
 #include "PlayerController.h"
 #include "SceneTransition.h"
 #include "GameOverUIController.h"
+#include "AttackDroneProjectile.h"
 
 #define LEFT_SHOT "LeftShot"
 #define RIGHT_SHOT "RightShot"
@@ -137,6 +138,15 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 		}
 	} else if (collidedWith.name == "DukeProjectile") {
 		if (playerController) playerController->TakeDamage(rangedDamageTaken);
+	}
+	else if (collidedWith.name == "AttackDroneProjectile") {
+		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+		if (pSystem) pSystem->KillParticle(p);
+
+		if (playerController) playerController->TakeDamage(rangedDamageTaken);
+		AttackDroneProjectile* projectileScript = GET_SCRIPT(&collidedWith, AttackDroneProjectile);
+		if (projectileScript) projectileScript->Collide();
 	}
 }
 

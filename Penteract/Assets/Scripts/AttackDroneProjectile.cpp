@@ -5,7 +5,9 @@
 #include "GameplaySystems.h"
 
 EXPOSE_MEMBERS(AttackDroneProjectile) {
-    MEMBER(MemberType::FLOAT, speed)
+	MEMBER(MemberType::FLOAT, speed),
+	MEMBER(MemberType::FLOAT, destroyTime),
+	MEMBER(MemberType::FLOAT, destroyTimeOnCollision)
 };
 
 GENERATE_BODY_IMPL(AttackDroneProjectile);
@@ -15,7 +17,7 @@ void AttackDroneProjectile::Start() {
 }
 
 void AttackDroneProjectile::Update() {
-	if (transform) transform->SetGlobalPosition(transform->GetGlobalPosition() + transform->GetFront() * speed * Time::GetDeltaTime());
+	if (transform && !mustStopMovement) transform->SetGlobalPosition(transform->GetGlobalPosition() + transform->GetFront() * speed * Time::GetDeltaTime());
 
 	if (currentTime >= destroyTime) {
 		GameplaySystems::DestroyGameObject(&GetOwner());
@@ -31,4 +33,16 @@ void AttackDroneProjectile::SetDestroyTime(float newDestroyTime) {
 
 void AttackDroneProjectile::SetSpeed(float newSpeed) {
 	speed = newSpeed;
+}
+
+void AttackDroneProjectile::Collide() {
+	// In case it has it
+	ComponentSphereCollider* collider = GetOwner().GetComponent<ComponentSphereCollider>();
+	if (collider) {
+		collider->Disable();
+	}
+
+	mustStopMovement = true;
+	currentTime = 0.0f;
+	destroyTime = destroyTimeOnCollision;
 }
