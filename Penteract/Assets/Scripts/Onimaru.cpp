@@ -110,12 +110,11 @@ void Onimaru::PlayAnimation() {
 
 	if (!UltimateStarted()) {
 		if (!ultimateOn) {
-			int idle = aiming ? static_cast<int>(ONIMARU_STATES::IDLE_AIM) : static_cast<int>(ONIMARU_STATES::IDLE);
 			if (compAnimation->GetCurrentState()) {
 				if (movementInputDirection == MovementDirection::NONE) {
-					//Primery state machine idle when alive, without input movement
-					if (compAnimation->GetCurrentState()->name != states[idle]) {
-						compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[idle]);
+					//Primary state machine idle when alive, without input movement
+					if (compAnimation->GetCurrentState()->name != states[static_cast<int>(ONIMARU_STATES::IDLE)]) {
+						compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(ONIMARU_STATES::IDLE)]);
 					}
 				}
 				else {
