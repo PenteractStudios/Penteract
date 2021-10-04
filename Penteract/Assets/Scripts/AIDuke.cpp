@@ -12,6 +12,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, shieldObjUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, bulletUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargeColliderUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, meleeAttackColliderUID),
 
 	MEMBER_SEPARATOR("Duke Atributes"),
 	MEMBER(MemberType::FLOAT, dukeCharacter.lifePoints),

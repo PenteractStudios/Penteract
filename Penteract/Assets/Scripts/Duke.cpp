@@ -10,7 +10,7 @@
 
 std::uniform_real_distribution<> rng(-1.0f, 1.0f);
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID)
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID)
 {
 	gen = std::minstd_rand(rd());
 
@@ -18,6 +18,7 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 	characterGameObject = GameplaySystems::GetGameObject(dukeUID);
 	player = GameplaySystems::GetGameObject(playerUID);
 	chargeCollider = GameplaySystems::GetGameObject(chargeColliderUID);
+	meleeAttackCollider = GameplaySystems::GetGameObject(meleeAttackColliderUID);
 
 	barrel = GameplaySystems::GetResource<ResourcePrefab>(barrelUID);
 
@@ -88,6 +89,14 @@ void Duke::ShootAndMove(const float3& playerDirection)
 void Duke::MeleeAttack()
 {
 	Debug::Log("Hooryah!");
+	if (!hasMeleeAttacked) {
+		if (compAnimation) {
+			if (compAnimation->GetCurrentState()) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[DUKE_ANIMATION_STATES::PUNCH]);
+				hasMeleeAttacked = true;
+			}
+		}
+	}
 }
 
 void Duke::BulletHell()
@@ -161,6 +170,7 @@ void Duke::ThrowBarrels()
 
 void Duke::OnAnimationFinished()
 {
+
 }
 
 void Duke::OnAnimationSecondaryFinished()
