@@ -89,7 +89,7 @@ void SpawnPointController::Update() {
 					initialDoor->Disable();
 				}
 				// Must open the bridge
-				if (initialBridge && finalBridge && !initialBridge->IsActive() && !finalBridge->IsActive()) {
+ 				if (initialBridge && finalBridge && !initialBridge->IsActive() && !finalBridge->IsActive()) {
 					OpenBridges();
 				}
 				gameObject->Disable();
@@ -124,6 +124,10 @@ void SpawnPointController::OnCollision(GameObject& /* collidedWith */, float3 /*
 	}
 	if (initialDoor && !initialDoor->IsActive()) initialDoor->Enable();
 	if (finalDoor && !finalDoor->IsActive()) finalDoor->Enable();
+	if (initialBridge && finalBridge && initialBridge->IsActive() && finalBridge->IsActive())
+	{
+		CloseBridges();
+	}
 	if (gameObjectActivatedOnCombatEnd && gameObjectActivatedOnCombatEnd->IsActive()) gameObjectActivatedOnCombatEnd->Disable();
 	if (gameObjectDeactivatedOnCombatEnd && !gameObjectDeactivatedOnCombatEnd->IsActive()) gameObjectDeactivatedOnCombatEnd->Enable();
 
@@ -160,14 +164,14 @@ void SpawnPointController::OpenDoor() {
 
 void SpawnPointController::OpenBridges()
 {
-	initialBridge->Disable();
-	finalBridge->Disable();
+	initialBridge->Enable();
+	finalBridge->Enable();
 }
 
 void SpawnPointController::CloseBridges()
 {
-	initialBridge->Enable();
-	finalBridge->Enable();
+	initialBridge->Disable();
+	finalBridge->Disable();
 }
 
 void SpawnPointController::SetCurrentEnemyAmount(unsigned int pos, unsigned int amount) {
