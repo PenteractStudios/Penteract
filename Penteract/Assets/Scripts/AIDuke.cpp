@@ -72,7 +72,7 @@ void AIDuke::Start() {
 	}
 
 	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID);
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID);
 }
 
 void AIDuke::Update() {

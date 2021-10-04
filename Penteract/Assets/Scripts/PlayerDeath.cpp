@@ -149,7 +149,6 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 			// Push the player a little bit
 			PushPlayerBack(collisionNormal, penetrationDistance);
 		}
-		collidedWith.Disable();
 	} else if (collidedWith.name == "DukePunch") {
 		if (playerController) {
 			playerController->TakeDamage(dukeDamageTaken);

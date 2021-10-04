@@ -187,12 +187,11 @@ void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 	switch (stateMachineEnum)
 	{
 	case StateMachineEnum::PRINCIPAL:
-		if (strcmp(eventName, "EnablePunch")) {
+		if (strcmp(eventName, "EnablePunch") == 0) {
 			if (meleeAttackCollider && !meleeAttackCollider->IsActive()) {
 				meleeAttackCollider->Enable();
 			}
-		}
-		else if (strcmp(eventName, "DisablePunch")) {
+		} else if (strcmp(eventName, "DisablePunch") == 0) {
 			if (meleeAttackCollider && meleeAttackCollider->IsActive()) {
 				meleeAttackCollider->Disable();
 			}
