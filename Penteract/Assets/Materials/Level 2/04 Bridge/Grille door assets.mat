@@ -9,7 +9,7 @@
         1.0,
         1.0
     ],
-    "DiffuseMap": 16493612435865958246,
+    "DiffuseMap": 18171679374765035829,
     "SpecularColor": [
         0.15000000596046449,
         0.15000000596046449,
@@ -18,8 +18,8 @@
     ],
     "SpecularMap": 0,
     "Metalness": 0.0,
-    "MetallicMap": 18085152294632546653,
-    "NormalMap": 9990572546714428804,
+    "MetallicMap": 10316424553831919319,
+    "NormalMap": 12184508290134560542,
     "NormalStrength": 1.0,
     "EmissiveColor": [
         1.0,
@@ -27,9 +27,9 @@
         0.9999899864196777,
         0.0
     ],
-    "EmissiveMap": 10143226760113864683,
-    "Emissive": 0.0,
-    "AmbientOcclusionMap": 10513791238898370735,
+    "EmissiveMap": 7426527092746866955,
+    "Emissive": 7.0,
+    "AmbientOcclusionMap": 10587662419229263541,
     "Smoothness": 1.0,
     "HasSmoothnessInAlphaChannel": true,
     "Tiling": [
