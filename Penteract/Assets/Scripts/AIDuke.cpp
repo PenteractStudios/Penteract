@@ -89,7 +89,7 @@ void AIDuke::Start() {
 void AIDuke::Update() {
 	std::string life = std::to_string(dukeCharacter.lifePoints);
 	life = "Life points: " + life;
-	// Debug::Log(life.c_str());
+	Debug::Log(life.c_str());
 
 	if (toggleShield) {
 		toggleShield = false;
@@ -106,7 +106,7 @@ void AIDuke::Update() {
 	case Phase::PHASE1:
 		currentShieldCooldown += Time::GetDeltaTime();
 		if ((dukeCharacter.lifePoints < 0.85 * dukeCharacter.GetTotalLifePoints()) && !activeFireTiles) {
-			// Debug::Log("BulletHell active and fire tiles on");
+			Debug::Log("BulletHell active and fire tiles on");
 			activeFireTiles = true;
 			// TODO: signal fire tiles activation
 			currentBulletHellCooldown = 0.8f * bulletHellCooldown;
@@ -119,7 +119,7 @@ void AIDuke::Update() {
 			phase = Phase::PHASE3;
 			lifeThreshold -= 0.1f;
 			dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
-			// Debug::Log("Phase3");
+			Debug::Log("Phase3");
 			dukeCharacter.criticalMode = true;
 			// Phase change VFX? and anim?
 			return;
@@ -131,7 +131,7 @@ void AIDuke::Update() {
 			// Anim + dissolve for teleportation
 			lifeThreshold -= 0.1f;
 			activeFireTiles = false;
-			// Debug::Log("Fire tiles disabled");
+			Debug::Log("Fire tiles disabled");
 			movementScript->Stop();
 			if (isInArena) TeleportDuke(true);
 			dukeCharacter.CallTroops();
@@ -236,24 +236,21 @@ void AIDuke::Update() {
 
 		break;
 	case Phase::PHASE2:
-		// Debug::Log("PHASE2");
+		Debug::Log("PHASE2");
 		if (!activeLasers && dukeCharacter.lifePoints < lasersThreshold * dukeCharacter.GetTotalLifePoints()) {
 			activeLasers = true;
 			// TODO: signal lasers activation
-			// Debug::Log("Lasers enabled");
+			Debug::Log("Lasers enabled");
 		}
 
-		// TODO: Replace this for real enemy troops control
-		if (troopsCounter <= 0) {
-			troopsCounter = 5;
+		if (isInArena) {
 			activeFireTiles = true;
-			// Debug::Log("Fire tiles enabled");
+			Debug::Log("Fire tiles enabled");
 			phase = Phase::PHASE1;
 			dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 			currentBulletHellCooldown = 0.f;
 			currentShieldCooldown = 0.f;
 		} else {
-			troopsCounter -= 0.0063f;
 			if (player) {
 				float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
 				movementScript->Orientate(dir);
@@ -268,7 +265,7 @@ void AIDuke::Update() {
 	case Phase::PHASE3:
 		if (dukeCharacter.lifePoints <= 0.f) {
 			// TODO: Init victory sequence
-			// Debug::Log("Ugh...I'm...Dead...");
+			Debug::Log("Ugh...I'm...Dead...");
 			if (playerController) playerController->RemoveEnemyFromMap(duke);
 			GameplaySystems::DestroyGameObject(duke);
 			SceneManager::ChangeScene(winSceneUID); // TODO: Replace with the correct trigger (for the video or whatever)

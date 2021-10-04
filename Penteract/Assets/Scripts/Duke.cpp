@@ -82,22 +82,22 @@ void Duke::ShootAndMove(const float3& playerDirection) {
 	}
 	agent->SetMoveTarget(dukeTransform->GetGlobalPosition() + perpendicular);
 	Shoot();
-	// Debug::Log("I'm moving while shooting");
+	Debug::Log("I'm moving while shooting");
 }
 
 void Duke::MeleeAttack() {
-	// Debug::Log("Hooryah!");
+	Debug::Log("Hooryah!");
 }
 
 void Duke::BulletHell() {
-	// Debug::Log("Bullet hell");
+	Debug::Log("Bullet hell");
 }
 
 void Duke::InitCharge(DukeState nextState) {
 	this->nextState = nextState;
 	reducedDamaged = true;
 	if (chargeCollider) chargeCollider->Enable();
-	// Debug::Log("Electric Tackle!");
+	Debug::Log("Electric Tackle!");
 }
 
 void Duke::UpdateCharge(bool forceStop) {
@@ -133,11 +133,11 @@ void Duke::Shoot() {
 		attackTimePool = (attackBurst / attackSpeed) + timeInterBurst + rng(gen) * RNG_SCALE;
 		// Animation
 	}
-	// Debug::Log("PIUM!");
+	Debug::Log("PIUM!");
 }
 
 void Duke::ThrowBarrels() {
-	// Debug::Log("Here, barrel in your face!");
+	Debug::Log("Here, barrel in your face!");
 
 	float height = 15.0f;
 	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
