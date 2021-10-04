@@ -154,6 +154,9 @@ void DialogueManager::Start() {
 	dialoguesArray[38] = Dialogue(DialogueWindow::UPGRADES2, true, "", nullptr);
 
 	dialoguesArray[41] = Dialogue(DialogueWindow::UPGRADES3, true, "", nullptr);
+
+	// LEVEL 1 - Duke Walk To Factory
+	dialoguesArray[45] = Dialogue(DialogueWindow::ONIMARU, true, "Duke is running away.\nDon't let him escape!", nullptr);
 }
 
 void DialogueManager::Update() {
