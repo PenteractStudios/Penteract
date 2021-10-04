@@ -178,7 +178,6 @@ void AIDuke::Update() {
 			break;
 		case DukeState::MELEE_ATTACK:
 			dukeCharacter.MeleeAttack();
-			dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 			break;
 		case DukeState::SHOOT_SHIELD:
 			if (player) movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition(), orientationSpeed, orientationThreshold);

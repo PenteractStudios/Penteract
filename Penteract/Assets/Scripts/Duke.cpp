@@ -170,7 +170,12 @@ void Duke::ThrowBarrels()
 
 void Duke::OnAnimationFinished()
 {
-
+	State* currentState = compAnimation->GetCurrentState();
+	if (currentState->name == "Punch") {
+		hasMeleeAttacked = false;
+		compAnimation->SendTrigger(currentState->name + animationStates[DUKE_ANIMATION_STATES::IDLE]);
+		state = DukeState::BASIC_BEHAVIOUR;
+	}
 }
 
 void Duke::OnAnimationSecondaryFinished()
@@ -179,4 +184,25 @@ void Duke::OnAnimationSecondaryFinished()
 
 void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName)
 {
+	switch (stateMachineEnum)
+	{
+	case StateMachineEnum::PRINCIPAL:
+		if (strcmp(eventName, "EnablePunch")) {
+			if (meleeAttackCollider) {
+				ComponentSphereCollider* col = meleeAttackCollider->GetComponent<ComponentSphereCollider>();
+				if (col && !col->IsActive()) col->Enable();
+			}
+		}
+		else if (strcmp(eventName, "DisablePunch")) {
+			if (meleeAttackCollider) {
+				ComponentSphereCollider* col = meleeAttackCollider->GetComponent<ComponentSphereCollider>();
+				if (col && col->IsActive()) col->Disable();
+			}
+		}
+		break;
+	case StateMachineEnum::SECONDARY:
+		break;
+	default:
+		break;
+	}
 }
