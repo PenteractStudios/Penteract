@@ -11,6 +11,7 @@ EXPOSE_MEMBERS(Barrel) {
 	MEMBER(MemberType::FLOAT, timeWillDoDamage),
 	MEMBER(MemberType::FLOAT, timerToDestroy),
 	MEMBER(MemberType::BOOL, onFloor),
+	MEMBER(MemberType::FLOAT, heightOfThrow),
 	MEMBER(MemberType::FLOAT, forceOfFall),
 	MEMBER(MemberType::FLOAT, shakeMultiplier)
 };
@@ -49,7 +50,18 @@ void Barrel::Start() {
 		audioForTimer = particleForTimerAux->GetComponent<ComponentAudioSource>();
 	}
 
+	if (!onFloor) {
+		float3 pos = parentTransform->GetGlobalPosition();
+		parentTransform->SetGlobalPosition(float3(pos.x, heightOfThrow, pos.z));
+	}
 
+	barrelShadow = barrel->GetParent()->GetParent()->GetChild("BarrelShadowWarning");
+	if (barrelShadow) {
+		particlesShadow = barrelShadow->GetComponent<ComponentParticleSystem>();
+		if (particlesShadow) {
+			particlesShadow->PlayChildParticles();
+		}
+	}
 }
 
 void Barrel::Update() {
@@ -90,7 +102,12 @@ void Barrel::Update() {
 		}
 		else {
 			destroy = false;
-			GameplaySystems::DestroyGameObject(barrel->GetParent());
+			if (particlesShadow) {
+				GameplaySystems::DestroyGameObject(barrel->GetParent()->GetParent());				
+			}
+			else {
+				GameplaySystems::DestroyGameObject(barrel->GetParent());
+			}
 		}
 	}
 

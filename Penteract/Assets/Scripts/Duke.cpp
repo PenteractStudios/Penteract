@@ -176,10 +176,8 @@ void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 
 void Duke::InstantiateBarrel()
 {
-	float height = 15.0f;
-	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
 	//Instantiate barrel and play animation throw barrels for Duke and the barrel
 	if (barrel) {
-		GameObject* auxBarrel = GameplaySystems::Instantiate(barrel, playerPos + float3(0.0f, height, 0.0f), Quat(0, 0, 0, 1));
+		GameObject* auxBarrel = GameplaySystems::Instantiate(barrel, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), Quat(0, 0, 0, 1));
 	}
 }
