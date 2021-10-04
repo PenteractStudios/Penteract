@@ -188,15 +188,13 @@ void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 	{
 	case StateMachineEnum::PRINCIPAL:
 		if (strcmp(eventName, "EnablePunch")) {
-			if (meleeAttackCollider) {
-				ComponentSphereCollider* col = meleeAttackCollider->GetComponent<ComponentSphereCollider>();
-				if (col && !col->IsActive()) col->Enable();
+			if (meleeAttackCollider && !meleeAttackCollider->IsActive()) {
+				meleeAttackCollider->Enable();
 			}
 		}
 		else if (strcmp(eventName, "DisablePunch")) {
-			if (meleeAttackCollider) {
-				ComponentSphereCollider* col = meleeAttackCollider->GetComponent<ComponentSphereCollider>();
-				if (col && col->IsActive()) col->Disable();
+			if (meleeAttackCollider && meleeAttackCollider->IsActive()) {
+				meleeAttackCollider->Disable();
 			}
 		}
 		break;

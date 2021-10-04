@@ -147,13 +147,15 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 		if (playerController) {
 			playerController->TakeDamage(dukeChargeDamageTaken);
 			// Push the player a little bit
-			float3 truePenetrationDistance = penetrationDistance.ProjectTo(collisionNormal);
-			playerController->playerFang.IsActive() ? playerController->playerFang.agent->RemoveAgentFromCrowd() : playerController->playerOnimaru.agent->RemoveAgentFromCrowd();
-			ComponentTransform* playerTransform = playerController->playerFang.playerMainTransform;
-			playerTransform->SetGlobalPosition(playerTransform->GetGlobalPosition() + 8 * truePenetrationDistance);
-			playerController->playerFang.IsActive() ? playerController->playerFang.agent->AddAgentToCrowd() : playerController->playerOnimaru.agent->AddAgentToCrowd();
+			PushPlayerBack(collisionNormal, penetrationDistance);
 		}
-
+		collidedWith.Disable();
+	} else if (collidedWith.name == "DukePunch") {
+		if (playerController) {
+			playerController->TakeDamage(dukeDamageTaken);
+			PushPlayerBack(collisionNormal, penetrationDistance);
+		}
+		collidedWith.Disable();
 	}
 }
 
@@ -167,4 +169,13 @@ void PlayerDeath::OnLoseConditionMet() {
 			if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 		}
 	}
+}
+
+void PlayerDeath::PushPlayerBack(float3 collisionNormal, float3 penetrationDistance)
+{
+	float3 truePenetrationDistance = penetrationDistance.ProjectTo(collisionNormal);
+	playerController->playerFang.IsActive() ? playerController->playerFang.agent->RemoveAgentFromCrowd() : playerController->playerOnimaru.agent->RemoveAgentFromCrowd();
+	ComponentTransform* playerTransform = playerController->playerFang.playerMainTransform;
+	playerTransform->SetGlobalPosition(playerTransform->GetGlobalPosition() + 8 * truePenetrationDistance);
+	playerController->playerFang.IsActive() ? playerController->playerFang.agent->AddAgentToCrowd() : playerController->playerOnimaru.agent->AddAgentToCrowd();
 }
