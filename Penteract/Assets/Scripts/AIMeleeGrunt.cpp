@@ -36,6 +36,9 @@ EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
 	MEMBER(MemberType::FLOAT, stunDuration),
 	MEMBER(MemberType::FLOAT, groundPosition),
+	MEMBER_SEPARATOR("Push Random Feedback"),
+	MEMBER(MemberType::FLOAT, minTimePushEffect),
+	MEMBER(MemberType::FLOAT, maxTimePushEffect),
 	MEMBER_SEPARATOR("Attack1"),
 	MEMBER(MemberType::FLOAT, att1AttackSpeed),
 	MEMBER(MemberType::FLOAT, att1MovementSpeedWhileAttacking),
@@ -127,6 +130,24 @@ void AIMeleeGrunt::Start() {
 		}
 	}
 
+	//EMP Feedback
+	objectEMP = GetOwner().GetChild("EmpParticles");
+	if (objectEMP) {
+		ComponentParticleSystem* particlesEmpAux = objectEMP->GetComponent<ComponentParticleSystem>();
+		if (particlesEmpAux) {
+			particlesEmp = particlesEmpAux;
+		}
+	}
+
+	//Push Feedback
+	objectPush = GetOwner().GetChild("PushParticles");
+	if (objectPush) {
+		ComponentParticleSystem* particlesPushAux = objectPush->GetComponent<ComponentParticleSystem>();
+		if (particlesPushAux) {
+			particlesPush = particlesPushAux;
+		}
+	}
+	
 	gameObject = &GetOwner();
 	if (gameObject) {
 		// Workaround get the first children - Create a Prefab overrides childs IDs
@@ -296,6 +317,8 @@ void AIMeleeGrunt::Update() {
 	if (!gruntCharacter.isAlive) {
 		Death();
 	}
+
+	if (pushEffectHasToStart)EnablePushFeedback();
 }
 
 void AIMeleeGrunt::OnAnimationFinished() {
@@ -409,16 +432,32 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 			}
 
 			if (collidedWith.name == "EMP") {
-				if (state != AIState::STUNNED) {
-					if (animation->GetCurrentState()) {
-						animation->SendTrigger(animation->GetCurrentState()->name + "StunStart");
-					}
-					agent->RemoveAgentFromCrowd();
-					stunTimeRemaining = stunDuration;
-					state = AIState::STUNNED;
-				}
+				DoStunned();
 			}
 		}
+	}
+}
+
+void AIMeleeGrunt::DoStunned()
+{
+	if (state != AIState::STUNNED) {
+		if (animation->GetCurrentState()) {
+			animation->SendTrigger(animation->GetCurrentState()->name + "StunStart");
+		}
+		if(particlesEmp)particlesEmp->PlayChildParticles();
+		agent->RemoveAgentFromCrowd();
+		stunTimeRemaining = stunDuration;
+		state = AIState::STUNNED;
+	}
+}
+
+void AIMeleeGrunt::EnablePushFeedback() {
+	if (timeToSrartPush < 0) {
+		pushEffectHasToStart = false;
+		if (particlesPush) particlesPush->PlayChildParticles();
+	}
+	else {
+		timeToSrartPush -= Time::GetDeltaTime(); 
 	}
 }
 
@@ -427,6 +466,8 @@ void AIMeleeGrunt::EnableBlastPushBack() {
 		gruntCharacter.beingPushed = true;
 		pushBackTimer = 0.f;
 		state = AIState::PUSHED;
+		pushEffectHasToStart = true;
+		timeToSrartPush = (minTimePushEffect + 1) + (((float)rand()) / (float)RAND_MAX) * (maxTimePushEffect - (minTimePushEffect + 1));
 		if (animation->GetCurrentState()) animation->SendTrigger(animation->GetCurrentState()->name + "Hurt");
 		CalculatePushBackRealDistance();
 		// Damage
