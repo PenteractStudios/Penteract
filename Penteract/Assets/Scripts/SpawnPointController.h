@@ -33,6 +33,10 @@ public:
 	/* Dissolve UID */
 	UID dissolveMaterialGOUID = 0;
 
+	/* Bridges Transport UID */
+	UID initialBridgeUID = 0;
+	UID finalBridgeUID = 0;
+
 public:
 	void Start() override;
 	void Update() override;
@@ -40,6 +44,8 @@ public:
 	/* Enable the spawn points on trigger  */
 	void OnCollision(GameObject& /* collidedWith */, float3 /* collisionNormal */, float3 penetrationDistance, void* particle = nullptr) override;
 	void OpenDoor();
+	void OpenBridge();
+	void CloseBridge();
 
 	ResourcePrefab* GetMeleePrefab() { return meleeEnemyPrefab; };
 	ResourcePrefab* GetRangePrefab() { return rangeEnemyPrefab; };
@@ -63,6 +69,11 @@ private:
 
 	GameObject* gameObjectActivatedOnCombatEnd = nullptr;	// This gameObject will be disabled when triggering the combat, and will be enabled again when the combat ends (in 'OpenDoor()'). Useful to set up triggers and other gameplay features after a combat encounter.
 	GameObject* gameObjectDeactivatedOnCombatEnd = nullptr;	// This gameObject will be enabled when triggering the combat, and will be disabled again when the combat ends (in 'OpenDoor()'). Useful to set down triggers and other gameplay features after a combat encounter.
+
+
+	/* Bridges Transport Object */
+	GameObject* initialBridge = nullptr;
+	GameObject* finalBridge = nullptr;
 
 	/* Spawn points satus*/
 	std::vector<unsigned int> enemiesPerSpawnPoint;

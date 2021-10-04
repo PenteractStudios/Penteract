@@ -18,6 +18,9 @@ EXPOSE_MEMBERS(SpawnPointController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, gameObjectActivatedOnCombatEndUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, gameObjectDeactivatedOnCombatEndUID),
 	MEMBER(MemberType::FLOAT, timerToUnlock),
+	MEMBER_SEPARATOR("Bridge Transport GameObject Refs"),
+	MEMBER(MemberType::GAME_OBJECT_UID, initialBridgeUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, finalBridgeUID),
 	MEMBER_SEPARATOR("Dissolve material reference in placeholders"),
 	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID)
 };
@@ -36,6 +39,9 @@ void SpawnPointController::Start() {
 
 	gameObjectActivatedOnCombatEnd = GameplaySystems::GetGameObject(gameObjectActivatedOnCombatEndUID);
 	gameObjectDeactivatedOnCombatEnd = GameplaySystems::GetGameObject(gameObjectDeactivatedOnCombatEndUID);
+
+	initialBridge = GameplaySystems::GetGameObject(initialBridgeUID);
+	finalBridge = GameplaySystems::GetGameObject(finalBridgeUID);
 
 	unsigned int i = 0;
 	for (GameObject* child : gameObject->GetChildren()) {
@@ -74,12 +80,17 @@ void SpawnPointController::Start() {
 void SpawnPointController::Update() {
 	if (unlockStarted) {
 		if (currentUnlockTime >= timerToUnlock) {
-			if (!isClosing) {			// Must open the door
+			if (!isClosing) {		
+				// Must open the door
 				if (finalDoor && finalDoor->IsActive()) {
 					finalDoor->Disable();
 				}
 				if (unlocksInitialDoor && initialDoor && initialDoor->IsActive()) {
 					initialDoor->Disable();
+				}
+				// Must open the bridge
+				if (initialBridge && finalBridge && !initialBridge->IsActive() && !finalBridge->IsActive()) {
+					OpenBridges();
 				}
 				gameObject->Disable();
 			}
@@ -145,6 +156,18 @@ void SpawnPointController::OpenDoor() {
 		unlockStarted = true;
 		isClosing = false;
 	}
+}
+
+void SpawnPointController::OpenBridges()
+{
+	initialBridge->Disable();
+	finalBridge->Disable();
+}
+
+void SpawnPointController::CloseBridges()
+{
+	initialBridge->Enable();
+	finalBridge->Enable();
 }
 
 void SpawnPointController::SetCurrentEnemyAmount(unsigned int pos, unsigned int amount) {
