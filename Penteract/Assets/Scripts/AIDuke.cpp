@@ -153,7 +153,7 @@ void AIDuke::Update() {
 						// If player dominates the center for too long, perform charge
 						timeSinceLastCharge += Time::GetDeltaTime();
 					}
-					if (timeSinceLastCharge >= 4.0f) {
+					if (timeSinceLastCharge >= 3.0f) {
 						timeSinceLastCharge = 0.f;
 						// Charge
 						movementScript->Stop();
@@ -363,10 +363,7 @@ void AIDuke::Update() {
 						if (timeSinceLastCharge >= 4.0f) {
 							timeSinceLastCharge = 0.f;
 							// Charge
-							dukeCharacter.chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-							dukeCharacter.agent->SetMoveTarget(dukeCharacter.chargeTarget);
-							dukeCharacter.agent->SetMaxSpeed(dukeCharacter.chargeSpeed);
-							dukeCharacter.state = DukeState::CHARGE;
+							movementScript->Stop();
 							dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
 						}
 						else {
@@ -593,6 +590,7 @@ void AIDuke::UpdatePushBackPosition() {
 		dukeCharacter.agent->SetMaxSpeed(dukeCharacter.pushBackSpeed);
 		float distance = enemyPos.Distance(initialPos);
 		currentPushBackDistance += distance;
+		Debug::Log("MACAGUNLAPUTA");
 
 		if (currentPushBackDistance >= pushBackRealDistance) {
 			dukeCharacter.agent->SetMaxSpeed(dukeCharacter.slowedDownSpeed);

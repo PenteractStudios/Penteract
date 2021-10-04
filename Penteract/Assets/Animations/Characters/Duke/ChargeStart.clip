@@ -4,7 +4,12 @@
     "BeginIndex": 226,
     "EndIndex": 308,
     "Loop": false,
-    "Speed": 1.7000000476837159,
+    "Speed": 2.299999952316284,
     "FrameRate": 0.041631944477558139,
-    "KeyEventClip": null
+    "KeyEventClip": [
+        {
+            "KeyFrame": 290,
+            "Name": "StopTracking"
+        }
+    ]
 }

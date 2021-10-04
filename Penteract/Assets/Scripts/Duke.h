@@ -106,6 +106,9 @@ private:
 	float distanceCorrectionTimer = 0.f;
 	float distanceCorrectionThreshold = 2.0f;
 
+	// Charge
+	bool trackingChargeTarget = false;
+
 	// Shooting
 	float attackTimePool = 0.f;
 	ComponentParticleSystem* bullet = nullptr;

@@ -149,7 +149,7 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 			// Push the player a little bit
 			playerController->playerFang.IsActive() ? playerController->playerFang.agent->RemoveAgentFromCrowd() : playerController->playerOnimaru.agent->RemoveAgentFromCrowd();
 			ComponentTransform* playerTransform = playerController->playerFang.playerMainTransform;
-			playerTransform->SetGlobalPosition(playerTransform->GetGlobalPosition() + 2 * collisionNormal);
+			playerTransform->SetGlobalPosition(playerTransform->GetGlobalPosition() + 1.2f * collisionNormal);
 			playerController->playerFang.IsActive() ? playerController->playerFang.agent->AddAgentToCrowd() : playerController->playerOnimaru.agent->AddAgentToCrowd();
 		}
 

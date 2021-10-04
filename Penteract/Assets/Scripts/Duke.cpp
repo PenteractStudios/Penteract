@@ -3,6 +3,7 @@
 #include "GameplaySystems.h"
 #include "RangerProjectileScript.h"
 #include "PlayerController.h"
+#include "AIMovement.h"
 
 #include <string>
 
@@ -39,6 +40,8 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 		dukeTransform = characterGameObject->GetComponent<ComponentTransform>();
 		agent = characterGameObject->GetComponent<ComponentAgent>();
 		compAnimation = characterGameObject->GetComponent<ComponentAnimation>();
+		movementScript = GET_SCRIPT(characterGameObject, AIMovement);
+
 		if (compAnimation) {
 			currentState = compAnimation->GetCurrentState();
 		}
@@ -98,7 +101,7 @@ void Duke::BulletHell()
 
 void Duke::InitCharge(DukeState nextState)
 {
-	chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	trackingChargeTarget = true;
 	state = DukeState::CHARGE;
 	this->nextState = nextState;
 	reducedDamaged = true;
@@ -111,6 +114,12 @@ void Duke::InitCharge(DukeState nextState)
 
 void Duke::UpdateCharge(bool forceStop)
 {
+
+	if (trackingChargeTarget) {
+		float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - dukeTransform->GetGlobalPosition();
+		dir.y = 0.0f;
+		movementScript->Orientate(dir);
+	}
 	if (forceStop || (dukeTransform->GetGlobalPosition() - chargeTarget).Length() <= 0.2f) {
 		if (chargeCollider) chargeCollider->Disable();
 		if (compAnimation) {
@@ -188,4 +197,15 @@ void Duke::OnAnimationSecondaryFinished()
 
 void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName)
 {
+	switch (stateMachineEnum) {
+		case StateMachineEnum::PRINCIPAL:
+			if (strcmp(eventName, "StopTracking") == 0) {
+				if (!trackingChargeTarget) return;
+				trackingChargeTarget = false;
+				chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+			}
+			break;
+		default:
+			break;
+	}
 }
