@@ -179,7 +179,7 @@ float PlayerController::GetFangMaxHealth() const {
 }
 
 bool PlayerController::IsPlayerDead() {
-	return !playerFang.isAlive && (!playerOnimaru.isAlive || GameplaySystems::GetGlobalVariable(globalSwitchTutorialReached, false));
+	return !playerFang.isAlive && (!playerOnimaru.isAlive || !GameplaySystems::GetGlobalVariable(globalSwitchTutorialReached, true));
 }
 
 void PlayerController::SetNoCooldown(bool status) {
