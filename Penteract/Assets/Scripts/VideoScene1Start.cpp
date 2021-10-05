@@ -60,7 +60,7 @@ void VideoScene1Start::Update() {
 void VideoScene1Start::BackToNormalGameplay() {
     Time::ResumeGame();
     componentVideo->Stop();
-    GameplaySystems::SetGlobalVariable(isVideoActive, true);
+    GameplaySystems::SetGlobalVariable(isVideoActive, false);
     parent->Disable();
     if (faderScript) {
         faderScript->FadeIn();
