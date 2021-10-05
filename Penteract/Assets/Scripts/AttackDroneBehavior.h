@@ -5,6 +5,7 @@
 
 class ComponentTransform;
 class ComponentParticleSystem;
+class AttackDronesController;
 
 class AttackDroneBehavior : public Script
 {
@@ -18,6 +19,9 @@ public:
 	void Reposition(float3 newPosition);
 	void SetPositionOffset(float3 newOffset);
 	void SetMustForceRotation(bool mustForce);
+	void SetWaitEndOfWave(bool mustWait);
+	void SetIsLastDrone(bool isLast);
+	void SetControllerScript(AttackDronesController* controllerScript);
 	void Shoot();
 	void StartWave(int newWaves, float bulletDelay, float timeBetweenWaves);
 
@@ -43,12 +47,18 @@ private:
 	GameObject* dronesController = nullptr;
 	ComponentTransform* dronesControllerTransform = nullptr;
 	ComponentTransform* transform = nullptr;
+	AttackDronesController* dronesControllerScript = nullptr;
 
 	ProjectileController shooter;
 
 	bool mustReposition = false;
 	float3 positionOffset = float3(0.0f, 0.0f, 0.0f);
 	bool mustForceRotation = false;
+
+	bool mustWaitEndOfWave = false;
+	bool availableShot = true;
+
+	bool isLastDrone = false;
 
 	// Shooting
 	int remainingWaves = 0;
@@ -61,4 +71,3 @@ private:
 	// Recoil effect
 	float recoilCurrentTime = 0.0f;
 };
-

@@ -3,6 +3,7 @@
 #include "GameplaySystems.h"
 #include "Components/ComponentTransform.h"
 #include "Components/ComponentParticleSystem.h"
+#include "AttackDronesController.h"
 #include "RandomNumberGenerator.h"
 
 EXPOSE_MEMBERS(AttackDroneBehavior) {
@@ -25,6 +26,7 @@ void AttackDroneBehavior::Start() {
     dronesController = GameplaySystems::GetGameObject(dronesControllerUID);
     if (dronesController) {
         dronesControllerTransform = dronesController->GetComponent<ComponentTransform>();
+        dronesControllerScript = GET_SCRIPT(dronesController, AttackDronesController);
     }
 
     hoverCurrentTime = RandomNumberGenerator::GenerateFloat(-1.5708, 1.5708);
@@ -61,13 +63,31 @@ void AttackDroneBehavior::SetMustForceRotation(bool mustForce) {
     mustForceRotation = mustForce;
 }
 
+void AttackDroneBehavior::SetWaitEndOfWave(bool mustWait) {
+    mustWaitEndOfWave = mustWait;
+    if (!mustWait) availableShot = true;
+}
+
+void AttackDroneBehavior::SetIsLastDrone(bool isLast) {
+    isLastDrone = isLast;
+}
+
+void AttackDroneBehavior::SetControllerScript(AttackDronesController* controllerScript) {
+    dronesControllerScript = controllerScript;
+}
+
 void AttackDroneBehavior::Shoot() {
-    if (remainingWaves > 0) {        
+    if (remainingWaves > 0 && availableShot) {
         if (currentTime >= delay) {
             remainingWaves--;
             shooter.Shoot(projectilePrefabUID, transform->GetGlobalPosition(), transform->GetGlobalRotation());
             currentTime = 0.0f;
             droneMustRecoil = true;
+            if (mustWaitEndOfWave) availableShot = false;
+            if (isLastDrone && dronesControllerScript) {
+                dronesControllerScript->EndOfWave();
+                isLastDrone = false;
+            }
         }
         else {
             currentTime += Time::GetDeltaTime();

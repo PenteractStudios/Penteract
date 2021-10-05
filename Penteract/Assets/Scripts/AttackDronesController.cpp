@@ -28,6 +28,7 @@ void AttackDronesController::Start() {
             if (droneScript) {
                 dronesScripts.push_back(droneScript);
             }
+            droneScript->SetControllerScript(this);
         }
     }
 
@@ -107,12 +108,31 @@ void AttackDronesController::StartBulletHell() {
             AddDrone();
         }
     }
+    
+    if (newNumberOfDrones == 0) return;
 
+    waves = 0;
+    cycle = chosenPattern.cycles[0];
+    
+    CheckDronesWaitEndOfWave();
     RecalculateFormations();
     SetDronesFormation(chosenPattern.droneFormation);
-    RepositionDrones();
+    //RepositionDrones();
     mustStartBulletHell = true;
     currentTime = 0.0f;
+}
+
+void AttackDronesController::EndOfWave() {
+    Debug::Log("end of wave");
+
+    waves++;
+    if (waves == chosenPattern.waves) return;
+    
+    cycle = chosenPattern.cycles[waves];
+    CheckDronesWaitEndOfWave();
+    //RecalculateFormations();  // I don't think this is needed
+    SetDronesFormation(chosenPattern.droneFormation);
+    StartWave();
 }
 
 void AttackDronesController::SetDronesFormation(DronesFormation newFormation) {
@@ -179,7 +199,18 @@ void AttackDronesController::RecalculateFormations() {
 void AttackDronesController::RepositionDrones() {
     for (int i = 0; i < dronesScripts.size(); ++i) {
         dronesScripts[i]->SetPositionOffset(formationsOffsetPositions[static_cast<int>(formation)][i]);
-        dronesScripts[i]->SetMustForceRotation(cycle == WaveCycle::CENTERED);
+        dronesScripts[i]->SetMustForceRotation(cycle == WaveCycle::CENTERED && formation == DronesFormation::CIRCLE);
+    }
+}
+
+void AttackDronesController::CheckDronesWaitEndOfWave() {
+    SetDronesWaitEndOfWave(false);      // clear and initialize
+
+    if (waves < chosenPattern.cycles.size() && chosenPattern.cycles.size() > 1) {
+        bool mustWaitEndOfWave = MustWaitEndOfWave();
+        if (mustWaitEndOfWave) {
+            SetDronesWaitEndOfWave(true);
+        }
     }
 }
 
@@ -250,12 +281,20 @@ float AttackDronesController::GetVerticalOffset() const {
 
 void AttackDronesController::StartWave() {
     if (dronesScripts.size() == 0) return;
+
+    float maxDelay = 0.0f;
+    int mostDelayedDrone = 0;
     
     switch (cycle) {
         case WaveCycle::LEFT_TO_RIGHT: {
             float accumulatedDelay = 0.0f;
-            for (AttackDroneBehavior* drone : dronesScripts) {
-                drone->StartWave(chosenPattern.waves, accumulatedDelay, chosenPattern.timeBetweenWaves);
+            for (int i = 0; i < dronesScripts.size(); ++i) {
+                if (accumulatedDelay > maxDelay) {
+                    maxDelay = accumulatedDelay;
+                    mostDelayedDrone = i;
+                }
+
+                dronesScripts[i]->StartWave(chosenPattern.waves - waves, accumulatedDelay, chosenPattern.timeBetweenWaves);
                 accumulatedDelay += chosenPattern.droneShotDelay;
             }
             break;
@@ -263,10 +302,21 @@ void AttackDronesController::StartWave() {
 
 		case WaveCycle::RIGHT_TO_LEFT: {
 			float accumulatedDelay = 0.0f;
-			for (auto it = dronesScripts.rbegin(); it != dronesScripts.rend(); ++it) {
+			/*for (auto it = dronesScripts.rbegin(); it != dronesScripts.rend(); ++it) {
 				(*it)->StartWave(chosenPattern.waves, accumulatedDelay, chosenPattern.timeBetweenWaves);
 				accumulatedDelay += chosenPattern.droneShotDelay;
-			}
+			}*/
+
+            for (int i = dronesScripts.size() - 1; i >= 0; --i) {
+                if (accumulatedDelay > maxDelay) {
+                    maxDelay = accumulatedDelay;
+                    mostDelayedDrone = i;
+                }
+
+                dronesScripts[i]->StartWave(chosenPattern.waves - waves, accumulatedDelay, chosenPattern.timeBetweenWaves);
+                accumulatedDelay += chosenPattern.droneShotDelay;
+            }
+
 			break;
 		}
 
@@ -277,7 +327,12 @@ void AttackDronesController::StartWave() {
             float multiplier = -1.0f;
 
             for (int i = 0; i < dronesScripts.size(); ++i) {
-                dronesScripts[i]->StartWave(chosenPattern.waves, accumulatedDelay, chosenPattern.timeBetweenWaves);
+                if (accumulatedDelay > maxDelay) {
+                    maxDelay = accumulatedDelay;
+                    mostDelayedDrone = i;
+                }
+
+                dronesScripts[i]->StartWave(chosenPattern.waves - waves, accumulatedDelay, chosenPattern.timeBetweenWaves);
 
                 if (i == dronesScripts.size() / 2) {
                     multiplier = 1.0f;
@@ -294,4 +349,16 @@ void AttackDronesController::StartWave() {
             break;
         }
     }
+
+    if (MustWaitEndOfWave()) dronesScripts[mostDelayedDrone]->SetIsLastDrone(true);
+}
+
+void AttackDronesController::SetDronesWaitEndOfWave(bool value) {
+    for (AttackDroneBehavior* drone : dronesScripts) {
+        drone->SetWaitEndOfWave(value);
+    }
+}
+
+bool AttackDronesController::MustWaitEndOfWave() const {
+    return chosenPattern.cycles[waves] != chosenPattern.cycles[waves + 1];
 }

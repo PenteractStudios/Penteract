@@ -55,9 +55,12 @@ extern inline std::vector<AttackDronesPattern> patterns = {
 	AttackDronesPattern(),
 
 	AttackDronesPattern(3.0f, 4.0f, 6.0f, 1.0f, 1.0f, 
-						0.1f, 5, DronesFormation::ARROW, 5, 0.5f, { WaveCycle::LEFT_TO_RIGHT, WaveCycle::LEFT_TO_RIGHT, WaveCycle::LEFT_TO_RIGHT }, 40),
+						0.1f, 5, DronesFormation::ARROW, 5, 0.5f, { WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED }, 30),
 
 	AttackDronesPattern(3.0f, 4.0f, 6.0f, 1.0f, 1.0f, 
-						0.1f, 9, DronesFormation::CIRCLE, 2, 0.5f, { WaveCycle::LEFT_TO_RIGHT, WaveCycle::LEFT_TO_RIGHT, WaveCycle::LEFT_TO_RIGHT }, 40),
+						0.1f, 9, DronesFormation::CIRCLE, 2, 0.5f, { WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED }, 30),
+
+	AttackDronesPattern(3.0f, 4.0f, 6.0f, 1.0f, 1.0f,
+						0.3f, 5, DronesFormation::LINE, 3, 0.5f, { WaveCycle::LEFT_TO_RIGHT, WaveCycle::RIGHT_TO_LEFT, WaveCycle::LEFT_TO_RIGHT }, 20),
 
 };

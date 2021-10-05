@@ -18,6 +18,8 @@ public:
 	void Update() override;
 
 	void StartBulletHell();
+	void EndOfWave();
+
 	void SetDronesFormation(DronesFormation newFormation);
 	void AddDrone();
 	void RemoveDrone();
@@ -26,11 +28,12 @@ public:
 	UID dronesParentUID = 0;
 	UID dronePrefabUID = 0;
 
-	float bulletHellDelay = 0.5f;		// Time that needs to pass until the bullet hell starts to fire
+	float bulletHellDelay = 0.75f;		// Time that needs to pass until the bullet hell starts to fire
 	
 private:
 	void RecalculateFormations();
 	void RepositionDrones();
+	void CheckDronesWaitEndOfWave();
 
 	std::vector<float3> GenerateLineFormation();
 	std::vector<float3> GenerateArrowFormation();
@@ -39,6 +42,9 @@ private:
 	float GetVerticalOffset() const;
 
 	void StartWave();
+	void SetDronesWaitEndOfWave(bool value);
+
+	bool MustWaitEndOfWave() const;
 
 private:
 	ComponentTransform* transform = nullptr;
@@ -60,4 +66,6 @@ private:
 	// Bullet Hell shoot start
 	bool mustStartBulletHell = false;
 	float currentTime = 0.0f;
+
+	int waves = 0;
 };
