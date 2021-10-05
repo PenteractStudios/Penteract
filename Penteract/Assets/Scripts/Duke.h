@@ -70,6 +70,7 @@ public:
 
 public:
 	float chargeSpeed = 5.f;
+	float chargeMinimumDistance = 10.f;
 	float searchRadius = 8.f;
 	float attackRange = 2.0f;
 	float attackSpeed = 0.5f;

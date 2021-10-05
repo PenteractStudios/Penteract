@@ -202,7 +202,13 @@ void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 			if (strcmp(eventName, "StopTracking") == 0) {
 				if (!trackingChargeTarget) return;
 				trackingChargeTarget = false;
-				chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+				float3 dukePos = dukeTransform->GetGlobalPosition();
+				if ((player->GetComponent<ComponentTransform>()->GetGlobalPosition() - dukePos).Length() <= chargeMinimumDistance) {
+					bool result;
+					Navigation::Raycast(dukePos, dukePos + chargeMinimumDistance * dukeTransform->GetFront(), result, chargeTarget);
+				} else {
+					chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+				}
 			}
 			break;
 		default:
