@@ -6,6 +6,7 @@
 
 class ComponentParticleSystem;
 class ResourcePrefab;
+class BarrelSpawner;
 
 enum class DukeState {
 	BASIC_BEHAVIOUR,
@@ -52,7 +53,7 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID barrelSpawnerUID);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void BulletHell();
@@ -101,6 +102,8 @@ private:
 	GameObject* player = nullptr;
 	GameObject* chargeCollider = nullptr;
 	ComponentTransform* dukeTransform = nullptr;
+
+	BarrelSpawner* barrelSpawneScript = nullptr;
 
 	float3 perpendicular;
 	float movementTimer = 0.f;
