@@ -68,6 +68,9 @@ public:
 	void OnAnimationSecondaryFinished();
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
 
+private:
+	int GetWalkAnimation();
+
 public:
 	float chargeSpeed = 5.f;
 	float searchRadius = 8.f;

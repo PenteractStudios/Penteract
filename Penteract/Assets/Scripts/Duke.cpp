@@ -80,7 +80,8 @@ void Duke::ShootAndMove(const float3& playerDirection)
 		distanceCorrectionThreshold = distanceCorrectEvery + rng(gen);
 		distanceCorrectionTimer = 0.f;
 	}
-	agent->SetMoveTarget(dukeTransform->GetGlobalPosition() + perpendicular);
+	if (agent) agent->SetMoveTarget(dukeTransform->GetGlobalPosition() + perpendicular);
+	if (compAnimation) compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[GetWalkAnimation()]);
 	Shoot();
 	Debug::Log("I'm moving while shooting");
 }
@@ -137,6 +138,7 @@ void Duke::Shoot()
 		}
 		attackTimePool = (attackBurst / attackSpeed) + timeInterBurst + rng(gen) * RNG_SCALE;
 		// Animation
+		if (compAnimation) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)]);
 	}
 	Debug::Log("PIUM!");
 }
@@ -169,4 +171,25 @@ void Duke::OnAnimationSecondaryFinished()
 
 void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName)
 {
+}
+
+int Duke::GetWalkAnimation()
+{
+	float dot = Dot(perpendicular.Normalized(), dukeTransform->GetFront());
+	float3 cross = Cross(perpendicular.Normalized(), dukeTransform->GetFront());
+
+	if (dot >= 0.707) {
+		return static_cast<int>(DUKE_ANIMATION_STATES::WALK_FORWARD);
+	}
+	else if (dot <= -0.707) {
+		return static_cast<int>(DUKE_ANIMATION_STATES::WALK_BACK);
+	}
+	else {
+		if (cross.y > 0) {
+			return static_cast<int>(DUKE_ANIMATION_STATES::WALK_RIGHT);
+		}
+		else {
+			return static_cast<int>(DUKE_ANIMATION_STATES::WALK_LEFT);
+		}
+	}
 }
