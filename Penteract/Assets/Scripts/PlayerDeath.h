@@ -21,7 +21,7 @@ public:
 	void OnLoseConditionMet();
 
 private:
-	void PushPlayerBack(float3 collisionNormal, float3 penetrationDistance);
+	void PushPlayerBack(float3 collisionNormal);
 
 public:
 
