@@ -17,8 +17,14 @@ void BossEncounterCallback::Start() {
 }
 
 void BossEncounterCallback::OnEnable() {
-    if (duke && dukeScript) dukeScript->TeleportDuke(false);
-    shouldTeleport = false;
+    if (duke && dukeScript && shouldTeleport) { 
+        dukeScript->TeleportDuke(false); 
+        shouldTeleport = false;
+    }
+}
+
+void BossEncounterCallback::OnDisable() {
+    shouldTeleport = true;
 }
 
 void BossEncounterCallback::Update() {

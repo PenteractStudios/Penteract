@@ -11,6 +11,7 @@ public:
 	void Start() override;
 	void Update() override;
 	void OnEnable() override;
+	void OnDisable() override;
 
 public:
 	UID dukeUID = 0;
