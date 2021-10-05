@@ -235,7 +235,7 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 			}
 		}
 		timeWithoutCombat += Time::GetDeltaTime();
-		if (timeWithoutCombat >= aimTime || GameController::IsGameplayBlocked()) {
+		if (timeWithoutCombat >= aimTime || GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 			aiming = false;
 			timeWithoutCombat = aimTime;
 		}
