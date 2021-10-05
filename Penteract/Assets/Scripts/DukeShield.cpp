@@ -68,7 +68,7 @@ void DukeShield::FadeShield() {
 	isActive = false;
 }
 
-void DukeShield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+void DukeShield::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, float3 /*penetrationDistance*/, void* particle) {
 	if ((collidedWith.name == "OnimaruBullet" || collidedWith.name == "FangLeftBullet" || collidedWith.name == "FangRightBullet" ||
 		collidedWith.name == "OnimaruBulletUltimate" || collidedWith.name == "FangBullet")
 		&& isActive && duke) {

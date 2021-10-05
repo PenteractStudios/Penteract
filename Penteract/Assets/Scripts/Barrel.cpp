@@ -53,15 +53,15 @@ void Barrel::Start() {
 }
 
 void Barrel::Update() {
-	if (!barrel || !barrelCollider || !cameraController || !particles || !audio || !particlesForTimer || !audioForTimer) return;
+	if (!barrelMesh || !barrelCollider || !cameraController || !particles || !audio || !particlesForTimer || !audioForTimer) return;
 
 	if (startTimerToDestroy && timerDestroyActivated) {
 		particlesForTimer->PlayChildParticles();
-		audioForTimer->Play();
+		//audioForTimer->Play(); // TODO uncomment this line when BarrelWarning have is proper sound (right now doesn't have and produce bugs) 
 
 		currentTimerToDestroy += Time::GetDeltaTime();
 		if (currentTimerToDestroy >= timerToDestroy) {
-			audioForTimer->Stop();
+			//audioForTimer->Stop(); // TODO uncomment this line when BarrelWarning have is proper sound (right now doesn't have and produce bugs) 
 			isHit = true;
 			startTimerToDestroy = false;
 		}

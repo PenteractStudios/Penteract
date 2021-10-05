@@ -1,11 +1,11 @@
 {
     "Name": "Shooting",
-    "AnimationUID": 3797775895440340977,
+    "AnimationUID": 16102588795477284283,
     "BeginIndex": 135,
     "EndIndex": 150,
     "Loop": true,
     "Speed": 1.0,
-    "FrameRate": 0.041631944477558139,
+    "FrameRate": 0.04163135588169098,
     "KeyEventClip": [
         {
             "KeyFrame": 136,
