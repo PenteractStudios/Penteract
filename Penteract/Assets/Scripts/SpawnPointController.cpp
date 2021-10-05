@@ -21,6 +21,7 @@ EXPOSE_MEMBERS(SpawnPointController) {
 	MEMBER_SEPARATOR("Bridge Transport GameObject Refs"),
 	MEMBER(MemberType::GAME_OBJECT_UID, initialBridgeUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, finalBridgeUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, bridgeObstaclesUID),
 	MEMBER_SEPARATOR("Dissolve material reference in placeholders"),
 	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID)
 };
@@ -42,6 +43,7 @@ void SpawnPointController::Start() {
 
 	initialBridge = GameplaySystems::GetGameObject(initialBridgeUID);
 	finalBridge = GameplaySystems::GetGameObject(finalBridgeUID);
+	bridgeObstacles = GameplaySystems::GetGameObject(bridgeObstaclesUID);
 
 	unsigned int i = 0;
 	for (GameObject* child : gameObject->GetChildren()) {
@@ -164,12 +166,23 @@ void SpawnPointController::OpenDoor() {
 
 void SpawnPointController::OpenBridges()
 {
+	// Disabled the obstables
+	if (bridgeObstacles && bridgeObstacles->IsActive()) {
+		bridgeObstacles->Disable();
+	}
+	// Animation
 	initialBridge->Enable();
 	finalBridge->Enable();
+
 }
 
 void SpawnPointController::CloseBridges()
 {
+	// Enabled the obstacles
+	if (bridgeObstacles && !bridgeObstacles->IsActive()) {
+		bridgeObstacles->Enable();
+	}
+	// Animation
 	initialBridge->Disable();
 	finalBridge->Disable();
 }

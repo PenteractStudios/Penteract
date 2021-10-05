@@ -36,6 +36,7 @@ public:
 	/* Bridges Transport UID */
 	UID initialBridgeUID = 0;
 	UID finalBridgeUID = 0;
+	UID bridgeObstaclesUID = 0;
 
 public:
 	void Start() override;
@@ -74,6 +75,7 @@ private:
 	/* Bridges Transport Object */
 	GameObject* initialBridge = nullptr;
 	GameObject* finalBridge = nullptr;
+	GameObject* bridgeObstacles = nullptr;
 
 	/* Spawn points satus*/
 	std::vector<unsigned int> enemiesPerSpawnPoint;
