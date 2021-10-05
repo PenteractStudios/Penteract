@@ -5,8 +5,8 @@
     "ShadowType": 0,
     "DiffuseColor": [
         1.0,
-        1.0,
-        1.0,
+        0.9999899864196777,
+        0.9999899864196777,
         1.0
     ],
     "DiffuseMap": 691810716129091891,
@@ -28,7 +28,7 @@
         0.0
     ],
     "EmissiveMap": 6318397099841778659,
-    "Emissive": 9.258999824523926,
+    "Emissive": 10.0,
     "AmbientOcclusionMap": 6872380589512056105,
     "Smoothness": 1.0,
     "HasSmoothnessInAlphaChannel": true,

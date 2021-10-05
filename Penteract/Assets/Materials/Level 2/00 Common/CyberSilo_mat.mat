@@ -9,7 +9,7 @@
         1.0,
         1.0
     ],
-    "DiffuseMap": 8288363352272513025,
+    "DiffuseMap": 11802220858983233041,
     "SpecularColor": [
         0.15000000596046449,
         0.15000000596046449,
@@ -27,8 +27,8 @@
         0.0,
         0.0
     ],
-    "EmissiveMap": 14123079567986843992,
-    "Emissive": 10.0,
+    "EmissiveMap": 6065829051653472710,
+    "Emissive": 15.0,
     "AmbientOcclusionMap": 9165367130744359761,
     "Smoothness": 1.0,
     "HasSmoothnessInAlphaChannel": true,
