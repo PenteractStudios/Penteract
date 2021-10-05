@@ -284,10 +284,12 @@ void AttackDronesController::StartWave() {
 
     float maxDelay = 0.0f;
     int mostDelayedDrone = 0;
+    //bool mustWaitDelayed = MustWaitEndOfWave() && waves > 0;
+    float delayWaitWave = MustWaitEndOfWave() && waves > 0 ? chosenPattern.timeBetweenWaves : 0.0f;
     
     switch (cycle) {
         case WaveCycle::LEFT_TO_RIGHT: {
-            float accumulatedDelay = 0.0f;
+            float accumulatedDelay = 0.0f + delayWaitWave;
             for (int i = 0; i < dronesScripts.size(); ++i) {
                 if (accumulatedDelay > maxDelay) {
                     maxDelay = accumulatedDelay;
@@ -301,11 +303,7 @@ void AttackDronesController::StartWave() {
         }
 
 		case WaveCycle::RIGHT_TO_LEFT: {
-			float accumulatedDelay = 0.0f;
-			/*for (auto it = dronesScripts.rbegin(); it != dronesScripts.rend(); ++it) {
-				(*it)->StartWave(chosenPattern.waves, accumulatedDelay, chosenPattern.timeBetweenWaves);
-				accumulatedDelay += chosenPattern.droneShotDelay;
-			}*/
+			float accumulatedDelay = 0.0f + delayWaitWave;
 
             for (int i = dronesScripts.size() - 1; i >= 0; --i) {
                 if (accumulatedDelay > maxDelay) {
@@ -323,7 +321,7 @@ void AttackDronesController::StartWave() {
         case WaveCycle::CENTERED: {
             bool hasEvenDrones = dronesScripts.size() % 2 == 0;
             float orderedI = dronesScripts.size() / 2 - (hasEvenDrones ? 1 : 0);
-            float accumulatedDelay = orderedI * chosenPattern.droneShotDelay;
+            float accumulatedDelay = (orderedI * chosenPattern.droneShotDelay) + delayWaitWave;
             float multiplier = -1.0f;
 
             for (int i = 0; i < dronesScripts.size(); ++i) {
