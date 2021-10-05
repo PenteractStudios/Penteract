@@ -112,7 +112,7 @@ void Barrel::Update() {
 	}
 
 	if (!onFloor) {
-		if (barrelMesh->GetComponent<ComponentTransform>()->GetGlobalPosition().y > 0.25f) {
+		if (parentTransform->GetGlobalPosition().y > 2.0f) {
 			float3 barrelPos = parentTransform->GetGlobalPosition();
 			barrelPos += float3(0, -forceOfFall, 0);
 			parentTransform->SetGlobalPosition(barrelPos);
@@ -122,6 +122,9 @@ void Barrel::Update() {
 			timerDestroyActivated = true;
 			onFloor = true;
 			obstacle->Enable();
+			if (particlesShadow) {
+				particlesShadow->StopChildParticles();
+			}
 		}
 	}
 }
