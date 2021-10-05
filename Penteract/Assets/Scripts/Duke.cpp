@@ -147,6 +147,7 @@ void Duke::ThrowBarrels()
 
 	if (compAnimation->GetCurrentState()->name != animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]) {
 		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]);
+		instantiateBarrel = true;
 	}
 }
 
@@ -165,8 +166,9 @@ void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 {
 	switch (stateMachineEnum) {
 	case StateMachineEnum::PRINCIPAL:
-		if (std::strcmp(eventName, "ThrowBarrels") == 0) {
+		if (std::strcmp(eventName, "ThrowBarrels") == 0 && instantiateBarrel) {
 			InstantiateBarrel();
+			instantiateBarrel = false;
 		}
 		break;
 	case StateMachineEnum::SECONDARY:
