@@ -8,50 +8,54 @@
 
 EXPOSE_MEMBERS(AIDuke) {
 	MEMBER_SEPARATOR("Objects UIDs"),
-		MEMBER(MemberType::GAME_OBJECT_UID, dukeUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, shieldObjUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, bulletUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, chargeColliderUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, firstEncounterUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, secondEncounterUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, thirdEncounterUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fourthEncounterUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dukeUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, shieldObjUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, bulletUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, chargeColliderUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, meleeAttackColliderUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, chargeColliderUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, firstEncounterUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, secondEncounterUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, thirdEncounterUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fourthEncounterUID),
 
-		MEMBER_SEPARATOR("Duke Atributes"),
-		MEMBER(MemberType::FLOAT, dukeCharacter.lifePoints),
-		MEMBER(MemberType::FLOAT, dukeCharacter.chargeSpeed),
-		MEMBER(MemberType::FLOAT, dukeCharacter.movementSpeed),
-		MEMBER(MemberType::FLOAT, dukeCharacter.searchRadius),
-		MEMBER(MemberType::FLOAT, dukeCharacter.attackRange),
-		MEMBER(MemberType::FLOAT, dukeCharacter.attackSpeed),
-		MEMBER(MemberType::INT, dukeCharacter.attackBurst),
-		MEMBER(MemberType::FLOAT, dukeCharacter.timeInterBurst),
-		MEMBER(MemberType::FLOAT, dukeCharacter.pushBackDistance),
-		MEMBER(MemberType::FLOAT, dukeCharacter.pushBackSpeed),
-		MEMBER(MemberType::FLOAT, dukeCharacter.slowedDownTime),
-		MEMBER(MemberType::FLOAT, dukeCharacter.slowedDownSpeed),
-		MEMBER(MemberType::FLOAT, dukeCharacter.moveChangeEvery),
-		MEMBER(MemberType::FLOAT, dukeCharacter.distanceCorrectEvery),
+	MEMBER_SEPARATOR("Duke Atributes"),
+	MEMBER(MemberType::FLOAT, dukeCharacter.lifePoints),
+	MEMBER(MemberType::FLOAT, dukeCharacter.chargeSpeed),
+	MEMBER(MemberType::FLOAT, dukeCharacter.movementSpeed),
+	MEMBER(MemberType::FLOAT, dukeCharacter.searchRadius),
+	MEMBER(MemberType::FLOAT, dukeCharacter.attackRange),
+	MEMBER(MemberType::FLOAT, dukeCharacter.attackSpeed),
+	MEMBER(MemberType::INT, dukeCharacter.attackBurst),
+	MEMBER(MemberType::FLOAT, dukeCharacter.timeInterBurst),
+	MEMBER(MemberType::FLOAT, dukeCharacter.pushBackDistance),
+	MEMBER(MemberType::FLOAT, dukeCharacter.pushBackSpeed),
+	MEMBER(MemberType::FLOAT, dukeCharacter.slowedDownTime),
+	MEMBER(MemberType::FLOAT, dukeCharacter.slowedDownSpeed),
+	MEMBER(MemberType::FLOAT, dukeCharacter.moveChangeEvery),
+	MEMBER(MemberType::FLOAT, dukeCharacter.distanceCorrectEvery),
 
-		MEMBER_SEPARATOR("Duke Abilities Variables"),
-		MEMBER(MemberType::FLOAT, shieldCooldown),
-		MEMBER(MemberType::FLOAT, shieldActiveTime),
-		MEMBER(MemberType::FLOAT, bulletHellCooldown),
-		MEMBER(MemberType::FLOAT, bulletHellActiveTime),
-		MEMBER(MemberType::FLOAT, abilityChangeCooldown),
-		MEMBER(MemberType::FLOAT, throwBarrelTimer),
-		MEMBER(MemberType::FLOAT, orientationSpeed),
-		MEMBER(MemberType::FLOAT, orientationThreshold),
+	MEMBER_SEPARATOR("Duke Abilities Variables"),
+	MEMBER(MemberType::FLOAT, shieldCooldown),
+	MEMBER(MemberType::FLOAT, shieldActiveTime),
+	MEMBER(MemberType::FLOAT, bulletHellCooldown),
+	MEMBER(MemberType::FLOAT, bulletHellActiveTime),
+	MEMBER(MemberType::FLOAT, abilityChangeCooldown),
+	MEMBER(MemberType::FLOAT, throwBarrelTimer),
+	MEMBER(MemberType::FLOAT, orientationSpeed),
+	MEMBER(MemberType::FLOAT, orientationThreshold),
 
-		MEMBER_SEPARATOR("Particles UIDs"),
+	MEMBER_SEPARATOR("Particles UIDs"),
 
-		MEMBER_SEPARATOR("Prefabs UIDs"),
-		MEMBER(MemberType::PREFAB_RESOURCE_UID, barrelUID),
+	MEMBER_SEPARATOR("Prefabs UIDs"),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, barrelUID),
 
-		MEMBER_SEPARATOR("Debug"),
-		MEMBER(MemberType::BOOL, toggleShield),
-		MEMBER(MemberType::SCENE_RESOURCE_UID, winSceneUID),
+	MEMBER_SEPARATOR("Debug"),
+	MEMBER(MemberType::BOOL, toggleShield),
+	MEMBER(MemberType::SCENE_RESOURCE_UID, winSceneUID),
+
+
 };
 
 GENERATE_BODY_IMPL(AIDuke);
@@ -81,7 +85,7 @@ void AIDuke::Start() {
 	}
 
 	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, encounters);
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, encounters);
 }
 
 void AIDuke::Update() {
@@ -187,7 +191,6 @@ void AIDuke::Update() {
 			break;
 		case DukeState::MELEE_ATTACK:
 			dukeCharacter.MeleeAttack();
-			dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 			break;
 		case DukeState::SHOOT_SHIELD:
 			if (player) movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition(), orientationSpeed, orientationThreshold);

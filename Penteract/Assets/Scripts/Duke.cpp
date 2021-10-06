@@ -10,13 +10,15 @@
 
 std::uniform_real_distribution<> rng(-1.0f, 1.0f);
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, std::vector<UID> encounterUIDs) {
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, std::vector<UID> encounterUIDs)
+{
 	gen = std::minstd_rand(rd());
 
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(dukeUID);
 	player = GameplaySystems::GetGameObject(playerUID);
 	chargeCollider = GameplaySystems::GetGameObject(chargeColliderUID);
+	meleeAttackCollider = GameplaySystems::GetGameObject(meleeAttackColliderUID);
 
 	barrel = GameplaySystems::GetResource<ResourcePrefab>(barrelUID);
 
@@ -87,6 +89,14 @@ void Duke::ShootAndMove(const float3& playerDirection) {
 
 void Duke::MeleeAttack() {
 	Debug::Log("Hooryah!");
+	if (!hasMeleeAttacked) {
+		if (compAnimation) {
+			if (compAnimation->GetCurrentState()) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[DUKE_ANIMATION_STATES::PUNCH]);
+				hasMeleeAttacked = true;
+			}
+		}
+	}
 }
 
 void Duke::BulletHell() {
@@ -153,11 +163,37 @@ void Duke::ThrowBarrels() {
 	//When animation finished, set player + random offset position and the barrel falls to this position
 }
 
-void Duke::OnAnimationFinished() {
+void Duke::OnAnimationFinished()
+{
+	State* currentState = compAnimation->GetCurrentState();
+	if (currentState->name == "Punch") {
+		hasMeleeAttacked = false;
+		compAnimation->SendTrigger(currentState->name + animationStates[DUKE_ANIMATION_STATES::IDLE]);
+		state = DukeState::BASIC_BEHAVIOUR;
+	}
 }
 
 void Duke::OnAnimationSecondaryFinished() {
 }
 
-void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
+void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName)
+{
+	switch (stateMachineEnum)
+	{
+	case StateMachineEnum::PRINCIPAL:
+		if (strcmp(eventName, "EnablePunch") == 0) {
+			if (meleeAttackCollider && !meleeAttackCollider->IsActive()) {
+				meleeAttackCollider->Enable();
+			}
+		} else if (strcmp(eventName, "DisablePunch") == 0) {
+			if (meleeAttackCollider && meleeAttackCollider->IsActive()) {
+				meleeAttackCollider->Disable();
+			}
+		}
+		break;
+	case StateMachineEnum::SECONDARY:
+		break;
+	default:
+		break;
+	}
 }
