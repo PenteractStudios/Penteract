@@ -33,7 +33,7 @@ void Barrel::Start() {
 		barrelCollider->Disable();
 	}
 
-	GameObject* cameraAux = GameplaySystems::GetGameObject("Game Camera"); 
+	GameObject* cameraAux = GameplaySystems::GetGameObject("Game Camera");
 	if (cameraAux) {
 		cameraController = GET_SCRIPT(cameraAux, CameraController);
 	}
@@ -59,7 +59,7 @@ void Barrel::Start() {
 	if (barrelShadow) {
 		particlesShadow = barrelShadow->GetComponent<ComponentParticleSystem>();
 		if (particlesShadow) {
-			particlesShadow->PlayChildParticles();
+			if (!onFloor) particlesShadow->PlayChildParticles();
 		}
 	}
 }
@@ -69,11 +69,11 @@ void Barrel::Update() {
 
 	if (startTimerToDestroy && timerDestroyActivated) {
 		particlesForTimer->PlayChildParticles();
-		//audioForTimer->Play(); // TODO uncomment this line when BarrelWarning have is proper sound (right now doesn't have and produce bugs) 
+		//audioForTimer->Play(); // TODO uncomment this line when BarrelWarning have is proper sound (right now doesn't have and produce bugs)
 
 		currentTimerToDestroy += Time::GetDeltaTime();
 		if (currentTimerToDestroy >= timerToDestroy) {
-			//audioForTimer->Stop(); // TODO uncomment this line when BarrelWarning have is proper sound (right now doesn't have and produce bugs) 
+			//audioForTimer->Stop(); // TODO uncomment this line when BarrelWarning have is proper sound (right now doesn't have and produce bugs)
 			isHit = true;
 			startTimerToDestroy = false;
 		}
@@ -103,7 +103,7 @@ void Barrel::Update() {
 		else {
 			destroy = false;
 			if (particlesShadow) {
-				GameplaySystems::DestroyGameObject(barrel->GetParent()->GetParent());				
+				GameplaySystems::DestroyGameObject(barrel->GetParent()->GetParent());
 			}
 			else {
 				GameplaySystems::DestroyGameObject(barrel->GetParent());
@@ -118,6 +118,9 @@ void Barrel::Update() {
 			parentTransform->SetGlobalPosition(barrelPos);
 		}
 		else {
+			float3 barrelPos = parentTransform->GetGlobalPosition();
+			barrelPos.y = 2.0f;
+			parentTransform->SetGlobalPosition(barrelPos);
 			startTimerToDestroy = true;
 			timerDestroyActivated = true;
 			onFloor = true;

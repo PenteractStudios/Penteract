@@ -12,6 +12,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, shieldObjUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, bulletUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargeColliderUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, meleeAttackColliderUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, barrelSpawnerUID),
 
 	MEMBER_SEPARATOR("Duke Atributes"),
@@ -72,7 +73,7 @@ void AIDuke::Start() {
 	}
 
 	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, barrelSpawnerUID);
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID);
 }
 
 void AIDuke::Update() {
@@ -178,7 +179,6 @@ void AIDuke::Update() {
 			break;
 		case DukeState::MELEE_ATTACK:
 			dukeCharacter.MeleeAttack();
-			dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 			break;
 		case DukeState::SHOOT_SHIELD:
 			if (player) movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition(), orientationSpeed, orientationThreshold);
