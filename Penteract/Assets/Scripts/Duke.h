@@ -95,6 +95,9 @@ public:
 	float3 chargeTarget;
 
 private:
+	void InstantiateBarrel();
+
+private:
 	GameObject* player = nullptr;
 	GameObject* chargeCollider = nullptr;
 	GameObject* meleeAttackCollider = nullptr;
@@ -115,6 +118,7 @@ private:
 	GameObject* meshObj = nullptr;	//Main mesh for Getting MeshRenderer reference and checking frustum presence (if not inside frustum shooting won't happen)
 
 	ResourcePrefab* barrel = nullptr;
+	bool instantiateBarrel = false;
 
 	// Animations
 	enum DUKE_ANIMATION_STATES {
