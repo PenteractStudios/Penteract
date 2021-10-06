@@ -58,9 +58,9 @@ void GameplaySceneWalkToFactory::Start() {
 }
 
 void GameplaySceneWalkToFactory::Update() {
-    if (triggered) {
-        if (!duke2 || !dukeAgent || !cameraControllerScript || !dialogueManagerScript || !laserBeamsSecurity) return;
+    if (!duke2 || !dukeAgent || !movementScript || !cameraControllerScript || !dialogueManagerScript || !laserBeamsSecurity) return;
 
+    if (triggered) {
         GameController::BlockGameplay(true);
         cameraControllerScript->ChangeCameraOffset(cameraNewPosition.x, cameraNewPosition.y, cameraNewPosition.z);
         movementScript->Seek(state, dukeRunTowards, dukeAgent->GetMaxSpeed(), true);
