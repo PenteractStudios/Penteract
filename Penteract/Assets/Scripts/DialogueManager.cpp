@@ -112,18 +112,18 @@ void DialogueManager::Start() {
 	dialoguesArray[7] = Dialogue(DialogueWindow::ONIMARU, true, "Upgrade complete.\n All systems ready.", nullptr);
 
 	// LEVEL 1 - START
-	dialoguesArray[9] = Dialogue(DialogueWindow::DUKE, true, "Fang...\nMy favorite assassin.", &dialoguesArray[10]);
-	dialoguesArray[10] = Dialogue(DialogueWindow::DUKE, true, "After all these years\nyou finally came back.\nHoping to join Milibot again?", &dialoguesArray[11]);
-	dialoguesArray[11] = Dialogue(DialogueWindow::FANG, true, "You wish.\nI'm here to kill you.\nFor 5 million \nand the pleasure of\ndoing it myself.", &dialoguesArray[12]);
-	dialoguesArray[12] = Dialogue(DialogueWindow::DUKE, true, "I made you what you are,\neven if you hate it!\nYou should\nbe more grateful.", &dialoguesArray[13]);
-	dialoguesArray[13] = Dialogue(DialogueWindow::DUKE, true, "Let's see how\nyou perform against\nmy latest designs...", &dialoguesArray[14]);
-	dialoguesArray[14] = Dialogue(DialogueWindow::DUKE, true, "SECURITY!", nullptr);
+	dialoguesArray[9] = Dialogue(DialogueWindow::DUKE, true, "Fang...\nMy favorite assassin.", &dialoguesArray[10], true);
+	dialoguesArray[10] = Dialogue(DialogueWindow::DUKE, true, "After all these years\nyou finally came back.\nHoping to join Milibot again?", &dialoguesArray[11], true);
+	dialoguesArray[11] = Dialogue(DialogueWindow::FANG, true, "You wish.\nI'm here to kill you.\nA 5 million bounty\nand the pleasure of\ndoing it myself.", &dialoguesArray[12], true);
+	dialoguesArray[12] = Dialogue(DialogueWindow::DUKE, true, "I made you what you are,\neven if you hate it!\nYou should\nbe more grateful.", &dialoguesArray[13], true);
+	dialoguesArray[13] = Dialogue(DialogueWindow::DUKE, true, "Let's see how\nyou perform against\nmy latest designs...", &dialoguesArray[14], true);
+	dialoguesArray[14] = Dialogue(DialogueWindow::DUKE, true, "SECURITY!", nullptr, true);
 
 	// LEVEL 1 - FANG TUTORIAL
 	dialoguesArray[15] = Dialogue(DialogueWindow::TUTO_FANG, true, "Movement", &dialoguesArray[16]);
-	dialoguesArray[16] = Dialogue(DialogueWindow::TUTO_FANG, true, "(Hold) Fire", nullptr);
+	dialoguesArray[16] = Dialogue(DialogueWindow::TUTO_FANG, true, "(Hold) Shoot", nullptr);
 	dialoguesArray[17] = Dialogue(DialogueWindow::TUTO_FANG, true, "Dash", nullptr);
-	dialoguesArray[18] = Dialogue(DialogueWindow::TUTO_FANG, true, "Electric Pulse", nullptr);
+	dialoguesArray[18] = Dialogue(DialogueWindow::TUTO_FANG, true, "Electric Pulse Field", nullptr);
 	dialoguesArray[19] = Dialogue(DialogueWindow::TUTO_FANG_ULTI, true, "", nullptr);
 
 	// LEVEL 1 - SWAP DIALOGUE
