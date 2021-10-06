@@ -42,6 +42,8 @@ void CameraController::Start() {
 	cameraInitialOffsetZ = cameraOffsetZ;
 
 	RestoreCameraOffset();
+
+	shakeMultiplierStoredValue = shakeMultiplier;
 }
 
 void CameraController::Update() {
@@ -74,13 +76,15 @@ void CameraController::Update() {
 	} else {
 		transform->SetGlobalPosition(smoothedPosition);
 		Screen::SetChromaticAberration(false);
+		shakeMultiplier = shakeMultiplierStoredValue;
 	}
 }
 
 
 
-void CameraController::StartShake() {
+void CameraController::StartShake(float shakeMult) {
 	shakeTimer = shakeTotalTime;
+	if (shakeMult > 0) shakeMultiplier = shakeMult;
 }
 
 void CameraController::ChangeCameraOffset(float x, float y, float z) {
