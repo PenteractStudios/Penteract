@@ -217,11 +217,13 @@ void PlayerController::SwitchCharacter() {
 			audios[static_cast<int>(AudioType::SWITCH)]->Play();
 		}
 		if (playerFang.characterGameObject->IsActive()) {
+			playerOnimaru.ResetToIdle();
 			playerFang.characterGameObject->Disable();
 			playerOnimaru.characterGameObject->Enable();
 
 			fangRecovering = 0.0f;
 		} else {
+			playerFang.ResetToIdle();
 			playerOnimaru.characterGameObject->Disable();
 			playerFang.characterGameObject->Enable();
 

@@ -133,6 +133,15 @@ bool Fang::IsVulnerable() const {
 	return !ultimateOn;
 }
 
+void Fang::ResetToIdle()
+{
+	if (compAnimation) {
+		if (compAnimation->GetCurrentState()) {
+			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::IDLE)]);
+		}
+	}
+}
+
 bool Fang::CanSwitch() const {
 	if (!EMP) return false;
 	return isAlive && !EMP->IsActive() && !ultimateOn && (!GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) || GameplaySystems::GetGlobalVariable(globalswitchTutorialActive, true)) && GameplaySystems::GetGlobalVariable(globalSwitchTutorialReached, true);
