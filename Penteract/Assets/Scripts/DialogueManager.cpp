@@ -130,7 +130,7 @@ void DialogueManager::Start() {
 	dialoguesArray[20] = Dialogue(DialogueWindow::FANG, true, "Onimaru,\nget the repair bots\nready...\nI need a break.", &dialoguesArray[21]);
 	dialoguesArray[21] = Dialogue(DialogueWindow::ONIMARU, true, "Roger.\nInitialising Matter-Switch.", &dialoguesArray[22]);
 	dialoguesArray[22] = Dialogue(DialogueWindow::TUTO_SWAP, true, "", &dialoguesArray[23], false, InputActions::SWITCH);
-	dialoguesArray[23] = Dialogue(DialogueWindow::ONIMARU, true, "Long hallways\nis where I perform best.\nWatch how it is done.", nullptr);
+	dialoguesArray[23] = Dialogue(DialogueWindow::ONIMARU, true, "In long hallways\nis where I perform best.\nWatch how it is done.", nullptr);
 
 	// LEVEL 1 - ONIMARU TUTORIAL
 	dialoguesArray[24] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "Particle Push", nullptr);
@@ -151,6 +151,9 @@ void DialogueManager::Start() {
 	dialoguesArray[38] = Dialogue(DialogueWindow::UPGRADES2, true, "", nullptr);
 
 	dialoguesArray[41] = Dialogue(DialogueWindow::UPGRADES3, true, "", nullptr);
+
+	// LEVEL 1 - Duke Walk To Factory
+	dialoguesArray[45] = Dialogue(DialogueWindow::ONIMARU, true, "Duke is running away.\nDo not let him escape!", nullptr);
 }
 
 void DialogueManager::Update() {
