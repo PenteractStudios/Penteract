@@ -88,7 +88,6 @@ void Duke::ShootAndMove(const float3& playerDirection)
 
 void Duke::MeleeAttack()
 {
-	Debug::Log("Hooryah!");
 	if (!hasMeleeAttacked) {
 		if (compAnimation) {
 			if (compAnimation->GetCurrentState()) {
