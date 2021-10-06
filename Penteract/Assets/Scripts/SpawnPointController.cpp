@@ -110,25 +110,23 @@ void SpawnPointController::Update() {
 					initialDoor->Disable();
 				}
 				// Must open the bridge
-				if (initialBridge && finalBridge && !initialBridge->IsActive() && !finalBridge->IsActive()) {
+				if (initialBridge && finalBridge) {
 					hasToBeEnabledBridges = true;
-					isInitiallyLocked = false;
+					isInitiallyLocked = true;
 					MoveBridges();
 				}
 				if (!isTransportArea) {
 					gameObject->Disable();
 				}
 			}
-			
+
 			unlockStarted = false;
-			
+
 			if (!mustKeepOpen) {			// Perform light animation
 				SetLightIntensity(initialDoorLight, isClosing ? initialDoorLightStartIntensity : 0.0f);
 				SetLightIntensity(finalDoorLight, isClosing ? finalDoorLightStartIntensity : 0.0f);
 			}
-
-		}
-		else {
+		} else {
 			currentUnlockTime += Time::GetDeltaTime();
 
 			if (!mustKeepOpen) {			// Perform light animation
@@ -144,9 +142,12 @@ void SpawnPointController::Update() {
 			if (!hasToBeEnabledBridges && initialBridge->IsActive() && finalBridge->IsActive()) {
 				MoveBridges();
 			}
-			if (hasToBeEnabledBridges && initialBridge->IsActive() && finalBridge->IsActive()) {
-				MoveBridges();
-			}
+		}
+	}
+	// To unlock Transport
+	if (initialBridge && finalBridge && isInitiallyLocked) {
+		if (hasToBeEnabledBridges && initialBridge->IsActive() && finalBridge->IsActive()) {
+			MoveBridges();
 		}
 	}
 }
@@ -159,10 +160,7 @@ void SpawnPointController::OnCollision(GameObject& /* collidedWith */, float3 /*
 	}
 	if (initialDoor && !initialDoor->IsActive()) initialDoor->Enable();
 	if (finalDoor && !finalDoor->IsActive()) finalDoor->Enable();
-	if (initialBridge && finalBridge && initialBridge->IsActive() && finalBridge->IsActive())
-	{
-		hasToBeEnabledBridges = false;
-	}
+	if (initialBridge && finalBridge && initialBridge->IsActive() && finalBridge->IsActive()) hasToBeEnabledBridges = false;
 	if (gameObjectActivatedOnCombatEnd && gameObjectActivatedOnCombatEnd->IsActive()) gameObjectActivatedOnCombatEnd->Disable();
 	if (gameObjectDeactivatedOnCombatEnd && !gameObjectDeactivatedOnCombatEnd->IsActive()) gameObjectDeactivatedOnCombatEnd->Enable();
 
@@ -199,10 +197,6 @@ void SpawnPointController::OpenDoor() {
 
 void SpawnPointController::OpenBridges()
 {
-	// Disabled the obstables
-	if (bridgeObstacles && bridgeObstacles->IsActive()) {
-		bridgeObstacles->Disable();
-	}
 	// Enable gameobjects
 	initialBridge->Enable();
 	finalBridge->Enable();
@@ -227,23 +221,27 @@ void SpawnPointController::MoveBridges() {
 				CloseBridges();
 			} else {
 				transformInitialBridge->SetPosition(float3(transformInitialBridge->GetPosition().x - (speedAnimationBridges * 1), transformInitialBridge->GetPosition().y, transformInitialBridge->GetPosition().z - (speedAnimationBridges * 1)));
-				transformFinalBridge->SetPosition(float3(transformFinalBridge->GetPosition().x + (speedAnimationBridges * 1), transformInitialBridge->GetPosition().y, transformFinalBridge->GetPosition().z + (speedAnimationBridges * 1)));
+				transformFinalBridge->SetPosition(float3(transformFinalBridge->GetPosition().x + (speedAnimationBridges * 1), transformFinalBridge->GetPosition().y, transformFinalBridge->GetPosition().z + (speedAnimationBridges * 1)));
 			}
 		}
 		else {
-			if (!isInitiallyLocked) {
+			if (isInitiallyLocked) {
 				if (!initialBridge->IsActive() && !finalBridge->IsActive()) {
 					OpenBridges();
 				}
 				if (transformInitialBridge->GetPosition().x >= POS_X_OPEN_INITIAL_BRIDGE && transformInitialBridge->GetPosition().z >= POS_Z_OPEN_INITIAL_BRIDGE
 					&& transformFinalBridge->GetPosition().x <= POS_XZ_OPEN_FINAL_BRIDGE && transformFinalBridge->GetPosition().z <= POS_XZ_OPEN_FINAL_BRIDGE) {
+					// Disabled the obstables
+					if (bridgeObstacles && bridgeObstacles->IsActive()) {
+						bridgeObstacles->Disable();
+					}
 					// To put the exact position
 					//transformInitialBridge->SetPosition(float3(POS_X_OPEN_INITIAL_BRIDGE, transformInitialBridge->GetPosition().y, POS_Z_OPEN_INITIAL_BRIDGE));
 					//transformFinalBridge->SetPosition(float3(POS_XZ_OPEN_FINAL_BRIDGE, transformInitialBridge->GetPosition().y, POS_XZ_OPEN_FINAL_BRIDGE));
 					gameObject->Disable();
 				} else {
 					transformInitialBridge->SetPosition(float3(transformInitialBridge->GetPosition().x + (speedAnimationBridges * 1), transformInitialBridge->GetPosition().y, transformInitialBridge->GetPosition().z + (speedAnimationBridges * 1)));
-					transformFinalBridge->SetPosition(float3(transformFinalBridge->GetPosition().x + - (speedAnimationBridges * 1), transformInitialBridge->GetPosition().y, transformFinalBridge->GetPosition().z - (speedAnimationBridges * 1)));
+					transformFinalBridge->SetPosition(float3(transformFinalBridge->GetPosition().x + - (speedAnimationBridges * 1), transformFinalBridge->GetPosition().y, transformFinalBridge->GetPosition().z - (speedAnimationBridges * 1)));
 				}
 			}
 		}
