@@ -161,11 +161,6 @@ void Duke::ThrowBarrels()
 	if (barrel) {
 		GameObject* auxBarrel = GameplaySystems::Instantiate(barrel, playerPos + float3(0.0f, height, 0.0f), Quat(0, 0, 0, 1));
 	}
-	/*if (auxBarrel->GetComponent<ComponentParticleSystem>()) {
-		auxBarrel->GetComponent<ComponentParticleSystem>()->Play();
-	}*/
-
-	//When animation finished, set player + random offset position and the barrel falls to this position
 }
 
 void Duke::OnAnimationFinished()
