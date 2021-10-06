@@ -43,7 +43,7 @@ void BridgeDoorButton::Update() {
 	}
 }
 
-void BridgeDoorButton::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle)
+void BridgeDoorButton::OnCollision(GameObject& /*collidedWith*/, float3 /*collisionNormal*/, float3 /*penetrationDistance*/, void* /*particle*/)
 {
 	if (doorScript && bridgeTilesScript && arenaTilesScript) {
 		doorScript->Open();
