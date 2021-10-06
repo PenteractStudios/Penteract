@@ -5,5 +5,11 @@
     "EndIndex": 418,
     "Loop": false,
     "Speed": 1.0,
-    "FrameRate": 0.04163135588169098
+    "FrameRate": 0.04163135588169098,
+    "KeyEventClip": [
+        {
+            "KeyFrame": 400,
+            "Name": "ThrowBarrels"
+        }
+    ]
 }
