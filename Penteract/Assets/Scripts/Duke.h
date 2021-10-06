@@ -62,6 +62,8 @@ public:
 	void CallTroops();
 	void Shoot();
 	void ThrowBarrels();
+	void StartUsingShield();
+	void StopUsingShield();
 
 	// ------- Animation Functions ------ //
 	void OnAnimationFinished();
