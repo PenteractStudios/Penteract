@@ -10,7 +10,7 @@
 
 std::uniform_real_distribution<> rng(-1.0f, 1.0f);
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID)
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID)
 {
 	gen = std::minstd_rand(rd());
 
@@ -18,6 +18,7 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 	characterGameObject = GameplaySystems::GetGameObject(dukeUID);
 	player = GameplaySystems::GetGameObject(playerUID);
 	chargeCollider = GameplaySystems::GetGameObject(chargeColliderUID);
+	meleeAttackCollider = GameplaySystems::GetGameObject(meleeAttackColliderUID);
 
 	barrel = GameplaySystems::GetResource<ResourcePrefab>(barrelUID);
 
@@ -88,6 +89,14 @@ void Duke::ShootAndMove(const float3& playerDirection)
 void Duke::MeleeAttack()
 {
 	Debug::Log("Hooryah!");
+	if (!hasMeleeAttacked) {
+		if (compAnimation) {
+			if (compAnimation->GetCurrentState()) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[DUKE_ANIMATION_STATES::PUNCH]);
+				hasMeleeAttacked = true;
+			}
+		}
+	}
 }
 
 void Duke::BulletHell()
@@ -153,8 +162,14 @@ void Duke::ThrowBarrels()
 
 void Duke::OnAnimationFinished()
 {
-	if (compAnimation->GetCurrentState()->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]) {
-		compAnimation->SendTrigger(animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)] + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);		
+	State* currentState = compAnimation->GetCurrentState();
+	if (currentState->name == "Punch") {
+		hasMeleeAttacked = false;
+		compAnimation->SendTrigger(currentState->name + animationStates[DUKE_ANIMATION_STATES::IDLE]);
+		state = DukeState::BASIC_BEHAVIOUR;
+	}
+	else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]) {
+		compAnimation->SendTrigger(animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)] + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
 	}
 }
 
@@ -164,14 +179,27 @@ void Duke::OnAnimationSecondaryFinished()
 
 void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName)
 {
-	switch (stateMachineEnum) {
+	switch (stateMachineEnum)
+	{
 	case StateMachineEnum::PRINCIPAL:
-		if (std::strcmp(eventName, "ThrowBarrels") == 0 && instantiateBarrel) {
+		if (strcmp(eventName, "EnablePunch") == 0) {
+			if (meleeAttackCollider && !meleeAttackCollider->IsActive()) {
+				meleeAttackCollider->Enable();
+			}
+		} else if (strcmp(eventName, "DisablePunch") == 0) {
+			if (meleeAttackCollider && meleeAttackCollider->IsActive()) {
+				meleeAttackCollider->Disable();
+			}
+		}
+
+		if (strcmp(eventName, "ThrowBarrels") == 0 && instantiateBarrel) {
 			InstantiateBarrel();
 			instantiateBarrel = false;
 		}
 		break;
 	case StateMachineEnum::SECONDARY:
+		break;
+	default:
 		break;
 	}
 }

@@ -3379,8 +3379,6 @@
         "LeftHand1",
         "RightHand",
         "LeftElbow",
-        "LeftShoulder",
-        "RightGun",
-        "RightShoulder"
+        "RightGun"
     ]
 }
