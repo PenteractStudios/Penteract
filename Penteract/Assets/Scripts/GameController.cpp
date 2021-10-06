@@ -302,7 +302,7 @@ void GameController::ClearPauseMenus() {
 	if (pauseCanvas) {
 		PauseController::SetIsPause(false);
 		pauseCanvas->Disable();
-		
+
 	}
 
 	if (settingsCanvas) {

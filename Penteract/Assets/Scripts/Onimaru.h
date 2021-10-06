@@ -71,6 +71,8 @@ public:
 	float shieldReboundedDamage = 1.0f;
 	float shieldingMaxSpeed = 2.0f;
 
+	float shieldBeingUsed = 0.f;
+
 public:
 	// ------- Contructors ------- //
 	Onimaru() {};

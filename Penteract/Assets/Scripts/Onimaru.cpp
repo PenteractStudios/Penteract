@@ -8,6 +8,7 @@
 #include "OnimaruBullet.h"
 #include "AIMeleeGrunt.h"
 #include "RangedAI.h"
+#include "AIDuke.h"
 
 #include "Shield.h"
 
@@ -23,7 +24,7 @@ void Onimaru::GetHit(float damage_) {
 	//We assume that the player is always alive when this method gets called, so no need to check if character was alive before taking lives
 	if (isAlive) {
 		if (cameraController) {
-			cameraController->StartShake();
+			cameraController->StartShake(-1.f);
 		}
 
 		lifePoints -= damage_;
@@ -70,7 +71,8 @@ void Onimaru::Blast() {
 		for (GameObject* enemy : enemiesInMap) {
 			AIMeleeGrunt* meleeScript = GET_SCRIPT(enemy, AIMeleeGrunt);
 			RangedAI* rangedScript = GET_SCRIPT(enemy, RangedAI);
-			if (rangedScript || meleeScript) {
+			AIDuke* dukeScript = GET_SCRIPT(enemy, AIDuke);
+			if (rangedScript || meleeScript || dukeScript) {
 				if (rightHand && playerMainTransform) {
 					float3 onimaruRightArmPos = rightHand->GetGlobalPosition();
 					float3 enemyPos = enemy->GetComponent<ComponentTransform>()->GetGlobalPosition();
@@ -84,6 +86,7 @@ void Onimaru::Blast() {
 						if (angle <= blastAngle / 2.0f) {
 							if (meleeScript) meleeScript->EnableBlastPushBack();
 							else if (rangedScript) rangedScript->EnableBlastPushBack();
+							else if (dukeScript) dukeScript->EnableBlastPushBack();
 						}
 					}
 					else {
@@ -92,6 +95,9 @@ void Onimaru::Blast() {
 						}
 						else if (rangedScript) {
 							if (!rangedScript->IsBeingPushed()) rangedScript->DisableBlastPushBack();
+						}
+						else if (dukeScript) {
+							if (!dukeScript->IsBeingPushed()) dukeScript->DisableBlastPushBack();
 						}
 					}
 				}
@@ -491,7 +497,7 @@ void Onimaru::InitShield() {
 void Onimaru::FadeShield() {
 	if (shield == nullptr || shieldGO == nullptr) return;
 	shield->FadeShield();
-
+	shieldBeingUsed = 0.f;
 	movementSpeed = normalMovementSpeed;
 	if (agent) agent->SetMaxSpeed(movementSpeed);
 
@@ -552,6 +558,10 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */
 					ResetIsInCombatValues();
 					InitShield();
 				}
+			}
+
+			if (shield->GetIsActive()) {
+				shieldBeingUsed += Time::GetDeltaTime();
 			}
 
 			if ((!GetInputBool(InputActions::ABILITY_1, useGamepad) || !shield->CanUse()) && shield->GetIsActive()) {
