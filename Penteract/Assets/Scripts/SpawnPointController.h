@@ -7,6 +7,7 @@
 class GameObject;
 class ResourcePrefab;
 class ComponentLight;
+class ComponentTransform;
 
 class SpawnPointController : public Script {
 	GENERATE_BODY(SpawnPointController);
@@ -37,6 +38,9 @@ public:
 	UID initialBridgeUID = 0;
 	UID finalBridgeUID = 0;
 	UID bridgeObstaclesUID = 0;
+	bool hasToBeEnabledBridges = true;
+	bool isTransportArea = false;
+	float speedAnimationBridges = 0.1f;
 
 public:
 	void Start() override;
@@ -47,6 +51,7 @@ public:
 	void OpenDoor();
 	void OpenBridges();
 	void CloseBridges();
+	void MoveBridges();
 
 	ResourcePrefab* GetMeleePrefab() { return meleeEnemyPrefab; };
 	ResourcePrefab* GetRangePrefab() { return rangeEnemyPrefab; };
@@ -76,6 +81,9 @@ private:
 	GameObject* initialBridge = nullptr;
 	GameObject* finalBridge = nullptr;
 	GameObject* bridgeObstacles = nullptr;
+
+	ComponentTransform* transformInitialBridge = nullptr;
+	ComponentTransform* transformFinalBridge = nullptr;
 
 	/* Spawn points satus*/
 	std::vector<unsigned int> enemiesPerSpawnPoint;
