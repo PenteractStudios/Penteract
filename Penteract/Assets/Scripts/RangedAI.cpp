@@ -37,6 +37,7 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.barrelDamageTaken),
+	MEMBER(MemberType::BOOL, isSniper),
 	MEMBER_SEPARATOR("Push variables"),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackDistance),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackSpeed),
@@ -450,7 +451,7 @@ void RangedAI::UpdateState() {
 						break;
 					}
 
-					if (!CharacterInRange(player, rangerGruntCharacter.attackRange, true)) {
+					if (!CharacterInRange(player, rangerGruntCharacter.attackRange, true) && !isSniper) {
 						ChangeState(AIState::RUN);
 						break;
 					}
