@@ -34,7 +34,7 @@ void RobotsLineController::Start() {
 				direction = transform->GetFront();
 			}
 			forwardReversed = changeDirection ? -1 : 1;
-			finalPos = initialPos + direction * lineLength * forwardReversed;
+			finalPos = initialPos + direction * lineLength * static_cast<float>(forwardReversed);
 			RobotLineMovement* script = GET_SCRIPT(children[0], RobotLineMovement);
 			if (script) script->Initialize(initialPos, finalPos, timeToReachDestination);
 		}
@@ -44,7 +44,7 @@ void RobotsLineController::Start() {
 	stoppedTimer = timeStopped;
 	stopInTimer = timeBetweenStops;
 
-	totalRobotsToDeploy = timeToReachDestination / timeBetweenSpawns;
+	totalRobotsToDeploy = static_cast<unsigned> (timeToReachDestination / timeBetweenSpawns);
 
 }
 
