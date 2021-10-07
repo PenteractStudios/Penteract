@@ -42,6 +42,7 @@ void GameController::Start() {
 
 	if (PlayerController::currentLevel == 1) switchTutorialReached = false;
 	else switchTutorialReached = true;
+	switchTutorialReached = true; // TODELETE
 
 	gameCamera = GameplaySystems::GetGameObject(gameCameraUID);
 	godCamera = GameplaySystems::GetGameObject(godCameraUID);

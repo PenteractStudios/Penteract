@@ -8,6 +8,7 @@ class ComponentAudioSource;
 class ComponentAgent;
 class ComponentAnimation;
 class ComponentTransform;
+class AIMovement;
 
 class Character {
 public:
@@ -30,6 +31,7 @@ public:
 	float movementSpeed = 1.0f;
 	ComponentAgent* agent = nullptr;
 	ComponentAnimation* compAnimation = nullptr;
+	AIMovement* movementScript = nullptr;
 	State* currentState = nullptr;
 	GameObject* characterGameObject = nullptr;
 
