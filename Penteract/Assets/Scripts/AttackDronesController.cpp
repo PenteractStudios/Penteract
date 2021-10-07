@@ -78,6 +78,13 @@ void AttackDronesController::Update() {
             currentTime += Time::GetDeltaTime();
         }
     }
+
+    if (BulletHellActive() && chosenPattern.rotationDronesActive) {
+        rotationOffset += (chosenPattern.rotationDronesClockwise ? 1 : -1) * Time::GetDeltaTime() * chosenPattern.rotationDronesSpeed;
+
+        RecalculateFormations();
+        RepositionDrones();
+    }
 }
 
 void AttackDronesController::StartBulletHell() {
@@ -113,17 +120,19 @@ void AttackDronesController::StartBulletHell() {
 
     waves = 1;
     cycle = chosenPattern.cycles[0];
-    
+    mustStartBulletHell = true;
+    currentTime = 0.0f;
+    rotationOffset = 0.0f;
+    bulletHellActive = true;
+
     CheckDronesWaitEndOfWave();
     RecalculateFormations();
     SetDronesFormation(chosenPattern.droneFormation);
-    //RepositionDrones();
-    mustStartBulletHell = true;
-    currentTime = 0.0f;
 }
 
 void AttackDronesController::EndOfWave() {
     waves++;
+    if (waves > chosenPattern.waves) bulletHellActive = false;
     if (waves > chosenPattern.waves || !HadToWaitEndOfWave()) return;
     
     cycle = chosenPattern.cycles[waves - 1];
@@ -269,7 +278,7 @@ std::vector<float3> AttackDronesController::GenerateCircleFormation() {
 
     for (int i = 0; i < size; ++i) {
         float theta = ((PI * 2) / size);
-        float angle = (theta * i);
+        float angle = (theta * i) + rotationOffset;
         
         result[i] = float3x3::RotateY(transform->GetGlobalRotation().ToEulerXZY().z) * (float3(cos(angle), 0.0f, sin(angle)) * chosenPattern.droneRadiusFormation);
         result[i] += float3(0.0f, GetVerticalOffset(), 0.0f);
@@ -355,7 +364,8 @@ void AttackDronesController::StartWave() {
         }
     }
 
-    /*if (MustWaitEndOfWave()) */dronesScripts[mostDelayedDrone]->SetIsLastDrone(true);
+    SetDronesIsLastDrone(false);
+    dronesScripts[mostDelayedDrone]->SetIsLastDrone(true);
 }
 
 void AttackDronesController::SetDronesWaitEndOfWave(bool value) {
@@ -364,17 +374,26 @@ void AttackDronesController::SetDronesWaitEndOfWave(bool value) {
     }
 }
 
+void AttackDronesController::SetDronesIsLastDrone(bool value) {
+    for (AttackDroneBehavior* drone : dronesScripts) {
+        drone->SetIsLastDrone(value);
+    }
+}
+
 bool AttackDronesController::MustWaitEndOfWave() const {
-    if (waves == chosenPattern.waves) return false;
+    if (waves == chosenPattern.waves) return true;
     return chosenPattern.cycles[waves - 1] != chosenPattern.cycles[waves];
 }
 
 bool AttackDronesController::HadToWaitEndOfWave() const {
-    if (waves > 1) {
+    if (waves > 1 && waves <= chosenPattern.cycles.size()) {
         if (chosenPattern.cycles[waves - 1] != chosenPattern.cycles[waves - 2]) {           // If current 
             return true;
         }
     }
-
     return false;
+}
+
+bool AttackDronesController::BulletHellActive() const {
+    return waves < chosenPattern.waves;
 }

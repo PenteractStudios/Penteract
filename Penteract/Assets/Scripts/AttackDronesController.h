@@ -43,9 +43,11 @@ private:
 
 	void StartWave();
 	void SetDronesWaitEndOfWave(bool value);
+	void SetDronesIsLastDrone(bool value);
 
 	bool MustWaitEndOfWave() const;
 	bool HadToWaitEndOfWave() const;
+	bool BulletHellActive() const;
 
 private:
 	ComponentTransform* transform = nullptr;
@@ -69,4 +71,7 @@ private:
 	float currentTime = 0.0f;
 
 	int waves = 0;
+	bool bulletHellActive = false;
+
+	float rotationOffset = 0.0f;
 };
