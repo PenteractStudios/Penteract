@@ -45,6 +45,7 @@ private:
 	void SetDronesWaitEndOfWave(bool value);
 
 	bool MustWaitEndOfWave() const;
+	bool HadToWaitEndOfWave() const;
 
 private:
 	ComponentTransform* transform = nullptr;
@@ -56,7 +57,7 @@ private:
 
 	// Formation
 	DronesFormation formation = DronesFormation::LINE;
-	std::vector<std::vector<float3>> formationsOffsetPositions;
+	std::vector<float3> formationsOffsetPositions;
 
 	// Wave cycle
 	WaveCycle cycle = WaveCycle::CENTERED;

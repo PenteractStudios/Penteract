@@ -85,8 +85,8 @@ void AttackDroneBehavior::Shoot() {
             droneMustRecoil = true;
             if (mustWaitEndOfWave) availableShot = false;
             if (isLastDrone && dronesControllerScript) {
-                dronesControllerScript->EndOfWave();
                 isLastDrone = false;
+                dronesControllerScript->EndOfWave();
             }
         }
         else {
