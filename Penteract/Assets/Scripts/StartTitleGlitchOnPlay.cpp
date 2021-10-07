@@ -78,6 +78,7 @@ void StartTitleGlitchOnPlay::OnButtonClick() {
 void StartTitleGlitchOnPlay::DoTransition() {
 	if (sceneUID != 0) {
 		GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, true);
+		GameplaySystems::SetGlobalVariable(globalCheckpoint, 0);
 
 		SceneManager::ChangeScene(sceneUID);
 
