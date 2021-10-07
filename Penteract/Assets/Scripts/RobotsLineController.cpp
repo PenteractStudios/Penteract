@@ -23,18 +23,21 @@ GENERATE_BODY_IMPL(RobotsLineController);
 
 void RobotsLineController::Start() {
 	robotsParent = GetOwner().GetChild("Robots");
-	std::vector<GameObject*> children = robotsParent->GetChildren();
-	// Get the first robot reference
-	if (children.size() > 0) {
-		ComponentTransform* transform = children[0]->GetComponent<ComponentTransform>();
-		if (transform) {
-			initialPos = transform->GetGlobalPosition();
-			direction = transform->GetFront();
+	std::vector<GameObject*> children;
+	if (robotsParent) {
+		children = robotsParent->GetChildren();
+		// Get the first robot reference
+		if (children.size() > 0) {
+			ComponentTransform* transform = children[0]->GetComponent<ComponentTransform>();
+			if (transform) {
+				initialPos = transform->GetGlobalPosition();
+				direction = transform->GetFront();
+			}
+			forwardReversed = changeDirection ? -1 : 1;
+			finalPos = initialPos + direction * lineLength * forwardReversed;
+			RobotLineMovement* script = GET_SCRIPT(children[0], RobotLineMovement);
+			if (script) script->Initialize(initialPos, finalPos, timeToReachDestination);
 		}
-		forwardReversed = changeDirection ? -1 : 1;
-		finalPos = initialPos + direction * lineLength * forwardReversed;
-		RobotLineMovement* script = GET_SCRIPT(children[0], RobotLineMovement);
-		if (script) script->Initialize(initialPos, finalPos, timeToReachDestination);
 	}
 	robotPrefab = GameplaySystems::GetResource<ResourcePrefab>(prefab);
 	spawnNextRobotTimer = timeBetweenSpawns;
@@ -59,7 +62,7 @@ void RobotsLineController::Update() {
 		if (stopInTimer <= 0.f) {
 			for (GameObject* robot : robotsParent->GetChildren()) {
 				RobotLineMovement* script = GET_SCRIPT(robot, RobotLineMovement);
-				script->Stop();
+				if (script) script->Stop();
 				stoppedTimer = timeStopped;
 			}
 			robotsStopped = true;
@@ -72,7 +75,7 @@ void RobotsLineController::Update() {
 		if (stoppedTimer <= 0.f) {
 			for (GameObject* robot : robotsParent->GetChildren()) {
 				RobotLineMovement* script = GET_SCRIPT(robot, RobotLineMovement);
-				script->Restart();
+				if (script) script->Restart();
 				stopInTimer = timeBetweenStops;
 			}
 			robotsStopped = false;
@@ -86,7 +89,9 @@ void RobotsLineController::Update() {
 
 	if (robotToDestroy) {
 		RobotLineMovement* script = GET_SCRIPT(robotToDestroy, RobotLineMovement);
-		bool destroy = script->NeedsToBeDestroyed();
-		if (destroy) GameplaySystems::DestroyGameObject(robotToDestroy);
+		if (script) {
+			bool destroy = script->NeedsToBeDestroyed();
+			if (destroy) GameplaySystems::DestroyGameObject(robotToDestroy);
+		}
 	}
 }
