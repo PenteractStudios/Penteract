@@ -179,7 +179,8 @@ void Duke::OnAnimationFinished()
 	State* currentState = compAnimation->GetCurrentState();
 	if (!currentState) return;
 
-	if (currentState->name == "Punch") {
+	Debug::Log("Finishing");
+	if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PUNCH)]) {
 		hasMeleeAttacked = false;
 		compAnimation->SendTrigger(currentState->name + animationStates[DUKE_ANIMATION_STATES::IDLE]);
 		state = DukeState::BASIC_BEHAVIOUR;
@@ -189,12 +190,13 @@ void Duke::OnAnimationFinished()
 		agent->SetMoveTarget(chargeTarget);
 		agent->SetMaxSpeed(chargeSpeed);
 		if (chargeCollider) chargeCollider->Enable();
+		Debug::Log("Start");
 		compAnimation->SendTrigger(currentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE)]);
-	}
-	else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_END)]) {
+	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_END)]) {
 		if (chargeAttack) chargeAttack->Disable();
 		state = nextState;
 		agent->SetMaxSpeed(movementSpeed);
+		Debug::Log("End");
 		compAnimation->SendTrigger(currentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
 	}
 }

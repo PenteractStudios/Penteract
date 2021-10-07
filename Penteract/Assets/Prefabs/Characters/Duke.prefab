@@ -55,9 +55,9 @@
                 "Script": 14370151214457210467,
                 "Values": [
                     {
-                        "Name": "dukeCharacter.chargeSpeed",
-                        "Type": "Float",
-                        "Value": 28.0
+                        "Name": "dukeUID",
+                        "Type": "GameObjectUID",
+                        "Value": 6391292472212719813
                     },
                     {
                         "Name": "dukeCharacter.lifePoints",
@@ -65,9 +65,9 @@
                         "Value": 100.0
                     },
                     {
-                        "Name": "dukeUID",
-                        "Type": "GameObjectUID",
-                        "Value": 6391292472212719813
+                        "Name": "dukeCharacter.chargeSpeed",
+                        "Type": "Float",
+                        "Value": 28.0
                     },
                     {
                         "Name": "playerUID",
@@ -85,14 +85,14 @@
                         "Value": 16913913298597001699
                     },
                     {
-                        "Name": "chargeColliderUID",
-                        "Type": "GameObjectUID",
-                        "Value": 6423596394444815009
-                    },
-                    {
                         "Name": "bulletUID",
                         "Type": "GameObjectUID",
                         "Value": 6336960488722600974
+                    },
+                    {
+                        "Name": "chargeColliderUID",
+                        "Type": "GameObjectUID",
+                        "Value": 6423596394444815009
                     },
                     {
                         "Name": "dukeCharacter.movementSpeed",
@@ -100,14 +100,14 @@
                         "Value": 4.0
                     },
                     {
-                        "Name": "dukeCharacter.moveChangeEvery",
-                        "Type": "Float",
-                        "Value": 1.899999976158142
-                    },
-                    {
                         "Name": "dukeCharacter.searchRadius",
                         "Type": "Float",
                         "Value": 12.0
+                    },
+                    {
+                        "Name": "dukeCharacter.moveChangeEvery",
+                        "Type": "Float",
+                        "Value": 1.899999976158142
                     },
                     {
                         "Name": "dukeCharacter.attackRange",
@@ -115,14 +115,14 @@
                         "Value": 5.0
                     },
                     {
-                        "Name": "abilityChangeCooldown",
-                        "Type": "Float",
-                        "Value": 5.0
-                    },
-                    {
                         "Name": "dukeCharacter.attackSpeed",
                         "Type": "Float",
                         "Value": 3.0
+                    },
+                    {
+                        "Name": "abilityChangeCooldown",
+                        "Type": "Float",
+                        "Value": 5.0
                     },
                     {
                         "Name": "dukeCharacter.attackBurst",
@@ -150,14 +150,14 @@
                         "Value": 1.0
                     },
                     {
-                        "Name": "barrelUID",
-                        "Type": "PrefabResourceUID",
-                        "Value": 17661954173970697245
-                    },
-                    {
                         "Name": "shieldCooldown",
                         "Type": "Float",
                         "Value": 10.0
+                    },
+                    {
+                        "Name": "barrelUID",
+                        "Type": "PrefabResourceUID",
+                        "Value": 17661954173970697245
                     },
                     {
                         "Name": "shieldActiveTime",
@@ -165,14 +165,14 @@
                         "Value": 7.0
                     },
                     {
-                        "Name": "bulletHellCooldown",
-                        "Type": "Float",
-                        "Value": 15.0
-                    },
-                    {
                         "Name": "meleeAttackColliderUID",
                         "Type": "GameObjectUID",
                         "Value": 5748956022661331108
+                    },
+                    {
+                        "Name": "bulletHellCooldown",
+                        "Type": "Float",
+                        "Value": 15.0
                     },
                     {
                         "Name": "bulletHellActiveTime",
