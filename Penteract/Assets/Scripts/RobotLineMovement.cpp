@@ -16,7 +16,7 @@ void RobotLineMovement::Start() {
 }
 
 void RobotLineMovement::Update() {
-    if (destroy) return;
+    if (resetMovement) return;
 
     if (!stopped) {
 
@@ -27,7 +27,7 @@ void RobotLineMovement::Update() {
         robotTransform->SetGlobalPosition(float3::Lerp(initialPos, finalPos, currentTime / totalTime));
 
         if (totalTime == currentTime) {
-            destroy = true;
+            resetMovement = true;
         }
         else {
             currentTime += Time::GetDeltaTime();
@@ -56,6 +56,12 @@ void RobotLineMovement::Stop() {
     stopped = true;
 }
 
-bool RobotLineMovement::NeedsToBeDestroyed() const {
-    return destroy;
+bool RobotLineMovement::NeedsToBeReset() const {
+    return resetMovement;
+}
+
+void RobotLineMovement::ResetMovement() {
+    resetMovement = false;
+    currentTime = 0.f;
+    robotTransform->SetGlobalPosition(initialPos);
 }

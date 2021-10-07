@@ -44,16 +44,39 @@ void RobotsLineController::Start() {
 	stoppedTimer = timeStopped;
 	stopInTimer = timeBetweenStops;
 
+	totalRobotsToDeploy = timeToReachDestination / timeBetweenSpawns;
+
 }
 
 void RobotsLineController::Update() {
-	if (!robotPrefab) return;
+	if (!robotPrefab || !robotsParent) return;
 	if (!robotsStopped) {
 		if (spawnNextRobotTimer <= 0.f) {
-			GameObject* robot = GameplaySystems::GetGameObject(robotPrefab->BuildPrefab(robotsParent));
-			spawnNextRobotTimer = timeBetweenSpawns;
-			RobotLineMovement* script = GET_SCRIPT(robot, RobotLineMovement);
-			if (script) script->Initialize(initialPos, finalPos, timeToReachDestination);
+			if (!allRobotsDeployed) {
+				GameObject* robot = GameplaySystems::GetGameObject(robotPrefab->BuildPrefab(robotsParent));
+				if (robot) {
+					RobotLineMovement* script = GET_SCRIPT(robot, RobotLineMovement);
+					if (script) script->Initialize(initialPos, finalPos, timeToReachDestination);
+				}
+				++robotsDeployed;
+				allRobotsDeployed = robotsDeployed == totalRobotsToDeploy;
+				spawnNextRobotTimer = timeBetweenSpawns;
+			}
+			else {
+				if (robotsParent->GetChildren().size() > robotToMove) {
+					GameObject* robotToResetPos = robotsParent->GetChildren()[robotToMove];
+					RobotLineMovement* script = GET_SCRIPT(robotToResetPos, RobotLineMovement);
+					if (script) {
+						bool move = script->NeedsToBeReset();
+						if (move) {
+							script->ResetMovement();
+							robotToMove += 1;
+							robotToMove = robotToMove == totalRobotsToDeploy ? 0 : robotToMove;
+							spawnNextRobotTimer = timeBetweenSpawns;
+						}
+					}
+				}
+			}
 		}
 		else {
 			spawnNextRobotTimer -= Time::GetDeltaTime();
@@ -82,16 +105,6 @@ void RobotsLineController::Update() {
 		}
 		else {
 			stoppedTimer -= Time::GetDeltaTime();
-		}
-	}
-
-	GameObject* robotToDestroy = robotsParent->GetChildren()[0];
-
-	if (robotToDestroy) {
-		RobotLineMovement* script = GET_SCRIPT(robotToDestroy, RobotLineMovement);
-		if (script) {
-			bool destroy = script->NeedsToBeDestroyed();
-			if (destroy) GameplaySystems::DestroyGameObject(robotToDestroy);
 		}
 	}
 }

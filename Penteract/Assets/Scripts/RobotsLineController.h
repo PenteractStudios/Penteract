@@ -36,6 +36,12 @@ private:
 	ResourcePrefab* robotPrefab = nullptr;
 
 	bool robotsStopped = false;
+	bool allRobotsDeployed = false;
+
+	int totalRobotsToDeploy = 0;
+	int robotsDeployed = 0;
+
+	int robotToMove = 0;
 
 	/* Timers */
 

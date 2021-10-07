@@ -18,7 +18,11 @@ public:
 	void Restart();
 	void Stop();
 
-	bool NeedsToBeDestroyed() const;
+	bool NeedsToBeReset() const;
+
+	void ResetMovement();
+
+
 
 private:
 
@@ -32,7 +36,7 @@ private:
 
 	bool stopped = false;
 
-	bool destroy = false;
+	bool resetMovement = false;
 
 };
 
