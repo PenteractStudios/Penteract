@@ -57,7 +57,7 @@
                     {
                         "Name": "dukeCharacter.chargeSpeed",
                         "Type": "Float",
-                        "Value": 14.0
+                        "Value": 28.0
                     },
                     {
                         "Name": "dukeCharacter.lifePoints",
@@ -152,7 +152,7 @@
                     {
                         "Name": "barrelUID",
                         "Type": "PrefabResourceUID",
-                        "Value": 15155939258575185893
+                        "Value": 17661954173970697245
                     },
                     {
                         "Name": "shieldCooldown",
@@ -170,6 +170,11 @@
                         "Value": 15.0
                     },
                     {
+                        "Name": "meleeAttackColliderUID",
+                        "Type": "GameObjectUID",
+                        "Value": 5748956022661331108
+                    },
+                    {
                         "Name": "bulletHellActiveTime",
                         "Type": "Float",
                         "Value": 7.0
@@ -182,12 +187,17 @@
                     {
                         "Name": "orientationSpeed",
                         "Type": "Float",
-                        "Value": 10.0
+                        "Value": 25.0
                     },
                     {
                         "Name": "winSceneUID",
                         "Type": "SceneResourceUID",
                         "Value": 7141310542589317769
+                    },
+                    {
+                        "Name": "chargeAttackUID",
+                        "Type": "GameObjectUID",
+                        "Value": 9076045893085021422
                     }
                 ]
             },
@@ -2086,6 +2096,106 @@
                                                                                 ]
                                                                             }
                                                                         ]
+                                                                    },
+                                                                    {
+                                                                        "Name": "DukePunch",
+                                                                        "Active": false,
+                                                                        "RootBoneName": "",
+                                                                        "Mask": 0,
+                                                                        "Components": [
+                                                                            {
+                                                                                "Type": "Transform",
+                                                                                "Active": false,
+                                                                                "Position": [
+                                                                                    -0.7704620361328125,
+                                                                                    -12.698497772216797,
+                                                                                    2.84747314453125
+                                                                                ],
+                                                                                "Rotation": [
+                                                                                    0.0,
+                                                                                    0.0,
+                                                                                    0.0,
+                                                                                    1.0
+                                                                                ],
+                                                                                "Scale": [
+                                                                                    1.0,
+                                                                                    1.0,
+                                                                                    1.0
+                                                                                ],
+                                                                                "LocalEulerAngles": [
+                                                                                    -0.0,
+                                                                                    0.0,
+                                                                                    -0.0
+                                                                                ]
+                                                                            },
+                                                                            {
+                                                                                "Type": "SphereCollider",
+                                                                                "Active": false,
+                                                                                "colliderType": 2,
+                                                                                "layerType": 6,
+                                                                                "mass": 1.0,
+                                                                                "radius": 1.0,
+                                                                                "centerOffset": [
+                                                                                    0.0,
+                                                                                    0.0,
+                                                                                    0.0
+                                                                                ],
+                                                                                "freezeRotation": false
+                                                                            }
+                                                                        ],
+                                                                        "Children": null
+                                                                    },
+                                                                    {
+                                                                        "Name": "ChargeAttack",
+                                                                        "Active": false,
+                                                                        "RootBoneName": "",
+                                                                        "Mask": 0,
+                                                                        "Components": [
+                                                                            {
+                                                                                "Type": "Transform",
+                                                                                "Active": false,
+                                                                                "Position": [
+                                                                                    0.0,
+                                                                                    0.0,
+                                                                                    0.0
+                                                                                ],
+                                                                                "Rotation": [
+                                                                                    0.0,
+                                                                                    0.0,
+                                                                                    0.0,
+                                                                                    1.0
+                                                                                ],
+                                                                                "Scale": [
+                                                                                    1.0,
+                                                                                    1.0,
+                                                                                    1.0
+                                                                                ],
+                                                                                "LocalEulerAngles": [
+                                                                                    -0.0,
+                                                                                    0.0,
+                                                                                    -0.0
+                                                                                ]
+                                                                            },
+                                                                            {
+                                                                                "Type": "BoxCollider",
+                                                                                "Active": false,
+                                                                                "colliderType": 2,
+                                                                                "layerType": 6,
+                                                                                "mass": 1.0,
+                                                                                "size": [
+                                                                                    1.149999976158142,
+                                                                                    2.299999952316284,
+                                                                                    1.100000023841858
+                                                                                ],
+                                                                                "centerOffset": [
+                                                                                    -0.05000000074505806,
+                                                                                    0.0,
+                                                                                    0.05000000074505806
+                                                                                ],
+                                                                                "freezeRotation": false
+                                                                            }
+                                                                        ],
+                                                                        "Children": null
                                                                     }
                                                                 ]
                                                             }
@@ -2292,7 +2402,7 @@
                         "Type": "BoxCollider",
                         "Active": true,
                         "colliderType": 2,
-                        "layerType": 4,
+                        "layerType": 2,
                         "mass": 1.0,
                         "size": [
                             5.599999904632568,
@@ -2337,7 +2447,7 @@
                             {
                                 "Name": "dukeUID",
                                 "Type": "GameObjectUID",
-                                "Value": 1727168639637301665
+                                "Value": 6391292472212719813
                             }
                         ]
                     }
@@ -2397,7 +2507,7 @@
                             {
                                 "Name": "dukeUID",
                                 "Type": "GameObjectUID",
-                                "Value": 1727168639637301665
+                                "Value": 6391292472212719813
                             }
                         ]
                     }

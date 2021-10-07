@@ -189,13 +189,13 @@ void Duke::OnAnimationFinished()
 		agent->SetMoveTarget(chargeTarget);
 		agent->SetMaxSpeed(chargeSpeed);
 		if (chargeCollider) chargeCollider->Enable();
-		compAnimation->SendTrigger(currentStateName + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE)]);
+		compAnimation->SendTrigger(currentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE)]);
 	}
 	else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_END)]) {
 		if (chargeAttack) chargeAttack->Disable();
 		state = nextState;
 		agent->SetMaxSpeed(movementSpeed);
-		compAnimation->SendTrigger(currentStateName + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
+		compAnimation->SendTrigger(currentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
 	}
 }
 
