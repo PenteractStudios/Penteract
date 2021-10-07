@@ -133,7 +133,7 @@ void AIDuke::Update() {
 			if (!phase2Reached) phase2Reached = true;
 			// Phase change VFX?
 			// Anim + dissolve for teleportation
-			lifeThreshold -= 0.1f;
+			lifeThreshold -= 0.15f;
 			activeFireTiles = false;
 			Debug::Log("Fire tiles disabled");
 			movementScript->Stop();
@@ -271,7 +271,6 @@ void AIDuke::Update() {
 			lifeThreshold -= 0.1f;
 			if (!dukeCharacter.criticalMode) {
 				movementScript->Stop();
-				if (isInArena) TeleportDuke(true);
 				dukeCharacter.CallTroops();
 				if (dukeShield) dukeShield->InitShield();
 				dukeCharacter.state = DukeState::SHOOT_SHIELD;
