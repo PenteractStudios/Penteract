@@ -3,6 +3,7 @@
 #include "Character.h"
 
 #include <random>
+#include <vector>
 
 class ComponentParticleSystem;
 class ResourcePrefab;
@@ -53,7 +54,7 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID chargeAttackColliderUID);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID chargeAttackColliderUID, std::vector<UID> encounterUIDs);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void BulletHell();
@@ -156,4 +157,8 @@ private:
 	DukeState nextState = DukeState::BASIC_BEHAVIOUR;
 	std::random_device rd;
 	std::minstd_rand gen;
+
+	/* Boss encounters */
+	std::vector<GameObject*> encounters;
+	unsigned currentEncounter = 0;
 };

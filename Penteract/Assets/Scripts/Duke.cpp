@@ -11,7 +11,7 @@
 
 std::uniform_real_distribution<> rng(-1.0f, 1.0f);
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID chargeAttackColliderUID)
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID chargeAttackColliderUID, std::vector<UID> encounterUIDs)
 {
 	gen = std::minstd_rand(rd());
 
@@ -67,10 +67,11 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 	}
 	movementChangeThreshold = moveChangeEvery;
 	distanceCorrectionThreshold = distanceCorrectEvery;
+
+	for (auto itr : encounterUIDs) encounters.push_back(GameplaySystems::GetGameObject(itr));
 }
 
-void Duke::ShootAndMove(const float3& playerDirection)
-{
+void Duke::ShootAndMove(const float3& playerDirection) {
 	// Shoot
 	movementTimer += Time::GetDeltaTime();
 	if (movementTimer >= movementChangeThreshold) {
@@ -102,8 +103,7 @@ void Duke::MeleeAttack()
 	}
 }
 
-void Duke::BulletHell()
-{
+void Duke::BulletHell() {
 	Debug::Log("Bullet hell");
 }
 
@@ -144,13 +144,13 @@ void Duke::UpdateCharge(bool forceStop)
 	}
 }
 
-void Duke::CallTroops()
-{
+void Duke::CallTroops() {
 	Debug::Log("Come, guys!");
+	if (encounters.size() > currentEncounter && encounters[currentEncounter] && !encounters[currentEncounter]->IsActive()) encounters[currentEncounter]->Enable();
+	currentEncounter++;
 }
 
-void Duke::Shoot()
-{
+void Duke::Shoot() {
 	attackTimePool -= Time::GetDeltaTime();
 	if (attackTimePool <= 0) {
 		if (bullet) {
@@ -163,8 +163,7 @@ void Duke::Shoot()
 	Debug::Log("PIUM!");
 }
 
-void Duke::ThrowBarrels()
-{
+void Duke::ThrowBarrels() {
 	Debug::Log("Here, barrel in your face!");
 
 	if (compAnimation->GetCurrentState()->name != animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]) {
@@ -201,8 +200,7 @@ void Duke::OnAnimationFinished()
 	}
 }
 
-void Duke::OnAnimationSecondaryFinished()
-{
+void Duke::OnAnimationSecondaryFinished() {
 }
 
 void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName)
