@@ -1,8 +1,13 @@
 {
     "Resources": [
         {
-            "Id": 2585463839322119677,
+            "Id": 5279626958414096795,
             "Type": "Texture"
         }
-    ]
+    ],
+    "Flip": false,
+    "Compression": 0,
+    "Wrap": 0,
+    "MinFilter": 5,
+    "MagFilter": 1
 }
