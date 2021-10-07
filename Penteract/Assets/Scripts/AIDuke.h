@@ -60,6 +60,7 @@ public:
 	UID barrelUID = 0;
 	UID chargeColliderUID = 0;
 	UID meleeAttackColliderUID = 0;
+	UID chargeAttackUID = 0;
 
 	GameObject* duke = nullptr;
 	GameObject* player = nullptr;
