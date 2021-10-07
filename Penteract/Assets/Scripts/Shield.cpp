@@ -37,7 +37,7 @@ void Shield::FadeShield() {
 }
 
 void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
-	if ((collidedWith.name == "WeaponParticles" || collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") && isActive && playerController) {
+	if ((collidedWith.name == "WeaponParticles" || collidedWith.name == "DukeProjectile" || collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") && isActive && playerController) {
 
 		if (!particle) {
 			collidedWith.Disable();

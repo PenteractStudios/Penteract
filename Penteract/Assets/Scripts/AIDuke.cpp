@@ -14,6 +14,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, bulletUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargeColliderUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, meleeAttackColliderUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, chargeAttackUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargeColliderUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, firstEncounterUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, secondEncounterUID),
@@ -23,6 +24,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER_SEPARATOR("Duke Atributes"),
 	MEMBER(MemberType::FLOAT, dukeCharacter.lifePoints),
 	MEMBER(MemberType::FLOAT, dukeCharacter.chargeSpeed),
+	MEMBER(MemberType::FLOAT, dukeCharacter.chargeMinimumDistance),
 	MEMBER(MemberType::FLOAT, dukeCharacter.movementSpeed),
 	MEMBER(MemberType::FLOAT, dukeCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, dukeCharacter.attackRange),
@@ -85,7 +87,7 @@ void AIDuke::Start() {
 	}
 
 	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, encounters);
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, chargeAttackUID, encounters);
 }
 
 void AIDuke::Update() {
@@ -149,10 +151,7 @@ void AIDuke::Update() {
 				movementScript->Stop();
 			} else if (phase2Reached && playerController->playerOnimaru.shieldBeingUsed >= 2.0f) {
 				// If onimaru shields -> perform charge
-				dukeCharacter.chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-				dukeCharacter.agent->SetMoveTarget(dukeCharacter.chargeTarget);
-				dukeCharacter.agent->SetMaxSpeed(dukeCharacter.chargeSpeed);
-				dukeCharacter.state = DukeState::CHARGE;
+				movementScript->Stop();
 				dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
 			} else if (currentShieldCooldown >= shieldCooldown) {
 				if (dukeShield) dukeShield->InitShield();
@@ -169,13 +168,10 @@ void AIDuke::Update() {
 						// If player dominates the center for too long, perform charge
 						timeSinceLastCharge += Time::GetDeltaTime();
 					}
-					if (timeSinceLastCharge >= 5.0f) {
+					if (timeSinceLastCharge >= 3.0f) {
 						timeSinceLastCharge = 0.f;
 						// Charge
-						dukeCharacter.chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-						dukeCharacter.agent->SetMoveTarget(dukeCharacter.chargeTarget);
-						dukeCharacter.agent->SetMaxSpeed(dukeCharacter.chargeSpeed);
-						dukeCharacter.state = DukeState::CHARGE;
+						movementScript->Stop();
 						dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
 					}
 					else {
@@ -296,10 +292,7 @@ void AIDuke::Update() {
 				currentAbilityChangeCooldown += Time::GetDeltaTime();
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
 					currentAbilityChangeCooldown = 0.f;
-					dukeCharacter.chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-					dukeCharacter.agent->SetMoveTarget(dukeCharacter.chargeTarget);
-					dukeCharacter.agent->SetMaxSpeed(dukeCharacter.chargeSpeed);
-					dukeCharacter.state = DukeState::CHARGE;
+					movementScript->Stop();
 					dukeCharacter.InitCharge(DukeState::MELEE_ATTACK);
 				} else {
 					if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(dukeCharacter.movementSpeed);
@@ -379,13 +372,10 @@ void AIDuke::Update() {
 							// If player dominates the center for too long, perform charge
 							timeSinceLastCharge += Time::GetDeltaTime();
 						}
-						if (timeSinceLastCharge >= 5.0f) {
+						if (timeSinceLastCharge >= 4.0f) {
 							timeSinceLastCharge = 0.f;
 							// Charge
-							dukeCharacter.chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-							dukeCharacter.agent->SetMoveTarget(dukeCharacter.chargeTarget);
-							dukeCharacter.agent->SetMaxSpeed(dukeCharacter.chargeSpeed);
-							dukeCharacter.state = DukeState::CHARGE;
+							movementScript->Stop();
 							dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
 						}
 						else {
@@ -446,7 +436,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 				GameplaySystems::DestroyGameObject(&collidedWith);
 				hitTaken = true;
 				float damage = playerController->playerFang.damageHit;
-				dukeCharacter.GetHit(dukeCharacter.reducedDamaged ? damage / 2 : damage + playerController->GetOverPowerMode());
+				dukeCharacter.GetHit( dukeCharacter.reducedDamaged ? damage / 3 : damage + playerController->GetOverPowerMode());
 			}
 			else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
 				hitTaken = true;
@@ -463,7 +453,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 			else if (collidedWith.name == "DashDamage" && playerController->playerFang.level1Upgrade) {
 				hitTaken = true;
 				float damage = playerController->playerFang.dashDamage;
-				dukeCharacter.GetHit(dukeCharacter.reducedDamaged ? damage / 2 : damage + playerController->GetOverPowerMode());
+				dukeCharacter.GetHit(dukeCharacter.reducedDamaged ? damage / 3 : damage + playerController->GetOverPowerMode());
 			}
 
 			if (hitTaken) {
@@ -629,7 +619,7 @@ void AIDuke::ParticleHit(GameObject& collidedWith, void* particle, Player& playe
 	ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 	if (pSystem) pSystem->KillParticle(p);
-	float damage = dukeCharacter.reducedDamaged ? player.damageHit / 2 : player.damageHit;
+	float damage = dukeCharacter.reducedDamaged ? player.damageHit / 3 : player.damageHit;
 	if (dukeCharacter.state == DukeState::STUNNED && player.level2Upgrade) {
 		dukeCharacter.GetHit(damage * 2 + playerController->GetOverPowerMode());
 	} else {
