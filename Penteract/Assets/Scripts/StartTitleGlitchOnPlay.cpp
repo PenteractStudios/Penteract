@@ -2,11 +2,7 @@
 #include "GlitchyTitleController.h"
 
 #include "GameplaySystems.h"
-#include "CheckpointManager.h"
-#include "SceneTransition.h"
 #include "PlayerController.h"
-
-#include "GameplaySystems.h"
 #include "GameObject.h"
 #include "VideoScene1Start.h"
 
