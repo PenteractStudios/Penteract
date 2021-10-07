@@ -795,7 +795,7 @@ void HUDManager::ManageSwitch() {
 				for (unsigned i = 0; i < skillsFang.size(); ++i) {
 					transform2D = skillsFang[i]->GetComponent<ComponentTransform2D>();
 					if (transform2D) {
-						transform2D->SetScale(float3::Lerp(float3(0, 0, 0), float3(1, 1, 1), delta));
+						transform2D->SetScale(float3::Lerp(float3(0, 1, 0), float3(1, 1, 1), delta));
 					}
 				}
 			} else {
@@ -1286,7 +1286,7 @@ void HUDManager::ManageSwitchCollapseState(GameObject* /* skillsParent */, const
 		for (unsigned i = 0; i < skills.size(); ++i) {
 			transform2D = skills[i]->GetComponent<ComponentTransform2D>();
 			if (transform2D) {
-				transform2D->SetScale(float3::Lerp(float3(1, 1, 1), float3(0, 0, 0), delta));
+				transform2D->SetScale(float3::Lerp(float3(1, 1, 1), float3(0, 1, 0), delta));
 			}
 		}
 	}
