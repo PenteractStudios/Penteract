@@ -1,0 +1,19 @@
+{
+    "Name": "Charge",
+    "AnimationUID": 16102588795477284283,
+    "BeginIndex": 312,
+    "EndIndex": 324,
+    "Loop": true,
+    "Speed": 1.0,
+    "FrameRate": 0.04163135588169098,
+    "KeyEventClip": [
+        {
+            "KeyFrame": 315,
+            "Name": "FootstepLeft"
+        },
+        {
+            "KeyFrame": 320,
+            "Name": "FootstepRight"
+        }
+    ]
+}

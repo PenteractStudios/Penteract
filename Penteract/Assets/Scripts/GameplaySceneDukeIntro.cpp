@@ -5,6 +5,7 @@
 #include "AIMovement.h"
 #include "Components/ComponentAgent.h"
 #include "Components/UI/ComponentVideo.h"
+#include "GlobalVariables.h"
 
 EXPOSE_MEMBERS(GameplaySceneDukeIntro) {
     MEMBER_SEPARATOR("Object Refs"),
@@ -24,27 +25,28 @@ void GameplaySceneDukeIntro::Start() {
 
     // TODO: Duke is a placeholder for the real duke. The prefab or a part of it should be used instead to be congruent with the other duke instances in the game
     duke1 = GameplaySystems::GetGameObject(duke1UID);
-    movementScript = GET_SCRIPT(duke1, AIMovement);
+    if (duke1) {
+        movementScript = GET_SCRIPT(duke1, AIMovement);
+        dukeAgent = duke1->GetComponent<ComponentAgent>();
+        if (dukeAgent) {
+            dukeAgent->SetMaxSpeed(dukeSpeed);
+            dukeAgent->SetMaxAcceleration(AIMovement::maxAcceleration);
+            dukeAgent->SetAgentObstacleAvoidance(true);
+            dukeAgent->AddAgentToCrowd();
+        }
+    }
+
     player = GameplaySystems::GetGameObject(playerUID);
     encounterPlaza = GameplaySystems::GetGameObject(encounterPlazaUID);
     if (encounterPlaza) encounterPlaza->Disable();
     GameObject* videoObj = GameplaySystems::GetGameObject(videoUID);
     if (videoObj) videoIntro = videoObj->GetComponent<ComponentVideo>();
-
-
-    dukeAgent = duke1->GetComponent<ComponentAgent>();
-    if (dukeAgent) {
-        dukeAgent->SetMaxSpeed(dukeSpeed);
-        dukeAgent->SetMaxAcceleration(AIMovement::maxAcceleration);
-        dukeAgent->SetAgentObstacleAvoidance(true);
-        dukeAgent->AddAgentToCrowd();
-    }
 }
 
 void GameplaySceneDukeIntro::Update() {
     if (!dukeAgent || !player || !videoIntro || !movementScript || !encounterPlaza) return;
     if (!videoIntro->HasVideoFinished()) return;
-    if (GameController::IsGameplayBlocked()) return;
+    if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) return;
 
     // Make Duke move away
     movementScript->Seek(state, dukeRunTowards, dukeAgent->GetMaxSpeed(), true);

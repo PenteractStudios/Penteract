@@ -69,6 +69,7 @@ public:
 	void SetClipSpeed(ResourceClip* clip, float speed) {
 		clip->speed = speed * animationSpeedFactor;
 	}
+	virtual void ResetToIdle(){}
 
 public:
 	float rangedDamageTaken = 1.0f;
