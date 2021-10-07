@@ -1,10 +1,10 @@
 #include "Player.h"
 
 #include "CameraController.h"
-#include "GameController.h"
 #include "Geometry/Plane.h"
 #include "Geometry/Frustum.h"
 #include "Geometry/LineSegment.h"
+#include "GlobalVariables.h"
 
 #define PRESSED_TRIGGER_THRESHOLD 0.3f
 
@@ -330,14 +330,14 @@ void Player::LookAtMouse() {
 
 void Player::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 
-	if (!lockMovement && !GameController::IsGameplayBlocked()) {
+	if (!lockMovement && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 		movementInputDirection = GetInputMovementDirection(useGamepad && Input::IsGamepadConnected(0));
 		MoveTo();
 	} else {
 		movementInputDirection = MovementDirection::NONE;
 		if (agent) agent->SetMoveTarget(playerMainTransform->GetGlobalPosition(), false);
 	}
-	if (!lockRotation && !GameController::IsGameplayBlocked()) {
+	if (!lockRotation && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 		UpdateFacePointDir(useGamepad && Input::IsGamepadConnected(0), faceToFront);
 		LookAtFacePointTarget(useGamepad && Input::IsGamepadConnected(0));
 	}
