@@ -110,6 +110,11 @@ void AIDuke::Update() {
 			Debug::Log("Phase3");
 			dukeCharacter.criticalMode = true;
 			// Phase change VFX? and anim?
+			if (dukeCharacter.compAnimation->GetCurrentStateSecondary()->name == dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::SHOOT]) {
+				dukeCharacter.compAnimation->SendTriggerSecondary(dukeCharacter.compAnimation->GetCurrentStateSecondary()->name +
+					dukeCharacter.compAnimation->GetCurrentState()->name);
+				dukeCharacter.isShooting = false;
+			}
 			return;
 		} else if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints() &&
 			dukeCharacter.state != DukeState::BULLET_HELL && dukeCharacter.state != DukeState::CHARGE) {
@@ -124,6 +129,11 @@ void AIDuke::Update() {
 			dukeCharacter.CallTroops();
 			dukeCharacter.state = DukeState::INVULNERABLE;
 			if (dukeShield && dukeShield->GetIsActive()) dukeShield->FadeShield();
+			if (dukeCharacter.compAnimation->GetCurrentStateSecondary()->name == dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::SHOOT]) {
+				dukeCharacter.compAnimation->SendTriggerSecondary(dukeCharacter.compAnimation->GetCurrentStateSecondary()->name +
+					dukeCharacter.compAnimation->GetCurrentState()->name);
+				dukeCharacter.isShooting = false;
+			}
 			break;
 		}
 
@@ -173,6 +183,12 @@ void AIDuke::Update() {
 						dukeCharacter.ShootAndMove(dir);
 					}
 				}
+				break;
+			}
+			if (dukeCharacter.compAnimation->GetCurrentStateSecondary()->name == dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::SHOOT]) {
+				dukeCharacter.compAnimation->SendTriggerSecondary(dukeCharacter.compAnimation->GetCurrentStateSecondary()->name +
+					dukeCharacter.compAnimation->GetCurrentState()->name);
+				dukeCharacter.isShooting = false;
 			}
 			break;
 		case DukeState::MELEE_ATTACK:

@@ -95,26 +95,9 @@ public:
 	bool slowedDown = false;
 	bool reducedDamaged = false;
 
+	bool isShooting = false;
+
 	float3 chargeTarget;
-
-private:
-	GameObject* player = nullptr;
-	GameObject* chargeCollider = nullptr;
-	ComponentTransform* dukeTransform = nullptr;
-
-	float3 perpendicular;
-	float movementTimer = 0.f;
-	float movementChangeThreshold = 2.0f;
-	float distanceCorrectionTimer = 0.f;
-	float distanceCorrectionThreshold = 2.0f;
-
-	// Shooting
-	float attackTimePool = 0.f;
-	ComponentParticleSystem* bullet = nullptr;
-
-	GameObject* meshObj = nullptr;	//Main mesh for Getting MeshRenderer reference and checking frustum presence (if not inside frustum shooting won't happen)
-
-	ResourcePrefab* barrel = nullptr;
 
 	// Animations
 	enum DUKE_ANIMATION_STATES {
@@ -136,10 +119,31 @@ private:
 		WALK_NO_AIM,
 		WALK_LEFT,
 		WALK_RIGHT,
-		LENGTH };
+		LENGTH
+	};
 	std::string animationStates[static_cast<int>(DUKE_ANIMATION_STATES::LENGTH)] = { "Charge", "ChargeEnd", "ChargeStart",
 		"Punch", "Death", "Idle", "Enrage", "Shooting", "PDA", "Pushed", "Shield", "ShootingShield", "Stun",
-		"WalkBack", "WalkForward", "WalkForwardNoAim", "WalkLeft", "WalkRight"};
+		"WalkBack", "WalkForward", "WalkForwardNoAim", "WalkLeft", "WalkRight" };
+
+private:
+	GameObject* player = nullptr;
+	GameObject* chargeCollider = nullptr;
+	ComponentTransform* dukeTransform = nullptr;
+
+	float3 perpendicular;
+	float movementTimer = 0.f;
+	float movementChangeThreshold = 2.0f;
+	float distanceCorrectionTimer = 0.f;
+	float distanceCorrectionThreshold = 2.0f;
+
+	// Shooting
+	float attackTimePool = 0.f;
+	ComponentParticleSystem* bullet = nullptr;
+	float isShootingTimer = 0.f;
+
+	GameObject* meshObj = nullptr;	//Main mesh for Getting MeshRenderer reference and checking frustum presence (if not inside frustum shooting won't happen)
+
+	ResourcePrefab* barrel = nullptr;
 
 	// Audios
 	ComponentAudioSource* dukeAudios[static_cast<int>(DUKE_AUDIOS::TOTAL)] = { nullptr };

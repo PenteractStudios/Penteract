@@ -130,6 +130,13 @@ void Duke::CallTroops()
 
 void Duke::Shoot()
 {
+	if (isShooting) {
+		isShootingTimer += Time::GetDeltaTime();
+		if (isShootingTimer >= attackBurst / attackSpeed) {
+			isShooting = false;
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+		}
+	}
 	attackTimePool -= Time::GetDeltaTime();
 	if (attackTimePool <= 0) {
 		if (bullet) {
@@ -137,9 +144,12 @@ void Duke::Shoot()
 			bullet->PlayChildParticles();
 		}
 		attackTimePool = (attackBurst / attackSpeed) + timeInterBurst + rng(gen) * RNG_SCALE;
+		isShooting = true;
+		isShootingTimer = 0.f;
 		// Animation
-		if (compAnimation) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)]);
+		if (compAnimation) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)]);
 	}
+
 	Debug::Log("PIUM!");
 }
 
