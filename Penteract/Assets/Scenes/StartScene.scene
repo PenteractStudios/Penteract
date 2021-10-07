@@ -166,7 +166,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 200.0,
-                            "HorizontalFov": 1.3970844745635987,
+                            "HorizontalFov": 1.5413323640823365,
                             "VerticalFov": 1.0
                         }
                     },
@@ -561,7 +561,7 @@
                                                 "Type": "Image",
                                                 "Id": 4666030001373830128,
                                                 "Active": true,
-                                                "TextureId": 9466386056112899117,
+                                                "TextureId": 14072615774467549191,
                                                 "Color": [
                                                     1.0,
                                                     1.0,
@@ -969,116 +969,6 @@
                                 ]
                             },
                             {
-                                "Id": 2349511295773514418,
-                                "Name": "TitleImage",
-                                "Active": false,
-                                "Static": false,
-                                "ActiveHierarchy": false,
-                                "RootBoneId": 0,
-                                "Mask": 0,
-                                "Components": [
-                                    {
-                                        "Type": "Transform",
-                                        "Id": 18197892664124618085,
-                                        "Active": true,
-                                        "Position": [
-                                            0.0,
-                                            0.0,
-                                            0.0
-                                        ],
-                                        "Rotation": [
-                                            0.0,
-                                            0.0,
-                                            0.0,
-                                            1.0
-                                        ],
-                                        "Scale": [
-                                            1.0,
-                                            1.0,
-                                            1.0
-                                        ],
-                                        "LocalEulerAngles": [
-                                            -0.0,
-                                            0.0,
-                                            -0.0
-                                        ]
-                                    },
-                                    {
-                                        "Type": "Transform2D",
-                                        "Id": 333009539785831299,
-                                        "Active": true,
-                                        "Position": [
-                                            0.0,
-                                            220.0,
-                                            0.0
-                                        ],
-                                        "Rotation": [
-                                            0.0,
-                                            0.0,
-                                            0.0,
-                                            1.0
-                                        ],
-                                        "Scale": [
-                                            1.0,
-                                            1.0,
-                                            1.0
-                                        ],
-                                        "LocalEulerAngles": [
-                                            0.0,
-                                            0.0,
-                                            0.0
-                                        ],
-                                        "Pivot": [
-                                            0.5,
-                                            0.5
-                                        ],
-                                        "Size": [
-                                            1438.0,
-                                            291.0
-                                        ],
-                                        "AnchorMin": [
-                                            0.5,
-                                            0.5
-                                        ],
-                                        "AnchorMax": [
-                                            0.5,
-                                            0.5
-                                        ],
-                                        "AnchorSelected": 5,
-                                        "IsCustomAnchor": false
-                                    },
-                                    {
-                                        "Type": "CanvasRenderer",
-                                        "Id": 9998631406788964421,
-                                        "Active": true
-                                    },
-                                    {
-                                        "Type": "Image",
-                                        "Id": 10898196818729317114,
-                                        "Active": true,
-                                        "TextureId": 13875769582491226808,
-                                        "Color": [
-                                            1.0,
-                                            1.0,
-                                            1.0,
-                                            1.0
-                                        ],
-                                        "AlphaTransparency": true,
-                                        "IsFill": false,
-                                        "FillValue": 0.0,
-                                        "Offset": [
-                                            0.0,
-                                            0.0
-                                        ],
-                                        "Tiling": [
-                                            1.0,
-                                            1.0
-                                        ]
-                                    }
-                                ],
-                                "Children": null
-                            },
-                            {
                                 "Id": 14669291529436515708,
                                 "Name": "Canvas",
                                 "Active": true,
@@ -1205,7 +1095,7 @@
                                                 "Active": true,
                                                 "Position": [
                                                     0.0,
-                                                    0.0,
+                                                    -11.0,
                                                     0.0
                                                 ],
                                                 "Rotation": [
@@ -1250,174 +1140,6 @@
                                             }
                                         ],
                                         "Children": [
-                                            {
-                                                "Id": 16469870195460074707,
-                                                "Name": "HoveredButtonImage",
-                                                "Active": true,
-                                                "Static": false,
-                                                "ActiveHierarchy": true,
-                                                "RootBoneId": 0,
-                                                "Mask": 0,
-                                                "Components": [
-                                                    {
-                                                        "Type": "Transform2D",
-                                                        "Id": 12296403140474076869,
-                                                        "Active": true,
-                                                        "Position": [
-                                                            0.0,
-                                                            0.0,
-                                                            0.0
-                                                        ],
-                                                        "Rotation": [
-                                                            0.0,
-                                                            0.0,
-                                                            0.0,
-                                                            1.0
-                                                        ],
-                                                        "Scale": [
-                                                            1.0,
-                                                            1.0,
-                                                            1.0
-                                                        ],
-                                                        "LocalEulerAngles": [
-                                                            0.0,
-                                                            0.0,
-                                                            0.0
-                                                        ],
-                                                        "Pivot": [
-                                                            0.5,
-                                                            0.5
-                                                        ],
-                                                        "Size": [
-                                                            548.0,
-                                                            130.0
-                                                        ],
-                                                        "AnchorMin": [
-                                                            0.5,
-                                                            0.5
-                                                        ],
-                                                        "AnchorMax": [
-                                                            0.5,
-                                                            0.5
-                                                        ],
-                                                        "AnchorSelected": 5,
-                                                        "IsCustomAnchor": false
-                                                    },
-                                                    {
-                                                        "Type": "CanvasRenderer",
-                                                        "Id": 17142729667235522558,
-                                                        "Active": true
-                                                    },
-                                                    {
-                                                        "Type": "Image",
-                                                        "Id": 685154998654891673,
-                                                        "Active": true,
-                                                        "TextureId": 5993758774357394277,
-                                                        "Color": [
-                                                            1.0,
-                                                            1.0,
-                                                            1.0,
-                                                            1.0
-                                                        ],
-                                                        "AlphaTransparency": true,
-                                                        "IsFill": false,
-                                                        "FillValue": 1.0,
-                                                        "Offset": [
-                                                            0.0,
-                                                            0.0
-                                                        ],
-                                                        "Tiling": [
-                                                            1.0,
-                                                            1.0
-                                                        ]
-                                                    }
-                                                ],
-                                                "Children": null
-                                            },
-                                            {
-                                                "Id": 10573828623181840020,
-                                                "Name": "PressedButtonImage",
-                                                "Active": true,
-                                                "Static": false,
-                                                "ActiveHierarchy": true,
-                                                "RootBoneId": 0,
-                                                "Mask": 0,
-                                                "Components": [
-                                                    {
-                                                        "Type": "Transform2D",
-                                                        "Id": 10603391707619773137,
-                                                        "Active": true,
-                                                        "Position": [
-                                                            0.0,
-                                                            0.0,
-                                                            0.0
-                                                        ],
-                                                        "Rotation": [
-                                                            0.0,
-                                                            0.0,
-                                                            0.0,
-                                                            1.0
-                                                        ],
-                                                        "Scale": [
-                                                            1.0,
-                                                            1.0,
-                                                            1.0
-                                                        ],
-                                                        "LocalEulerAngles": [
-                                                            0.0,
-                                                            0.0,
-                                                            0.0
-                                                        ],
-                                                        "Pivot": [
-                                                            0.5,
-                                                            0.5
-                                                        ],
-                                                        "Size": [
-                                                            548.0,
-                                                            130.0
-                                                        ],
-                                                        "AnchorMin": [
-                                                            0.5,
-                                                            0.5
-                                                        ],
-                                                        "AnchorMax": [
-                                                            0.5,
-                                                            0.5
-                                                        ],
-                                                        "AnchorSelected": 5,
-                                                        "IsCustomAnchor": false
-                                                    },
-                                                    {
-                                                        "Type": "CanvasRenderer",
-                                                        "Id": 14669589442799283412,
-                                                        "Active": true
-                                                    },
-                                                    {
-                                                        "Type": "Image",
-                                                        "Id": 10379731215382754220,
-                                                        "Active": true,
-                                                        "TextureId": 17083678890629101974,
-                                                        "Color": [
-                                                            1.0,
-                                                            1.0,
-                                                            1.0,
-                                                            1.0
-                                                        ],
-                                                        "AlphaTransparency": true,
-                                                        "IsFill": false,
-                                                        "FillValue": 1.0,
-                                                        "Offset": [
-                                                            0.0,
-                                                            0.0
-                                                        ],
-                                                        "Tiling": [
-                                                            1.0,
-                                                            1.0
-                                                        ]
-                                                    }
-                                                ],
-                                                "Children": null
-                                            },
                                             {
                                                 "Id": 857224952291648140,
                                                 "Name": "Button",
@@ -1483,8 +1205,8 @@
                                                             0.5
                                                         ],
                                                         "Size": [
-                                                            548.0,
-                                                            130.0
+                                                            406.0,
+                                                            108.0
                                                         ],
                                                         "AnchorMin": [
                                                             0.5,
@@ -1554,7 +1276,7 @@
                                                         "Type": "Image",
                                                         "Id": 3659136712125746206,
                                                         "Active": true,
-                                                        "TextureId": 2836308617326386907,
+                                                        "TextureId": 5349754429331577028,
                                                         "Color": [
                                                             1.0,
                                                             0.9999899864196777,
@@ -1654,6 +1376,16 @@
                                                                 "Name": "buttonClickedImageObjUID",
                                                                 "Type": "GameObjectUID",
                                                                 "Value": 10573828623181840020
+                                                            },
+                                                            {
+                                                                "Name": "buttonTextWhiteObjUID",
+                                                                "Type": "GameObjectUID",
+                                                                "Value": 1115436267050186072
+                                                            },
+                                                            {
+                                                                "Name": "buttonTextShadowObjUID",
+                                                                "Type": "GameObjectUID",
+                                                                "Value": 13314463709361290754
                                                             }
                                                         ]
                                                     }
@@ -1661,8 +1393,254 @@
                                                 "Children": null
                                             },
                                             {
+                                                "Id": 16469870195460074707,
+                                                "Name": "HoveredButtonImage",
+                                                "Active": true,
+                                                "Static": false,
+                                                "ActiveHierarchy": true,
+                                                "RootBoneId": 0,
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform2D",
+                                                        "Id": 12296403140474076869,
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Pivot": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "Size": [
+                                                            406.0,
+                                                            108.0
+                                                        ],
+                                                        "AnchorMin": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorMax": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorSelected": 5,
+                                                        "IsCustomAnchor": false
+                                                    },
+                                                    {
+                                                        "Type": "CanvasRenderer",
+                                                        "Id": 17142729667235522558,
+                                                        "Active": true
+                                                    },
+                                                    {
+                                                        "Type": "Image",
+                                                        "Id": 685154998654891673,
+                                                        "Active": true,
+                                                        "TextureId": 5993758774357394277,
+                                                        "Color": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "AlphaTransparency": true,
+                                                        "IsFill": false,
+                                                        "FillValue": 1.0,
+                                                        "Offset": [
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Tiling": [
+                                                            1.0,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                ],
+                                                "Children": null
+                                            },
+                                            {
+                                                "Id": 10573828623181840020,
+                                                "Name": "PressedButtonImage",
+                                                "Active": true,
+                                                "Static": false,
+                                                "ActiveHierarchy": true,
+                                                "RootBoneId": 0,
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform2D",
+                                                        "Id": 10603391707619773137,
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Pivot": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "Size": [
+                                                            406.0,
+                                                            108.0
+                                                        ],
+                                                        "AnchorMin": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorMax": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorSelected": 5,
+                                                        "IsCustomAnchor": false
+                                                    },
+                                                    {
+                                                        "Type": "CanvasRenderer",
+                                                        "Id": 14669589442799283412,
+                                                        "Active": true
+                                                    },
+                                                    {
+                                                        "Type": "Image",
+                                                        "Id": 10379731215382754220,
+                                                        "Active": true,
+                                                        "TextureId": 17083678890629101974,
+                                                        "Color": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "AlphaTransparency": true,
+                                                        "IsFill": false,
+                                                        "FillValue": 1.0,
+                                                        "Offset": [
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Tiling": [
+                                                            1.0,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                ],
+                                                "Children": null
+                                            },
+                                            {
+                                                "Id": 13314463709361290754,
+                                                "Name": "Text-Shadow",
+                                                "Active": true,
+                                                "Static": false,
+                                                "ActiveHierarchy": true,
+                                                "RootBoneId": 0,
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform2D",
+                                                        "Id": 7303704241097265958,
+                                                        "Active": true,
+                                                        "Position": [
+                                                            2.5,
+                                                            -15.75,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Pivot": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "Size": [
+                                                            200.0,
+                                                            200.0
+                                                        ],
+                                                        "AnchorMin": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorMax": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorSelected": 5,
+                                                        "IsCustomAnchor": false
+                                                    },
+                                                    {
+                                                        "Type": "CanvasRenderer",
+                                                        "Id": 3202647494270800894,
+                                                        "Active": true
+                                                    },
+                                                    {
+                                                        "Type": "Text",
+                                                        "Id": 5540424076498050245,
+                                                        "Active": true,
+                                                        "FontID": 18326526522212889354,
+                                                        "FontSize": 40.0,
+                                                        "LineHeight": 6.0,
+                                                        "LetterSpacing": 10.0,
+                                                        "Alignment": 1,
+                                                        "Value": "PLAY",
+                                                        "Color": [
+                                                            0.0,
+                                                            0.1568627506494522,
+                                                            0.23529411852359773,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                ],
+                                                "Children": null
+                                            },
+                                            {
                                                 "Id": 1115436267050186072,
-                                                "Name": "Text",
+                                                "Name": "Text-White",
                                                 "Active": true,
                                                 "Static": false,
                                                 "ActiveHierarchy": true,
@@ -1675,7 +1653,7 @@
                                                         "Active": true,
                                                         "Position": [
                                                             0.0,
-                                                            -25.0,
+                                                            -13.25,
                                                             0.0
                                                         ],
                                                         "Rotation": [
@@ -1722,10 +1700,10 @@
                                                         "Type": "Text",
                                                         "Id": 15813774569507303744,
                                                         "Active": true,
-                                                        "FontID": 9939030777484332345,
-                                                        "FontSize": 74.0,
+                                                        "FontID": 18326526522212889354,
+                                                        "FontSize": 40.0,
                                                         "LineHeight": 6.0,
-                                                        "LetterSpacing": 0.0,
+                                                        "LetterSpacing": 10.0,
                                                         "Alignment": 1,
                                                         "Value": "PLAY",
                                                         "Color": [
@@ -1781,7 +1759,7 @@
                                                 "Active": true,
                                                 "Position": [
                                                     0.0,
-                                                    -140.0,
+                                                    -125.0,
                                                     0.0
                                                 ],
                                                 "Rotation": [
@@ -1891,8 +1869,8 @@
                                                             0.5
                                                         ],
                                                         "Size": [
-                                                            414.0,
-                                                            100.0
+                                                            296.0,
+                                                            80.0
                                                         ],
                                                         "AnchorMin": [
                                                             0.5,
@@ -1962,7 +1940,7 @@
                                                         "Type": "Image",
                                                         "Id": 9866260835089933075,
                                                         "Active": true,
-                                                        "TextureId": 5246324672998598713,
+                                                        "TextureId": 4635565774170027007,
                                                         "Color": [
                                                             0.9999987483024597,
                                                             0.9999997019767761,
@@ -2049,6 +2027,11 @@
                                                                 "Value": 13253529248281625945
                                                             },
                                                             {
+                                                                "Name": "buttonTextWhiteObjUID",
+                                                                "Type": "GameObjectUID",
+                                                                "Value": 9572453239161411647
+                                                            },
+                                                            {
                                                                 "Name": "buttonHoveredImageObjUID",
                                                                 "Type": "GameObjectUID",
                                                                 "Value": 9217926501698145110
@@ -2057,91 +2040,12 @@
                                                                 "Name": "buttonIdleImageObjUID",
                                                                 "Type": "GameObjectUID",
                                                                 "Value": 7491420689186152131
+                                                            },
+                                                            {
+                                                                "Name": "buttonTextShadowObjUID",
+                                                                "Type": "GameObjectUID",
+                                                                "Value": 718800567643586462
                                                             }
-                                                        ]
-                                                    }
-                                                ],
-                                                "Children": null
-                                            },
-                                            {
-                                                "Id": 13253529248281625945,
-                                                "Name": "PressedButtonImage",
-                                                "Active": true,
-                                                "Static": false,
-                                                "ActiveHierarchy": true,
-                                                "RootBoneId": 0,
-                                                "Mask": 0,
-                                                "Components": [
-                                                    {
-                                                        "Type": "Transform2D",
-                                                        "Id": 18021477081414321793,
-                                                        "Active": true,
-                                                        "Position": [
-                                                            0.0,
-                                                            0.0,
-                                                            0.0
-                                                        ],
-                                                        "Rotation": [
-                                                            0.0,
-                                                            0.0,
-                                                            0.0,
-                                                            1.0
-                                                        ],
-                                                        "Scale": [
-                                                            1.0,
-                                                            1.0,
-                                                            1.0
-                                                        ],
-                                                        "LocalEulerAngles": [
-                                                            0.0,
-                                                            0.0,
-                                                            0.0
-                                                        ],
-                                                        "Pivot": [
-                                                            0.5,
-                                                            0.5
-                                                        ],
-                                                        "Size": [
-                                                            414.0,
-                                                            100.0
-                                                        ],
-                                                        "AnchorMin": [
-                                                            0.5,
-                                                            0.5
-                                                        ],
-                                                        "AnchorMax": [
-                                                            0.5,
-                                                            0.5
-                                                        ],
-                                                        "AnchorSelected": 5,
-                                                        "IsCustomAnchor": false
-                                                    },
-                                                    {
-                                                        "Type": "CanvasRenderer",
-                                                        "Id": 16150679039488924660,
-                                                        "Active": true
-                                                    },
-                                                    {
-                                                        "Type": "Image",
-                                                        "Id": 1606703395386825011,
-                                                        "Active": true,
-                                                        "TextureId": 17579252613526960775,
-                                                        "Color": [
-                                                            1.0,
-                                                            1.0,
-                                                            1.0,
-                                                            1.0
-                                                        ],
-                                                        "AlphaTransparency": true,
-                                                        "IsFill": false,
-                                                        "FillValue": 1.0,
-                                                        "Offset": [
-                                                            0.0,
-                                                            0.0
-                                                        ],
-                                                        "Tiling": [
-                                                            1.0,
-                                                            1.0
                                                         ]
                                                     }
                                                 ],
@@ -2186,8 +2090,8 @@
                                                             0.5
                                                         ],
                                                         "Size": [
-                                                            414.0,
-                                                            100.0
+                                                            296.0,
+                                                            80.0
                                                         ],
                                                         "AnchorMin": [
                                                             0.5,
@@ -2232,8 +2136,92 @@
                                                 "Children": null
                                             },
                                             {
+                                                "Id": 13253529248281625945,
+                                                "Name": "PressedButtonImage",
+                                                "Active": true,
+                                                "Static": false,
+                                                "ActiveHierarchy": true,
+                                                "RootBoneId": 0,
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform2D",
+                                                        "Id": 18021477081414321793,
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Pivot": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "Size": [
+                                                            296.0,
+                                                            80.0
+                                                        ],
+                                                        "AnchorMin": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorMax": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorSelected": 5,
+                                                        "IsCustomAnchor": false
+                                                    },
+                                                    {
+                                                        "Type": "CanvasRenderer",
+                                                        "Id": 16150679039488924660,
+                                                        "Active": true
+                                                    },
+                                                    {
+                                                        "Type": "Image",
+                                                        "Id": 1606703395386825011,
+                                                        "Active": true,
+                                                        "TextureId": 17579252613526960775,
+                                                        "Color": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "AlphaTransparency": true,
+                                                        "IsFill": false,
+                                                        "FillValue": 1.0,
+                                                        "Offset": [
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Tiling": [
+                                                            1.0,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                ],
+                                                "Children": null
+                                            },
+                                            {
                                                 "Id": 718800567643586462,
-                                                "Name": "ButtonText",
+                                                "Name": "Text-Shadow",
                                                 "Active": true,
                                                 "Static": false,
                                                 "ActiveHierarchy": true,
@@ -2271,8 +2259,8 @@
                                                         "Id": 7162017620857508572,
                                                         "Active": true,
                                                         "Position": [
-                                                            0.0,
-                                                            -5.0,
+                                                            2.0,
+                                                            -7.0,
                                                             0.0
                                                         ],
                                                         "Rotation": [
@@ -2319,10 +2307,114 @@
                                                         "Type": "Text",
                                                         "Id": 12115015643810880889,
                                                         "Active": true,
-                                                        "FontID": 9939030777484332345,
+                                                        "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 0.0,
+                                                        "LetterSpacing": 8.0,
+                                                        "Alignment": 1,
+                                                        "Value": "LEVEL SELECT",
+                                                        "Color": [
+                                                            0.0,
+                                                            0.1568627506494522,
+                                                            0.23529411852359773,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                ],
+                                                "Children": null
+                                            },
+                                            {
+                                                "Id": 9572453239161411647,
+                                                "Name": "Text-White",
+                                                "Active": true,
+                                                "Static": false,
+                                                "ActiveHierarchy": true,
+                                                "RootBoneId": 0,
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform",
+                                                        "Id": 14191578623725720968,
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            -0.0,
+                                                            0.0,
+                                                            -0.0
+                                                        ]
+                                                    },
+                                                    {
+                                                        "Type": "Transform2D",
+                                                        "Id": 5282296096900628002,
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            -5.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Pivot": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "Size": [
+                                                            262.0,
+                                                            200.0
+                                                        ],
+                                                        "AnchorMin": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorMax": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorSelected": 5,
+                                                        "IsCustomAnchor": false
+                                                    },
+                                                    {
+                                                        "Type": "CanvasRenderer",
+                                                        "Id": 4169089583814369511,
+                                                        "Active": true
+                                                    },
+                                                    {
+                                                        "Type": "Text",
+                                                        "Id": 6787073823220121560,
+                                                        "Active": true,
+                                                        "FontID": 18326526522212889354,
+                                                        "FontSize": 24.0,
+                                                        "LineHeight": 16.0,
+                                                        "LetterSpacing": 8.0,
                                                         "Alignment": 1,
                                                         "Value": "LEVEL SELECT",
                                                         "Color": [
@@ -2378,7 +2470,7 @@
                                                 "Active": true,
                                                 "Position": [
                                                     0.0,
-                                                    -240.0,
+                                                    -210.0,
                                                     0.0
                                                 ],
                                                 "Rotation": [
@@ -2488,8 +2580,8 @@
                                                             0.5
                                                         ],
                                                         "Size": [
-                                                            414.0,
-                                                            100.0
+                                                            296.0,
+                                                            80.0
                                                         ],
                                                         "AnchorMin": [
                                                             0.5,
@@ -2559,7 +2651,7 @@
                                                         "Type": "Image",
                                                         "Id": 14640294085098523736,
                                                         "Active": true,
-                                                        "TextureId": 5246324672998598713,
+                                                        "TextureId": 4635565774170027007,
                                                         "Color": [
                                                             1.0,
                                                             1.0,
@@ -2641,6 +2733,11 @@
                                                         "Script": 14613544446749292252,
                                                         "Values": [
                                                             {
+                                                                "Name": "buttonTextWhiteObjUID",
+                                                                "Type": "GameObjectUID",
+                                                                "Value": 17161561931129229363
+                                                            },
+                                                            {
                                                                 "Name": "buttonClickedImageObjUID",
                                                                 "Type": "GameObjectUID",
                                                                 "Value": 12117821580151971788
@@ -2654,91 +2751,12 @@
                                                                 "Name": "buttonIdleImageObjUID",
                                                                 "Type": "GameObjectUID",
                                                                 "Value": 4350496057787619139
+                                                            },
+                                                            {
+                                                                "Name": "buttonTextShadowObjUID",
+                                                                "Type": "GameObjectUID",
+                                                                "Value": 16663509895134420899
                                                             }
-                                                        ]
-                                                    }
-                                                ],
-                                                "Children": null
-                                            },
-                                            {
-                                                "Id": 12117821580151971788,
-                                                "Name": "PressedButtonImage",
-                                                "Active": true,
-                                                "Static": false,
-                                                "ActiveHierarchy": true,
-                                                "RootBoneId": 0,
-                                                "Mask": 0,
-                                                "Components": [
-                                                    {
-                                                        "Type": "Transform2D",
-                                                        "Id": 15098803197507460144,
-                                                        "Active": true,
-                                                        "Position": [
-                                                            0.0,
-                                                            0.0,
-                                                            0.0
-                                                        ],
-                                                        "Rotation": [
-                                                            0.0,
-                                                            0.0,
-                                                            0.0,
-                                                            1.0
-                                                        ],
-                                                        "Scale": [
-                                                            1.0,
-                                                            1.0,
-                                                            1.0
-                                                        ],
-                                                        "LocalEulerAngles": [
-                                                            0.0,
-                                                            0.0,
-                                                            0.0
-                                                        ],
-                                                        "Pivot": [
-                                                            0.5,
-                                                            0.5
-                                                        ],
-                                                        "Size": [
-                                                            414.0,
-                                                            100.0
-                                                        ],
-                                                        "AnchorMin": [
-                                                            0.5,
-                                                            0.5
-                                                        ],
-                                                        "AnchorMax": [
-                                                            0.5,
-                                                            0.5
-                                                        ],
-                                                        "AnchorSelected": 5,
-                                                        "IsCustomAnchor": false
-                                                    },
-                                                    {
-                                                        "Type": "CanvasRenderer",
-                                                        "Id": 7627830808184405130,
-                                                        "Active": true
-                                                    },
-                                                    {
-                                                        "Type": "Image",
-                                                        "Id": 3917692917979866625,
-                                                        "Active": true,
-                                                        "TextureId": 17579252613526960775,
-                                                        "Color": [
-                                                            1.0,
-                                                            1.0,
-                                                            1.0,
-                                                            1.0
-                                                        ],
-                                                        "AlphaTransparency": true,
-                                                        "IsFill": false,
-                                                        "FillValue": 1.0,
-                                                        "Offset": [
-                                                            0.0,
-                                                            0.0
-                                                        ],
-                                                        "Tiling": [
-                                                            1.0,
-                                                            1.0
                                                         ]
                                                     }
                                                 ],
@@ -2783,8 +2801,8 @@
                                                             0.5
                                                         ],
                                                         "Size": [
-                                                            414.0,
-                                                            100.0
+                                                            296.0,
+                                                            80.0
                                                         ],
                                                         "AnchorMin": [
                                                             0.5,
@@ -2829,8 +2847,92 @@
                                                 "Children": null
                                             },
                                             {
+                                                "Id": 12117821580151971788,
+                                                "Name": "PressedButtonImage",
+                                                "Active": true,
+                                                "Static": false,
+                                                "ActiveHierarchy": true,
+                                                "RootBoneId": 0,
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform2D",
+                                                        "Id": 15098803197507460144,
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Pivot": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "Size": [
+                                                            296.0,
+                                                            80.0
+                                                        ],
+                                                        "AnchorMin": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorMax": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorSelected": 5,
+                                                        "IsCustomAnchor": false
+                                                    },
+                                                    {
+                                                        "Type": "CanvasRenderer",
+                                                        "Id": 7627830808184405130,
+                                                        "Active": true
+                                                    },
+                                                    {
+                                                        "Type": "Image",
+                                                        "Id": 3917692917979866625,
+                                                        "Active": true,
+                                                        "TextureId": 17579252613526960775,
+                                                        "Color": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "AlphaTransparency": true,
+                                                        "IsFill": false,
+                                                        "FillValue": 1.0,
+                                                        "Offset": [
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Tiling": [
+                                                            1.0,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                ],
+                                                "Children": null
+                                            },
+                                            {
                                                 "Id": 16663509895134420899,
-                                                "Name": "ButtonText",
+                                                "Name": "Text-Shadow",
                                                 "Active": true,
                                                 "Static": false,
                                                 "ActiveHierarchy": true,
@@ -2868,8 +2970,8 @@
                                                         "Id": 11004344467975927656,
                                                         "Active": true,
                                                         "Position": [
-                                                            0.0,
-                                                            -5.0,
+                                                            2.0,
+                                                            -7.0,
                                                             0.0
                                                         ],
                                                         "Rotation": [
@@ -2916,10 +3018,114 @@
                                                         "Type": "Text",
                                                         "Id": 2814538944619215457,
                                                         "Active": true,
-                                                        "FontID": 9939030777484332345,
+                                                        "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 0.0,
+                                                        "LetterSpacing": 8.0,
+                                                        "Alignment": 1,
+                                                        "Value": "SETTINGS",
+                                                        "Color": [
+                                                            0.0,
+                                                            0.1568627506494522,
+                                                            0.23529411852359773,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                ],
+                                                "Children": null
+                                            },
+                                            {
+                                                "Id": 17161561931129229363,
+                                                "Name": "Text-White",
+                                                "Active": true,
+                                                "Static": false,
+                                                "ActiveHierarchy": true,
+                                                "RootBoneId": 0,
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform",
+                                                        "Id": 13915433832212298564,
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            -0.0,
+                                                            0.0,
+                                                            -0.0
+                                                        ]
+                                                    },
+                                                    {
+                                                        "Type": "Transform2D",
+                                                        "Id": 495536053952829342,
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            -5.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Pivot": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "Size": [
+                                                            262.0,
+                                                            200.0
+                                                        ],
+                                                        "AnchorMin": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorMax": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorSelected": 5,
+                                                        "IsCustomAnchor": false
+                                                    },
+                                                    {
+                                                        "Type": "CanvasRenderer",
+                                                        "Id": 9446972543392784339,
+                                                        "Active": true
+                                                    },
+                                                    {
+                                                        "Type": "Text",
+                                                        "Id": 11043782484877973167,
+                                                        "Active": true,
+                                                        "FontID": 18326526522212889354,
+                                                        "FontSize": 24.0,
+                                                        "LineHeight": 16.0,
+                                                        "LetterSpacing": 8.0,
                                                         "Alignment": 1,
                                                         "Value": "SETTINGS",
                                                         "Color": [
@@ -2975,7 +3181,7 @@
                                                 "Active": true,
                                                 "Position": [
                                                     0.0,
-                                                    -340.0,
+                                                    -295.0,
                                                     0.0
                                                 ],
                                                 "Rotation": [
@@ -3085,8 +3291,8 @@
                                                             0.5
                                                         ],
                                                         "Size": [
-                                                            414.0,
-                                                            100.0
+                                                            296.0,
+                                                            80.0
                                                         ],
                                                         "AnchorMin": [
                                                             0.5,
@@ -3156,7 +3362,7 @@
                                                         "Type": "Image",
                                                         "Id": 279432962620587543,
                                                         "Active": true,
-                                                        "TextureId": 5246324672998598713,
+                                                        "TextureId": 4635565774170027007,
                                                         "Color": [
                                                             1.0,
                                                             1.0,
@@ -3238,6 +3444,11 @@
                                                         "Script": 14613544446749292252,
                                                         "Values": [
                                                             {
+                                                                "Name": "buttonTextWhiteObjUID",
+                                                                "Type": "GameObjectUID",
+                                                                "Value": 2959401358566548135
+                                                            },
+                                                            {
                                                                 "Name": "buttonClickedImageObjUID",
                                                                 "Type": "GameObjectUID",
                                                                 "Value": 14113233159097231513
@@ -3251,91 +3462,12 @@
                                                                 "Name": "buttonHoveredImageObjUID",
                                                                 "Type": "GameObjectUID",
                                                                 "Value": 15229733306895596434
+                                                            },
+                                                            {
+                                                                "Name": "buttonTextShadowObjUID",
+                                                                "Type": "GameObjectUID",
+                                                                "Value": 10934903361864630753
                                                             }
-                                                        ]
-                                                    }
-                                                ],
-                                                "Children": null
-                                            },
-                                            {
-                                                "Id": 14113233159097231513,
-                                                "Name": "PressedButtonImage",
-                                                "Active": true,
-                                                "Static": false,
-                                                "ActiveHierarchy": true,
-                                                "RootBoneId": 0,
-                                                "Mask": 0,
-                                                "Components": [
-                                                    {
-                                                        "Type": "Transform2D",
-                                                        "Id": 18210395286872923116,
-                                                        "Active": true,
-                                                        "Position": [
-                                                            0.0,
-                                                            0.0,
-                                                            0.0
-                                                        ],
-                                                        "Rotation": [
-                                                            0.0,
-                                                            0.0,
-                                                            0.0,
-                                                            1.0
-                                                        ],
-                                                        "Scale": [
-                                                            1.0,
-                                                            1.0,
-                                                            1.0
-                                                        ],
-                                                        "LocalEulerAngles": [
-                                                            0.0,
-                                                            0.0,
-                                                            0.0
-                                                        ],
-                                                        "Pivot": [
-                                                            0.5,
-                                                            0.5
-                                                        ],
-                                                        "Size": [
-                                                            414.0,
-                                                            100.0
-                                                        ],
-                                                        "AnchorMin": [
-                                                            0.5,
-                                                            0.5
-                                                        ],
-                                                        "AnchorMax": [
-                                                            0.5,
-                                                            0.5
-                                                        ],
-                                                        "AnchorSelected": 5,
-                                                        "IsCustomAnchor": false
-                                                    },
-                                                    {
-                                                        "Type": "CanvasRenderer",
-                                                        "Id": 14474912534118276784,
-                                                        "Active": true
-                                                    },
-                                                    {
-                                                        "Type": "Image",
-                                                        "Id": 3953428622463598562,
-                                                        "Active": true,
-                                                        "TextureId": 17579252613526960775,
-                                                        "Color": [
-                                                            1.0,
-                                                            1.0,
-                                                            1.0,
-                                                            1.0
-                                                        ],
-                                                        "AlphaTransparency": true,
-                                                        "IsFill": false,
-                                                        "FillValue": 1.0,
-                                                        "Offset": [
-                                                            0.0,
-                                                            0.0
-                                                        ],
-                                                        "Tiling": [
-                                                            1.0,
-                                                            1.0
                                                         ]
                                                     }
                                                 ],
@@ -3380,8 +3512,8 @@
                                                             0.5
                                                         ],
                                                         "Size": [
-                                                            414.0,
-                                                            100.0
+                                                            296.0,
+                                                            80.0
                                                         ],
                                                         "AnchorMin": [
                                                             0.5,
@@ -3426,8 +3558,92 @@
                                                 "Children": null
                                             },
                                             {
+                                                "Id": 14113233159097231513,
+                                                "Name": "PressedButtonImage",
+                                                "Active": true,
+                                                "Static": false,
+                                                "ActiveHierarchy": true,
+                                                "RootBoneId": 0,
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform2D",
+                                                        "Id": 18210395286872923116,
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Pivot": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "Size": [
+                                                            296.0,
+                                                            80.0
+                                                        ],
+                                                        "AnchorMin": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorMax": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorSelected": 5,
+                                                        "IsCustomAnchor": false
+                                                    },
+                                                    {
+                                                        "Type": "CanvasRenderer",
+                                                        "Id": 14474912534118276784,
+                                                        "Active": true
+                                                    },
+                                                    {
+                                                        "Type": "Image",
+                                                        "Id": 3953428622463598562,
+                                                        "Active": true,
+                                                        "TextureId": 17579252613526960775,
+                                                        "Color": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "AlphaTransparency": true,
+                                                        "IsFill": false,
+                                                        "FillValue": 1.0,
+                                                        "Offset": [
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Tiling": [
+                                                            1.0,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                ],
+                                                "Children": null
+                                            },
+                                            {
                                                 "Id": 10934903361864630753,
-                                                "Name": "ButtonText",
+                                                "Name": "Text-Shadow",
                                                 "Active": true,
                                                 "Static": false,
                                                 "ActiveHierarchy": true,
@@ -3465,8 +3681,8 @@
                                                         "Id": 11331290322312568977,
                                                         "Active": true,
                                                         "Position": [
-                                                            0.0,
-                                                            -5.0,
+                                                            2.0,
+                                                            -7.0,
                                                             0.0
                                                         ],
                                                         "Rotation": [
@@ -3513,10 +3729,114 @@
                                                         "Type": "Text",
                                                         "Id": 13962272469794685343,
                                                         "Active": true,
-                                                        "FontID": 9939030777484332345,
+                                                        "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 0.0,
+                                                        "LetterSpacing": 8.0,
+                                                        "Alignment": 1,
+                                                        "Value": "CONTROLS",
+                                                        "Color": [
+                                                            0.0,
+                                                            0.1568627506494522,
+                                                            0.23529411852359773,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                ],
+                                                "Children": null
+                                            },
+                                            {
+                                                "Id": 2959401358566548135,
+                                                "Name": "Text-White",
+                                                "Active": true,
+                                                "Static": false,
+                                                "ActiveHierarchy": true,
+                                                "RootBoneId": 0,
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform",
+                                                        "Id": 10702091594623509244,
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            -0.0,
+                                                            0.0,
+                                                            -0.0
+                                                        ]
+                                                    },
+                                                    {
+                                                        "Type": "Transform2D",
+                                                        "Id": 12139164514799136917,
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            -5.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Pivot": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "Size": [
+                                                            262.0,
+                                                            200.0
+                                                        ],
+                                                        "AnchorMin": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorMax": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorSelected": 5,
+                                                        "IsCustomAnchor": false
+                                                    },
+                                                    {
+                                                        "Type": "CanvasRenderer",
+                                                        "Id": 12480896124567749168,
+                                                        "Active": true
+                                                    },
+                                                    {
+                                                        "Type": "Text",
+                                                        "Id": 10942819078545134507,
+                                                        "Active": true,
+                                                        "FontID": 18326526522212889354,
+                                                        "FontSize": 24.0,
+                                                        "LineHeight": 16.0,
+                                                        "LetterSpacing": 8.0,
                                                         "Alignment": 1,
                                                         "Value": "CONTROLS",
                                                         "Color": [
@@ -3572,7 +3892,7 @@
                                                 "Active": true,
                                                 "Position": [
                                                     0.0,
-                                                    -440.0,
+                                                    -380.0,
                                                     0.0
                                                 ],
                                                 "Rotation": [
@@ -3682,8 +4002,8 @@
                                                             0.5
                                                         ],
                                                         "Size": [
-                                                            414.0,
-                                                            100.0
+                                                            296.0,
+                                                            80.0
                                                         ],
                                                         "AnchorMin": [
                                                             0.5,
@@ -3753,7 +4073,7 @@
                                                         "Type": "Image",
                                                         "Id": 9904404769195859317,
                                                         "Active": true,
-                                                        "TextureId": 5246324672998598713,
+                                                        "TextureId": 4635565774170027007,
                                                         "Color": [
                                                             1.0,
                                                             1.0,
@@ -3845,94 +4165,20 @@
                                                                 "Value": 9693516544177923887
                                                             },
                                                             {
+                                                                "Name": "buttonTextWhiteObjUID",
+                                                                "Type": "GameObjectUID",
+                                                                "Value": 8851438363080235041
+                                                            },
+                                                            {
                                                                 "Name": "buttonClickedImageObjUID",
                                                                 "Type": "GameObjectUID",
                                                                 "Value": 16117120399601211096
+                                                            },
+                                                            {
+                                                                "Name": "buttonTextShadowObjUID",
+                                                                "Type": "GameObjectUID",
+                                                                "Value": 5255240448463627848
                                                             }
-                                                        ]
-                                                    }
-                                                ],
-                                                "Children": null
-                                            },
-                                            {
-                                                "Id": 16117120399601211096,
-                                                "Name": "PressedButtonImage",
-                                                "Active": true,
-                                                "Static": false,
-                                                "ActiveHierarchy": true,
-                                                "RootBoneId": 0,
-                                                "Mask": 0,
-                                                "Components": [
-                                                    {
-                                                        "Type": "Transform2D",
-                                                        "Id": 11881815884775962998,
-                                                        "Active": true,
-                                                        "Position": [
-                                                            0.0,
-                                                            0.0,
-                                                            0.0
-                                                        ],
-                                                        "Rotation": [
-                                                            0.0,
-                                                            0.0,
-                                                            0.0,
-                                                            1.0
-                                                        ],
-                                                        "Scale": [
-                                                            1.0,
-                                                            1.0,
-                                                            1.0
-                                                        ],
-                                                        "LocalEulerAngles": [
-                                                            0.0,
-                                                            0.0,
-                                                            0.0
-                                                        ],
-                                                        "Pivot": [
-                                                            0.5,
-                                                            0.5
-                                                        ],
-                                                        "Size": [
-                                                            414.0,
-                                                            100.0
-                                                        ],
-                                                        "AnchorMin": [
-                                                            0.5,
-                                                            0.5
-                                                        ],
-                                                        "AnchorMax": [
-                                                            0.5,
-                                                            0.5
-                                                        ],
-                                                        "AnchorSelected": 5,
-                                                        "IsCustomAnchor": false
-                                                    },
-                                                    {
-                                                        "Type": "CanvasRenderer",
-                                                        "Id": 6321308194252811883,
-                                                        "Active": true
-                                                    },
-                                                    {
-                                                        "Type": "Image",
-                                                        "Id": 6121479922590168612,
-                                                        "Active": true,
-                                                        "TextureId": 17579252613526960775,
-                                                        "Color": [
-                                                            1.0,
-                                                            1.0,
-                                                            1.0,
-                                                            1.0
-                                                        ],
-                                                        "AlphaTransparency": true,
-                                                        "IsFill": false,
-                                                        "FillValue": 1.0,
-                                                        "Offset": [
-                                                            0.0,
-                                                            0.0
-                                                        ],
-                                                        "Tiling": [
-                                                            1.0,
-                                                            1.0
                                                         ]
                                                     }
                                                 ],
@@ -3977,8 +4223,8 @@
                                                             0.5
                                                         ],
                                                         "Size": [
-                                                            414.0,
-                                                            100.0
+                                                            296.0,
+                                                            80.0
                                                         ],
                                                         "AnchorMin": [
                                                             0.5,
@@ -4023,8 +4269,92 @@
                                                 "Children": null
                                             },
                                             {
+                                                "Id": 16117120399601211096,
+                                                "Name": "PressedButtonImage",
+                                                "Active": true,
+                                                "Static": false,
+                                                "ActiveHierarchy": true,
+                                                "RootBoneId": 0,
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform2D",
+                                                        "Id": 11881815884775962998,
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Pivot": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "Size": [
+                                                            296.0,
+                                                            80.0
+                                                        ],
+                                                        "AnchorMin": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorMax": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorSelected": 5,
+                                                        "IsCustomAnchor": false
+                                                    },
+                                                    {
+                                                        "Type": "CanvasRenderer",
+                                                        "Id": 6321308194252811883,
+                                                        "Active": true
+                                                    },
+                                                    {
+                                                        "Type": "Image",
+                                                        "Id": 6121479922590168612,
+                                                        "Active": true,
+                                                        "TextureId": 17579252613526960775,
+                                                        "Color": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "AlphaTransparency": true,
+                                                        "IsFill": false,
+                                                        "FillValue": 1.0,
+                                                        "Offset": [
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Tiling": [
+                                                            1.0,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                ],
+                                                "Children": null
+                                            },
+                                            {
                                                 "Id": 5255240448463627848,
-                                                "Name": "ButtonText",
+                                                "Name": "Text-Shadow",
                                                 "Active": true,
                                                 "Static": false,
                                                 "ActiveHierarchy": true,
@@ -4062,8 +4392,8 @@
                                                         "Id": 16090013291855834086,
                                                         "Active": true,
                                                         "Position": [
-                                                            0.0,
-                                                            -5.0,
+                                                            2.0,
+                                                            -7.0,
                                                             0.0
                                                         ],
                                                         "Rotation": [
@@ -4110,10 +4440,114 @@
                                                         "Type": "Text",
                                                         "Id": 8638645853062281494,
                                                         "Active": true,
-                                                        "FontID": 9939030777484332345,
+                                                        "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 0.0,
+                                                        "LetterSpacing": 8.0,
+                                                        "Alignment": 1,
+                                                        "Value": "CREDITS",
+                                                        "Color": [
+                                                            0.0,
+                                                            0.1568627506494522,
+                                                            0.23529411852359773,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                ],
+                                                "Children": null
+                                            },
+                                            {
+                                                "Id": 8851438363080235041,
+                                                "Name": "Text-White",
+                                                "Active": true,
+                                                "Static": false,
+                                                "ActiveHierarchy": true,
+                                                "RootBoneId": 0,
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform",
+                                                        "Id": 13674830526094429786,
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            -0.0,
+                                                            0.0,
+                                                            -0.0
+                                                        ]
+                                                    },
+                                                    {
+                                                        "Type": "Transform2D",
+                                                        "Id": 17960369966185754981,
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            -5.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Pivot": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "Size": [
+                                                            262.0,
+                                                            200.0
+                                                        ],
+                                                        "AnchorMin": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorMax": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorSelected": 5,
+                                                        "IsCustomAnchor": false
+                                                    },
+                                                    {
+                                                        "Type": "CanvasRenderer",
+                                                        "Id": 7188959557370167619,
+                                                        "Active": true
+                                                    },
+                                                    {
+                                                        "Type": "Text",
+                                                        "Id": 14598605351326319022,
+                                                        "Active": true,
+                                                        "FontID": 18326526522212889354,
+                                                        "FontSize": 24.0,
+                                                        "LineHeight": 16.0,
+                                                        "LetterSpacing": 8.0,
                                                         "Alignment": 1,
                                                         "Value": "CREDITS",
                                                         "Color": [
@@ -4168,8 +4602,8 @@
                                                 "Id": 7885480379150265967,
                                                 "Active": true,
                                                 "Position": [
-                                                    250.0,
-                                                    120.0,
+                                                    195.0,
+                                                    110.0,
                                                     0.0
                                                 ],
                                                 "Rotation": [
@@ -4279,8 +4713,8 @@
                                                             0.5
                                                         ],
                                                         "Size": [
-                                                            414.0,
-                                                            112.0
+                                                            296.0,
+                                                            80.0
                                                         ],
                                                         "AnchorMin": [
                                                             0.5,
@@ -4350,7 +4784,7 @@
                                                         "Type": "Image",
                                                         "Id": 2923765700071201125,
                                                         "Active": true,
-                                                        "TextureId": 5246324672998598713,
+                                                        "TextureId": 4635565774170027007,
                                                         "Color": [
                                                             1.0,
                                                             1.0,
@@ -4431,94 +4865,20 @@
                                                                 "Value": 11656158695006814749
                                                             },
                                                             {
+                                                                "Name": "buttonTextWhiteObjUID",
+                                                                "Type": "GameObjectUID",
+                                                                "Value": 9746582432068687475
+                                                            },
+                                                            {
                                                                 "Name": "buttonHoveredImageObjUID",
                                                                 "Type": "GameObjectUID",
                                                                 "Value": 10137024298673813090
+                                                            },
+                                                            {
+                                                                "Name": "buttonTextShadowObjUID",
+                                                                "Type": "GameObjectUID",
+                                                                "Value": 13571365053433037872
                                                             }
-                                                        ]
-                                                    }
-                                                ],
-                                                "Children": null
-                                            },
-                                            {
-                                                "Id": 11656158695006814749,
-                                                "Name": "PressedButtonImage",
-                                                "Active": true,
-                                                "Static": false,
-                                                "ActiveHierarchy": true,
-                                                "RootBoneId": 0,
-                                                "Mask": 0,
-                                                "Components": [
-                                                    {
-                                                        "Type": "Transform2D",
-                                                        "Id": 11404221118948190615,
-                                                        "Active": true,
-                                                        "Position": [
-                                                            0.0,
-                                                            0.0,
-                                                            0.0
-                                                        ],
-                                                        "Rotation": [
-                                                            0.0,
-                                                            0.0,
-                                                            0.0,
-                                                            1.0
-                                                        ],
-                                                        "Scale": [
-                                                            1.0,
-                                                            1.0,
-                                                            1.0
-                                                        ],
-                                                        "LocalEulerAngles": [
-                                                            0.0,
-                                                            0.0,
-                                                            0.0
-                                                        ],
-                                                        "Pivot": [
-                                                            0.5,
-                                                            0.5
-                                                        ],
-                                                        "Size": [
-                                                            414.0,
-                                                            100.0
-                                                        ],
-                                                        "AnchorMin": [
-                                                            0.5,
-                                                            0.5
-                                                        ],
-                                                        "AnchorMax": [
-                                                            0.5,
-                                                            0.5
-                                                        ],
-                                                        "AnchorSelected": 5,
-                                                        "IsCustomAnchor": false
-                                                    },
-                                                    {
-                                                        "Type": "CanvasRenderer",
-                                                        "Id": 8794419499860614796,
-                                                        "Active": true
-                                                    },
-                                                    {
-                                                        "Type": "Image",
-                                                        "Id": 836307156925522681,
-                                                        "Active": true,
-                                                        "TextureId": 17579252613526960775,
-                                                        "Color": [
-                                                            1.0,
-                                                            1.0,
-                                                            1.0,
-                                                            1.0
-                                                        ],
-                                                        "AlphaTransparency": true,
-                                                        "IsFill": false,
-                                                        "FillValue": 1.0,
-                                                        "Offset": [
-                                                            0.0,
-                                                            0.0
-                                                        ],
-                                                        "Tiling": [
-                                                            1.0,
-                                                            1.0
                                                         ]
                                                     }
                                                 ],
@@ -4563,8 +4923,8 @@
                                                             0.5
                                                         ],
                                                         "Size": [
-                                                            414.0,
-                                                            100.0
+                                                            296.0,
+                                                            80.0
                                                         ],
                                                         "AnchorMin": [
                                                             0.5,
@@ -4609,8 +4969,92 @@
                                                 "Children": null
                                             },
                                             {
+                                                "Id": 11656158695006814749,
+                                                "Name": "PressedButtonImage",
+                                                "Active": true,
+                                                "Static": false,
+                                                "ActiveHierarchy": true,
+                                                "RootBoneId": 0,
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform2D",
+                                                        "Id": 11404221118948190615,
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Pivot": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "Size": [
+                                                            296.0,
+                                                            80.0
+                                                        ],
+                                                        "AnchorMin": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorMax": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorSelected": 5,
+                                                        "IsCustomAnchor": false
+                                                    },
+                                                    {
+                                                        "Type": "CanvasRenderer",
+                                                        "Id": 8794419499860614796,
+                                                        "Active": true
+                                                    },
+                                                    {
+                                                        "Type": "Image",
+                                                        "Id": 836307156925522681,
+                                                        "Active": true,
+                                                        "TextureId": 17579252613526960775,
+                                                        "Color": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "AlphaTransparency": true,
+                                                        "IsFill": false,
+                                                        "FillValue": 1.0,
+                                                        "Offset": [
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Tiling": [
+                                                            1.0,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                ],
+                                                "Children": null
+                                            },
+                                            {
                                                 "Id": 13571365053433037872,
-                                                "Name": "ButtonText",
+                                                "Name": "Text-Shadow",
                                                 "Active": true,
                                                 "Static": false,
                                                 "ActiveHierarchy": true,
@@ -4648,8 +5092,8 @@
                                                         "Id": 4253257009023869982,
                                                         "Active": true,
                                                         "Position": [
-                                                            0.0,
-                                                            -5.0,
+                                                            2.0,
+                                                            -7.0,
                                                             0.0
                                                         ],
                                                         "Rotation": [
@@ -4696,10 +5140,114 @@
                                                         "Type": "Text",
                                                         "Id": 1319472197824082989,
                                                         "Active": true,
-                                                        "FontID": 9939030777484332345,
+                                                        "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 0.0,
+                                                        "LetterSpacing": 8.0,
+                                                        "Alignment": 1,
+                                                        "Value": "EXIT GAME",
+                                                        "Color": [
+                                                            0.0,
+                                                            0.1568627506494522,
+                                                            0.23529411852359773,
+                                                            1.0
+                                                        ]
+                                                    }
+                                                ],
+                                                "Children": null
+                                            },
+                                            {
+                                                "Id": 9746582432068687475,
+                                                "Name": "Text-White",
+                                                "Active": true,
+                                                "Static": false,
+                                                "ActiveHierarchy": true,
+                                                "RootBoneId": 0,
+                                                "Mask": 0,
+                                                "Components": [
+                                                    {
+                                                        "Type": "Transform",
+                                                        "Id": 2597525410205578657,
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            -0.0,
+                                                            0.0,
+                                                            -0.0
+                                                        ]
+                                                    },
+                                                    {
+                                                        "Type": "Transform2D",
+                                                        "Id": 11836550608415051300,
+                                                        "Active": true,
+                                                        "Position": [
+                                                            0.0,
+                                                            -5.0,
+                                                            0.0
+                                                        ],
+                                                        "Rotation": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0,
+                                                            1.0
+                                                        ],
+                                                        "Scale": [
+                                                            1.0,
+                                                            1.0,
+                                                            1.0
+                                                        ],
+                                                        "LocalEulerAngles": [
+                                                            0.0,
+                                                            0.0,
+                                                            0.0
+                                                        ],
+                                                        "Pivot": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "Size": [
+                                                            262.0,
+                                                            200.0
+                                                        ],
+                                                        "AnchorMin": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorMax": [
+                                                            0.5,
+                                                            0.5
+                                                        ],
+                                                        "AnchorSelected": 5,
+                                                        "IsCustomAnchor": false
+                                                    },
+                                                    {
+                                                        "Type": "CanvasRenderer",
+                                                        "Id": 1145091577757787838,
+                                                        "Active": true
+                                                    },
+                                                    {
+                                                        "Type": "Text",
+                                                        "Id": 2450848868894124118,
+                                                        "Active": true,
+                                                        "FontID": 18326526522212889354,
+                                                        "FontSize": 24.0,
+                                                        "LineHeight": 16.0,
+                                                        "LetterSpacing": 8.0,
                                                         "Alignment": 1,
                                                         "Value": "EXIT GAME",
                                                         "Color": [
@@ -10045,9 +10593,9 @@
                             {
                                 "Id": 17695041365782035885,
                                 "Name": "Black",
-                                "Active": true,
+                                "Active": false,
                                 "Static": false,
-                                "ActiveHierarchy": true,
+                                "ActiveHierarchy": false,
                                 "RootBoneId": 0,
                                 "Mask": 0,
                                 "Components": [
