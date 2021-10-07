@@ -53,7 +53,7 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID chargeAttackColliderUID);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID chargeAttackColliderUID);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void BulletHell();
@@ -96,10 +96,16 @@ public:
 	float3 chargeTarget;
 
 private:
+	void InstantiateBarrel();
+
+private:
 	GameObject* player = nullptr;
 	GameObject* chargeCollider = nullptr;
+	GameObject* meleeAttackCollider = nullptr;
 	GameObject* chargeAttack = nullptr;
 	ComponentTransform* dukeTransform = nullptr;
+
+	bool hasMeleeAttacked = false;
 
 	float3 perpendicular;
 	float movementTimer = 0.f;
@@ -117,6 +123,7 @@ private:
 	GameObject* meshObj = nullptr;	//Main mesh for Getting MeshRenderer reference and checking frustum presence (if not inside frustum shooting won't happen)
 
 	ResourcePrefab* barrel = nullptr;
+	bool instantiateBarrel = false;
 
 	// Animations
 	enum DUKE_ANIMATION_STATES {

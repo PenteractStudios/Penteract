@@ -59,6 +59,7 @@ public:
 	UID bulletUID = 0;
 	UID barrelUID = 0;
 	UID chargeColliderUID = 0;
+	UID meleeAttackColliderUID = 0;
 	UID chargeAttackUID = 0;
 
 	GameObject* duke = nullptr;
@@ -79,9 +80,9 @@ public:
 
 	float stunDuration = 3.f;
 
-	float troopsCounter = 5;
+	float troopsCounter = 5.f;
 
-	float throwBarrelTimer = 5;
+	float throwBarrelTimer = 5.f;
 
 	float orientationSpeed = 1.0f;
 	float orientationThreshold = 0.1f;
