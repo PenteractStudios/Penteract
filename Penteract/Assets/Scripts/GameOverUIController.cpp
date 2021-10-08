@@ -75,8 +75,6 @@ void GameOverUIController::Start() {
 		if (children.size() > HIERARCHY_INDEX_PLAY_AGAIN_TEXT - 1) {
 			mainMenuButtonText = children[HIERARCHY_INDEX_PLAY_AGAIN_TEXT]->GetComponent < ComponentText>();
 		}
-
-		mainMenuButtonText = mainMenuGO->GetChildren()[HIERARCHY_INDEX_PLAY_AGAIN_TEXT]->GetComponent < ComponentText>();
 	}
 	if (exitButtonGO) {
 		exitButtonImage = exitButtonGO->GetComponent<ComponentImage>();
@@ -85,13 +83,10 @@ void GameOverUIController::Start() {
 		if (children.size() > HIERARCHY_INDEX_PLAY_AGAIN_TEXT - 1) {
 			exitButtonText = children[HIERARCHY_INDEX_PLAY_AGAIN_TEXT]->GetComponent < ComponentText>();
 		}
-
-		exitButtonText = exitButtonGO->GetChildren()[HIERARCHY_INDEX_PLAY_AGAIN_TEXT]->GetComponent < ComponentText>();
 	}
 
 	if (backgroundGO) {
 		backgroundImage = backgroundGO->GetComponent<ComponentImage>();
-
 	}
 
 	if (scrollingBackgroundObj) {
