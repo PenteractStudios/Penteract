@@ -91,28 +91,34 @@ void SpecialHoverButton::OnButtonClick() {
 }
 
 void SpecialHoverButton::EnterButtonState(ButtonState newState) {
-	if (!buttonIdleImage || !buttonHoveredImage || !buttonClickedImage || !buttonText || !buttonTextShadow) return;
+	if (!buttonIdleImage || !buttonHoveredImage || !buttonClickedImage) return;
 	switch (newState) {
 	case ButtonState::IDLE:
 		buttonHoveredImage->Disable();
 		buttonClickedImage->Disable();
 		buttonIdleImage->Enable();
-		buttonText->SetFontColor(float4(1, 1, 1, 1));
-		buttonTextShadow->Enable();
+		if (buttonText && buttonTextShadow) {
+			buttonText->SetFontColor(float4(1, 1, 1, 1));
+			buttonTextShadow->Enable();
+		}
 		break;
 	case ButtonState::HOVERED:
 		buttonHoveredImage->Enable();
 		buttonClickedImage->Disable();
 		buttonIdleImage->Enable();
-		buttonText->SetFontColor(float4(1, 1, 1, 1));
-		buttonTextShadow->Enable();
+		if (buttonText && buttonTextShadow) {
+			buttonText->SetFontColor(float4(1, 1, 1, 1));
+			buttonTextShadow->Enable();
+		}
 		break;
 	case ButtonState::CLICKED:
 		buttonHoveredImage->Disable();
 		buttonClickedImage->Enable();
 		buttonIdleImage->Enable();
-		buttonText->SetFontColor(float4(0, 0.1568, 0.2353, 1));
-		buttonTextShadow->Disable();
+		if (buttonText && buttonTextShadow) {
+			buttonText->SetFontColor(float4(0, 0.1568, 0.2353, 1));
+			buttonTextShadow->Disable();
+		}
 		break;
 	}
 	buttonState = newState;
