@@ -62,6 +62,10 @@ void GameController::Start() {
 
 	player = GameplaySystems::GetGameObject(playerUID);
 
+	if (player) {
+		playerController = GET_SCRIPT(player, PlayerController);
+	}
+
 	pauseCanvas = GameplaySystems::GetGameObject(pauseUID);
 	hudCanvas = GameplaySystems::GetGameObject(hudUID);
 	settingsCanvas = GameplaySystems::GetGameObject(settingsPlusUID);
@@ -103,11 +107,10 @@ void GameController::Update() {
 		}
 	}
 
-	if ((Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)) && !GameplaySystems::GetGlobalVariable(isVideoActive, true)) {
+	if (CanPause() && ((Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)))) {
 		if (isPaused) {
 			ResumeGame();
-		}
-		else {
+		} else {
 			PauseGame();
 		}
 	}
@@ -306,8 +309,7 @@ void GameController::ClearPauseMenus() {
 	}
 }
 
-void GameController::EnablePauseMenus()
-{
+void GameController::EnablePauseMenus() {
 	if (hudCanvas) {
 		hudCanvas->Disable();
 	}
@@ -324,4 +326,8 @@ void GameController::EnablePauseMenus()
 	if (statsController) {
 		statsController->SetPanelActive(false);
 	}
+}
+
+bool GameController::CanPause() {
+	return !GameplaySystems::GetGlobalVariable(isVideoActive, true) && (!playerController || playerController && !playerController->IsPlayerDead());
 }

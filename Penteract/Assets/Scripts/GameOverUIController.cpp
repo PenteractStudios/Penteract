@@ -11,7 +11,7 @@
 //TODO MAKE BACKGROUND ANIMATED
 //TODO ADJUST UI SIZES
 
-#define HIERARCHY_INDEX_PLAY_AGAIN_TEXT_ 2
+#define HIERARCHY_INDEX_PLAY_AGAIN_TEXT 2
 
 EXPOSE_MEMBERS(GameOverUIController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, inOutPlayerUID),
@@ -63,15 +63,30 @@ void GameOverUIController::Start() {
 
 	if (playAgainGO) {
 		playAgainButtonImage = playAgainGO->GetComponent<ComponentImage>();
-		playAgainButtonText = playAgainGO->GetChildren()[HIERARCHY_INDEX_PLAY_AGAIN_TEXT_]->GetComponent < ComponentText>();
+		std::vector<GameObject*>children = playAgainGO->GetChildren();
+		if (children.size() > HIERARCHY_INDEX_PLAY_AGAIN_TEXT - 1) {
+			playAgainButtonText = children[HIERARCHY_INDEX_PLAY_AGAIN_TEXT]->GetComponent < ComponentText>();
+		}
 	}
 	if (mainMenuGO) {
 		mainMenuButtonImage = mainMenuGO->GetComponent<ComponentImage>();
-		mainMenuButtonText = mainMenuGO->GetChildren()[HIERARCHY_INDEX_PLAY_AGAIN_TEXT_]->GetComponent < ComponentText>();
+
+		std::vector<GameObject*>children = mainMenuGO->GetChildren();
+		if (children.size() > HIERARCHY_INDEX_PLAY_AGAIN_TEXT - 1) {
+			mainMenuButtonText = children[HIERARCHY_INDEX_PLAY_AGAIN_TEXT]->GetComponent < ComponentText>();
+		}
+
+		mainMenuButtonText = mainMenuGO->GetChildren()[HIERARCHY_INDEX_PLAY_AGAIN_TEXT]->GetComponent < ComponentText>();
 	}
 	if (exitButtonGO) {
 		exitButtonImage = exitButtonGO->GetComponent<ComponentImage>();
-		exitButtonText = exitButtonGO->GetChildren()[HIERARCHY_INDEX_PLAY_AGAIN_TEXT_]->GetComponent < ComponentText>();
+
+		std::vector<GameObject*>children = exitButtonGO->GetChildren();
+		if (children.size() > HIERARCHY_INDEX_PLAY_AGAIN_TEXT - 1) {
+			exitButtonText = children[HIERARCHY_INDEX_PLAY_AGAIN_TEXT]->GetComponent < ComponentText>();
+		}
+
+		exitButtonText = exitButtonGO->GetChildren()[HIERARCHY_INDEX_PLAY_AGAIN_TEXT]->GetComponent < ComponentText>();
 	}
 
 	if (backgroundGO) {

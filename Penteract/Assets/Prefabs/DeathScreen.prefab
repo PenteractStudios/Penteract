@@ -1,7 +1,7 @@
 {
     "Root": {
         "Name": "DeathScreen",
-        "Active": true,
+        "Active": false,
         "RootBoneName": "",
         "Mask": 0,
         "Components": [
@@ -50,14 +50,9 @@
             },
             {
                 "Type": "Script",
-                "Active": true,
+                "Active": false,
                 "Script": 1795085235405539910,
                 "Values": [
-                    {
-                        "Name": "backgroundUID",
-                        "Type": "GameObjectUID",
-                        "Value": 14835596042719268687
-                    },
                     {
                         "Name": "scrollingBackgroundObjUID",
                         "Type": "GameObjectUID",
@@ -67,6 +62,11 @@
                         "Name": "playAgainButtonUID",
                         "Type": "GameObjectUID",
                         "Value": 10181371517413657289
+                    },
+                    {
+                        "Name": "backgroundUID",
+                        "Type": "GameObjectUID",
+                        "Value": 14835596042719268687
                     },
                     {
                         "Name": "mainMenuButtonUID",
@@ -120,7 +120,7 @@
                 "Components": [
                     {
                         "Type": "Transform2D",
-                        "Active": true,
+                        "Active": false,
                         "Position": [
                             0.0,
                             0.0,
@@ -163,11 +163,11 @@
                     },
                     {
                         "Type": "CanvasRenderer",
-                        "Active": true
+                        "Active": false
                     },
                     {
                         "Type": "Image",
-                        "Active": true,
+                        "Active": false,
                         "TextureId": 0,
                         "Color": [
                             0.06666667014360428,
@@ -197,7 +197,7 @@
                         "Components": [
                             {
                                 "Type": "Transform2D",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     0.0,
@@ -240,11 +240,11 @@
                             },
                             {
                                 "Type": "CanvasRenderer",
-                                "Active": true
+                                "Active": false
                             },
                             {
                                 "Type": "Image",
-                                "Active": true,
+                                "Active": false,
                                 "TextureId": 16088894305820618009,
                                 "Color": [
                                     1.0,
@@ -277,7 +277,7 @@
                 "Components": [
                     {
                         "Type": "Transform2D",
-                        "Active": true,
+                        "Active": false,
                         "Position": [
                             0.0,
                             325.0,
@@ -328,7 +328,7 @@
                         "Components": [
                             {
                                 "Type": "Transform2D",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     0.0,
@@ -371,7 +371,7 @@
                             },
                             {
                                 "Type": "Script",
-                                "Active": true,
+                                "Active": false,
                                 "Script": 15815488295708913647,
                                 "Values": null
                             }
@@ -385,7 +385,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -428,11 +428,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 16363530423460008148,
                                         "Color": [
                                             1.0,
@@ -463,7 +463,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -506,11 +506,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 7097050797936835035,
                                         "Color": [
                                             1.0,
@@ -541,7 +541,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -584,11 +584,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 7062301636225051713,
                                         "Color": [
                                             1.0,
@@ -619,7 +619,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -662,11 +662,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 17580139162309151403,
                                         "Color": [
                                             1.0,
@@ -697,7 +697,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -740,11 +740,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 17271155541296877995,
                                         "Color": [
                                             1.0,
@@ -775,7 +775,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -818,11 +818,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 2580265354118792599,
                                         "Color": [
                                             1.0,
@@ -853,7 +853,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -896,11 +896,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 9306520051442473715,
                                         "Color": [
                                             1.0,
@@ -931,7 +931,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -974,11 +974,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 5406200266399156444,
                                         "Color": [
                                             1.0,
@@ -1009,7 +1009,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -1052,11 +1052,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 8613890449906493529,
                                         "Color": [
                                             1.0,
@@ -1087,7 +1087,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -1130,11 +1130,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 1028116885161712249,
                                         "Color": [
                                             1.0,
@@ -1167,7 +1167,7 @@
                         "Components": [
                             {
                                 "Type": "Transform2D",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     0.0,
@@ -1210,7 +1210,7 @@
                             },
                             {
                                 "Type": "Script",
-                                "Active": true,
+                                "Active": false,
                                 "Script": 15815488295708913647,
                                 "Values": [
                                     {
@@ -1230,7 +1230,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -1273,11 +1273,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 9161901506193462286,
                                         "Color": [
                                             1.0,
@@ -1308,7 +1308,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -1351,11 +1351,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 11505458743066656769,
                                         "Color": [
                                             1.0,
@@ -1386,7 +1386,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -1429,11 +1429,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 11758151328454959491,
                                         "Color": [
                                             1.0,
@@ -1464,7 +1464,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -1507,11 +1507,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 7894286287363448005,
                                         "Color": [
                                             1.0,
@@ -1542,7 +1542,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -1585,11 +1585,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 8767793447301152404,
                                         "Color": [
                                             1.0,
@@ -1620,7 +1620,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -1663,11 +1663,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 16013769403457571387,
                                         "Color": [
                                             1.0,
@@ -1698,7 +1698,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -1741,11 +1741,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 10635694128557141974,
                                         "Color": [
                                             1.0,
@@ -1776,7 +1776,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -1819,11 +1819,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 5540180540504260945,
                                         "Color": [
                                             1.0,
@@ -1854,7 +1854,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -1897,11 +1897,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 14903093653502567534,
                                         "Color": [
                                             1.0,
@@ -1932,7 +1932,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -1975,11 +1975,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 2627889335629206844,
                                         "Color": [
                                             1.0,
@@ -2010,7 +2010,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -2053,11 +2053,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 7727861634972874419,
                                         "Color": [
                                             1.0,
@@ -2088,7 +2088,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -2131,11 +2131,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 4004128632120985910,
                                         "Color": [
                                             1.0,
@@ -2166,7 +2166,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -2209,11 +2209,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 939244417911547962,
                                         "Color": [
                                             1.0,
@@ -2244,7 +2244,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -2287,11 +2287,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 14658128328278934182,
                                         "Color": [
                                             1.0,
@@ -2324,7 +2324,7 @@
                         "Components": [
                             {
                                 "Type": "Transform2D",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     0.0,
@@ -2367,7 +2367,7 @@
                             },
                             {
                                 "Type": "Script",
-                                "Active": true,
+                                "Active": false,
                                 "Script": 15815488295708913647,
                                 "Values": null
                             }
@@ -2381,7 +2381,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -2424,11 +2424,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 13014202847159776368,
                                         "Color": [
                                             1.0,
@@ -2459,7 +2459,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -2502,11 +2502,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 2977971220558352475,
                                         "Color": [
                                             1.0,
@@ -2537,7 +2537,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -2580,11 +2580,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 1189069550218563138,
                                         "Color": [
                                             1.0,
@@ -2615,7 +2615,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -2658,11 +2658,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 3036945366366376063,
                                         "Color": [
                                             1.0,
@@ -2693,7 +2693,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -2736,11 +2736,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 7874014716726283706,
                                         "Color": [
                                             1.0,
@@ -2771,7 +2771,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -2814,11 +2814,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 13968259299353459622,
                                         "Color": [
                                             1.0,
@@ -2849,7 +2849,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -2892,11 +2892,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 16814401429755934215,
                                         "Color": [
                                             1.0,
@@ -2927,7 +2927,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -2970,11 +2970,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 2412364368827601391,
                                         "Color": [
                                             1.0,
@@ -3005,7 +3005,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -3048,11 +3048,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 2127587764819452184,
                                         "Color": [
                                             1.0,
@@ -3083,7 +3083,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -3126,11 +3126,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 2118570520187841633,
                                         "Color": [
                                             1.0,
@@ -3161,7 +3161,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -3204,11 +3204,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 8840683785105221949,
                                         "Color": [
                                             1.0,
@@ -3239,7 +3239,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -3282,11 +3282,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 8112325657744046571,
                                         "Color": [
                                             1.0,
@@ -3317,7 +3317,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -3360,11 +3360,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 7752678491438625375,
                                         "Color": [
                                             1.0,
@@ -3395,7 +3395,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -3438,11 +3438,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 17790459209348860945,
                                         "Color": [
                                             1.0,
@@ -3475,7 +3475,7 @@
                         "Components": [
                             {
                                 "Type": "Transform2D",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     0.0,
@@ -3518,7 +3518,7 @@
                             },
                             {
                                 "Type": "Script",
-                                "Active": true,
+                                "Active": false,
                                 "Script": 15815488295708913647,
                                 "Values": [
                                     {
@@ -3538,7 +3538,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -3581,11 +3581,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 1028116885161712249,
                                         "Color": [
                                             1.0,
@@ -3616,7 +3616,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -3659,11 +3659,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 8613890449906493529,
                                         "Color": [
                                             1.0,
@@ -3694,7 +3694,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -3737,11 +3737,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 5406200266399156444,
                                         "Color": [
                                             1.0,
@@ -3772,7 +3772,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -3815,11 +3815,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 9306520051442473715,
                                         "Color": [
                                             1.0,
@@ -3850,7 +3850,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -3893,11 +3893,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 2580265354118792599,
                                         "Color": [
                                             1.0,
@@ -3928,7 +3928,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -3971,11 +3971,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 17271155541296877995,
                                         "Color": [
                                             1.0,
@@ -4006,7 +4006,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -4049,11 +4049,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 17580139162309151403,
                                         "Color": [
                                             1.0,
@@ -4084,7 +4084,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -4127,11 +4127,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 7062301636225051713,
                                         "Color": [
                                             1.0,
@@ -4162,7 +4162,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -4205,11 +4205,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 7097050797936835035,
                                         "Color": [
                                             1.0,
@@ -4240,7 +4240,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -4283,11 +4283,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 16363530423460008148,
                                         "Color": [
                                             1.0,
@@ -4322,7 +4322,7 @@
                 "Components": [
                     {
                         "Type": "Transform2D",
-                        "Active": true,
+                        "Active": false,
                         "Position": [
                             0.0,
                             -300.0,
@@ -4365,11 +4365,11 @@
                     },
                     {
                         "Type": "CanvasRenderer",
-                        "Active": true
+                        "Active": false
                     },
                     {
                         "Type": "BoundingBox2D",
-                        "Active": true,
+                        "Active": false,
                         "LocalBoundingBox2D": [
                             -0.5,
                             -0.5,
@@ -4379,7 +4379,7 @@
                     },
                     {
                         "Type": "Selectable",
-                        "Active": true,
+                        "Active": false,
                         "ColorHover": [
                             0.0,
                             0.686274528503418,
@@ -4403,7 +4403,7 @@
                     },
                     {
                         "Type": "Button",
-                        "Active": true,
+                        "Active": false,
                         "Clicked": false,
                         "ColorClick": [
                             0.9254902005195618,
@@ -4414,7 +4414,7 @@
                     },
                     {
                         "Type": "Image",
-                        "Active": true,
+                        "Active": false,
                         "TextureId": 2836308617326386907,
                         "Color": [
                             1.0,
@@ -4436,7 +4436,7 @@
                     },
                     {
                         "Type": "Script",
-                        "Active": true,
+                        "Active": false,
                         "Script": 15139721463718087939,
                         "Values": [
                             {
@@ -4458,7 +4458,7 @@
                     },
                     {
                         "Type": "Script",
-                        "Active": true,
+                        "Active": false,
                         "Script": 14613544446749292252,
                         "Values": [
                             {
@@ -4488,7 +4488,7 @@
                         "Components": [
                             {
                                 "Type": "Transform2D",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     0.0,
@@ -4531,11 +4531,11 @@
                             },
                             {
                                 "Type": "CanvasRenderer",
-                                "Active": true
+                                "Active": false
                             },
                             {
                                 "Type": "Image",
-                                "Active": true,
+                                "Active": false,
                                 "TextureId": 5993758774357394277,
                                 "Color": [
                                     1.0,
@@ -4566,7 +4566,7 @@
                         "Components": [
                             {
                                 "Type": "Transform2D",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     0.0,
@@ -4609,11 +4609,11 @@
                             },
                             {
                                 "Type": "CanvasRenderer",
-                                "Active": true
+                                "Active": false
                             },
                             {
                                 "Type": "Image",
-                                "Active": true,
+                                "Active": false,
                                 "TextureId": 17083678890629101974,
                                 "Color": [
                                     1.0,
@@ -4644,7 +4644,7 @@
                         "Components": [
                             {
                                 "Type": "Transform2D",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     -6.0,
@@ -4687,11 +4687,11 @@
                             },
                             {
                                 "Type": "CanvasRenderer",
-                                "Active": true
+                                "Active": false
                             },
                             {
                                 "Type": "Text",
-                                "Active": true,
+                                "Active": false,
                                 "FontID": 9939030777484332345,
                                 "FontSize": 28.0,
                                 "LineHeight": 16.0,
@@ -4718,7 +4718,7 @@
                 "Components": [
                     {
                         "Type": "Transform2D",
-                        "Active": true,
+                        "Active": false,
                         "Position": [
                             0.0,
                             -420.0,
@@ -4761,11 +4761,11 @@
                     },
                     {
                         "Type": "CanvasRenderer",
-                        "Active": true
+                        "Active": false
                     },
                     {
                         "Type": "BoundingBox2D",
-                        "Active": true,
+                        "Active": false,
                         "LocalBoundingBox2D": [
                             -0.5,
                             -0.5,
@@ -4775,7 +4775,7 @@
                     },
                     {
                         "Type": "Selectable",
-                        "Active": true,
+                        "Active": false,
                         "ColorHover": [
                             0.0,
                             0.686274528503418,
@@ -4799,7 +4799,7 @@
                     },
                     {
                         "Type": "Button",
-                        "Active": true,
+                        "Active": false,
                         "Clicked": false,
                         "ColorClick": [
                             0.9254902005195618,
@@ -4810,13 +4810,13 @@
                     },
                     {
                         "Type": "Image",
-                        "Active": true,
+                        "Active": false,
                         "TextureId": 9771556415350180533,
                         "Color": [
-                            0.0,
-                            0.3450980484485626,
-                            0.4588235318660736,
-                            0.7019608020782471
+                            0.9999997019767761,
+                            0.9999999403953552,
+                            1.0,
+                            1.0
                         ],
                         "AlphaTransparency": true,
                         "IsFill": false,
@@ -4832,7 +4832,7 @@
                     },
                     {
                         "Type": "Script",
-                        "Active": true,
+                        "Active": false,
                         "Script": 15139721463718087939,
                         "Values": [
                             {
@@ -4849,7 +4849,7 @@
                     },
                     {
                         "Type": "Script",
-                        "Active": true,
+                        "Active": false,
                         "Script": 14613544446749292252,
                         "Values": [
                             {
@@ -4879,7 +4879,7 @@
                         "Components": [
                             {
                                 "Type": "Transform2D",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     0.0,
@@ -4922,11 +4922,11 @@
                             },
                             {
                                 "Type": "CanvasRenderer",
-                                "Active": true
+                                "Active": false
                             },
                             {
                                 "Type": "Image",
-                                "Active": true,
+                                "Active": false,
                                 "TextureId": 12052583771053742201,
                                 "Color": [
                                     1.0,
@@ -4957,7 +4957,7 @@
                         "Components": [
                             {
                                 "Type": "Transform2D",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     0.0,
@@ -5000,11 +5000,11 @@
                             },
                             {
                                 "Type": "CanvasRenderer",
-                                "Active": true
+                                "Active": false
                             },
                             {
                                 "Type": "Image",
-                                "Active": true,
+                                "Active": false,
                                 "TextureId": 17579252613526960775,
                                 "Color": [
                                     1.0,
@@ -5035,7 +5035,7 @@
                         "Components": [
                             {
                                 "Type": "Transform2D",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     -3.0,
@@ -5078,11 +5078,11 @@
                             },
                             {
                                 "Type": "CanvasRenderer",
-                                "Active": true
+                                "Active": false
                             },
                             {
                                 "Type": "Text",
-                                "Active": true,
+                                "Active": false,
                                 "FontID": 9939030777484332345,
                                 "FontSize": 24.0,
                                 "LineHeight": 16.0,
@@ -5109,9 +5109,9 @@
                 "Components": [
                     {
                         "Type": "Transform2D",
-                        "Active": true,
+                        "Active": false,
                         "Position": [
-                            -670.0,
+                            -775.0,
                             -475.0,
                             0.0
                         ],
@@ -5140,23 +5140,23 @@
                             62.0
                         ],
                         "AnchorMin": [
-                            0.0,
-                            0.0
+                            0.5,
+                            0.5
                         ],
                         "AnchorMax": [
-                            0.0,
-                            0.0
+                            0.5,
+                            0.5
                         ],
-                        "AnchorSelected": 8,
+                        "AnchorSelected": 5,
                         "IsCustomAnchor": false
                     },
                     {
                         "Type": "CanvasRenderer",
-                        "Active": true
+                        "Active": false
                     },
                     {
                         "Type": "BoundingBox2D",
-                        "Active": true,
+                        "Active": false,
                         "LocalBoundingBox2D": [
                             -0.5,
                             -0.5,
@@ -5166,7 +5166,7 @@
                     },
                     {
                         "Type": "Selectable",
-                        "Active": true,
+                        "Active": false,
                         "ColorHover": [
                             0.0,
                             0.686274528503418,
@@ -5190,7 +5190,7 @@
                     },
                     {
                         "Type": "Button",
-                        "Active": true,
+                        "Active": false,
                         "Clicked": false,
                         "ColorClick": [
                             0.9254902005195618,
@@ -5201,13 +5201,13 @@
                     },
                     {
                         "Type": "Image",
-                        "Active": true,
+                        "Active": false,
                         "TextureId": 9771556415350180533,
                         "Color": [
-                            0.0,
-                            0.3450980484485626,
-                            0.4588235318660736,
-                            0.7019608020782471
+                            0.9999987483024597,
+                            0.9999997019767761,
+                            1.0,
+                            1.0
                         ],
                         "AlphaTransparency": true,
                         "IsFill": false,
@@ -5223,7 +5223,7 @@
                     },
                     {
                         "Type": "Script",
-                        "Active": true,
+                        "Active": false,
                         "Script": 11787012945619397912,
                         "Values": [
                             {
@@ -5235,7 +5235,7 @@
                     },
                     {
                         "Type": "Script",
-                        "Active": true,
+                        "Active": false,
                         "Script": 14613544446749292252,
                         "Values": [
                             {
@@ -5265,7 +5265,7 @@
                         "Components": [
                             {
                                 "Type": "Transform2D",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     0.0,
@@ -5308,11 +5308,11 @@
                             },
                             {
                                 "Type": "CanvasRenderer",
-                                "Active": true
+                                "Active": false
                             },
                             {
                                 "Type": "Image",
-                                "Active": true,
+                                "Active": false,
                                 "TextureId": 12052583771053742201,
                                 "Color": [
                                     1.0,
@@ -5343,7 +5343,7 @@
                         "Components": [
                             {
                                 "Type": "Transform2D",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     0.0,
@@ -5386,11 +5386,11 @@
                             },
                             {
                                 "Type": "CanvasRenderer",
-                                "Active": true
+                                "Active": false
                             },
                             {
                                 "Type": "Image",
-                                "Active": true,
+                                "Active": false,
                                 "TextureId": 17579252613526960775,
                                 "Color": [
                                     1.0,
@@ -5421,7 +5421,7 @@
                         "Components": [
                             {
                                 "Type": "Transform2D",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     -3.0,
@@ -5464,11 +5464,83 @@
                             },
                             {
                                 "Type": "CanvasRenderer",
-                                "Active": true
+                                "Active": false
                             },
                             {
                                 "Type": "Text",
-                                "Active": true,
+                                "Active": false,
+                                "FontID": 9939030777484332345,
+                                "FontSize": 30.0,
+                                "LineHeight": 16.0,
+                                "LetterSpacing": 4.0,
+                                "Alignment": 1,
+                                "Value": "EXIT GAME",
+                                "Color": [
+                                    9.999999974752428e-7,
+                                    9.999899930335233e-7,
+                                    9.999899930335233e-7,
+                                    1.0
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Name": "Text",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform2D",
+                                "Active": false,
+                                "Position": [
+                                    0.0,
+                                    -3.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Pivot": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "Size": [
+                                    200.0,
+                                    200.0
+                                ],
+                                "AnchorMin": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorMax": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorSelected": 5,
+                                "IsCustomAnchor": false
+                            },
+                            {
+                                "Type": "CanvasRenderer",
+                                "Active": false
+                            },
+                            {
+                                "Type": "Text",
+                                "Active": false,
                                 "FontID": 9939030777484332345,
                                 "FontSize": 24.0,
                                 "LineHeight": 16.0,
@@ -5495,7 +5567,7 @@
                 "Components": [
                     {
                         "Type": "Transform2D",
-                        "Active": true,
+                        "Active": false,
                         "Position": [
                             0.0,
                             -420.0,
@@ -5538,11 +5610,11 @@
                     },
                     {
                         "Type": "CanvasRenderer",
-                        "Active": true
+                        "Active": false
                     },
                     {
                         "Type": "Image",
-                        "Active": true,
+                        "Active": false,
                         "TextureId": 3904950738888863925,
                         "Color": [
                             1.0,
@@ -5573,9 +5645,9 @@
                 "Components": [
                     {
                         "Type": "Transform2D",
-                        "Active": true,
+                        "Active": false,
                         "Position": [
-                            -670.0,
+                            -775.0,
                             -475.0,
                             0.0
                         ],
@@ -5604,23 +5676,23 @@
                             62.0
                         ],
                         "AnchorMin": [
-                            0.0,
-                            0.0
+                            0.5,
+                            0.5
                         ],
                         "AnchorMax": [
-                            0.0,
-                            0.0
+                            0.5,
+                            0.5
                         ],
-                        "AnchorSelected": 8,
+                        "AnchorSelected": 5,
                         "IsCustomAnchor": false
                     },
                     {
                         "Type": "CanvasRenderer",
-                        "Active": true
+                        "Active": false
                     },
                     {
                         "Type": "Image",
-                        "Active": true,
+                        "Active": false,
                         "TextureId": 3904950738888863925,
                         "Color": [
                             1.0,
