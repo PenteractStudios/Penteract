@@ -1,10 +1,12 @@
 #pragma once
 
 #include "Scripting/Script.h"
+#include "UIAudioType.h"
 
 class ComponentImage;
 class ComponentSelectable;
 class ComponentText;
+class ComponentAudioSource;
 
 class SpecialHoverButton : public Script {
 	GENERATE_BODY(SpecialHoverButton);
@@ -15,6 +17,8 @@ public:
 	void Update() override;
 	void OnButtonClick() override;
 
+	void PlayAudio(UIAudio type);
+
 public:
 
 	UID buttonIdleImageObjUID = 0;
@@ -22,6 +26,7 @@ public:
 	UID buttonClickedImageObjUID = 0;
 	UID buttonTextWhiteObjUID = 0;
 	UID buttonTextShadowObjUID = 0;
+	UID audioSourcesUID = 0;
 
 	ComponentImage* buttonIdleImage = nullptr;
 	ComponentImage* buttonHoveredImage = nullptr;
@@ -33,6 +38,7 @@ private:
 	ComponentSelectable* selectable = nullptr;
 	enum class ButtonState { IDLE, HOVERED, CLICKED };
 	ButtonState buttonState = ButtonState::IDLE;
+	ComponentAudioSource* audios[static_cast<int>(UIAudio::TOTAL)] = { nullptr };
 
 private:
 	void EnterButtonState(ButtonState newState);

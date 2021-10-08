@@ -31,6 +31,7 @@ public:
 	UID glitchTitleObjUID = 0;
 	UID startPlayingTitleObjUID = 0;
 	UID blackImageObjUID = 0;
+	UID audioSourcesUID = 0;
 	StartTitleGlitchOnPlay* pressedButton = nullptr;
 
 

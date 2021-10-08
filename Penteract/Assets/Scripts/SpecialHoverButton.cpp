@@ -4,13 +4,15 @@
 #include "Components/UI/ComponentImage.h"
 #include "Components/UI/ComponentSelectable.h"
 #include "Components/UI/ComponentText.h"
+#include "Components/ComponentAudioSource.h"
 
 EXPOSE_MEMBERS(SpecialHoverButton) {
 	MEMBER(MemberType::GAME_OBJECT_UID, buttonIdleImageObjUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, buttonHoveredImageObjUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, buttonClickedImageObjUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, buttonTextWhiteObjUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, buttonTextShadowObjUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, buttonTextShadowObjUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, audioSourcesUID)
 };
 
 GENERATE_BODY_IMPL(SpecialHoverButton);
@@ -37,6 +39,14 @@ void SpecialHoverButton::Start() {
 
 	selectable = GetOwner().GetComponent<ComponentSelectable>();
 
+	GameObject* audioSourcesObj = GameplaySystems::GetGameObject(audioSourcesUID);
+	if (audioSourcesObj) {
+		int i = 0;
+		for (ComponentAudioSource& src : audioSourcesObj->GetComponents<ComponentAudioSource>()) {
+			if (i < static_cast<int>(UIAudio::TOTAL)) audios[i] = &src;
+			++i;
+		}
+	}
 }
 
 void SpecialHoverButton::Update() {
@@ -103,6 +113,7 @@ void SpecialHoverButton::EnterButtonState(ButtonState newState) {
 		}
 		break;
 	case ButtonState::HOVERED:
+		PlayAudio(UIAudio::HOVERED);
 		buttonHoveredImage->Enable();
 		buttonClickedImage->Disable();
 		buttonIdleImage->Enable();
@@ -112,6 +123,7 @@ void SpecialHoverButton::EnterButtonState(ButtonState newState) {
 		}
 		break;
 	case ButtonState::CLICKED:
+		PlayAudio(UIAudio::CLICKED);
 		buttonHoveredImage->Disable();
 		buttonClickedImage->Enable();
 		buttonIdleImage->Enable();
@@ -122,4 +134,8 @@ void SpecialHoverButton::EnterButtonState(ButtonState newState) {
 		break;
 	}
 	buttonState = newState;
+}
+
+void SpecialHoverButton::PlayAudio(UIAudio type) {
+	if (audios[static_cast<int>(type)]) audios[static_cast<int>(type)]->Play();
 }

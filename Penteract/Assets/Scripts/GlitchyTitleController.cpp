@@ -15,7 +15,8 @@ EXPOSE_MEMBERS(GlitchyTitleController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, loopingTitleObjUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, glitchTitleObjUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, startPlayingTitleObjUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, blackImageObjUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, blackImageObjUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, audioSourcesUID)
 };
 
 GENERATE_BODY_IMPL(GlitchyTitleController);
@@ -26,6 +27,7 @@ void GlitchyTitleController::Start() {
 	GameObject* glitchTitleObj = GameplaySystems::GetGameObject(glitchTitleObjUID);
 	GameObject* startPlayingTitleObj = GameplaySystems::GetGameObject(startPlayingTitleObjUID);
 	GameObject* blackImageObj = GameplaySystems::GetGameObject(blackImageObjUID);
+	GameObject* audioSourcesObj = GameplaySystems::GetGameObject(audioSourcesUID);
 
 	if (blackImageObjUID) {
 		canvasFader = GET_SCRIPT(blackImageObj, CanvasFader);
@@ -52,12 +54,13 @@ void GlitchyTitleController::Start() {
 		startPlayingTitleSpriteSheetPlayer = GET_SCRIPT(startPlayingTitleObj, UISpriteSheetPlayer);
 	}
 
-	int i = 0;
-	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
-		if (i < static_cast<int>(GlitchTitleAudio::TOTAL)) audios[i] = &src;
-		++i;
+	if (audioSourcesObj) {
+		int i = 0;
+		for (ComponentAudioSource& src : audioSourcesObj->GetComponents<ComponentAudioSource>()) {
+			if (i < static_cast<int>(GlitchTitleAudio::TOTAL)) audios[i] = &src;
+			++i;
+		}
 	}
-
 }
 
 void GlitchyTitleController::Update() {
