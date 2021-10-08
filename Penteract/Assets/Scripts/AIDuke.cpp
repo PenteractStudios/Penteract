@@ -214,6 +214,12 @@ void AIDuke::Update() {
 				currentShieldCooldown = 0.f;
 				currentShieldActiveTime = 0.f;
 				dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
+
+				if (dukeCharacter.compAnimation->GetCurrentStateSecondary()->name == dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::SHOOT]) {
+					dukeCharacter.compAnimation->SendTriggerSecondary(dukeCharacter.compAnimation->GetCurrentStateSecondary()->name +
+						dukeCharacter.compAnimation->GetCurrentState()->name);
+					dukeCharacter.isShooting = false;
+				}
 			}
 			break;
 		case DukeState::BULLET_HELL:
@@ -299,6 +305,12 @@ void AIDuke::Update() {
 			movementScript->CharacterInAttackRange(player, dukeCharacter.attackRange)) {
 			dukeCharacter.state = DukeState::MELEE_ATTACK;
 			movementScript->Stop();
+
+			if (dukeCharacter.compAnimation->GetCurrentStateSecondary()->name == dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::SHOOT]) {
+				dukeCharacter.compAnimation->SendTriggerSecondary(dukeCharacter.compAnimation->GetCurrentStateSecondary()->name +
+					dukeCharacter.compAnimation->GetCurrentState()->name);
+				dukeCharacter.isShooting = false;
+			}
 		}
 
 		if (dukeCharacter.criticalMode) {
@@ -309,6 +321,12 @@ void AIDuke::Update() {
 					currentAbilityChangeCooldown = 0.f;
 					movementScript->Stop();
 					dukeCharacter.InitCharge(DukeState::MELEE_ATTACK);
+
+					if (dukeCharacter.compAnimation->GetCurrentStateSecondary()->name == dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::SHOOT]) {
+						dukeCharacter.compAnimation->SendTriggerSecondary(dukeCharacter.compAnimation->GetCurrentStateSecondary()->name +
+							dukeCharacter.compAnimation->GetCurrentState()->name);
+						dukeCharacter.isShooting = false;
+					}
 				} else {
 					if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(dukeCharacter.movementSpeed);
 					float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
@@ -360,6 +378,12 @@ void AIDuke::Update() {
 					if (dukeShield) dukeShield->FadeShield();
 					currentAbilityChangeCooldown = 0.f;
 					dukeCharacter.state = DukeState::BULLET_HELL;
+
+					if (dukeCharacter.compAnimation->GetCurrentStateSecondary()->name == dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::SHOOT]) {
+						dukeCharacter.compAnimation->SendTriggerSecondary(dukeCharacter.compAnimation->GetCurrentStateSecondary()->name +
+							dukeCharacter.compAnimation->GetCurrentState()->name);
+						dukeCharacter.isShooting = false;
+					}
 				}
 				break;
 			case DukeState::BULLET_HELL:
@@ -392,6 +416,12 @@ void AIDuke::Update() {
 							// Charge
 							movementScript->Stop();
 							dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
+
+							if (dukeCharacter.compAnimation->GetCurrentStateSecondary()->name == dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::SHOOT]) {
+								dukeCharacter.compAnimation->SendTriggerSecondary(dukeCharacter.compAnimation->GetCurrentStateSecondary()->name +
+									dukeCharacter.compAnimation->GetCurrentState()->name);
+								dukeCharacter.isShooting = false;
+							}
 						}
 						else {
 							// Normal behavior
@@ -496,6 +526,12 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 			movementScript->Stop();
 			stunTimeRemaining = stunDuration;
 			dukeCharacter.state = DukeState::STUNNED;
+
+			if (dukeCharacter.compAnimation->GetCurrentStateSecondary()->name == dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::SHOOT]) {
+				dukeCharacter.compAnimation->SendTriggerSecondary(dukeCharacter.compAnimation->GetCurrentStateSecondary()->name +
+					dukeCharacter.compAnimation->GetCurrentState()->name);
+				dukeCharacter.isShooting = false;
+			}
 		}
 	}
 
