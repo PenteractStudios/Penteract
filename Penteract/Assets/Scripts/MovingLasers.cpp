@@ -5,8 +5,12 @@
 
 EXPOSE_MEMBERS(MovingLasers) {
     MEMBER(MemberType::FLOAT, chargingDuration),
-    MEMBER(MemberType::FLOAT3, InitialPosition),
-    MEMBER(MemberType::FLOAT3, FinalPosition),
+    MEMBER(MemberType::FLOAT3, initialGeneratorPosition),
+    MEMBER(MemberType::FLOAT3, finalGeneratorPosition),
+    MEMBER(MemberType::FLOAT3, minLaserEscale),
+    MEMBER(MemberType::FLOAT3, maxLaserEscale),
+    MEMBER(MemberType::FLOAT3, minLaserPosition),
+    MEMBER(MemberType::FLOAT3, maxLaserPosition),
     MEMBER(MemberType::GAME_OBJECT_UID, laserTargetUID),
     MEMBER(MemberType::GAME_OBJECT_UID, laserWarningUID),
     MEMBER(MemberType::GAME_OBJECT_UID, pairGeneratorUID)
@@ -37,8 +41,6 @@ void MovingLasers::Start() {
     if (laserWarning) {
         laserWarning->Disable();
     }
-
-    TurnOn(); //remove before pr
 }
 
 void MovingLasers::Update() {
@@ -82,23 +84,29 @@ void MovingLasers::Update() {
         }
         else {
             //moving code
-            float3 destination = (movingToInit) ? InitialPosition : FinalPosition;
-            float3 position = transform->GetGlobalPosition();
-            position = float3::Lerp(position, destination, movementSpeed * Time::GetDeltaTime());
+            float3 destination = (movingToInit) ? initialGeneratorPosition : finalGeneratorPosition;
+            float3 newLaserScale = (movingToInit) ? minLaserEscale : maxLaserEscale;
+            float3 newLaserPosition = (movingToInit) ? minLaserPosition : maxLaserPosition;
+            float3 generatorPosition = transform->GetGlobalPosition();
+            generatorPosition = Lerp(generatorPosition, destination, movementSpeed * Time::GetDeltaTime());
             
-            transform->SetGlobalPosition(position);
-            if (position.Distance(destination) < 0.1f) {
+            if (generatorPosition.Distance(destination) < 0.5f) {
                 movingToInit = !movingToInit;
+                if (pairScript->movingToInit != movingToInit) pairScript->Synchronize(movingToInit);
+                generatorPosition = destination;
+                laserTransform->SetGlobalScale(newLaserScale);
+                laserTransform->SetPosition(newLaserPosition);
             }
             else {
-                float scale = (movingToInit) ? movementSpeed : -movementSpeed;
-                float newScale = laserTransform->GetGlobalScale().y - (scale * Time::GetDeltaTime());
-                float3 newPosition = float3(laserTransform->GetPosition().x - (scale * 9.8f * Time::GetDeltaTime()), laserTransform->GetPosition().y, laserTransform->GetPosition().z);
-                if (!(newScale > maxLaserEscale || newScale < minLaserEscale)) {
-                    laserTransform->SetGlobalScale(float3(laserTransform->GetGlobalScale().x, newScale, laserTransform->GetGlobalScale().z));
-                    laserTransform->SetPosition(newPosition);
-                }
+                float3 laserScale = laserTransform->GetGlobalScale();
+                float3 laserPosition = laserTransform->GetPosition();
+                laserScale = Lerp(laserScale, newLaserScale, movementSpeed * Time::GetDeltaTime());
+                laserPosition = Lerp(laserPosition, newLaserPosition, movementSpeed * Time::GetDeltaTime());
+                laserTransform->SetGlobalScale(laserScale);
+                laserTransform->SetPosition(laserPosition);
             }
+            transform->SetGlobalPosition(generatorPosition);
+
         }
         break;
     }
@@ -124,4 +132,14 @@ void MovingLasers::TurnOff() {
 
 bool MovingLasers::BeingUsed() {
     return beingUsed;
+}
+void MovingLasers::Synchronize(bool movingToInit_) {
+    float3 destination = (movingToInit) ? initialGeneratorPosition : finalGeneratorPosition;
+    float3 newLaserScale = (movingToInit) ? minLaserEscale : maxLaserEscale;
+    float3 newLaserPosition = (movingToInit) ? minLaserPosition : maxLaserPosition;
+    laserTransform->SetGlobalScale(newLaserScale);
+    laserTransform->SetPosition(newLaserPosition);
+    transform->SetGlobalPosition(destination);
+    movingToInit = movingToInit_;
+    if (pairScript->movingToInit != movingToInit) pairScript->Synchronize(movingToInit);
 }

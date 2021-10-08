@@ -21,15 +21,18 @@ public:
 
 	float chargingDuration = 1.f;
 
-	float3 InitialPosition = float3(0, 0, 0);
-	float3 FinalPosition = float3(0, 0, 0);
+	float3 initialGeneratorPosition = float3(0, 0, 0);
+	float3 finalGeneratorPosition = float3(0, 0, 0);
 
 	bool movingToInit = true;
 
 	float movementSpeed = 1.0f;
-	float maxLaserEscale = 2.f;
-	float minLaserEscale = 1.f;
 
+	float3 minLaserEscale = float3(1.f, 1.f, 1.f);
+	float3 maxLaserEscale = float3(1.f, 2.05f,1.f);
+
+	float3 minLaserPosition = float3(10.f, 4.f, 0.f);
+	float3 maxLaserPosition = float3(20.f, 4.f, 0.f);
 
 public:
 
@@ -38,6 +41,7 @@ public:
 	void TurnOn();
 	void TurnOff();
 	bool BeingUsed();
+	void Synchronize(bool movingToInit);
 
 private:
 
