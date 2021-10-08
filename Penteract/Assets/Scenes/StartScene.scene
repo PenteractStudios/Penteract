@@ -166,7 +166,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 200.0,
-                            "HorizontalFov": 1.5413323640823365,
+                            "HorizontalFov": 1.5248351097106934,
                             "VerticalFov": 1.0
                         }
                     },
@@ -1538,7 +1538,7 @@
                                                         "Type": "Image",
                                                         "Id": 10379731215382754220,
                                                         "Active": true,
-                                                        "TextureId": 17083678890629101974,
+                                                        "TextureId": 8243720725778060165,
                                                         "Color": [
                                                             1.0,
                                                             1.0,
@@ -2197,7 +2197,7 @@
                                                         "Type": "Image",
                                                         "Id": 1606703395386825011,
                                                         "Active": true,
-                                                        "TextureId": 17579252613526960775,
+                                                        "TextureId": 17516598454393144275,
                                                         "Color": [
                                                             1.0,
                                                             1.0,
@@ -2908,7 +2908,7 @@
                                                         "Type": "Image",
                                                         "Id": 3917692917979866625,
                                                         "Active": true,
-                                                        "TextureId": 17579252613526960775,
+                                                        "TextureId": 17516598454393144275,
                                                         "Color": [
                                                             1.0,
                                                             1.0,
@@ -3619,7 +3619,7 @@
                                                         "Type": "Image",
                                                         "Id": 3953428622463598562,
                                                         "Active": true,
-                                                        "TextureId": 17579252613526960775,
+                                                        "TextureId": 17516598454393144275,
                                                         "Color": [
                                                             1.0,
                                                             1.0,
@@ -4330,7 +4330,7 @@
                                                         "Type": "Image",
                                                         "Id": 6121479922590168612,
                                                         "Active": true,
-                                                        "TextureId": 17579252613526960775,
+                                                        "TextureId": 17516598454393144275,
                                                         "Color": [
                                                             1.0,
                                                             1.0,
@@ -5030,7 +5030,7 @@
                                                         "Type": "Image",
                                                         "Id": 836307156925522681,
                                                         "Active": true,
-                                                        "TextureId": 17579252613526960775,
+                                                        "TextureId": 17516598454393144275,
                                                         "Color": [
                                                             1.0,
                                                             1.0,
@@ -10593,9 +10593,9 @@
                             {
                                 "Id": 17695041365782035885,
                                 "Name": "Black",
-                                "Active": false,
+                                "Active": true,
                                 "Static": false,
-                                "ActiveHierarchy": false,
+                                "ActiveHierarchy": true,
                                 "RootBoneId": 0,
                                 "Mask": 0,
                                 "Components": [
