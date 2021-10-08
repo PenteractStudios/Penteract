@@ -49,6 +49,9 @@
 #define HUD_HIT_FEEDBACK_SIDES 2
 #define SWITCH_HEALTH_HIERARCHY_NUM_CHILDREN 2
 
+#define WAVING_EFFECT_MIN_ALPHA 0.3f
+#define WAVING_EFFECT_MAX_ALPHA 0.7f
+
 EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerObjectUID),
 	MEMBER_SEPARATOR("HUD Abilities"),
@@ -193,19 +196,19 @@ void HUDManager::Update() {
 	} else {
 		if (switchSkillParent && switchSkillParent->IsActive()) switchSkillParent->Disable();
 	}
-		// Dash/Shield
+	// Dash/Shield
 	if (GameplaySystems::GetGlobalVariable(globalSkill1TutorialReached, true)) {
 		if (skillsFang[0] && !skillsFang[0]->IsActive()) skillsFang[0]->Enable();
 	} else {
 		if (skillsFang[0] && skillsFang[0]->IsActive()) skillsFang[0]->Disable();
 	}
-		// EMP/Blast
+	// EMP/Blast
 	if (GameplaySystems::GetGlobalVariable(globalSkill2TutorialReached, true)) {
 		if (skillsFang[1] && !skillsFang[1]->IsActive()) skillsFang[1]->Enable();
 	} else {
 		if (skillsFang[1] && skillsFang[1]->IsActive()) skillsFang[1]->Disable();
 	}
-		// Ultimate
+	// Ultimate
 	if (GameplaySystems::GetGlobalVariable(globalSkill3TutorialReached, true)) {
 		if (skillsFang[2] && !skillsFang[2]->IsActive()) skillsFang[2]->Enable();
 	} else {
@@ -383,10 +386,30 @@ void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 
 				if (cooldowns[skill] < 1) {
 					//On Cooldown
-					fillImage->SetColor(float4(skillColorNotAvailable.xyz(), 0.3f + cooldowns[skill]));
+					fillImage->SetColor(float4(skillColorNotAvailable.xyz(), Clamp(WAVING_EFFECT_MIN_ALPHA + cooldowns[skill], WAVING_EFFECT_MIN_ALPHA, WAVING_EFFECT_MAX_ALPHA)));
 				} else {
+					float4 colorToSet = skillColorAvailable;
+					float delta = abilityWavingEffects[static_cast<int>(skill)].second / abilityAlphaWavingTotalTime;
+
 					//Available
-					fillImage->SetColor(skillColorAvailable);
+
+					if (abilityWavingEffects[static_cast<int>(skill)].first) {
+						colorToSet = float4::Lerp(float4(skillColorAvailable.xyz(), WAVING_EFFECT_MIN_ALPHA), float4(skillColorAvailable.xyz(), WAVING_EFFECT_MAX_ALPHA), delta);
+					} else {
+						colorToSet = float4::Lerp(float4(skillColorAvailable.xyz(), WAVING_EFFECT_MAX_ALPHA), float4(skillColorAvailable.xyz(), WAVING_EFFECT_MIN_ALPHA), delta);
+					}
+
+					abilityWavingEffects[static_cast<int>(skill)].second += Time::GetDeltaTime();
+
+					if (abilityWavingEffects[static_cast<int>(skill)].second > abilityAlphaWavingTotalTime) {
+						abilityWavingEffects[static_cast<int>(skill)].first = !abilityWavingEffects[static_cast<int>(skill)].first;
+						abilityWavingEffects[static_cast<int>(skill)].second = 0;
+					}
+
+					fillImage->SetColor(colorToSet);
+
+
+					//fillImage->SetColor(skillColorAvailable);
 				}
 
 				if (fillImage->IsFill()) {
@@ -561,7 +584,9 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 		fillColor->SetFillValue(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
 		if (playerController) {
 			if (playerController->AreBothCharactersAlive()) {
-				fillColor->SetColor(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1 ? float4(switchSkillColorNotAvailable.xyz(), 0.3f + cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]) : switchSkillColorAvailable);
+				if (cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1) {
+					fillColor->SetColor(float4(switchSkillColorNotAvailable.xyz(), Clamp(WAVING_EFFECT_MIN_ALPHA + cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)],WAVING_EFFECT_MIN_ALPHA, WAVING_EFFECT_MAX_ALPHA)));
+				}
 			} else {
 				fillColor->SetColor(switchSkillColorDeadCharacter);
 			}
@@ -611,21 +636,21 @@ void HUDManager::ManageSwitch() {
 			fillImage = children[HIERARCHY_INDEX_SWITCH_ABILITY_FILL]->GetComponent<ComponentImage>();
 			if (fillImage) {
 
-				float delta = switchColorTimer / switchColorTotalTime;
+				float delta = abilityWavingEffects[static_cast<int>(Cooldowns::SWITCH_SKILL)].second / abilityAlphaWavingTotalTime;
 
-				if (switchColorIncreasing) {
+				if (abilityWavingEffects[static_cast<int>(Cooldowns::SWITCH_SKILL)].first) {
 					fillImage->SetColor(float4(fillImage->GetColor().xyz(), Lerp(0.3f, 0.7f, delta)));
 				} else {
 					fillImage->SetColor(float4(fillImage->GetColor().xyz(), Lerp(0.7f, 0.3f, delta)));
 				}
-				switchColorTimer += Time::GetDeltaTime();
+				abilityWavingEffects[static_cast<int>(Cooldowns::SWITCH_SKILL)].second += Time::GetDeltaTime();
 			}
 		}
 
 		//Reset color timer and invert the toggle for increasing/decreasing
-		if (switchColorTimer >= switchColorTotalTime) {
-			switchColorTimer = 0;
-			switchColorIncreasing = !switchColorIncreasing;
+		if (abilityWavingEffects[static_cast<int>(Cooldowns::SWITCH_SKILL)].second >= abilityAlphaWavingTotalTime) {
+			abilityWavingEffects[static_cast<int>(Cooldowns::SWITCH_SKILL)].second = 0;
+			abilityWavingEffects[static_cast<int>(Cooldowns::SWITCH_SKILL)].first = !abilityWavingEffects[static_cast<int>(Cooldowns::SWITCH_SKILL)].first;
 		}
 
 		break;
