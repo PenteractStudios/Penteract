@@ -7,15 +7,20 @@
 #include "RandomNumberGenerator.h"
 
 EXPOSE_MEMBERS(AttackDroneBehavior) {
+    MEMBER_SEPARATOR("References"),
     MEMBER(MemberType::GAME_OBJECT_UID, dronesControllerUID),
     MEMBER(MemberType::PREFAB_RESOURCE_UID, projectilePrefabUID),
+    MEMBER_SEPARATOR("Speed"),
     MEMBER(MemberType::FLOAT, droneSpeed),
+    MEMBER(MemberType::FLOAT, droneSpeedOnRecoil),
     MEMBER(MemberType::FLOAT, droneRotationSpeed),
+    MEMBER_SEPARATOR("Hover"),
     MEMBER(MemberType::BOOL, droneMustHover),
     MEMBER(MemberType::FLOAT, droneHoverAmplitude),
+    MEMBER_SEPARATOR("Recoil"),
     MEMBER(MemberType::BOOL, droneMustRecoil),
-    MEMBER(MemberType::FLOAT, droneRecoilOffset),
     MEMBER(MemberType::FLOAT, droneRecoilTime),
+    MEMBER(MemberType::FLOAT, droneRecoilDistance),
 };
 
 GENERATE_BODY_IMPL(AttackDroneBehavior);
@@ -35,7 +40,7 @@ void AttackDroneBehavior::Start() {
 void AttackDroneBehavior::Update() {
     if (!transform || !dronesControllerTransform) return;
 
-    transform->SetGlobalPosition(float3::Lerp(transform->GetGlobalPosition(), dronesControllerTransform->GetGlobalPosition() + positionOffset + GetHoverOffset() + GetRecoilOffset(), Time::GetDeltaTime() * droneSpeed));
+    transform->SetGlobalPosition(float3::Lerp(transform->GetGlobalPosition(), dronesControllerTransform->GetGlobalPosition() + positionOffset + GetHoverOffset() + GetRecoilOffset(), Time::GetDeltaTime() * (droneMustRecoil ? droneSpeedOnRecoil : droneSpeed)));
     
     if (mustForceRotation) {
         float3 direction = (transform->GetGlobalPosition() - dronesControllerTransform->GetGlobalPosition()).Normalized();
@@ -114,17 +119,21 @@ float3 AttackDroneBehavior::GetHoverOffset() {
 float3 AttackDroneBehavior::GetRecoilOffset() {
     float3 recoilPosition = float3(0.0f, 0.0f, 0.0f);
 
-   /* if (droneMustRecoil) {
+    if (droneMustRecoil) {
         if (recoilCurrentTime > droneRecoilTime) {
             droneMustRecoil = false;
             recoilCurrentTime = 0.0f;
         }
         else {
-            recoilPosition = float3::Lerp(float3(0.0f, 0.0f, 0.0f), float3(0.0f, 0.0f, droneRecoilOffset), recoilCurrentTime / droneRecoilTime);
+            recoilPosition = float3::Lerp(float3(0.0f, 0.0f, 0.0f), -transform->GetFront() * droneRecoilDistance, recoilCurrentTime / droneRecoilTime);
+            recoilPosition = float3(recoilPosition.x, 0.0f, recoilPosition.z);
+
+            Debug::Log(recoilPosition.ToString().c_str());
 
             recoilCurrentTime += Time::GetDeltaTime();
         }
-    }*/
+
+    }
 
     return recoilPosition;
 }

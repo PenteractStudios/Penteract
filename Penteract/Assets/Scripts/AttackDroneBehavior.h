@@ -28,14 +28,15 @@ public:
 public:
 	UID dronesControllerUID = 0;
 	float droneSpeed = 8.0f;
+	float droneSpeedOnRecoil = 14.0f;
 	float droneRotationSpeed = 9.0f;
 
 	bool droneMustHover = true;
 	float droneHoverAmplitude = 0.1f;
 
 	bool droneMustRecoil = false;
-	float droneRecoilOffset = 0.1f;
-	float droneRecoilTime = 0.1f;
+	float droneRecoilDistance = 0.6f;
+	float droneRecoilTime = 0.2f;
 
 	UID projectilePrefabUID = 0;
 
