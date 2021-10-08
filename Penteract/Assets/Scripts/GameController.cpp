@@ -35,7 +35,7 @@ EXPOSE_MEMBERS(GameController) {
 GENERATE_BODY_IMPL(GameController);
 
 void GameController::Start() {
-
+	isPaused = false;
 	showWireframe = false;
 	transitionFinished = false;
 	GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, false);
@@ -79,6 +79,8 @@ void GameController::Start() {
 	Debug::SetGodModeOn(false);
 	if (gameCamera && godCamera) godModeAvailable = true;
 	godModeController = GameplaySystems::GetGameObject(godModeControllerUID);
+
+	ClearPauseMenus();
 }
 
 void GameController::Update() {
