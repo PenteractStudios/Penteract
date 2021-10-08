@@ -44,6 +44,7 @@ public:
 		RUNBACKWARDLEFT,
 		RUNBACKWARDRIGHT,
 		SHOOTBLAST,
+		IDLE_AIM,
 
 	};
 
@@ -52,7 +53,7 @@ public:
 					"EnergyBlast", "UltiLoopWalking" , "UltiIntro" , "UltiLoop" ,
 					"Death" , "Shooting", "Shield", "ShootingShield",
 					"RunForwardLeft","RunForwardRight", "RunBackwardLeft", "RunBackwardRight"
-					, "ShootingBlast"
+					, "ShootingBlast" , "IdleAim"
 	};
 
 	//Onimaru ultimate related
@@ -73,6 +74,8 @@ public:
 
 	float offsetWeaponAngle = 14.0f;
 	float limitAngle = 10.0f;
+	float shieldBeingUsed = 0.f;
+
 public:
 	// ------- Contructors ------- //
 	Onimaru() {};
@@ -103,6 +106,7 @@ public:
 	float GetNormalizedRemainingUltimateTime()const;
 
 	void UpdateWeaponRotation();
+	void ResetToIdle() override;
 
 private:
 
@@ -161,6 +165,7 @@ private:
 	void Shoot() override;
 	void Blast();
 	void PlayAnimation();
+	void ResetIsInCombatValues();
 
 	void StartUltimate();
 	void FinishUltimate();

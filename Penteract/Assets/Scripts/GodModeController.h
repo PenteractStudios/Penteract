@@ -69,6 +69,10 @@ private:
 
 	/* Dialog triggers */
 	GameObject* dialogTriggers = nullptr;
+	bool skill1WasActive = false;
+	bool skill2WasActive = false;
+	bool skill3WasActive = false;
+	bool switchWasActive = false;
 
 	/* Door array to keep previous state */
 	std::vector <std::pair<GameObject*, bool>> doorPreviousStates;

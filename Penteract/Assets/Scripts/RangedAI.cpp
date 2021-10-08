@@ -1,6 +1,5 @@
 #include "RangedAI.h"
 
-#include "GameController.h"
 #include "PlayerController.h"
 #include "PlayerDeath.h"
 #include "HUDController.h"
@@ -17,6 +16,7 @@
 #include "Components/ComponentAnimation.h"
 #include "Components/ComponentMeshRenderer.h"
 #include "Resources/ResourcePrefab.h"
+#include "GlobalVariables.h"
 //clang-format off
 #include <random>
 
@@ -37,6 +37,7 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.barrelDamageTaken),
+	MEMBER(MemberType::BOOL, isSniper),
 	MEMBER_SEPARATOR("Push variables"),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackDistance),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackSpeed),
@@ -52,6 +53,9 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
 	MEMBER(MemberType::FLOAT, groundPosition),
 	MEMBER(MemberType::FLOAT, fleeingUpdateTime),
+	MEMBER_SEPARATOR("Push Random Feedback"),
+	MEMBER(MemberType::FLOAT, minTimePushEffect),
+	MEMBER(MemberType::FLOAT, maxTimePushEffect),
 	MEMBER_SEPARATOR("Dissolve properties"),
 	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialObj),
 	MEMBER(MemberType::FLOAT, dissolveTimerToStart)
@@ -132,6 +136,26 @@ void RangedAI::Start() {
 		player = GameplaySystems::GetGameObject("Player");
 		if (player) {
 			playerController = GET_SCRIPT(player, PlayerController);
+		}
+	}
+
+
+	//EMP Feedback
+	objectEMP = GetOwner().GetChild("EmpParticles");
+	if (objectEMP) {
+		ComponentParticleSystem* particlesEmpAux = objectEMP->GetComponent<ComponentParticleSystem>();
+		if (particlesEmpAux) {
+			particlesEmp = particlesEmpAux;
+		}
+	}
+
+	//Push Feedback
+	objectPush = GetOwner().GetChild("PushParticles");
+
+	if (objectPush) {
+		ComponentParticleSystem* particlesPushAux = objectPush->GetComponent<ComponentParticleSystem>();
+		if (particlesPushAux) {
+			particlesPush = particlesPushAux;
 		}
 	}
 
@@ -274,9 +298,7 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 /* collisionNormal *
 			}
 
 			if (collidedWith.name == "EMP") {
-				if (agent) agent->RemoveAgentFromCrowd();
-				stunTimeRemaining = stunDuration;
-				if (state != AIState::STUNNED) ChangeState(AIState::STUNNED);
+				DoStunned();
 			}
 		}
 	}
@@ -300,7 +322,7 @@ void RangedAI::Update() {
 
 	if (!GetOwner().IsActive()) return;
 
-	if ((state == AIState::IDLE || state == AIState::RUN || state == AIState::FLEE) && !GameController::IsGameplayBlocked()) {
+	if ((state == AIState::IDLE || state == AIState::RUN || state == AIState::FLEE) && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 		attackTimePool = Max(attackTimePool - Time::GetDeltaTime(), 0.0f);
 		if (attackTimePool == 0) {
 			if (actualShotTimer == -1) {
@@ -324,7 +346,7 @@ void RangedAI::Update() {
 		currentSlowedDownTime += Time::GetDeltaTime();
 	}
 
-	if (!rangerGruntCharacter.isAlive && state != AIState::DEATH && !GameController::IsGameplayBlocked()) {
+	if (!rangerGruntCharacter.isAlive && state != AIState::DEATH && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 		PlayAudio(AudioType::DEATH);
 		ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
 		if (collider) collider->Disable();
@@ -334,6 +356,8 @@ void RangedAI::Update() {
 	}
 
 	UpdateState();
+	if (pushEffectHasToStart)EnablePushFeedback();
+
 }
 
 void RangedAI::EnterState(AIState newState) {
@@ -402,7 +426,7 @@ void RangedAI::UpdateState() {
 
 	float speedToUse = rangerGruntCharacter.slowedDown ? rangerGruntCharacter.slowedDownSpeed : rangerGruntCharacter.movementSpeed;
 
-	if (GameController::IsGameplayBlocked() && state != AIState::START && state != AIState::SPAWN) {
+	if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && state != AIState::START && state != AIState::SPAWN) {
 		state = AIState::IDLE;
 	}
 
@@ -421,13 +445,13 @@ void RangedAI::UpdateState() {
 		if (player) {
 			if (aiMovement) {
 				aiMovement->Stop();
-				if (aiMovement->CharacterInSight(player, rangerGruntCharacter.searchRadius) && !GameController::IsGameplayBlocked()) {
+				if (aiMovement->CharacterInSight(player, rangerGruntCharacter.searchRadius) && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 					if (aiMovement->CharacterInSight(player, fleeingRange)) {
 						ChangeState(AIState::FLEE);
 						break;
 					}
 
-					if (!CharacterInRange(player, rangerGruntCharacter.attackRange, true)) {
+					if (!CharacterInRange(player, rangerGruntCharacter.attackRange, true) && !isSniper) {
 						ChangeState(AIState::RUN);
 						break;
 					}
@@ -603,9 +627,29 @@ void RangedAI::PlayAudio(AudioType audioType) {
 	if (audios[static_cast<int>(audioType)]) audios[static_cast<int>(audioType)]->Play();
 }
 
+void RangedAI::DoStunned()
+{
+	if (agent) agent->RemoveAgentFromCrowd();
+	stunTimeRemaining = stunDuration;
+	if (state != AIState::STUNNED) ChangeState(AIState::STUNNED);
+	if(particlesEmp) particlesEmp->PlayChildParticles();
+}
+
+void RangedAI::EnablePushFeedback() {
+	if (timeToSrartPush < 0) {
+		pushEffectHasToStart = false;
+		if (particlesPush) particlesPush->PlayChildParticles();
+	}
+	else {
+		timeToSrartPush -= Time::GetDeltaTime();
+	}
+}
+
 void RangedAI::EnableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		ChangeState(AIState::PUSHED);
+		pushEffectHasToStart = true;
+		timeToSrartPush = (minTimePushEffect + 1) + (((float)rand()) / (float)RAND_MAX) * (maxTimePushEffect - (minTimePushEffect + 1));
 		rangerGruntCharacter.beingPushed = true;
 		CalculatePushBackRealDistance();
 		// Damage
