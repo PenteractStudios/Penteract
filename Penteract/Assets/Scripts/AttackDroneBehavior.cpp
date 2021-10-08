@@ -40,7 +40,7 @@ void AttackDroneBehavior::Start() {
 void AttackDroneBehavior::Update() {
     if (!transform || !dronesControllerTransform) return;
 
-    transform->SetGlobalPosition(float3::Lerp(transform->GetGlobalPosition(), dronesControllerTransform->GetGlobalPosition() + positionOffset + GetHoverOffset() + GetRecoilOffset(), Time::GetDeltaTime() * (droneMustRecoil ? droneSpeedOnRecoil : droneSpeed)));
+    transform->SetGlobalPosition(float3::Lerp(transform->GetGlobalPosition(), dronesControllerTransform->GetGlobalPosition() + positionOffset + GetHoverOffset() + GetRecoilOffset(), Time::GetDeltaTime() * (isRecoiling ? droneSpeedOnRecoil : droneSpeed)));
     
     if (mustForceRotation) {
         float3 direction = (transform->GetGlobalPosition() - dronesControllerTransform->GetGlobalPosition()).Normalized();
@@ -87,7 +87,7 @@ void AttackDroneBehavior::Shoot() {
             remainingWaves--;
             shooter.Shoot(projectilePrefabUID, transform->GetGlobalPosition(), transform->GetGlobalRotation());
             currentTime = 0.0f;
-            droneMustRecoil = true;
+            if (droneMustRecoil) isRecoiling = true;
             if (mustWaitEndOfWave) availableShot = false;
             if (isLastDrone && dronesControllerScript) {
                 dronesControllerScript->EndOfWave();
@@ -119,16 +119,14 @@ float3 AttackDroneBehavior::GetHoverOffset() {
 float3 AttackDroneBehavior::GetRecoilOffset() {
     float3 recoilPosition = float3(0.0f, 0.0f, 0.0f);
 
-    if (droneMustRecoil) {
+    if (droneMustRecoil && isRecoiling) {
         if (recoilCurrentTime > droneRecoilTime) {
-            droneMustRecoil = false;
+            isRecoiling = false;
             recoilCurrentTime = 0.0f;
         }
         else {
             recoilPosition = float3::Lerp(float3(0.0f, 0.0f, 0.0f), -transform->GetFront() * droneRecoilDistance, recoilCurrentTime / droneRecoilTime);
             recoilPosition = float3(recoilPosition.x, 0.0f, recoilPosition.z);
-
-            Debug::Log(recoilPosition.ToString().c_str());
 
             recoilCurrentTime += Time::GetDeltaTime();
         }

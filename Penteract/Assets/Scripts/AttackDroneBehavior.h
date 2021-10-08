@@ -27,18 +27,18 @@ public:
 
 public:
 	UID dronesControllerUID = 0;
+	UID projectilePrefabUID = 0;
+
 	float droneSpeed = 8.0f;
-	float droneSpeedOnRecoil = 14.0f;
+	float droneSpeedOnRecoil = 16.0f;
 	float droneRotationSpeed = 9.0f;
 
 	bool droneMustHover = true;
 	float droneHoverAmplitude = 0.1f;
 
-	bool droneMustRecoil = false;
+	bool droneMustRecoil = true;
 	float droneRecoilDistance = 0.6f;
 	float droneRecoilTime = 0.2f;
-
-	UID projectilePrefabUID = 0;
 
 private:
 	float3 GetHoverOffset();
@@ -71,4 +71,5 @@ private:
 
 	// Recoil effect
 	float recoilCurrentTime = 0.0f;
+	bool isRecoiling = false;
 };
