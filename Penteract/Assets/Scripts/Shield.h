@@ -35,6 +35,5 @@ public:
 
 private:
 	bool isActive = false;
-	ComponentAudioSource* audio;
-
+	ComponentAudioSource* audio = nullptr;
 };

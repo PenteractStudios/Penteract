@@ -84,7 +84,7 @@ private:
 	float finalDoorLightStartIntensity = 0.0f;				// Initial intensity of the finalDoorLight
 
 	bool isClosing = false;
-
+	bool enemiesSpawned = false;
 private:
 	bool CheckSpawnPointStatus();
 	void PlayDissolveAnimation(GameObject* root, bool playReverse);				// Searches on root the GameObject called "DoorEnergyBack" and "DoorEnergyFront" and calls PlayDissolveAnimation on their materials. PlayReverse will play the reverse animation.

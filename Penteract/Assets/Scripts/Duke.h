@@ -3,6 +3,7 @@
 #include "Character.h"
 
 #include <random>
+#include <vector>
 
 class ComponentParticleSystem;
 class ResourcePrefab;
@@ -13,6 +14,7 @@ enum class DukeState {
 	SHOOT_SHIELD,
 	BULLET_HELL,
 	CHARGE,
+	CHARGE_ATTACK,
 	INVULNERABLE,
 	STUNNED,
 	PUSHED,
@@ -52,13 +54,12 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID chargeAttackColliderUID, std::vector<UID> encounterUIDs);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void BulletHell();
 	void InitCharge(DukeState nextState);
 	void UpdateCharge(bool forceStop = false);
-	void EndCharge();
 	void CallTroops();
 	void Shoot();
 	void ThrowBarrels();
@@ -72,6 +73,7 @@ public:
 
 public:
 	float chargeSpeed = 5.f;
+	float chargeMinimumDistance = 10.f;
 	float searchRadius = 8.f;
 	float attackRange = 2.0f;
 	float attackSpeed = 0.5f;
@@ -97,15 +99,25 @@ public:
 	float3 chargeTarget;
 
 private:
+	void InstantiateBarrel();
+
+private:
 	GameObject* player = nullptr;
 	GameObject* chargeCollider = nullptr;
+	GameObject* meleeAttackCollider = nullptr;
+	GameObject* chargeAttack = nullptr;
 	ComponentTransform* dukeTransform = nullptr;
+
+	bool hasMeleeAttacked = false;
 
 	float3 perpendicular;
 	float movementTimer = 0.f;
 	float movementChangeThreshold = 2.0f;
 	float distanceCorrectionTimer = 0.f;
 	float distanceCorrectionThreshold = 2.0f;
+
+	// Charge
+	bool trackingChargeTarget = false;
 
 	// Shooting
 	float attackTimePool = 0.f;
@@ -114,6 +126,7 @@ private:
 	GameObject* meshObj = nullptr;	//Main mesh for Getting MeshRenderer reference and checking frustum presence (if not inside frustum shooting won't happen)
 
 	ResourcePrefab* barrel = nullptr;
+	bool instantiateBarrel = false;
 
 	// Animations
 	enum DUKE_ANIMATION_STATES {
@@ -146,4 +159,8 @@ private:
 	DukeState nextState = DukeState::BASIC_BEHAVIOUR;
 	std::random_device rd;
 	std::minstd_rand gen;
+
+	/* Boss encounters */
+	std::vector<GameObject*> encounters;
+	unsigned currentEncounter = 0;
 };
