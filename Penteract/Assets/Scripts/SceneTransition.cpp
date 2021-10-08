@@ -62,16 +62,16 @@ void SceneTransition::Update() {
 	case TransitionState::IN_PROGRESS: {
 		bool finishedTransition = false;
 		if (transitionMove == static_cast<int>(TransitionMove::LEFT_TO_RIGHT)) {
-			transform2D->SetPosition(float3(transform2D->GetPosition().x + (Time::GetDeltaTime() * 1.f * speedTransition), 0.f, 0.f));
+			transform2D->SetPosition(float3(transform2D->GetPosition().x + (Time::GetDeltaTime() * speedTransition), 0.f, 0.f));
 			finishedTransition = transform2D->GetPosition().x == CENTER_POSITION;
 		} else if (transitionMove == static_cast<int>(TransitionMove::RIGHT_TO_LEFT)) {
-			transform2D->SetPosition(float3(transform2D->GetPosition().x - (Time::GetDeltaTime() * 1.f * speedTransition), 0.f, 0.f));
+			transform2D->SetPosition(float3(transform2D->GetPosition().x - (Time::GetDeltaTime() * speedTransition), 0.f, 0.f));
 			finishedTransition = transform2D->GetPosition().x == CENTER_POSITION;
 		} else if (transitionMove == static_cast<int>(TransitionMove::TOP_TO_BOTTOM)) {
-			transform2D->SetPosition(float3(0.f, transform2D->GetPosition().y - (Time::GetDeltaTime() * 1.f * speedTransition), 0.f));
+			transform2D->SetPosition(float3(0.f, transform2D->GetPosition().y - (Time::GetDeltaTime() * speedTransition), 0.f));
 			finishedTransition = transform2D->GetPosition().y == CENTER_POSITION;
 		} else if (transitionMove == static_cast<int>(TransitionMove::BOTTOM_TO_TOP)) {
-			transform2D->SetPosition(float3(0.f, transform2D->GetPosition().y + (Time::GetDeltaTime() * 1.f * speedTransition), 0.f));
+			transform2D->SetPosition(float3(0.f, transform2D->GetPosition().y + (Time::GetDeltaTime() * speedTransition), 0.f));
 			finishedTransition = transform2D->GetPosition().y == CENTER_POSITION;
 		} else if (transitionMove == static_cast<int>(TransitionMove::FADE_OUT)) {
 			if (!canvasFader) {
