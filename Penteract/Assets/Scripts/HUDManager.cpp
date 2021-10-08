@@ -581,6 +581,9 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 	ComponentImage* textFill = children[HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL]->GetComponent<ComponentImage>();
 
 	if (fillColor && image) {
+
+		if (!fillColor->IsFill() )fillColor->SetIsFill(true); //Double check the image being fill
+
 		fillColor->SetFillValue(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
 		if (playerController) {
 			if (playerController->AreBothCharactersAlive()) {

@@ -54,6 +54,11 @@
                 "Script": 1795085235405539910,
                 "Values": [
                     {
+                        "Name": "backgroundUID",
+                        "Type": "GameObjectUID",
+                        "Value": 14835596042719268687
+                    },
+                    {
                         "Name": "scrollingBackgroundObjUID",
                         "Type": "GameObjectUID",
                         "Value": 16915980686576582153
@@ -62,11 +67,6 @@
                         "Name": "playAgainButtonUID",
                         "Type": "GameObjectUID",
                         "Value": 10181371517413657289
-                    },
-                    {
-                        "Name": "backgroundUID",
-                        "Type": "GameObjectUID",
-                        "Value": 14835596042719268687
                     },
                     {
                         "Name": "mainMenuButtonUID",
@@ -4811,7 +4811,7 @@
                     {
                         "Type": "Image",
                         "Active": false,
-                        "TextureId": 9771556415350180533,
+                        "TextureId": 5246324672998598713,
                         "Color": [
                             0.9999997019767761,
                             0.9999999403953552,
@@ -5202,7 +5202,7 @@
                     {
                         "Type": "Image",
                         "Active": false,
-                        "TextureId": 9771556415350180533,
+                        "TextureId": 5246324672998598713,
                         "Color": [
                             0.9999987483024597,
                             0.9999997019767761,
@@ -5470,78 +5470,6 @@
                                 "Type": "Text",
                                 "Active": false,
                                 "FontID": 9939030777484332345,
-                                "FontSize": 30.0,
-                                "LineHeight": 16.0,
-                                "LetterSpacing": 4.0,
-                                "Alignment": 1,
-                                "Value": "EXIT GAME",
-                                "Color": [
-                                    9.999999974752428e-7,
-                                    9.999899930335233e-7,
-                                    9.999899930335233e-7,
-                                    1.0
-                                ]
-                            }
-                        ],
-                        "Children": null
-                    },
-                    {
-                        "Name": "Text",
-                        "Active": true,
-                        "RootBoneName": "",
-                        "Mask": 0,
-                        "Components": [
-                            {
-                                "Type": "Transform2D",
-                                "Active": false,
-                                "Position": [
-                                    0.0,
-                                    -3.0,
-                                    0.0
-                                ],
-                                "Rotation": [
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    1.0
-                                ],
-                                "Scale": [
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                ],
-                                "LocalEulerAngles": [
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                ],
-                                "Pivot": [
-                                    0.5,
-                                    0.5
-                                ],
-                                "Size": [
-                                    200.0,
-                                    200.0
-                                ],
-                                "AnchorMin": [
-                                    0.5,
-                                    0.5
-                                ],
-                                "AnchorMax": [
-                                    0.5,
-                                    0.5
-                                ],
-                                "AnchorSelected": 5,
-                                "IsCustomAnchor": false
-                            },
-                            {
-                                "Type": "CanvasRenderer",
-                                "Active": false
-                            },
-                            {
-                                "Type": "Text",
-                                "Active": false,
-                                "FontID": 9939030777484332345,
                                 "FontSize": 24.0,
                                 "LineHeight": 16.0,
                                 "LetterSpacing": 4.0,
@@ -5558,162 +5486,6 @@
                         "Children": null
                     }
                 ]
-            },
-            {
-                "Name": "MainMenuButtonStroke",
-                "Active": true,
-                "RootBoneName": "",
-                "Mask": 0,
-                "Components": [
-                    {
-                        "Type": "Transform2D",
-                        "Active": false,
-                        "Position": [
-                            0.0,
-                            -420.0,
-                            0.0
-                        ],
-                        "Rotation": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            1.0
-                        ],
-                        "Scale": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ],
-                        "LocalEulerAngles": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ],
-                        "Pivot": [
-                            0.5,
-                            0.5
-                        ],
-                        "Size": [
-                            262.0,
-                            62.0
-                        ],
-                        "AnchorMin": [
-                            0.5,
-                            0.5
-                        ],
-                        "AnchorMax": [
-                            0.5,
-                            0.5
-                        ],
-                        "AnchorSelected": 5,
-                        "IsCustomAnchor": false
-                    },
-                    {
-                        "Type": "CanvasRenderer",
-                        "Active": false
-                    },
-                    {
-                        "Type": "Image",
-                        "Active": false,
-                        "TextureId": 3904950738888863925,
-                        "Color": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ],
-                        "AlphaTransparency": true,
-                        "IsFill": false,
-                        "FillValue": 1.0,
-                        "Offset": [
-                            0.0,
-                            0.0
-                        ],
-                        "Tiling": [
-                            1.0,
-                            1.0
-                        ]
-                    }
-                ],
-                "Children": null
-            },
-            {
-                "Name": "ExitGameButtonStroke",
-                "Active": true,
-                "RootBoneName": "",
-                "Mask": 0,
-                "Components": [
-                    {
-                        "Type": "Transform2D",
-                        "Active": false,
-                        "Position": [
-                            -775.0,
-                            -475.0,
-                            0.0
-                        ],
-                        "Rotation": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            1.0
-                        ],
-                        "Scale": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ],
-                        "LocalEulerAngles": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ],
-                        "Pivot": [
-                            0.5,
-                            0.5
-                        ],
-                        "Size": [
-                            262.0,
-                            62.0
-                        ],
-                        "AnchorMin": [
-                            0.5,
-                            0.5
-                        ],
-                        "AnchorMax": [
-                            0.5,
-                            0.5
-                        ],
-                        "AnchorSelected": 5,
-                        "IsCustomAnchor": false
-                    },
-                    {
-                        "Type": "CanvasRenderer",
-                        "Active": false
-                    },
-                    {
-                        "Type": "Image",
-                        "Active": false,
-                        "TextureId": 3904950738888863925,
-                        "Color": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ],
-                        "AlphaTransparency": true,
-                        "IsFill": false,
-                        "FillValue": 1.0,
-                        "Offset": [
-                            0.0,
-                            0.0
-                        ],
-                        "Tiling": [
-                            1.0,
-                            1.0
-                        ]
-                    }
-                ],
-                "Children": null
             }
         ]
     }
