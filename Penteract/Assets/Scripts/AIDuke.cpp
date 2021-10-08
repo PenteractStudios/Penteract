@@ -1,7 +1,6 @@
 #include "AIDuke.h"
 
 #include "AIMovement.h"
-#include "Components/ComponentAnimation.h"
 #include "PlayerController.h"
 #include "DukeShield.h"
 #include <string>
@@ -86,9 +85,6 @@ void AIDuke::Start() {
 		dukeShield = GET_SCRIPT(shieldObj, DukeShield);
 	}
 
-	animation = GetOwner().GetComponent <ComponentAnimation>();
-	if (animation)Debug::Log("Animation was found");
-
 
 	// Init Duke character
 	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, chargeAttackUID, encounters);
@@ -153,7 +149,8 @@ void AIDuke::Update() {
 				dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
 			} else if (currentShieldCooldown >= shieldCooldown) {
 				dukeCharacter.StartUsingShield();
-				dukeShield->InitShield();
+				if(dukeShield) dukeShield->InitShield();
+
 				movementScript->Stop();
 
 			} else if (player && movementScript->CharacterInAttackRange(player, dukeCharacter.attackRange)) {
@@ -273,7 +270,7 @@ void AIDuke::Update() {
 			if (!dukeCharacter.criticalMode) {
 				movementScript->Stop();
 				dukeCharacter.CallTroops();
-				dukeShield->InitShield();
+				if(dukeShield) dukeShield->InitShield();
 				dukeCharacter.StartUsingShield();
 				movementScript->Stop();
 			} else {
@@ -365,7 +362,7 @@ void AIDuke::Update() {
 				currentAbilityChangeCooldown += Time::GetDeltaTime();
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
 					currentAbilityChangeCooldown = 0.f;
-					dukeShield->InitShield();
+					if (dukeShield) dukeShield->InitShield();
 					dukeCharacter.StartUsingShield();
 					movementScript->Stop();
 				}
@@ -395,7 +392,7 @@ void AIDuke::Update() {
 				break;
 			case DukeState::MELEE_ATTACK:
 				dukeCharacter.MeleeAttack();
-				dukeShield->InitShield();
+				if (dukeShield) dukeShield->InitShield();
 				dukeCharacter.StartUsingShield();
 				break;
 			case DukeState::STUNNED:
