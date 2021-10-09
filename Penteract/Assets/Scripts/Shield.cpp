@@ -80,5 +80,7 @@ void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 			collidedWith.GetComponent<ComponentTransform>()->SetGlobalPosition(collidedWith.GetComponent<ComponentTransform>()->GetGlobalPosition() + actualPenDistance);
 			agent->AddAgentToCrowd();
 		}
+	} else if (collidedWith.name == "DukeCharge") {
+		currentAvailableCharges = 0;
 	}
 }

@@ -2,6 +2,7 @@
 
 #include "Scripting/Script.h"
 #include <vector>
+#include <random>
 
 class LasersGenerator;
 
@@ -28,5 +29,8 @@ private:
 	float permutationTimer = 0.0f;
 
 	std::vector<LasersGenerator*> generators;
+
+	std::random_device rd;
+	std::minstd_rand gen;
 };
 
