@@ -6,6 +6,7 @@
 #include "DialogueManager.h"
 #include "AIMovement.h"
 #include "Components/ComponentAgent.h"
+#include "GlobalVariables.h"
 
 EXPOSE_MEMBERS(GameplaySceneWalkToFactory) {
     MEMBER_SEPARATOR("Duke Controller"),
@@ -61,7 +62,7 @@ void GameplaySceneWalkToFactory::Update() {
     if (!duke2 || !dukeAgent || !movementScript || !cameraControllerScript || !dialogueManagerScript || !laserBeamsSecurity) return;
 
     if (triggered) {
-        GameController::BlockGameplay(true);
+        GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, true);
         cameraControllerScript->ChangeCameraOffset(cameraNewPosition.x, cameraNewPosition.y, cameraNewPosition.z);
         movementScript->Seek(state, dukeRunTowards, dukeAgent->GetMaxSpeed(), true);
 
@@ -79,7 +80,7 @@ void GameplaySceneWalkToFactory::Update() {
 
     if (finishScene) {
         cameraControllerScript->RestoreCameraOffset();
-        GameController::BlockGameplay(false);
+        GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, false);
         dukeAgent->RemoveAgentFromCrowd();
         duke2->Disable();
 

@@ -5,8 +5,6 @@
 
 #define N_CHECKPOINTS 5
 
-extern int checkpoint;
-
 class ComponentAudioSource;
 class ComponentSelectable;
 
