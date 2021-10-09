@@ -8,7 +8,7 @@
 #include "HUDManager.h"
 #include "OnimaruBullet.h"
 #include "SwitchParticles.h"
-#include "GameController.h"
+#include "GlobalVariables.h"
 
 #include "Math/Quat.h"
 #include "Geometry/Plane.h"
@@ -179,7 +179,7 @@ float PlayerController::GetFangMaxHealth() const {
 }
 
 bool PlayerController::IsPlayerDead() {
-	return !playerFang.isAlive && (!playerOnimaru.isAlive || !GameController::IsSwitchTutorialReached());
+	return !playerFang.isAlive && (!playerOnimaru.isAlive || !GameplaySystems::GetGlobalVariable(globalSwitchTutorialReached, true));
 }
 
 void PlayerController::SetNoCooldown(bool status) {
@@ -237,7 +237,7 @@ void PlayerController::SwitchCharacter() {
 		if (sCollider) sCollider->Disable();
 		switchFirstHit = true;
 
-		if (GameController::IsSwitchTutorialActive()) GameController::ActivateSwitchTutorial(false);
+		if (GameplaySystems::GetGlobalVariable(globalswitchTutorialActive, true)) GameplaySystems::SetGlobalVariable(globalswitchTutorialActive, false);
 
 	} else {
 		if (playSwitchParticles) {
@@ -440,7 +440,7 @@ void PlayerController::Update() {
 	}
 }
 
-void PlayerController::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* /* particle */) {
+void PlayerController::OnCollision(GameObject& collidedWith, float3 /* collisionNormal */ , float3 /* penetrationDistance */, void* /* particle */) {
 	if (collidedWith.name == "MeleeGrunt" || collidedWith.name == "RangedGrunt") {
 		switchCollisionedGO.push_back(&collidedWith);
 	}

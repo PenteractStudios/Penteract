@@ -1,10 +1,10 @@
 #include "Fang.h"
 #include "GameplaySystems.h"
-#include "GameController.h"
 #include "HUDController.h"
 #include "HUDManager.h"
 #include "CameraController.h"
 #include "UltimateFang.h"
+#include "GlobalVariables.h"
 
 void Fang::Init(UID fangUID, UID dashParticleUID, UID leftGunUID, UID rightGunUID, UID rightBulletUID, UID leftBulletUID, UID laserUID, UID cameraUID, UID HUDManagerObjectUID, UID dashUID, UID EMPUID, UID EMPEffectsUID, UID fangUltimateUID, UID ultimateVFXUID, UID rightFootVFX, UID leftFootVFX) {
 	SetTotalLifePoints(lifePoints);
@@ -144,7 +144,7 @@ void Fang::ResetToIdle()
 
 bool Fang::CanSwitch() const {
 	if (!EMP) return false;
-	return isAlive && !EMP->IsActive() && !ultimateOn && GameController::IsSwitchTutorialReached() && (!GameController::IsGameplayBlocked() || GameController::IsSwitchTutorialActive());
+	return isAlive && !EMP->IsActive() && !ultimateOn && (!GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) || GameplaySystems::GetGlobalVariable(globalswitchTutorialActive, true)) && GameplaySystems::GetGlobalVariable(globalSwitchTutorialReached, true);
 }
 
 void Fang::IncreaseUltimateCounter() {
@@ -216,7 +216,7 @@ void Fang::Dash() {
 }
 
 bool Fang::CanDash() {
-	return isAlive && !dashing && !dashInCooldown && !EMP->IsActive() && !ultimateOn && !GameController::IsGameplayBlocked();
+	return isAlive && !dashing && !dashInCooldown && !EMP->IsActive() && !ultimateOn && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && GameplaySystems::GetGlobalVariable(globalSkill1TutorialReached, true);;
 }
 
 void Fang::ActivateEMP() {
@@ -237,7 +237,7 @@ void Fang::ActivateEMP() {
 }
 
 bool Fang::CanEMP() {
-	return !EMP->IsActive() && !EMPInCooldown && !dashing && !ultimateOn && !GameController::IsGameplayBlocked();
+	return !EMP->IsActive() && !EMPInCooldown && !dashing && !ultimateOn && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && GameplaySystems::GetGlobalVariable(globalSkill2TutorialReached, true);
 }
 
 void Fang::CheckCoolDowns(bool noCooldownMode) {
@@ -251,7 +251,7 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 			fangLaser->Disable();
 		}
 		timeWithoutCombat += Time::GetDeltaTime();
-		if (timeWithoutCombat >= aimTime || GameController::IsGameplayBlocked()) {
+		if (timeWithoutCombat >= aimTime || GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 			aiming = false;
 			transitioning = 0;
 			timeWithoutCombat = aimTime;
@@ -378,7 +378,7 @@ float Fang::GetRealUltimateCooldown() {
 }
 
 bool Fang::CanShoot() {
-	return !shooting && !ultimateOn && !compAnimation->GetCurrentStateSecondary() && !GameController::IsGameplayBlocked() && !switchInProgress;
+	return !shooting && !ultimateOn && !compAnimation->GetCurrentStateSecondary() && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && !switchInProgress;
 }
 
 bool Fang::IsAiming() {
@@ -472,7 +472,7 @@ void Fang::ActiveUltimate() {
 }
 
 bool Fang::CanUltimate() {
-	return !dashing && !EMP->IsActive() && ultimateCooldownRemaining >= ultimateCooldown && !ultimateOn && !GameController::IsGameplayBlocked() && !switchInProgress;
+	return !dashing && !EMP->IsActive() && ultimateCooldownRemaining >= ultimateCooldown && !ultimateOn && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && !switchInProgress && GameplaySystems::GetGlobalVariable(globalSkill3TutorialReached, true);
 }
 
 void Fang::Update(bool useGamepad, bool /* lockMovement */, bool /* lockRotation */) {
@@ -492,7 +492,7 @@ void Fang::Update(bool useGamepad, bool /* lockMovement */, bool /* lockRotation
 			}
 
 			if (!dashing && !EMP->IsActive()) {
-				if (GetInputBool(InputActions::SHOOT, useGamepad) && !GameController::IsGameplayBlocked()) {
+				if (GetInputBool(InputActions::SHOOT, useGamepad) && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 					ResetIsInCombatValues();
 					Shoot();
 				}
@@ -503,7 +503,7 @@ void Fang::Update(bool useGamepad, bool /* lockMovement */, bool /* lockRotation
 			}
 
 			Dash();
-			if (!GetInputBool(InputActions::SHOOT, useGamepad) || dashing || EMP->IsActive() || ultimateOn || GameController::IsGameplayBlocked()) {
+			if (!GetInputBool(InputActions::SHOOT, useGamepad) || dashing || EMP->IsActive() || ultimateOn || GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 				if (shooting) {
 					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 					shooting = false;

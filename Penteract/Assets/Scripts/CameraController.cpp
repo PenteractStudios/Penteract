@@ -1,8 +1,8 @@
 #include "CameraController.h"
 
 #include "PlayerController.h"
-#include "GameController.h"
 #include "Components/ComponentTransform.h"
+#include "GlobalVariables.h"
 
 #include "Geometry/LineSegment.h"
 #include "Geometry/Plane.h"
@@ -67,7 +67,7 @@ void CameraController::Update() {
 		}
 	}
 
-	if (shakeTimer > 0 && !GameController::IsGameplayBlocked()) {
+	if (shakeTimer > 0 && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 		float2 shakeDir = GetRandomPosInUnitaryCircle(float2(0, 0));
 		transform->SetGlobalPosition(smoothedPosition + transform->GetRight() * shakeDir.x * shakeMultiplier + transform->GetUp() * shakeDir.y * shakeMultiplier);
 		shakeTimer -= Time::GetDeltaTime();

@@ -50,7 +50,7 @@ public:
 private:
 	void CalculatePushBackRealDistance();
 	void UpdatePushBackPosition();
-	void ParticleHit(GameObject& collidedWith, void* particle, Player& player);
+	void ParticleHit(GameObject& collidedWith, void* particle, Player& player_);
 
 public:
 	UID dukeUID = 0;

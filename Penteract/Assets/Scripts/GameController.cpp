@@ -6,6 +6,7 @@
 #include "GameplaySystems.h"
 #include "StatsDisplayer.h"
 #include "PauseController.h"
+#include "GlobalVariables.h"
 
 #include "Math/float3x3.h"
 #include "Geometry/frustum.h"
@@ -34,14 +35,23 @@ EXPOSE_MEMBERS(GameController) {
 GENERATE_BODY_IMPL(GameController);
 
 void GameController::Start() {
-
+	isPaused = false;
 	showWireframe = false;
 	transitionFinished = false;
-	isGameplayBlocked = false;
-	switchTutorialActive = false;
+	GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, false);
+	GameplaySystems::SetGlobalVariable(globalswitchTutorialActive, false);
 
-	if (PlayerController::currentLevel == 1) switchTutorialReached = false;
-	else switchTutorialReached = true;
+	if (PlayerController::currentLevel == 1) {
+		GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, false);
+		GameplaySystems::SetGlobalVariable(globalSkill2TutorialReached, false);
+		GameplaySystems::SetGlobalVariable(globalSkill3TutorialReached, false);
+		GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, false);
+	} else {
+		GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, true);
+		GameplaySystems::SetGlobalVariable(globalSkill2TutorialReached, true);
+		GameplaySystems::SetGlobalVariable(globalSkill3TutorialReached, true);
+		GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, true);
+	}
 
 	gameCamera = GameplaySystems::GetGameObject(gameCameraUID);
 	godCamera = GameplaySystems::GetGameObject(godCameraUID);
@@ -69,6 +79,8 @@ void GameController::Start() {
 	Debug::SetGodModeOn(false);
 	if (gameCamera && godCamera) godModeAvailable = true;
 	godModeController = GameplaySystems::GetGameObject(godModeControllerUID);
+
+	ClearPauseMenus();
 }
 
 void GameController::Update() {
@@ -93,7 +105,7 @@ void GameController::Update() {
 		}
 	}
 
-	if ((Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)) && !isVideoActive) {
+	if ((Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)) && !GameplaySystems::GetGlobalVariable(isVideoActive, true)) {
 		if (isPaused) {
 			ResumeGame();
 		}
@@ -242,8 +254,8 @@ void GameController::PauseGame() {
 	Time::PauseGame();
 	EnablePauseMenus();
 	isPaused = true;
-	if (isGameplayBlocked) gameplayWasAlreadyBlocked = true;
-	else isGameplayBlocked = true;
+	if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) gameplayWasAlreadyBlocked = true;
+	else GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, true);
 }
 
 void GameController::ResumeGame() {
@@ -251,36 +263,7 @@ void GameController::ResumeGame() {
 	ClearPauseMenus();
 	isPaused = false;
 	if (gameplayWasAlreadyBlocked) gameplayWasAlreadyBlocked = false;
-	else isGameplayBlocked = false;
-}
-
-bool const GameController::IsGameplayBlocked() {
-	return isGameplayBlocked;
-}
-
-void GameController::BlockGameplay(bool blockIt) {
-	isGameplayBlocked = blockIt;
-}
-
-bool const GameController::IsSwitchTutorialActive() {
-	return switchTutorialActive;
-}
-
-void GameController::ActivateSwitchTutorial(bool isFinished) {
-	switchTutorialActive = isFinished;
-}
-
-bool const GameController::IsSwitchTutorialReached() {
-	return switchTutorialReached;
-}
-
-void GameController::ReachSwitchTutorial(bool isReached) {
-	switchTutorialReached = isReached;
-}
-
-void GameController::SetVideoActive(bool isActived)
-{
-	isVideoActive = isActived;
+	else GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, false);
 }
 
 void GameController::DoTransition() {
