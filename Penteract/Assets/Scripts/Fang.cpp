@@ -149,7 +149,7 @@ bool Fang::IsInstantOrientation(bool useGamepad) const {
 void Fang::GetHit(float damage_) {
 	if (!dashing && isAlive) {
 		if (cameraController) {
-			cameraController->StartShake();
+			cameraController->StartShake(-1.f);
 		}
 
 		lifePoints -= damage_;
@@ -314,6 +314,8 @@ void Fang::OnAnimationFinished() {
 				if (hudManagerScript) {
 					hudManagerScript->StopUsingSkill(HUDManager::Cooldowns::FANG_SKILL_3);
 				}
+			} else if (compAnimation->GetCurrentState()->name == states[static_cast<int>(FANG_STATES::DRIFT)]) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::IDLE)]);
 			}
 		}
 	}
@@ -367,7 +369,7 @@ float Fang::GetRealUltimateCooldown() {
 }
 
 bool Fang::CanShoot() {
-	return !shooting && !ultimateOn && !compAnimation->GetCurrentStateSecondary() && !GameController::IsGameplayBlocked();
+	return !shooting && !ultimateOn && !compAnimation->GetCurrentStateSecondary() && !GameController::IsGameplayBlocked() && !switchInProgress;
 }
 
 bool Fang::IsAiming() {
@@ -461,10 +463,10 @@ void Fang::ActiveUltimate() {
 }
 
 bool Fang::CanUltimate() {
-	return !dashing && !EMP->IsActive() && ultimateCooldownRemaining >= ultimateCooldown && !ultimateOn && !GameController::IsGameplayBlocked();
+	return !dashing && !EMP->IsActive() && ultimateCooldownRemaining >= ultimateCooldown && !ultimateOn && !GameController::IsGameplayBlocked() && !switchInProgress;
 }
 
-void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
+void Fang::Update(bool useGamepad, bool /* lockMovement */, bool /* lockRotation */) {
 	if (isAlive) {
 		if (ultimateOn) {
 			ultimateTimeRemaining -= Time::GetDeltaTime();

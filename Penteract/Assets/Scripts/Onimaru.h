@@ -44,6 +44,7 @@ public:
 		RUNBACKWARDLEFT,
 		RUNBACKWARDRIGHT,
 		SHOOTBLAST,
+		IDLE_AIM,
 
 	};
 
@@ -52,7 +53,7 @@ public:
 					"EnergyBlast", "UltiLoopWalking" , "UltiIntro" , "UltiLoop" ,
 					"Death" , "Shooting", "Shield", "ShootingShield",
 					"RunForwardLeft","RunForwardRight", "RunBackwardLeft", "RunBackwardRight"
-					, "ShootingBlast"
+					, "ShootingBlast" , "IdleAim"
 	};
 
 	//Onimaru ultimate related
@@ -64,7 +65,7 @@ public:
 	float blastCooldown = 7.f;
 	float blastDistance = 15.f;
 	float blastAngle = 50.f;
-	float blastDelay = 0.6;
+	float blastDelay = 0.6f;
 	float blastDamage = 1.0f;
 	// Shield
 	float shieldReboundedDamage = 1.0f;
@@ -154,6 +155,7 @@ private:
 	void Shoot() override;
 	void Blast();
 	void PlayAnimation();
+	void ResetIsInCombatValues();
 
 	void StartUltimate();
 	void FinishUltimate();

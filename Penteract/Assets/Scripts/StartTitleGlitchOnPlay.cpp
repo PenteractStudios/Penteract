@@ -10,6 +10,9 @@
 #include "GameplaySystems.h"
 #include "GameObject.h"
 #include "CanvasFader.h"
+#include "VideoScene1Start.h"
+
+#include "GlobalVariables.h" 
 
 
 EXPOSE_MEMBERS(StartTitleGlitchOnPlay) {
@@ -99,6 +102,9 @@ void StartTitleGlitchOnPlay::OnButtonClick() {
 }
 
 void StartTitleGlitchOnPlay::DoTransition() {
+
+	GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, true);
+
 	checkpoint = checkpointNum;
 	if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 	if (levelNum == 2) {

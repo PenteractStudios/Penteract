@@ -9,9 +9,9 @@
                 "Type": "Transform",
                 "Active": true,
                 "Position": [
-                    0.0,
-                    4.977370262145996,
-                    0.0
+                    -27.90470314025879,
+                    4.97737979888916,
+                    -15.876317977905274
                 ],
                 "Rotation": [
                     0.0,
@@ -196,7 +196,7 @@
                             {
                                 "Name": "barrelUID",
                                 "Type": "GameObjectUID",
-                                "Value": 7577218068131943608
+                                "Value": 8082100637965124385
                             },
                             {
                                 "Name": "BarrelUID",
@@ -211,27 +211,37 @@
                             {
                                 "Name": "sphereColliderUID",
                                 "Type": "GameObjectUID",
-                                "Value": 2769042814310110797
+                                "Value": 8504797570965665090
                             },
                             {
                                 "Name": "particlesUID",
                                 "Type": "GameObjectUID",
-                                "Value": 15811726370727058125
+                                "Value": 16072293829161371648
                             },
                             {
                                 "Name": "timeToDestroy",
                                 "Type": "Float",
-                                "Value": 0.5
+                                "Value": 5.0
                             },
                             {
                                 "Name": "particlesForTimerUID",
                                 "Type": "GameObjectUID",
-                                "Value": 7028232394799856150
+                                "Value": 15013294660503006480
                             },
                             {
                                 "Name": "timerToDestroy",
                                 "Type": "Float",
                                 "Value": 2.0
+                            },
+                            {
+                                "Name": "onFloor",
+                                "Type": "Bool",
+                                "Value": true
+                            },
+                            {
+                                "Name": "timeWillDoDamage",
+                                "Type": "Float",
+                                "Value": 0.25
                             }
                         ]
                     },
@@ -615,22 +625,22 @@
                         ],
                         "ParticleEmitterType": 0,
                         "ShapeRadius": 0.0,
-                        "ShapeRadiusThickness": 0.0,
-                        "ShapeArc": 0.0,
+                        "ShapeRadiusThickness": 1.0,
+                        "ShapeArc": 6.2831854820251469,
                         "EmitterPosition": [
                             0.0,
                             0.0,
                             0.0
                         ],
                         "EmitterRotation": [
+                            -0.0,
                             0.0,
-                            0.0,
-                            0.0
+                            -0.0
                         ],
                         "EmitterScale": [
-                            0.0,
-                            0.0,
-                            0.0
+                            1.0,
+                            1.0,
+                            1.0
                         ],
                         "ConeRadiusUp": 0.0,
                         "RandomConeRadiusUp": false,
@@ -765,9 +775,9 @@
                         "NCycles": 1.0,
                         "TextureId": 10705737829492858176,
                         "TextureItensity": [
-                            0.0,
-                            0.0,
-                            0.0
+                            1.0,
+                            1.0,
+                            1.0
                         ],
                         "BillboardType": 2,
                         "IsHorizontalOrientation": false,
@@ -984,7 +994,7 @@
                                 "Duration": 0.10000000149011612,
                                 "Looping": false,
                                 "StartDelay": [
-                                    0.18000000715255738,
+                                    0.30000001192092898,
                                     1.0
                                 ],
                                 "LifeRM": 1,
@@ -1304,23 +1314,23 @@
                                     ]
                                 ],
                                 "ParticleEmitterType": 0,
-                                "ShapeRadius": 0.0,
-                                "ShapeRadiusThickness": 0.0,
-                                "ShapeArc": 0.0,
+                                "ShapeRadius": 1.2000000476837159,
+                                "ShapeRadiusThickness": 1.0,
+                                "ShapeArc": 6.2831854820251469,
                                 "EmitterPosition": [
                                     0.0,
                                     0.0,
                                     0.0
                                 ],
                                 "EmitterRotation": [
+                                    -0.0,
                                     0.0,
-                                    0.0,
-                                    0.0
+                                    -0.0
                                 ],
                                 "EmitterScale": [
-                                    0.0,
-                                    0.0,
-                                    0.0
+                                    1.0,
+                                    1.0,
+                                    1.0
                                 ],
                                 "ConeRadiusUp": 4.0,
                                 "RandomConeRadiusUp": false,
@@ -1469,9 +1479,9 @@
                                 "NCycles": 1.0,
                                 "TextureId": 6323935495490660456,
                                 "TextureItensity": [
-                                    0.0,
-                                    0.0,
-                                    0.0
+                                    1.5,
+                                    1.5,
+                                    1.0
                                 ],
                                 "BillboardType": 0,
                                 "IsHorizontalOrientation": false,
@@ -1676,7 +1686,7 @@
                                 ],
                                 "LifeRM": 0,
                                 "Life": [
-                                    0.5,
+                                    0.4000000059604645,
                                     6.0
                                 ],
                                 "LifeCurve": [
@@ -1829,8 +1839,8 @@
                                 ],
                                 "ScaleRM": 0,
                                 "Scale": [
-                                    120.0,
-                                    120.0
+                                    130.0,
+                                    200.0
                                 ],
                                 "ScaleCurve": [
                                     [
@@ -1992,22 +2002,22 @@
                                 ],
                                 "ParticleEmitterType": 0,
                                 "ShapeRadius": 0.0,
-                                "ShapeRadiusThickness": 0.0,
-                                "ShapeArc": 0.0,
+                                "ShapeRadiusThickness": 1.0,
+                                "ShapeArc": 6.2831854820251469,
                                 "EmitterPosition": [
                                     0.0,
                                     0.0,
                                     0.0
                                 ],
                                 "EmitterRotation": [
+                                    -0.0,
                                     0.0,
-                                    0.0,
-                                    0.0
+                                    -0.0
                                 ],
                                 "EmitterScale": [
-                                    0.0,
-                                    0.0,
-                                    0.0
+                                    1.0,
+                                    1.0,
+                                    1.0
                                 ],
                                 "ConeRadiusUp": 0.0,
                                 "RandomConeRadiusUp": false,
@@ -2149,9 +2159,9 @@
                                 "NCycles": 1.0,
                                 "TextureId": 8162118997113642209,
                                 "TextureItensity": [
-                                    0.0,
-                                    0.0,
-                                    0.0
+                                    1.399999976158142,
+                                    1.399999976158142,
+                                    1.399999976158142
                                 ],
                                 "BillboardType": 0,
                                 "IsHorizontalOrientation": false,
@@ -2672,22 +2682,22 @@
                                 ],
                                 "ParticleEmitterType": 0,
                                 "ShapeRadius": 0.0,
-                                "ShapeRadiusThickness": 0.0,
-                                "ShapeArc": 0.0,
+                                "ShapeRadiusThickness": 1.0,
+                                "ShapeArc": 6.2831854820251469,
                                 "EmitterPosition": [
                                     0.0,
                                     0.0,
                                     0.0
                                 ],
                                 "EmitterRotation": [
+                                    -0.0,
                                     0.0,
-                                    0.0,
-                                    0.0
+                                    -0.0
                                 ],
                                 "EmitterScale": [
-                                    0.0,
-                                    0.0,
-                                    0.0
+                                    1.0,
+                                    1.0,
+                                    1.0
                                 ],
                                 "ConeRadiusUp": 0.0,
                                 "RandomConeRadiusUp": false,
@@ -2829,9 +2839,9 @@
                                 "NCycles": 1.0,
                                 "TextureId": 18076704291587492614,
                                 "TextureItensity": [
-                                    0.0,
-                                    0.0,
-                                    0.0
+                                    1.0,
+                                    1.0,
+                                    1.0
                                 ],
                                 "BillboardType": 2,
                                 "IsHorizontalOrientation": false,
@@ -3189,7 +3199,7 @@
                                 ],
                                 "ScaleRM": 0,
                                 "Scale": [
-                                    135.0,
+                                    0.0,
                                     135.0
                                 ],
                                 "ScaleCurve": [
@@ -3352,22 +3362,22 @@
                                 ],
                                 "ParticleEmitterType": 0,
                                 "ShapeRadius": 0.0,
-                                "ShapeRadiusThickness": 0.0,
-                                "ShapeArc": 0.0,
+                                "ShapeRadiusThickness": 1.0,
+                                "ShapeArc": 6.2831854820251469,
                                 "EmitterPosition": [
                                     0.0,
                                     0.0,
                                     0.0
                                 ],
                                 "EmitterRotation": [
+                                    -0.0,
                                     0.0,
-                                    0.0,
-                                    0.0
+                                    -0.0
                                 ],
                                 "EmitterScale": [
-                                    0.0,
-                                    0.0,
-                                    0.0
+                                    1.0,
+                                    1.0,
+                                    1.0
                                 ],
                                 "ConeRadiusUp": 0.0,
                                 "RandomConeRadiusUp": false,
@@ -3425,51 +3435,51 @@
                                     ]
                                 ],
                                 "SizeOverLifetime": true,
-                                "ScaleFactorRM": 0,
+                                "ScaleFactorRM": 2,
                                 "ScaleFactor": [
-                                    8.0,
+                                    20.0,
                                     45.0
                                 ],
                                 "ScaleFactorCurve": [
                                     [
+                                        0.0,
+                                        0.0
+                                    ],
+                                    [
+                                        0.05000000074505806,
+                                        0.3933333158493042
+                                    ],
+                                    [
+                                        0.08666666597127915,
+                                        0.5800000429153442
+                                    ],
+                                    [
+                                        0.15333333611488343,
+                                        0.7866666316986084
+                                    ],
+                                    [
+                                        0.24666666984558106,
+                                        0.8866666555404663
+                                    ],
+                                    [
+                                        1.0,
+                                        1.0
+                                    ],
+                                    [
                                         -1.0,
-                                        0.0
+                                        1.0
                                     ],
                                     [
-                                        0.0,
-                                        0.0
+                                        -1.0,
+                                        1.0
                                     ],
                                     [
-                                        0.0,
-                                        0.0
+                                        -1.0,
+                                        1.0
                                     ],
                                     [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
+                                        -1.0,
+                                        1.0
                                     ],
                                     [
                                         0.0,
@@ -3483,7 +3493,7 @@
                                         0.3579534590244293,
                                         0.35795098543167117,
                                         1.0,
-                                        0.20080672204494477
+                                        0.24691623449325562
                                     ],
                                     [
                                         0.0,
@@ -3502,9 +3512,9 @@
                                 "NCycles": 1.0,
                                 "TextureId": 12441453756307210230,
                                 "TextureItensity": [
-                                    0.0,
-                                    0.0,
-                                    0.0
+                                    1.0,
+                                    1.0,
+                                    1.0
                                 ],
                                 "BillboardType": 0,
                                 "IsHorizontalOrientation": false,
@@ -4025,22 +4035,22 @@
                                 ],
                                 "ParticleEmitterType": 0,
                                 "ShapeRadius": 0.0,
-                                "ShapeRadiusThickness": 0.0,
-                                "ShapeArc": 0.0,
+                                "ShapeRadiusThickness": 1.0,
+                                "ShapeArc": 6.2831854820251469,
                                 "EmitterPosition": [
                                     0.0,
                                     0.0,
                                     0.0
                                 ],
                                 "EmitterRotation": [
+                                    -0.0,
                                     0.0,
-                                    0.0,
-                                    0.0
+                                    -0.0
                                 ],
                                 "EmitterScale": [
-                                    0.0,
-                                    0.0,
-                                    0.0
+                                    1.0,
+                                    1.0,
+                                    1.0
                                 ],
                                 "ConeRadiusUp": 0.0,
                                 "RandomConeRadiusUp": false,
@@ -4175,9 +4185,9 @@
                                 "NCycles": 1.0,
                                 "TextureId": 938133264874778416,
                                 "TextureItensity": [
-                                    0.0,
-                                    0.0,
-                                    0.0
+                                    1.0,
+                                    1.0,
+                                    1.0
                                 ],
                                 "BillboardType": 0,
                                 "IsHorizontalOrientation": false,
@@ -4698,22 +4708,22 @@
                                 ],
                                 "ParticleEmitterType": 0,
                                 "ShapeRadius": 0.0,
-                                "ShapeRadiusThickness": 0.0,
-                                "ShapeArc": 0.0,
+                                "ShapeRadiusThickness": 1.0,
+                                "ShapeArc": 6.2831854820251469,
                                 "EmitterPosition": [
                                     0.0,
                                     0.0,
                                     0.0
                                 ],
                                 "EmitterRotation": [
+                                    -0.0,
                                     0.0,
-                                    0.0,
-                                    0.0
+                                    -0.0
                                 ],
                                 "EmitterScale": [
-                                    0.0,
-                                    0.0,
-                                    0.0
+                                    1.0,
+                                    1.0,
+                                    1.0
                                 ],
                                 "ConeRadiusUp": 0.0,
                                 "RandomConeRadiusUp": false,
@@ -4869,9 +4879,9 @@
                                 "NCycles": 1.0,
                                 "TextureId": 7186598326334691268,
                                 "TextureItensity": [
-                                    0.0,
-                                    0.0,
-                                    0.0
+                                    1.0,
+                                    1.0,
+                                    1.0
                                 ],
                                 "BillboardType": 2,
                                 "IsHorizontalOrientation": false,
@@ -4912,708 +4922,6 @@
                                 "HasColorOverTrail": false,
                                 "GradientColorsTrail": null,
                                 "NumberColorsTrail": 0,
-                                "SubEmitters": null,
-                                "SubEmittersNumber": 0,
-                                "HasLights": false,
-                                "LightGameObjectUID": 0,
-                                "LightsRatio": 0.0,
-                                "LightsOffset": [
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                ],
-                                "IntensityMultiplierRM": 0,
-                                "IntensityMultiplier": [
-                                    0.0,
-                                    0.0
-                                ],
-                                "IntensityMultiplierCurve": [
-                                    [
-                                        -1.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ]
-                                ],
-                                "RangeMultiplierRM": 0,
-                                "RangeMultiplier": [
-                                    0.0,
-                                    0.0
-                                ],
-                                "RangeMultiplierCurve": [
-                                    [
-                                        -1.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ]
-                                ],
-                                "UseParticleColor": false,
-                                "UseCustomColor": false,
-                                "GradientColorsLights": null,
-                                "NumberColorsLights": 0,
-                                "MaxLights": 0
-                            }
-                        ],
-                        "Children": null
-                    },
-                    {
-                        "Name": "FlameSmoke",
-                        "Active": true,
-                        "RootBoneName": "",
-                        "Mask": 0,
-                        "Components": [
-                            {
-                                "Type": "Transform",
-                                "Active": true,
-                                "Position": [
-                                    0.0,
-                                    3.0,
-                                    0.0
-                                ],
-                                "Rotation": [
-                                    0.0,
-                                    0.0,
-                                    0.0,
-                                    1.0
-                                ],
-                                "Scale": [
-                                    1.000000238418579,
-                                    1.0000001192092896,
-                                    1.0000001192092896
-                                ],
-                                "LocalEulerAngles": [
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                ]
-                            },
-                            {
-                                "Type": "Particle",
-                                "Active": true,
-                                "DrawGizmo": true,
-                                "Duration": 0.05000000074505806,
-                                "Looping": false,
-                                "StartDelay": [
-                                    0.15000000596046449,
-                                    0.30000001192092898
-                                ],
-                                "LifeRM": 1,
-                                "Life": [
-                                    0.44999998807907107,
-                                    0.699999988079071
-                                ],
-                                "LifeCurve": [
-                                    [
-                                        -1.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ]
-                                ],
-                                "SpeedRM": 1,
-                                "Speed": [
-                                    1.0,
-                                    2.0
-                                ],
-                                "SpeedCurve": [
-                                    [
-                                        -1.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ]
-                                ],
-                                "RotationRM": 1,
-                                "Rotation": [
-                                    0.6108652353286743,
-                                    -0.6108652353286743
-                                ],
-                                "RotationCurve": [
-                                    [
-                                        -1.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ]
-                                ],
-                                "ScaleRM": 1,
-                                "Scale": [
-                                    60.0,
-                                    90.0
-                                ],
-                                "ScaleCurve": [
-                                    [
-                                        -1.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ]
-                                ],
-                                "ReverseEffect": false,
-                                "ReverseDistanceRM": 0,
-                                "ReverseDistance": [
-                                    5.0,
-                                    5.0
-                                ],
-                                "ReverseDistanceCurve": [
-                                    [
-                                        -1.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ]
-                                ],
-                                "MaxParticle": 3,
-                                "PlayOnAwake": false,
-                                "AttachEmitter": true,
-                                "ParticlesPerSecondRM": 0,
-                                "ParticlesPerSecond": [
-                                    200.0,
-                                    300.0
-                                ],
-                                "GravityEffect": false,
-                                "GravityFactorRM": 0,
-                                "GravityFactor": [
-                                    0.0,
-                                    0.0
-                                ],
-                                "GravityFactorCurve": [
-                                    [
-                                        -1.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ]
-                                ],
-                                "ParticleEmitterType": 0,
-                                "ShapeRadius": 0.0,
-                                "ShapeRadiusThickness": 0.0,
-                                "ShapeArc": 0.0,
-                                "EmitterPosition": [
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                ],
-                                "EmitterRotation": [
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                ],
-                                "EmitterScale": [
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                ],
-                                "ConeRadiusUp": 1.0,
-                                "RandomConeRadiusUp": false,
-                                "BoxEmitterFrom": 0,
-                                "RotationOverLifetime": false,
-                                "RotationFactorRM": 0,
-                                "RotationFactor": [
-                                    0.0,
-                                    0.0
-                                ],
-                                "RotationFactorCurve": [
-                                    [
-                                        -1.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ]
-                                ],
-                                "SizeOverLifetime": true,
-                                "ScaleFactorRM": 1,
-                                "ScaleFactor": [
-                                    4.0,
-                                    8.0
-                                ],
-                                "ScaleFactorCurve": [
-                                    [
-                                        -1.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ],
-                                    [
-                                        0.0,
-                                        0.0
-                                    ]
-                                ],
-                                "ColorOverLifetime": true,
-                                "GradientColors": [
-                                    [
-                                        1.0,
-                                        0.9736568927764893,
-                                        0.9318181872367859,
-                                        0.7881584167480469,
-                                        0.018181832507252694
-                                    ],
-                                    [
-                                        1.0,
-                                        0.8888655304908752,
-                                        0.6477272510528565,
-                                        1.0,
-                                        0.09090930968523026
-                                    ],
-                                    [
-                                        0.7443181872367859,
-                                        0.40863415598869326,
-                                        0.20722493529319764,
-                                        0.8213509321212769,
-                                        0.44675329327583315
-                                    ],
-                                    [
-                                        0.11931818723678589,
-                                        0.07864152640104294,
-                                        0.07864152640104294,
-                                        0.0,
-                                        0.8753249049186707
-                                    ]
-                                ],
-                                "NumberColors": 4,
-                                "Ytiles": 2,
-                                "Xtiles": 5,
-                                "AnimationSpeed": 20.0,
-                                "IsRandomFrame": false,
-                                "LoopAnimation": false,
-                                "NCycles": 1.0,
-                                "TextureId": 13123699745384966265,
-                                "TextureItensity": [
-                                    0.0,
-                                    0.0,
-                                    0.0
-                                ],
-                                "BillboardType": 0,
-                                "IsHorizontalOrientation": false,
-                                "ParticleRenderMode": 0,
-                                "ParticleRenderAlignment": 0,
-                                "FlipTexture": [
-                                    false,
-                                    false
-                                ],
-                                "IsSoft": true,
-                                "SoftRange": 0.699999988079071,
-                                "HasCollision": false,
-                                "LayerIndex": 5,
-                                "CollRadius": 0.25,
-                                "HasTrail": false,
-                                "TrailRatio": 1.0,
-                                "WidthRM": 0,
-                                "Width": [
-                                    0.10000000149011612,
-                                    0.10000000149011612
-                                ],
-                                "TrailQuadsRM": 0,
-                                "TrailQuads": [
-                                    50.0,
-                                    50.0
-                                ],
-                                "QuadLifeRM": 0,
-                                "QuadLife": [
-                                    10.0,
-                                    10.0
-                                ],
-                                "TextureTrailID": 0,
-                                "FlipTrailTexture": [
-                                    false,
-                                    false
-                                ],
-                                "TextureRepeats": 1,
-                                "HasColorOverTrail": false,
-                                "GradientColorsTrail": [
-                                    [
-                                        0.0,
-                                        0.0,
-                                        0.0,
-                                        1.0,
-                                        0.0
-                                    ],
-                                    [
-                                        1.0,
-                                        1.0,
-                                        1.0,
-                                        1.0,
-                                        1.0
-                                    ]
-                                ],
-                                "NumberColorsTrail": 2,
                                 "SubEmitters": null,
                                 "SubEmittersNumber": 0,
                                 "HasLights": false,
@@ -6094,22 +5402,22 @@
                                 ],
                                 "ParticleEmitterType": 0,
                                 "ShapeRadius": 0.0,
-                                "ShapeRadiusThickness": 0.0,
-                                "ShapeArc": 0.0,
+                                "ShapeRadiusThickness": 1.0,
+                                "ShapeArc": 6.2831854820251469,
                                 "EmitterPosition": [
                                     0.0,
                                     0.0,
                                     0.0
                                 ],
                                 "EmitterRotation": [
+                                    -0.0,
                                     0.0,
-                                    0.0,
-                                    0.0
+                                    -0.0
                                 ],
                                 "EmitterScale": [
-                                    0.0,
-                                    0.0,
-                                    0.0
+                                    1.0,
+                                    1.0,
+                                    1.0
                                 ],
                                 "ConeRadiusUp": 0.0,
                                 "RandomConeRadiusUp": false,
@@ -6265,9 +5573,9 @@
                                 "NCycles": 1.0,
                                 "TextureId": 730960105442358221,
                                 "TextureItensity": [
-                                    0.0,
-                                    0.0,
-                                    0.0
+                                    1.0,
+                                    1.0,
+                                    1.0
                                 ],
                                 "BillboardType": 2,
                                 "IsHorizontalOrientation": false,
@@ -6788,22 +6096,22 @@
                                 ],
                                 "ParticleEmitterType": 0,
                                 "ShapeRadius": 0.0,
-                                "ShapeRadiusThickness": 0.0,
-                                "ShapeArc": 0.0,
+                                "ShapeRadiusThickness": 1.0,
+                                "ShapeArc": 6.2831854820251469,
                                 "EmitterPosition": [
                                     0.0,
                                     0.0,
                                     0.0
                                 ],
                                 "EmitterRotation": [
+                                    -0.0,
                                     0.0,
-                                    0.0,
-                                    0.0
+                                    -0.0
                                 ],
                                 "EmitterScale": [
-                                    0.0,
-                                    0.0,
-                                    0.0
+                                    1.0,
+                                    1.0,
+                                    1.0
                                 ],
                                 "ConeRadiusUp": 0.0,
                                 "RandomConeRadiusUp": false,
@@ -6938,9 +6246,9 @@
                                 "NCycles": 1.0,
                                 "TextureId": 938133264874778416,
                                 "TextureItensity": [
-                                    0.0,
-                                    0.0,
-                                    0.0
+                                    1.0,
+                                    1.0,
+                                    1.0
                                 ],
                                 "BillboardType": 2,
                                 "IsHorizontalOrientation": false,
@@ -6983,9 +6291,9 @@
                                 "NumberColorsTrail": 0,
                                 "SubEmitters": null,
                                 "SubEmittersNumber": 0,
-                                "HasLights": false,
+                                "HasLights": true,
                                 "LightGameObjectUID": 0,
-                                "LightsRatio": 0.0,
+                                "LightsRatio": 1.0,
                                 "LightsOffset": [
                                     0.0,
                                     0.0,
@@ -6993,8 +6301,8 @@
                                 ],
                                 "IntensityMultiplierRM": 0,
                                 "IntensityMultiplier": [
-                                    0.0,
-                                    0.0
+                                    1.0,
+                                    1.0
                                 ],
                                 "IntensityMultiplierCurve": [
                                     [
@@ -7044,8 +6352,8 @@
                                 ],
                                 "RangeMultiplierRM": 0,
                                 "RangeMultiplier": [
-                                    0.0,
-                                    0.0
+                                    1.0,
+                                    1.0
                                 ],
                                 "RangeMultiplierCurve": [
                                     [
@@ -7094,10 +6402,89 @@
                                     ]
                                 ],
                                 "UseParticleColor": false,
-                                "UseCustomColor": false,
-                                "GradientColorsLights": null,
-                                "NumberColorsLights": 0,
-                                "MaxLights": 0
+                                "UseCustomColor": true,
+                                "GradientColorsLights": [
+                                    [
+                                        1.0,
+                                        0.9577922821044922,
+                                        0.8522727489471436,
+                                        1.0,
+                                        0.006896549835801125
+                                    ],
+                                    [
+                                        0.9943181872367859,
+                                        0.5635408759117127,
+                                        0.30507490038871767,
+                                        1.0,
+                                        0.07241377234458924
+                                    ],
+                                    [
+                                        0.26704543828964236,
+                                        0.06062319874763489,
+                                        0.045519113540649417,
+                                        1.0,
+                                        0.5068967938423157
+                                    ],
+                                    [
+                                        9.999999974752428e-7,
+                                        9.999899930335233e-7,
+                                        9.999899930335233e-7,
+                                        1.0,
+                                        0.9724137783050537
+                                    ]
+                                ],
+                                "NumberColorsLights": 4,
+                                "MaxLights": 1
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Name": "Light Object",
+                        "Active": false,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Active": false,
+                                "Position": [
+                                    0.0,
+                                    4.639762878417969,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "Light",
+                                "Active": false,
+                                "LightType": 1,
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "Intensity": 600.0,
+                                "Radius": 30.0,
+                                "UseCustomFalloff": false,
+                                "FalloffExponent": 1.0,
+                                "InnerAngle": 0.2617993950843811,
+                                "OuterAngle": 0.5235987901687622
                             }
                         ],
                         "Children": null
@@ -7463,22 +6850,22 @@
                         ],
                         "ParticleEmitterType": 0,
                         "ShapeRadius": 0.0,
-                        "ShapeRadiusThickness": 0.0,
-                        "ShapeArc": 0.0,
+                        "ShapeRadiusThickness": 1.0,
+                        "ShapeArc": 6.2831854820251469,
                         "EmitterPosition": [
                             0.0,
                             0.0,
                             0.0
                         ],
                         "EmitterRotation": [
+                            -0.0,
                             0.0,
-                            0.0,
-                            0.0
+                            -0.0
                         ],
                         "EmitterScale": [
-                            0.0,
-                            0.0,
-                            0.0
+                            1.0,
+                            1.0,
+                            1.0
                         ],
                         "ConeRadiusUp": 0.0,
                         "RandomConeRadiusUp": false,
@@ -7627,9 +7014,9 @@
                         "NCycles": 1.0,
                         "TextureId": 9184241185323712437,
                         "TextureItensity": [
-                            0.0,
-                            0.0,
-                            0.0
+                            1.399999976158142,
+                            1.399999976158142,
+                            1.399999976158142
                         ],
                         "BillboardType": 2,
                         "IsHorizontalOrientation": false,
@@ -7802,6 +7189,24 @@
                         "GradientColorsLights": null,
                         "NumberColorsLights": 0,
                         "MaxLights": 0
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": true,
+                        "Pitch": 1.0,
+                        "Gain": 1.0,
+                        "Mute": false,
+                        "Looping": false,
+                        "PlayOnAwake": false,
+                        "AudioClipId": 0,
+                        "SpatialBlend": 1,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0,
+                        "RolloffFactor": 1.0,
+                        "ReferenceDistance": 10.0,
+                        "MaxDistance": 30.0
                     }
                 ],
                 "Children": [
@@ -8102,12 +7507,12 @@
                                         0.0
                                     ]
                                 ],
-                                "MaxParticle": 100,
+                                "MaxParticle": 200,
                                 "PlayOnAwake": false,
                                 "AttachEmitter": true,
                                 "ParticlesPerSecondRM": 0,
                                 "ParticlesPerSecond": [
-                                    18.0,
+                                    20.0,
                                     20.0
                                 ],
                                 "GravityEffect": false,
@@ -8163,23 +7568,23 @@
                                     ]
                                 ],
                                 "ParticleEmitterType": 0,
-                                "ShapeRadius": 0.0,
-                                "ShapeRadiusThickness": 0.0,
-                                "ShapeArc": 0.0,
+                                "ShapeRadius": 6.0,
+                                "ShapeRadiusThickness": 1.0,
+                                "ShapeArc": 6.2831854820251469,
                                 "EmitterPosition": [
                                     0.0,
                                     0.0,
                                     0.0
                                 ],
                                 "EmitterRotation": [
+                                    -0.0,
                                     0.0,
-                                    0.0,
-                                    0.0
+                                    -0.0
                                 ],
                                 "EmitterScale": [
-                                    0.0,
-                                    0.0,
-                                    0.0
+                                    1.0,
+                                    1.0,
+                                    1.0
                                 ],
                                 "ConeRadiusUp": 6.0,
                                 "RandomConeRadiusUp": false,
@@ -8335,9 +7740,9 @@
                                 "NCycles": 1.0,
                                 "TextureId": 18444131569059378007,
                                 "TextureItensity": [
-                                    0.0,
-                                    0.0,
-                                    0.0
+                                    1.2000000476837159,
+                                    1.2000000476837159,
+                                    1.2000000476837159
                                 ],
                                 "BillboardType": 1,
                                 "IsHorizontalOrientation": false,

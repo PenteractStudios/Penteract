@@ -8,6 +8,7 @@ class ComponentAudioSource;
 class ComponentAgent;
 class ComponentAnimation;
 class ComponentTransform;
+class AIMovement;
 
 class Character {
 public:
@@ -15,9 +16,9 @@ public:
 
 	virtual void GetHit(float damage_);
 	virtual void OnDeath();
-	void Recover(int recoveryLife_);
+	void Recover(float recoveryLife_);
 
-	void SetTotalLifePoints(int totalLifePoints_);
+	void SetTotalLifePoints(float totalLifePoints_);
 	void SetDamageHit(float damageHit_);
 
 	float GetTotalLifePoints() const;
@@ -30,6 +31,7 @@ public:
 	float movementSpeed = 1.0f;
 	ComponentAgent* agent = nullptr;
 	ComponentAnimation* compAnimation = nullptr;
+	AIMovement* movementScript = nullptr;
 	State* currentState = nullptr;
 	GameObject* characterGameObject = nullptr;
 

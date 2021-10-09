@@ -12,6 +12,8 @@ class ComponentMeshRenderer;
 class ResourcePrefab;
 class HUDController;
 class PlayerController;
+class DukeShield;
+class Player;
 //class PlayerDeath;
 class AIMovement;
 
@@ -39,17 +41,37 @@ public:
 	void Update() override;
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
+	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
+	void EnableBlastPushBack();
+	void DisableBlastPushBack();
+	bool IsBeingPushed() const;
+	void TeleportDuke(bool toPlatform);
+
+private:
+	void CalculatePushBackRealDistance();
+	void UpdatePushBackPosition();
+	void ParticleHit(GameObject& collidedWith, void* particle, Player& player);
 
 public:
 	UID dukeUID = 0;
 	UID playerUID = 0;
-	UID bulletPrefabUID = 0;
+	UID shieldObjUID = 0;
+	UID bulletUID = 0;
+	UID barrelUID = 0;
+	UID chargeColliderUID = 0;
+	UID firstEncounterUID = 0;
+	UID secondEncounterUID = 0;
+	UID thirdEncounterUID = 0;
+	UID fourthEncounterUID = 0;
+	UID meleeAttackColliderUID = 0;
+	UID chargeAttackUID = 0;
 
 	GameObject* duke = nullptr;
 	GameObject* player = nullptr;
 
 	Duke dukeCharacter = Duke();
+	DukeShield* dukeShield = nullptr;
 
 	Phase phase = Phase::PHASE1;
 
@@ -61,11 +83,18 @@ public:
 
 	float abilityChangeCooldown = 8.f;
 
-	//float movingTime = 10.f;
-
 	float stunDuration = 3.f;
 
-	float troopsCounter = 5;
+	float troopsCounter = 5.f;
+
+	float throwBarrelTimer = 5.f;
+
+	float orientationSpeed = 1.0f;
+	float orientationThreshold = 0.1f;
+
+	bool toggleShield = false;
+
+	UID winSceneUID = 0;
 
 private:
 
@@ -73,7 +102,6 @@ private:
 	AIMovement* movementScript = nullptr;
 
 	PlayerController* playerController = nullptr;
-	//PlayerDeath* playerDeath = nullptr;
 
 	float currentShieldCooldown = 0.f;
 	float currentShieldActiveTime = 0.f;
@@ -85,6 +113,8 @@ private:
 
 	float currentMovingTime = 0.f;
 
+	float currentBarrelTimer = 0.f;
+
 	float lifeThreshold = 0.70f;
 	float lasersThreshold = 0.6f;
 
@@ -94,5 +124,14 @@ private:
 	bool phase2Reached = false;
 
 	float stunTimeRemaining = 0.f;
+
+	float timeSinceLastCharge = 0.f;
+
+	// Onimaru blast effect
+	float currentPushBackDistance = 0.f;
+	float currentSlowedDownTime = 0.f;
+	float pushBackRealDistance = 0.f;
+
+	bool isInArena = true;
 };
 

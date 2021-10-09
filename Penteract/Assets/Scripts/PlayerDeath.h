@@ -19,6 +19,10 @@ public:
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
 	void OnLoseConditionMet();
+
+private:
+	void PushPlayerBack(float3 collisionNormal);
+
 public:
 
 	UID playerUID = 0;
@@ -32,6 +36,7 @@ public:
 	float rangedDamageTaken = 1.0f;
 	float meleeDamageTaken = 1.0f;
 	float dukeDamageTaken = 1.0f;
+	float dukeChargeDamageTaken = 1.0f;
 	float barrelDamageTaken = 1.0f;
 	float laserBeamTaken = 1.0f;
 

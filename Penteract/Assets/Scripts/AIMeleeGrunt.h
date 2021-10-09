@@ -39,6 +39,8 @@ public:
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
 
+	void DoStunned();
+	void EnablePushFeedback();
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
@@ -97,6 +99,16 @@ public:
 	float att3MovementSpeedWhileAttacking = 1.f;
 	int att3AbilityChance = 33;
 
+
+	//EMP Stun feedback
+	ComponentParticleSystem* particlesEmp = nullptr;
+	GameObject* objectEMP = nullptr;
+
+	//Push Stun feedback
+	ComponentParticleSystem* particlesPush = nullptr;
+	GameObject* objectPush = nullptr;
+	float maxTimePushEffect = 1.0f;
+	float minTimePushEffect = 0.0f;
 private:
 	bool track = true;
 	bool attackStep = false;
@@ -106,7 +118,6 @@ private:
 	float attackMovementSpeed = 0.f;
 	float3 velocity = float3(0, 0, 0);
 	AIState state = AIState::START;
-	bool hitTaken = false;
 	ComponentAnimation* animation = nullptr;
 	ComponentTransform* ownerTransform = nullptr;
 	int damageRecieved = 0;
@@ -139,11 +150,14 @@ private:
 	bool dissolveAlreadyStarted = false;	//Used to control other material setters so it doesn't interfere with Dissolve's material
 	bool dissolveAlreadyPlayed = false;		//Controls whether the animation function has already been played (called material->PlayAnimation) or not
 
+	bool  pushEffectHasToStart = false;
+	float timeToSrartPush = 0.0f;
+
 private:
 	void UpdatePushBackPosition();
 	void CalculatePushBackRealDistance();	// Calculates the real distance of the pushback taking into account any obstacles in the path
 	void Death();
-	void ParticleHit(GameObject& collidedWith, void* particle, Player& player);
+	void ParticleHit(GameObject& collidedWith, void* particle, Player& player_);
 	void PlayHitMaterialEffect();
 	void UpdateDissolveTimer();
 	void SetRandomMaterial();

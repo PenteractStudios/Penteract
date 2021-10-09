@@ -1,0 +1,54 @@
+{
+    "Root": {
+        "Name": "ChargeAttack",
+        "Active": false,
+        "RootBoneName": "",
+        "Mask": 0,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Active": false,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "LocalEulerAngles": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ]
+            },
+            {
+                "Type": "BoxCollider",
+                "Active": false,
+                "colliderType": 2,
+                "layerType": 6,
+                "mass": 1.0,
+                "size": [
+                    1.149999976158142,
+                    2.299999952316284,
+                    1.100000023841858
+                ],
+                "centerOffset": [
+                    -0.05000000074505806,
+                    0.0,
+                    0.05000000074505806
+                ],
+                "freezeRotation": false
+            }
+        ],
+        "Children": null
+    }
+}

@@ -28,8 +28,8 @@ public:
 	float positionToLerpSwapMain = 90;				// This is the final position to set on the lerp of swapAnimation
 	float positionToLerpSwapAlternative = 90;
 	bool isFang = true;								// Default value to who's set atm
-	float3 initialPositionMainCanvas = float3(-45.200, 168.650, 0);
-	float3 initialPositionAlternativeCanvas = float3(26.400, -9.000, 0);
+	float3 initialPositionMainCanvas = float3(-45.200f, 168.650f, 0.0f);
+	float3 initialPositionAlternativeCanvas = float3(26.400f, -9.000f, 0.0f);
 
 	bool debugPlay = false;
 
@@ -45,8 +45,8 @@ public:
 	UID onimaruAlternativeUID = 0;
 
 private:
-	void IncreaseOverTime(GameObject* image, float currentTime, float maxTime);
-	void SwapAnimation(GameObject* targetCanvas, bool isMain, bool playReverse, float currentTime, float maxTime);
+	void IncreaseOverTime(GameObject* image, float currentTime_, float maxTime);
+	void SwapAnimation(GameObject* targetCanvas, bool isMain, bool playReverse, float currentTime_, float maxTime);
 
 private:
 	GameObject* firstBarEffect = nullptr;

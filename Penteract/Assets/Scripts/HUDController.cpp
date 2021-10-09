@@ -226,7 +226,7 @@ void HUDController::ChangePlayerHUD(int fangLives, int oniLives) {
 	isSwitching = true;
 }
 
-void HUDController::HealthRegeneration(float currentHp, float hpRecovered) {
+void HUDController::HealthRegeneration(int currentHp, float hpRecovered) {
 	if (!onimaruHealthSecondCanvas || !fangHealthSecondCanvas) return;
 
 	GameObject* targetCanvas = fang && fang->IsActive() ? onimaruHealthSecondCanvas : fangHealthSecondCanvas;
@@ -248,7 +248,7 @@ void HUDController::HealthRegeneration(float currentHp, float hpRecovered) {
 	}
 }
 
-void HUDController::ResetHealthRegenerationEffects(float currentHp) {
+void HUDController::ResetHealthRegenerationEffects(int currentHp) {
 	if (!onimaruHealthSecondCanvas || !fangHealthSecondCanvas) return;
 
 	GameObject* targetCanvas = fang && fang->IsActive() ? onimaruHealthSecondCanvas : fangHealthSecondCanvas;
@@ -263,7 +263,7 @@ void HUDController::ResetHealthRegenerationEffects(float currentHp) {
 		}
 	}
 
-	for (int pos = currentHp; pos < MAX_HEALTH; ++pos) {
+	for (unsigned pos = currentHp; pos < MAX_HEALTH; ++pos) {
 		if (pos < targetCanvas->GetChildren().size()) {
 			const GameObject* healthSlot = targetCanvas->GetChildren()[pos];
 			for (GameObject* healthComponents : healthSlot->GetChildren()) {
@@ -344,6 +344,7 @@ void HUDController::UpdateCooldowns(float onimaruCooldown1, float onimaruCooldow
 	UpdateComponents();
 }
 
+/*
 void HUDController::UpdateHP(float currentHp, float altHp) {
 	if (!fang || !onimaru) return;
 	if (fang->IsActive()) {
@@ -370,6 +371,7 @@ void HUDController::UpdateHP(float currentHp, float altHp) {
 		}
 	}
 }
+*/
 
 void HUDController::UpdateDurableHPLoss(GameObject* targetCanvas) {
 	bool isFang = (targetCanvas->GetID() == fangHealthMainCanvas->GetID());
@@ -485,13 +487,13 @@ void HUDController::UpdateCommonSkill() {
 	}
 }
 
-void HUDController::PlayCoolDownEffect(AbilityRefreshEffect* ef, Cooldowns cooldown) {
+void HUDController::PlayCoolDownEffect(AbilityRefreshEffect* ef, Cooldowns /* cooldown */) {
 	if (ef != nullptr) {
 		ef->Play();
 	}
 }
 
-void HUDController::PlayProgressBarEffect(AbilityRefreshEffectProgressBar* ef, Cooldowns cooldown) {
+void HUDController::PlayProgressBarEffect(AbilityRefreshEffectProgressBar* ef, Cooldowns /* cooldown */) {
 	if (ef != nullptr) {
 		ef->Play();
 	}
@@ -652,7 +654,7 @@ void HUDController::OnHealthLost(GameObject* targetCanvas, int health) {
 	}
 }
 
-void HUDController::UpdateCanvasHP(GameObject* targetCanvas, int health, bool darkened) {
+void HUDController::UpdateCanvasHP(GameObject* targetCanvas, int health, bool /* darkened */) {
 	bool isFang = (targetCanvas->GetID() == fangHealthMainCanvas->GetID());
 
 	if (isFang) {

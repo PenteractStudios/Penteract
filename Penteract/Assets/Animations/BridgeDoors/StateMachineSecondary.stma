@@ -1,0 +1,77 @@
+{
+    "InitialState": 0,
+    "Clips": [
+        14654052627670973986,
+        1267499798399892229,
+        3646111480446057889
+    ],
+    "States": [
+        {
+            "Id": 14055111328434477909,
+            "Name": "Closed",
+            "ClipId": 14654052627670973986
+        },
+        {
+            "Id": 13545353903283756733,
+            "Name": "Open",
+            "ClipId": 1267499798399892229
+        },
+        {
+            "Id": 1204403158179951160,
+            "Name": "Opening",
+            "ClipId": 3646111480446057889
+        }
+    ],
+    "Transitions": [
+        {
+            "Trigger": "ClosedOpen",
+            "Id": 17727322101967827366,
+            "Source": 14055111328434477909,
+            "Target": 13545353903283756733,
+            "Interpolation": 0.3
+        },
+        {
+            "Trigger": "ClosedOpening",
+            "Id": 1970681714777329904,
+            "Source": 14055111328434477909,
+            "Target": 1204403158179951160,
+            "Interpolation": 0.3
+        },
+        {
+            "Trigger": "OpenClosed",
+            "Id": 5508450144339647195,
+            "Source": 13545353903283756733,
+            "Target": 14055111328434477909,
+            "Interpolation": 0.3
+        },
+        {
+            "Trigger": "OpenOpening",
+            "Id": 6526449282349453341,
+            "Source": 13545353903283756733,
+            "Target": 1204403158179951160,
+            "Interpolation": 0.3
+        },
+        {
+            "Trigger": "OpeningClosed",
+            "Id": 9417460381586030366,
+            "Source": 1204403158179951160,
+            "Target": 14055111328434477909,
+            "Interpolation": 0.3
+        },
+        {
+            "Trigger": "OpeningOpen",
+            "Id": 14250546576037338570,
+            "Source": 1204403158179951160,
+            "Target": 13545353903283756733,
+            "Interpolation": 0.3
+        }
+    ],
+    "Bones": [
+        "rightDoor",
+        "rightDownLock",
+        "rightUpLock",
+        "leftDoor",
+        "leftDownLock",
+        "leftUpLock"
+    ]
+}

@@ -16,6 +16,8 @@ EXPOSE_MEMBERS(PlayerDeath) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::FLOAT, rangedDamageTaken),
 	MEMBER(MemberType::FLOAT, meleeDamageTaken),
+	MEMBER(MemberType::FLOAT, dukeDamageTaken),
+	MEMBER(MemberType::FLOAT, dukeChargeDamageTaken),
 	MEMBER(MemberType::FLOAT, barrelDamageTaken),
 	MEMBER(MemberType::FLOAT, laserBeamTaken),
 	MEMBER(MemberType::FLOAT, laserHitCooldown),
@@ -137,7 +139,36 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 			fireDamageActive = false;
 		}
 	} else if (collidedWith.name == "DukeProjectile") {
-		if (playerController) playerController->TakeDamage(rangedDamageTaken);
+		if (!particle) return;
+		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+		if (pSystem) pSystem->KillParticle(p);
+		if (playerController) playerController->TakeDamage(dukeDamageTaken);
+	} else if (collidedWith.name == "DukeCharge") {
+		if (playerController) {
+			playerController->TakeDamage(dukeChargeDamageTaken);
+			// Push the player a little bit
+			PushPlayerBack(collisionNormal);
+		}
+	} else if (collidedWith.name == "DukePunch") {
+		if (playerController) {
+			playerController->TakeDamage(dukeDamageTaken);
+			PushPlayerBack(collisionNormal);
+		}
+		collidedWith.Disable();
+	} else if (collidedWith.name == "DukeShield") {
+		if (playerController) {
+			// don't let the player penetrate duke shield
+			float3 truePenetrationDistance = penetrationDistance.ProjectTo(collisionNormal);
+			playerController->playerFang.IsActive() ? playerController->playerFang.agent->RemoveAgentFromCrowd() : playerController->playerOnimaru.agent->RemoveAgentFromCrowd();
+			ComponentTransform* playerTransform = playerController->playerFang.playerMainTransform;
+			playerTransform->SetGlobalPosition(playerTransform->GetGlobalPosition() + truePenetrationDistance);
+			playerController->playerFang.IsActive() ? playerController->playerFang.agent->AddAgentToCrowd() : playerController->playerOnimaru.agent->AddAgentToCrowd();
+		}
+
+	} else if (collidedWith.name == "ChargeAttack") {
+		if (playerController) playerController->TakeDamage(dukeChargeDamageTaken);
+		collidedWith.Disable();
 	}
 	else if (collidedWith.name == "AttackDroneProjectile") {
 		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
@@ -160,4 +191,13 @@ void PlayerDeath::OnLoseConditionMet() {
 			if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 		}
 	}
+}
+
+void PlayerDeath::PushPlayerBack(float3 collisionNormal)
+{
+	playerController->playerFang.IsActive() ? playerController->playerFang.agent->RemoveAgentFromCrowd() : playerController->playerOnimaru.agent->RemoveAgentFromCrowd();
+	ComponentTransform* playerTransform = playerController->playerFang.playerMainTransform;
+	collisionNormal.y = 0;
+	playerTransform->SetGlobalPosition(playerTransform->GetGlobalPosition() + 1.2 * collisionNormal.Normalized());
+	playerController->playerFang.IsActive() ? playerController->playerFang.agent->AddAgentToCrowd() : playerController->playerOnimaru.agent->AddAgentToCrowd();
 }
