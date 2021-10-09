@@ -115,6 +115,7 @@ void FloorIsLava::StartFire()
 void FloorIsLava::StopFire()
 {
 	started = false;
+	if (sequential) sequentialCount = 0;
 }
 
 void FloorIsLava::SetPattern(int pattern, const bool*& boolPattern)
