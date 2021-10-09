@@ -123,7 +123,7 @@ void AttackDronesController::StartBulletHell() {
     mustStartBulletHell = true;
     currentTime = 0.0f;
     rotationOffset = 0.0f;
-    bulletHellActive = true;
+    bulletHellFinished = false;
 
     CheckDronesWaitEndOfWave();
     RecalculateFormations();
@@ -132,7 +132,7 @@ void AttackDronesController::StartBulletHell() {
 
 void AttackDronesController::EndOfWave() {
     waves++;
-    if (waves > chosenPattern.waves) bulletHellActive = false;
+    if (waves > chosenPattern.waves) bulletHellFinished = true;
     if (waves > chosenPattern.waves || !HadToWaitEndOfWave()) return;
     
     cycle = chosenPattern.cycles[waves - 1];
@@ -395,5 +395,9 @@ bool AttackDronesController::HadToWaitEndOfWave() const {
 }
 
 bool AttackDronesController::BulletHellActive() const {
-    return waves <= chosenPattern.waves;
+    return !bulletHellFinished && waves <= chosenPattern.waves;
+}
+
+bool AttackDronesController::BulletHellFinished() const {
+    return bulletHellFinished;
 }

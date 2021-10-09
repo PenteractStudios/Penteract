@@ -3,6 +3,7 @@
 #include "AIMovement.h"
 #include "PlayerController.h"
 #include "DukeShield.h"
+#include "AttackDronesController.h"
 #include <string>
 #include <vector>
 
@@ -86,12 +87,14 @@ void AIDuke::Start() {
 		dukeShield = GET_SCRIPT(shieldObj, DukeShield);
 	}
 
+	// AttackDronesController
+	AttackDronesController* dronesController = GET_SCRIPT(&GetOwner(), AttackDronesController);
+
 	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, chargeAttackUID, encounters);
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, chargeAttackUID, encounters, dronesController);
 }
 
 void AIDuke::Update() {
-	return;
 	std::string life = std::to_string(dukeCharacter.lifePoints);
 	life = "Life points: " + life;
 	Debug::Log(life.c_str());
@@ -203,9 +206,13 @@ void AIDuke::Update() {
 			break;
 		case DukeState::BULLET_HELL:
 			dukeCharacter.reducedDamaged = true;
-			dukeCharacter.BulletHell();
-			currentBulletHellActiveTime += Time::GetDeltaTime();
-			if (currentBulletHellActiveTime >= bulletHellActiveTime) {
+			if (!bulletHellIsActive) {
+				dukeCharacter.BulletHell();
+				bulletHellIsActive = true;
+			}
+			if (dukeCharacter.BulletHellFinished()){
+				dukeCharacter.DisableBulletHell();
+				bulletHellIsActive = false;
 				dukeCharacter.reducedDamaged = false;
 				currentBulletHellCooldown = 0.f;
 				currentBulletHellActiveTime = 0.f;

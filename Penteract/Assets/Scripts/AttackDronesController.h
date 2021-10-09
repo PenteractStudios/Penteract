@@ -18,6 +18,8 @@ public:
 	void Update() override;
 
 	void StartBulletHell();
+	bool BulletHellActive() const;
+	bool BulletHellFinished() const;
 	void EndOfWave();
 
 	void SetDronesFormation(DronesFormation newFormation);
@@ -47,7 +49,6 @@ private:
 
 	bool MustWaitEndOfWave() const;
 	bool HadToWaitEndOfWave() const;
-	bool BulletHellActive() const;
 
 private:
 	ComponentTransform* transform = nullptr;
@@ -71,7 +72,7 @@ private:
 	float currentTime = 0.0f;
 
 	int waves = 0;
-	bool bulletHellActive = false;
+	bool bulletHellFinished = true;
 
 	float rotationOffset = 0.0f;
 };

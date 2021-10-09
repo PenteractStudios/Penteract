@@ -7,6 +7,7 @@
 
 class ComponentParticleSystem;
 class ResourcePrefab;
+class AttackDronesController;
 
 enum class DukeState {
 	BASIC_BEHAVIOUR,
@@ -54,10 +55,13 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID chargeAttackColliderUID, std::vector<UID> encounterUIDs);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID chargeAttackColliderUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void BulletHell();
+	void DisableBulletHell();
+	bool BulletHellActive();
+	bool BulletHellFinished();
 	void InitCharge(DukeState nextState);
 	void UpdateCharge(bool forceStop = false);
 	void CallTroops();
@@ -125,6 +129,9 @@ private:
 
 	ResourcePrefab* barrel = nullptr;
 	bool instantiateBarrel = false;
+
+	// AttackDrones
+	AttackDronesController* attackDronesController = nullptr;
 
 	// Animations
 	enum DUKE_ANIMATION_STATES {

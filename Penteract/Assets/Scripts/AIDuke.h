@@ -108,6 +108,7 @@ private:
 
 	float currentBulletHellCooldown = 0.f;
 	float currentBulletHellActiveTime = 0.f;
+	bool bulletHellIsActive = false;
 
 	float currentAbilityChangeCooldown = 0.f;
 
