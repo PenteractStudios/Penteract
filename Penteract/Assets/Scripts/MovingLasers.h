@@ -3,6 +3,8 @@
 #include "Scripting/Script.h"
 class ComponentAnimation;
 class ComponentTransform;
+class ComponentParticleSystem;
+
 class MovingLasers : public Script
 {
 	GENERATE_BODY(MovingLasers);
@@ -34,6 +36,9 @@ public:
 	float3 minLaserPosition = float3(10.f, 4.f, 0.f);
 	float3 maxLaserPosition = float3(20.f, 4.f, 0.f);
 
+	float2 minLaserWarningScale = float2(280.f, 280.f);
+	float2 maxLaserWarningScale = float2(280.f, 280.f);
+
 public:
 
 	void Start() override;
@@ -45,6 +50,10 @@ public:
 
 private:
 
+	void Move();
+
+private:
+
 	ComponentAnimation* animationComp = nullptr;
 	ComponentAnimation* pairAnimationComp = nullptr;
 	GeneratorState currentState = GeneratorState::IDLE;
@@ -53,7 +62,7 @@ private:
 	GameObject* laserObject = nullptr;
 	GameObject* laserWarning = nullptr;
 	MovingLasers* pairScript = nullptr;
-
+	ComponentParticleSystem* laserWarningVFX = nullptr;
 	bool beingUsed = false;
 
 	float chargingTimer = 0.f;
