@@ -46,6 +46,7 @@ public:
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
+	void TeleportDuke(bool toPlatform);
 
 private:
 	void CalculatePushBackRealDistance();
@@ -59,8 +60,13 @@ public:
 	UID bulletUID = 0;
 	UID barrelUID = 0;
 	UID chargeColliderUID = 0;
+	UID firstEncounterUID = 0;
+	UID secondEncounterUID = 0;
+	UID thirdEncounterUID = 0;
+	UID fourthEncounterUID = 0;
 	UID meleeAttackColliderUID = 0;
 	UID barrelSpawnerUID = 0;
+	UID chargeAttackUID = 0;
 
 	GameObject* duke = nullptr;
 	GameObject* player = nullptr;
@@ -127,5 +133,6 @@ private:
 	float currentSlowedDownTime = 0.f;
 	float pushBackRealDistance = 0.f;
 
+	bool isInArena = true;
 };
 

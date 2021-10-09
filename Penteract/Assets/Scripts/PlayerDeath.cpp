@@ -164,6 +164,10 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 			playerTransform->SetGlobalPosition(playerTransform->GetGlobalPosition() + truePenetrationDistance);
 			playerController->playerFang.IsActive() ? playerController->playerFang.agent->AddAgentToCrowd() : playerController->playerOnimaru.agent->AddAgentToCrowd();
 		}
+
+	} else if (collidedWith.name == "ChargeAttack") {
+		if (playerController) playerController->TakeDamage(dukeChargeDamageTaken);
+		collidedWith.Disable();
 	}
 }
 

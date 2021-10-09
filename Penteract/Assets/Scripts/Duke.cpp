@@ -4,6 +4,7 @@
 #include "RangerProjectileScript.h"
 #include "PlayerController.h"
 #include "BarrelSpawner.h"
+#include "AIMovement.h"
 
 #include <string>
 
@@ -11,7 +12,7 @@
 
 std::uniform_real_distribution<> rng(-1.0f, 1.0f);
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID)
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, std::vector<UID> encounterUIDs)
 {
 	gen = std::minstd_rand(rd());
 
@@ -21,6 +22,7 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 	chargeCollider = GameplaySystems::GetGameObject(chargeColliderUID);
 
 	meleeAttackCollider = GameplaySystems::GetGameObject(meleeAttackColliderUID);
+	chargeAttack = GameplaySystems::GetGameObject(chargeAttackColliderUID);
 
 	barrelSpawneScript = GET_SCRIPT(GameplaySystems::GetGameObject(barrelSpawnerUID), BarrelSpawner);
 
@@ -43,6 +45,8 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 		dukeTransform = characterGameObject->GetComponent<ComponentTransform>();
 		agent = characterGameObject->GetComponent<ComponentAgent>();
 		compAnimation = characterGameObject->GetComponent<ComponentAnimation>();
+		movementScript = GET_SCRIPT(characterGameObject, AIMovement);
+
 		if (compAnimation) {
 			currentState = compAnimation->GetCurrentState();
 		}
@@ -67,10 +71,11 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 	}
 	movementChangeThreshold = moveChangeEvery;
 	distanceCorrectionThreshold = distanceCorrectEvery;
+
+	for (auto itr : encounterUIDs) encounters.push_back(GameplaySystems::GetGameObject(itr));
 }
 
-void Duke::ShootAndMove(const float3& playerDirection)
-{
+void Duke::ShootAndMove(const float3& playerDirection) {
 	// Shoot
 	movementTimer += Time::GetDeltaTime();
 	if (movementTimer >= movementChangeThreshold) {
@@ -102,45 +107,54 @@ void Duke::MeleeAttack()
 	}
 }
 
-void Duke::BulletHell()
-{
+void Duke::BulletHell() {
 	Debug::Log("Bullet hell");
 }
 
 void Duke::InitCharge(DukeState nextState)
 {
+	trackingChargeTarget = true;
+	state = DukeState::CHARGE;
 	this->nextState = nextState;
 	reducedDamaged = true;
-	if (chargeCollider) chargeCollider->Enable();
+
+	if (compAnimation) {
+		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_START)]);
+	}
 	Debug::Log("Electric Tackle!");
 }
 
 void Duke::UpdateCharge(bool forceStop)
 {
+
+	if (trackingChargeTarget) {
+		float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - dukeTransform->GetGlobalPosition();
+		dir.y = 0.0f;
+		movementScript->Orientate(dir);
+	}
 	if (forceStop || (dukeTransform->GetGlobalPosition() - chargeTarget).Length() <= 0.2f) {
 		if (chargeCollider) chargeCollider->Disable();
-		EndCharge();
+		if (compAnimation) {
+			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_END)]);
+		}
+		// Perform arm attack (either use the same or another collider as the melee attack)
+		if (chargeAttack) chargeAttack->Enable();
+		state = DukeState::CHARGE_ATTACK;
+		reducedDamaged = false;
+		if (player) {
+			PlayerController* playerController = GET_SCRIPT(player, PlayerController);
+			if (playerController) playerController->playerOnimaru.shieldBeingUsed = 0.0f;
+		}
 	}
 }
 
-void Duke::EndCharge()
-{
-	// Perform arm attack (either use the same or another collider as the melee attack)
-	state = nextState;
-	reducedDamaged = false;
-	if (player) {
-		PlayerController* playerController = GET_SCRIPT(player, PlayerController);
-		if (playerController) playerController->playerOnimaru.shieldBeingUsed = 0.0f;
-	}
-}
-
-void Duke::CallTroops()
-{
+void Duke::CallTroops() {
 	Debug::Log("Come, guys!");
+	if (encounters.size() > currentEncounter && encounters[currentEncounter] && !encounters[currentEncounter]->IsActive()) encounters[currentEncounter]->Enable();
+	currentEncounter++;
 }
 
-void Duke::Shoot()
-{
+void Duke::Shoot() {
 	attackTimePool -= Time::GetDeltaTime();
 	if (attackTimePool <= 0) {
 		if (bullet) {
@@ -153,8 +167,7 @@ void Duke::Shoot()
 	Debug::Log("PIUM!");
 }
 
-void Duke::ThrowBarrels()
-{
+void Duke::ThrowBarrels() {
 	Debug::Log("Here, barrel in your face!");
 
 	if (compAnimation->GetCurrentState()->name != animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]) {
@@ -165,19 +178,33 @@ void Duke::ThrowBarrels()
 
 void Duke::OnAnimationFinished()
 {
+	if (!compAnimation) return;
 	State* currentState = compAnimation->GetCurrentState();
-	if (currentState->name == "Punch") {
+	if (!currentState) return;
+
+	Debug::Log("Finishing");
+	if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PUNCH)]) {
 		hasMeleeAttacked = false;
 		compAnimation->SendTrigger(currentState->name + animationStates[DUKE_ANIMATION_STATES::IDLE]);
 		state = DukeState::BASIC_BEHAVIOUR;
-	}
-	else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]) {
+	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]) {
 		compAnimation->SendTrigger(animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)] + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
+	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_START)]) {
+		agent->SetMoveTarget(chargeTarget);
+		agent->SetMaxSpeed(chargeSpeed);
+		if (chargeCollider) chargeCollider->Enable();
+		Debug::Log("Start");
+		compAnimation->SendTrigger(currentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE)]);
+	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_END)]) {
+		if (chargeAttack) chargeAttack->Disable();
+		state = nextState;
+		agent->SetMaxSpeed(movementSpeed);
+		Debug::Log("End");
+		compAnimation->SendTrigger(currentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
 	}
 }
 
-void Duke::OnAnimationSecondaryFinished()
-{
+void Duke::OnAnimationSecondaryFinished() {
 }
 
 void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName)
@@ -192,6 +219,17 @@ void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 		} else if (strcmp(eventName, "DisablePunch") == 0) {
 			if (meleeAttackCollider && meleeAttackCollider->IsActive()) {
 				meleeAttackCollider->Disable();
+			}
+		} else if (strcmp(eventName, "StopTracking") == 0) {
+			if (!trackingChargeTarget) return;
+			trackingChargeTarget = false;
+			float3 dukePos = dukeTransform->GetGlobalPosition();
+			if ((player->GetComponent<ComponentTransform>()->GetGlobalPosition() - dukePos).Length() <= chargeMinimumDistance) {
+				bool result;
+				Navigation::Raycast(dukePos, dukePos + chargeMinimumDistance * dukeTransform->GetFront(), result, chargeTarget);
+			}
+			else {
+				chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
 			}
 		}
 
