@@ -99,6 +99,6 @@ void GameplaySceneWalkToFactory::Update() {
     }
 }
 
-void GameplaySceneWalkToFactory::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+void GameplaySceneWalkToFactory::OnCollision(GameObject& /* collidedWith */, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* /* particle */) {
     triggered = true;
 }

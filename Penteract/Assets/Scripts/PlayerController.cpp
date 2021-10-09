@@ -440,7 +440,7 @@ void PlayerController::Update() {
 	}
 }
 
-void PlayerController::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* /* particle */) {
+void PlayerController::OnCollision(GameObject& collidedWith, float3 /* collisionNormal */ , float3 /* penetrationDistance */, void* /* particle */) {
 	if (collidedWith.name == "MeleeGrunt" || collidedWith.name == "RangedGrunt") {
 		switchCollisionedGO.push_back(&collidedWith);
 	}
