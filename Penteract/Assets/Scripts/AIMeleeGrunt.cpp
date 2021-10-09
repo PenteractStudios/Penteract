@@ -2,13 +2,13 @@
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
-#include "GameController.h"
 #include "PlayerController.h"
 #include "PlayerDeath.h"
 #include "EnemySpawnPoint.h"
 #include "HUDController.h"
 #include "AIMovement.h"
 #include "Onimaru.h"
+#include "GlobalVariables.h"
 
 #include <math.h>
 #include <random>
@@ -209,7 +209,7 @@ void AIMeleeGrunt::Update() {
 		currentSlowedDownTime += Time::GetDeltaTime();
 	}
 
-	if (GameController::IsGameplayBlocked() && state != AIState::START && state != AIState::SPAWN) {
+	if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && state != AIState::START && state != AIState::SPAWN) {
 		state = AIState::IDLE;
 	}
 
@@ -227,7 +227,7 @@ void AIMeleeGrunt::Update() {
 		break;
 	case AIState::IDLE:
 		if (!playerController->IsPlayerDead()) {
-			if (movementScript->CharacterInSight(player, gruntCharacter.searchRadius) && !GameController::IsGameplayBlocked()) {
+			if (movementScript->CharacterInSight(player, gruntCharacter.searchRadius) && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 				animation->SendTrigger("IdleWalkForward");
 				if (agent) agent->SetMaxSpeed(speedToUse);
 				state = AIState::RUN;
@@ -593,7 +593,7 @@ void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const cha
 
 void AIMeleeGrunt::Death()
 {
-	if (!GameController::IsGameplayBlocked()) {
+	if (!GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 		if (animation->GetCurrentState() && state != AIState::DEATH) {
 			std::string changeState = animation->GetCurrentState()->name + "Death";
 			deathType = 1 + rand() % 2;

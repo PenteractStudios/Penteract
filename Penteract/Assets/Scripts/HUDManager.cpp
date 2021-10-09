@@ -6,6 +6,7 @@
 #include "Components/UI/ComponentImage.h"
 #include "ImageColorFader.h"
 #include "AbilityRefeshFX.h"
+#include "GlobalVariables.h"
 
 #define HIERARCHY_INDEX_ABILITY_FILL 1
 #define HIERARCHY_INDEX_ABILITY_DURATION_FILL 2
@@ -78,14 +79,13 @@ void HUDManager::Start() {
 	fangSkillParent = GameplaySystems::GetGameObject(fangSkillParentUID);
 	onimaruSkillParent = GameplaySystems::GetGameObject(onimaruSkillParentUID);
 	switchSkillParent = GameplaySystems::GetGameObject(switchSkillParentUID);
-	switchSkillActivated = false;
 
 	if (fangSkillParent && onimaruSkillParent && switchSkillParent) {
 		skillsFang = fangSkillParent->GetChildren();
 		skillsOni = onimaruSkillParent->GetChildren();
 		switchSkillParent->Disable();
 
-		//Vector used later to avoid a flicker on first swtich
+		//Vector used later to avoid a flicker on first switch
 		std::vector<ComponentTransform2D*>oniTransforms;
 
 		for (int i = 0; i < static_cast<int>(Cooldowns::TOTAL); i++) {
@@ -93,6 +93,8 @@ void HUDManager::Start() {
 			if (i < static_cast<int>(Cooldowns::ONIMARU_SKILL_1)) {
 				//Fang skill
 				transform2D = skillsFang[i]->GetComponent<ComponentTransform2D>();
+				//Disable the skill until the tutorial
+				skillsFang[i]->Disable();
 
 			} else if (i != static_cast<int>(Cooldowns::SWITCH_SKILL)) {
 				//Onimaru skill
@@ -184,14 +186,30 @@ void HUDManager::Start() {
 }
 
 void HUDManager::Update() {
-	// This checks for when the Switch tutorial is reached.When this happens, switch is activated and Player will be able to switch from then on.
-	if (GameController::IsSwitchTutorialReached() && !switchSkillActivated) {
-		if (switchSkillParent) {
-			if (!switchSkillParent->IsActive()) {
-				switchSkillParent->Enable();
-				switchSkillActivated = true;
-			}
-		}
+	// Tutorial activated skills
+		// Switch
+	if (GameplaySystems::GetGlobalVariable(globalSwitchTutorialReached, true)) {
+		if (switchSkillParent && !switchSkillParent->IsActive()) switchSkillParent->Enable();
+	} else {
+		if (switchSkillParent && switchSkillParent->IsActive()) switchSkillParent->Disable();
+	}
+		// Dash/Shield
+	if (GameplaySystems::GetGlobalVariable(globalSkill1TutorialReached, true)) {
+		if (skillsFang[0] && !skillsFang[0]->IsActive()) skillsFang[0]->Enable();
+	} else {
+		if (skillsFang[0] && skillsFang[0]->IsActive()) skillsFang[0]->Disable();
+	}
+		// EMP/Blast
+	if (GameplaySystems::GetGlobalVariable(globalSkill2TutorialReached, true)) {
+		if (skillsFang[1] && !skillsFang[1]->IsActive()) skillsFang[1]->Enable();
+	} else {
+		if (skillsFang[1] && skillsFang[1]->IsActive()) skillsFang[1]->Disable();
+	}
+		// Ultimate
+	if (GameplaySystems::GetGlobalVariable(globalSkill3TutorialReached, true)) {
+		if (skillsFang[2] && !skillsFang[2]->IsActive()) skillsFang[2]->Enable();
+	} else {
+		if (skillsFang[2] && skillsFang[2]->IsActive()) skillsFang[2]->Disable();
 	}
 
 	ManageSwitch();

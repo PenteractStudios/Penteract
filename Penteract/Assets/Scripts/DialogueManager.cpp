@@ -1,13 +1,13 @@
 #include "DialogueManager.h"
 
 #include "GameplaySystems.h"
-#include "GameController.h"
 #include "PlayerController.h"
 #include "CameraController.h"
 #include "GameObject.h"
 #include "Components/UI/ComponentTransform2D.h"
 #include "Components/UI/ComponentText.h"
 #include "Components/UI/Componentimage.h"
+#include "GlobalVariables.h"
 
 EXPOSE_MEMBERS(DialogueManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
@@ -251,9 +251,23 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 			skillIconName = "Buttons" + std::to_string(tutorialSkillNumber);
 			GameObject* skillButtonIcon = activeDialogueObject->GetChild("Skill Buttons")->GetChild(skillIconName.c_str());
 			if (skillButtonIcon) skillButtonIcon->Enable();
+
+			// Activate the use of the skill
+			switch (tutorialSkillNumber) {
+			case 3:
+				GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, true);
+				break;
+			case 4:
+				GameplaySystems::SetGlobalVariable(globalSkill2TutorialReached, true);
+				break;
+			default:
+				// Do nothing
+				break;
+			}
 			break;
 		}
 		case DialogueWindow::TUTO_FANG_ULTI:
+			GameplaySystems::SetGlobalVariable(globalSkill3TutorialReached, true);
 			activeDialogueObject = tutorialFangUltimate;
 			tutorialSkillNumber = 0;
 			break;
@@ -281,7 +295,7 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 			break;
 		case DialogueWindow::TUTO_SWAP:
 			activeDialogueObject = tutorialSwap;
-			GameController::ReachSwitchTutorial(true);
+			GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, true);
 			break;
 		case DialogueWindow::UPGRADES1:
 			activeDialogueObject = tutorialUpgrades1;
@@ -300,7 +314,7 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 		uiComponents.clear();
 		uiColors.clear();
 		RetrieveUIComponents(activeDialogueObject);
-		GameController::BlockGameplay(dialogue->isBlocking);
+		GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, dialogue->isBlocking);
 
 		// Camera Zoom In
 		if (cameraControllerScript) {
@@ -312,8 +326,8 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 		}
 	} else {
 		activeDialogueObject = nullptr;
-		GameController::BlockGameplay(false);
-		GameController::ActivateSwitchTutorial(false);
+		GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, false);
+		GameplaySystems::SetGlobalVariable(globalswitchTutorialActive, false);
 
 		// Camera Zoom Out
 		if (cameraControllerScript) {
@@ -356,7 +370,7 @@ void DialogueManager::ActivateDialogue() {
 			activeDialogueObject->GetComponent<ComponentTransform2D>()->SetPosition(currentEndPosition);
 			TransitionUIElementsColor(true, false);
 			if (activeDialogue->character == DialogueWindow::TUTO_SWAP) {
-				GameController::ActivateSwitchTutorial(true);
+				GameplaySystems::SetGlobalVariable(globalswitchTutorialActive, true);
 			}
 		}
 	}

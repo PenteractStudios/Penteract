@@ -1,6 +1,5 @@
 #include "RangedAI.h"
 
-#include "GameController.h"
 #include "PlayerController.h"
 #include "PlayerDeath.h"
 #include "HUDController.h"
@@ -17,6 +16,7 @@
 #include "Components/ComponentAnimation.h"
 #include "Components/ComponentMeshRenderer.h"
 #include "Resources/ResourcePrefab.h"
+#include "GlobalVariables.h"
 //clang-format off
 #include <random>
 
@@ -322,7 +322,7 @@ void RangedAI::Update() {
 
 	if (!GetOwner().IsActive()) return;
 
-	if ((state == AIState::IDLE || state == AIState::RUN || state == AIState::FLEE) && !GameController::IsGameplayBlocked()) {
+	if ((state == AIState::IDLE || state == AIState::RUN || state == AIState::FLEE) && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 		attackTimePool = Max(attackTimePool - Time::GetDeltaTime(), 0.0f);
 		if (attackTimePool == 0) {
 			if (actualShotTimer == -1) {
@@ -346,7 +346,7 @@ void RangedAI::Update() {
 		currentSlowedDownTime += Time::GetDeltaTime();
 	}
 
-	if (!rangerGruntCharacter.isAlive && state != AIState::DEATH && !GameController::IsGameplayBlocked()) {
+	if (!rangerGruntCharacter.isAlive && state != AIState::DEATH && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 		PlayAudio(AudioType::DEATH);
 		ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
 		if (collider) collider->Disable();
@@ -426,7 +426,7 @@ void RangedAI::UpdateState() {
 
 	float speedToUse = rangerGruntCharacter.slowedDown ? rangerGruntCharacter.slowedDownSpeed : rangerGruntCharacter.movementSpeed;
 
-	if (GameController::IsGameplayBlocked() && state != AIState::START && state != AIState::SPAWN) {
+	if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && state != AIState::START && state != AIState::SPAWN) {
 		state = AIState::IDLE;
 	}
 
@@ -445,7 +445,7 @@ void RangedAI::UpdateState() {
 		if (player) {
 			if (aiMovement) {
 				aiMovement->Stop();
-				if (aiMovement->CharacterInSight(player, rangerGruntCharacter.searchRadius) && !GameController::IsGameplayBlocked()) {
+				if (aiMovement->CharacterInSight(player, rangerGruntCharacter.searchRadius) && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 					if (aiMovement->CharacterInSight(player, fleeingRange)) {
 						ChangeState(AIState::FLEE);
 						break;
