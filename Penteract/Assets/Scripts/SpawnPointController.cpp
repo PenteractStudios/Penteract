@@ -160,7 +160,13 @@ void SpawnPointController::OnCollision(GameObject& /* collidedWith */, float3 /*
 	}
 	if (initialDoor && !initialDoor->IsActive()) initialDoor->Enable();
 	if (finalDoor && !finalDoor->IsActive()) finalDoor->Enable();
-	if (initialBridge && finalBridge && initialBridge->IsActive() && finalBridge->IsActive()) hasToBeEnabledBridges = false;
+	if (initialBridge && finalBridge && initialBridge->IsActive() && finalBridge->IsActive()) {
+		hasToBeEnabledBridges = false;
+		// Enabled the obstacles
+		if (bridgeObstacles && !bridgeObstacles->IsActive()) {
+			bridgeObstacles->Enable();
+		}
+	}
 	if (gameObjectActivatedOnCombatEnd && gameObjectActivatedOnCombatEnd->IsActive()) gameObjectActivatedOnCombatEnd->Disable();
 	if (gameObjectDeactivatedOnCombatEnd && !gameObjectDeactivatedOnCombatEnd->IsActive()) gameObjectDeactivatedOnCombatEnd->Enable();
 
@@ -204,10 +210,6 @@ void SpawnPointController::OpenBridges()
 
 void SpawnPointController::CloseBridges()
 {
-	// Enabled the obstacles
-	if (bridgeObstacles && !bridgeObstacles->IsActive()) {
-		bridgeObstacles->Enable();
-	}
 	// Disabled gameobject
 	initialBridge->Disable();
 	finalBridge->Disable();
