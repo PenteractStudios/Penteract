@@ -72,7 +72,6 @@ void MovingLasers::Update() {
                 chargingTimer = 0.f;
                 currentState = GeneratorState::SHOOT;
             }
-            //Move();
         }
         break;
 
@@ -81,6 +80,7 @@ void MovingLasers::Update() {
                 currentState = GeneratorState::IDLE;
                 if (!beingUsed) {
                     animationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::SHOOT)] + states[static_cast<unsigned int>(GeneratorState::IDLE)]);
+                    currentState = GeneratorState::DISABLE;
                 }
                 if (pairScript->currentState == GeneratorState::IDLE) {
                     pairAnimationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::SHOOT)] + states[static_cast<unsigned int>(GeneratorState::IDLE)]);
@@ -90,6 +90,11 @@ void MovingLasers::Update() {
             Move();
         }
         break;
+    case GeneratorState::DISABLE:
+        movingToInit = false;
+        if (Move()) {
+            currentState = GeneratorState::IDLE;
+        }
     }
 
     if (currentState != GeneratorState::SHOOT) {
@@ -100,7 +105,7 @@ void MovingLasers::Update() {
     }
 }
 
-void MovingLasers::Move() {
+bool MovingLasers::Move() {
 
     float3 destination = (movingToInit) ? initialGeneratorPosition : finalGeneratorPosition;
     float3 newLaserScale = (movingToInit) ? minLaserEscale : maxLaserEscale;
@@ -109,8 +114,9 @@ void MovingLasers::Move() {
     float3 generatorPosition = transform->GetGlobalPosition();
 
     generatorPosition = Lerp(generatorPosition, destination, movementSpeed * Time::GetDeltaTime());
+    bool positionReached = generatorPosition.Distance(destination) < 0.5f;
 
-    if (generatorPosition.Distance(destination) < 0.5f) {
+    if (positionReached) {
         movingToInit = !movingToInit;
         if (pairScript->movingToInit != movingToInit) pairScript->Synchronize(movingToInit);
         generatorPosition = destination;
@@ -130,6 +136,7 @@ void MovingLasers::Move() {
         laserWarningVFX->SetScale(laserWarningScale);
     }
     transform->SetGlobalPosition(generatorPosition);
+    return positionReached;
 }
 
 void MovingLasers::TurnOn() {
@@ -140,8 +147,8 @@ void MovingLasers::TurnOn() {
 
 void MovingLasers::TurnOff() {
     beingUsed = false;
-    currentState = GeneratorState::IDLE;
-    if (pairScript && !pairScript->BeingUsed()) pairScript->TurnOff();
+    currentState = GeneratorState::DISABLE;
+    if (pairScript && pairScript->BeingUsed()) pairScript->TurnOff();
 }
 
 bool MovingLasers::BeingUsed() {

@@ -12,7 +12,8 @@ class MovingLasers : public Script
 	enum class GeneratorState {
 		START = 0,
 		SHOOT,
-		IDLE
+		IDLE,
+		DISABLE
 	};
 
 public:
@@ -50,7 +51,7 @@ public:
 
 private:
 
-	void Move();
+	bool Move(); // returns true if position = maxPosition || position = minPosition
 
 private:
 

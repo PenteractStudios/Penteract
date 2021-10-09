@@ -4,7 +4,8 @@
 #include "MovingLasers.h"
 
 EXPOSE_MEMBERS(LaserTriggerLvl2) {
-    MEMBER(MemberType::GAME_OBJECT_UID, laserUID)
+    MEMBER(MemberType::GAME_OBJECT_UID, laserUID),
+    MEMBER(MemberType::BOOL, SwitchOn)
 };
 
 GENERATE_BODY_IMPL(LaserTriggerLvl2);
@@ -20,8 +21,8 @@ void LaserTriggerLvl2::Update() {
 
 void LaserTriggerLvl2::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, float3 /*penetrationDistance*/, void* /*particle*/) {
     if (collidedWith.name == "Fang" || collidedWith.name == "Onimaru") {
-        laserScript->TurnOn();
+        if (laserScript) (SwitchOn)? laserScript->TurnOn() : laserScript->TurnOff();
         GameObject* ownerGo = &GetOwner();
-        ownerGo->GetComponent<ComponentSphereCollider>()->Disable();
+        if(ownerGo) ownerGo->Disable();
     }
 }

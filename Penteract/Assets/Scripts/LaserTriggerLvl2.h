@@ -10,6 +10,7 @@ class LaserTriggerLvl2 : public Script
 
 public:
 	UID laserUID = 0;
+	bool SwitchOn = true;
 public:
 
 	void Start() override;
@@ -18,7 +19,6 @@ public:
 
 
 private:
-
 	MovingLasers* laserScript = nullptr;
 };
 
