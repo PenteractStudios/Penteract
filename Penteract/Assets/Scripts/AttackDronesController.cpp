@@ -395,5 +395,5 @@ bool AttackDronesController::HadToWaitEndOfWave() const {
 }
 
 bool AttackDronesController::BulletHellActive() const {
-    return waves < chosenPattern.waves;
+    return waves <= chosenPattern.waves;
 }
