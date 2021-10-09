@@ -6,11 +6,14 @@
 #include <math.h>
 
 EXPOSE_MEMBERS(FloorIsLava) {
-    MEMBER(MemberType::FLOAT, timeTilesActive),
+	MEMBER_SEPARATOR("Normal Attributes"),
+    MEMBER(MemberType::FLOAT, timeTilesActiveNormal),
 	MEMBER(MemberType::FLOAT, timeWarning),
 	MEMBER(MemberType::STRING, container),
-	MEMBER(MemberType::BOOL, sequential)
+	MEMBER(MemberType::BOOL, sequential),
 
+	MEMBER_SEPARATOR("Boss Exclusive Attributes"),
+	MEMBER(MemberType::FLOAT, timeTilesActiveInterphase)
 };
 
 GENERATE_BODY_IMPL(FloorIsLava);
@@ -20,7 +23,7 @@ void FloorIsLava::Start() {
 	tiles = GetOwner().GetChildren();		
 	
 	if (container == "corridor") {
-		sequentialPatterns = corridorPatterns;
+		sequentialCorridorPatterns = corridorPatterns;
 	}
 	else if (container == "arena") {
 		pattern1 = arenaPattern1.pattern;
@@ -28,11 +31,11 @@ void FloorIsLava::Start() {
 		pattern3 = arenaPattern3.pattern;
 	}
 	else if (container == "boss") {
-		pattern1 = bossPattern1.pattern;
-		pattern2 = bossPattern2.pattern;
-		pattern3 = bossPattern3.pattern;
+		sequentialBossPatternsNormal = bossPatternsNormal;
+		sequentialBossPatternsInterphase = bossPatternsInterphase;
 	}
 	
+	timeTilesActive = timeTilesActiveNormal;
 	timeRemainingWarning = timeWarning;	
 }
 
@@ -43,20 +46,25 @@ void FloorIsLava::Update() {
 	//select a random corridor and arena pattern
 	if (patternFinished) {
 		if (sequential) {
-			currentTilesPattern = sequentialPatterns[sequentialCount].pattern;
-			++sequentialCount;
-			if (sequentialCount >= CORRIDOR_PATTERNS) {
-				sequentialCount = 0;
-			}	
-			nextTilesPattern = sequentialPatterns[sequentialCount].pattern;			
+			if (container == "boss") {
+				if (!interphase) {
+					SetSequentialPatterns(BOSS_PATTERNS_NORMAL, bossPatternsNormal);
+				}
+				else {
+					SetSequentialPatterns(BOSS_PATTERNS_INTERPHASE, bossPatternsInterphase);
+				}
+			}
+			else if (container == "corridor") {
+				SetSequentialPatterns(CORRIDOR_PATTERNS, sequentialCorridorPatterns);
+			}
 		}
 		else {
 			currentPattern = nextPattern;
 			while (currentPattern == nextPattern) {
 				nextPattern = 1 + (rand() % 3);
 			}
-			SetPattern(currentPattern, currentTilesPattern);
-			SetPattern(nextPattern, nextTilesPattern);
+			SetRandomPattern(currentPattern, currentTilesPattern);
+			SetRandomPattern(nextPattern, nextTilesPattern);
 		}
 		patternFinished = false;
 	}
@@ -71,7 +79,6 @@ void FloorIsLava::Update() {
 			timeRemainingWarning -= Time::GetDeltaTime();
 		}
 		else {
-			UpdateWarningTiles(false);
 			warningActive = false;
 			fireActive = true;
 			timeRemainingTilesActive = timeTilesActive;
@@ -83,13 +90,17 @@ void FloorIsLava::Update() {
 		if (firstTimeFireActive) {
 			UpdateFireActiveTiles(true);
 			firstTimeFireActive = false;
+			firsTimeFireStopped = true;
 		}
 
 		if (timeRemainingTilesActive > 0.f) {
 			timeRemainingTilesActive -= Time::GetDeltaTime();
 		}
 		else {
-			UpdateFireActiveTiles(false);
+			if (firsTimeFireStopped) {
+				UpdateFireActiveTiles(false);
+				firsTimeFireStopped = false;
+			}
 			if (timerTilesClosingRemaining <= timerTilesClosing) {
 				timerTilesClosingRemaining += Time::GetDeltaTime();
 			}
@@ -110,15 +121,22 @@ void FloorIsLava::Update() {
 void FloorIsLava::StartFire()
 {
 	started = true;
+	if (interphase) {
+		timeTilesActive = timeTilesActiveInterphase;
+	}
+	else {
+		timeTilesActive = timeTilesActiveNormal;
+	}
 }
 
 void FloorIsLava::StopFire()
 {
 	started = false;
+	UpdateFireActiveTiles(false);
 	if (sequential) sequentialCount = 0;
 }
 
-void FloorIsLava::SetPattern(int pattern, const bool*& boolPattern)
+void FloorIsLava::SetRandomPattern(int pattern, const bool*& boolPattern)
 {
 	switch (pattern)
 	{
@@ -134,6 +152,16 @@ void FloorIsLava::SetPattern(int pattern, const bool*& boolPattern)
 	default:
 		break;
 	}
+}
+
+void FloorIsLava::SetSequentialPatterns(int countSize, const TilesPattern* sequentialPattern)
+{
+	currentTilesPattern = sequentialPattern[sequentialCount].pattern;
+	++sequentialCount;
+	if (sequentialCount >= countSize) {
+		sequentialCount = 0;
+	}
+	nextTilesPattern = sequentialPattern[sequentialCount].pattern;
 }
 
 void FloorIsLava::UpdateWarningTiles(bool activate)
@@ -180,6 +208,11 @@ void FloorIsLava::UpdateFireActiveTiles(bool activate)
 			}
 		}		
 	}
+}
+
+void FloorIsLava::SetInterphase(bool interphaseActive)
+{
+	interphase = interphaseActive;
 }
 
 

@@ -36,6 +36,5 @@ const TilesPattern arenaPattern3 = TilesPattern(ARENA_TILES, true, true, true, f
 	true, false, true, true, true, false, true, false, true, false,
 	true, false);
 
-const TilesPattern bossPattern1 = TilesPattern(BOSS_TILES, true);
-const TilesPattern bossPattern2 = TilesPattern(BOSS_TILES, true);
-const TilesPattern bossPattern3 = TilesPattern(BOSS_TILES, true);
+const TilesPattern bossPatternsNormal = {};
+const TilesPattern bossPatternsInterphase = {};

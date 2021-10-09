@@ -5,7 +5,9 @@
 #define CORRIDOR_PATTERNS 11
 #define CORRIDOR_TILES 28
 #define ARENA_TILES 32
-#define BOSS_TILES 1
+#define BOSS_PATTERNS_NORMAL 11
+#define BOSS_PATTERNS_INTERPHASE 11
+#define BOSS_TILES 22
 
 class TilesPattern{
 public:
@@ -30,6 +32,5 @@ const extern TilesPattern arenaPattern1;
 const extern TilesPattern arenaPattern2;
 const extern TilesPattern arenaPattern3;
 
-const extern TilesPattern bossPattern1;
-const extern TilesPattern bossPattern2;
-const extern TilesPattern bossPattern3;
+const extern TilesPattern bossPatternsNormal [BOSS_PATTERNS_NORMAL];
+const extern TilesPattern bossPatternsInterphase [BOSS_PATTERNS_INTERPHASE];
