@@ -196,9 +196,15 @@ void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 		}
 
 		if (strcmp(eventName, "ThrowBarrels") == 0 && instantiateBarrel) {
-			InstantiateBarrel();
+			if (startSpawnBarrel) {
+				barrelSpawneScript->SpawnBarrels();
+				startSpawnBarrel = false;
+			}
+			else {
+				InstantiateBarrel();
+				startSpawnBarrel = true;
+			}
 			instantiateBarrel = false;
-			barrelSpawneScript->SpawnBarrels();
 		}
 		break;
 	case StateMachineEnum::SECONDARY:

@@ -92,6 +92,7 @@ public:
 	bool beingPushed = false;
 	bool slowedDown = false;
 	bool reducedDamaged = false;
+	bool startSpawnBarrel = false;
 
 	float3 chargeTarget;
 

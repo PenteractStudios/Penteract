@@ -30,6 +30,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::FLOAT, dukeCharacter.slowedDownSpeed),
 	MEMBER(MemberType::FLOAT, dukeCharacter.moveChangeEvery),
 	MEMBER(MemberType::FLOAT, dukeCharacter.distanceCorrectEvery),
+	MEMBER(MemberType::BOOL, dukeCharacter.startSpawnBarrel),
 
 	MEMBER_SEPARATOR("Duke Abilities Variables"),
 	MEMBER(MemberType::FLOAT, shieldCooldown),
