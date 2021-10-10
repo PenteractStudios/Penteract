@@ -68,6 +68,7 @@ public:
 	void OnAnimationFinished();
 	void OnAnimationSecondaryFinished();
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
+	void StopShooting();
 
 private:
 	int GetWalkAnimation();

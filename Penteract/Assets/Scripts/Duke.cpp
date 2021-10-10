@@ -73,6 +73,8 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 
 void Duke::ShootAndMove(const float3& playerDirection) {
 	// Shoot
+	Shoot();
+
 	movementTimer += Time::GetDeltaTime();
 	if (movementTimer >= movementChangeThreshold) {
 		perpendicular = playerDirection.Cross(float3(0, 1, 0));
@@ -86,10 +88,15 @@ void Duke::ShootAndMove(const float3& playerDirection) {
 		distanceCorrectionThreshold = distanceCorrectEvery + rng(gen);
 		distanceCorrectionTimer = 0.f;
 	}
+	/*if (compAnimation->GetCurrentStateSecondary()) {
+		if (compAnimation->GetCurrentStateSecondary()->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)] ||
+			!compAnimation->animationInterpolationsSecondary.empty() || !compAnimation->animationInterpolationsSecondary.empty()) return;
+	}*/
 	if (agent) agent->SetMoveTarget(dukeTransform->GetGlobalPosition() + perpendicular);
-	if (compAnimation) compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[GetWalkAnimation()]);
-	Shoot();
-	Debug::Log("I'm moving while shooting");
+	int movementAnim = GetWalkAnimation();
+	if (compAnimation && compAnimation->GetCurrentState()->name != animationStates[movementAnim]) {
+		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[movementAnim]);
+	}
 }
 
 void Duke::MeleeAttack()
@@ -118,7 +125,6 @@ void Duke::InitCharge(DukeState nextState)
 	if (compAnimation) {
 		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_START)]);
 	}
-	Debug::Log("Electric Tackle!");
 }
 
 void Duke::UpdateCharge(bool forceStop)
@@ -146,22 +152,24 @@ void Duke::UpdateCharge(bool forceStop)
 }
 
 void Duke::CallTroops() {
-	Debug::Log("Come, guys!");
 	if (encounters.size() > currentEncounter && encounters[currentEncounter] && !encounters[currentEncounter]->IsActive()) encounters[currentEncounter]->Enable();
 	currentEncounter++;
 }
 
 void Duke::Shoot()
 {
+	attackTimePool -= Time::GetDeltaTime();
 	if (isShooting) {
 		isShootingTimer += Time::GetDeltaTime();
 		if (isShootingTimer >= attackBurst / attackSpeed) {
 			isShooting = false;
-			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+			/*if (compAnimation && compAnimation->GetCurrentStateSecondary()) {
+				if (compAnimation->GetCurrentStateSecondary()->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)]) {
+					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+				}
+			}*/
 		}
-	}
-	attackTimePool -= Time::GetDeltaTime();
-	if (attackTimePool <= 0) {
+	} else if (attackTimePool <= 0) {
 		if (bullet) {
 			if (!meshObj) return;
 			bullet->PlayChildParticles();
@@ -170,15 +178,17 @@ void Duke::Shoot()
 		isShooting = true;
 		isShootingTimer = 0.f;
 		// Animation
-		if (compAnimation) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)]);
+		if (compAnimation && compAnimation->GetCurrentStateSecondary()) {
+			if (compAnimation->GetCurrentStateSecondary()->name != animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)]) {
+				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)]);
+			}
+		} else if (compAnimation) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)]);
+		}
 	}
-
-	Debug::Log("PIUM!");
 }
 
 void Duke::ThrowBarrels() {
-	Debug::Log("Here, barrel in your face!");
-
 	if (compAnimation->GetCurrentState()->name != animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]) {
 		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]);
 		instantiateBarrel = true;
@@ -191,7 +201,6 @@ void Duke::OnAnimationFinished()
 	State* currentState = compAnimation->GetCurrentState();
 	if (!currentState) return;
 
-	Debug::Log("Finishing");
 	if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PUNCH)]) {
 		hasMeleeAttacked = false;
 		compAnimation->SendTrigger(currentState->name + animationStates[DUKE_ANIMATION_STATES::IDLE]);
@@ -202,13 +211,11 @@ void Duke::OnAnimationFinished()
 		agent->SetMoveTarget(chargeTarget);
 		agent->SetMaxSpeed(chargeSpeed);
 		if (chargeCollider) chargeCollider->Enable();
-		Debug::Log("Start");
 		compAnimation->SendTrigger(currentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE)]);
 	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_END)]) {
 		if (chargeAttack) chargeAttack->Disable();
 		state = nextState;
 		agent->SetMaxSpeed(movementSpeed);
-		Debug::Log("End");
 		compAnimation->SendTrigger(currentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
 	}
 }
@@ -254,6 +261,17 @@ void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 	}
 }
 
+void Duke::StopShooting()
+{
+	/*if (compAnimation && compAnimation->GetCurrentStateSecondary()) {
+		if (compAnimation->GetCurrentStateSecondary()->name == animationStates[Duke::DUKE_ANIMATION_STATES::SHOOT]) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name +
+				compAnimation->GetCurrentState()->name);
+		}
+	}*/
+	if (isShooting) isShooting = false;
+}
+
 void Duke::InstantiateBarrel()
 {
 	//Instantiate barrel and play animation throw barrels for Duke and the barrel
@@ -267,18 +285,20 @@ int Duke::GetWalkAnimation()
 	float dot = Dot(perpendicular.Normalized(), dukeTransform->GetFront());
 	float3 cross = Cross(perpendicular.Normalized(), dukeTransform->GetFront());
 
-	if (dot >= 0.707) {
-		return static_cast<int>(DUKE_ANIMATION_STATES::WALK_FORWARD);
-	}
-	else if (dot <= -0.707) {
-		return static_cast<int>(DUKE_ANIMATION_STATES::WALK_BACK);
-	}
-	else {
+	int animNum = 0;
+	if (perpendicular.Length() <= 0.01f) {
+		animNum = static_cast<int>(DUKE_ANIMATION_STATES::IDLE);
+	} else if (dot >= 0.707) {
+		animNum = static_cast<int>(DUKE_ANIMATION_STATES::WALK_FORWARD);
+	} else if (dot <= -0.707) {
+		animNum = static_cast<int>(DUKE_ANIMATION_STATES::WALK_BACK);
+	} else {
 		if (cross.y > 0) {
-			return static_cast<int>(DUKE_ANIMATION_STATES::WALK_RIGHT);
+			animNum = static_cast<int>(DUKE_ANIMATION_STATES::WALK_RIGHT);
 		}
 		else {
-			return static_cast<int>(DUKE_ANIMATION_STATES::WALK_LEFT);
+			animNum = static_cast<int>(DUKE_ANIMATION_STATES::WALK_LEFT);
 		}
 	}
+	return animNum;
 }
