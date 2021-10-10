@@ -335,14 +335,7 @@ void AIDuke::Update() {
 				}
 				break;
 			case DukeState::BULLET_HELL:
-				dukeCharacter.reducedDamaged = true;
-				dukeCharacter.BulletHell();
-				currentAbilityChangeCooldown += Time::GetDeltaTime();
-				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
-					dukeCharacter.reducedDamaged = false;
-					currentAbilityChangeCooldown = 0.f;
-					dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
-				}
+				PerformBulletHell();
 				break;
 			case DukeState::BASIC_BEHAVIOUR:
 				currentAbilityChangeCooldown += Time::GetDeltaTime();
