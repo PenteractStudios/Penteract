@@ -141,14 +141,8 @@ private:
 	GameObject* rightBladeCollider = nullptr;
 	GameObject* leftBladeCollider = nullptr;
 
-	float currentPushBackDistance = 0.f;
 	float currentSlowedDownTime = 0.f;
-	float3 pushBackInitialPos = { 0,0,0 };
-	float3 pushBackFinalPos = { 0,0,0 };
 	float pushBackTimer = 0.f;
-
-	float pushBackRealDistance = 0.f;
-	float3 pushBackDirection = { 0,0,0 };
 
 	float currentDissolveTime = 0.0f;
 	bool dissolveAlreadyStarted = false;	//Used to control other material setters so it doesn't interfere with Dissolve's material
@@ -159,7 +153,6 @@ private:
 
 private:
 	void UpdatePushBackPosition();
-	void CalculatePushBackRealDistance();	// Calculates the real distance of the pushback taking into account any obstacles in the path
 	void Death();
 	void ParticleHit(GameObject& collidedWith, void* particle, Player& player_);
 	void PlayHitMaterialEffect();

@@ -196,7 +196,6 @@ void RangedAI::Start() {
 
 	enemySpawnPointScript = GET_SCRIPT(GetOwner().GetParent(), EnemySpawnPoint);
 
-	pushBackRealDistance = rangerGruntCharacter.pushBackDistance;
 	SetRandomMaterial();
 }
 
@@ -539,7 +538,16 @@ void RangedAI::UpdateState() {
 
 		break;
 	case AIState::PUSHED:
+		if (pushBackTimer > rangerGruntCharacter.pushBackTime) {
+			pushBackTimer = rangerGruntCharacter.pushBackTime;
+		}
 		UpdatePushBackPosition();
+		if (pushBackTimer == rangerGruntCharacter.pushBackTime) {
+			DisableBlastPushBack();
+		}
+		else {
+			pushBackTimer += Time::GetDeltaTime();
+		}
 		break;
 	default:
 		break;
@@ -651,7 +659,8 @@ void RangedAI::EnableBlastPushBack() {
 		pushEffectHasToStart = true;
 		timeToSrartPush = (minTimePushEffect + 1) + (((float)rand()) / (float)RAND_MAX) * (maxTimePushEffect - (minTimePushEffect + 1));
 		rangerGruntCharacter.beingPushed = true;
-		CalculatePushBackRealDistance();
+		pushBackTimer = 0.f;
+		rangerGruntCharacter.CalculatePushBackFinalPos(GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition(), player->GetComponent<ComponentTransform>()->GetGlobalPosition(), rangerGruntCharacter.pushBackDistance);
 		// Damage
 		if (playerController->playerOnimaru.level2Upgrade) {
 			rangerGruntCharacter.GetHit(playerController->playerOnimaru.blastDamage + playerController->GetOverPowerMode());
@@ -660,6 +669,7 @@ void RangedAI::EnableBlastPushBack() {
 			PlayHitMaterialEffect();
 			timeSinceLastHurt = 0.0f;
 		}
+		agent->Disable();
 	}
 }
 
@@ -667,6 +677,10 @@ void RangedAI::DisableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		ChangeState(AIState::IDLE);
 		rangerGruntCharacter.beingPushed = false;
+		agent->Enable();
+		agent->SetMaxSpeed(rangerGruntCharacter.slowedDownSpeed);
+		rangerGruntCharacter.slowedDown = true;
+		currentSlowedDownTime = 0.f;
 	}
 }
 
@@ -698,46 +712,7 @@ void RangedAI::ShootPlayerInRange() {
 }
 
 void RangedAI::UpdatePushBackPosition() {
-	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
-	float3 initialPos = enemyPos;
-
-	float3 direction = (enemyPos - playerPos).Normalized();
-
-	if (agent) {
-		enemyPos += direction * rangerGruntCharacter.pushBackTime * Time::GetDeltaTime();
-		agent->SetMoveTarget(enemyPos, false);
-		agent->SetMaxSpeed(rangerGruntCharacter.pushBackTime);
-		float distance = enemyPos.Distance(initialPos);
-		currentPushBackDistance += distance;
-
-		if (currentPushBackDistance >= pushBackRealDistance) {
-			agent->SetMaxSpeed(rangerGruntCharacter.slowedDownSpeed);
-			DisableBlastPushBack();
-			rangerGruntCharacter.slowedDown = true;
-			currentPushBackDistance = 0.f;
-			currentSlowedDownTime = 0.f;
-			pushBackRealDistance = rangerGruntCharacter.pushBackDistance;
-		}
-	}
-}
-
-void RangedAI::CalculatePushBackRealDistance() {
-	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
-
-	float3 direction = (enemyPos - playerPos).Normalized();
-
-	bool hitResult = false;
-
-	float3 finalPos = enemyPos + direction * rangerGruntCharacter.pushBackDistance;
-	float3 resultPos = { 0,0,0 };
-
-	Navigation::Raycast(enemyPos, finalPos, hitResult, resultPos);
-
-	if (hitResult) {
-		pushBackRealDistance = resultPos.Distance(enemyPos) - 1; // Should be agent radius but it's not exposed
-	}
+	ownerTransform->SetGlobalPosition(float3::Lerp(rangerGruntCharacter.pushBackInitialPos, rangerGruntCharacter.pushBackFinalPos, pushBackTimer / rangerGruntCharacter.pushBackTime));
 }
 
 void RangedAI::PlayHitMaterialEffect()

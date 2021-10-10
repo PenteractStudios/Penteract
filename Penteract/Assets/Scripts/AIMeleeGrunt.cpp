@@ -169,8 +169,6 @@ void AIMeleeGrunt::Start() {
 			}
 		}
 	}
-
-	pushBackRealDistance = gruntCharacter.pushBackDistance;
 	SetRandomMaterial();
 }
 
@@ -284,7 +282,7 @@ void AIMeleeGrunt::Update() {
 		}
 		break;
 	case AIState::PUSHED:
-		if (pushBackTimer <= gruntCharacter.pushBackTime) {
+		if (pushBackTimer > gruntCharacter.pushBackTime) {
 			pushBackTimer = gruntCharacter.pushBackTime;
 		}
 		UpdatePushBackPosition();
@@ -469,7 +467,7 @@ void AIMeleeGrunt::EnableBlastPushBack() {
 		pushEffectHasToStart = true;
 		timeToSrartPush = (minTimePushEffect + 1) + (((float)rand()) / (float)RAND_MAX) * (maxTimePushEffect - (minTimePushEffect + 1));
 		if (animation->GetCurrentState()) animation->SendTrigger(animation->GetCurrentState()->name + "Hurt");
-		CalculatePushBackRealDistance();
+		gruntCharacter.CalculatePushBackFinalPos(GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition(), player->GetComponent<ComponentTransform>()->GetGlobalPosition(), gruntCharacter.pushBackDistance);
 		// Damage
 		if (playerController->playerOnimaru.level2Upgrade) {
 			gruntCharacter.GetHit(playerController->playerOnimaru.blastDamage + playerController->GetOverPowerMode());
@@ -489,7 +487,6 @@ void AIMeleeGrunt::DisableBlastPushBack() {
 		state = AIState::IDLE;
 		agent->Enable();
 		gruntCharacter.slowedDown = true;
-		currentPushBackDistance = 0.f;
 		currentSlowedDownTime = 0.f;
 	}
 }
@@ -506,48 +503,7 @@ void AIMeleeGrunt::PlayHit()
 }
 
 void AIMeleeGrunt::UpdatePushBackPosition() {
-
-	Debug::Log("Updating position... Current y = %s", std::to_string(pushBackFinalPos.y));
-	ownerTransform->SetGlobalPosition(float3::Lerp(pushBackInitialPos,pushBackFinalPos, pushBackTimer / gruntCharacter.pushBackTime));
-
-	if (pushBackTimer == gruntCharacter.pushBackTime) {
-		Debug::Log("Hey");
-	}
-
-}
-
-void AIMeleeGrunt::CalculatePushBackRealDistance() {
-	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
-
-	pushBackDirection = (enemyPos - playerPos).Normalized();
-
-	bool hitResult = false;
-	pushBackInitialPos = enemyPos;
-	pushBackFinalPos = enemyPos + pushBackDirection * gruntCharacter.pushBackDistance;
-	float3 resultPos = { 0,0,0 };
-
-	Navigation::Raycast(enemyPos, pushBackFinalPos, hitResult, resultPos);
-
-	if (hitResult) {
-		pushBackFinalPos = resultPos - pushBackDirection;
-	}
-
-	float pushInitialHeight = -100.f;
-	float pushFinalHeight = -100.f;
-
-	Navigation::GetNavMeshHeightInPosition(pushBackInitialPos, pushInitialHeight);
-	Navigation::GetNavMeshHeightInPosition(pushBackFinalPos, pushFinalHeight);
-
-	if (pushInitialHeight != pushFinalHeight) {
-		Debug::Log("Initial height: %s", std::to_string(pushInitialHeight));
-		Debug::Log("Final height: %s", std::to_string(pushFinalHeight));
-		float heightDifference = pushFinalHeight - pushInitialHeight;
-		Debug::Log("Difference: %s", std::to_string(heightDifference));
-		pushBackFinalPos.y = enemyPos.y + pushFinalHeight - pushInitialHeight;
-		Debug::Log("Final y: %s", std::to_string(pushBackFinalPos.y));
-	}
-	
+	ownerTransform->SetGlobalPosition(float3::Lerp(gruntCharacter.pushBackInitialPos, gruntCharacter.pushBackFinalPos, pushBackTimer / gruntCharacter.pushBackTime));
 }
 
 void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {

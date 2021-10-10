@@ -38,3 +38,33 @@ void Character::SetDamageHit(float damageHit_) {
 bool Character::IsFullHealth() const {
 	return lifePoints == totalLifePoints;
 }
+
+void Character::CalculatePushBackFinalPos(const float3& enemyPos, const float3& playerPos, float pushBackDistance) {
+	pushBackDirection = (enemyPos - playerPos).Normalized();
+
+	bool hitResult = false;
+	pushBackInitialPos = enemyPos;
+	pushBackFinalPos = enemyPos + pushBackDirection * pushBackDistance;
+	float3 resultPos = { 0,0,0 };
+
+	Navigation::Raycast(enemyPos, pushBackFinalPos, hitResult, resultPos);
+
+	if (hitResult) {
+		pushBackFinalPos = resultPos - pushBackDirection;
+	}
+
+	float pushInitialHeight = -100.f;
+	float pushFinalHeight = -100.f;
+
+	Navigation::GetNavMeshHeightInPosition(pushBackInitialPos, pushInitialHeight);
+	Navigation::GetNavMeshHeightInPosition(pushBackFinalPos, pushFinalHeight);
+
+	if (pushInitialHeight != pushFinalHeight) {
+		Debug::Log("Initial height: %s", std::to_string(pushInitialHeight));
+		Debug::Log("Final height: %s", std::to_string(pushFinalHeight));
+		float heightDifference = pushFinalHeight - pushInitialHeight;
+		Debug::Log("Difference: %s", std::to_string(heightDifference));
+		pushBackFinalPos.y = enemyPos.y + pushFinalHeight - pushInitialHeight;
+		Debug::Log("Final y: %s", std::to_string(pushBackFinalPos.y));
+	}
+}
