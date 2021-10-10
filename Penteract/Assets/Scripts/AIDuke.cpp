@@ -205,19 +205,7 @@ void AIDuke::Update() {
 			}
 			break;
 		case DukeState::BULLET_HELL:
-			dukeCharacter.reducedDamaged = true;
-			if (!bulletHellIsActive) {
-				dukeCharacter.BulletHell();
-				bulletHellIsActive = true;
-			}
-			if (dukeCharacter.BulletHellFinished()){
-				dukeCharacter.DisableBulletHell();
-				bulletHellIsActive = false;
-				dukeCharacter.reducedDamaged = false;
-				currentBulletHellCooldown = 0.f;
-				currentBulletHellActiveTime = 0.f;
-				dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
-			}
+			PerformBulletHell();
 			break;
 		case DukeState::CHARGE:
 			dukeCharacter.UpdateCharge();
@@ -316,15 +304,7 @@ void AIDuke::Update() {
 				dukeCharacter.state = DukeState::BULLET_HELL;
 				break;
 			case DukeState::BULLET_HELL:
-				dukeCharacter.reducedDamaged = true;
-				dukeCharacter.BulletHell();
-				currentBulletHellActiveTime += Time::GetDeltaTime();
-				if (currentBulletHellActiveTime >= bulletHellActiveTime) {
-					dukeCharacter.reducedDamaged = false;
-					currentBulletHellCooldown = 0.f;
-					currentBulletHellActiveTime = 0.f;
-					dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
-				}
+				PerformBulletHell();
 				break;
 			case DukeState::STUNNED:
 				if (stunTimeRemaining <= 0.f) {
@@ -631,6 +611,21 @@ void AIDuke::ParticleHit(GameObject& collidedWith, void* particle, Player& playe
 		dukeCharacter.GetHit(damage * 2 + playerController->GetOverPowerMode());
 	} else {
 		dukeCharacter.GetHit(damage + playerController->GetOverPowerMode());
+	}
+}
+
+void AIDuke::PerformBulletHell() {
+	dukeCharacter.reducedDamaged = true;
+	if (!bulletHellIsActive) {
+		dukeCharacter.BulletHell();
+		bulletHellIsActive = true;
+	}
+	if (dukeCharacter.BulletHellFinished()) {
+		dukeCharacter.DisableBulletHell();
+		bulletHellIsActive = false;
+		dukeCharacter.reducedDamaged = false;
+		currentBulletHellCooldown = 0.f;
+		dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 	}
 }
 
