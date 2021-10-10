@@ -14,7 +14,15 @@
 EXPOSE_MEMBERS(AttackDronesController) {
     MEMBER(MemberType::GAME_OBJECT_UID, dronesParentUID),
     MEMBER(MemberType::PREFAB_RESOURCE_UID, dronePrefabUID),
-    MEMBER(MemberType::FLOAT, bulletHellDelay)
+
+    MEMBER_SEPARATOR("Delay until drones are positioned"),
+    MEMBER(MemberType::FLOAT, dronesRepositionDelay),
+
+    MEMBER_SEPARATOR("Delay until drones start shooting"),
+    MEMBER(MemberType::FLOAT, dronesStartShootingDelay),
+
+    MEMBER_SEPARATOR("Delay until drones start leaving"),
+    MEMBER(MemberType::FLOAT, dronesDismissDelay)
 };
 
 GENERATE_BODY_IMPL(AttackDronesController);
@@ -70,9 +78,21 @@ void AttackDronesController::Update() {
     }
 
     if (mustStartBulletHell) {
-        if (currentTime > bulletHellDelay) {
+        if (currentTime > dronesRepositionDelay + dronesStartShootingDelay) {
             StartWave();
             mustStartBulletHell = false;
+            currentTime = 0.0f;
+        }
+        else {
+            currentTime += Time::GetDeltaTime();
+        }
+    }
+
+    if (mustStopBulletHell) {
+        if (currentTime > dronesDismissDelay) {
+            DismissDrones();
+            mustStopBulletHell = false;
+            currentTime = 0.0f;
         }
         else {
             currentTime += Time::GetDeltaTime();
@@ -121,6 +141,7 @@ void AttackDronesController::StartBulletHell() {
     waves = 1;
     cycle = chosenPattern.cycles[0];
     mustStartBulletHell = true;
+    mustStopBulletHell = false;
     currentTime = 0.0f;
     rotationOffset = 0.0f;
     bulletHellFinished = false;
@@ -135,7 +156,7 @@ void AttackDronesController::EndOfWave() {
     waves++;
     if (waves > chosenPattern.waves) {
         bulletHellFinished = true;
-        DismissDrones();
+        mustStopBulletHell = true;
     }
     if (waves > chosenPattern.waves || !HadToWaitEndOfWave()) return;
     
@@ -196,13 +217,13 @@ void AttackDronesController::RemoveDrone() {
 
 void AttackDronesController::DeployDrones() {
     for (AttackDroneBehavior* drone : dronesScripts) {
-        drone->Deploy(bulletHellDelay * 0.8f);
+        drone->Deploy(dronesRepositionDelay);
     }
 }
 
 void AttackDronesController::DismissDrones() {
     for (AttackDroneBehavior* drone : dronesScripts) {
-        drone->Dismiss(bulletHellDelay * 1.3f);
+        drone->Dismiss(dronesRepositionDelay);
     }
 }
 

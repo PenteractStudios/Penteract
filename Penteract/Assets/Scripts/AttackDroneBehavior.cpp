@@ -144,7 +144,10 @@ void AttackDroneBehavior::Translate() {
         progress = Time::GetDeltaTime() * (isRecoiling ? droneSpeedOnRecoil : droneSpeed);
     }
     
-    if (isDeploying || isDismissing) {
+    if (isDismissing) {
+        transform->SetGlobalPosition(CurvesGenerator::SmoothStep7Float3(transform->GetGlobalPosition(), targetPosition, progress));
+    }
+    else if (isDeploying) {
         transform->SetGlobalPosition(CurvesGenerator::SmoothStep7Float3(transform->GetGlobalPosition(), targetPosition, progress));
     }
     else {

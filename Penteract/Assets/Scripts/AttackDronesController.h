@@ -32,7 +32,9 @@ public:
 	UID dronesParentUID = 0;
 	UID dronePrefabUID = 0;
 
-	float bulletHellDelay = 0.75f;		// Time that needs to pass until the bullet hell starts to fire
+	float dronesRepositionDelay = 1.5f;			// Time that needs to position drones
+	float dronesStartShootingDelay = 0.25f;		// Time to start shooting
+	float dronesDismissDelay = 0.25f;			// Time until drones are dismissed
 	
 private:
 	void RecalculateFormations();
@@ -71,6 +73,7 @@ private:
 
 	// Bullet Hell shoot start
 	bool mustStartBulletHell = false;
+	bool mustStopBulletHell = false;
 	float currentTime = 0.0f;
 
 	int waves = 0;
