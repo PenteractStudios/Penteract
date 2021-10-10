@@ -143,6 +143,7 @@ private:
 
 	float currentSlowedDownTime = 0.f;
 	float pushBackTimer = 0.f;
+	bool reactivateCollider = true;
 
 	float currentDissolveTime = 0.0f;
 	bool dissolveAlreadyStarted = false;	//Used to control other material setters so it doesn't interfere with Dissolve's material

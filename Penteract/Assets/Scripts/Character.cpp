@@ -60,11 +60,6 @@ void Character::CalculatePushBackFinalPos(const float3& enemyPos, const float3& 
 	Navigation::GetNavMeshHeightInPosition(pushBackFinalPos, pushFinalHeight);
 
 	if (pushInitialHeight != pushFinalHeight) {
-		Debug::Log("Initial height: %s", std::to_string(pushInitialHeight));
-		Debug::Log("Final height: %s", std::to_string(pushFinalHeight));
-		float heightDifference = pushFinalHeight - pushInitialHeight;
-		Debug::Log("Difference: %s", std::to_string(heightDifference));
 		pushBackFinalPos.y = enemyPos.y + pushFinalHeight - pushInitialHeight;
-		Debug::Log("Final y: %s", std::to_string(pushBackFinalPos.y));
 	}
 }

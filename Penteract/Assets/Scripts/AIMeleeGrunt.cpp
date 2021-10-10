@@ -285,6 +285,12 @@ void AIMeleeGrunt::Update() {
 		if (pushBackTimer > gruntCharacter.pushBackTime) {
 			pushBackTimer = gruntCharacter.pushBackTime;
 		}
+		// Reactivate collider
+		if (reactivateCollider && pushBackTimer >= gruntCharacter.pushBackTime / 4.0f) {
+			ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
+			if (collider) collider->Enable();
+			reactivateCollider = false;
+		}
 		UpdatePushBackPosition();
 		if (pushBackTimer == gruntCharacter.pushBackTime) {
 			DisableBlastPushBack();
@@ -477,6 +483,11 @@ void AIMeleeGrunt::EnableBlastPushBack() {
 			timeSinceLastHurt = 0.0f;
 		}
 		agent->Disable();
+
+		// Need to do this. When the enemy is too close to the player the collider causes the enemy to stay in place
+		ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
+		if (collider) collider->Disable();
+		reactivateCollider = true;
 	}
 }
 
