@@ -15,6 +15,8 @@ EXPOSE_MEMBERS(PlayerDeath) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::FLOAT, rangedDamageTaken),
 	MEMBER(MemberType::FLOAT, meleeDamageTaken),
+	MEMBER(MemberType::FLOAT, dukeDamageTaken),
+	MEMBER(MemberType::FLOAT, dukeChargeDamageTaken),
 	MEMBER(MemberType::FLOAT, barrelDamageTaken),
 	MEMBER(MemberType::FLOAT, laserBeamTaken),
 	MEMBER(MemberType::FLOAT, laserHitCooldown),
@@ -135,6 +137,24 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 			if (playerController) playerController->TakeDamage(fireDamageTaken);
 			fireDamageActive = false;
 		}
+	} else if (collidedWith.name == "DukeProjectile") {
+		if (!particle) return;
+		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+		if (pSystem) pSystem->KillParticle(p);
+		if (playerController) playerController->TakeDamage(dukeDamageTaken);
+	} else if (collidedWith.name == "DukeCharge") {
+		if (playerController) {
+			playerController->TakeDamage(dukeChargeDamageTaken);
+			// Push the player a little bit
+			PushPlayerBack(collisionNormal);
+		}
+	} else if (collidedWith.name == "DukePunch") {
+		if (playerController) {
+			playerController->TakeDamage(dukeDamageTaken);
+			PushPlayerBack(collisionNormal);
+		}
+		collidedWith.Disable();
 	}
 }
 
@@ -148,4 +168,13 @@ void PlayerDeath::OnLoseConditionMet() {
 			if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 		}
 	}
+}
+
+void PlayerDeath::PushPlayerBack(float3 collisionNormal)
+{
+	playerController->playerFang.IsActive() ? playerController->playerFang.agent->RemoveAgentFromCrowd() : playerController->playerOnimaru.agent->RemoveAgentFromCrowd();
+	ComponentTransform* playerTransform = playerController->playerFang.playerMainTransform;
+	collisionNormal.y = 0;
+	playerTransform->SetGlobalPosition(playerTransform->GetGlobalPosition() + 1.2f * collisionNormal.Normalized());
+	playerController->playerFang.IsActive() ? playerController->playerFang.agent->AddAgentToCrowd() : playerController->playerOnimaru.agent->AddAgentToCrowd();
 }

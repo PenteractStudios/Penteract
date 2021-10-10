@@ -41,6 +41,7 @@ public:
 	void OnCollision(GameObject& collidedWith, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* particle = nullptr) override; //This is commented until merge with collisions
 	void ShootPlayerInRange(); //Sets in motion the shooting at the player, if found and close enough
 
+	void DoStunned();
 	void EnablePushFeedback();
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
@@ -126,6 +127,8 @@ public:
 	GameObject* objectPush = nullptr;
 	float maxTimePushEffect = 1.0f;
 	float minTimePushEffect = 0.0f;
+
+	bool isSniper = false;	// This is set for ranged enemies that will not chase the player
 
 private:
 

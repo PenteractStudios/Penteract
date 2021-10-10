@@ -44,6 +44,7 @@ public:
 		RUNBACKWARDLEFT,
 		RUNBACKWARDRIGHT,
 		SHOOTBLAST,
+		IDLE_AIM,
 
 	};
 
@@ -52,7 +53,7 @@ public:
 					"EnergyBlast", "UltiLoopWalking" , "UltiIntro" , "UltiLoop" ,
 					"Death" , "Shooting", "Shield", "ShootingShield",
 					"RunForwardLeft","RunForwardRight", "RunBackwardLeft", "RunBackwardRight"
-					, "ShootingBlast"
+					, "ShootingBlast" , "IdleAim"
 	};
 
 	//Onimaru ultimate related
@@ -69,6 +70,8 @@ public:
 	// Shield
 	float shieldReboundedDamage = 1.0f;
 	float shieldingMaxSpeed = 2.0f;
+
+	float shieldBeingUsed = 0.f;
 
 public:
 	// ------- Contructors ------- //
@@ -98,6 +101,8 @@ public:
 	bool IsShielding() const;
 	bool IsVulnerable() const override;
 	float GetNormalizedRemainingUltimateTime()const;
+	void ResetToIdle() override;
+
 private:
 
 	ResourcePrefab* trail = nullptr;
@@ -152,6 +157,7 @@ private:
 	void Shoot() override;
 	void Blast();
 	void PlayAnimation();
+	void ResetIsInCombatValues();
 
 	void StartUltimate();
 	void FinishUltimate();
