@@ -5,6 +5,7 @@
 #include "Components/ComponentParticleSystem.h"
 #include "AttackDronesController.h"
 #include "RandomNumberGenerator.h"
+#include "CurvesGenerator.h"
 
 EXPOSE_MEMBERS(AttackDroneBehavior) {
     MEMBER_SEPARATOR("References"),
@@ -34,25 +35,19 @@ void AttackDroneBehavior::Start() {
         dronesControllerScript = GET_SCRIPT(dronesController, AttackDronesController);
     }
 
+    GameObject* parent = GetOwner().GetParent();
+    if (parent) {
+        dronesContainerTransform = parent->GetComponent<ComponentTransform>();
+    }
+
     hoverCurrentTime = RandomNumberGenerator::GenerateFloat(-1.5708, 1.5708);
 }
 
 void AttackDroneBehavior::Update() {
-    if (!transform || !dronesControllerTransform) return;
+    if (!transform || !dronesControllerTransform || !dronesContainerTransform || droneDisabled) return;
 
-    transform->SetGlobalPosition(float3::Lerp(transform->GetGlobalPosition(), dronesControllerTransform->GetGlobalPosition() + positionOffset + GetHoverOffset() + GetRecoilOffset(), Time::GetDeltaTime() * (isRecoiling ? droneSpeedOnRecoil : droneSpeed)));
-    
-    if (mustForceRotation) {
-        float3 direction = (transform->GetGlobalPosition() - dronesControllerTransform->GetGlobalPosition()).Normalized();
-        float3 right = Cross(float3(0, 1, 0), direction);
-        direction = Cross(right, float3(0, 1, 0));
-
-        transform->SetGlobalRotation(Quat::Lerp(transform->GetGlobalRotation(), Quat(float3x3(right, float3(0, 1, 0), direction)), Time::GetDeltaTime() * droneRotationSpeed));
-    }
-    else {
-        transform->SetGlobalRotation(Quat::Lerp(transform->GetGlobalRotation(), dronesControllerTransform->GetGlobalRotation(), Time::GetDeltaTime() * droneRotationSpeed));
-    }
-
+    Translate();
+    Rotate();
     Shoot();
 }
 
@@ -105,6 +100,71 @@ void AttackDroneBehavior::StartWave(int newWaves, float bulletDelay, float timeB
     delay = timeBetweenWaves;
 }
 
+void AttackDroneBehavior::Deploy(float timeToReach) {
+    isDeploying = true;
+    isDismissing = false;
+    deployTime = timeToReach;
+    currentDeployTime = 0.0f;
+    droneDisabled = false;
+}
+
+void AttackDroneBehavior::Dismiss(float timeToReach) {
+    isDismissing = true;
+    isDeploying = false;
+    dismissTime = timeToReach;
+    currentDismissTime = 0.0f;
+}
+
+
+void AttackDroneBehavior::Translate() {
+    float3 targetPosition = dronesControllerTransform->GetGlobalPosition() + positionOffset + GetHoverOffset() + GetRecoilOffset();
+    float progress = 0.0f;
+    if (isDeploying) {
+        progress = currentDeployTime / deployTime;
+        if (currentDeployTime > deployTime) {
+            isDeploying = false;
+        }
+        else {
+            currentDeployTime += Time::GetDeltaTime();
+        }
+    }
+    else if (isDismissing) {
+        progress = currentDismissTime / dismissTime;
+        targetPosition.y += 20.0f;
+
+        if (currentDismissTime > dismissTime) {
+            isDismissing = false;
+            droneDisabled = true;
+        }
+        else {
+            currentDismissTime += Time::GetDeltaTime();
+        }
+    }
+    else {
+        progress = Time::GetDeltaTime() * (isRecoiling ? droneSpeedOnRecoil : droneSpeed);
+    }
+    
+    if (isDeploying || isDismissing) {
+        transform->SetGlobalPosition(CurvesGenerator::SmoothStep7Float3(transform->GetGlobalPosition(), targetPosition, progress));
+    }
+    else {
+        transform->SetGlobalPosition(float3::Lerp(transform->GetGlobalPosition(), targetPosition, progress));
+    }
+}
+
+void AttackDroneBehavior::Rotate() {
+    if (mustForceRotation) {
+        float3 direction = (transform->GetGlobalPosition() - dronesControllerTransform->GetGlobalPosition()).Normalized();
+        float3 right = Cross(float3(0, 1, 0), direction);
+        direction = Cross(right, float3(0, 1, 0));
+
+        transform->SetGlobalRotation(Quat::Lerp(transform->GetGlobalRotation(), Quat(float3x3(right, float3(0, 1, 0), direction)), Time::GetDeltaTime() * droneRotationSpeed));
+    }
+    else {
+        transform->SetGlobalRotation(Quat::Lerp(transform->GetGlobalRotation(), dronesControllerTransform->GetGlobalRotation(), Time::GetDeltaTime() * droneRotationSpeed));
+    }
+}
+
 float3 AttackDroneBehavior::GetHoverOffset() {
     float3 hoverPosition = float3(0.0f, 0.0f, 0.0f);
 
@@ -130,7 +190,6 @@ float3 AttackDroneBehavior::GetRecoilOffset() {
 
             recoilCurrentTime += Time::GetDeltaTime();
         }
-
     }
 
     return recoilPosition;

@@ -128,11 +128,15 @@ void AttackDronesController::StartBulletHell() {
     CheckDronesWaitEndOfWave();
     RecalculateFormations();
     SetDronesFormation(chosenPattern.droneFormation);
+    DeployDrones();
 }
 
 void AttackDronesController::EndOfWave() {
     waves++;
-    if (waves > chosenPattern.waves) bulletHellFinished = true;
+    if (waves > chosenPattern.waves) {
+        bulletHellFinished = true;
+        DismissDrones();
+    }
     if (waves > chosenPattern.waves || !HadToWaitEndOfWave()) return;
     
     cycle = chosenPattern.cycles[waves - 1];
@@ -188,6 +192,18 @@ void AttackDronesController::RemoveDrone() {
 
     RecalculateFormations();
     RepositionDrones();
+}
+
+void AttackDronesController::DeployDrones() {
+    for (AttackDroneBehavior* drone : dronesScripts) {
+        drone->Deploy(bulletHellDelay * 0.8f);
+    }
+}
+
+void AttackDronesController::DismissDrones() {
+    for (AttackDroneBehavior* drone : dronesScripts) {
+        drone->Dismiss(bulletHellDelay * 1.3f);
+    }
 }
 
 void AttackDronesController::RecalculateFormations() {

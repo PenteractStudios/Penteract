@@ -24,6 +24,8 @@ public:
 	void SetControllerScript(AttackDronesController* controllerScript);
 	void Shoot();
 	void StartWave(int newWaves, float bulletDelay, float timeBetweenWaves);
+	void Deploy(float timeToReach);
+	void Dismiss(float timeToReach);
 
 public:
 	UID dronesControllerUID = 0;
@@ -41,6 +43,8 @@ public:
 	float droneRecoilTime = 0.2f;
 
 private:
+	void Translate();
+	void Rotate();
 	float3 GetHoverOffset();
 	float3 GetRecoilOffset();
 
@@ -48,9 +52,20 @@ private:
 	GameObject* dronesController = nullptr;
 	ComponentTransform* dronesControllerTransform = nullptr;
 	ComponentTransform* transform = nullptr;
+	ComponentTransform* dronesContainerTransform = nullptr;
 	AttackDronesController* dronesControllerScript = nullptr;
 
 	ProjectileController shooter;
+
+	bool droneDisabled = false;
+
+	bool isDeploying = false;
+	float deployTime = 1.0f;
+	float currentDeployTime = 0.0f;
+
+	bool isDismissing = false;
+	float dismissTime = 1.0f;
+	float currentDismissTime = 0.0f;
 
 	bool mustReposition = false;
 	float3 positionOffset = float3(0.0f, 0.0f, 0.0f);

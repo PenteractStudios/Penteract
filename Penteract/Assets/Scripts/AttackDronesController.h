@@ -25,6 +25,8 @@ public:
 	void SetDronesFormation(DronesFormation newFormation);
 	void AddDrone();
 	void RemoveDrone();
+	void DeployDrones();
+	void DismissDrones();
 
 public:
 	UID dronesParentUID = 0;
