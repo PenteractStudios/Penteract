@@ -9,4 +9,5 @@ GameObject* ProjectileController::Shoot(UID bulletPrefabUID, float3 position, Qu
 	if (!bulletPrefab) return nullptr;
 
 	GameObject* projectileInstance(GameplaySystems::Instantiate(bulletPrefab, position, rotation));
+	return projectileInstance;
 }
