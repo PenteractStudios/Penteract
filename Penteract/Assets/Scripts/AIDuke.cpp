@@ -88,7 +88,8 @@ void AIDuke::Start() {
 		dukeShield = GET_SCRIPT(shieldObj, DukeShield);
 	}
 
-	// Init Duke character	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, encounters);
+	// Init Duke character	
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, encounters);
 }
 
 void AIDuke::Update() {
