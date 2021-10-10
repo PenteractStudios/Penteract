@@ -30,7 +30,7 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 		if (bullet) {
 			bullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
 			bullet->Play();
-			bullet->SetMaxParticles(attackBurst);
+			bullet->SetMaxParticles(attackBurst*2);
 			bullet->SetParticlesPerSecond(float2(attackSpeed, attackSpeed));
 			bullet->SetDuration(attackBurst / attackSpeed);
 		}
@@ -88,10 +88,7 @@ void Duke::ShootAndMove(const float3& playerDirection) {
 		distanceCorrectionThreshold = distanceCorrectEvery + rng(gen);
 		distanceCorrectionTimer = 0.f;
 	}
-	/*if (compAnimation->GetCurrentStateSecondary()) {
-		if (compAnimation->GetCurrentStateSecondary()->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)] ||
-			!compAnimation->animationInterpolationsSecondary.empty() || !compAnimation->animationInterpolationsSecondary.empty()) return;
-	}*/
+
 	if (agent) agent->SetMoveTarget(dukeTransform->GetGlobalPosition() + perpendicular);
 	int movementAnim = GetWalkAnimation();
 	if (compAnimation && compAnimation->GetCurrentState()->name != animationStates[movementAnim]) {
@@ -161,13 +158,13 @@ void Duke::Shoot()
 	attackTimePool -= Time::GetDeltaTime();
 	if (isShooting) {
 		isShootingTimer += Time::GetDeltaTime();
-		if (isShootingTimer >= attackBurst / attackSpeed) {
+		if (isShootingTimer >= (attackBurst-1) / attackSpeed) {
 			isShooting = false;
-			/*if (compAnimation && compAnimation->GetCurrentStateSecondary()) {
+			if (compAnimation && compAnimation->GetCurrentStateSecondary()) {
 				if (compAnimation->GetCurrentStateSecondary()->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)]) {
 					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 				}
-			}*/
+			}
 		}
 	} else if (attackTimePool <= 0) {
 		if (bullet) {
@@ -178,11 +175,7 @@ void Duke::Shoot()
 		isShooting = true;
 		isShootingTimer = 0.f;
 		// Animation
-		if (compAnimation && compAnimation->GetCurrentStateSecondary()) {
-			if (compAnimation->GetCurrentStateSecondary()->name != animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)]) {
-				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)]);
-			}
-		} else if (compAnimation) {
+		if (compAnimation) {
 			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)]);
 		}
 	}
@@ -263,12 +256,12 @@ void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 
 void Duke::StopShooting()
 {
-	/*if (compAnimation && compAnimation->GetCurrentStateSecondary()) {
+	if (compAnimation && compAnimation->GetCurrentStateSecondary()) {
 		if (compAnimation->GetCurrentStateSecondary()->name == animationStates[Duke::DUKE_ANIMATION_STATES::SHOOT]) {
 			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name +
 				compAnimation->GetCurrentState()->name);
 		}
-	}*/
+	}
 	if (isShooting) isShooting = false;
 }
 

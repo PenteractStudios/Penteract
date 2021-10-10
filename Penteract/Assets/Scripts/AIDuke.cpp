@@ -106,11 +106,6 @@ void AIDuke::Update() {
 		}
 	}
 
-	Debug::Log(dukeCharacter.compAnimation->GetCurrentState()->name.c_str());
-	Debug::Log("----");
-	if (dukeCharacter.compAnimation->GetCurrentStateSecondary()) Debug::Log(dukeCharacter.compAnimation->GetCurrentStateSecondary()->name.c_str());
-	Debug::Log("**********");
-
 	switch (phase) {
 	case Phase::PHASE1:
 		currentShieldCooldown += Time::GetDeltaTime();
@@ -249,7 +244,6 @@ void AIDuke::Update() {
 
 		break;
 	case Phase::PHASE2:
-		 Debug::Log("PHASE2");
 		if (!activeLasers && dukeCharacter.lifePoints < lasersThreshold * dukeCharacter.GetTotalLifePoints()) {
 			activeLasers = true;
 			// TODO: signal lasers activation
