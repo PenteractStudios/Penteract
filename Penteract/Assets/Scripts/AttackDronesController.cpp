@@ -53,30 +53,6 @@ void AttackDronesController::Update() {
         RepositionDrones();
     }
 
-    if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_I)) {
-        SetDronesFormation(DronesFormation::LINE);
-    }
-
-    if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_O)) {
-        SetDronesFormation(DronesFormation::ARROW);
-    }
-
-    if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_P)) {
-        SetDronesFormation(DronesFormation::CIRCLE);
-    }
-
-    if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_9)) {
-        AddDrone();
-    }
-
-    if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_0)) {
-        RemoveDrone();
-    }
-
-    if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_B)) {
-        StartBulletHell();
-    }
-
     if (mustStartBulletHell) {
         if (currentTime > dronesRepositionDelay + dronesStartShootingDelay) {
             StartWave();
