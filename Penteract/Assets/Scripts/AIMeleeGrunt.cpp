@@ -507,7 +507,7 @@ void AIMeleeGrunt::PlayHit()
 
 void AIMeleeGrunt::UpdatePushBackPosition() {
 
-	Debug::Log("Updating position...");
+	Debug::Log("Updating position... Current y = %s", std::to_string(pushBackFinalPos.y));
 	ownerTransform->SetGlobalPosition(float3::Lerp(pushBackInitialPos,pushBackFinalPos, pushBackTimer / gruntCharacter.pushBackTime));
 
 	if (pushBackTimer == gruntCharacter.pushBackTime) {
@@ -532,6 +532,22 @@ void AIMeleeGrunt::CalculatePushBackRealDistance() {
 	if (hitResult) {
 		pushBackFinalPos = resultPos - pushBackDirection;
 	}
+
+	float pushInitialHeight = -100.f;
+	float pushFinalHeight = -100.f;
+
+	Navigation::GetNavMeshHeightInPosition(pushBackInitialPos, pushInitialHeight);
+	Navigation::GetNavMeshHeightInPosition(pushBackFinalPos, pushFinalHeight);
+
+	if (pushInitialHeight != pushFinalHeight) {
+		Debug::Log("Initial height: %s", std::to_string(pushInitialHeight));
+		Debug::Log("Final height: %s", std::to_string(pushFinalHeight));
+		float heightDifference = pushFinalHeight - pushInitialHeight;
+		Debug::Log("Difference: %s", std::to_string(heightDifference));
+		pushBackFinalPos.y = enemyPos.y + pushFinalHeight - pushInitialHeight;
+		Debug::Log("Final y: %s", std::to_string(pushBackFinalPos.y));
+	}
+	
 }
 
 void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
