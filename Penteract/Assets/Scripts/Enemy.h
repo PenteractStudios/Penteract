@@ -9,13 +9,13 @@ public:
 	// ------- Contructors ------- //
 	Enemy() {};
 
-	Enemy(float lifePoints_, float movementSpeed_, float damageHit_, float fallingSpeed_, float searchRadius_, float attackRange_, float timeToDie_, float pushBackDistance_, float pushBackSpeed_, float slowedDownSpeed_, float slowedDownTime_)
+	Enemy(float lifePoints_, float movementSpeed_, float damageHit_, float fallingSpeed_, float searchRadius_, float attackRange_, float timeToDie_, float pushBackDistance_, float pushBackTime_, float slowedDownSpeed_, float slowedDownTime_)
 		: fallingSpeed(fallingSpeed_)
 		, searchRadius(searchRadius_)
 		, attackRange(attackRange_)
 		, timeToDie(timeToDie_)
 		, pushBackDistance(pushBackDistance_)
-		, pushBackTime(pushBackSpeed_)
+		, pushBackTime(pushBackTime_)
 		, slowedDownSpeed(slowedDownSpeed_)
 		, slowedDownTime(slowedDownTime_) {
 		lifePoints = lifePoints_;
