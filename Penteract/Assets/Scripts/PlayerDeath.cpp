@@ -112,7 +112,7 @@ void PlayerDeath::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char
 	}
 }
 
-void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 /* penetrationDistance */, void* particle) {
 	if (collidedWith.name == "WeaponParticles") {
 		if (!particle) return;
 		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
@@ -188,6 +188,6 @@ void PlayerDeath::PushPlayerBack(float3 collisionNormal)
 	playerController->playerFang.IsActive() ? playerController->playerFang.agent->RemoveAgentFromCrowd() : playerController->playerOnimaru.agent->RemoveAgentFromCrowd();
 	ComponentTransform* playerTransform = playerController->playerFang.playerMainTransform;
 	collisionNormal.y = 0;
-	playerTransform->SetGlobalPosition(playerTransform->GetGlobalPosition() + 1.2 * collisionNormal.Normalized());
+	playerTransform->SetGlobalPosition(playerTransform->GetGlobalPosition() + 1.2f * collisionNormal.Normalized());
 	playerController->playerFang.IsActive() ? playerController->playerFang.agent->AddAgentToCrowd() : playerController->playerOnimaru.agent->AddAgentToCrowd();
 }

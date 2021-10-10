@@ -613,7 +613,7 @@ void AIDuke::UpdatePushBackPosition() {
 	}
 }
 
-void AIDuke::ParticleHit(GameObject& collidedWith, void* particle, Player& player) {
+void AIDuke::ParticleHit(GameObject& collidedWith, void* particle, Player& player_) {
 	if (!particle) return;
 	ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
