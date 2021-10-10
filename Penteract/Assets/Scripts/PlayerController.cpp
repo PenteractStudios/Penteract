@@ -25,7 +25,6 @@
 int PlayerController::currentLevel = 1;
 
 EXPOSE_MEMBERS(PlayerController) {
-	MEMBER(MemberType::FLOAT, playerOnimaru.height),
 	MEMBER_SEPARATOR("Player References"),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruUID),
