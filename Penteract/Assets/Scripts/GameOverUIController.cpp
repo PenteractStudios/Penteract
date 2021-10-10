@@ -5,22 +5,29 @@
 #include "Components/UI/ComponentImage.h"
 #include "Components/UI/ComponentText.h"
 #include "Components/ComponentAudioSource.h"
+#include "CanvasFader.h"
 
 //TODO MAKE BUTTONS DO WHAT THEY SAY THEY DO
 //TODO MAKE BACKGROUND ANIMATED
 //TODO ADJUST UI SIZES
 
+#define HIERARCHY_INDEX_PLAY_AGAIN_TEXT 2
+
 EXPOSE_MEMBERS(GameOverUIController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, inOutPlayerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, loopPlayerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, vibrationPlayerUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, outInPlayerUID),
 	MEMBER(MemberType::FLOAT, minVibrationTime),
 	MEMBER(MemberType::FLOAT, maxVibrationTime),
 	MEMBER(MemberType::FLOAT, fadeInTime),
 	MEMBER(MemberType::GAME_OBJECT_UID, playAgainButtonUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, mainMenuButtonUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, exitButtonUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, backgroundUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, scrollingBackgroundObjUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasFaderObjUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasPlayerHUDObjUID),
 	MEMBER(MemberType::FLOAT, scrollDuration)
 };
 
@@ -31,33 +38,62 @@ void GameOverUIController::Start() {
 	GameObject* inOutPlayerGO = GameplaySystems::GetGameObject(inOutPlayerUID);
 	GameObject* loopPlayerGO = GameplaySystems::GetGameObject(loopPlayerUID);
 	GameObject* vibrationPlayerGO = GameplaySystems::GetGameObject(vibrationPlayerUID);
+	GameObject* outInPlayerGO = GameplaySystems::GetGameObject(outInPlayerUID);
 
 	if (inOutPlayerGO) inOutPlayer = GET_SCRIPT(inOutPlayerGO, UISpriteSheetPlayer);
 	if (loopPlayerGO) loopPlayer = GET_SCRIPT(loopPlayerGO, UISpriteSheetPlayer);
 	if (vibrationPlayerGO) vibrationPlayer = GET_SCRIPT(vibrationPlayerGO, UISpriteSheetPlayer);
+	if (outInPlayerGO) outInPlayer = GET_SCRIPT(outInPlayerGO, UISpriteSheetPlayer);
 
 	GameObject* playAgainGO = GameplaySystems::GetGameObject(playAgainButtonUID);
 	GameObject* mainMenuGO = GameplaySystems::GetGameObject(mainMenuButtonUID);
+	GameObject* exitButtonGO = GameplaySystems::GetGameObject(exitButtonUID);
 	GameObject* backgroundGO = GameplaySystems::GetGameObject(backgroundUID);
 	GameObject* scrollingBackgroundObj = GameplaySystems::GetGameObject(scrollingBackgroundObjUID);
 
+	canvasPlayerHUDObj = GameplaySystems::GetGameObject(canvasPlayerHUDObjUID);
+
+	if (canvasFaderObjUID != 0) {
+		GameObject* canvasFaderObj = GameplaySystems::GetGameObject(canvasFaderObjUID);
+		if (canvasFaderObj) {
+			canvasFader = GET_SCRIPT(canvasFaderObj, CanvasFader);
+		}
+	}
+
+
 	if (playAgainGO) {
 		playAgainButtonImage = playAgainGO->GetComponent<ComponentImage>();
-		playAgainButtonText = playAgainGO->GetChildren()[0]->GetComponent < ComponentText>();
+		std::vector<GameObject*>children = playAgainGO->GetChildren();
+		if (children.size() > HIERARCHY_INDEX_PLAY_AGAIN_TEXT - 1) {
+			playAgainButtonText = children[HIERARCHY_INDEX_PLAY_AGAIN_TEXT]->GetComponent < ComponentText>();
+		}
 	}
 	if (mainMenuGO) {
 		mainMenuButtonImage = mainMenuGO->GetComponent<ComponentImage>();
-		mainMenuButtonText = mainMenuGO->GetChildren()[0]->GetComponent < ComponentText>();
+
+		std::vector<GameObject*>children = mainMenuGO->GetChildren();
+		if (children.size() > HIERARCHY_INDEX_PLAY_AGAIN_TEXT - 1) {
+			mainMenuButtonText = children[HIERARCHY_INDEX_PLAY_AGAIN_TEXT]->GetComponent < ComponentText>();
+		}
+	}
+	if (exitButtonGO) {
+		exitButtonImage = exitButtonGO->GetComponent<ComponentImage>();
+
+		std::vector<GameObject*>children = exitButtonGO->GetChildren();
+		if (children.size() > HIERARCHY_INDEX_PLAY_AGAIN_TEXT - 1) {
+			exitButtonText = children[HIERARCHY_INDEX_PLAY_AGAIN_TEXT]->GetComponent < ComponentText>();
+		}
 	}
 
 	if (backgroundGO) {
 		backgroundImage = backgroundGO->GetComponent<ComponentImage>();
-
 	}
 
 	if (scrollingBackgroundObj) {
 		scrollingBackgroundImage = scrollingBackgroundObj->GetComponent<ComponentImage>();
 	}
+
+
 
 	std::vector<GameObject*> children = GetOwner().GetChildren();
 
@@ -68,7 +104,21 @@ void GameOverUIController::Start() {
 }
 
 void GameOverUIController::Update() {
-	if (!inOutPlayer || !loopPlayer || !vibrationPlayer) return;
+	if (!inOutPlayer || !loopPlayer || !vibrationPlayer || !outInPlayer) return;
+
+	if (state != GameOverState::FADE_OUT && state != GameOverState::OFFLINE) {
+		if (canvasFader) {
+			if (canvasFader->IsPlaying()) {
+				if (outInPlayer) {
+					state = GameOverState::FADE_OUT;
+					if (inOutPlayer)inOutPlayer->Stop();
+					if (loopPlayer)loopPlayer->Stop();
+					if (vibrationPlayer)vibrationPlayer->Stop();
+					outInPlayer->Play();
+				}
+			}
+		}
+	}
 
 	if (scrollingBackgroundImage) {
 		if (scrollingTimer < scrollDuration) {
@@ -117,11 +167,15 @@ void GameOverUIController::Update() {
 			EnterIdleState();
 		}
 		break;
+	case GameOverState::FADE_OUT:
+		break;
 	}
 }
 
 void GameOverUIController::GameOver() {
 	GetOwner().Enable();
+	DisablePlayerHUD();
+	Screen::SetChromaticAberration(false);
 	if (inOutPlayer && state == GameOverState::OFFLINE) {
 		fadeInTimer = 0.0f;
 		state = GameOverState::FADE_IN;
@@ -162,4 +216,10 @@ void GameOverUIController::SetColors(float delta) {
 	backgroundImage->SetColor(float4(backgroundOriginalColor.xyz(), delta * backgroundOriginalColor.w));
 
 	scrollingBackgroundImage->SetColor(float4(scrollingBackgroundImageOriginalColor.xyz(), delta * scrollingBackgroundImageOriginalColor.w));
+}
+
+void GameOverUIController::DisablePlayerHUD() {
+	if (canvasPlayerHUDObj) {
+		canvasPlayerHUDObj->Disable();
+	}
 }
