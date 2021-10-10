@@ -1,0 +1,15 @@
+{
+    "Name": "Enrage",
+    "AnimationUID": 16102588795477284283,
+    "BeginIndex": 420,
+    "EndIndex": 476,
+    "Loop": false,
+    "Speed": 1.0,
+    "FrameRate": 0.04163135588169098,
+    "KeyEventClip": [
+        {
+            "KeyFrame": 457,
+            "Name": "FistBump"
+        }
+    ]
+}

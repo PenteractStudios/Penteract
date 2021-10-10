@@ -128,6 +128,8 @@ public:
 	float maxTimePushEffect = 1.0f;
 	float minTimePushEffect = 0.0f;
 
+	bool isSniper = false;	// This is set for ranged enemies that will not chase the player
+
 private:
 
 	EnemySpawnPoint* enemySpawnPointScript = nullptr;

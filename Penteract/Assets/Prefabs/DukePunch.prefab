@@ -1,0 +1,50 @@
+{
+    "Root": {
+        "Name": "DukePunch",
+        "Active": true,
+        "RootBoneName": "",
+        "Mask": 0,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Active": true,
+                "Position": [
+                    -0.7704620361328125,
+                    -12.698497772216797,
+                    2.84747314453125
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "LocalEulerAngles": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ]
+            },
+            {
+                "Type": "SphereCollider",
+                "Active": true,
+                "colliderType": 2,
+                "layerType": 6,
+                "mass": 1.0,
+                "radius": 1.0,
+                "centerOffset": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "freezeRotation": false
+            }
+        ],
+        "Children": null
+    }
+}

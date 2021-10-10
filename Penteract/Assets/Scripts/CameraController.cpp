@@ -1,8 +1,8 @@
 #include "CameraController.h"
 
 #include "PlayerController.h"
-#include "GameController.h"
 #include "Components/ComponentTransform.h"
+#include "GlobalVariables.h"
 
 #include "Geometry/LineSegment.h"
 #include "Geometry/Plane.h"
@@ -42,6 +42,8 @@ void CameraController::Start() {
 	cameraInitialOffsetZ = cameraOffsetZ;
 
 	RestoreCameraOffset();
+
+	shakeMultiplierStoredValue = shakeMultiplier;
 }
 
 void CameraController::Update() {
@@ -65,7 +67,7 @@ void CameraController::Update() {
 		}
 	}
 
-	if (shakeTimer > 0 && !GameController::IsGameplayBlocked()) {
+	if (shakeTimer > 0 && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 		float2 shakeDir = GetRandomPosInUnitaryCircle(float2(0, 0));
 		transform->SetGlobalPosition(smoothedPosition + transform->GetRight() * shakeDir.x * shakeMultiplier + transform->GetUp() * shakeDir.y * shakeMultiplier);
 		shakeTimer -= Time::GetDeltaTime();
@@ -74,13 +76,15 @@ void CameraController::Update() {
 	} else {
 		transform->SetGlobalPosition(smoothedPosition);
 		Screen::SetChromaticAberration(false);
+		shakeMultiplier = shakeMultiplierStoredValue;
 	}
 }
 
 
 
-void CameraController::StartShake() {
+void CameraController::StartShake(float shakeMult) {
 	shakeTimer = shakeTotalTime;
+	if (shakeMult > 0) shakeMultiplier = shakeMult;
 }
 
 void CameraController::ChangeCameraOffset(float x, float y, float z) {
