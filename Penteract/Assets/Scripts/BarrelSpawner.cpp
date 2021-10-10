@@ -45,8 +45,5 @@ void BarrelSpawner::Update() {
 
 void BarrelSpawner::SpawnBarrels() {
     if (!barrel) return;
-    spawn = true;
-    /*for (float3 position : positionSpawners) {
-        GameplaySystems::Instantiate(barrel, position, Quat(0, 0, 0, 1));
-    }*/    
+    spawn = true;   
 }
