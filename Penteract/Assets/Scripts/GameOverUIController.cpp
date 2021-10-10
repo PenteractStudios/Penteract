@@ -109,7 +109,6 @@ void GameOverUIController::Update() {
 	if (state != GameOverState::FADE_OUT && state != GameOverState::OFFLINE) {
 		if (canvasFader) {
 			if (canvasFader->IsPlaying()) {
-				Debug::Log("CanvasFaderPlaying");
 				if (outInPlayer) {
 					state = GameOverState::FADE_OUT;
 					if (inOutPlayer)inOutPlayer->Stop();
