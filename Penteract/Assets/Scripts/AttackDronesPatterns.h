@@ -69,6 +69,7 @@ public:
 //	1- Create a new AttackDronesPattern object inside the patterns array
 //	2- Set values following the AttackDronesPattern constructor.
 //	3- !!!IMPORTANT!!! It's quite important to properly set the pickChance, or else, the pattern may never be picked.
+//	4- !!!IMPORTANT!!! The cycles vector MUST have a value for each WAVE, for example, if it has 3 waves, it MUST HAVE an array of 3 cycles.
 
 extern inline std::vector<AttackDronesPattern> patterns = {
 	AttackDronesPattern(),
