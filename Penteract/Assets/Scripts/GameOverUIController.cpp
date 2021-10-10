@@ -176,6 +176,7 @@ void GameOverUIController::Update() {
 void GameOverUIController::GameOver() {
 	GetOwner().Enable();
 	DisablePlayerHUD();
+	Screen::SetChromaticAberration(false);
 	if (inOutPlayer && state == GameOverState::OFFLINE) {
 		fadeInTimer = 0.0f;
 		state = GameOverState::FADE_IN;

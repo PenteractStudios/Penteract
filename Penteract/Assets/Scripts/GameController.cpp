@@ -255,6 +255,7 @@ void GameController::PauseGame() {
 	Time::PauseGame();
 	EnablePauseMenus();
 	isPaused = true;
+	Screen::SetChromaticAberration(false);
 	if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) gameplayWasAlreadyBlocked = true;
 	else GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, true);
 }
