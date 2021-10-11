@@ -5,6 +5,7 @@
 #include "GameObject.h"
 
 class ComponentSelectable;
+class ComponentVideo;
 
 class SwapPanels : public Script {
 	GENERATE_BODY(SwapPanels);
@@ -16,13 +17,15 @@ public:
 	void OnButtonClick() override;
 	void DoSwapPanels();
 public:
-	UID targetUID;
-	UID currentUID;
-	GameObject* target;
-	GameObject* current;
+	UID targetUID = 0;
+	UID currentUID = 0;
+	UID optionalVideoUID = 0;
+	GameObject* target = nullptr;
+	GameObject* current = nullptr;
 
 private:
 	ComponentSelectable* selectable = nullptr;
+	ComponentVideo* video = nullptr;
 	
 };
 
