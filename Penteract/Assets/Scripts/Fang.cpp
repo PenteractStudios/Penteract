@@ -180,7 +180,8 @@ void Fang::InitDash() {
 			dashDirection = GetDirection();
 			dashMovementDirection = movementInputDirection;
 		} else {
-			dashDirection = facePointDir;
+			dashDirection = playerMainTransform->GetFront();
+			dashMovementDirection = MovementDirection::RIGHT;
 		}
 
 		if (dashParticle) {
@@ -424,7 +425,7 @@ void Fang::PlayAnimation() {
 					}
 				}
 			} else {
-				if (compAnimation->GetCurrentState()->name == states[static_cast<int>(FANG_STATES::SPRINT)]) {
+				if (compAnimation->GetCurrentState()->name == states[static_cast<int>(FANG_STATES::SPRINT)] || compAnimation->GetCurrentState()->name == states[static_cast<int>(FANG_STATES::DASH)]) {
 					compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::DRIFT)]);
 					decelerating = true;
 				} else if (!decelerating) {
@@ -437,11 +438,14 @@ void Fang::PlayAnimation() {
 				}
 			}
 		} else {
-			if (compAnimation->GetCurrentState()->name != states[aiming ? (GetMouseDirectionState() + dashAnimation) : static_cast<int>(FANG_STATES::SPRINT)]) {
-				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[aiming ? (GetMouseDirectionState() + dashAnimation) : static_cast<int>(FANG_STATES::SPRINT)]);
-				ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentState()->clipUid);
-				SetClipSpeed(clip, agent->GetMaxSpeed());
+			if (dashing && !aiming && compAnimation->GetCurrentState()->name != states[static_cast<int>(FANG_STATES::DASH)]) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::DASH)]);
 			}
+			else if (compAnimation->GetCurrentState()->name != states[aiming ? (GetMouseDirectionState() + dashAnimation) : static_cast<int>(FANG_STATES::SPRINT)]) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[aiming ? (GetMouseDirectionState() + dashAnimation) : static_cast<int>(FANG_STATES::SPRINT)]);
+			}
+			ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentState()->clipUid);
+			SetClipSpeed(clip, agent->GetMaxSpeed());
 		}
 	}
 }
