@@ -126,7 +126,8 @@ bool Duke::BulletHellActive() {
 }
 
 bool Duke::BulletHellFinished() {
-	return attackDronesController && attackDronesController->BulletHellFinished();
+	if (!attackDronesController) return true;
+	return attackDronesController->BulletHellFinished();
 }
 
 void Duke::InitCharge(DukeState nextState_)
