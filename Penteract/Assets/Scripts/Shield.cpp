@@ -18,7 +18,12 @@ EXPOSE_MEMBERS(Shield) {
 	MEMBER(MemberType::GAME_OBJECT_UID, ShieldBilboardUID),
 	MEMBER(MemberType::FLOAT, maxFrames),
 	MEMBER_SEPARATOR("Debug only"),
-	MEMBER(MemberType::INT, currentAvailableCharges)
+	MEMBER(MemberType::INT, currentAvailableCharges),
+	MEMBER(MemberType::FLOAT, shieldMaxScale),
+	MEMBER(MemberType::FLOAT, growthSpeed),
+	MEMBER(MemberType::FLOAT, fadeSpeed),
+	MEMBER(MemberType::FLOAT, growthThreshold),
+	MEMBER(MemberType::FLOAT, fadeThreshold)
 };
 
 GENERATE_BODY_IMPL(Shield);
@@ -29,19 +34,50 @@ void Shield::Start() {
 	if (playerGO) playerController = GET_SCRIPT(playerGO, PlayerController);
 	audio = GetOwner().GetComponent<ComponentAudioSource>();
 
+	transform = GetOwner().GetComponent<ComponentTransform>();
+
 	GameObject* bilboAux = GameplaySystems::GetGameObject(ShieldBilboardUID);
 	if (bilboAux)shieldBilb = bilboAux->GetComponent<ComponentBillboard>();
-	factor = maxCharges / maxFrames;
 }
 
-void Shield::Update() {}
+void Shield::Update() {
+	switch (shieldState) {
+	case  ShieldState::OFFLINE:
+		break;
+	case  ShieldState::GROWING:
+		if (transform->GetScale().x < shieldMaxScale - growthThreshold) {
+			transform->SetScale(float3(float3::Lerp(transform->GetScale(), float3(shieldMaxScale), Time::GetDeltaTime() * growthSpeed)));
+		}
+		else {
+			transform->SetScale(float3(shieldMaxScale));
+			shieldState = ShieldState::IDLE;
+		}
+		break;
+	case  ShieldState::IDLE:
+		break;
+	case  ShieldState::FADING:
+		if (transform->GetScale().x > fadeThreshold) {
+			transform->SetScale(float3(float3::Lerp(transform->GetScale(), float3(0.0f), Time::GetDeltaTime() * fadeSpeed)));
+		}
+		else {
+			transform->SetScale(float3(0.1f));
+			shieldState = ShieldState::OFFLINE;
+			GetOwner().Disable();
+		}
+		break;
+	}
+}
 
 void Shield::InitShield() {
 	isActive = true;
 	currentFrame = 0;
+	shieldState = ShieldState::GROWING;
+	isActive = true;
+	transform->SetScale(float3(0.01f));
 }
 
 void Shield::FadeShield() {
+	shieldState = ShieldState::FADING;
 	isActive = false;
 }
 
