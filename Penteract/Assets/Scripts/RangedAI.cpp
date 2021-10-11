@@ -25,40 +25,40 @@
 
 EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, materialsUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
-		MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
-		MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
-		MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
-		MEMBER_SEPARATOR("Enemy stats"),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.lifePoints),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.barrelDamageTaken),
-		MEMBER(MemberType::BOOL, isSniper),
-		MEMBER_SEPARATOR("Push variables"),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackDistance),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackSpeed),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownSpeed),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownTime),
-		MEMBER(MemberType::FLOAT, minAttackSpeed),
-		MEMBER(MemberType::FLOAT, maxAttackSpeed),
-		MEMBER(MemberType::FLOAT, fleeingRange),
-		MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
-		MEMBER(MemberType::FLOAT, timeSinceLastHurt),
-		MEMBER(MemberType::FLOAT, approachOffset), //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
-		MEMBER(MemberType::FLOAT, stunDuration),
-		MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
-		MEMBER(MemberType::FLOAT, groundPosition),
-		MEMBER(MemberType::FLOAT, fleeingUpdateTime),
-		MEMBER_SEPARATOR("Push Random Feedback"),
-		MEMBER(MemberType::FLOAT, minTimePushEffect),
-		MEMBER(MemberType::FLOAT, maxTimePushEffect),
-		MEMBER_SEPARATOR("Dissolve properties"),
-		MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialObj),
-		MEMBER(MemberType::FLOAT, dissolveTimerToStart)
+	MEMBER(MemberType::GAME_OBJECT_UID, materialsUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
+	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
+	MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
+	MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
+	MEMBER_SEPARATOR("Enemy stats"),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.lifePoints),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.barrelDamageTaken),
+	MEMBER(MemberType::BOOL, isSniper),
+	MEMBER_SEPARATOR("Push variables"),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackDistance),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackSpeed),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownSpeed),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownTime),
+	MEMBER(MemberType::FLOAT, minAttackSpeed),
+	MEMBER(MemberType::FLOAT, maxAttackSpeed),
+	MEMBER(MemberType::FLOAT, fleeingRange),
+	MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
+	MEMBER(MemberType::FLOAT, timeSinceLastHurt),
+	MEMBER(MemberType::FLOAT, approachOffset), //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
+	MEMBER(MemberType::FLOAT, stunDuration),
+	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
+	MEMBER(MemberType::FLOAT, groundPosition),
+	MEMBER(MemberType::FLOAT, fleeingUpdateTime),
+	MEMBER_SEPARATOR("Push Random Feedback"),
+	MEMBER(MemberType::FLOAT, minTimePushEffect),
+	MEMBER(MemberType::FLOAT, maxTimePushEffect),
+	MEMBER_SEPARATOR("Dissolve properties"),
+	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialObj),
+	MEMBER(MemberType::FLOAT, dissolveTimerToStart)
 };//clang-format on
 
 GENERATE_BODY_IMPL(RangedAI);
@@ -632,7 +632,7 @@ void RangedAI::DoStunned()
 	if (agent) agent->RemoveAgentFromCrowd();
 	stunTimeRemaining = stunDuration;
 	if (state != AIState::STUNNED) ChangeState(AIState::STUNNED);
-	if (particlesEmp) particlesEmp->PlayChildParticles();
+	if(particlesEmp) particlesEmp->PlayChildParticles();
 }
 
 void RangedAI::EnablePushFeedback() {
