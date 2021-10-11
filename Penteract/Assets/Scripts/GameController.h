@@ -8,6 +8,7 @@ class GameObject;
 class ComponentCamera;
 class ComponentTransform;
 class StatsDisplayer;
+class PlayerController;
 
 struct TesseractEvent;
 
@@ -51,7 +52,7 @@ private:
 	void DoTransition();
 	void ClearPauseMenus();
 	void EnablePauseMenus();
-
+	bool CanPause();
 private:
 	GameObject* gameCamera = nullptr;
 	GameObject* godCamera = nullptr;
@@ -61,6 +62,7 @@ private:
 	ComponentCamera* staticCamera3 = nullptr;
 	ComponentCamera* staticCamera4 = nullptr;
 	GameObject* player = nullptr;
+	PlayerController* playerController = nullptr;
 
 	GameObject* pauseCanvas = nullptr;
 	GameObject* hudCanvas = nullptr;
@@ -69,7 +71,6 @@ private:
 	StatsDisplayer* statsController = nullptr;
 
 	GameObject* godModeController = nullptr;
-
 	float yaw = 0.f;
 	float pitch = 0.f;
 	bool showWireframe = false;
