@@ -56,7 +56,6 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, barrelUID),
 
 	MEMBER_SEPARATOR("Debug"),
-	MEMBER(MemberType::BOOL, toggleShield),
 	MEMBER(MemberType::SCENE_RESOURCE_UID, winSceneUID),
 
 
@@ -97,16 +96,7 @@ void AIDuke::Update() {
 	life = "Life points: " + life;
 	Debug::Log(life.c_str());
 
-	if (toggleShield) {
-		toggleShield = false;
-		if (dukeShield) {
-			if (!dukeShield->GetIsActive()) {
-				dukeShield->InitShield();
-			} else {
-				dukeShield->FadeShield();
-			}
-		}
-	}
+	
 
 	switch (phase) {
 	case Phase::PHASE1:
@@ -142,7 +132,10 @@ void AIDuke::Update() {
 			if (isInArena) TeleportDuke(true);
 			dukeCharacter.CallTroops();
 			dukeCharacter.state = DukeState::INVULNERABLE;
-			if (dukeShield && dukeShield->GetIsActive()) dukeShield->FadeShield();
+			if (dukeShield && dukeShield->GetIsActive()) {
+				dukeCharacter.StopUsingShield();
+				dukeShield->FadeShield();
+			}
 			break;
 		}
 
@@ -156,9 +149,11 @@ void AIDuke::Update() {
 				movementScript->Stop();
 				dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
 			} else if (currentShieldCooldown >= shieldCooldown) {
-				if (dukeShield) dukeShield->InitShield();
-				dukeCharacter.state = DukeState::SHOOT_SHIELD;
+				dukeCharacter.StartUsingShield();
+				if(dukeShield) dukeShield->InitShield();
+
 				movementScript->Stop();
+
 			} else if (player && movementScript->CharacterInAttackRange(player, dukeCharacter.attackRange)) {
 				// If player too close -> perform melee attack
 				dukeCharacter.state = DukeState::MELEE_ATTACK;
@@ -195,8 +190,10 @@ void AIDuke::Update() {
 			dukeCharacter.Shoot();
 			currentShieldActiveTime += Time::GetDeltaTime();
 			if (currentShieldActiveTime >= shieldActiveTime) {
-				// TODO: Deactivate shield animation
-				if (dukeShield) dukeShield->FadeShield();
+				if (dukeShield) {
+					dukeCharacter.StopUsingShield();
+					dukeShield->FadeShield();
+				}
 				currentShieldCooldown = 0.f;
 				currentShieldActiveTime = 0.f;
 				dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
@@ -274,8 +271,9 @@ void AIDuke::Update() {
 			if (!dukeCharacter.criticalMode) {
 				movementScript->Stop();
 				dukeCharacter.CallTroops();
-				if (dukeShield) dukeShield->InitShield();
-				dukeCharacter.state = DukeState::SHOOT_SHIELD;
+				if(dukeShield) dukeShield->InitShield();
+				dukeCharacter.StartUsingShield();
+				movementScript->Stop();
 			} else {
 				dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 			}
@@ -342,8 +340,11 @@ void AIDuke::Update() {
 				dukeCharacter.Shoot();
 				currentAbilityChangeCooldown += Time::GetDeltaTime();
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
-					// TODO: Deactivate shield animation
-					if (dukeShield) dukeShield->FadeShield();
+
+					if (dukeShield) {
+						dukeCharacter.StopUsingShield();
+						dukeShield->FadeShield();
+					}
 					currentAbilityChangeCooldown = 0.f;
 					dukeCharacter.state = DukeState::BULLET_HELL;
 				}
@@ -363,7 +364,7 @@ void AIDuke::Update() {
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
 					currentAbilityChangeCooldown = 0.f;
 					if (dukeShield) dukeShield->InitShield();
-					dukeCharacter.state = DukeState::SHOOT_SHIELD;
+					dukeCharacter.StartUsingShield();
 					movementScript->Stop();
 				}
 				else {
@@ -393,7 +394,7 @@ void AIDuke::Update() {
 			case DukeState::MELEE_ATTACK:
 				dukeCharacter.MeleeAttack();
 				if (dukeShield) dukeShield->InitShield();
-				dukeCharacter.state = DukeState::SHOOT_SHIELD;
+				dukeCharacter.StartUsingShield();
 				break;
 			case DukeState::STUNNED:
 				if (stunTimeRemaining <= 0.f) {

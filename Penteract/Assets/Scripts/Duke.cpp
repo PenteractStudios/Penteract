@@ -176,6 +176,25 @@ void Duke::ThrowBarrels() {
 	}
 }
 
+void Duke::StartUsingShield() {
+	state = DukeState::SHOOT_SHIELD;
+	if (compAnimation) {
+		if (compAnimation->GetCurrentStateSecondary()) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT_SHIELD)]);
+		} else if (compAnimation->GetCurrentState()) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT_SHIELD)]);
+		}
+	}
+}
+
+void Duke::StopUsingShield() {
+	if (compAnimation) {
+		if (compAnimation->GetCurrentState() && compAnimation->GetCurrentStateSecondary()) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+		}
+	}
+}
+
 void Duke::OnAnimationFinished()
 {
 	if (!compAnimation) return;
