@@ -146,6 +146,7 @@ void GlitchyTitleController::Update() {
 		if (!canvasFader->IsPlaying()) {
 			if (pressedButton) {
 				pressedButton->DoTransition();
+				glitchState = GlitchState::IDLE;
 			}
 		}
 		break;
