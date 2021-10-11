@@ -47,6 +47,7 @@ public:
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
 	void TeleportDuke(bool toPlatform);
+	float GetDukeMaxHealth() const;
 
 private:
 	void CalculatePushBackRealDistance();

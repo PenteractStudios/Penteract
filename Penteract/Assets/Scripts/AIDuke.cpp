@@ -637,3 +637,7 @@ void AIDuke::TeleportDuke(bool toPlatform) {
 		isInArena = true;
 	}
 }
+
+float AIDuke::GetDukeMaxHealth() const {
+	return dukeCharacter.GetTotalLifePoints();
+}

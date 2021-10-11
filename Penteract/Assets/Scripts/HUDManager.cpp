@@ -1,6 +1,7 @@
 #include "HUDManager.h"
 
 #include "PlayerController.h"
+#include "AIDuke.h"
 #include "GameController.h"
 #include "Components/UI/ComponentTransform2D.h"
 #include "Components/UI/ComponentImage.h"
@@ -54,6 +55,7 @@
 
 EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerObjectUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dukeObjectUID),
 	MEMBER_SEPARATOR("HUD Abilities"),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangSkillParentUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillParentUID),
@@ -81,6 +83,12 @@ void HUDManager::Start() {
 		onimaruObj = playerControllerObj->GetChild("Onimaru");
 		fangObj = playerControllerObj->GetChild("Fang");
 	}
+
+	GameObject* dukeAIObj = GameplaySystems::GetGameObject(dukeObjectUID);
+	if (dukeAIObj) {
+		dukeScript = GET_SCRIPT(dukeAIObj, AIDuke);
+	}
+
 	fangSkillParent = GameplaySystems::GetGameObject(fangSkillParentUID);
 	onimaruSkillParent = GameplaySystems::GetGameObject(onimaruSkillParentUID);
 	switchSkillParent = GameplaySystems::GetGameObject(switchSkillParentUID);
@@ -167,9 +175,11 @@ void HUDManager::Start() {
 		if (pos) originalOnimaruHealthPosition = pos->GetPosition();
 		fangHealthChildren = fangHealthParent->GetChildren();
 		onimaruHealthChildren = onimaruHealthParent->GetChildren();
+		dukeHealthChildren = dukeHealthParent->GetChildren();
 
 		GetAllHealthColors();
 		InitializeHealth();
+		InitializeDukeHealth();
 	}
 
 	if (switchHealthParent) {
@@ -1253,6 +1263,7 @@ void HUDManager::GetAllHealthColors() {
 
 void HUDManager::InitializeHealth() {
 	if (!playerController) return;
+	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
 	// Set initial health values
 	ComponentImage* health = fangHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
@@ -1300,7 +1311,24 @@ void HUDManager::InitializeHealth() {
 }
 
 void HUDManager::InitializeDukeHealth() {
+	if (!dukeScript) return;
+	if (dukeHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
+	// Set initial health values
+	float healthValue = dukeScript->GetDukeMaxHealth();
+	ComponentImage* health = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
+	if (health && health->IsFill()) {
+		health->SetFillValue(1);
+	}
+
+	// Set initial lost health bar
+	ComponentImage* healthLost = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
+	if (healthLost && healthLost->IsFill()) {
+		healthLost->SetFillValue(1);
+		healthLost->SetColor(healthLostFeedbackFillBarFinalColor);
+	}
+
+	dukePreviousHealth = healthValue;
 }
 
 void HUDManager::InitializeHUDSides() {

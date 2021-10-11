@@ -3,6 +3,7 @@
 #include "Scripting/Script.h"
 
 class PlayerController;
+class AIDuke;
 class ComponentTransform2D;
 class ComponentImage;
 class AbilityRefeshFX;
@@ -47,6 +48,7 @@ public:
 	ComponentAudioSource* audios[static_cast<int>(HUDManagerAudio::TOTAL)] = { nullptr };
 
 	UID playerObjectUID = 0;
+	UID dukeObjectUID = 0;
 
 	//Skill HUD
 
@@ -153,6 +155,7 @@ public:
 private:
 
 	PlayerController* playerController = nullptr;
+	AIDuke* dukeScript = nullptr;
 	GameObject* fangObj = nullptr;
 	GameObject* onimaruObj = nullptr;
 
