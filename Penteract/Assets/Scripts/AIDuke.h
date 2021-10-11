@@ -4,7 +4,6 @@
 #include "Duke.h"
 
 class GameObject;
-class ComponentAnimation;
 class ComponentTransform;
 class ComponentAgent;
 class ComponentAudioSource;
@@ -65,6 +64,7 @@ public:
 	UID thirdEncounterUID = 0;
 	UID fourthEncounterUID = 0;
 	UID meleeAttackColliderUID = 0;
+	UID barrelSpawnerUID = 0;
 	UID chargeAttackUID = 0;
 
 	GameObject* duke = nullptr;
@@ -92,12 +92,9 @@ public:
 	float orientationSpeed = 1.0f;
 	float orientationThreshold = 0.1f;
 
-	bool toggleShield = false;
-
 	UID winSceneUID = 0;
 
 private:
-
 	ComponentTransform* ownerTransform = nullptr;
 	AIMovement* movementScript = nullptr;
 

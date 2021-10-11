@@ -3,6 +3,7 @@
 #include "GameplaySystems.h"
 #include "RangerProjectileScript.h"
 #include "PlayerController.h"
+#include "BarrelSpawner.h"
 #include "AIMovement.h"
 
 #include <string>
@@ -11,7 +12,7 @@
 
 std::uniform_real_distribution<float> rng(-1.0f, 1.0f);
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID chargeAttackColliderUID, std::vector<UID> encounterUIDs)
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, std::vector<UID> encounterUIDs)
 {
 	gen = std::minstd_rand(rd());
 
@@ -19,8 +20,11 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 	characterGameObject = GameplaySystems::GetGameObject(dukeUID);
 	player = GameplaySystems::GetGameObject(playerUID);
 	chargeCollider = GameplaySystems::GetGameObject(chargeColliderUID);
+
 	meleeAttackCollider = GameplaySystems::GetGameObject(meleeAttackColliderUID);
 	chargeAttack = GameplaySystems::GetGameObject(chargeAttackColliderUID);
+
+	barrelSpawneScript = GET_SCRIPT(GameplaySystems::GetGameObject(barrelSpawnerUID), BarrelSpawner);
 
 	barrel = GameplaySystems::GetResource<ResourcePrefab>(barrelUID);
 
@@ -195,6 +199,25 @@ void Duke::ThrowBarrels() {
 	}
 }
 
+void Duke::StartUsingShield() {
+	state = DukeState::SHOOT_SHIELD;
+	if (compAnimation) {
+		if (compAnimation->GetCurrentStateSecondary()) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT_SHIELD)]);
+		} else if (compAnimation->GetCurrentState()) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT_SHIELD)]);
+		}
+	}
+}
+
+void Duke::StopUsingShield() {
+	if (compAnimation) {
+		if (compAnimation->GetCurrentState() && compAnimation->GetCurrentStateSecondary()) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+		}
+	}
+}
+
 void Duke::OnAnimationFinished()
 {
 	if (!compAnimation) return;
@@ -258,7 +281,14 @@ void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 		}
 
 		if (strcmp(eventName, "ThrowBarrels") == 0 && instantiateBarrel) {
-			InstantiateBarrel();
+			if (startSpawnBarrel) {
+				barrelSpawneScript->SpawnBarrels();
+				startSpawnBarrel = false;
+			}
+			else {
+				InstantiateBarrel();
+				startSpawnBarrel = true;
+			}
 			instantiateBarrel = false;
 		}
 		break;

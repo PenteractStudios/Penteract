@@ -14,6 +14,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, bulletUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargeColliderUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, meleeAttackColliderUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, barrelSpawnerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargeAttackUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargeColliderUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, firstEncounterUID),
@@ -37,6 +38,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::FLOAT, dukeCharacter.slowedDownSpeed),
 	MEMBER(MemberType::FLOAT, dukeCharacter.moveChangeEvery),
 	MEMBER(MemberType::FLOAT, dukeCharacter.distanceCorrectEvery),
+	MEMBER(MemberType::BOOL, dukeCharacter.startSpawnBarrel),
 
 	MEMBER_SEPARATOR("Duke Abilities Variables"),
 	MEMBER(MemberType::FLOAT, shieldCooldown),
@@ -54,7 +56,6 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, barrelUID),
 
 	MEMBER_SEPARATOR("Debug"),
-	MEMBER(MemberType::BOOL, toggleShield),
 	MEMBER(MemberType::SCENE_RESOURCE_UID, winSceneUID),
 
 
@@ -87,7 +88,7 @@ void AIDuke::Start() {
 	}
 
 	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, chargeAttackUID, encounters);
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, encounters);
 
 	dukeCharacter.winSceneUID = winSceneUID; // TODO: REPLACE
 }
@@ -158,7 +159,10 @@ void AIDuke::Update() {
 			if (isInArena) TeleportDuke(true);
 			dukeCharacter.CallTroops();
 			dukeCharacter.state = DukeState::INVULNERABLE;
-			if (dukeShield && dukeShield->GetIsActive()) dukeShield->FadeShield();
+			if (dukeShield && dukeShield->GetIsActive()) {
+				dukeCharacter.StopUsingShield();
+				dukeShield->FadeShield();
+			}
 			dukeCharacter.StopShooting();
 			break;
 		}
@@ -175,11 +179,11 @@ void AIDuke::Update() {
 				movementScript->Stop();
 				dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
 			} else if (currentShieldCooldown >= shieldCooldown) {
-				if (dukeShield) dukeShield->InitShield();
-				dukeCharacter.state = DukeState::SHOOT_SHIELD;
+				dukeCharacter.StartUsingShield();
+				if(dukeShield) dukeShield->InitShield();
+
 				movementScript->Stop();
-				// TODO: Delete next line
-				dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::IDLE] );
+
 			} else if (player && movementScript->CharacterInAttackRange(player, dukeCharacter.attackRange)) {
 				// If player too close -> perform melee attack
 				dukeCharacter.state = DukeState::MELEE_ATTACK;
@@ -219,8 +223,10 @@ void AIDuke::Update() {
 			dukeCharacter.Shoot();
 			currentShieldActiveTime += Time::GetDeltaTime();
 			if (currentShieldActiveTime >= shieldActiveTime) {
-				// TODO: Deactivate shield animation
-				if (dukeShield) dukeShield->FadeShield();
+				if (dukeShield) {
+					dukeCharacter.StopUsingShield();
+					dukeShield->FadeShield();
+				}
 				currentShieldCooldown = 0.f;
 				currentShieldActiveTime = 0.f;
 				dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
@@ -380,8 +386,11 @@ void AIDuke::Update() {
 				dukeCharacter.Shoot();
 				currentAbilityChangeCooldown += Time::GetDeltaTime();
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
-					// TODO: Deactivate shield animation
-					if (dukeShield) dukeShield->FadeShield();
+
+					if (dukeShield) {
+						dukeCharacter.StopUsingShield();
+						dukeShield->FadeShield();
+					}
 					currentAbilityChangeCooldown = 0.f;
 					dukeCharacter.state = DukeState::BULLET_HELL;
 
@@ -403,10 +412,8 @@ void AIDuke::Update() {
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
 					currentAbilityChangeCooldown = 0.f;
 					if (dukeShield) dukeShield->InitShield();
-					dukeCharacter.state = DukeState::SHOOT_SHIELD;
+					dukeCharacter.StartUsingShield();
 					movementScript->Stop();
-					// TODO: Delete next line
-					dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::IDLE]);
 				}
 				else {
 					if (player) {
@@ -437,7 +444,7 @@ void AIDuke::Update() {
 			case DukeState::MELEE_ATTACK:
 				dukeCharacter.MeleeAttack();
 				if (dukeShield) dukeShield->InitShield();
-				dukeCharacter.state = DukeState::SHOOT_SHIELD;
+				dukeCharacter.StartUsingShield();
 				break;
 			case DukeState::STUNNED:
 				if (stunTimeRemaining <= 0.f) {
