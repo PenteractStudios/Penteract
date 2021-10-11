@@ -2,6 +2,7 @@
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
+#include "GlobalVariables.h"
 
 #include <math.h>
 
@@ -87,6 +88,9 @@ void FloorIsLava::Update() {
 	}
 
 	if (fireActive) {
+
+		if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) return;
+
 		if (firstTimeFireActive) {
 			UpdateFireActiveTiles(true);
 			firstTimeFireActive = false;

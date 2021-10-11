@@ -3,6 +3,7 @@
 #include "GameplaySystems.h"
 #include "GameObject.h"
 #include "Components/ComponentTransform.h"
+#include "GlobalVariables.h"
 
 EXPOSE_MEMBERS(CheckpointManager) {
 
@@ -29,10 +30,8 @@ void CheckpointManager::Start() {
 		++i;
 	}
 
-	//Error prevention
-	if (checkpoint < 0 || checkpoint > N_CHECKPOINTS) {
-		checkpoint = 0;
-	}
+	GameplaySystems::SetGlobalVariable(globalCheckpoint, 0);
+
 	avatarObj = GameplaySystems::GetGameObject(avatarUID);
 
 	if (timeBetweenChecks <= 0) {
@@ -50,9 +49,7 @@ void CheckpointManager::Start() {
 
 	if (!transform) return;
 
-	transform->SetGlobalPosition(runtimeCheckpointPositions[checkpoint]);
-
-
+	transform->SetGlobalPosition(runtimeCheckpointPositions[GameplaySystems::GetGlobalVariable(globalCheckpoint, 0)]);
 }
 
 void CheckpointManager::CheckDistanceWithCheckpoints() {
@@ -62,11 +59,9 @@ void CheckpointManager::CheckDistanceWithCheckpoints() {
 	for (int i = 0; i < N_CHECKPOINTS && checkPointCloseEnough == -1; i++) {
 		if (runtimeCheckpointPositions[i].Distance(transform->GetGlobalPosition()) < distanceThreshold) {
 			checkPointCloseEnough = i;
-			checkpoint = i;
-
+			GameplaySystems::SetGlobalVariable(globalCheckpoint, i);
 		}
 	}
-
 }
 
 void CheckpointManager::Update() {
@@ -95,7 +90,7 @@ void CheckpointManager::Update() {
 			if (!avatarObj) return;
 			ComponentTransform* transform = avatarObj->GetComponent<ComponentTransform>();
 			if (!transform) return;
-			checkpoint = checkpointToSet;
+			GameplaySystems::SetGlobalVariable(globalCheckpoint, checkpointToSet);
 			transform->SetGlobalPosition(runtimeCheckpointPositions[checkpointToSet]);
 		}
 	}
