@@ -96,7 +96,9 @@ public:
 	UID fangHealthParentUID = 0;
 	UID onimaruHealthParentUID = 0;
 	UID switchHealthParentUID = 0;
+	UID dukeHealthParentUID = 0;
 
+	// Onimaru's & Fang's HUD Colors
 	float4 healthBarBackgroundColorInBackground = float4(0.f / 255.f, 40.f / 255.f, 60.f / 255.f, 30.f / 255.f);
 	float4 healthFillBarColorInBackground = float4(255.f / 255.f, 0.f / 255.f, 0.f / 255.f, 30.f / 255.f);
 	float4 healthOverlayColorInBackground = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 100.f / 255.f);
@@ -104,7 +106,12 @@ public:
 	float4 healthFillBarColor = float4(255.f / 255.f, 0.f / 255.f, 0.f / 255.f, 255.f / 255.f);
 	float4 healthOverlayColor = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 255.f / 255.f);
 
-	// Health lost feedback
+	// Duke's HUD Colors
+	float4 dukeHealthBarBackgroundColor = float4(0.f / 255.f, 40.f / 255.f, 60.f / 255.f, 220.f / 255.f);
+	float4 dukeHealthFillBarColor = float4(255.f / 255.f, 0.f / 255.f, 0.f / 255.f, 255.f / 255.f);
+	float4 dukeHealthOverlayColor = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 255.f / 255.f);
+
+	// Health lost feedback (Fang & Onimaru & Duke)
 	float4 healthLostFeedbackFillBarInitialColor = float4(0.f / 255.f, 177.f / 255.f, 227.f / 255.f, 204.f / 255.f);
 	float4 healthLostFeedbackFillBarFinalColor = float4(0.f / 255.f, 177.f / 255.f, 227.f / 255.f, 0.f / 255.f);
 	float lostHealthFeedbackAlpha = 204.f / 255.f;
@@ -117,6 +124,7 @@ public:
 
 	std::vector<GameObject*> fangHealthChildren;
 	std::vector<GameObject*> onimaruHealthChildren;
+	std::vector<GameObject*> dukeHealthChildren;
 	std::vector<GameObject*> switchHealthChildren;
 
 	// Sides
@@ -160,6 +168,7 @@ private:
 	// Health HUD
 	GameObject* fangHealthParent = nullptr;
 	GameObject* onimaruHealthParent = nullptr;
+	GameObject* dukeHealthParent = nullptr;
 	GameObject* switchHealthParent = nullptr;
 
 	float3 originalFangHealthPosition = { 0,0,0 };
@@ -173,9 +182,12 @@ private:
 
 	float fangPreviousHealth = 0.f;
 	float onimaruPreviousHealth = 0.f;
+	float dukePreviousHealth = 0.f;
 
 	bool playingLostHealthFeedback = false;
+	bool playingDukeLostHealthFeedback = false;
 	float lostHealthTimer = 0.0f;
+	float lostHealthDukeTimer = 0.f;
 	float lostHealthFeedbackTotalTime = 1.0f;
 
 	bool playingHitEffect = false;
@@ -207,6 +219,7 @@ private:
 	void GetAllHealthColors();
 
 	void InitializeHealth();
+	void InitializeDukeHealth();
 	void InitializeHUDSides();
 
 	void ManageSwitchPreCollapseState(GameObject* /* activeParent */, const std::vector<GameObject*>& skills);

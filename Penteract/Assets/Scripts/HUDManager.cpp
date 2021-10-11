@@ -63,6 +63,8 @@ EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthParentUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, switchHealthParentUID),
 	MEMBER(MemberType::FLOAT, lostHealthFeedbackAlpha),
+	MEMBER_SEPARATOR("HUD Duke"),
+	MEMBER(MemberType::GAME_OBJECT_UID, dukeHealthParentUID),
 	MEMBER_SEPARATOR("HUD Sides"),
 	MEMBER(MemberType::GAME_OBJECT_UID, sidesHUDParentUID),
 	MEMBER(MemberType::FLOAT, criticalHealthPercentage),
@@ -153,9 +155,10 @@ void HUDManager::Start() {
 
 	fangHealthParent = GameplaySystems::GetGameObject(fangHealthParentUID);
 	onimaruHealthParent = GameplaySystems::GetGameObject(onimaruHealthParentUID);
+	dukeHealthParent = GameplaySystems::GetGameObject(dukeHealthParentUID);
 	switchHealthParent = GameplaySystems::GetGameObject(switchHealthParentUID);
 
-	if (fangHealthParent && onimaruHealthParent) {
+	if (fangHealthParent && onimaruHealthParent && dukeHealthParent) {
 		ComponentTransform2D* pos = nullptr;
 		pos = fangHealthParent->GetComponent<ComponentTransform2D>();
 		if (pos) originalFangHealthPosition = pos->GetPosition();
@@ -1193,8 +1196,9 @@ void HUDManager::SetPictoState(Cooldowns cooldown, PictoState newState) {
 }
 
 void HUDManager::GetAllHealthColors() {
-	if (!fangHealthParent || !onimaruHealthParent) return;
+	if (!fangHealthParent || !onimaruHealthParent || !dukeHealthParent) return;
 	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
+	if (dukeHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
 	// Get background color in background
 	ComponentImage* image = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
@@ -1224,6 +1228,24 @@ void HUDManager::GetAllHealthColors() {
 	image = fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
 	if (image) {
 		healthLostFeedbackFillBarFinalColor = image->GetColor();
+	}
+
+	// Get Duke main background color
+	image = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
+	if (image) {
+		dukeHealthBarBackgroundColor = image->GetColor();
+	}
+
+	// Get Duke main fill color
+	image = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
+	if (image) {
+		dukeHealthOverlayColor = image->GetColor();
+	}
+
+	// Get Duke main overlay color
+	image = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
+	if (image) {
+		dukeHealthBarBackgroundColor = image->GetColor();
 	}
 
 	healthLostFeedbackFillBarInitialColor = float4(healthLostFeedbackFillBarFinalColor.xyz(), lostHealthFeedbackAlpha);
@@ -1275,6 +1297,10 @@ void HUDManager::InitializeHealth() {
 		}
 		healthLost->SetColor(healthLostFeedbackFillBarFinalColor);
 	}
+}
+
+void HUDManager::InitializeDukeHealth() {
+
 }
 
 void HUDManager::InitializeHUDSides() {
