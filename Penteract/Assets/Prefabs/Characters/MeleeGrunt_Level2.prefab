@@ -65,11 +65,6 @@
                         "Value": 15261592491771467264
                     },
                     {
-                        "Name": "rightBladeColliderUID",
-                        "Type": "GameObjectUID",
-                        "Value": 12119067485365247026
-                    },
-                    {
                         "Name": "att2AttackSpeed",
                         "Type": "Float",
                         "Value": 1.5
@@ -80,9 +75,9 @@
                         "Value": 826311568033082909
                     },
                     {
-                        "Name": "leftBladeColliderUID",
+                        "Name": "rightBladeColliderUID",
                         "Type": "GameObjectUID",
-                        "Value": 114993121818193807
+                        "Value": 12119067485365247026
                     },
                     {
                         "Name": "winConditionUID",
@@ -90,14 +85,19 @@
                         "Value": 5515770555020674411
                     },
                     {
-                        "Name": "fangUID",
+                        "Name": "leftBladeColliderUID",
                         "Type": "GameObjectUID",
-                        "Value": 18423563680655226216
+                        "Value": 114993121818193807
                     },
                     {
                         "Name": "gruntCharacter.lifePoints",
                         "Type": "Float",
                         "Value": 10.0
+                    },
+                    {
+                        "Name": "fangUID",
+                        "Type": "GameObjectUID",
+                        "Value": 18423563680655226216
                     },
                     {
                         "Name": "damageMaterialPlaceHolderUID",
@@ -115,14 +115,14 @@
                         "Value": 7.0
                     },
                     {
-                        "Name": "hurtFeedbackTimeDuration",
-                        "Type": "Float",
-                        "Value": 0.10000000149011612
-                    },
-                    {
                         "Name": "att1AttackSpeed",
                         "Type": "Float",
                         "Value": 1.5
+                    },
+                    {
+                        "Name": "hurtFeedbackTimeDuration",
+                        "Type": "Float",
+                        "Value": 0.10000000149011612
                     },
                     {
                         "Name": "dissolveMaterialObj",
@@ -130,14 +130,14 @@
                         "Value": 14928098792412113817
                     },
                     {
-                        "Name": "materialsUID",
-                        "Type": "GameObjectUID",
-                        "Value": 16502326001645675377
-                    },
-                    {
                         "Name": "groundPosition",
                         "Type": "Float",
                         "Value": 0.0
+                    },
+                    {
+                        "Name": "materialsUID",
+                        "Type": "GameObjectUID",
+                        "Value": 16502326001645675377
                     },
                     {
                         "Name": "dissolveTimerToStart",
@@ -9684,7 +9684,7 @@
                             {
                                 "Name": "ground",
                                 "Type": "Float",
-                                "Value": 3.25
+                                "Value": 0.25
                             }
                         ]
                     }
