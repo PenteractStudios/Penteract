@@ -98,17 +98,6 @@ void AIDuke::Update() {
 	life = "Life points: " + life;
 	Debug::Log(life.c_str());
 
-	if (toggleShield) {
-		toggleShield = false;
-		if (dukeShield) {
-			if (!dukeShield->GetIsActive()) {
-				dukeShield->InitShield();
-			} else {
-				dukeShield->FadeShield();
-			}
-		}
-	}
-
 	float speedToUse = dukeCharacter.slowedDown ? dukeCharacter.slowedDownSpeed : dukeCharacter.movementSpeed;
 
 	if (dukeCharacter.slowedDown) {
