@@ -82,9 +82,6 @@ void MovingLasers::Update() {
                     animationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::SHOOT)] + states[static_cast<unsigned int>(GeneratorState::IDLE)]);
                     currentState = GeneratorState::DISABLE;
                 }
-                if (pairScript->currentState == GeneratorState::IDLE) {
-                    pairAnimationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::SHOOT)] + states[static_cast<unsigned int>(GeneratorState::IDLE)]);
-                }
         }
         else {
             Move();
