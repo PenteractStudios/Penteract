@@ -5,6 +5,7 @@
 #include "PlayerController.h"
 #include "RangerProjectileScript.h"
 #include "Components/Physics/ComponentSphereCollider.h"
+#include "Components/ComponentBillboard.h"
 #include "Components/ComponentAudioSource.h"
 #include "Components/ComponentAgent.h"
 #include "Math/float3.h"
@@ -12,7 +13,10 @@
 EXPOSE_MEMBERS(Shield) {
 	MEMBER(MemberType::INT, maxCharges),
 	MEMBER(MemberType::FLOAT, chargeCooldown),
+	MEMBER_SEPARATOR("Life Effect"),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, ShieldBilboardUID),
+	MEMBER(MemberType::FLOAT, maxFrames),
 	MEMBER_SEPARATOR("Debug only"),
 	MEMBER(MemberType::INT, currentAvailableCharges)
 };
@@ -24,12 +28,17 @@ void Shield::Start() {
 	GameObject* playerGO = GameplaySystems::GetGameObject(playerUID);
 	if (playerGO) playerController = GET_SCRIPT(playerGO, PlayerController);
 	audio = GetOwner().GetComponent<ComponentAudioSource>();
+
+	GameObject* bilboAux = GameplaySystems::GetGameObject(ShieldBilboardUID);
+	if (bilboAux)shieldBilb = bilboAux->GetComponent<ComponentBillboard>();
+	factor = maxCharges / maxFrames;
 }
 
 void Shield::Update() {}
 
 void Shield::InitShield() {
 	isActive = true;
+	currentFrame = 0;
 }
 
 void Shield::FadeShield() {
@@ -63,6 +72,13 @@ void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 				pSystem->layerIndex = 6;
 
 			} else {
+				if (currentFrame < maxFrames) {
+					currentFrame += currentAvailableCharges/ maxFrames;
+					shieldBilb->SetCurrentFrame(currentFrame);
+				}
+				else {
+					currentFrame = 0;
+				}
 				if (pSystem) pSystem->KillParticle(p);
 			}
 		}

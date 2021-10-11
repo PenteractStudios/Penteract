@@ -4,6 +4,7 @@
 
 class PlayerController;
 class ComponentAudioSource;
+class ComponentBillboard;
 
 class Shield : public Script
 {
@@ -32,8 +33,13 @@ public:
 	int currentAvailableCharges = 0;
 	UID playerUID = 0;
 	PlayerController* playerController = nullptr;
+	ComponentBillboard* shieldBilb = nullptr;
+	UID ShieldBilboardUID = 0;
+	float maxFrames = 0;
 
 private:
 	bool isActive = false;
 	ComponentAudioSource* audio = nullptr;
+	float currentFrame = 0;
+	float factor = 0;
 };
