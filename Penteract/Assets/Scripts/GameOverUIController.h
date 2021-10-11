@@ -38,7 +38,9 @@ public:
 	UID backgroundUID = 0;
 	UID scrollingBackgroundObjUID = 0;
 	UID canvasFaderObjUID = 0;
-	UID canvasPlayerHUDObjUID = 0;
+	UID canvasPlayerSkillsObjUID = 0;
+	UID canvasPlayerLifeBarsObjUID = 0;
+	UID canvasDukeLifeBarObjUID = 0;
 	UID audioSourcesUID = 0;
 
 private:
@@ -71,7 +73,9 @@ private:
 	float4 mainMenuButtonImageOriginalColor = float4(0, 0, 0, 0);
 	float4 scrollingBackgroundImageOriginalColor = float4(20,70,100,225);
 	CanvasFader* canvasFader = nullptr;
-	GameObject* canvasPlayerHUDObj = nullptr;
+	GameObject* canvasPlayerSkillsObj = nullptr;
+	GameObject* canvasPlayerLifeBarsObj = nullptr;
+	GameObject* canvasDukeLifeBarObj = nullptr;
 
 	ComponentAudioSource* audios[static_cast<int>(GlitchTitleAudio::TOTAL)] = { nullptr };
 };

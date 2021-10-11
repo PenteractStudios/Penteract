@@ -27,7 +27,9 @@ EXPOSE_MEMBERS(GameOverUIController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, backgroundUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, scrollingBackgroundObjUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, canvasFaderObjUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, canvasPlayerHUDObjUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasPlayerSkillsObjUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasPlayerLifeBarsObjUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasDukeLifeBarObjUID),
 	MEMBER(MemberType::FLOAT, scrollDuration),
 	MEMBER(MemberType::GAME_OBJECT_UID, audioSourcesUID)
 };
@@ -53,7 +55,9 @@ void GameOverUIController::Start() {
 	GameObject* backgroundGO = GameplaySystems::GetGameObject(backgroundUID);
 	GameObject* scrollingBackgroundObj = GameplaySystems::GetGameObject(scrollingBackgroundObjUID);
 
-	canvasPlayerHUDObj = GameplaySystems::GetGameObject(canvasPlayerHUDObjUID);
+	canvasPlayerSkillsObj = GameplaySystems::GetGameObject(canvasPlayerSkillsObjUID);
+	canvasPlayerLifeBarsObj = GameplaySystems::GetGameObject(canvasPlayerLifeBarsObjUID);
+	canvasDukeLifeBarObj = GameplaySystems::GetGameObject(canvasDukeLifeBarObjUID);
 
 	if (canvasFaderObjUID != 0) {
 		GameObject* canvasFaderObj = GameplaySystems::GetGameObject(canvasFaderObjUID);
@@ -230,9 +234,9 @@ void GameOverUIController::SetColors(float delta) {
 }
 
 void GameOverUIController::DisablePlayerHUD() {
-	if (canvasPlayerHUDObj) {
-		canvasPlayerHUDObj->Disable();
-	}
+	if (canvasPlayerSkillsObj) canvasPlayerSkillsObj->Disable();
+	if (canvasPlayerLifeBarsObj) canvasPlayerLifeBarsObj->Disable();
+	if (canvasDukeLifeBarObj) canvasDukeLifeBarObj->Disable();
 }
 
 void GameOverUIController::PlayAudio(GlitchTitleAudio type) {
