@@ -247,7 +247,7 @@ void Duke::OnAnimationFinished()
 		state = DukeState::BASIC_BEHAVIOUR;
 	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::STUN)] && state == DukeState::INVULNERABLE) {
 		CallTroops();
-		state = DukeState::SHOOT_SHIELD;
+		StartUsingShield();
 	}
 }
 
