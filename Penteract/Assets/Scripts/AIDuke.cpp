@@ -3,6 +3,8 @@
 #include "AIMovement.h"
 #include "PlayerController.h"
 #include "DukeShield.h"
+#include "GlobalVariables.h"
+
 #include <string>
 #include <vector>
 
@@ -20,6 +22,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, secondEncounterUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, thirdEncounterUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fourthEncounterUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, triggerBosslvl2EndUID),
 
 	MEMBER_SEPARATOR("Duke Atributes"),
 	MEMBER(MemberType::FLOAT, dukeCharacter.lifePoints),
@@ -55,6 +58,7 @@ EXPOSE_MEMBERS(AIDuke) {
 
 	MEMBER_SEPARATOR("Debug"),
 	MEMBER(MemberType::BOOL, toggleShield),
+	MEMBER(MemberType::BOOL, islevel2),
 	MEMBER(MemberType::SCENE_RESOURCE_UID, winSceneUID),
 
 
@@ -88,9 +92,14 @@ void AIDuke::Start() {
 
 	// Init Duke character
 	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, chargeAttackUID, encounters);
+
+	if(islevel2) triggerBosslvl2End = GameplaySystems::GetGameObject(triggerBosslvl2EndUID);
+
 }
 
-void AIDuke::Update() {
+void AIDuke::Update() {	
+	if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) return;
+
 	std::string life = std::to_string(dukeCharacter.lifePoints);
 	life = "Life points: " + life;
 	Debug::Log(life.c_str());
@@ -129,6 +138,11 @@ void AIDuke::Update() {
 			return;
 		} else if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints() &&
 				 dukeCharacter.state != DukeState::BULLET_HELL && dukeCharacter.state != DukeState::CHARGE) {
+			if (islevel2) {// only for level 2
+				// call animation teleport and disable gameobject
+				triggerBosslvl2End->Enable();
+				GetOwner().Disable();
+			}
 			phase = Phase::PHASE2;
 			if (!phase2Reached) phase2Reached = true;
 			// Phase change VFX?

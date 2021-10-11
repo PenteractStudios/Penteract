@@ -66,6 +66,7 @@ public:
 	UID fourthEncounterUID = 0;
 	UID meleeAttackColliderUID = 0;
 	UID chargeAttackUID = 0;
+	UID triggerBosslvl2EndUID = 0;
 
 	GameObject* duke = nullptr;
 	GameObject* player = nullptr;
@@ -93,6 +94,7 @@ public:
 	float orientationThreshold = 0.1f;
 
 	bool toggleShield = false;
+	bool islevel2 = false;
 
 	UID winSceneUID = 0;
 
@@ -133,5 +135,8 @@ private:
 	float pushBackRealDistance = 0.f;
 
 	bool isInArena = true;
+
+	//Only for level2
+	GameObject* triggerBosslvl2End = nullptr;
 };
 
