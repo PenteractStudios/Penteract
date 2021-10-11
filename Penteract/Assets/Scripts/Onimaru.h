@@ -101,6 +101,8 @@ public:
 	bool IsShielding() const;
 	bool IsVulnerable() const override;
 	float GetNormalizedRemainingUltimateTime()const;
+	void ResetToIdle() override;
+
 private:
 
 	ResourcePrefab* trail = nullptr;

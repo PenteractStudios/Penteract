@@ -10,7 +10,7 @@
 
 #define RNG_SCALE 1.3f
 
-std::uniform_real_distribution<> rng(-1.0f, 1.0f);
+std::uniform_real_distribution<float> rng(-1.0f, 1.0f);
 
 void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID chargeAttackColliderUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController)
 {
@@ -129,11 +129,11 @@ bool Duke::BulletHellFinished() {
 	return attackDronesController && attackDronesController->BulletHellFinished();
 }
 
-void Duke::InitCharge(DukeState nextState)
+void Duke::InitCharge(DukeState nextState_)
 {
 	trackingChargeTarget = true;
 	state = DukeState::CHARGE;
-	this->nextState = nextState;
+	this->nextState = nextState_;
 	reducedDamaged = true;
 
 	if (compAnimation) {
