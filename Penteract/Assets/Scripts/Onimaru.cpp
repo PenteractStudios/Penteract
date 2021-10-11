@@ -91,17 +91,6 @@ void Onimaru::Blast() {
 							else if (dukeScript) dukeScript->EnableBlastPushBack();
 						}
 					}
-					else {
-						if (meleeScript) {
-							if (!meleeScript->IsBeingPushed()) meleeScript->DisableBlastPushBack();
-						}
-						else if (rangedScript) {
-							if (!rangedScript->IsBeingPushed()) rangedScript->DisableBlastPushBack();
-						}
-						else if (dukeScript) {
-							if (!dukeScript->IsBeingPushed()) dukeScript->DisableBlastPushBack();
-						}
-					}
 				}
 			}
 		}
