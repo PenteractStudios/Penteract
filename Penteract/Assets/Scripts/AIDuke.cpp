@@ -93,7 +93,7 @@ void AIDuke::Start() {
 void AIDuke::Update() {
 	std::string life = std::to_string(dukeCharacter.lifePoints);
 	life = "Life points: " + life;
-	//Debug::Log(life.c_str());
+	Debug::Log(life.c_str());
 
 	if (toggleShield) {
 		toggleShield = false;
@@ -169,26 +169,25 @@ void AIDuke::Update() {
 				movementScript->Stop();
 			} else {
 				if (player) {
-					//if ((float3(0, 0, 0) - player->GetComponent<ComponentTransform>()->GetGlobalPosition()).LengthSq() <
-					//	(float3(0, 0, 0) - ownerTransform->GetGlobalPosition()).LengthSq()) {
-					//	// If player dominates the center for too long, perform charge
-					//	timeSinceLastCharge += Time::GetDeltaTime();
-					//}
-					//if (timeSinceLastCharge >= 3.0f) {
-					//	timeSinceLastCharge = 0.f;
-					//	// Charge
-					//	movementScript->Stop();
-					//	dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
-					//	dukeCharacter.StopShooting();
-					//}
-					//else {
+					if ((float3(0, 0, 0) - player->GetComponent<ComponentTransform>()->GetGlobalPosition()).LengthSq() <
+						(float3(0, 0, 0) - ownerTransform->GetGlobalPosition()).LengthSq()) {
+						// If player dominates the center for too long, perform charge
+						timeSinceLastCharge += Time::GetDeltaTime();
+					}
+					if (timeSinceLastCharge >= 3.0f) {
+						timeSinceLastCharge = 0.f;
+						// Charge
+						movementScript->Stop();
+						dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
+						dukeCharacter.StopShooting();
+					} else {
 						// Normal behavior
 						if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(dukeCharacter.movementSpeed);
 						float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
 						dir.y = 0.0f;
 						movementScript->Orientate(dir);
 						dukeCharacter.ShootAndMove(dir);
-					//}
+					}
 				}
 				break;
 			}

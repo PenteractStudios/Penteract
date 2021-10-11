@@ -90,8 +90,8 @@ void Duke::ShootAndMove(const float3& playerDirection) {
 	}
 
 	Navigation::Raycast(dukeTransform->GetGlobalPosition(), dukeTransform->GetGlobalPosition() + perpendicular, navigationHit, navigationHitPos);
+	if (navigationHit) perpendicular = -perpendicular;
 	if (agent) agent->SetMoveTarget(navigationHitPos);
-	perpendicular = navigationHitPos - dukeTransform->GetGlobalPosition();
 	int movementAnim = GetWalkAnimation();
 	if (compAnimation && compAnimation->GetCurrentState()->name != animationStates[movementAnim]) {
 		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[movementAnim]);
@@ -286,9 +286,7 @@ int Duke::GetWalkAnimation()
 	float3 cross = Cross(perpendicular.Normalized(), dukeTransform->GetFront());
 
 	int animNum = 0;
-	if (perpendicular.Length() <= 0.1f) {
-		animNum = static_cast<int>(DUKE_ANIMATION_STATES::IDLE);
-	} else if (dot >= 0.707) {
+	if (dot >= 0.707) {
 		animNum = static_cast<int>(DUKE_ANIMATION_STATES::WALK_FORWARD);
 	} else if (dot <= -0.707) {
 		animNum = static_cast<int>(DUKE_ANIMATION_STATES::WALK_BACK);
