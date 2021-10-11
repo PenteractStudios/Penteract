@@ -3,6 +3,7 @@
 #include "Scripting/Script.h"
 
 class UISpriteSheetPlayer;
+class ComponentAudioSource;
 class ComponentImage;
 class ComponentText;
 class CanvasFader;
@@ -17,6 +18,9 @@ public:
 	void GameOver();
 
 public:
+
+	enum class GlitchTitleAudio { FADE_IN, GLITCH, FADE_OUT, TOTAL };
+
 	float minVibrationTime = 2.0f;
 	float maxVibrationTime = 3.0f;
 	float fadeInTime = 1.0f;
@@ -35,11 +39,14 @@ public:
 	UID scrollingBackgroundObjUID = 0;
 	UID canvasFaderObjUID = 0;
 	UID canvasPlayerHUDObjUID = 0;
+	UID audioSourcesUID = 0;
 
 private:
 	void EnterIdleState();
 	void SetColors(float delta);
 	void DisablePlayerHUD();
+	void PlayAudio(GlitchTitleAudio type);
+
 private:
 	GameOverState state = GameOverState::OFFLINE;
 	float vibrationTimer = 0.0f;
@@ -65,5 +72,7 @@ private:
 	float4 scrollingBackgroundImageOriginalColor = float4(20,70,100,225);
 	CanvasFader* canvasFader = nullptr;
 	GameObject* canvasPlayerHUDObj = nullptr;
+
+	ComponentAudioSource* audios[static_cast<int>(GlitchTitleAudio::TOTAL)] = { nullptr };
 };
 
