@@ -6,6 +6,7 @@
 #include "Components/UI/ComponentImage.h"
 #include "ImageColorFader.h"
 #include "AbilityRefeshFX.h"
+#include "GlobalVariables.h"
 
 #define HIERARCHY_INDEX_ABILITY_FILL 1
 #define HIERARCHY_INDEX_ABILITY_DURATION_FILL 2
@@ -48,6 +49,9 @@
 #define HUD_HIT_FEEDBACK_SIDES 2
 #define SWITCH_HEALTH_HIERARCHY_NUM_CHILDREN 2
 
+#define WAVING_EFFECT_MIN_ALPHA 0.3f
+#define WAVING_EFFECT_MAX_ALPHA 0.7f
+
 EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerObjectUID),
 	MEMBER_SEPARATOR("HUD Abilities"),
@@ -78,14 +82,13 @@ void HUDManager::Start() {
 	fangSkillParent = GameplaySystems::GetGameObject(fangSkillParentUID);
 	onimaruSkillParent = GameplaySystems::GetGameObject(onimaruSkillParentUID);
 	switchSkillParent = GameplaySystems::GetGameObject(switchSkillParentUID);
-	switchSkillActivated = false;
 
 	if (fangSkillParent && onimaruSkillParent && switchSkillParent) {
 		skillsFang = fangSkillParent->GetChildren();
 		skillsOni = onimaruSkillParent->GetChildren();
 		switchSkillParent->Disable();
 
-		//Vector used later to avoid a flicker on first swtich
+		//Vector used later to avoid a flicker on first switch
 		std::vector<ComponentTransform2D*>oniTransforms;
 
 		for (int i = 0; i < static_cast<int>(Cooldowns::TOTAL); i++) {
@@ -93,6 +96,8 @@ void HUDManager::Start() {
 			if (i < static_cast<int>(Cooldowns::ONIMARU_SKILL_1)) {
 				//Fang skill
 				transform2D = skillsFang[i]->GetComponent<ComponentTransform2D>();
+				//Disable the skill until the tutorial
+				skillsFang[i]->Disable();
 
 			} else if (i != static_cast<int>(Cooldowns::SWITCH_SKILL)) {
 				//Onimaru skill
@@ -184,14 +189,30 @@ void HUDManager::Start() {
 }
 
 void HUDManager::Update() {
-	// This checks for when the Switch tutorial is reached.When this happens, switch is activated and Player will be able to switch from then on.
-	if (GameController::IsSwitchTutorialReached() && !switchSkillActivated) {
-		if (switchSkillParent) {
-			if (!switchSkillParent->IsActive()) {
-				switchSkillParent->Enable();
-				switchSkillActivated = true;
-			}
-		}
+	// Tutorial activated skills
+		// Switch
+	if (GameplaySystems::GetGlobalVariable(globalSwitchTutorialReached, true)) {
+		if (switchSkillParent && !switchSkillParent->IsActive()) switchSkillParent->Enable();
+	} else {
+		if (switchSkillParent && switchSkillParent->IsActive()) switchSkillParent->Disable();
+	}
+	// Dash/Shield
+	if (GameplaySystems::GetGlobalVariable(globalSkill1TutorialReached, true)) {
+		if (skillsFang[0] && !skillsFang[0]->IsActive()) skillsFang[0]->Enable();
+	} else {
+		if (skillsFang[0] && skillsFang[0]->IsActive()) skillsFang[0]->Disable();
+	}
+	// EMP/Blast
+	if (GameplaySystems::GetGlobalVariable(globalSkill2TutorialReached, true)) {
+		if (skillsFang[1] && !skillsFang[1]->IsActive()) skillsFang[1]->Enable();
+	} else {
+		if (skillsFang[1] && skillsFang[1]->IsActive()) skillsFang[1]->Disable();
+	}
+	// Ultimate
+	if (GameplaySystems::GetGlobalVariable(globalSkill3TutorialReached, true)) {
+		if (skillsFang[2] && !skillsFang[2]->IsActive()) skillsFang[2]->Enable();
+	} else {
+		if (skillsFang[2] && skillsFang[2]->IsActive()) skillsFang[2]->Disable();
 	}
 
 	ManageSwitch();
@@ -365,10 +386,30 @@ void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 
 				if (cooldowns[skill] < 1) {
 					//On Cooldown
-					fillImage->SetColor(float4(skillColorNotAvailable.xyz(), 0.3f + cooldowns[skill]));
+					fillImage->SetColor(float4(skillColorNotAvailable.xyz(), Clamp(WAVING_EFFECT_MIN_ALPHA + cooldowns[skill], WAVING_EFFECT_MIN_ALPHA, WAVING_EFFECT_MAX_ALPHA)));
 				} else {
+					float4 colorToSet = skillColorAvailable;
+					float delta = abilityWavingEffects[static_cast<int>(skill)].second / abilityAlphaWavingTotalTime;
+
 					//Available
-					fillImage->SetColor(skillColorAvailable);
+
+					if (abilityWavingEffects[static_cast<int>(skill)].first) {
+						colorToSet = float4::Lerp(float4(skillColorAvailable.xyz(), WAVING_EFFECT_MIN_ALPHA), float4(skillColorAvailable.xyz(), WAVING_EFFECT_MAX_ALPHA), delta);
+					} else {
+						colorToSet = float4::Lerp(float4(skillColorAvailable.xyz(), WAVING_EFFECT_MAX_ALPHA), float4(skillColorAvailable.xyz(), WAVING_EFFECT_MIN_ALPHA), delta);
+					}
+
+					abilityWavingEffects[static_cast<int>(skill)].second += Time::GetDeltaTime();
+
+					if (abilityWavingEffects[static_cast<int>(skill)].second > abilityAlphaWavingTotalTime) {
+						abilityWavingEffects[static_cast<int>(skill)].first = !abilityWavingEffects[static_cast<int>(skill)].first;
+						abilityWavingEffects[static_cast<int>(skill)].second = 0;
+					}
+
+					fillImage->SetColor(colorToSet);
+
+
+					//fillImage->SetColor(skillColorAvailable);
 				}
 
 				if (fillImage->IsFill()) {
@@ -540,10 +581,15 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 	ComponentImage* textFill = children[HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL]->GetComponent<ComponentImage>();
 
 	if (fillColor && image) {
+
+		if (!fillColor->IsFill() )fillColor->SetIsFill(true); //Double check the image being fill
+
 		fillColor->SetFillValue(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
 		if (playerController) {
 			if (playerController->AreBothCharactersAlive()) {
-				fillColor->SetColor(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1 ? float4(switchSkillColorNotAvailable.xyz(), 0.3f + cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]) : switchSkillColorAvailable);
+				if (cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1) {
+					fillColor->SetColor(float4(switchSkillColorNotAvailable.xyz(), Clamp(WAVING_EFFECT_MIN_ALPHA + cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)],WAVING_EFFECT_MIN_ALPHA, WAVING_EFFECT_MAX_ALPHA)));
+				}
 			} else {
 				fillColor->SetColor(switchSkillColorDeadCharacter);
 			}
@@ -593,21 +639,21 @@ void HUDManager::ManageSwitch() {
 			fillImage = children[HIERARCHY_INDEX_SWITCH_ABILITY_FILL]->GetComponent<ComponentImage>();
 			if (fillImage) {
 
-				float delta = switchColorTimer / switchColorTotalTime;
+				float delta = abilityWavingEffects[static_cast<int>(Cooldowns::SWITCH_SKILL)].second / abilityAlphaWavingTotalTime;
 
-				if (switchColorIncreasing) {
+				if (abilityWavingEffects[static_cast<int>(Cooldowns::SWITCH_SKILL)].first) {
 					fillImage->SetColor(float4(fillImage->GetColor().xyz(), Lerp(0.3f, 0.7f, delta)));
 				} else {
 					fillImage->SetColor(float4(fillImage->GetColor().xyz(), Lerp(0.7f, 0.3f, delta)));
 				}
-				switchColorTimer += Time::GetDeltaTime();
+				abilityWavingEffects[static_cast<int>(Cooldowns::SWITCH_SKILL)].second += Time::GetDeltaTime();
 			}
 		}
 
 		//Reset color timer and invert the toggle for increasing/decreasing
-		if (switchColorTimer >= switchColorTotalTime) {
-			switchColorTimer = 0;
-			switchColorIncreasing = !switchColorIncreasing;
+		if (abilityWavingEffects[static_cast<int>(Cooldowns::SWITCH_SKILL)].second >= abilityAlphaWavingTotalTime) {
+			abilityWavingEffects[static_cast<int>(Cooldowns::SWITCH_SKILL)].second = 0;
+			abilityWavingEffects[static_cast<int>(Cooldowns::SWITCH_SKILL)].first = !abilityWavingEffects[static_cast<int>(Cooldowns::SWITCH_SKILL)].first;
 		}
 
 		break;
@@ -777,7 +823,7 @@ void HUDManager::ManageSwitch() {
 				for (unsigned i = 0; i < skillsFang.size(); ++i) {
 					transform2D = skillsFang[i]->GetComponent<ComponentTransform2D>();
 					if (transform2D) {
-						transform2D->SetScale(float3::Lerp(float3(0, 0, 0), float3(1, 1, 1), delta));
+						transform2D->SetScale(float3::Lerp(float3(0, 1, 0), float3(1, 1, 1), delta));
 					}
 				}
 			} else {
@@ -1268,7 +1314,7 @@ void HUDManager::ManageSwitchCollapseState(GameObject* /* skillsParent */, const
 		for (unsigned i = 0; i < skills.size(); ++i) {
 			transform2D = skills[i]->GetComponent<ComponentTransform2D>();
 			if (transform2D) {
-				transform2D->SetScale(float3::Lerp(float3(1, 1, 1), float3(0, 0, 0), delta));
+				transform2D->SetScale(float3::Lerp(float3(1, 1, 1), float3(0, 1, 0), delta));
 			}
 		}
 	}

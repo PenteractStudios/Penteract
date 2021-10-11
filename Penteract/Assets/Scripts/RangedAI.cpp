@@ -1,6 +1,5 @@
 #include "RangedAI.h"
 
-#include "GameController.h"
 #include "PlayerController.h"
 #include "PlayerDeath.h"
 #include "HUDController.h"
@@ -17,6 +16,7 @@
 #include "Components/ComponentAnimation.h"
 #include "Components/ComponentMeshRenderer.h"
 #include "Resources/ResourcePrefab.h"
+#include "GlobalVariables.h"
 //clang-format off
 #include <random>
 
@@ -90,7 +90,7 @@ void RangedAI::Start() {
 		if (weaponGO) {
 			weaponMeshRenderer = weaponGO->GetComponent<ComponentMeshRenderer>();
 			if (weaponMeshRenderer) {
-				weaponMaterialID = weaponMeshRenderer->materialId;
+				weaponMaterialID = weaponMeshRenderer->GetMaterial();
 			}
 		}
 	}
@@ -100,7 +100,7 @@ void RangedAI::Start() {
 		if (backpackGO) {
 			backpackMeshRenderer = backpackGO->GetComponent<ComponentMeshRenderer>();
 			if (backpackMeshRenderer) {
-				backpackMaterialID = backpackMeshRenderer->materialId;
+				backpackMaterialID = backpackMeshRenderer->GetMaterial();
 			}
 		}
 	}
@@ -109,7 +109,7 @@ void RangedAI::Start() {
 	if (damagedObj) {
 		ComponentMeshRenderer* dmgMeshRenderer = damagedObj->GetComponent<ComponentMeshRenderer>();
 		if (dmgMeshRenderer) {
-			damageMaterialID = dmgMeshRenderer->materialId;
+			damageMaterialID = dmgMeshRenderer->GetMaterial();
 		}
 	}
 
@@ -117,7 +117,7 @@ void RangedAI::Start() {
 	if (dissolveObj) {
 		ComponentMeshRenderer* dissolveMeshRenderer = dissolveObj->GetComponent<ComponentMeshRenderer>();
 		if (dissolveMeshRenderer) {
-			dissolveMaterialID = dissolveMeshRenderer->materialId;
+			dissolveMaterialID = dissolveMeshRenderer->GetMaterial();
 		}
 	}
 
@@ -322,7 +322,7 @@ void RangedAI::Update() {
 
 	if (!GetOwner().IsActive()) return;
 
-	if ((state == AIState::IDLE || state == AIState::RUN || state == AIState::FLEE) && !GameController::IsGameplayBlocked()) {
+	if ((state == AIState::IDLE || state == AIState::RUN || state == AIState::FLEE) && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 		attackTimePool = Max(attackTimePool - Time::GetDeltaTime(), 0.0f);
 		if (attackTimePool == 0) {
 			if (actualShotTimer == -1) {
@@ -346,7 +346,7 @@ void RangedAI::Update() {
 		currentSlowedDownTime += Time::GetDeltaTime();
 	}
 
-	if (!rangerGruntCharacter.isAlive && state != AIState::DEATH && !GameController::IsGameplayBlocked()) {
+	if (!rangerGruntCharacter.isAlive && state != AIState::DEATH && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 		PlayAudio(AudioType::DEATH);
 		ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
 		if (collider) collider->Disable();
@@ -426,7 +426,7 @@ void RangedAI::UpdateState() {
 
 	float speedToUse = rangerGruntCharacter.slowedDown ? rangerGruntCharacter.slowedDownSpeed : rangerGruntCharacter.movementSpeed;
 
-	if (GameController::IsGameplayBlocked() && state != AIState::START && state != AIState::SPAWN) {
+	if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && state != AIState::START && state != AIState::SPAWN) {
 		state = AIState::IDLE;
 	}
 
@@ -445,7 +445,7 @@ void RangedAI::UpdateState() {
 		if (player) {
 			if (aiMovement) {
 				aiMovement->Stop();
-				if (aiMovement->CharacterInSight(player, rangerGruntCharacter.searchRadius) && !GameController::IsGameplayBlocked()) {
+				if (aiMovement->CharacterInSight(player, rangerGruntCharacter.searchRadius) && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 					if (aiMovement->CharacterInSight(player, fleeingRange)) {
 						ChangeState(AIState::FLEE);
 						break;
@@ -774,8 +774,8 @@ void RangedAI::SetRandomMaterial()
 		std::vector<UID> materials;
 		for (const auto& child : materialsHolder->GetChildren()) {
 			ComponentMeshRenderer* meshRendererChild = child->GetComponent<ComponentMeshRenderer>();
-			if (meshRendererChild && meshRendererChild->materialId) {
-				materials.push_back(meshRendererChild->materialId);
+			if (meshRendererChild && meshRendererChild->GetMaterial()) {
+				materials.push_back(meshRendererChild->GetMaterial());
 			}
 		}
 
@@ -787,7 +787,7 @@ void RangedAI::SetRandomMaterial()
 			std::uniform_int_distribution<int> distrib(1, materials.size());
 
 			int position = distrib(gen) - 1;
-			meshRenderer->materialId = materials[position];
+			meshRenderer->SetMaterial(materials[position]);
 			defaultMaterialID = materials[position];
 		}
 	}
@@ -795,7 +795,7 @@ void RangedAI::SetRandomMaterial()
 
 void RangedAI::SetMaterial(ComponentMeshRenderer* mesh, UID newMaterialID, bool needToPlayDissolve) {
 	if (newMaterialID > 0 && mesh) {
-		mesh->materialId = newMaterialID;
+		mesh->SetMaterial(newMaterialID);
 		if (needToPlayDissolve) {
 			mesh->PlayDissolveAnimation();
 		}
