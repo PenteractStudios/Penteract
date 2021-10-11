@@ -89,7 +89,9 @@ void Duke::ShootAndMove(const float3& playerDirection) {
 		distanceCorrectionTimer = 0.f;
 	}
 
-	if (agent) agent->SetMoveTarget(dukeTransform->GetGlobalPosition() + perpendicular);
+	Navigation::Raycast(dukeTransform->GetGlobalPosition(), dukeTransform->GetGlobalPosition() + perpendicular, navigationHit, navigationHitPos);
+	if (agent) agent->SetMoveTarget(navigationHitPos);
+	perpendicular = navigationHitPos - dukeTransform->GetGlobalPosition();
 	int movementAnim = GetWalkAnimation();
 	if (compAnimation && compAnimation->GetCurrentState()->name != animationStates[movementAnim]) {
 		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[movementAnim]);
@@ -156,6 +158,11 @@ void Duke::CallTroops() {
 void Duke::Shoot()
 {
 	attackTimePool -= Time::GetDeltaTime();
+	if (bullet) {
+		ComponentTransform* bulletTransform = bullet->GetOwner().GetComponent<ComponentTransform>();
+		float3 targetDirection = player->GetComponent<ComponentTransform>()->GetGlobalPosition() + float3(0.f, 2.7f, 0.f) - bulletTransform->GetGlobalPosition();
+		bulletTransform->SetGlobalRotation(Quat::LookAt(float3(0,1,0), targetDirection, float3(0,0,-1), float3(0,1,0)));
+	}
 	if (isShooting) {
 		isShootingTimer += Time::GetDeltaTime();
 		if (isShootingTimer >= (attackBurst-1) / attackSpeed) {
@@ -279,7 +286,7 @@ int Duke::GetWalkAnimation()
 	float3 cross = Cross(perpendicular.Normalized(), dukeTransform->GetFront());
 
 	int animNum = 0;
-	if (perpendicular.Length() <= 0.01f) {
+	if (perpendicular.Length() <= 0.1f) {
 		animNum = static_cast<int>(DUKE_ANIMATION_STATES::IDLE);
 	} else if (dot >= 0.707) {
 		animNum = static_cast<int>(DUKE_ANIMATION_STATES::WALK_FORWARD);

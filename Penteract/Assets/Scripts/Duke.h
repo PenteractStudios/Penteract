@@ -140,11 +140,14 @@ private:
 
 	bool hasMeleeAttacked = false;
 
+	// Movement
 	float3 perpendicular;
 	float movementTimer = 0.f;
 	float movementChangeThreshold = 2.0f;
 	float distanceCorrectionTimer = 0.f;
 	float distanceCorrectionThreshold = 2.0f;
+	bool navigationHit;
+	float3 navigationHitPos;
 
 	// Charge
 	bool trackingChargeTarget = false;
