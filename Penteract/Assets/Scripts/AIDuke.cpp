@@ -14,6 +14,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, bulletUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargeColliderUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, meleeAttackColliderUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, barrelSpawnerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargeAttackUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargeColliderUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, firstEncounterUID),
@@ -37,6 +38,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::FLOAT, dukeCharacter.slowedDownSpeed),
 	MEMBER(MemberType::FLOAT, dukeCharacter.moveChangeEvery),
 	MEMBER(MemberType::FLOAT, dukeCharacter.distanceCorrectEvery),
+	MEMBER(MemberType::BOOL, dukeCharacter.startSpawnBarrel),
 
 	MEMBER_SEPARATOR("Duke Abilities Variables"),
 	MEMBER(MemberType::FLOAT, shieldCooldown),
@@ -85,9 +87,8 @@ void AIDuke::Start() {
 		dukeShield = GET_SCRIPT(shieldObj, DukeShield);
 	}
 
-
-	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, chargeAttackUID, encounters);
+	// Init Duke character	
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, encounters);
 }
 
 void AIDuke::Update() {

@@ -64,6 +64,7 @@ public:
 	UID thirdEncounterUID = 0;
 	UID fourthEncounterUID = 0;
 	UID meleeAttackColliderUID = 0;
+	UID barrelSpawnerUID = 0;
 	UID chargeAttackUID = 0;
 
 	GameObject* duke = nullptr;
