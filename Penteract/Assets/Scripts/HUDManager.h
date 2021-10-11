@@ -88,9 +88,7 @@ public:
 	SwitchState switchState = SwitchState::IDLE;
 	PictoState pictoStates[static_cast<int>(Cooldowns::TOTAL)];
 
-	float switchColorTimer = 0.0f;
-	float switchColorTotalTime = 1.25f;
-	bool switchColorIncreasing = true;
+	float abilityAlphaWavingTotalTime = 1.25f;
 
 	float rotationSpeed = 3.1416f / 4.0f;
 
@@ -132,6 +130,7 @@ public:
 	float criticalHealthPercentage = 15.f;
 
 	std::string shieldObjName = "VFXShield";
+	std::pair<bool, float> abilityWavingEffects[static_cast<int>(Cooldowns::TOTAL)] = { {true,0.0f},{true,0.0f} ,{true,0.0f} ,{true,0.0f} ,{true,0.0f} ,{true,0.0f} ,{true,0.0f} };
 public:
 	void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown, float fangUltimateRemainingNormalizedValue, float oniUltimateRemainingNormalizedValue);
 	void UpdateHealth(float fangHealth, float onimaruHealth);
@@ -157,7 +156,6 @@ private:
 	ComponentImage* switchGlowImage = nullptr;
 	float switchTimer = 0.0f;
 	bool abilityCoolDownsRetreived[static_cast<int>(Cooldowns::TOTAL)] = { false,false,false,false,false,false,false };
-	bool switchSkillActivated = false;
 
 	// Health HUD
 	GameObject* fangHealthParent = nullptr;

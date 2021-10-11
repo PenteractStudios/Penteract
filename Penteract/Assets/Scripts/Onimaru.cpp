@@ -1,7 +1,6 @@
 #include "Onimaru.h"
 
 #include "GameplaySystems.h"
-#include "GameController.h"
 #include "HUDController.h"
 #include "HUDManager.h"
 #include "CameraController.h"
@@ -9,15 +8,16 @@
 #include "AIMeleeGrunt.h"
 #include "RangedAI.h"
 #include "AIDuke.h"
+#include "GlobalVariables.h"
 
 #include "Shield.h"
 
 bool Onimaru::CanShoot() {
-	return !shootingOnCooldown && !GameController::IsGameplayBlocked();
+	return !shootingOnCooldown && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true);
 }
 
 bool Onimaru::CanBlast() const {
-	return !blastInCooldown && !IsShielding() && !ultimateOn && !blastInUse && !GameController::IsGameplayBlocked();
+	return !blastInCooldown && !IsShielding() && !ultimateOn && !blastInUse && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true);
 }
 
 void Onimaru::GetHit(float damage_) {
@@ -224,6 +224,15 @@ float Onimaru::GetNormalizedRemainingUltimateTime() const {
 	return 0.0f;
 }
 
+void Onimaru::ResetToIdle()
+{
+	if (compAnimation) {
+		if (compAnimation->GetCurrentState()) {
+			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(IDLE)]);
+		}
+	}
+}
+
 float Onimaru::GetRealShieldCooldown() {
 	if (shield == nullptr || shieldGO == nullptr) return 0.0f;
 	float realShieldCooldown = 1.0f;
@@ -241,7 +250,7 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 			}
 		}
 		timeWithoutCombat += Time::GetDeltaTime();
-		if (timeWithoutCombat >= aimTime || GameController::IsGameplayBlocked()) {
+		if (timeWithoutCombat >= aimTime || GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 			aiming = false;
 			timeWithoutCombat = aimTime;
 		}
@@ -309,7 +318,7 @@ void Onimaru::OnDeath() {
 }
 
 bool Onimaru::CanSwitch() const {
-	return isAlive && ultimateTimeRemaining <= 0 && !ultimateOn && !IsShielding() && !blastInUse && (!GameController::IsGameplayBlocked() || GameController::IsSwitchTutorialActive());
+	return isAlive && ultimateTimeRemaining <= 0 && !ultimateOn && !IsShielding() && !blastInUse && (!GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) || GameplaySystems::GetGlobalVariable(globalswitchTutorialActive, true));
 }
 
 void Onimaru::OnAnimationSecondaryFinished() {
@@ -449,11 +458,11 @@ void Onimaru::OnAnimationFinished() {
 
 bool Onimaru::CanShield() const {
 	if (shield == nullptr || shieldGO == nullptr) return false;
-	return !ultimateOn && !shield->GetIsActive() && shield->CanUse() && !GameController::IsGameplayBlocked();
+	return !ultimateOn && !shield->GetIsActive() && shield->CanUse() && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true);
 }
 
 bool Onimaru::CanUltimate() const {
-	return !blastInUse && !IsShielding() && ultimateChargePoints >= ultimateChargePointsTotal && !GameController::IsGameplayBlocked() && !switchInProgress;
+	return !blastInUse && !IsShielding() && ultimateChargePoints >= ultimateChargePointsTotal && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && !switchInProgress;
 }
 
 bool Onimaru::UltimateStarted() const {
@@ -601,7 +610,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */
 		}
 
 		if (shooting) {
-			if (!GetInputBool(InputActions::SHOOT, useGamepad) || GameController::IsGameplayBlocked() || ultimateOn) {
+			if (!GetInputBool(InputActions::SHOOT, useGamepad) || GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) || ultimateOn) {
 				shooting = false;
 				if (compAnimation) {
 					if (shield->GetIsActive()) {
