@@ -191,6 +191,33 @@ void Duke::StopUsingShield() {
 	}
 }
 
+void Duke::BePushed() {
+	state = DukeState::PUSHED;
+	beingPushed = true;
+
+	if (compAnimation) {
+		if (compAnimation->GetCurrentStateSecondary()) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+		}
+		if (compAnimation->GetCurrentState()) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PUSHED)]);
+		}
+	}
+}
+
+void Duke::BecomeStunned() {
+	if (compAnimation) {
+		if (compAnimation) {
+			if (compAnimation->GetCurrentStateSecondary()) {
+				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+			}
+			if (compAnimation->GetCurrentState()) {
+				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::STUN)]);
+			}
+		}
+	}
+}
+
 void Duke::OnAnimationFinished()
 {
 	if (!compAnimation) return;

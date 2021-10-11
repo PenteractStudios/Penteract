@@ -51,7 +51,8 @@ private:
 	void CalculatePushBackRealDistance();
 	void UpdatePushBackPosition();
 	void ParticleHit(GameObject& collidedWith, void* particle, Player& player_);
-
+	bool CanBeHurtDuringCriticalMode() const;
+	bool IsInvulnerable()const;
 public:
 	UID dukeUID = 0;
 	UID playerUID = 0;
