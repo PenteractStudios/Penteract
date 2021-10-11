@@ -131,6 +131,7 @@ void GlitchyTitleController::Update() {
 		startPlayingTitleSpriteSheetPlayer->Stop();
 
 		startPlayingTitleSpriteSheetPlayer->Play();
+		PlayAudio(GlitchTitleAudio::FADE_OUT);
 
 		glitchState = GlitchState::WAIT_FADE_OUT;
 		break;
