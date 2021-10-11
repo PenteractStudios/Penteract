@@ -717,7 +717,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */
 		Blast();
 	}
 	PlayAnimation();
-	UpdateWeaponRotation();
+	if (!GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) UpdateWeaponRotation();
 }
 
 float Onimaru::GetRealUltimateCooldown() {
