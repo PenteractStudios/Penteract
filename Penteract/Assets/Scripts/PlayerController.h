@@ -53,7 +53,7 @@ public:
 	void AddEnemyInMap(GameObject* enemy);
 	void RemoveEnemyFromMap(GameObject* enemy);
 
-	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
+	void OnCollision(GameObject& collidedWith, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* particle = nullptr) override;
 	void ObtainUpgradeCell();
 	void OnCharacterDeath();
 	void OnCharacterResurrect();

@@ -90,7 +90,7 @@ void RangedAI::Start() {
 		if (weaponGO) {
 			weaponMeshRenderer = weaponGO->GetComponent<ComponentMeshRenderer>();
 			if (weaponMeshRenderer) {
-				weaponMaterialID = weaponMeshRenderer->materialId;
+				weaponMaterialID = weaponMeshRenderer->GetMaterial();
 			}
 		}
 	}
@@ -100,7 +100,7 @@ void RangedAI::Start() {
 		if (backpackGO) {
 			backpackMeshRenderer = backpackGO->GetComponent<ComponentMeshRenderer>();
 			if (backpackMeshRenderer) {
-				backpackMaterialID = backpackMeshRenderer->materialId;
+				backpackMaterialID = backpackMeshRenderer->GetMaterial();
 			}
 		}
 	}
@@ -109,7 +109,7 @@ void RangedAI::Start() {
 	if (damagedObj) {
 		ComponentMeshRenderer* dmgMeshRenderer = damagedObj->GetComponent<ComponentMeshRenderer>();
 		if (dmgMeshRenderer) {
-			damageMaterialID = dmgMeshRenderer->materialId;
+			damageMaterialID = dmgMeshRenderer->GetMaterial();
 		}
 	}
 
@@ -117,7 +117,7 @@ void RangedAI::Start() {
 	if (dissolveObj) {
 		ComponentMeshRenderer* dissolveMeshRenderer = dissolveObj->GetComponent<ComponentMeshRenderer>();
 		if (dissolveMeshRenderer) {
-			dissolveMaterialID = dissolveMeshRenderer->materialId;
+			dissolveMaterialID = dissolveMeshRenderer->GetMaterial();
 		}
 	}
 
@@ -774,8 +774,8 @@ void RangedAI::SetRandomMaterial()
 		std::vector<UID> materials;
 		for (const auto& child : materialsHolder->GetChildren()) {
 			ComponentMeshRenderer* meshRendererChild = child->GetComponent<ComponentMeshRenderer>();
-			if (meshRendererChild && meshRendererChild->materialId) {
-				materials.push_back(meshRendererChild->materialId);
+			if (meshRendererChild && meshRendererChild->GetMaterial()) {
+				materials.push_back(meshRendererChild->GetMaterial());
 			}
 		}
 
@@ -787,7 +787,7 @@ void RangedAI::SetRandomMaterial()
 			std::uniform_int_distribution<int> distrib(1, materials.size());
 
 			int position = distrib(gen) - 1;
-			meshRenderer->materialId = materials[position];
+			meshRenderer->SetMaterial(materials[position]);
 			defaultMaterialID = materials[position];
 		}
 	}
@@ -795,7 +795,7 @@ void RangedAI::SetRandomMaterial()
 
 void RangedAI::SetMaterial(ComponentMeshRenderer* mesh, UID newMaterialID, bool needToPlayDissolve) {
 	if (newMaterialID > 0 && mesh) {
-		mesh->materialId = newMaterialID;
+		mesh->SetMaterial(newMaterialID);
 		if (needToPlayDissolve) {
 			mesh->PlayDissolveAnimation();
 		}

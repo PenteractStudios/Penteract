@@ -1,5 +1,7 @@
 #pragma once
 
+constexpr const char* globalCheckpoint = "Checkpoint";			// This variable keeps track of the last reached checkpoint. When the player dies, he will be able to resume the game at that point.
+
 constexpr const char* globalVariableKeyPlayVideoScene1 = "CameFromMainMenu";
 constexpr const char* isVideoActive = "IsVideoActive";			// isVideoActive is used to check if any video is Active and playing on the scene.
 

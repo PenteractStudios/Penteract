@@ -8,7 +8,7 @@
 
 #define RNG_SCALE 1.3f
 
-std::uniform_real_distribution<> rng(-1.0f, 1.0f);
+std::uniform_real_distribution<float> rng(-1.0f, 1.0f);
 
 void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID)
 {
@@ -104,9 +104,9 @@ void Duke::BulletHell()
 	Debug::Log("Bullet hell");
 }
 
-void Duke::InitCharge(DukeState nextState)
+void Duke::InitCharge(DukeState nextState_)
 {
-	this->nextState = nextState;
+	nextState = nextState_;
 	reducedDamaged = true;
 	if (chargeCollider) chargeCollider->Enable();
 	Debug::Log("Electric Tackle!");
@@ -165,7 +165,7 @@ void Duke::ThrowBarrels()
 
 void Duke::OnAnimationFinished()
 {
-	State* currentState = compAnimation->GetCurrentState();
+	currentState = compAnimation->GetCurrentState();
 	if (currentState->name == "Punch") {
 		hasMeleeAttacked = false;
 		compAnimation->SendTrigger(currentState->name + animationStates[DUKE_ANIMATION_STATES::IDLE]);
