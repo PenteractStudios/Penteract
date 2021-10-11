@@ -217,6 +217,14 @@ void Duke::OnAnimationFinished()
 		state = nextState;
 		agent->SetMaxSpeed(movementSpeed);
 		compAnimation->SendTrigger(currentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
+	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::DEATH)]) {
+		GameplaySystems::DestroyGameObject(characterGameObject);
+		SceneManager::ChangeScene(winSceneUID); // TODO: Replace with the correct trigger (for the video or whatever)
+	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::ENRAGE)]) {
+		state = DukeState::BASIC_BEHAVIOUR;
+	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::STUN)] && state == DukeState::INVULNERABLE) {
+		CallTroops();
+		state = DukeState::SHOOT_SHIELD;
 	}
 }
 

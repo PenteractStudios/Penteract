@@ -128,6 +128,8 @@ public:
 		"Punch", "Death", "Idle", "Enrage", "Shooting", "PDA", "Pushed", "Shield", "ShootingShield", "Stun",
 		"WalkBack", "WalkForward", "WalkForwardNoAim", "WalkLeft", "WalkRight" };
 
+	UID winSceneUID = 0; // TODO: Delete
+
 private:
 	void InstantiateBarrel();
 
