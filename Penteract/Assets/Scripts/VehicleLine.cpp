@@ -57,10 +57,9 @@ void VehicleLine::Update() {
 }
 
 void VehicleLine::AddVehicle(UID vehicleUID) {
-
     ResourcePrefab* prefabVehicle = GameplaySystems::GetResource<ResourcePrefab>(vehicleUID);
-    GameObject* goVehicle = GameplaySystems::GetGameObject(prefabVehicle->BuildPrefab(&GetOwner()));
     if (prefabVehicle) {
+        GameObject* goVehicle = GameplaySystems::GetGameObject(prefabVehicle->BuildPrefab(&GetOwner()));
         goVehicle = GameplaySystems::GetGameObject(prefabVehicle->BuildPrefab(&GetOwner()));
         if (goVehicle) {
             ComponentTransform* transform = goVehicle->GetComponent<ComponentTransform>();
