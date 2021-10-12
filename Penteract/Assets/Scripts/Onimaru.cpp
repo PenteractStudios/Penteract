@@ -235,7 +235,7 @@ void Onimaru::ResetToIdle()
 
 float Onimaru::GetRealShieldCooldown() {
 	if (shield == nullptr || shieldGO == nullptr) return 0.0f;
-	float realShieldCooldown = 1.0f;
+	float realShieldCooldown = 5.0f;
 	realShieldCooldown = (float)shield->currentAvailableCharges / shield->maxCharges;
 
 	return realShieldCooldown;
@@ -528,7 +528,7 @@ void Onimaru::FadeShield() {
 		hudManagerScript->StopUsingSkill(HUDManager::Cooldowns::ONIMARU_SKILL_1);
 	}
 
-	shieldGO->Disable();
+	//shieldGO->Disable();
 }
 
 void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */) {

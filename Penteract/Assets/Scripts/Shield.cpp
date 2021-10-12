@@ -66,20 +66,36 @@ void Shield::Update() {
 		}
 		break;
 	}
+
+	if (currentAvailableCharges < 1) {
+		if (GetOwner().GetComponent<ComponentMeshRenderer>()->HasDissolveAnimationFinished()) {
+			GetOwner().Disable();
+		}
+	}else{
+		currentFrame = maxCharges - currentAvailableCharges;
+		shieldBilb->SetCurrentFrame(currentFrame);
+	}
 }
 
 void Shield::InitShield() {
 	isActive = true;
 	currentFrame = 0;
 	shieldState = ShieldState::GROWING;
-	isActive = true;
 	transform->SetScale(float3(0.01f));
+	GetOwner().GetComponent<ComponentMeshRenderer>()->ResetDissolveValues();
+	GetOwner().Enable();
 }
 
 void Shield::FadeShield() {
-	shieldState = ShieldState::FADING;
+	if (currentAvailableCharges < 1) {
+		GetOwner().GetComponent<ComponentMeshRenderer>()->PlayDissolveAnimation();
+	}
+	else {
+		shieldState = ShieldState::FADING;
+	}
 	isActive = false;
 }
+
 
 void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
 	if ((collidedWith.name == "WeaponParticles" || collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") && isActive && playerController) {
@@ -108,13 +124,6 @@ void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 				pSystem->layerIndex = 6;
 
 			} else {
-				if (currentFrame < maxFrames) {
-					currentFrame += currentAvailableCharges/ maxFrames;
-					shieldBilb->SetCurrentFrame(currentFrame);
-				}
-				else {
-					currentFrame = 0;
-				}
 				if (pSystem) pSystem->KillParticle(p);
 			}
 		}
