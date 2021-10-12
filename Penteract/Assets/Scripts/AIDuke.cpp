@@ -163,23 +163,6 @@ void AIDuke::Update() {
 		switch (dukeCharacter.state) {
 		case DukeState::BASIC_BEHAVIOUR:
 			if (currentBulletHellCooldown >= bulletHellCooldown) {
-				if (mustWaitForTimerBetweenAbilities) {
-					if (currentTimeBetweenAbilities >= timerBetweenAbilities) {
-						mustWaitForTimerBetweenAbilities = false;
-						currentTimeBetweenAbilities = 0.0f;
-					}
-					else {
-						currentTimeBetweenAbilities += Time::GetDeltaTime();
-
-						float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
-						dir.y = 0.0f;
-						movementScript->Orientate(dir);
-						dukeCharacter.Move(dir);
-
-						return;
-					}
-				}
-
 				dukeCharacter.state = DukeState::BULLET_HELL;
 				movementScript->Stop();
 				// TODO: Delete next line
@@ -617,6 +600,24 @@ void AIDuke::ParticleHit(GameObject& collidedWith, void* particle, Player& playe
 }
 
 void AIDuke::PerformBulletHell() {
+	if (mustWaitForTimerBetweenAbilities) {
+		if (currentTimeBetweenAbilities >= timerBetweenAbilities) {
+			mustWaitForTimerBetweenAbilities = false;
+			currentTimeBetweenAbilities = 0.0f;
+		}
+		else {
+			currentTimeBetweenAbilities += Time::GetDeltaTime();
+
+			float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
+			dir.y = 0.0f;
+			movementScript->Orientate(dir);
+			dukeCharacter.Move(dir);
+
+			return;
+		}
+	}
+	movementScript->Stop();
+
 	dukeCharacter.reducedDamaged = true;
 	if (!bulletHellIsActive) {
 		dukeCharacter.BulletHell();
