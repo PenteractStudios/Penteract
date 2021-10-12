@@ -138,6 +138,7 @@ public:
 	float4 sideHitColor = float4(248.f / 255.f, 47.f / 255.f, 47.f / 255.f, 30.f / 255.f);
 
 	float criticalHealthPercentage = 15.f;
+	float showBossHealthTotalTime = 1.f;
 
 	std::string shieldObjName = "VFXShield";
 	std::pair<bool, float> abilityWavingEffects[static_cast<int>(Cooldowns::TOTAL)] = { {true,0.0f},{true,0.0f} ,{true,0.0f} ,{true,0.0f} ,{true,0.0f} ,{true,0.0f} ,{true,0.0f} };
@@ -152,6 +153,7 @@ public:
 	void StopUsingSkill(Cooldowns cooldown);
 	void OnCharacterDeath();
 	void OnCharacterResurrect();
+	void ShowBossHealth();
 
 private:
 
@@ -193,6 +195,8 @@ private:
 	float lostHealthTimer = 0.0f;
 	float lostHealthDukeTimer = 0.f;
 	float lostHealthFeedbackTotalTime = 1.0f;
+	float showBossHealthTimer = 0.f;
+	bool playingBossHealthEffect = false;
 
 	bool playingHitEffect = false;
 	float hitEffectTimer = 0.0f;
@@ -218,6 +222,7 @@ private:
 	void StartLostHealthFeedback(float& timer, bool& playingEffect, const std::vector<GameObject*>& healthChildren, bool isBoss);
 	void StopLostHealthFeedback(float& timer, bool& playingEffect, const std::vector<GameObject*>& healthChildren, bool isBoss);
 	void ResetLostHealthFeedback(float& timer, bool& playingEffect, const std::vector<GameObject*>& healthChildren, bool isBoss);
+	void PlayShowHealthBossEffect();
 	void SetPictoState(Cooldowns cooldown, PictoState newState);
 
 	void GetAllHealthColors();

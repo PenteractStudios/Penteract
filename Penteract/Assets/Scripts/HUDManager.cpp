@@ -67,6 +67,7 @@ EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::FLOAT, lostHealthFeedbackAlpha),
 	MEMBER_SEPARATOR("HUD Duke"),
 	MEMBER(MemberType::GAME_OBJECT_UID, dukeHealthParentUID),
+	MEMBER(MemberType::FLOAT, showBossHealthTotalTime),
 	MEMBER_SEPARATOR("HUD Sides"),
 	MEMBER(MemberType::GAME_OBJECT_UID, sidesHUDParentUID),
 	MEMBER(MemberType::FLOAT, criticalHealthPercentage),
@@ -229,6 +230,7 @@ void HUDManager::Update() {
 	}
 
 	ManageSwitch();
+	if (playingBossHealthEffect) PlayShowHealthBossEffect();
 	if (playingLostHealthFeedback) PlayLostHealthFeedback(lostHealthTimer, playingLostHealthFeedback, fangObj->IsActive() ? fangHealthChildren : onimaruHealthChildren, false);
 	if (playingDukeLostHealthFeedback) PlayLostHealthFeedback(lostHealthDukeTimer, playingDukeLostHealthFeedback, dukeHealthChildren, true);
 	if (playingHitEffect) PlayHitEffect();
@@ -380,6 +382,13 @@ void HUDManager::OnCharacterDeath() {
 
 void HUDManager::OnCharacterResurrect() {
 
+}
+
+void HUDManager::ShowBossHealth() {
+	if (!dukeHealthParent) return;
+	showBossHealthTimer = 0.f;
+	playingBossHealthEffect = true;
+	dukeHealthParent->Enable();
 }
 
 void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
@@ -1158,6 +1167,32 @@ void HUDManager::ResetLostHealthFeedback(float& timer, bool& playingEffect, cons
 	}
 }
 
+void HUDManager::PlayShowHealthBossEffect() {
+	if (dukeHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
+
+	if (showBossHealthTimer > showBossHealthTotalTime) {
+		showBossHealthTimer = showBossHealthTotalTime;
+	}
+
+	ComponentImage* image = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
+	if (image) image->SetColor(float4::Lerp(float4(dukeHealthBarBackgroundColor.xyz(), 0.0f), dukeHealthBarBackgroundColor, showBossHealthTimer / showBossHealthTotalTime));
+
+	image = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
+	if (image) image->SetColor(float4::Lerp(float4(dukeHealthFillBarColor.xyz(), 0.0f), dukeHealthFillBarColor, showBossHealthTimer / showBossHealthTotalTime));
+
+	image = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
+	if (image) image->SetColor(float4::Lerp(float4(dukeHealthOverlayColor.xyz(), 0.0f), dukeHealthOverlayColor, showBossHealthTimer / showBossHealthTotalTime));
+
+	if (showBossHealthTimer == showBossHealthTotalTime) {
+		playingBossHealthEffect = false;
+		showBossHealthTimer = 0.f;
+	}
+	else {
+		showBossHealthTimer += Time::GetDeltaTime();
+	}
+
+}
+
 void HUDManager::SetPictoState(Cooldowns cooldown, PictoState newState) {
 	if (pictoStates[static_cast<int>(cooldown)] == newState)return;
 
@@ -1260,18 +1295,21 @@ void HUDManager::GetAllHealthColors() {
 	image = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
 	if (image) {
 		dukeHealthBarBackgroundColor = image->GetColor();
+		image->SetColor(float4(dukeHealthBarBackgroundColor.xyz(), 0.0f));
 	}
 
 	// Get Duke main fill color
 	image = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
 	if (image) {
-		dukeHealthOverlayColor = image->GetColor();
+		dukeHealthFillBarColor = image->GetColor();
+		image->SetColor(float4(dukeHealthFillBarColor.xyz(), 0.0f));
 	}
 
 	// Get Duke main overlay color
 	image = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
 	if (image) {
-		dukeHealthBarBackgroundColor = image->GetColor();
+		dukeHealthOverlayColor = image->GetColor();
+		image->SetColor(float4(dukeHealthOverlayColor.xyz(), 0.0f));
 	}
 
 	healthLostFeedbackFillBarInitialColor = float4(healthLostFeedbackFillBarFinalColor.xyz(), lostHealthFeedbackAlpha);
