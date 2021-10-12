@@ -12,7 +12,9 @@ EXPOSE_MEMBERS(RangerProjectileScript) {
 GENERATE_BODY_IMPL(RangerProjectileScript);
 
 void RangerProjectileScript::Start() {
-	GetOwner().GetComponent<ComponentParticleSystem>()->PlayChildParticles();
+	ComponentParticleSystem* auxParticles = nullptr;
+	auxParticles = GetOwner().GetComponent<ComponentParticleSystem>();
+	if(auxParticles) GetOwner().GetComponent<ComponentParticleSystem>()->PlayChildParticles();
 }
 
 void RangerProjectileScript::Update() {

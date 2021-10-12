@@ -588,7 +588,6 @@ bool RangedAI::FindsRayToPlayer(bool useForward) {
 			dir.y = 0;
 			dir.Normalize();
 		}
-
 		int mask = static_cast<int>(MaskType::PLAYER);
 		GameObject* hitGo = Physics::Raycast(start, start + dir * rangerGruntCharacter.attackRange, mask);
 		return hitGo != nullptr;
@@ -606,9 +605,11 @@ void RangedAI::ActualShot() {
 		//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
 		if (!meshObj) return;
 		GameObject* bullet = GameplaySystems::Instantiate(bulletRange, weapon->GetComponent<ComponentTransform>()->GetGlobalPosition(), weapon->GetComponent<ComponentTransform>()->GetGlobalRotation());
-		GET_SCRIPT(bullet, RangerProjectileScript)->SetRangerDirection(weapon->GetComponent<ComponentTransform>()->GetGlobalRotation());
-		shootTrailPrefab->PlayChildParticles();
-		bullet->GetComponent<ComponentParticleSystem>()->PlayChildParticles();
+		if (bullet) {
+			GET_SCRIPT(bullet, RangerProjectileScript)->SetRangerDirection(weapon->GetComponent<ComponentTransform>()->GetGlobalRotation());
+			shootTrailPrefab->PlayChildParticles();
+			bullet->GetComponent<ComponentParticleSystem>()->PlayChildParticles();
+		}
 	}
 
 	attackSpeed = (minAttackSpeed + 1) + (((float)rand()) / (float)RAND_MAX) * (maxAttackSpeed - (minAttackSpeed + 1));
