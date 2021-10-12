@@ -32,6 +32,9 @@ public:
 	void CloseBridges();
 	void MoveBridges();
 private:
+	GameObject* gameObject = nullptr;
+	GameObject* childEncounter = nullptr;
+
 	/* Bridges Transport Objects */
 	GameObject* initialBridge = nullptr;
 	GameObject* finalBridge = nullptr;

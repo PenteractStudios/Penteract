@@ -23,6 +23,12 @@ EXPOSE_MEMBERS(BridgesTransportController) {
 GENERATE_BODY_IMPL(BridgesTransportController);
 
 void BridgesTransportController::Start() {
+	gameObject = &GetOwner();
+
+	if (gameObject->HasChildren()) {
+		childEncounter = gameObject->GetChild("Encounter_1");
+	}
+
 	initialBridge = GameplaySystems::GetGameObject(initialBridgeUID);
 	finalBridge = GameplaySystems::GetGameObject(finalBridgeUID);
 	bridgeObstacles = GameplaySystems::GetGameObject(bridgeObstaclesUID);
@@ -39,9 +45,10 @@ void BridgesTransportController::Start() {
 void BridgesTransportController::Update() {
 	if (initialBridge && finalBridge) {
 		if (isClosedBridges) {
-			// TODO : Control when kill the last encounter in Transport ->
 			if (hasToBeEnabledBridges) {
 				MoveBridges();
+			} else {
+				if (!childEncounter->IsActive()) hasToBeEnabledBridges = true;
 			}
 		}
 		else {
