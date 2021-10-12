@@ -17,6 +17,7 @@ public:
 	UID bridgeObstaclesUID = 0;
 
 	bool hasToBeEnabledBridges = true;	// Status of the bridges
+	bool isClosedBridges = false;		// If is closed the bridges
 	float speedAnimationBridges = 0.1f;	// Speed
 public:
 

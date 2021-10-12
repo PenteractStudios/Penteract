@@ -16,6 +16,7 @@ EXPOSE_MEMBERS(BridgesTransportController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, finalBridgeUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, bridgeObstaclesUID),
 	MEMBER(MemberType::BOOL, hasToBeEnabledBridges),
+	MEMBER(MemberType::BOOL, isClosedBridges),
 	MEMBER(MemberType::FLOAT, speedAnimationBridges),
 };
 
@@ -36,27 +37,22 @@ void BridgesTransportController::Start() {
 }
 
 void BridgesTransportController::Update() {
-	// Must open the bridge
 	if (initialBridge && finalBridge) {
-		hasToBeEnabledBridges = true;
-		//isInitiallyLocked = true;
-		MoveBridges();
-	}
-	else {
-		// To control the bridges in TRANSPORT
-		if (initialBridge && finalBridge) {
+		if (isClosedBridges) {
+			// TODO : Control when kill the last encounter in Transport ->
+			if (hasToBeEnabledBridges) {
+				MoveBridges();
+			}
+		}
+		else {
+			// To lock Transport
 			if (!hasToBeEnabledBridges && initialBridge->IsActive() && finalBridge->IsActive()) {
 				MoveBridges();
 			}
 		}
 	}
-	// To unlock Transport
-	if (initialBridge && finalBridge) {
-		if (hasToBeEnabledBridges && initialBridge->IsActive() && finalBridge->IsActive()) {
-			MoveBridges();
-		}
-	}
 }
+
 
 void BridgesTransportController::OnCollision(GameObject&, float3, float3 penetrationDistance, void* particle)
 {
@@ -81,6 +77,9 @@ void BridgesTransportController::CloseBridges()
 	// Disabled gameobject
 	initialBridge->Disable();
 	finalBridge->Disable();
+
+	// Confirm that the bridges are closed
+	isClosedBridges = true;
 }
 
 void BridgesTransportController::MoveBridges()
@@ -97,21 +96,19 @@ void BridgesTransportController::MoveBridges()
 			}
 		}
 		else {
-			if (true) {
-				if (!initialBridge->IsActive() && !finalBridge->IsActive()) {
-					OpenBridges();
+			if (!initialBridge->IsActive() && !finalBridge->IsActive()) {
+				OpenBridges();
+			}
+			if (transformInitialBridge->GetPosition().x >= POS_X_OPEN_INITIAL_BRIDGE && transformInitialBridge->GetPosition().z >= POS_Z_OPEN_INITIAL_BRIDGE
+				&& transformFinalBridge->GetPosition().x <= POS_XZ_OPEN_FINAL_BRIDGE && transformFinalBridge->GetPosition().z <= POS_XZ_OPEN_FINAL_BRIDGE) {
+				// Disabled the obstables
+				if (bridgeObstacles && bridgeObstacles->IsActive()) {
+					bridgeObstacles->Disable();
 				}
-				if (transformInitialBridge->GetPosition().x >= POS_X_OPEN_INITIAL_BRIDGE && transformInitialBridge->GetPosition().z >= POS_Z_OPEN_INITIAL_BRIDGE
-					&& transformFinalBridge->GetPosition().x <= POS_XZ_OPEN_FINAL_BRIDGE && transformFinalBridge->GetPosition().z <= POS_XZ_OPEN_FINAL_BRIDGE) {
-					// Disabled the obstables
-					if (bridgeObstacles && bridgeObstacles->IsActive()) {
-						bridgeObstacles->Disable();
-					}
-				}
-				else {
-					transformInitialBridge->SetPosition(float3(transformInitialBridge->GetPosition().x + (speedAnimationBridges * 1), transformInitialBridge->GetPosition().y, transformInitialBridge->GetPosition().z + (speedAnimationBridges * 1)));
-					transformFinalBridge->SetPosition(float3(transformFinalBridge->GetPosition().x + -(speedAnimationBridges * 1), transformFinalBridge->GetPosition().y, transformFinalBridge->GetPosition().z - (speedAnimationBridges * 1)));
-				}
+			}
+			else {
+				transformInitialBridge->SetPosition(float3(transformInitialBridge->GetPosition().x + (speedAnimationBridges * 1), transformInitialBridge->GetPosition().y, transformInitialBridge->GetPosition().z + (speedAnimationBridges * 1)));
+				transformFinalBridge->SetPosition(float3(transformFinalBridge->GetPosition().x + -(speedAnimationBridges * 1), transformFinalBridge->GetPosition().y, transformFinalBridge->GetPosition().z - (speedAnimationBridges * 1)));
 			}
 		}
 	}
