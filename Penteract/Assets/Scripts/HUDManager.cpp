@@ -264,13 +264,7 @@ void HUDManager::UpdateHealth(float fangHealth, float onimaruHealth) {
 	float health = fangObj->IsActive() ? fangHealth : onimaruHealth;
 	float maxHealth = fangObj->IsActive() ? playerController->GetFangMaxHealth() : playerController->GetOnimaruMaxHealth();
 
-	ComponentImage* healthFill = nullptr;
-	healthFill = fangObj->IsActive() ? fangHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>() : onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
-	if (healthFill) {
-		if (healthFill->IsFill()) {
-			healthFill->SetFillValue(health / maxHealth);
-		}
-	}
+	UpdateHealthFillBar(health, maxHealth, fangObj->IsActive() ? fangHealthChildren : onimaruHealthChildren);
 
 	if (fangObj->IsActive()) fangPreviousHealth = fangHealth;
 	else onimaruPreviousHealth = onimaruHealth;
@@ -281,6 +275,27 @@ void HUDManager::UpdateHealth(float fangHealth, float onimaruHealth) {
 
 	playingHitEffect = true;
 	hitEffectTimer = 0.0f;
+}
+
+void HUDManager::UpdateDukeHealth(float dukeHealth) {
+	if (!dukeScript) return;
+	if (dukeHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
+
+	float maxHealth = dukeScript->GetDukeMaxHealth();
+
+	UpdateHealthFillBar(dukeHealth, maxHealth, dukeHealthChildren);
+
+	dukePreviousHealth = dukeHealth;
+}
+
+void HUDManager::UpdateHealthFillBar(float health, float maxHealth, const std::vector<GameObject*>& healthChildren) {
+	ComponentImage* healthFill = nullptr;
+	healthFill = healthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
+	if (healthFill) {
+		if (healthFill->IsFill()) {
+			healthFill->SetFillValue(health / maxHealth);
+		}
+	}
 }
 
 void HUDManager::HealthRegeneration(float health) {

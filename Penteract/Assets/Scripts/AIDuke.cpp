@@ -3,6 +3,7 @@
 #include "AIMovement.h"
 #include "PlayerController.h"
 #include "DukeShield.h"
+#include "HUDManager.h"
 #include <string>
 #include <vector>
 
@@ -20,6 +21,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, secondEncounterUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, thirdEncounterUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fourthEncounterUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, hudManagerUID),
 
 	MEMBER_SEPARATOR("Duke Atributes"),
 	MEMBER(MemberType::FLOAT, dukeCharacter.lifePoints),
@@ -88,6 +90,10 @@ void AIDuke::Start() {
 
 	// Init Duke character
 	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, chargeAttackUID, encounters);
+
+	GameObject* hudManagerGO = GameplaySystems::GetGameObject(hudManagerUID);
+
+	if (hudManagerGO) hudManager = GET_SCRIPT(hudManagerGO, HUDManager);
 }
 
 void AIDuke::Update() {
@@ -456,6 +462,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 			}
 
 			if (hitTaken) {
+				if (hudManager) hudManager->UpdateDukeHealth(dukeCharacter.lifePoints);
 				// TODO: play audio and VFX
 				/*if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
 				if (componentMeshRenderer) {

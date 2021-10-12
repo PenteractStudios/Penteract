@@ -144,6 +144,7 @@ public:
 public:
 	void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown, float fangUltimateRemainingNormalizedValue, float oniUltimateRemainingNormalizedValue);
 	void UpdateHealth(float fangHealth, float onimaruHealth);
+	void UpdateDukeHealth(float dukeHealth);
 	void HealthRegeneration(float health);
 	void StartCharacterSwitch();
 	void SetCooldownRetreival(Cooldowns cooldown);
@@ -230,5 +231,6 @@ private:
 
 	void ManageSwitchGreenEffect(bool growing, float timer);
 
+	void UpdateHealthFillBar(float health, float maxHealth, const std::vector<GameObject*>& healthChildren);
 };
 

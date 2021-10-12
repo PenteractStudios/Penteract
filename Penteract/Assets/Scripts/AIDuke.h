@@ -14,6 +14,7 @@ class HUDController;
 class PlayerController;
 class DukeShield;
 class Player;
+class HUDManager;
 //class PlayerDeath;
 class AIMovement;
 
@@ -67,6 +68,7 @@ public:
 	UID fourthEncounterUID = 0;
 	UID meleeAttackColliderUID = 0;
 	UID chargeAttackUID = 0;
+	UID hudManagerUID = 0;
 
 	GameObject* duke = nullptr;
 	GameObject* player = nullptr;
@@ -103,6 +105,8 @@ private:
 	AIMovement* movementScript = nullptr;
 
 	PlayerController* playerController = nullptr;
+
+	HUDManager* hudManager = nullptr;
 
 	float currentShieldCooldown = 0.f;
 	float currentShieldActiveTime = 0.f;
