@@ -132,7 +132,9 @@ void AIDuke::Update() {
 			dukeCharacter.criticalMode = true;
 			// Phase change VFX? and anim?
 			movementScript->Stop();
-			if (dukeShield && dukeShield->GetIsActive()) dukeShield->FadeShield();
+			if (dukeShield && dukeShield->GetIsActive()) { 
+				OnShieldInterrupted();
+			}
 			if (dukeCharacter.compAnimation) {
 				dukeCharacter.StopShooting();
 				dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::ENRAGE]);
@@ -151,11 +153,13 @@ void AIDuke::Update() {
 			movementScript->Stop();
 			if (isInArena) TeleportDuke(true);
 			dukeCharacter.CallTroops();
-			dukeCharacter.state = DukeState::INVULNERABLE;
+
 			if (dukeShield && dukeShield->GetIsActive()) {
-				dukeCharacter.StopUsingShield();
-				dukeShield->FadeShield();
+				OnShieldInterrupted();
 			}
+
+			dukeCharacter.state = DukeState::INVULNERABLE;
+
 			dukeCharacter.StopShooting();
 			break;
 		}
@@ -173,10 +177,6 @@ void AIDuke::Update() {
 				dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
 			} else if (currentShieldCooldown >= shieldCooldown) {
 				dukeCharacter.StartUsingShield();
-				if(dukeShield) dukeShield->InitShield();
-
-				movementScript->Stop();
-
 			} else if (player && movementScript->CharacterInAttackRange(player, dukeCharacter.attackRange)) {
 				// If player too close -> perform melee attack
 				dukeCharacter.state = DukeState::MELEE_ATTACK;
@@ -213,15 +213,19 @@ void AIDuke::Update() {
 			break;
 		case DukeState::SHOOT_SHIELD:
 			if (player) movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition(), orientationSpeed, orientationThreshold);
+			
+			//Actual activating of the shield, when it is found not active during this state
+			if (dukeShield && !dukeShield->GetIsActive()) {
+				dukeShield->InitShield();
+				movementScript->Stop();
+			}
+			
 			dukeCharacter.Shoot();
 			currentShieldActiveTime += Time::GetDeltaTime();
 			if (currentShieldActiveTime >= shieldActiveTime) {
-				if (dukeShield) {
-					dukeCharacter.StopUsingShield();
-					dukeShield->FadeShield();
-				}
-				currentShieldCooldown = 0.f;
-				currentShieldActiveTime = 0.f;
+				
+				OnShieldInterrupted();
+				
 				dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 
 				dukeCharacter.StopShooting();
@@ -296,7 +300,9 @@ void AIDuke::Update() {
 
 			} else {
 				movementScript->Stop();
-				if (dukeShield && dukeShield->GetIsActive()) dukeShield->FadeShield();
+				if (dukeShield && dukeShield->GetIsActive()) {
+					OnShieldInterrupted();
+				}
 				if (dukeCharacter.compAnimation) {
 					dukeCharacter.StopShooting();
 					dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::ENRAGE]);
@@ -358,15 +364,20 @@ void AIDuke::Update() {
 		} else {
 			switch (dukeCharacter.state) {
 			case DukeState::SHOOT_SHIELD:
-				if (dukeShield && !dukeShield->GetIsActive()) dukeShield->InitShield();
+
+				//Actual activating of the shield, when it is found not active during this state
+				if (dukeShield && !dukeShield->GetIsActive()) {
+					dukeShield->InitShield();
+					movementScript->Stop();
+				}
+
 				movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition(), orientationSpeed, orientationThreshold);
 				dukeCharacter.Shoot();
 				currentAbilityChangeCooldown += Time::GetDeltaTime();
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
 
-					if (dukeShield) {
-						dukeCharacter.StopUsingShield();
-						dukeShield->FadeShield();
+					if (dukeShield && dukeShield->GetIsActive()) {
+						OnShieldInterrupted();
 					}
 					currentAbilityChangeCooldown = 0.f;
 					dukeCharacter.state = DukeState::BULLET_HELL;
@@ -381,9 +392,8 @@ void AIDuke::Update() {
 				currentAbilityChangeCooldown += Time::GetDeltaTime();
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
 					currentAbilityChangeCooldown = 0.f;
-					if (dukeShield) dukeShield->InitShield();
-					dukeCharacter.StartUsingShield();
-					movementScript->Stop();
+						dukeCharacter.StartUsingShield();
+					
 				}
 				else {
 					if (player) {
@@ -413,8 +423,6 @@ void AIDuke::Update() {
 				break;
 			case DukeState::MELEE_ATTACK:
 				dukeCharacter.MeleeAttack();
-				if (dukeShield) dukeShield->InitShield();
-				dukeCharacter.StartUsingShield();
 				break;
 			case DukeState::STUNNED:
 				if (stunTimeRemaining <= 0.f) {
@@ -452,45 +460,55 @@ void AIDuke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eve
 void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, float3 /*penetrationDistance*/, void* particle) {
 	if (dukeCharacter.isAlive && playerController) {
 		bool hitTaken = false;
-		if (dukeCharacter.state != DukeState::INVULNERABLE) {
-			if (collidedWith.name == "FangBullet") {
-				if (!particle) return;
-				GameplaySystems::DestroyGameObject(&collidedWith);
-				hitTaken = true;
+
+		if (collidedWith.name == "FangBullet") {
+			if (!particle) return;
+			GameplaySystems::DestroyGameObject(&collidedWith);
+			hitTaken = true;
+			if (IsInvulnerable())return;
+			if (!dukeCharacter.criticalMode || CanBeHurtDuringCriticalMode()) {
 				float damage = playerController->playerFang.damageHit;
-				dukeCharacter.GetHit( dukeCharacter.reducedDamaged ? damage / 3 : damage + playerController->GetOverPowerMode());
-			}
-			else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
-				hitTaken = true;
-				ParticleHit(collidedWith, particle, playerController->playerFang);
-			}
-			else if (collidedWith.name == "OnimaruBullet") {
-				hitTaken = true;
-				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
-			}
-			else if (collidedWith.name == "OnimaruBulletUltimate") {
-				hitTaken = true;
-				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
-			}
-			else if (collidedWith.name == "DashDamage" && playerController->playerFang.level1Upgrade) {
-				hitTaken = true;
+				dukeCharacter.GetHit(dukeCharacter.reducedDamaged ? damage / 3 : damage + playerController->GetOverPowerMode());
+			} 
+		}
+		else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
+			hitTaken = true;
+			ParticleHit(collidedWith, particle, playerController->playerFang);
+		}
+		else if (collidedWith.name == "OnimaruBullet") {
+			hitTaken = true;
+			ParticleHit(collidedWith, particle, playerController->playerOnimaru);
+		}
+		else if (collidedWith.name == "OnimaruBulletUltimate") {
+			hitTaken = true;
+			ParticleHit(collidedWith, particle, playerController->playerOnimaru);
+		}
+		else if (collidedWith.name == "DashDamage" && playerController->playerFang.level1Upgrade) {
+			hitTaken = true;
+			float damage = playerController->playerFang.dashDamage;
+			//dukeCharacter.GetHit(dukeCharacter.reducedDamaged ? damage / 3 : damage + playerController->GetOverPowerMode());
+			if (IsInvulnerable()) return;
+			if (!dukeCharacter.criticalMode || CanBeHurtDuringCriticalMode()) {
 				float damage = playerController->playerFang.dashDamage;
 				dukeCharacter.GetHit(dukeCharacter.reducedDamaged ? damage / 3 : damage + playerController->GetOverPowerMode());
 			}
 
-			if (hitTaken) {
-				// TODO: play audio and VFX
-				/*if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
-				if (componentMeshRenderer) {
-					if (damageMaterialID != 0) componentMeshRenderer->materialId = damageMaterialID;
-				}
-
-				timeSinceLastHurt = 0.0f;*/
-			}
 		}
 
+		if (hitTaken) {
+			// TODO: play audio and VFX
+			/*if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
+			if (componentMeshRenderer) {
+				if (damageMaterialID != 0) componentMeshRenderer->materialId = damageMaterialID;
+			}
+
+			timeSinceLastHurt = 0.0f;*/
+		}
+		
+
 		if (collidedWith.name == "EMP" && dukeCharacter.state != DukeState::INVULNERABLE && dukeCharacter.state != DukeState::CHARGE) {
-			dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::STUN]);
+			OnShieldInterrupted();
+			dukeCharacter.BecomeStunned();
 			dukeCharacter.StopShooting();
 			movementScript->Stop();
 			stunTimeRemaining = stunDuration;
@@ -503,6 +521,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 		dukeCharacter.StopShooting();
 		dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::DEATH]);
 
+		// TODO: play audio and VFX
 		//if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
 		ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
 		if (collider) collider->Disable();
@@ -520,14 +539,32 @@ void AIDuke::EnableBlastPushBack() {
 		dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::PUSHED]);
 		dukeCharacter.StopShooting();
 		CalculatePushBackRealDistance();
+
+		OnShieldInterrupted();
+
 		// Damage
 		if (playerController->playerOnimaru.level2Upgrade) {
 			dukeCharacter.GetHit(playerController->playerOnimaru.blastDamage + playerController->GetOverPowerMode());
 
+			// TODO: play audio and VFX
 			//if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
 			//PlayHitMaterialEffect();
 			//timeSinceLastHurt = 0.0f;
 		}
+	}
+
+
+	dukeCharacter.BePushed();
+
+	//if (animation->GetCurrentState()) animation->SendTrigger(animation->GetCurrentState()->name + "Hurt");
+	CalculatePushBackRealDistance();
+	// Damage
+	if (playerController->playerOnimaru.level2Upgrade) {
+		dukeCharacter.GetHit(playerController->playerOnimaru.blastDamage + playerController->GetOverPowerMode());
+
+		//if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
+		//PlayHitMaterialEffect();
+		//timeSinceLastHurt = 0.0f;
 	}
 }
 
@@ -562,6 +599,7 @@ void AIDuke::CalculatePushBackRealDistance() {
 }
 
 void AIDuke::UpdatePushBackPosition() {
+
 	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
 	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
 	float3 initialPos = enemyPos;
@@ -576,6 +614,7 @@ void AIDuke::UpdatePushBackPosition() {
 		currentPushBackDistance += distance;
 
 		if (currentPushBackDistance >= pushBackRealDistance) {
+
 			dukeCharacter.agent->SetMaxSpeed(dukeCharacter.slowedDownSpeed);
 			DisableBlastPushBack();
 			dukeCharacter.slowedDown = true;
@@ -592,11 +631,44 @@ void AIDuke::ParticleHit(GameObject& collidedWith, void* particle, Player& playe
 	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 	if (pSystem) pSystem->KillParticle(p);
 	float damage = dukeCharacter.reducedDamaged ? player_.damageHit / 3 : player_.damageHit;
-	if (dukeCharacter.state == DukeState::STUNNED && player_.level2Upgrade) {
-		dukeCharacter.GetHit(damage * 2 + playerController->GetOverPowerMode());
+
+	if (IsInvulnerable())return;
+
+	if (!dukeCharacter.criticalMode) {
+		if (dukeCharacter.state == DukeState::STUNNED && player_.level2Upgrade) {
+			dukeCharacter.GetHit(damage * 2 + playerController->GetOverPowerMode());
+		} else {
+			dukeCharacter.GetHit(damage + playerController->GetOverPowerMode());
+		}
 	} else {
-		dukeCharacter.GetHit(damage + playerController->GetOverPowerMode());
+		if (!CanBeHurtDuringCriticalMode()) return;
+		if (dukeCharacter.state == DukeState::STUNNED && player_.level2Upgrade) {
+			dukeCharacter.GetHit(damage * 2 + playerController->GetOverPowerMode());
+		} else {
+			dukeCharacter.GetHit(damage + playerController->GetOverPowerMode());
+		}
 	}
+
+}
+
+bool AIDuke::CanBeHurtDuringCriticalMode() const {
+	return !IsInvulnerable() && (dukeCharacter.slowedDown || IsBeingPushed() || dukeCharacter.state == DukeState::STUNNED);
+}
+
+bool AIDuke::IsInvulnerable() const {
+	return dukeCharacter.state == DukeState::INVULNERABLE;
+}
+
+
+
+
+//To be called to reset everything and Fade shield whenever was shielding and got pushed/stunned or straight up stopped shielding
+void AIDuke::OnShieldInterrupted() {
+	if (dukeShield&&dukeShield->GetIsActive()) {
+		dukeShield->FadeShield();
+	}
+	currentShieldCooldown = 0.f;
+	currentShieldActiveTime = 0.f;
 }
 
 void AIDuke::PerformBulletHell() {
