@@ -81,7 +81,6 @@ public:
 	float shieldActiveTime = 5.f;
 
 	float bulletHellCooldown = 0.f;
-	float bulletHellActiveTime = 5.f;
 
 	float abilityChangeCooldown = 8.f;
 
@@ -93,6 +92,8 @@ public:
 
 	float orientationSpeed = 1.0f;
 	float orientationThreshold = 0.1f;
+
+	float timerBetweenAbilities = 1.5f;
 
 	UID winSceneUID = 0;
 
@@ -130,6 +131,9 @@ private:
 	float currentPushBackDistance = 0.f;
 	float currentSlowedDownTime = 0.f;
 	float pushBackRealDistance = 0.f;
+
+	float currentTimeBetweenAbilities = 0.f;
+	bool mustWaitForTimerBetweenAbilities = true;
 
 	bool isInArena = true;
 };

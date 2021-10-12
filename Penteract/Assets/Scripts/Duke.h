@@ -66,6 +66,7 @@ public:
 	void InitCharge(DukeState nextState);
 	void UpdateCharge(bool forceStop = false);
 	void CallTroops();
+	void Move(const float3& playerDirection);
 	void Shoot();
 	void ThrowBarrels();
 	void StartUsingShield();
