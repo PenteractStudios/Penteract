@@ -682,8 +682,7 @@ bool AIDuke::IsInvulnerable() const {
 
 void AIDuke::StartUsingShield() {
 
-	dukeCharacter.state = DukeState::SHOOT_SHIELD;
-	dukeCharacter.StartUsingShieldAnimation();
+	dukeCharacter.StartUsingShield();
 	if (dukeCharacter.isShooting) {
 		dukeCharacter.StopShooting();
 	}

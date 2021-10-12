@@ -203,7 +203,8 @@ void Duke::ThrowBarrels() {
 	}
 }
 
-void Duke::StartUsingShieldAnimation() {
+void Duke::StartUsingShield() {
+	state = DukeState::SHOOT_SHIELD;
 	if (compAnimation) {
 		if (compAnimation->GetCurrentState()) {
 			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT_SHIELD)]);
@@ -266,8 +267,9 @@ void Duke::OnAnimationFinished()
 	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::ENRAGE)]) {
 		state = DukeState::BASIC_BEHAVIOUR;
 	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::STUN)] && state == DukeState::INVULNERABLE) {
+		//Coming from critical mode
 		CallTroops();
-		StartUsingShieldAnimation();
+		StartUsingShield();
 	}
 }
 

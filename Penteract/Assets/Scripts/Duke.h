@@ -64,7 +64,7 @@ public:
 	void CallTroops();
 	void Shoot();
 	void ThrowBarrels();
-	void StartUsingShieldAnimation();
+	void StartUsingShield();
 	void BePushed();
 	void BecomeStunned();
 
