@@ -47,8 +47,8 @@
     ],
     "DissolveDuration": 0.0,
     "DissolveEdgeSize": 0.0,
-    "VolumetricLightIntensity": 0.5,
-    "VolumetricLightAttenuationExponent": 15.0,
+    "VolumetricLightIntensity": 0.699999988079071,
+    "VolumetricLightAttenuationExponent": 5.0,
     "IsSoft": true,
-    "SoftRange": 5.0
+    "SoftRange": 16.0
 }
