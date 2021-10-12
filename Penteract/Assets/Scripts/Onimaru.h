@@ -71,12 +71,15 @@ public:
 	float shieldReboundedDamage = 1.0f;
 	float shieldingMaxSpeed = 2.0f;
 
+
+	float offsetWeaponAngle = 14.0f;
+	float limitAngle = 10.0f;
 	float shieldBeingUsed = 0.f;
 
 public:
 	// ------- Contructors ------- //
 	Onimaru() {};
-	void Init(UID onimaruUID = 0, UID onimaruLaser = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0, UID shieldUID = 0, UID onimaruTransformForUltimateProjectileOriginUID = 0, UID onimaruBlastEffectsUID = 0, UID cameraUID = 0, UID HUDManagerObjectUID = 0, UID rightFootVFX = 0, UID leftFootVFX = 0);
+	void Init(UID onimaruUID = 0, UID onimaruWeapon = 0,  UID onimaruLaser = 0, UID onimaruBulletUID = 0, UID onimaruGunUID = 0, UID onimaruRightHand = 0, UID shieldUID = 0, UID onimaruTransformForUltimateProjectileOriginUID = 0, UID onimaruBlastEffectsUID = 0, UID cameraUID = 0, UID HUDManagerObjectUID = 0, UID rightFootVFX = 0, UID leftFootVFX = 0);
 	void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockRotation = false) override;
 	void CheckCoolDowns(bool noCooldownMode = false) override;
 	bool IsAiming() const;
@@ -101,6 +104,8 @@ public:
 	bool IsShielding() const;
 	bool IsVulnerable() const override;
 	float GetNormalizedRemainingUltimateTime()const;
+
+	void UpdateWeaponRotation();
 	void ResetToIdle() override;
 
 private:
@@ -127,6 +132,9 @@ private:
 	//Shoot
 	float shootAceleration = 0.0f;
 	float minimAtackSpeed = 0.0f;
+
+	ComponentTransform* weaponTransform = nullptr;
+	GameObject* weapon = nullptr;
 
 	//Laser Aim
 	GameObject* onimaruLaser = nullptr;
