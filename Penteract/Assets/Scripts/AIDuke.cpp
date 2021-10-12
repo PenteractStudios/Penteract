@@ -98,13 +98,6 @@ void AIDuke::Update() {
 	life = "Life points: " + life;
 	Debug::Log(life.c_str());
 
-	//IF animation and actual state don't match, this line is useful
-
-	//if (dukeCharacter.compAnimation&& dukeCharacter.compAnimation->GetCurrentState()) {
-	//	std::string log ="State is "+ std::to_string(static_cast<int>(dukeCharacter.state)) + " and animation state is "+ dukeCharacter.compAnimation->GetCurrentState()->name;
-	//	Debug::Log(log.c_str());
-	//}
-
 	float speedToUse = dukeCharacter.slowedDown ? dukeCharacter.slowedDownSpeed : dukeCharacter.movementSpeed;
 
 	if (dukeCharacter.slowedDown) {
@@ -535,7 +528,6 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 		if (collidedWith.name == "EMP" && dukeCharacter.state != DukeState::INVULNERABLE && dukeCharacter.state != DukeState::CHARGE) {
 			OnShieldInterrupted();
 			dukeCharacter.BecomeStunned();
-			//dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::STUN]);
 			dukeCharacter.StopShooting();
 			movementScript->Stop();
 			stunTimeRemaining = stunDuration;
@@ -548,6 +540,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 		dukeCharacter.StopShooting();
 		dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::DEATH]);
 
+		// TODO: play audio and VFX
 		//if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
 		ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
 		if (collider) collider->Disable();
@@ -572,6 +565,7 @@ void AIDuke::EnableBlastPushBack() {
 		if (playerController->playerOnimaru.level2Upgrade) {
 			dukeCharacter.GetHit(playerController->playerOnimaru.blastDamage + playerController->GetOverPowerMode());
 
+			// TODO: play audio and VFX
 			//if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
 			//PlayHitMaterialEffect();
 			//timeSinceLastHurt = 0.0f;
