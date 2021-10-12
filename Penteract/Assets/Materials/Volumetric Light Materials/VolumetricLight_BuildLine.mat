@@ -1,6 +1,8 @@
 {
     "ShaderType": 6,
     "RenderingMode": 1,
+    "CastShadows": false,
+    "ShadowType": 0,
     "DiffuseColor": [
         1.0,
         0.0,
@@ -45,8 +47,8 @@
     ],
     "DissolveDuration": 0.0,
     "DissolveEdgeSize": 0.0,
-    "VolumetricLightIntensity": 2.0,
-    "VolumetricLightAttenuationExponent": 6.0,
+    "VolumetricLightIntensity": 1.0,
+    "VolumetricLightAttenuationExponent": 5.0,
     "IsSoft": true,
-    "SoftRange": 35.0
+    "SoftRange": 15.0
 }

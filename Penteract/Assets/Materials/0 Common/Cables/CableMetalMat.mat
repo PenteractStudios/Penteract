@@ -1,10 +1,12 @@
 {
     "ShaderType": 2,
     "RenderingMode": 0,
+    "CastShadows": false,
+    "ShadowType": 0,
     "DiffuseColor": [
-        0.9117646813392639,
-        0.9117555618286133,
-        0.9117555618286133,
+        0.3529411554336548,
+        0.35293760895729067,
+        0.35293760895729067,
         1.0
     ],
     "DiffuseMap": 0,
@@ -15,7 +17,7 @@
         1.0
     ],
     "SpecularMap": 0,
-    "Metalness": 1.0,
+    "Metalness": 0.5,
     "MetallicMap": 0,
     "NormalMap": 0,
     "NormalStrength": 0.0,

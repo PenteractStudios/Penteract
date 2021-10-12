@@ -12,12 +12,13 @@
 EXPOSE_MEMBERS(StartTitleGlitchOnPlay) {
 	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, controllerObjUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, parentCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, parentCanvasUID)
 };
 
 GENERATE_BODY_IMPL(StartTitleGlitchOnPlay);
 
 void StartTitleGlitchOnPlay::Start() {
+	/* Glitch controller */
 	GameObject* controllerObj = GameplaySystems::GetGameObject(controllerObjUID);
 	if (controllerObj) {
 		controller = GET_SCRIPT(controllerObj, GlitchyTitleController);
@@ -25,42 +26,12 @@ void StartTitleGlitchOnPlay::Start() {
 
 	parentCanvas = GameplaySystems::GetGameObject(parentCanvasUID);
 
-	/* Audio */
 	selectable = GetOwner().GetComponent<ComponentSelectable>();
-
-	int i = 0;
-	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
-		if (i < static_cast<int>(UIAudio::TOTAL)) audios[i] = &src;
-		++i;
-	}
 }
 
-void StartTitleGlitchOnPlay::Update() {
-	if (selectable) {
-		ComponentEventSystem* eventSystem = UserInterface::GetCurrentEventSystem();
-		if (eventSystem) {
-			ComponentSelectable* hoveredComponent = eventSystem->GetCurrentlyHovered();
-			if (hoveredComponent) {
-				bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
-				if (hovered) {
-					if (playHoveredAudio) {
-						PlayAudio(UIAudio::HOVERED);
-						playHoveredAudio = false;
-					}
-				} else {
-					playHoveredAudio = true;
-				}
-			} else {
-				playHoveredAudio = true;
-			}
-		}
-	}
-}
+void StartTitleGlitchOnPlay::Update() {}
 
 void StartTitleGlitchOnPlay::OnButtonClick() {
-
-	PlayAudio(UIAudio::CLICKED);
-
 	if (controller) {
 		controller->PressedPlay(this);
 	} else {
@@ -84,9 +55,4 @@ void StartTitleGlitchOnPlay::DoTransition() {
 
 		if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
 	}
-}
-
-
-void StartTitleGlitchOnPlay::PlayAudio(UIAudio type) {
-	if (audios[static_cast<int>(type)]) audios[static_cast<int>(type)]->Play();
 }

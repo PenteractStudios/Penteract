@@ -17,6 +17,7 @@ EXPOSE_MEMBERS(GameplaySceneWalkToFactory) {
     MEMBER(MemberType::GAME_OBJECT_UID, gameCameraUID),
     MEMBER(MemberType::FLOAT3, cameraNewPosition),
     MEMBER(MemberType::FLOAT, cameraPanningTime),
+    MEMBER(MemberType::FLOAT, cameraMoveSpeed),
     MEMBER_SEPARATOR("Lasers"),
     MEMBER(MemberType::GAME_OBJECT_UID, laserBeamsSecurityUID),
     MEMBER_SEPARATOR("Final Dialogue"),
@@ -63,6 +64,8 @@ void GameplaySceneWalkToFactory::Update() {
 
     if (triggered) {
         GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, true);
+        storedCameraSmoothValue = cameraControllerScript->smoothCameraSpeed;
+        cameraControllerScript->smoothCameraSpeed = cameraMoveSpeed;
         cameraControllerScript->ChangeCameraOffset(cameraNewPosition.x, cameraNewPosition.y, cameraNewPosition.z);
         movementScript->Seek(state, dukeRunTowards, dukeAgent->GetMaxSpeed(), true);
 
@@ -95,6 +98,7 @@ void GameplaySceneWalkToFactory::Update() {
 
         laserBeamsSecurity->Enable();
         finishScene = false;
+        cameraControllerScript->smoothCameraSpeed = storedCameraSmoothValue;
         GetOwner().Disable();
     }
 }

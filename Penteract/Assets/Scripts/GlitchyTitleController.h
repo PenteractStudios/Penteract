@@ -20,7 +20,7 @@ public:
 
 public:
 
-	enum class GlitchTitleAudio { FADE_IN, GLITCH, TOTAL };
+	enum class GlitchTitleAudio { FADE_IN, GLITCH, FADE_OUT, TOTAL };
 
 	float maxTimeForTimeBetweenGlitches = 5.0f;
 	float minTimeForTimeGlitches = 15.0f;
@@ -31,6 +31,7 @@ public:
 	UID glitchTitleObjUID = 0;
 	UID startPlayingTitleObjUID = 0;
 	UID blackImageObjUID = 0;
+	UID audioSourcesUID = 0;
 	StartTitleGlitchOnPlay* pressedButton = nullptr;
 
 

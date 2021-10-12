@@ -27,6 +27,7 @@ public:
 	UID gameCameraUID = 0;
 	float3 cameraNewPosition = float3(0.f, 0.f, 0.f);
 	float cameraPanningTime = 0.f;
+	float cameraMoveSpeed = 1.5f;
 
 	UID laserBeamsSecurityUID = 0;
 
@@ -52,5 +53,7 @@ private:
 	bool triggered = false;
 	bool sceneStarted = false;
 	bool finishScene = false;
+
+	float storedCameraSmoothValue = 0;
 };
 
