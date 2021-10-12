@@ -170,7 +170,7 @@ void DialogueManager::Start() {
 
 	// LEVEL 2 - FINAL
 	dialoguesArray[56] = Dialogue(DialogueWindow::ONIMARU, true, "OK, Fang.\nThis leads to\nthe Factory Core.\nAre you ready?", &dialoguesArray[57]);
-	dialoguesArray[58] = Dialogue(DialogueWindow::FANG, true, "Always.", nullptr);
+	dialoguesArray[57] = Dialogue(DialogueWindow::FANG, true, "Always.", nullptr);
 
 	// BOSS LEVEL - INTRO
 	dialoguesArray[60] = Dialogue(DialogueWindow::DUKE, true, "Welcome to the end\nof the line.", &dialoguesArray[61], 2);
