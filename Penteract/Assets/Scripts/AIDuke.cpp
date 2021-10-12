@@ -179,11 +179,7 @@ void AIDuke::Update() {
 				movementScript->Stop();
 				dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
 			} else if (currentShieldCooldown >= shieldCooldown) {
-
-				if (dukeShield) {
-					StartUsingShield();
-				}
-
+				dukeCharacter.StartUsingShield();
 			} else if (player && movementScript->CharacterInAttackRange(player, dukeCharacter.attackRange)) {
 				// If player too close -> perform melee attack
 				dukeCharacter.state = DukeState::MELEE_ATTACK;
@@ -220,6 +216,12 @@ void AIDuke::Update() {
 			break;
 		case DukeState::SHOOT_SHIELD:
 			if (player) movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition(), orientationSpeed, orientationThreshold);
+			
+			if (dukeShield && !dukeShield->GetIsActive()) {
+				dukeShield->InitShield();
+				movementScript->Stop();
+			}
+			
 			dukeCharacter.Shoot();
 			currentShieldActiveTime += Time::GetDeltaTime();
 			if (currentShieldActiveTime >= shieldActiveTime) {
@@ -382,7 +384,8 @@ void AIDuke::Update() {
 			case DukeState::SHOOT_SHIELD:
 
 				if (dukeShield && !dukeShield->GetIsActive()) {
-					StartUsingShield();
+					dukeShield->InitShield();
+					movementScript->Stop();
 				}
 
 				movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition(), orientationSpeed, orientationThreshold);
@@ -390,7 +393,7 @@ void AIDuke::Update() {
 				currentAbilityChangeCooldown += Time::GetDeltaTime();
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
 
-					if (dukeShield) {
+					if (dukeShield && dukeShield->GetIsActive()) {
 						OnShieldInterrupted();
 					}
 					currentAbilityChangeCooldown = 0.f;
@@ -413,9 +416,8 @@ void AIDuke::Update() {
 				currentAbilityChangeCooldown += Time::GetDeltaTime();
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
 					currentAbilityChangeCooldown = 0.f;
-					if (dukeShield) {
-						StartUsingShield();
-					}
+						dukeCharacter.StartUsingShield();
+					
 				}
 				else {
 					if (player) {
@@ -680,17 +682,10 @@ bool AIDuke::IsInvulnerable() const {
 	return dukeCharacter.state == DukeState::INVULNERABLE;
 }
 
-void AIDuke::StartUsingShield() {
 
-	dukeCharacter.StartUsingShield();
-	if (dukeCharacter.isShooting) {
-		dukeCharacter.StopShooting();
-	}
 
-	dukeShield->InitShield();
-	movementScript->Stop();
-}
 
+//To be called to reset everything and Fade shield whenever was shielding and got pushed/stunned or straight up stopped shielding
 void AIDuke::OnShieldInterrupted() {
 	if (dukeShield&&dukeShield->GetIsActive()) {
 		dukeShield->FadeShield();

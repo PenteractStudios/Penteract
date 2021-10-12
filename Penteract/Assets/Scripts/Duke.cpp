@@ -203,13 +203,20 @@ void Duke::ThrowBarrels() {
 	}
 }
 
+//Not to be confused with AIDuke StartUsing shield, this one manages both state and animations
 void Duke::StartUsingShield() {
+	
+	if (isShooting) {
+		StopShooting();
+	}
+
 	state = DukeState::SHOOT_SHIELD;
 	if (compAnimation) {
 		if (compAnimation->GetCurrentState()) {
 			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT_SHIELD)]);
 		}
 	}
+
 }
 
 void Duke::BePushed() {
