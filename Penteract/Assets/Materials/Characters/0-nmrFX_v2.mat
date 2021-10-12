@@ -1,5 +1,5 @@
 {
-    "ShaderType": 3,
+    "ShaderType": 5,
     "RenderingMode": 1,
     "CastShadows": true,
     "ShadowType": 1,
@@ -19,7 +19,7 @@
     "SpecularMap": 0,
     "Metalness": 0.0,
     "MetallicMap": 17401352241661826171,
-    "NormalMap": 17683563516297865714,
+    "NormalMap": 0,
     "NormalStrength": 1.0,
     "EmissiveColor": [
         1.0,
@@ -40,13 +40,21 @@
         0.0,
         0.0
     ],
+    "DissolveNoiseMap": 11856492640806761771,
+    "DissolveColor": [
+        0.2980392277240753,
+        0.9333333373069763,
+        0.9764705896377564,
+        0.0
+    ],
+    "DissolveIntensity": 15.0,
     "DissolveScale": 10.0,
     "DissolveOffset": [
         0.0,
         0.0
     ],
-    "DissolveDuration": 1.0,
-    "DissolveEdgeSize": 0.0,
+    "DissolveDuration": 0.30000001192092898,
+    "DissolveEdgeSize": 0.4000000059604645,
     "VolumetricLightIntensity": 1.0,
     "VolumetricLightAttenuationExponent": 1.0,
     "IsSoft": false,
