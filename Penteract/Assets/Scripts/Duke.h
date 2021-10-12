@@ -69,7 +69,8 @@ public:
 	void Shoot();
 	void ThrowBarrels();
 	void StartUsingShield();
-	void StopUsingShield();
+	void BePushed();
+	void BecomeStunned();
 
 	// ------- Animation Functions ------ //
 	void OnAnimationFinished();
