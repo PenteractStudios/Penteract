@@ -110,7 +110,7 @@ void Duke::MeleeAttack()
 	if (!hasMeleeAttacked) {
 		if (compAnimation) {
 			if (compAnimation->GetCurrentState()) {
-				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[DUKE_ANIMATION_STATES::PUNCH]);
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PUNCH)]);
 				hasMeleeAttacked = true;
 			}
 		}

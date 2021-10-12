@@ -17,6 +17,7 @@ public:
 
 	void StartFire();
 	void StopFire();
+	void SetInterphase(bool interphaseActive);
 
 public:
 	std::string container = "";
@@ -69,7 +70,6 @@ private:
 	void SetRandomPattern(int pattern, const bool*& boolPattern);
 	void SetSequentialPatterns(int countSize, const TilesPattern* sequentialPattern);
 	void UpdateWarningTiles(bool activate);
-	void UpdateFireActiveTiles(bool activate);
-	void SetInterphase(bool interphaseActive);
+	void UpdateFireActiveTiles(bool activate);	
 };
 

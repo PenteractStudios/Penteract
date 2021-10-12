@@ -15,6 +15,7 @@ class DukeShield;
 class Player;
 //class PlayerDeath;
 class AIMovement;
+class FloorIsLava;
 
 enum class Phase {
 	PHASE1,
@@ -68,6 +69,7 @@ public:
 	UID meleeAttackColliderUID = 0;
 	UID barrelSpawnerUID = 0;
 	UID chargeAttackUID = 0;
+	UID fireTilesUID = 0;
 
 	GameObject* duke = nullptr;
 	GameObject* player = nullptr;
@@ -101,6 +103,7 @@ private:
 	AIMovement* movementScript = nullptr;
 
 	PlayerController* playerController = nullptr;
+	FloorIsLava* fireTilesScript = nullptr;
 
 	float currentShieldCooldown = 0.f;
 	float currentShieldActiveTime = 0.f;
