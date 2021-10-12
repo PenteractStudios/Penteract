@@ -126,6 +126,12 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 		if (pSystem) pSystem->KillParticle(p);
 	}
+	else if (collidedWith.name == "SmallParticles") {
+		if (!particle) return;
+		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+		if (pSystem) pSystem->SetParticlesPerSecond(float2(0.0f,0.0f));
+	}
 	else if (collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") { //meleegrunt
 		if (playerController) {
 			float3 onimaruFront = -playerController->playerOnimaru.playerMainTransform->GetFront();

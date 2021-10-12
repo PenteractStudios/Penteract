@@ -32,6 +32,8 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
+	MEMBER_SEPARATOR("Shoot"),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, bulletUID),
 	MEMBER_SEPARATOR("Enemy stats"),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.lifePoints),

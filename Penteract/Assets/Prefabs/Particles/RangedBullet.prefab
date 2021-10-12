@@ -94,7 +94,7 @@
                 "SpeedRM": 0,
                 "Speed": [
                     0.0,
-                    30.0
+                    151.0
                 ],
                 "SpeedCurve": [
                     [
@@ -909,7 +909,7 @@
                     {
                         "Name": "life",
                         "Type": "Float",
-                        "Value": 5.0
+                        "Value": 10.0
                     }
                 ]
             }
@@ -1010,7 +1010,7 @@
                         "SpeedRM": 0,
                         "Speed": [
                             0.0,
-                            10.0
+                            15.0
                         ],
                         "SpeedCurve": [
                             [
@@ -1917,7 +1917,7 @@
                         "SpeedRM": 0,
                         "Speed": [
                             0.0,
-                            1.2999999523162842
+                            15.0
                         ],
                         "SpeedCurve": [
                             [

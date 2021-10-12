@@ -119,6 +119,19 @@ public:
 	float dissolveTimerToStart = 0.0f;	//Timer until the dissolve animation is played
 	UID materialsUID = 0;				//Reference to materials placeholder for random
 
+
+	//EMP Stun feedback
+	ComponentParticleSystem* particlesEmp = nullptr;
+	GameObject* objectEMP = nullptr;
+
+	//Push Stun feedback
+	ComponentParticleSystem* particlesPush = nullptr;
+	GameObject* objectPush = nullptr;
+	float maxTimePushEffect = 1.0f;
+	float minTimePushEffect = 0.0f;
+
+	bool isSniper = false;	// This is set for ranged enemies that will not chase the player
+
 private:
 
 	EnemySpawnPoint* enemySpawnPointScript = nullptr;
