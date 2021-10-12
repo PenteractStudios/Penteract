@@ -96,14 +96,14 @@ void AIDuke::Start() {
 void AIDuke::Update() {
 	std::string life = std::to_string(dukeCharacter.lifePoints);
 	life = "Life points: " + life;
-	//Debug::Log(life.c_str());
+	Debug::Log(life.c_str());
 
 	//IF animation and actual state don't match, this line is useful
 
-	if (dukeCharacter.compAnimation&& dukeCharacter.compAnimation->GetCurrentState()) {
-		std::string log ="State is "+ std::to_string(static_cast<int>(dukeCharacter.state)) + " and animation state is "+ dukeCharacter.compAnimation->GetCurrentState()->name;
-		Debug::Log(log.c_str());
-	}
+	//if (dukeCharacter.compAnimation&& dukeCharacter.compAnimation->GetCurrentState()) {
+	//	std::string log ="State is "+ std::to_string(static_cast<int>(dukeCharacter.state)) + " and animation state is "+ dukeCharacter.compAnimation->GetCurrentState()->name;
+	//	Debug::Log(log.c_str());
+	//}
 
 	float speedToUse = dukeCharacter.slowedDown ? dukeCharacter.slowedDownSpeed : dukeCharacter.movementSpeed;
 
@@ -217,6 +217,7 @@ void AIDuke::Update() {
 		case DukeState::SHOOT_SHIELD:
 			if (player) movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition(), orientationSpeed, orientationThreshold);
 			
+			//Actual activating of the shield, when it is found not active during this state
 			if (dukeShield && !dukeShield->GetIsActive()) {
 				dukeShield->InitShield();
 				movementScript->Stop();
@@ -383,6 +384,7 @@ void AIDuke::Update() {
 			switch (dukeCharacter.state) {
 			case DukeState::SHOOT_SHIELD:
 
+				//Actual activating of the shield, when it is found not active during this state
 				if (dukeShield && !dukeShield->GetIsActive()) {
 					dukeShield->InitShield();
 					movementScript->Stop();
