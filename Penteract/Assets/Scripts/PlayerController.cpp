@@ -242,7 +242,8 @@ void PlayerController::SwitchCharacter() {
 
 		if (GameplaySystems::GetGlobalVariable(globalswitchTutorialActive, true)) GameplaySystems::SetGlobalVariable(globalswitchTutorialActive, false);
 
-	} else {
+	}
+	else {
 		if (playSwitchParticles) {
 			if (switchEffects) {
 				SwitchParticles* script = GET_SCRIPT(switchEffects, SwitchParticles);
@@ -264,7 +265,8 @@ void PlayerController::SwitchCharacter() {
 							meleeScript->gruntCharacter.GetHit(switchDamage);
 							meleeScript->PlayHit();
 						}
-					} else if (rangedScript) {
+					}
+					else if (rangedScript) {
 						rangedScript->EnableBlastPushBack();
 						if (switchFirstHit) {
 							rangedScript->rangerGruntCharacter.GetHit(switchDamage);
@@ -288,7 +290,8 @@ void PlayerController::CheckCoolDowns() {
 		switchCooldownRemaining = 0.f;
 		switchInCooldown = false;
 		if (!noCooldownMode) switchInProgress = false;
-	} else {
+	}
+	else {
 		switchCooldownRemaining -= Time::GetDeltaTime();
 	}
 
@@ -304,7 +307,8 @@ void PlayerController::CheckCoolDowns() {
 				}
 			}
 
-		} else {
+		}
+		else {
 			fangRecovering += Time::GetDeltaTime();
 
 		}
@@ -321,7 +325,8 @@ void PlayerController::CheckCoolDowns() {
 				}
 			}
 
-		} else {
+		}
+		else {
 			onimaruRecovering += Time::GetDeltaTime();
 		}
 	}
@@ -338,7 +343,8 @@ void PlayerController::UpdatePlayerStats() {
 
 		if (playerFang.IsActive() && playerOnimaru.lifePoints <= playerOnimaru.GetTotalLifePoints()) {
 			hudManagerScript->HealthRegeneration(playerOnimaru.lifePoints);
-		} else if (playerOnimaru.IsActive() && playerFang.lifePoints <= playerFang.GetTotalLifePoints()) {
+		}
+		else if (playerOnimaru.IsActive() && playerFang.lifePoints <= playerFang.GetTotalLifePoints()) {
 			hudManagerScript->HealthRegeneration(playerFang.lifePoints);
 		}
 
@@ -352,7 +358,8 @@ void PlayerController::TakeDamage(float damage) {
 			if (playerFang.IsVulnerable()) {
 				playerFang.GetHit(damage);
 			}
-		} else {
+		}
+		else {
 			if (playerOnimaru.IsVulnerable()) {
 				playerOnimaru.GetHit(damage);
 			}
@@ -387,7 +394,8 @@ void PlayerController::OnCharacterDeath() {
 
 	if (playerFang.isAlive) {
 		playerFang.agent->AddAgentToCrowd();
-	} else {
+	}
+	else {
 		playerOnimaru.agent->AddAgentToCrowd();
 	}
 
@@ -415,7 +423,8 @@ void PlayerController::Update() {
 
 	if (playerFang.characterGameObject->IsActive()) {
 		playerFang.Update(useGamepad);
-	} else {
+	}
+	else {
 		playerOnimaru.Update(useGamepad);
 	}
 
