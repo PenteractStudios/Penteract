@@ -2,24 +2,23 @@
 
 #include "Scripting/Script.h"
 
-#include <utility>
+#include <queue>
 #include <vector>
 
 class ComponentTransform;
-class GameObject;
+class ResourcePrefab;
 
 class VehicleLine : public Script
 {
 	GENERATE_BODY(VehicleLine);
 
 public:
-	
+
 	void Start() override;
 	void Update() override;
 
 private:
 
-	void AddVehicle(UID vehicleUID);
 	void UpdateVehicles();
 	bool VehicleOutsideMap(const float3 posVehicle);
 
@@ -27,8 +26,6 @@ public:
 
 	float speed = 0.f;
 	float timeBetweenSpawns = 0.f;
-
-	float3 limits = { 600, 600, 600 };
 
 	UID vehicle1 = 0;
 	UID vehicle2 = 0;
@@ -41,13 +38,11 @@ public:
 	UID vehicle9 = 0;
 
 private:
-	std::vector<std::pair<GameObject*, ComponentTransform*>> vehicles;
-	
+	UID vehiclesUID[9] = { 0,0,0,0,0,0,0,0,0 };
+	std::vector<GameObject*> vehicles;
+
 	float timeToSpawn = 0.f;
 	int actualVehicle = 0;
 	int previousVehicle = 0;
-
-	ComponentTransform* transform = nullptr;
-	
 };
 
