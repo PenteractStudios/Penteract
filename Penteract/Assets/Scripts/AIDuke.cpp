@@ -677,7 +677,7 @@ void AIDuke::ParticleHit(GameObject& collidedWith, void* particle, Player& playe
 }
 
 bool AIDuke::CanBeHurtDuringCriticalMode() const {
-	return !IsInvulnerable() && (IsBeingPushed() || dukeCharacter.state == DukeState::STUNNED);
+	return !IsInvulnerable() && (dukeCharacter.slowedDown || IsBeingPushed() || dukeCharacter.state == DukeState::STUNNED);
 }
 
 bool AIDuke::IsInvulnerable() const {
