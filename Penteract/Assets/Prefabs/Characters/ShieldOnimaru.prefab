@@ -1,0 +1,212 @@
+{
+    "Root": {
+        "Name": "VFXShield",
+        "Active": true,
+        "RootBoneName": "",
+        "Mask": 24,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Active": true,
+                "Position": [
+                    -46.864013671875,
+                    95.16437530517578,
+                    122.06591796875
+                ],
+                "Rotation": [
+                    -0.7071068286895752,
+                    6.322026990801533e-8,
+                    -6.322027701344268e-8,
+                    0.7071067094802856
+                ],
+                "Scale": [
+                    2.299999952316284,
+                    2.299999952316284,
+                    2.299999952316284
+                ],
+                "LocalEulerAngles": [
+                    -90.00000762939453,
+                    0.000010245284101983998,
+                    0.0
+                ]
+            },
+            {
+                "Type": "MeshRenderer",
+                "Active": true,
+                "MeshID": 5281934096327446692,
+                "MaterialID": 10720619105023393070
+            },
+            {
+                "Type": "BoundingBox",
+                "Active": true,
+                "LocalBoundingBox": [
+                    -46.381160736083987,
+                    -6.901912689208984,
+                    -41.774566650390628,
+                    46.38115692138672,
+                    6.901927947998047,
+                    41.77455139160156
+                ]
+            },
+            {
+                "Type": "BoxCollider",
+                "Active": true,
+                "colliderType": 2,
+                "layerType": 3,
+                "mass": 1.0,
+                "size": [
+                    5.400000095367432,
+                    0.75,
+                    4.75
+                ],
+                "centerOffset": [
+                    0.0,
+                    -4.76837158203125e-7,
+                    2.9802322387695315e-8
+                ],
+                "freezeRotation": false
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 16502228949932593069,
+                "Values": [
+                    {
+                        "Name": "playerUID",
+                        "Type": "GameObjectUID",
+                        "Value": 9835691270176894595
+                    },
+                    {
+                        "Name": "maxCharges",
+                        "Type": "Int",
+                        "Value": 10
+                    },
+                    {
+                        "Name": "ShieldBilboardUID",
+                        "Type": "GameObjectUID",
+                        "Value": 8117583157830406789
+                    },
+                    {
+                        "Name": "chargeCooldown",
+                        "Type": "Float",
+                        "Value": 3.0
+                    },
+                    {
+                        "Name": "shieldMaxScale",
+                        "Type": "Float",
+                        "Value": 2.299999952316284
+                    },
+                    {
+                        "Name": "maxFrames",
+                        "Type": "Float",
+                        "Value": 10.0
+                    }
+                ]
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 1.0,
+                "Gain": 1.0,
+                "Mute": false,
+                "Looping": false,
+                "PlayOnAwake": false,
+                "AudioClipId": 0,
+                "SpatialBlend": 1,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0,
+                "RolloffFactor": 1.0,
+                "ReferenceDistance": 10.0,
+                "MaxDistance": 30.0
+            }
+        ],
+        "Children": [
+            {
+                "Name": "Game Object",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            -1.363739013671875,
+                            -30.8485107421875,
+                            -29.201908111572267
+                        ],
+                        "Rotation": [
+                            0.7071068286895752,
+                            -6.322027701344268e-8,
+                            6.322027701344268e-8,
+                            0.7071067094802856
+                        ],
+                        "Scale": [
+                            117.39129638671875,
+                            117.39131164550781,
+                            0.00003913043474312872
+                        ],
+                        "LocalEulerAngles": [
+                            90.00000762939453,
+                            8.142220079589146e-13,
+                            0.0000102452850114787
+                        ]
+                    },
+                    {
+                        "Type": "Billboard",
+                        "Active": true,
+                        "PlayOnAwake": false,
+                        "BillboardLifetime": 2.0,
+                        "BillboardType": 2,
+                        "IsHorizontalOrientation": true,
+                        "RenderMode": 0,
+                        "TextureId": 7380122264388313887,
+                        "TextureIntensity": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "FlipTexture": [
+                            false,
+                            false
+                        ],
+                        "Ytiles": 2,
+                        "Xtiles": 5,
+                        "AnimationCycles": 0.0,
+                        "AnimationLoop": false,
+                        "ColorOverLifetime": false,
+                        "ColorCycles": 1.0,
+                        "ColorLoop": true,
+                        "GradientColors": [
+                            [
+                                1.0,
+                                0.6039215922355652,
+                                0.6039215922355652,
+                                1.0,
+                                0.16044777631759644
+                            ],
+                            [
+                                1.0,
+                                0.0,
+                                0.0,
+                                1.0,
+                                0.9925373196601868
+                            ],
+                            [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        ],
+                        "NumberColors": 3
+                    }
+                ],
+                "Children": null
+            }
+        ]
+    }
+}
