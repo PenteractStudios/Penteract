@@ -4,12 +4,14 @@
 #include "GameplaySystems.h"
 #include "GameObject.h"
 #include "AfterDialogCallback.h"
+//#include "MovingLasers.h"
 
 EXPOSE_MEMBERS(TriggerDialogueBossLvl2Start) {
     MEMBER(MemberType::GAME_OBJECT_UID, BossUID),
-    MEMBER(MemberType::GAME_OBJECT_UID, gameControllerUID),
-    MEMBER(MemberType::GAME_OBJECT_UID, afterDialogCallbackUID),
-    MEMBER(MemberType::INT, dialogueID)
+    MEMBER(MemberType::GAME_OBJECT_UID, gameControllerUID),     
+    MEMBER(MemberType::GAME_OBJECT_UID, laserUID),
+    MEMBER(MemberType::INT, dialogueID),
+    MEMBER(MemberType::BOOL, SwitchOn)
 };
 
 GENERATE_BODY_IMPL(TriggerDialogueBossLvl2Start);
@@ -18,8 +20,9 @@ void TriggerDialogueBossLvl2Start::Start() {
     boss = GameplaySystems::GetGameObject(BossUID);
     gameController = GameplaySystems::GetGameObject(gameControllerUID);
     if (gameController) dialogueManagerScript = GET_SCRIPT(gameController, DialogueManager);
-    //GameObject* afterDialogCallback = GameplaySystems::GetGameObject(afterDialogCallbackUID);
-    //if (afterDialogCallback) afterDialogCallbackScript = GET_SCRIPT(afterDialogCallback, AfterDialogCallback);
+
+    GameObject* laser = GameplaySystems::GetGameObject(laserUID);
+    //laserScript = GET_SCRIPT(laser, MovingLasers);
 }
 
 void TriggerDialogueBossLvl2Start::Update() {}
@@ -31,7 +34,7 @@ void TriggerDialogueBossLvl2Start::OnCollision(GameObject& /*collidedWith*/, flo
             && &dialogueManagerScript->dialoguesArray[dialogueID] != nullptr) {
             dialogueManagerScript->PlayOpeningAudio();
             dialogueManagerScript->SetActiveDialogue(&dialogueManagerScript->dialoguesArray[dialogueID]);
-            //if (afterDialogCallbackScript) afterDialogCallbackScript->OpenFactoryDoors();
+            //if (laserScript) (SwitchOn) ? laserScript->TurnOn() : laserScript->TurnOff();
             triggered = true;
         }
     }

@@ -9,9 +9,9 @@
                 "Type": "Transform",
                 "Active": true,
                 "Position": [
-                    -46.0,
+                    -18.59450340270996,
                     0.0,
-                    2.0
+                    13.165069580078125
                 ],
                 "Rotation": [
                     0.0,
@@ -20,7 +20,7 @@
                     1.0
                 ],
                 "Scale": [
-                    1.0,
+                    2.7809033393859865,
                     1.0,
                     1.0
                 ],
@@ -37,9 +37,9 @@
                 "layerType": 1,
                 "mass": 1.0,
                 "size": [
-                    3.0,
+                    35.0,
                     15.0,
-                    7.0
+                    50.0
                 ],
                 "centerOffset": [
                     0.0,
@@ -53,6 +53,11 @@
                 "Active": true,
                 "Script": 3338726817112180566,
                 "Values": [
+                    {
+                        "Name": "dialogueID",
+                        "Type": "Int",
+                        "Value": 20
+                    },
                     {
                         "Name": "BossUID",
                         "Type": "GameObjectUID",
