@@ -11,12 +11,13 @@ class BridgesTransportController : public Script
 	GENERATE_BODY(BridgesTransportController);
 
 public:
+	/* GameObjects*/
 	UID initialBridgeUID = 0;
 	UID finalBridgeUID = 0;
 	UID bridgeObstaclesUID = 0;
-	bool hasToBeEnabledBridges = true;
-	bool isTransportArea = false;
-	float speedAnimationBridges = 0.1f;
+
+	bool hasToBeEnabledBridges = true;	// Status of the bridges
+	float speedAnimationBridges = 0.1f;	// Speed
 public:
 
 	void Start() override;
@@ -25,18 +26,17 @@ public:
 	/* Enable the spawn points on trigger  */
 	void OnCollision(GameObject& /* collidedWith */, float3 /* collisionNormal */, float3 penetrationDistance, void* particle = nullptr) override;
 
+	/* Control the bridges */
 	void OpenBridges();
 	void CloseBridges();
 	void MoveBridges();
 private:
-	/* Owner */
-	GameObject* gameObject = nullptr;
-
-	/* Bridges Transport Object */
+	/* Bridges Transport Objects */
 	GameObject* initialBridge = nullptr;
 	GameObject* finalBridge = nullptr;
 	GameObject* bridgeObstacles = nullptr;
 
+	/* Transforms */
 	ComponentTransform* transformInitialBridge = nullptr;
 	ComponentTransform* transformFinalBridge = nullptr;
 };

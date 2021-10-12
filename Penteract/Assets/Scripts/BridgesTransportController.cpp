@@ -16,15 +16,12 @@ EXPOSE_MEMBERS(BridgesTransportController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, finalBridgeUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, bridgeObstaclesUID),
 	MEMBER(MemberType::BOOL, hasToBeEnabledBridges),
-	MEMBER(MemberType::BOOL, isTransportArea),
 	MEMBER(MemberType::FLOAT, speedAnimationBridges),
 };
 
 GENERATE_BODY_IMPL(BridgesTransportController);
 
 void BridgesTransportController::Start() {
-	gameObject = &GetOwner();
-
 	initialBridge = GameplaySystems::GetGameObject(initialBridgeUID);
 	finalBridge = GameplaySystems::GetGameObject(finalBridgeUID);
 	bridgeObstacles = GameplaySystems::GetGameObject(bridgeObstaclesUID);
@@ -44,9 +41,6 @@ void BridgesTransportController::Update() {
 		hasToBeEnabledBridges = true;
 		//isInitiallyLocked = true;
 		MoveBridges();
-	}
-	if (!isTransportArea) {
-		gameObject->Disable();
 	}
 	else {
 		// To control the bridges in TRANSPORT
@@ -113,10 +107,6 @@ void BridgesTransportController::MoveBridges()
 					if (bridgeObstacles && bridgeObstacles->IsActive()) {
 						bridgeObstacles->Disable();
 					}
-					// To put the exact position
-					//transformInitialBridge->SetPosition(float3(POS_X_OPEN_INITIAL_BRIDGE, transformInitialBridge->GetPosition().y, POS_Z_OPEN_INITIAL_BRIDGE));
-					//transformFinalBridge->SetPosition(float3(POS_XZ_OPEN_FINAL_BRIDGE, transformInitialBridge->GetPosition().y, POS_XZ_OPEN_FINAL_BRIDGE));
-					gameObject->Disable();
 				}
 				else {
 					transformInitialBridge->SetPosition(float3(transformInitialBridge->GetPosition().x + (speedAnimationBridges * 1), transformInitialBridge->GetPosition().y, transformInitialBridge->GetPosition().z + (speedAnimationBridges * 1)));
