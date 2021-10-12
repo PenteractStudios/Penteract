@@ -1,8 +1,8 @@
 {
     "Name": "PDA",
     "AnimationUID": 16102588795477284283,
-    "BeginIndex": 384,
-    "EndIndex": 418,
+    "BeginIndex": 383,
+    "EndIndex": 417,
     "Loop": false,
     "Speed": 1.0,
     "FrameRate": 0.04163135588169098,
