@@ -192,7 +192,7 @@ void FloorIsLava::UpdateWarningTiles()
 			if (tiles[i]) {
 				ComponentAnimation* animation = tiles[i]->GetComponent<ComponentAnimation>();
 				if (animation) {
-					animation->SendTrigger("ClosedOpening");
+					animation->SendTrigger(animation->GetCurrentState()->name + "Opening");
 				}				
 			}			
 		}
@@ -206,7 +206,7 @@ void FloorIsLava::UpdateWarningNextTiles()
 			if (tiles[i]) {
 				ComponentAnimation* animation = tiles[i]->GetComponent<ComponentAnimation>();
 				if (animation) {
-					animation->SendTrigger("ClosedOpening");
+					animation->SendTrigger(animation->GetCurrentState()->name + "Opening");
 				}
 			}
 		}
@@ -234,7 +234,7 @@ void FloorIsLava::UpdateFireActiveTiles(bool activate)
 						if (!nextTilesPattern[i]) {
 							boxCollider->Disable();
 							fireParticles->StopChildParticles();
-							animation->SendTrigger("OpenedClosing");
+							animation->SendTrigger(animation->GetCurrentState()->name + "Closing");
 						}
 					}
 				}
