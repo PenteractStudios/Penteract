@@ -11,7 +11,9 @@
 //TODO MAKE BACKGROUND ANIMATED
 //TODO ADJUST UI SIZES
 
-#define HIERARCHY_INDEX_PLAY_AGAIN_TEXT 2
+#define HIERARCHY_INDEX_PLAY_AGAIN_TEXT 4
+#define HIERARCHY_INDEX_PLAY_AGAIN_SHADOW_TEXT 3
+#define HIERARCHY_INDEX_PLAY_AGAIN_IMAGE 0
 
 EXPOSE_MEMBERS(GameOverUIController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, inOutPlayerUID),
@@ -68,26 +70,27 @@ void GameOverUIController::Start() {
 
 
 	if (playAgainGO) {
-		playAgainButtonImage = playAgainGO->GetComponent<ComponentImage>();
 		std::vector<GameObject*>children = playAgainGO->GetChildren();
 		if (children.size() > HIERARCHY_INDEX_PLAY_AGAIN_TEXT - 1) {
-			playAgainButtonText = children[HIERARCHY_INDEX_PLAY_AGAIN_TEXT]->GetComponent < ComponentText>();
+			playAgainButtonImage = children[HIERARCHY_INDEX_PLAY_AGAIN_IMAGE]->GetComponent<ComponentImage>();
+			playAgainButtonText = children[HIERARCHY_INDEX_PLAY_AGAIN_TEXT]->GetComponent<ComponentText>();
+			playAgainButtonShadowText = children[HIERARCHY_INDEX_PLAY_AGAIN_SHADOW_TEXT]->GetComponent<ComponentText>();
 		}
 	}
 	if (mainMenuGO) {
-		mainMenuButtonImage = mainMenuGO->GetComponent<ComponentImage>();
-
 		std::vector<GameObject*>children = mainMenuGO->GetChildren();
 		if (children.size() > HIERARCHY_INDEX_PLAY_AGAIN_TEXT - 1) {
-			mainMenuButtonText = children[HIERARCHY_INDEX_PLAY_AGAIN_TEXT]->GetComponent < ComponentText>();
+			mainMenuButtonImage = children[HIERARCHY_INDEX_PLAY_AGAIN_IMAGE]->GetComponent<ComponentImage>();
+			mainMenuButtonText = children[HIERARCHY_INDEX_PLAY_AGAIN_TEXT]->GetComponent<ComponentText>();
+			mainMenuButtonShadowText = children[HIERARCHY_INDEX_PLAY_AGAIN_SHADOW_TEXT]->GetComponent<ComponentText>();
 		}
 	}
 	if (exitButtonGO) {
-		exitButtonImage = exitButtonGO->GetComponent<ComponentImage>();
-
 		std::vector<GameObject*>children = exitButtonGO->GetChildren();
 		if (children.size() > HIERARCHY_INDEX_PLAY_AGAIN_TEXT - 1) {
+			exitButtonImage = children[HIERARCHY_INDEX_PLAY_AGAIN_IMAGE]->GetComponent<ComponentImage>();
 			exitButtonText = children[HIERARCHY_INDEX_PLAY_AGAIN_TEXT]->GetComponent < ComponentText>();
+			exitButtonShadowText = children[HIERARCHY_INDEX_PLAY_AGAIN_SHADOW_TEXT]->GetComponent < ComponentText>();
 		}
 	}
 
@@ -201,10 +204,11 @@ void GameOverUIController::GameOver() {
 			(*it)->Enable();
 		}
 
-		if (backgroundImage && playAgainButtonImage && mainMenuButtonImage && scrollingBackgroundImage) {
+		if (backgroundImage && playAgainButtonImage && mainMenuButtonImage && scrollingBackgroundImage && exitButtonImage) {
 			backgroundOriginalColor = backgroundImage->GetColor();
 			playAgainButtonImageOriginalColor = playAgainButtonImage->GetColor();
 			mainMenuButtonImageOriginalColor = mainMenuButtonImage->GetColor();
+			exitButtonImageOriginalColor = exitButtonImage->GetColor();
 			scrollingBackgroundImageOriginalColor = scrollingBackgroundImage->GetColor();
 			SetColors(0);
 		}
@@ -222,12 +226,17 @@ void GameOverUIController::EnterIdleState() {
 }
 
 void GameOverUIController::SetColors(float delta) {
-	if (!playAgainButtonImage || !playAgainButtonText || !mainMenuButtonImage || !mainMenuButtonText || !backgroundImage)return;
+	if (!playAgainButtonImage || !playAgainButtonText || !playAgainButtonShadowText || !mainMenuButtonImage || !mainMenuButtonText || !mainMenuButtonShadowText || !exitButtonText || !exitButtonShadowText || !exitButtonImage || !backgroundImage)return;
 
 	playAgainButtonImage->SetColor(float4(playAgainButtonImageOriginalColor.xyz(), delta));
-	playAgainButtonText->SetFontColor(float4(1, 1, 1, delta));
+	playAgainButtonText->SetFontColor(float4(1.f, 1.f, 1.f, delta));
+	playAgainButtonShadowText->SetFontColor(float4(0, 0.1568627f, 0.235294f, delta));
 	mainMenuButtonImage->SetColor(float4(mainMenuButtonImageOriginalColor.xyz(), delta));
-	mainMenuButtonText->SetFontColor(float4(1, 1, 1, delta));
+	mainMenuButtonText->SetFontColor(float4(1.f, 1.f, 1.f, delta));
+	mainMenuButtonShadowText->SetFontColor(float4(0, 0.1568627f, 0.235294f, delta));
+	exitButtonImage->SetColor(float4(exitButtonImageOriginalColor.xyz(), delta));
+	exitButtonText->SetFontColor(float4(1.f, 1.f, 1.f, delta));
+	exitButtonShadowText->SetFontColor(float4(0, 0.1568627f, 0.235294f, delta));
 	backgroundImage->SetColor(float4(backgroundOriginalColor.xyz(), delta * backgroundOriginalColor.w));
 
 	scrollingBackgroundImage->SetColor(float4(scrollingBackgroundImageOriginalColor.xyz(), delta * scrollingBackgroundImageOriginalColor.w));
