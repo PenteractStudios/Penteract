@@ -57,7 +57,7 @@ void BridgesTransportController::Update() {
 		}
 	}
 	// To unlock Transport
-	if (initialBridge && finalBridge && isInitiallyLocked) {
+	if (initialBridge && finalBridge) {
 		if (hasToBeEnabledBridges && initialBridge->IsActive() && finalBridge->IsActive()) {
 			MoveBridges();
 		}
@@ -103,7 +103,7 @@ void BridgesTransportController::MoveBridges()
 			}
 		}
 		else {
-			if (isInitiallyLocked) {
+			if (true) {
 				if (!initialBridge->IsActive() && !finalBridge->IsActive()) {
 					OpenBridges();
 				}

@@ -7,7 +7,6 @@
 class GameObject;
 class ResourcePrefab;
 class ComponentLight;
-class ComponentTransform;
 
 class SpawnPointController : public Script {
 	GENERATE_BODY(SpawnPointController);

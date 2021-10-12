@@ -5,7 +5,6 @@
 #include "EnemySpawnPoint.h"
 #include "GameObjectUtils.h"
 #include "Components/ComponentLight.h"
-#include "Components/ComponentTransform.h"
 
 EXPOSE_MEMBERS(SpawnPointController) {
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, meleeEnemyPrefabUID),
@@ -75,20 +74,16 @@ void SpawnPointController::Start() {
 void SpawnPointController::Update() {
 	if (unlockStarted) {
 		if (currentUnlockTime >= timerToUnlock) {
-			if (!isClosing) {		
-				// Must open the door
+			if (!isClosing) {	// Must open the door
 				if (finalDoor && finalDoor->IsActive()) {
 					finalDoor->Disable();
 				}
 				if (unlocksInitialDoor && initialDoor && initialDoor->IsActive()) {
 					initialDoor->Disable();
 				}
-
 				gameObject->Disable();
 			}
-
 			unlockStarted = false;
-
 			if (!mustKeepOpen) {			// Perform light animation
 				SetLightIntensity(initialDoorLight, isClosing ? initialDoorLightStartIntensity : 0.0f);
 				SetLightIntensity(finalDoorLight, isClosing ? finalDoorLightStartIntensity : 0.0f);
