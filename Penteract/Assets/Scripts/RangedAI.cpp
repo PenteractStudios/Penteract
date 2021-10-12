@@ -26,38 +26,40 @@
 
 EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, materialsUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
-		MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
-		MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
-		MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
-		MEMBER_SEPARATOR("Shoot"),
-		MEMBER(MemberType::PREFAB_RESOURCE_UID, bulletUID),
-		MEMBER_SEPARATOR("Enemy stats"),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.lifePoints),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.barrelDamageTaken),
-		MEMBER_SEPARATOR("Push variables"),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackDistance),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackSpeed),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownSpeed),
-		MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownTime),
-		MEMBER(MemberType::FLOAT, minAttackSpeed),
-		MEMBER(MemberType::FLOAT, maxAttackSpeed),
-		MEMBER(MemberType::FLOAT, fleeingRange),
-		MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
-		MEMBER(MemberType::FLOAT, timeSinceLastHurt),
-		MEMBER(MemberType::FLOAT, approachOffset), //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
-		MEMBER(MemberType::FLOAT, stunDuration),
-		MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
-		MEMBER(MemberType::FLOAT, groundPosition),
-		MEMBER(MemberType::FLOAT, fleeingUpdateTime),
-		MEMBER_SEPARATOR("Dissolve properties"),
-		MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialObj),
-		MEMBER(MemberType::FLOAT, dissolveTimerToStart)
+	MEMBER(MemberType::GAME_OBJECT_UID, materialsUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDFang),
+	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
+	MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
+	MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
+	MEMBER_SEPARATOR("Enemy stats"),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.lifePoints),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.barrelDamageTaken),
+	MEMBER(MemberType::BOOL, isSniper),
+	MEMBER_SEPARATOR("Push variables"),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackDistance),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackTime),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownSpeed),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownTime),
+	MEMBER(MemberType::FLOAT, minAttackSpeed),
+	MEMBER(MemberType::FLOAT, maxAttackSpeed),
+	MEMBER(MemberType::FLOAT, fleeingRange),
+	MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
+	MEMBER(MemberType::FLOAT, timeSinceLastHurt),
+	MEMBER(MemberType::FLOAT, approachOffset), //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
+	MEMBER(MemberType::FLOAT, stunDuration),
+	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
+	MEMBER(MemberType::FLOAT, groundPosition),
+	MEMBER(MemberType::FLOAT, fleeingUpdateTime),
+	MEMBER_SEPARATOR("Push Random Feedback"),
+	MEMBER(MemberType::FLOAT, minTimePushEffect),
+	MEMBER(MemberType::FLOAT, maxTimePushEffect),
+	MEMBER_SEPARATOR("Dissolve properties"),
+	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialObj),
+	MEMBER(MemberType::FLOAT, dissolveTimerToStart)
 };//clang-format on
 
 GENERATE_BODY_IMPL(RangedAI);
@@ -177,7 +179,6 @@ void RangedAI::Start() {
 
 	enemySpawnPointScript = GET_SCRIPT(GetOwner().GetParent(), EnemySpawnPoint);
 
-	pushBackRealDistance = rangerGruntCharacter.pushBackDistance;
 	SetRandomMaterial();
 }
 
@@ -520,7 +521,16 @@ void RangedAI::UpdateState() {
 
 		break;
 	case AIState::PUSHED:
+		if (pushBackTimer > rangerGruntCharacter.pushBackTime) {
+			pushBackTimer = rangerGruntCharacter.pushBackTime;
+		}
 		UpdatePushBackPosition();
+		if (pushBackTimer == rangerGruntCharacter.pushBackTime) {
+			DisableBlastPushBack();
+		}
+		else {
+			pushBackTimer += Time::GetDeltaTime();
+		}
 		break;
 	default:
 		break;
@@ -614,7 +624,8 @@ void RangedAI::EnableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		ChangeState(AIState::PUSHED);
 		rangerGruntCharacter.beingPushed = true;
-		CalculatePushBackRealDistance();
+		pushBackTimer = 0.f;
+		rangerGruntCharacter.CalculatePushBackFinalPos(GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition(), player->GetComponent<ComponentTransform>()->GetGlobalPosition(), rangerGruntCharacter.pushBackDistance);
 		// Damage
 		if (playerController->playerOnimaru.level2Upgrade) {
 			rangerGruntCharacter.GetHit(playerController->playerOnimaru.blastDamage + playerController->GetOverPowerMode());
@@ -623,6 +634,7 @@ void RangedAI::EnableBlastPushBack() {
 			PlayHitMaterialEffect();
 			timeSinceLastHurt = 0.0f;
 		}
+		agent->Disable();
 	}
 }
 
@@ -630,6 +642,10 @@ void RangedAI::DisableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		ChangeState(AIState::IDLE);
 		rangerGruntCharacter.beingPushed = false;
+		agent->Enable();
+		agent->SetMaxSpeed(rangerGruntCharacter.slowedDownSpeed);
+		rangerGruntCharacter.slowedDown = true;
+		currentSlowedDownTime = 0.f;
 	}
 }
 
@@ -661,46 +677,7 @@ void RangedAI::ShootPlayerInRange() {
 }
 
 void RangedAI::UpdatePushBackPosition() {
-	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
-	float3 initialPos = enemyPos;
-
-	float3 direction = (enemyPos - playerPos).Normalized();
-
-	if (agent) {
-		enemyPos += direction * rangerGruntCharacter.pushBackSpeed * Time::GetDeltaTime();
-		agent->SetMoveTarget(enemyPos, false);
-		agent->SetMaxSpeed(rangerGruntCharacter.pushBackSpeed);
-		float distance = enemyPos.Distance(initialPos);
-		currentPushBackDistance += distance;
-
-		if (currentPushBackDistance >= pushBackRealDistance) {
-			agent->SetMaxSpeed(rangerGruntCharacter.slowedDownSpeed);
-			DisableBlastPushBack();
-			rangerGruntCharacter.slowedDown = true;
-			currentPushBackDistance = 0.f;
-			currentSlowedDownTime = 0.f;
-			pushBackRealDistance = rangerGruntCharacter.pushBackDistance;
-		}
-	}
-}
-
-void RangedAI::CalculatePushBackRealDistance() {
-	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
-
-	float3 direction = (enemyPos - playerPos).Normalized();
-
-	bool hitResult = false;
-
-	float3 finalPos = enemyPos + direction * rangerGruntCharacter.pushBackDistance;
-	float3 resultPos = { 0,0,0 };
-
-	Navigation::Raycast(enemyPos, finalPos, hitResult, resultPos);
-
-	if (hitResult) {
-		pushBackRealDistance = resultPos.Distance(enemyPos) - 1; // Should be agent radius but it's not exposed
-	}
+	ownerTransform->SetGlobalPosition(float3::Lerp(rangerGruntCharacter.pushBackInitialPos, rangerGruntCharacter.pushBackFinalPos, pushBackTimer / rangerGruntCharacter.pushBackTime));
 }
 
 void RangedAI::PlayHitMaterialEffect()

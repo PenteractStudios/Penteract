@@ -27,8 +27,11 @@ EXPOSE_MEMBERS(GameOverUIController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, backgroundUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, scrollingBackgroundObjUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, canvasFaderObjUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, canvasPlayerHUDObjUID),
-	MEMBER(MemberType::FLOAT, scrollDuration)
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasPlayerSkillsObjUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasPlayerLifeBarsObjUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasDukeLifeBarObjUID),
+	MEMBER(MemberType::FLOAT, scrollDuration),
+	MEMBER(MemberType::GAME_OBJECT_UID, audioSourcesUID)
 };
 
 GENERATE_BODY_IMPL(GameOverUIController);
@@ -39,6 +42,7 @@ void GameOverUIController::Start() {
 	GameObject* loopPlayerGO = GameplaySystems::GetGameObject(loopPlayerUID);
 	GameObject* vibrationPlayerGO = GameplaySystems::GetGameObject(vibrationPlayerUID);
 	GameObject* outInPlayerGO = GameplaySystems::GetGameObject(outInPlayerUID);
+	GameObject* audioSourcesObj = GameplaySystems::GetGameObject(audioSourcesUID);
 
 	if (inOutPlayerGO) inOutPlayer = GET_SCRIPT(inOutPlayerGO, UISpriteSheetPlayer);
 	if (loopPlayerGO) loopPlayer = GET_SCRIPT(loopPlayerGO, UISpriteSheetPlayer);
@@ -51,7 +55,9 @@ void GameOverUIController::Start() {
 	GameObject* backgroundGO = GameplaySystems::GetGameObject(backgroundUID);
 	GameObject* scrollingBackgroundObj = GameplaySystems::GetGameObject(scrollingBackgroundObjUID);
 
-	canvasPlayerHUDObj = GameplaySystems::GetGameObject(canvasPlayerHUDObjUID);
+	canvasPlayerSkillsObj = GameplaySystems::GetGameObject(canvasPlayerSkillsObjUID);
+	canvasPlayerLifeBarsObj = GameplaySystems::GetGameObject(canvasPlayerLifeBarsObjUID);
+	canvasDukeLifeBarObj = GameplaySystems::GetGameObject(canvasDukeLifeBarObjUID);
 
 	if (canvasFaderObjUID != 0) {
 		GameObject* canvasFaderObj = GameplaySystems::GetGameObject(canvasFaderObjUID);
@@ -93,7 +99,13 @@ void GameOverUIController::Start() {
 		scrollingBackgroundImage = scrollingBackgroundObj->GetComponent<ComponentImage>();
 	}
 
-
+	if (audioSourcesObj) {
+		int i = 0;
+		for (ComponentAudioSource& src : audioSourcesObj->GetComponents<ComponentAudioSource>()) {
+			if (i < static_cast<int>(GlitchTitleAudio::TOTAL)) audios[i] = &src;
+			++i;
+		}
+	}
 
 	std::vector<GameObject*> children = GetOwner().GetChildren();
 
@@ -115,6 +127,7 @@ void GameOverUIController::Update() {
 					if (loopPlayer)loopPlayer->Stop();
 					if (vibrationPlayer)vibrationPlayer->Stop();
 					outInPlayer->Play();
+					PlayAudio(GlitchTitleAudio::FADE_OUT);
 				}
 			}
 		}
@@ -141,6 +154,7 @@ void GameOverUIController::Update() {
 		}
 		if (delta >= 0.5f && !inOutPlayer->IsPlaying()) {
 			inOutPlayer->Play();
+			PlayAudio(GlitchTitleAudio::GLITCH);
 		}
 
 		break;
@@ -159,6 +173,7 @@ void GameOverUIController::Update() {
 			vibrationTimer = 0.0f;
 			loopPlayer->Stop();
 			vibrationPlayer->Play();
+			PlayAudio(GlitchTitleAudio::FADE_IN);
 		}
 
 		break;
@@ -219,7 +234,11 @@ void GameOverUIController::SetColors(float delta) {
 }
 
 void GameOverUIController::DisablePlayerHUD() {
-	if (canvasPlayerHUDObj) {
-		canvasPlayerHUDObj->Disable();
-	}
+	if (canvasPlayerSkillsObj) canvasPlayerSkillsObj->Disable();
+	if (canvasPlayerLifeBarsObj) canvasPlayerLifeBarsObj->Disable();
+	if (canvasDukeLifeBarObj) canvasDukeLifeBarObj->Disable();
+}
+
+void GameOverUIController::PlayAudio(GlitchTitleAudio type) {
+	if (audios[static_cast<int>(type)]) audios[static_cast<int>(type)]->Play();
 }
