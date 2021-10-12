@@ -5,6 +5,7 @@
 #include "PlayerController.h"
 #include "BarrelSpawner.h"
 #include "AIMovement.h"
+#include "AttackDronesController.h"
 
 #include <string>
 
@@ -12,7 +13,7 @@
 
 std::uniform_real_distribution<float> rng(-1.0f, 1.0f);
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, std::vector<UID> encounterUIDs)
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController)
 {
 	gen = std::minstd_rand(rd());
 
@@ -73,6 +74,8 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 	distanceCorrectionThreshold = distanceCorrectEvery;
 
 	for (auto itr : encounterUIDs) encounters.push_back(GameplaySystems::GetGameObject(itr));
+
+	attackDronesController = dronesController;
 }
 
 void Duke::ShootAndMove(const float3& playerDirection) {
@@ -116,6 +119,26 @@ void Duke::MeleeAttack()
 
 void Duke::BulletHell() {
 	Debug::Log("Bullet hell");
+	if (attackDronesController) {
+		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]);
+		ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentState()->clipUid);
+		if (clip) clip->loop = true;
+		attackDronesController->StartBulletHell();
+	}
+}
+
+void Duke::DisableBulletHell() {
+	ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentState()->clipUid);
+	if (clip) clip->loop = false;
+}
+
+bool Duke::BulletHellActive() {
+	return attackDronesController && attackDronesController->BulletHellActive();
+}
+
+bool Duke::BulletHellFinished() {
+	if (!attackDronesController) return true;
+	return attackDronesController->BulletHellFinished();
 }
 
 void Duke::InitCharge(DukeState nextState_)
