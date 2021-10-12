@@ -91,7 +91,8 @@ void AIDuke::Start() {
 	}
 
 	//Fire Tiles Script
-	fireTilesScript = GET_SCRIPT(GameplaySystems::GetGameObject(fireTilesUID), FloorIsLava);
+	GameObject* tilesObj = GameplaySystems::GetGameObject(fireTilesUID);
+	if(tilesObj) fireTilesScript = GET_SCRIPT(tilesObj, FloorIsLava);
 
 	// AttackDronesController
 	AttackDronesController* dronesController = GET_SCRIPT(&GetOwner(), AttackDronesController);
@@ -173,6 +174,7 @@ void AIDuke::Update() {
 			//Second time Duke teleports out of the arena, there is a new fire pattern active.
 			if (dukeCharacter.lifePoints <= 0.55f * dukeCharacter.GetTotalLifePoints()) {
 				if (fireTilesScript) {
+					if (activeFireTiles) fireTilesScript->StopFire();
 					fireTilesScript->SetInterphase(true);
 					fireTilesScript->StartFire();
 					activeFireTiles = true;

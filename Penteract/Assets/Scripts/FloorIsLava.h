@@ -57,6 +57,7 @@ private:
 	bool patternFinished = true;
 
 	bool firstTimeWarning = true;
+	bool firstTimeNextWarning = true;
 	bool firstTimeFireActive = true;
 	bool firsTimeFireStopped = true;
 
@@ -69,7 +70,8 @@ private:
 private:
 	void SetRandomPattern(int pattern, const bool*& boolPattern);
 	void SetSequentialPatterns(int countSize, const TilesPattern* sequentialPattern);
-	void UpdateWarningTiles(bool activate);
+	void UpdateWarningTiles();
+	void UpdateWarningNextTiles();
 	void UpdateFireActiveTiles(bool activate);	
 };
 

@@ -37,6 +37,7 @@ void FloorIsLava::Start() {
 	}
 	
 	timeTilesActive = timeTilesActiveNormal;
+	timeRemainingTilesActive = timeTilesActive;
 	timeRemainingWarning = timeWarning;	
 }
 
@@ -72,19 +73,16 @@ void FloorIsLava::Update() {
 	
 	if (warningActive) {
 		if (firstTimeWarning) {
-			UpdateWarningTiles(true);
+			UpdateWarningTiles();
 			firstTimeWarning = false;
 		}
-
 		if (timeRemainingWarning > 0.f) {
 			timeRemainingWarning -= Time::GetDeltaTime();
 		}
 		else {
 			warningActive = false;
 			fireActive = true;
-			timeRemainingTilesActive = timeTilesActive;
-			firstTimeFireActive = true;
-		}
+		}		
 	}
 
 	if (fireActive) {
@@ -99,25 +97,23 @@ void FloorIsLava::Update() {
 
 		if (timeRemainingTilesActive > 0.f) {
 			timeRemainingTilesActive -= Time::GetDeltaTime();
+			if (timeRemainingTilesActive <= std::min(timeWarning, timeTilesActive)) {
+				if (firstTimeNextWarning) {
+					UpdateWarningNextTiles();
+					firstTimeNextWarning = false;
+				}
+			}
 		}
 		else {
 			if (firsTimeFireStopped) {
 				UpdateFireActiveTiles(false);
 				firsTimeFireStopped = false;
 			}
-			if (timerTilesClosingRemaining <= timerTilesClosing) {
-				timerTilesClosingRemaining += Time::GetDeltaTime();
-			}
-			else {
-				warningActive = true;
-				fireActive = false;
-				patternFinished = true;
-				timeRemainingWarning = timeWarning;
-				firstTimeWarning = true;
-				timerTilesClosingRemaining = 0.f;
-			}
+			patternFinished = true;
+			firstTimeNextWarning = true;
+			firstTimeFireActive = true;
+			timeRemainingTilesActive = timeTilesActive;
 		}
-
 	}
 
 }
@@ -125,6 +121,12 @@ void FloorIsLava::Update() {
 void FloorIsLava::StartFire()
 {
 	started = true;
+	timeRemainingWarning = timeWarning;
+	warningActive = true;
+	firstTimeWarning = true;
+	fireActive = false;
+	firstTimeFireActive = true;
+	firsTimeFireStopped = false;
 	if (interphase) {
 		timeTilesActive = timeTilesActiveInterphase;
 	}
@@ -136,7 +138,22 @@ void FloorIsLava::StartFire()
 void FloorIsLava::StopFire()
 {
 	started = false;
-	UpdateFireActiveTiles(false);
+	for (unsigned i = 0; i < tiles.size(); ++i) {
+		if (tiles[i]) {
+			ComponentBoxCollider* boxCollider = tiles[i]->GetComponent<ComponentBoxCollider>();
+			GameObject* childFireParticlesObject = tiles[i]->GetChild("FireVerticalParticleSystem");
+			ComponentAnimation* animation = tiles[i]->GetComponent<ComponentAnimation>();
+			ComponentParticleSystem* fireParticles = nullptr;
+			if (childFireParticlesObject) {
+				fireParticles = childFireParticlesObject->GetComponent<ComponentParticleSystem>();
+			}
+			if (boxCollider && fireParticles && animation) {
+				boxCollider->Disable();
+				fireParticles->StopChildParticles();
+				animation->SendTrigger(animation->GetCurrentState()->name + "Closed");
+			}			
+		}
+	}
 	if (sequential) sequentialCount = 0;
 }
 
@@ -168,18 +185,30 @@ void FloorIsLava::SetSequentialPatterns(int countSize, const TilesPattern* seque
 	nextTilesPattern = sequentialPattern[sequentialCount].pattern;
 }
 
-void FloorIsLava::UpdateWarningTiles(bool activate)
+void FloorIsLava::UpdateWarningTiles()
 {
 	for (unsigned i = 0; i < tiles.size(); ++i) {
 		if (currentTilesPattern[i]) {
 			if (tiles[i]) {
-				if (activate) {
-					ComponentAnimation* animation = tiles[i]->GetComponent<ComponentAnimation>();
-					if (animation) {
-						animation->SendTrigger("ClosedOpening");
-					}
-				}
+				ComponentAnimation* animation = tiles[i]->GetComponent<ComponentAnimation>();
+				if (animation) {
+					animation->SendTrigger("ClosedOpening");
+				}				
 			}			
+		}
+	}
+}
+
+void FloorIsLava::UpdateWarningNextTiles()
+{
+	for (unsigned i = 0; i < tiles.size(); ++i) {
+		if (nextTilesPattern[i] && !currentTilesPattern[i]) {
+			if (tiles[i]) {
+				ComponentAnimation* animation = tiles[i]->GetComponent<ComponentAnimation>();
+				if (animation) {
+					animation->SendTrigger("ClosedOpening");
+				}
+			}
 		}
 	}
 }
