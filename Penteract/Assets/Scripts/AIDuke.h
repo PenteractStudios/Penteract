@@ -53,6 +53,8 @@ private:
 	void ParticleHit(GameObject& collidedWith, void* particle, Player& player_);
 	bool CanBeHurtDuringCriticalMode() const;
 	bool IsInvulnerable()const;
+	void StartUsingShield();
+	void OnShieldInterrupted();
 public:
 	UID dukeUID = 0;
 	UID playerUID = 0;

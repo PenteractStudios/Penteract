@@ -98,6 +98,8 @@ void AIDuke::Update() {
 	life = "Life points: " + life;
 	//Debug::Log(life.c_str());
 
+	//IF animation and actual state don't match, this line is useful
+
 	if (dukeCharacter.compAnimation&& dukeCharacter.compAnimation->GetCurrentState()) {
 		std::string log ="State is "+ std::to_string(static_cast<int>(dukeCharacter.state)) + " and animation state is "+ dukeCharacter.compAnimation->GetCurrentState()->name;
 		Debug::Log(log.c_str());
@@ -154,10 +156,13 @@ void AIDuke::Update() {
 			movementScript->Stop();
 			if (isInArena) TeleportDuke(true);
 			dukeCharacter.CallTroops();
-			dukeCharacter.state = DukeState::INVULNERABLE;
+
 			if (dukeShield && dukeShield->GetIsActive()) {
 				OnShieldInterrupted();
 			}
+
+			dukeCharacter.state = DukeState::INVULNERABLE;
+
 			dukeCharacter.StopShooting();
 			break;
 		}
@@ -174,12 +179,9 @@ void AIDuke::Update() {
 				movementScript->Stop();
 				dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
 			} else if (currentShieldCooldown >= shieldCooldown) {
-				if (dukeShield) {
-					Debug::Log("StartUsingShieldFromPhase1BasicBehavior");
 
-					dukeCharacter.StartUsingShield();
-					dukeShield->InitShield();
-					movementScript->Stop();
+				if (dukeShield) {
+					StartUsingShield();
 				}
 
 			} else if (player && movementScript->CharacterInAttackRange(player, dukeCharacter.attackRange)) {
@@ -380,12 +382,9 @@ void AIDuke::Update() {
 			case DukeState::SHOOT_SHIELD:
 
 				if (dukeShield && !dukeShield->GetIsActive()) {
-					Debug::Log("StartUsingShieldFromPhase3ShootShield");
-
-					dukeCharacter.StartUsingShield();
-					dukeShield->InitShield();
-					movementScript->Stop();
+					StartUsingShield();
 				}
+
 				movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition(), orientationSpeed, orientationThreshold);
 				dukeCharacter.Shoot();
 				currentAbilityChangeCooldown += Time::GetDeltaTime();
@@ -415,10 +414,7 @@ void AIDuke::Update() {
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
 					currentAbilityChangeCooldown = 0.f;
 					if (dukeShield) {
-						Debug::Log("StartUsingShieldFromPhase3BasicBehavior");
-						dukeCharacter.StartUsingShield();
-						dukeShield->InitShield();
-						movementScript->Stop();
+						StartUsingShield();
 					}
 				}
 				else {
@@ -682,6 +678,18 @@ bool AIDuke::CanBeHurtDuringCriticalMode() const {
 
 bool AIDuke::IsInvulnerable() const {
 	return dukeCharacter.state == DukeState::INVULNERABLE;
+}
+
+void AIDuke::StartUsingShield() {
+
+	dukeCharacter.state = DukeState::SHOOT_SHIELD;
+	dukeCharacter.StartUsingShieldAnimation();
+	if (dukeCharacter.isShooting) {
+		dukeCharacter.StopShooting();
+	}
+
+	dukeShield->InitShield();
+	movementScript->Stop();
 }
 
 void AIDuke::OnShieldInterrupted() {
