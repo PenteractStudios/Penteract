@@ -167,7 +167,11 @@ void HUDManager::Start() {
 	dukeHealthParent = GameplaySystems::GetGameObject(dukeHealthParentUID);
 	switchHealthParent = GameplaySystems::GetGameObject(switchHealthParentUID);
 
-	if (fangHealthParent && onimaruHealthParent && dukeHealthParent) {
+	if (dukeHealthParent) {
+		dukeHealthChildren = dukeHealthParent->GetChildren();
+	}
+
+	if (fangHealthParent && onimaruHealthParent) {
 		ComponentTransform2D* pos = nullptr;
 		pos = fangHealthParent->GetComponent<ComponentTransform2D>();
 		if (pos) originalFangHealthPosition = pos->GetPosition();
@@ -176,12 +180,10 @@ void HUDManager::Start() {
 		if (pos) originalOnimaruHealthPosition = pos->GetPosition();
 		fangHealthChildren = fangHealthParent->GetChildren();
 		onimaruHealthChildren = onimaruHealthParent->GetChildren();
-		dukeHealthChildren = dukeHealthParent->GetChildren();
-
-		GetAllHealthColors();
-		InitializeHealth();
-		InitializeDukeHealth();
 	}
+
+	GetAllHealthColors();
+	InitializeHealth();
 
 	if (switchHealthParent) {
 		switchHealthChildren = switchHealthParent->GetChildren();
@@ -1135,8 +1137,9 @@ void HUDManager::StopLostHealthFeedback(float& timer, bool& playingEffect, const
 }
 
 void HUDManager::ResetLostHealthFeedback(float& timer, bool& playingEffect, const std::vector<GameObject*>& healthChildren, bool isBoss) {
+	if (!fangObj || !playerController) return;
 
-	float maxHealth = dukeScript->GetDukeMaxHealth();
+	float maxHealth = dukeScript ? dukeScript->GetDukeMaxHealth() : 1.f;
 	if (!isBoss)  maxHealth = fangObj->IsActive() ? playerController->GetFangMaxHealth() : playerController->GetOnimaruMaxHealth();
 
 	ComponentImage* lostHealth = nullptr;
@@ -1257,9 +1260,8 @@ void HUDManager::SetPictoState(Cooldowns cooldown, PictoState newState) {
 }
 
 void HUDManager::GetAllHealthColors() {
-	if (!fangHealthParent || !onimaruHealthParent || !dukeHealthParent) return;
+	if (!fangHealthParent || !onimaruHealthParent) return;
 	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
-	if (dukeHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
 	// Get background color in background
 	ComponentImage* image = onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
@@ -1291,6 +1293,12 @@ void HUDManager::GetAllHealthColors() {
 		healthLostFeedbackFillBarFinalColor = image->GetColor();
 	}
 
+	healthLostFeedbackFillBarInitialColor = float4(healthLostFeedbackFillBarFinalColor.xyz(), lostHealthFeedbackAlpha);
+
+	// This goes here so if the scene is not properly set or the Duke's HUD is not needed the other HUD elements keep working
+	if (!dukeHealthParent) return;
+	if (dukeHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
+
 	// Get Duke main background color
 	image = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
 	if (image) {
@@ -1311,8 +1319,6 @@ void HUDManager::GetAllHealthColors() {
 		dukeHealthOverlayColor = image->GetColor();
 		image->SetColor(float4(dukeHealthOverlayColor.xyz(), 0.0f));
 	}
-
-	healthLostFeedbackFillBarInitialColor = float4(healthLostFeedbackFillBarFinalColor.xyz(), lostHealthFeedbackAlpha);
 }
 
 void HUDManager::InitializeHealth() {
@@ -1362,21 +1368,21 @@ void HUDManager::InitializeHealth() {
 		}
 		healthLost->SetColor(healthLostFeedbackFillBarFinalColor);
 	}
-}
 
-void HUDManager::InitializeDukeHealth() {
+
+	// This goes here so if the scene is not properly set or the Duke's HUD is not needed the other HUD elements keep working
 	if (!dukeScript) return;
 	if (dukeHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
-	// Set initial health values
-	float healthValue = dukeScript->GetDukeMaxHealth();
-	ComponentImage* health = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
+	// Set Duke's initial health values
+	healthValue = dukeScript->GetDukeMaxHealth();
+	health = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
 	if (health && health->IsFill()) {
 		health->SetFillValue(1);
 	}
 
-	// Set initial lost health bar
-	ComponentImage* healthLost = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
+	// Set Duke's initial lost health bar
+	healthLost = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
 	if (healthLost && healthLost->IsFill()) {
 		healthLost->SetFillValue(1);
 		healthLost->SetColor(healthLostFeedbackFillBarFinalColor);

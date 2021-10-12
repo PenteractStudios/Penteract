@@ -228,7 +228,6 @@ private:
 	void GetAllHealthColors();
 
 	void InitializeHealth();
-	void InitializeDukeHealth();
 	void InitializeHUDSides();
 
 	void ManageSwitchPreCollapseState(GameObject* /* activeParent */, const std::vector<GameObject*>& skills);
