@@ -209,8 +209,12 @@ void Duke::Shoot()
 		isShooting = true;
 		isShootingTimer = 0.f;
 		// Animation
-		if (compAnimation) {
-			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)]);
+		if (state != DukeState::SHOOT_SHIELD) {
+			if (compAnimation) {
+				if (compAnimation->GetCurrentState()) {
+					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)]);
+				}
+			}
 		}
 	}
 }
@@ -222,22 +226,45 @@ void Duke::ThrowBarrels() {
 	}
 }
 
+//Not to be confused with AIDuke StartUsing shield, this one manages both state and animations
 void Duke::StartUsingShield() {
+	
+	if (isShooting) {
+		StopShooting();
+	}
+
 	state = DukeState::SHOOT_SHIELD;
 	if (compAnimation) {
-		if (compAnimation->GetCurrentStateSecondary()) {
-			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT_SHIELD)]);
-		} else if (compAnimation->GetCurrentState()) {
-			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT_SHIELD)]);
+		if (compAnimation->GetCurrentState()) {
+			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT_SHIELD)]);
 		}
-		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
+	}
+
+}
+
+void Duke::BePushed() {
+	state = DukeState::PUSHED;
+	beingPushed = true;
+
+	if (compAnimation) {
+		if (compAnimation->GetCurrentStateSecondary()) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+		}
+		if (compAnimation->GetCurrentState()) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PUSHED)]);
+		}
 	}
 }
 
-void Duke::StopUsingShield() {
+void Duke::BecomeStunned() {
 	if (compAnimation) {
-		if (compAnimation->GetCurrentState() && compAnimation->GetCurrentStateSecondary()) {
-			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+		if (compAnimation) {
+			if (compAnimation->GetCurrentStateSecondary()) {
+				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+			}
+			if (compAnimation->GetCurrentState()) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::STUN)]);
+			}
 		}
 	}
 }
@@ -270,6 +297,7 @@ void Duke::OnAnimationFinished()
 	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::ENRAGE)]) {
 		state = DukeState::BASIC_BEHAVIOUR;
 	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::STUN)] && state == DukeState::INVULNERABLE) {
+		//Coming from critical mode
 		CallTroops();
 		StartUsingShield();
 	}
