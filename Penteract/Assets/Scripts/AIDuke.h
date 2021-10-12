@@ -54,6 +54,8 @@ private:
 	bool CanBeHurtDuringCriticalMode() const;
 	bool IsInvulnerable()const;
 	void OnShieldInterrupted();
+	void PerformBulletHell();
+
 public:
 	UID dukeUID = 0;
 	UID playerUID = 0;
@@ -106,7 +108,7 @@ private:
 	float currentShieldActiveTime = 0.f;
 
 	float currentBulletHellCooldown = 0.f;
-	float currentBulletHellActiveTime = 0.f;
+	bool bulletHellIsActive = false;
 
 	float currentAbilityChangeCooldown = 0.f;
 
