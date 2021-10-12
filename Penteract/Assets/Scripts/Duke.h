@@ -8,6 +8,7 @@
 class ComponentParticleSystem;
 class ResourcePrefab;
 class AttackDronesController;
+class BarrelSpawner;
 
 enum class DukeState {
 	BASIC_BEHAVIOUR,
@@ -55,7 +56,7 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID chargeAttackColliderUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void BulletHell();
@@ -67,11 +68,17 @@ public:
 	void CallTroops();
 	void Shoot();
 	void ThrowBarrels();
+	void StartUsingShield();
+	void StopUsingShield();
 
 	// ------- Animation Functions ------ //
 	void OnAnimationFinished();
 	void OnAnimationSecondaryFinished();
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
+	void StopShooting();
+
+private:
+	int GetWalkAnimation();
 
 public:
 	float chargeSpeed = 5.f;
@@ -97,8 +104,39 @@ public:
 	bool beingPushed = false;
 	bool slowedDown = false;
 	bool reducedDamaged = false;
+	bool startSpawnBarrel = false;
+
+	bool isShooting = false;
 
 	float3 chargeTarget;
+
+	// Animations
+	enum DUKE_ANIMATION_STATES {
+		CHARGE,
+		CHARGE_END,
+		CHARGE_START,
+		PUNCH,
+		DEATH,
+		IDLE,
+		ENRAGE,
+		SHOOT,
+		PDA,
+		PUSHED,
+		SHIELD,
+		SHOOT_SHIELD,
+		STUN,
+		WALK_BACK,
+		WALK_FORWARD,
+		WALK_NO_AIM,
+		WALK_LEFT,
+		WALK_RIGHT,
+		LENGTH
+	};
+	std::string animationStates[static_cast<int>(DUKE_ANIMATION_STATES::LENGTH)] = { "Charge", "ChargeEnd", "ChargeStart",
+		"Punch", "Death", "Idle", "Enrage", "Shooting", "PDA", "Pushed", "Shield", "ShootingShield", "Stun",
+		"WalkBack", "WalkForward", "WalkForwardNoAim", "WalkLeft", "WalkRight" };
+
+	UID winSceneUID = 0; // TODO: Delete
 
 private:
 	void InstantiateBarrel();
@@ -112,11 +150,16 @@ private:
 
 	bool hasMeleeAttacked = false;
 
+	BarrelSpawner* barrelSpawneScript = nullptr;
+
+	// Movement
 	float3 perpendicular;
 	float movementTimer = 0.f;
 	float movementChangeThreshold = 2.0f;
 	float distanceCorrectionTimer = 0.f;
 	float distanceCorrectionThreshold = 2.0f;
+	bool navigationHit;
+	float3 navigationHitPos;
 
 	// Charge
 	bool trackingChargeTarget = false;
@@ -124,6 +167,7 @@ private:
 	// Shooting
 	float attackTimePool = 0.f;
 	ComponentParticleSystem* bullet = nullptr;
+	float isShootingTimer = 0.f;
 
 	GameObject* meshObj = nullptr;	//Main mesh for Getting MeshRenderer reference and checking frustum presence (if not inside frustum shooting won't happen)
 
