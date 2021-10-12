@@ -214,10 +214,10 @@ private:
 	void PlayHitEffect();
 	void ShowCriticalHealthWarning();
 	void HideCriticalHealthWarning();
-	void PlayLostHealthFeedback();
-	void StartLostHealthFeedback();
-	void StopLostHealthFeedback();
-	void ResetLostHealthFeedback();
+	void PlayLostHealthFeedback(float& timer, bool& playingEffect, const std::vector<GameObject*>& healthChildren, bool isBoss);
+	void StartLostHealthFeedback(float& timer, bool& playingEffect, const std::vector<GameObject*>& healthChildren, bool isBoss);
+	void StopLostHealthFeedback(float& timer, bool& playingEffect, const std::vector<GameObject*>& healthChildren, bool isBoss);
+	void ResetLostHealthFeedback(float& timer, bool& playingEffect, const std::vector<GameObject*>& healthChildren, bool isBoss);
 	void SetPictoState(Cooldowns cooldown, PictoState newState);
 
 	void GetAllHealthColors();

@@ -229,7 +229,8 @@ void HUDManager::Update() {
 	}
 
 	ManageSwitch();
-	if (playingLostHealthFeedback) PlayLostHealthFeedback();
+	if (playingLostHealthFeedback) PlayLostHealthFeedback(lostHealthTimer, playingLostHealthFeedback, fangObj->IsActive() ? fangHealthChildren : onimaruHealthChildren, false);
+	if (playingDukeLostHealthFeedback) PlayLostHealthFeedback(lostHealthDukeTimer, playingDukeLostHealthFeedback, dukeHealthChildren, true);
 	if (playingHitEffect) PlayHitEffect();
 }
 
@@ -259,7 +260,7 @@ void HUDManager::UpdateHealth(float fangHealth, float onimaruHealth) {
 	if (!fangObj || !onimaruObj || !playerController) return;
 	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
-	if (switchState == SwitchState::IDLE) StartLostHealthFeedback(); // Temporary hack
+	if (switchState == SwitchState::IDLE) StartLostHealthFeedback(lostHealthTimer, playingLostHealthFeedback, fangObj->IsActive() ? fangHealthChildren : onimaruHealthChildren, false); // Temporary hack
 
 	float health = fangObj->IsActive() ? fangHealth : onimaruHealth;
 	float maxHealth = fangObj->IsActive() ? playerController->GetFangMaxHealth() : playerController->GetOnimaruMaxHealth();
@@ -269,7 +270,7 @@ void HUDManager::UpdateHealth(float fangHealth, float onimaruHealth) {
 	if (fangObj->IsActive()) fangPreviousHealth = fangHealth;
 	else onimaruPreviousHealth = onimaruHealth;
 
-	if (switchState != SwitchState::IDLE) ResetLostHealthFeedback();
+	if (switchState != SwitchState::IDLE) ResetLostHealthFeedback(lostHealthTimer, playingLostHealthFeedback, fangObj->IsActive() ? fangHealthChildren : onimaruHealthChildren, 0);
 
 	if (!criticalHealthWarning && health <= maxHealth * (criticalHealthPercentage / 100.f)) ShowCriticalHealthWarning();
 
@@ -282,6 +283,8 @@ void HUDManager::UpdateDukeHealth(float dukeHealth) {
 	if (dukeHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
 	float maxHealth = dukeScript->GetDukeMaxHealth();
+
+	StartLostHealthFeedback(lostHealthDukeTimer, playingDukeLostHealthFeedback, dukeHealthChildren, true);
 
 	UpdateHealthFillBar(dukeHealth, maxHealth, dukeHealthChildren);
 
@@ -344,7 +347,7 @@ void HUDManager::StartCharacterSwitch() {
 			switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_GREEN_EFFECT]->Enable();
 		}
 	}
-	if (playingLostHealthFeedback) StopLostHealthFeedback();
+	if (playingLostHealthFeedback) StopLostHealthFeedback(lostHealthTimer, playingLostHealthFeedback, fangObj->IsActive() ? fangHealthChildren : onimaruHealthChildren, false);
 
 	// Check if the new character needs the health warning
 
@@ -1075,83 +1078,81 @@ void HUDManager::HideCriticalHealthWarning() {
 	criticalHealthWarning = false;
 }
 
-void HUDManager::PlayLostHealthFeedback() {
-	if (!fangObj || !onimaruObj || !fangHealthParent || !onimaruHealthParent) return;
-	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
+void HUDManager::PlayLostHealthFeedback(float& timer, bool& playingEffect, const std::vector<GameObject*>& healthChildren, bool isBoss) {
+	if (healthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
-	if (lostHealthTimer > lostHealthFeedbackTotalTime) {
-		lostHealthTimer = lostHealthFeedbackTotalTime;
+	if (timer > lostHealthFeedbackTotalTime) {
+		timer = lostHealthFeedbackTotalTime;
 	}
 
 	ComponentImage* lostHealth = nullptr;
-	lostHealth = fangObj->IsActive() ? fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>() : onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
+	lostHealth = healthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
 	if (lostHealth) {
-		lostHealth->SetColor(float4::Lerp(healthLostFeedbackFillBarInitialColor, healthLostFeedbackFillBarFinalColor, lostHealthTimer / lostHealthFeedbackTotalTime));
+		lostHealth->SetColor(float4::Lerp(healthLostFeedbackFillBarInitialColor, healthLostFeedbackFillBarFinalColor, timer / lostHealthFeedbackTotalTime));
 	}
 
-	if (lostHealthTimer == lostHealthFeedbackTotalTime) {
-		lostHealthTimer = 0.f;
-		playingLostHealthFeedback = false;
-		ResetLostHealthFeedback();
+	if (timer == lostHealthFeedbackTotalTime) {
+		timer = 0.f;
+		playingEffect = false;
+		ResetLostHealthFeedback(timer, playingEffect, healthChildren, isBoss);
 	} else {
-		lostHealthTimer += Time::GetDeltaTime();
+		timer += Time::GetDeltaTime();
 	}
 }
 
-void HUDManager::StartLostHealthFeedback() {
-	if (!fangObj || !onimaruObj || !fangHealthParent || !onimaruHealthParent) return;
-	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
+void HUDManager::StartLostHealthFeedback(float& timer, bool& playingEffect, const std::vector<GameObject*>& healthChildren, bool isBoss) {
+	if (healthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
-	lostHealthTimer = 0.f;
+	timer = 0.f;
 
-	if (!playingLostHealthFeedback) {
-		playingLostHealthFeedback = true;
+	if (!playingEffect) {
+		playingEffect = true;
 		ComponentImage* lostHealth = nullptr;
-		lostHealth = fangObj->IsActive() ? fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>() : onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
+		lostHealth = healthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
 		if (lostHealth) {
 			lostHealth->SetColor(healthLostFeedbackFillBarInitialColor);
 		}
 	} else {
-		ResetLostHealthFeedback();
+		ResetLostHealthFeedback(timer, playingEffect, healthChildren, isBoss);
 	}
 }
 
-void HUDManager::StopLostHealthFeedback() {
-	if (!fangObj || !onimaruObj || !fangHealthParent || !onimaruHealthParent || !playerController) return;
-	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
+void HUDManager::StopLostHealthFeedback(float& timer, bool& playingEffect, const std::vector<GameObject*>& healthChildren, bool isBoss) {
+	if (healthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
-	playingLostHealthFeedback = false;
+	playingEffect = false;
 
-	ResetLostHealthFeedback();
+	ResetLostHealthFeedback(timer, playingEffect, healthChildren, isBoss);
 }
 
-void HUDManager::ResetLostHealthFeedback() {
-	// We don't need to check for null because it's called from a function that already checks them but just in case it's called from anywhere else
-	if (!fangObj || !onimaruObj || !fangHealthParent || !onimaruHealthParent || !playerController) return;
-	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
+void HUDManager::ResetLostHealthFeedback(float& timer, bool& playingEffect, const std::vector<GameObject*>& healthChildren, bool isBoss) {
 
-	float maxHealth = fangObj->IsActive() ? playerController->GetFangMaxHealth() : playerController->GetOnimaruMaxHealth();
+	float maxHealth = dukeScript->GetDukeMaxHealth();
+	if (!isBoss)  maxHealth = fangObj->IsActive() ? playerController->GetFangMaxHealth() : playerController->GetOnimaruMaxHealth();
+
 	ComponentImage* lostHealth = nullptr;
-	lostHealth = fangObj->IsActive() ? fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>() : onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
+	lostHealth = healthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
 	if (lostHealth) {
-		float feedbackHealth = fangObj->IsActive() ? fangPreviousHealth : onimaruPreviousHealth;
+		float feedbackHealth = dukePreviousHealth;
+		if (!isBoss) feedbackHealth = fangObj->IsActive() ? fangPreviousHealth : onimaruPreviousHealth;
 		if (lostHealth->IsFill()) {
 			lostHealth->SetFillValue(feedbackHealth / maxHealth);
 		}
 	}
 
 	// If we have switched, we need to reset the other health lost fill bar
-	if (switchState != SwitchState::IDLE) {
-		// If X character is active, we have already swapped so we get the other one feedback bar
-		lostHealth = nullptr;
-		lostHealth = fangObj->IsActive() ? fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>() : onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
-		maxHealth = fangObj->IsActive() ? playerController->GetFangMaxHealth() : playerController->GetOnimaruMaxHealth();
-		float feedbackHealth = fangObj->IsActive() ? fangPreviousHealth : onimaruPreviousHealth;
+	if (!isBoss) {
+		if (switchState != SwitchState::IDLE) {
+			lostHealth = nullptr;
+			lostHealth = healthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
+			maxHealth = fangObj->IsActive() ? playerController->GetFangMaxHealth() : playerController->GetOnimaruMaxHealth();
+			float feedbackHealth = fangObj->IsActive() ? fangPreviousHealth : onimaruPreviousHealth;
 
-		if (lostHealth) {
-			lostHealth->SetColor(healthLostFeedbackFillBarFinalColor);
-			if (lostHealth->IsFill()) {
-				lostHealth->SetFillValue(feedbackHealth / maxHealth);
+			if (lostHealth) {
+				lostHealth->SetColor(healthLostFeedbackFillBarFinalColor);
+				if (lostHealth->IsFill()) {
+					lostHealth->SetFillValue(feedbackHealth / maxHealth);
+				}
 			}
 		}
 	}
