@@ -2256,8 +2256,7 @@
             "Interpolation": 0.3
         }
     ],
-    "Bones": [
-        "Cannon1",  
+    "Bones": [  
         "Cannon2",  
         "Cannon3",
         "Duke_LeftHandThumb2",
