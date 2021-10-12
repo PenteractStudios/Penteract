@@ -8,7 +8,6 @@
 class ComponentParticleSystem;
 class ResourcePrefab;
 class BarrelSpawner;
-
 enum class DukeState {
 	BASIC_BEHAVIOUR,
 	MELEE_ATTACK,
@@ -55,7 +54,7 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, std::vector<UID> encounterUIDs);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID videoParentCanvasUID, UID videoCanvasUID, std::vector<UID> encounterUIDs);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void BulletHell();
@@ -72,6 +71,7 @@ public:
 	void OnAnimationSecondaryFinished();
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
 	void StopShooting();
+	void InitPlayerVictory();
 
 private:
 	int GetWalkAnimation();
@@ -92,6 +92,8 @@ public:
 	float barrelDamageTaken = 3.f;
 	float moveChangeEvery = 2.0f;
 	float distanceCorrectEvery = 2.0f;
+	float delayForDisplayVideo = 1.0f;
+
 
 	DukeState state = DukeState::BASIC_BEHAVIOUR;
 	bool criticalMode = false;
@@ -101,7 +103,7 @@ public:
 	bool slowedDown = false;
 	bool reducedDamaged = false;
 	bool startSpawnBarrel = false;
-
+	bool isDead = false;
 	bool isShooting = false;
 
 	float3 chargeTarget;
@@ -144,6 +146,9 @@ private:
 	GameObject* chargeAttack = nullptr;
 	ComponentTransform* dukeTransform = nullptr;
 
+	GameObject* videoParentCanvas = nullptr;
+	GameObject* videoCanvas = nullptr;
+
 	bool hasMeleeAttacked = false;
 
 	BarrelSpawner* barrelSpawneScript = nullptr;
@@ -180,4 +185,7 @@ private:
 	/* Boss encounters */
 	std::vector<GameObject*> encounters;
 	unsigned currentEncounter = 0;
+
+	bool endVideoRunning= false;
+	float currentDelayVideo = 0.0f;
 };

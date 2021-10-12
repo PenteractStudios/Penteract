@@ -22,6 +22,11 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, thirdEncounterUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fourthEncounterUID),
 
+	MEMBER_SEPARATOR("Video UIDs"),
+	MEMBER(MemberType::GAME_OBJECT_UID, videoParentCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, videoCanvasUID),
+	MEMBER(MemberType::FLOAT, dukeCharacter.delayForDisplayVideo),
+
 	MEMBER_SEPARATOR("Duke Atributes"),
 	MEMBER(MemberType::FLOAT, dukeCharacter.lifePoints),
 	MEMBER(MemberType::FLOAT, dukeCharacter.chargeSpeed),
@@ -88,7 +93,7 @@ void AIDuke::Start() {
 	}
 
 	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, encounters);
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, videoParentCanvasUID, videoCanvasUID , encounters);
 
 	dukeCharacter.winSceneUID = winSceneUID; // TODO: REPLACE
 }
@@ -99,6 +104,10 @@ void AIDuke::Update() {
 	Debug::Log(life.c_str());
 
 	float speedToUse = dukeCharacter.slowedDown ? dukeCharacter.slowedDownSpeed : dukeCharacter.movementSpeed;
+
+	if (dukeCharacter.isDead) {
+		dukeCharacter.InitPlayerVictory();
+	}
 
 	if (dukeCharacter.slowedDown) {
 		if (currentSlowedDownTime >= dukeCharacter.slowedDownTime) {

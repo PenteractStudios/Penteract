@@ -5,6 +5,8 @@
 #include "PlayerController.h"
 #include "BarrelSpawner.h"
 #include "AIMovement.h"
+#include "GlobalVariables.h" 
+#include "VideoSceneEnd.h"
 
 #include <string>
 
@@ -12,7 +14,7 @@
 
 std::uniform_real_distribution<float> rng(-1.0f, 1.0f);
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, std::vector<UID> encounterUIDs)
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID videoParentCanvasUID, UID videoCanvasUID, std::vector<UID> encounterUIDs)
 {
 	gen = std::minstd_rand(rd());
 
@@ -23,6 +25,8 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 
 	meleeAttackCollider = GameplaySystems::GetGameObject(meleeAttackColliderUID);
 	chargeAttack = GameplaySystems::GetGameObject(chargeAttackColliderUID);
+	videoParentCanvas = GameplaySystems::GetGameObject(videoParentCanvasUID);
+	videoCanvas = GameplaySystems::GetGameObject(videoCanvasUID);
 
 	barrelSpawneScript = GET_SCRIPT(GameplaySystems::GetGameObject(barrelSpawnerUID), BarrelSpawner);
 
@@ -242,8 +246,7 @@ void Duke::OnAnimationFinished()
 		agent->SetMaxSpeed(movementSpeed);
 		compAnimation->SendTrigger(currentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
 	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::DEATH)]) {
-		GameplaySystems::DestroyGameObject(characterGameObject);
-		SceneManager::ChangeScene(winSceneUID); // TODO: Replace with the correct trigger (for the video or whatever)
+		isDead = true;
 	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::ENRAGE)]) {
 		state = DukeState::BASIC_BEHAVIOUR;
 	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::STUN)] && state == DukeState::INVULNERABLE) {
@@ -338,4 +341,25 @@ int Duke::GetWalkAnimation()
 		}
 	}
 	return animNum;
+}
+
+void Duke::InitPlayerVictory()
+{
+	if (isDead && !endVideoRunning) {
+		
+		currentDelayVideo += Time::GetDeltaTime();
+
+		if (currentDelayVideo >= delayForDisplayVideo) {
+			endVideoRunning = true;
+			GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, true);
+			if (videoParentCanvas && videoCanvas) {
+				videoParentCanvas->Enable();
+				VideoSceneEnd* videoSceneEndScript = GET_SCRIPT(videoCanvas, VideoSceneEnd);
+				if (videoSceneEndScript) {
+					videoSceneEndScript->PlayVideo();
+				}
+
+			}
+		}
+	}
 }

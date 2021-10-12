@@ -51,6 +51,7 @@ private:
 	void CalculatePushBackRealDistance();
 	void UpdatePushBackPosition();
 	void ParticleHit(GameObject& collidedWith, void* particle, Player& player_);
+	void InitPlayerVictory();
 
 public:
 	UID dukeUID = 0;
@@ -66,6 +67,8 @@ public:
 	UID meleeAttackColliderUID = 0;
 	UID barrelSpawnerUID = 0;
 	UID chargeAttackUID = 0;
+	UID videoParentCanvasUID = 0;
+	UID videoCanvasUID = 0;
 
 	GameObject* duke = nullptr;
 	GameObject* player = nullptr;
