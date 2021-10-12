@@ -112,12 +112,13 @@ void BridgesTransportController::MoveBridges()
 				if (bridgeObstacles && bridgeObstacles->IsActive()) {
 					bridgeObstacles->Disable();
 				}
-				gameObject->Disable();
 				isClosedBridges = false;
+				gameObject->Disable();
+				
 			}
 			else {
 				transformInitialBridge->SetPosition(float3(transformInitialBridge->GetPosition().x + (speedAnimationBridges * 1), transformInitialBridge->GetPosition().y, transformInitialBridge->GetPosition().z + (speedAnimationBridges * 1)));
-				transformFinalBridge->SetPosition(float3(transformFinalBridge->GetPosition().x + -(speedAnimationBridges * 1), transformFinalBridge->GetPosition().y, transformFinalBridge->GetPosition().z - (speedAnimationBridges * 1)));
+				transformFinalBridge->SetPosition(float3(transformFinalBridge->GetPosition().x + - (speedAnimationBridges * 1), transformFinalBridge->GetPosition().y, transformFinalBridge->GetPosition().z - (speedAnimationBridges * 1)));
 			}
 		}
 	}
