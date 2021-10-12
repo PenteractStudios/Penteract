@@ -162,6 +162,8 @@ struct ProgramStandard : public Program {
 	int viewLocation = -1;
 	int projLocation = -1;
 
+	int isOpaqueLocation = -1;
+
 	int viewOrtoLightsStaticLocation = -1;
 	int projOrtoLightsStaticLocation = -1;
 
@@ -425,6 +427,10 @@ struct ProgramTrail : Program {
 struct ProgramStandardDissolve : ProgramStandardMetallic {
 	ProgramStandardDissolve(unsigned program);
 
+	int hasNoiseMapLocation = -1;
+	int noiseMapLocation = -1;
+	int colorLocation = -1;
+	int intensityLocation = -1;
 	int scaleLocation = -1;
 	int thresholdLocation = -1;
 	int offsetLocation = -1;
@@ -434,6 +440,10 @@ struct ProgramStandardDissolve : ProgramStandardMetallic {
 struct ProgramUnlitDissolve : ProgramUnlit {
 	ProgramUnlitDissolve(unsigned program);
 
+	int hasNoiseMapLocation = -1;
+	int noiseMapLocation = -1;
+	int colorLocation = -1;
+	int intensityLocation = -1;
 	int scaleLocation = -1;
 	int thresholdLocation = -1;
 	int offsetLocation = -1;
@@ -443,6 +453,8 @@ struct ProgramUnlitDissolve : ProgramUnlit {
 struct ProgramDepthPrepassDissolve : ProgramDepthPrepass {
 	ProgramDepthPrepassDissolve(unsigned program);
 
+	int hasNoiseMapLocation = -1;
+	int noiseMapLocation = -1;
 	int scaleLocation = -1;
 	int thresholdLocation = -1;
 	int offsetLocation = -1;

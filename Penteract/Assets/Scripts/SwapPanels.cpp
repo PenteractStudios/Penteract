@@ -4,7 +4,8 @@
 
 EXPOSE_MEMBERS(SwapPanels) {
 	MEMBER(MemberType::GAME_OBJECT_UID, targetUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, currentUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, currentUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, optionalVideoUID)
 };
 
 GENERATE_BODY_IMPL(SwapPanels);
@@ -14,51 +15,32 @@ void SwapPanels::Start() {
 	target = GameplaySystems::GetGameObject(targetUID);
 	current = GameplaySystems::GetGameObject(currentUID);
 
+	/* Video */
+	GameObject* videoObj = GameplaySystems::GetGameObject(optionalVideoUID);
+	if (videoObj) {
+		video = videoObj->GetComponent<ComponentVideo>();
+		if (video) video->Stop();
+	}
 	/* Audio */
 	selectable = GetOwner().GetComponent<ComponentSelectable>();
-
-	int i = 0;
-	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
-		if (i < static_cast<int>(UIAudio::TOTAL)) audios[i] = &src;
-		++i;
-	}
 }
 
 void SwapPanels::Update() {
-	/* Audio */
-	if (selectable) {
-		ComponentEventSystem* eventSystem = UserInterface::GetCurrentEventSystem();
-		if (eventSystem) {
-			ComponentSelectable* hoveredComponent = eventSystem->GetCurrentlyHovered();
-			if (hoveredComponent) {
-				bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
-				if (hovered) {
-					if (playHoveredAudio) {
-						PlayAudio(UIAudio::HOVERED);
-						playHoveredAudio = false;
-					}
-				} else {
-					playHoveredAudio = true;
-				}
-			} else {
-				playHoveredAudio = true;
-			}
-		}
-	}
 }
 
 void SwapPanels::OnButtonClick() {
-	PlayAudio(UIAudio::CLICKED);
 	DoSwapPanels();
-}
-
-void SwapPanels::PlayAudio(UIAudio type) {
-	if (audios[static_cast<int>(type)]) audios[static_cast<int>(type)]->Play();
 }
 
 void SwapPanels::DoSwapPanels() {
 	if (target != nullptr && current != nullptr) {
 		target->Enable();
 		current->Disable();
+
+		// TODO: This is a very ugly solution. An object OnEnable() function, or a video IsPlaying(), would be needed to have this in a separate script
+		if (video) {
+			if (current->name == "CanvasCredits") video->Stop();
+			if (target->name == "CanvasCredits") video->Play();
+		}
 	}
 }

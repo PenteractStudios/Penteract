@@ -40,7 +40,7 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::BOOL, isSniper),
 	MEMBER_SEPARATOR("Push variables"),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackDistance),
-	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackSpeed),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackTime),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownSpeed),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownTime),
 	MEMBER(MemberType::FLOAT, minAttackSpeed),
@@ -90,7 +90,7 @@ void RangedAI::Start() {
 		if (weaponGO) {
 			weaponMeshRenderer = weaponGO->GetComponent<ComponentMeshRenderer>();
 			if (weaponMeshRenderer) {
-				weaponMaterialID = weaponMeshRenderer->materialId;
+				weaponMaterialID = weaponMeshRenderer->GetMaterial();
 			}
 		}
 	}
@@ -100,7 +100,7 @@ void RangedAI::Start() {
 		if (backpackGO) {
 			backpackMeshRenderer = backpackGO->GetComponent<ComponentMeshRenderer>();
 			if (backpackMeshRenderer) {
-				backpackMaterialID = backpackMeshRenderer->materialId;
+				backpackMaterialID = backpackMeshRenderer->GetMaterial();
 			}
 		}
 	}
@@ -109,7 +109,7 @@ void RangedAI::Start() {
 	if (damagedObj) {
 		ComponentMeshRenderer* dmgMeshRenderer = damagedObj->GetComponent<ComponentMeshRenderer>();
 		if (dmgMeshRenderer) {
-			damageMaterialID = dmgMeshRenderer->materialId;
+			damageMaterialID = dmgMeshRenderer->GetMaterial();
 		}
 	}
 
@@ -117,7 +117,7 @@ void RangedAI::Start() {
 	if (dissolveObj) {
 		ComponentMeshRenderer* dissolveMeshRenderer = dissolveObj->GetComponent<ComponentMeshRenderer>();
 		if (dissolveMeshRenderer) {
-			dissolveMaterialID = dissolveMeshRenderer->materialId;
+			dissolveMaterialID = dissolveMeshRenderer->GetMaterial();
 		}
 	}
 
@@ -196,7 +196,6 @@ void RangedAI::Start() {
 
 	enemySpawnPointScript = GET_SCRIPT(GetOwner().GetParent(), EnemySpawnPoint);
 
-	pushBackRealDistance = rangerGruntCharacter.pushBackDistance;
 	SetRandomMaterial();
 }
 
@@ -539,7 +538,16 @@ void RangedAI::UpdateState() {
 
 		break;
 	case AIState::PUSHED:
+		if (pushBackTimer > rangerGruntCharacter.pushBackTime) {
+			pushBackTimer = rangerGruntCharacter.pushBackTime;
+		}
 		UpdatePushBackPosition();
+		if (pushBackTimer == rangerGruntCharacter.pushBackTime) {
+			DisableBlastPushBack();
+		}
+		else {
+			pushBackTimer += Time::GetDeltaTime();
+		}
 		break;
 	default:
 		break;
@@ -651,7 +659,8 @@ void RangedAI::EnableBlastPushBack() {
 		pushEffectHasToStart = true;
 		timeToSrartPush = (minTimePushEffect + 1) + (((float)rand()) / (float)RAND_MAX) * (maxTimePushEffect - (minTimePushEffect + 1));
 		rangerGruntCharacter.beingPushed = true;
-		CalculatePushBackRealDistance();
+		pushBackTimer = 0.f;
+		rangerGruntCharacter.CalculatePushBackFinalPos(GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition(), player->GetComponent<ComponentTransform>()->GetGlobalPosition(), rangerGruntCharacter.pushBackDistance);
 		// Damage
 		if (playerController->playerOnimaru.level2Upgrade) {
 			rangerGruntCharacter.GetHit(playerController->playerOnimaru.blastDamage + playerController->GetOverPowerMode());
@@ -660,6 +669,7 @@ void RangedAI::EnableBlastPushBack() {
 			PlayHitMaterialEffect();
 			timeSinceLastHurt = 0.0f;
 		}
+		agent->Disable();
 	}
 }
 
@@ -667,6 +677,10 @@ void RangedAI::DisableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		ChangeState(AIState::IDLE);
 		rangerGruntCharacter.beingPushed = false;
+		agent->Enable();
+		agent->SetMaxSpeed(rangerGruntCharacter.slowedDownSpeed);
+		rangerGruntCharacter.slowedDown = true;
+		currentSlowedDownTime = 0.f;
 	}
 }
 
@@ -698,46 +712,7 @@ void RangedAI::ShootPlayerInRange() {
 }
 
 void RangedAI::UpdatePushBackPosition() {
-	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
-	float3 initialPos = enemyPos;
-
-	float3 direction = (enemyPos - playerPos).Normalized();
-
-	if (agent) {
-		enemyPos += direction * rangerGruntCharacter.pushBackSpeed * Time::GetDeltaTime();
-		agent->SetMoveTarget(enemyPos, false);
-		agent->SetMaxSpeed(rangerGruntCharacter.pushBackSpeed);
-		float distance = enemyPos.Distance(initialPos);
-		currentPushBackDistance += distance;
-
-		if (currentPushBackDistance >= pushBackRealDistance) {
-			agent->SetMaxSpeed(rangerGruntCharacter.slowedDownSpeed);
-			DisableBlastPushBack();
-			rangerGruntCharacter.slowedDown = true;
-			currentPushBackDistance = 0.f;
-			currentSlowedDownTime = 0.f;
-			pushBackRealDistance = rangerGruntCharacter.pushBackDistance;
-		}
-	}
-}
-
-void RangedAI::CalculatePushBackRealDistance() {
-	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
-
-	float3 direction = (enemyPos - playerPos).Normalized();
-
-	bool hitResult = false;
-
-	float3 finalPos = enemyPos + direction * rangerGruntCharacter.pushBackDistance;
-	float3 resultPos = { 0,0,0 };
-
-	Navigation::Raycast(enemyPos, finalPos, hitResult, resultPos);
-
-	if (hitResult) {
-		pushBackRealDistance = resultPos.Distance(enemyPos) - 1; // Should be agent radius but it's not exposed
-	}
+	ownerTransform->SetGlobalPosition(float3::Lerp(rangerGruntCharacter.pushBackInitialPos, rangerGruntCharacter.pushBackFinalPos, pushBackTimer / rangerGruntCharacter.pushBackTime));
 }
 
 void RangedAI::PlayHitMaterialEffect()
@@ -774,8 +749,8 @@ void RangedAI::SetRandomMaterial()
 		std::vector<UID> materials;
 		for (const auto& child : materialsHolder->GetChildren()) {
 			ComponentMeshRenderer* meshRendererChild = child->GetComponent<ComponentMeshRenderer>();
-			if (meshRendererChild && meshRendererChild->materialId) {
-				materials.push_back(meshRendererChild->materialId);
+			if (meshRendererChild && meshRendererChild->GetMaterial()) {
+				materials.push_back(meshRendererChild->GetMaterial());
 			}
 		}
 
@@ -787,7 +762,7 @@ void RangedAI::SetRandomMaterial()
 			std::uniform_int_distribution<int> distrib(1, materials.size());
 
 			int position = distrib(gen) - 1;
-			meshRenderer->materialId = materials[position];
+			meshRenderer->SetMaterial(materials[position]);
 			defaultMaterialID = materials[position];
 		}
 	}
@@ -795,7 +770,7 @@ void RangedAI::SetRandomMaterial()
 
 void RangedAI::SetMaterial(ComponentMeshRenderer* mesh, UID newMaterialID, bool needToPlayDissolve) {
 	if (newMaterialID > 0 && mesh) {
-		mesh->materialId = newMaterialID;
+		mesh->SetMaterial(newMaterialID);
 		if (needToPlayDissolve) {
 			mesh->PlayDissolveAnimation();
 		}

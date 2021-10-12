@@ -1,6 +1,8 @@
 {
     "ShaderType": 2,
     "RenderingMode": 0,
+    "CastShadows": false,
+    "ShadowType": 0,
     "DiffuseColor": [
         1.0,
         1.0,
@@ -26,7 +28,7 @@
         0.0
     ],
     "EmissiveMap": 7426527092746866955,
-    "Emissive": 4.0,
+    "Emissive": 7.0,
     "AmbientOcclusionMap": 10587662419229263541,
     "Smoothness": 1.0,
     "HasSmoothnessInAlphaChannel": true,

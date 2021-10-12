@@ -53,7 +53,7 @@ public:
 	void AddEnemyInMap(GameObject* enemy);
 	void RemoveEnemyFromMap(GameObject* enemy);
 
-	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
+	void OnCollision(GameObject& collidedWith, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* particle = nullptr) override;
 	void ObtainUpgradeCell();
 	void OnCharacterDeath();
 	void OnCharacterResurrect();
@@ -102,6 +102,7 @@ public:
 	UID onimaruLaserUID = 0;
 	UID onimaruRightFootVFX = 0;
 	UID onimaruLeftFootVFX = 0;
+	UID onimaruWeaponUID = 0;
 
 	//HUD
 	UID HUDManagerObjectUID = 0;

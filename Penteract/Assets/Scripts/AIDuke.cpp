@@ -613,13 +613,13 @@ void AIDuke::UpdatePushBackPosition() {
 	}
 }
 
-void AIDuke::ParticleHit(GameObject& collidedWith, void* particle, Player& player) {
+void AIDuke::ParticleHit(GameObject& collidedWith, void* particle, Player& player_) {
 	if (!particle) return;
 	ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 	if (pSystem) pSystem->KillParticle(p);
-	float damage = dukeCharacter.reducedDamaged ? player.damageHit/ 2 : player.damageHit;
-	if (dukeCharacter.state == DukeState::STUNNED && player.level2Upgrade) {
+	float damage = dukeCharacter.reducedDamaged ? player_.damageHit/ 2 : player_.damageHit;
+	if (dukeCharacter.state == DukeState::STUNNED && player_.level2Upgrade) {
 		dukeCharacter.GetHit(damage * 2 + playerController->GetOverPowerMode());
 	} else {
 		dukeCharacter.GetHit(damage + playerController->GetOverPowerMode());

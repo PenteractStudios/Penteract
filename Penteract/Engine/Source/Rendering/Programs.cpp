@@ -118,6 +118,8 @@ ProgramStandard::ProgramStandard(unsigned program_)
 	viewLocation = glGetUniformLocation(program, "view");
 	projLocation = glGetUniformLocation(program, "proj");
 
+	isOpaqueLocation = glGetUniformLocation(program, "isOpaque");
+
 	viewOrtoLightsStaticLocation = glGetUniformLocation(program, "viewOrtoLightsStatic");
 	projOrtoLightsStaticLocation = glGetUniformLocation(program, "projOrtoLightsStatic");
 	
@@ -377,6 +379,10 @@ DepthMapsUniforms::DepthMapsUniforms(unsigned program, unsigned number) {
 
 ProgramStandardDissolve::ProgramStandardDissolve(unsigned program)
 	: ProgramStandardMetallic(program) {
+	hasNoiseMapLocation = glGetUniformLocation(program, "hasDissolveNoiseMap");
+	noiseMapLocation = glGetUniformLocation(program, "dissolveNoiseMap");
+	colorLocation = glGetUniformLocation(program, "dissolveColor");
+	intensityLocation = glGetUniformLocation(program, "dissolveIntensity");
 	scaleLocation = glGetUniformLocation(program, "dissolveScale");
 	thresholdLocation = glGetUniformLocation(program, "dissolveThreshold");
 	offsetLocation = glGetUniformLocation(program, "dissolveOffset");
@@ -385,6 +391,10 @@ ProgramStandardDissolve::ProgramStandardDissolve(unsigned program)
 
 ProgramUnlitDissolve::ProgramUnlitDissolve(unsigned program)
 	: ProgramUnlit(program) {
+	hasNoiseMapLocation = glGetUniformLocation(program, "hasDissolveNoiseMap");
+	noiseMapLocation = glGetUniformLocation(program, "dissolveNoiseMap");
+	colorLocation = glGetUniformLocation(program, "dissolveColor");
+	intensityLocation = glGetUniformLocation(program, "dissolveIntensity");
 	scaleLocation = glGetUniformLocation(program, "dissolveScale");
 	thresholdLocation = glGetUniformLocation(program, "dissolveThreshold");
 	offsetLocation = glGetUniformLocation(program, "dissolveOffset");
@@ -393,6 +403,8 @@ ProgramUnlitDissolve::ProgramUnlitDissolve(unsigned program)
 
 ProgramDepthPrepassDissolve::ProgramDepthPrepassDissolve(unsigned program)
 	: ProgramDepthPrepass(program) {
+	hasNoiseMapLocation = glGetUniformLocation(program, "hasDissolveNoiseMap");
+	noiseMapLocation = glGetUniformLocation(program, "dissolveNoiseMap");
 	scaleLocation = glGetUniformLocation(program, "dissolveScale");
 	thresholdLocation = glGetUniformLocation(program, "dissolveThreshold");
 	offsetLocation = glGetUniformLocation(program, "dissolveOffset");

@@ -156,11 +156,15 @@ void ModuleResources::ReceiveEvent(TesseractEvent& e) {
 		UID id = e.Get<DestroyResourceStruct>().resourceId;
 		resourcesMutex.lock();
 		auto& it = resources.find(id);
+		std::unique_ptr<Resource> resource = nullptr;
 		if (it != resources.end()) {
-			UnloadResource(it->second.get());
+			resource.swap(it->second);
 			resources.erase(it);
 		}
 		resourcesMutex.unlock();
+		if (resource.get() != nullptr) {
+			UnloadResource(resource.get());
+		}
 	} else if (e.type == TesseractEventType::UPDATE_ASSET_CACHE) {
 		AssetCache* newAssetCache = e.Get<UpdateAssetCacheStruct>().assetCache;
 		assetCache.reset(newAssetCache);
@@ -427,8 +431,6 @@ void ModuleResources::UpdateAsync() {
 		App->events->AddEvent(updateAssetCacheEv);
 #endif
 
-		App->events->AddEvent(TesseractEventType::RESOURCES_LOADED);
-
 		std::this_thread::sleep_for(std::chrono::milliseconds(TIME_BETWEEN_RESOURCE_UPDATES_MS));
 	}
 }
@@ -616,6 +618,9 @@ void ModuleResources::LoadImportOptions(std::unique_ptr<ImportOptions>& importOp
 		if (extension == JPG_TEXTURE_EXTENSION || extension == PNG_TEXTURE_EXTENSION || extension == TIF_TEXTURE_EXTENSION || extension == DDS_TEXTURE_EXTENSION || extension == TGA_TEXTURE_EXTENSION) {
 			// Texture files
 			importOptions.reset(new TextureImportOptions());
+		} else if (extension == WAV_AUDIO_EXTENSION || extension == OGG_AUDIO_EXTENSION) {
+			// Audio files
+			importOptions.reset(new AudioImportOptions());
 		} else {
 			return;
 		}

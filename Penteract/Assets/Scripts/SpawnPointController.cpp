@@ -77,7 +77,7 @@ void SpawnPointController::Start() {
 	if (dissolveObj) {
 		ComponentMeshRenderer* dissolveMeshRenderer = dissolveObj->GetComponent<ComponentMeshRenderer>();
 		if (dissolveMeshRenderer) {
-			dissolveMaterialID = dissolveMeshRenderer->materialId;
+			dissolveMaterialID = dissolveMeshRenderer->GetMaterial();
 		}
 	}
 
@@ -274,7 +274,7 @@ void SpawnPointController::PlayDissolveAnimation(GameObject* root, bool playReve
 	if (doorBack) {
 		ComponentMeshRenderer* meshRenderer = doorBack->GetComponent<ComponentMeshRenderer>();
 		if (meshRenderer) {
-			meshRenderer->materialId = dissolveMaterialID;
+			meshRenderer->SetMaterial(dissolveMaterialID);
 			meshRenderer->PlayDissolveAnimation(playReverse);
 		}
 	}
@@ -283,7 +283,7 @@ void SpawnPointController::PlayDissolveAnimation(GameObject* root, bool playReve
 	if (doorFront) {
 		ComponentMeshRenderer* meshRenderer = doorFront->GetComponent<ComponentMeshRenderer>();
 		if (meshRenderer ) {
-			meshRenderer->materialId = dissolveMaterialID;
+			meshRenderer->SetMaterial(dissolveMaterialID);
 			meshRenderer->PlayDissolveAnimation(playReverse);
 		}
 	}
