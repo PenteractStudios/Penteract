@@ -42,6 +42,11 @@ void AttackDroneProjectile::Collide() {
 		collider->Disable();
 	}
 
+	ComponentMeshRenderer* mesh = GetOwner().GetComponent<ComponentMeshRenderer>();
+	if (mesh) {
+		mesh->Disable();
+	}
+
 	mustStopMovement = true;
 	currentTime = 0.0f;
 	destroyTime = destroyTimeOnCollision;
