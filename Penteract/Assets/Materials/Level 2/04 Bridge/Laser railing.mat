@@ -38,8 +38,16 @@
     ],
     "Offset": [
         0.0,
-        -0.17000000178813935
+        0.0
     ],
+    "DissolveNoiseMap": 0,
+    "DissolveColor": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+    ],
+    "DissolveIntensity": 0.0,
     "DissolveScale": 0.0,
     "DissolveOffset": [
         0.0,

@@ -9,7 +9,7 @@
         1.0,
         1.0
     ],
-    "DiffuseMap": 11100638705815555550,
+    "DiffuseMap": 12540979176558714901,
     "SpecularColor": [
         0.15000000596046449,
         0.15000000596046449,
@@ -27,8 +27,8 @@
         0.009707833640277386,
         0.0
     ],
-    "EmissiveMap": 11100638705815555550,
-    "Emissive": 1.5,
+    "EmissiveMap": 12540979176558714901,
+    "Emissive": 6.466000080108643,
     "AmbientOcclusionMap": 0,
     "Smoothness": 0.0,
     "HasSmoothnessInAlphaChannel": false,
@@ -38,15 +38,23 @@
     ],
     "Offset": [
         0.0,
-        -0.17000000178813935
+        0.0
     ],
-    "DissolveScale": 5.0,
+    "DissolveNoiseMap": 0,
+    "DissolveColor": [
+        1.0,
+        0.5294117331504822,
+        0.0,
+        0.0
+    ],
+    "DissolveIntensity": 20.0,
+    "DissolveScale": 7.0,
     "DissolveOffset": [
         0.0,
         0.0
     ],
-    "DissolveDuration": 1.0,
-    "DissolveEdgeSize": 15.0,
+    "DissolveDuration": 1.5,
+    "DissolveEdgeSize": 0.10000000149011612,
     "VolumetricLightIntensity": 0.0,
     "VolumetricLightAttenuationExponent": 0.0,
     "IsSoft": false,

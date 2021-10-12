@@ -49,7 +49,9 @@ void CheckpointManager::Start() {
 
 	if (!transform) return;
 
-	transform->SetGlobalPosition(runtimeCheckpointPositions[GameplaySystems::GetGlobalVariable(globalCheckpoint, 0)]);
+
+	// TODO: This was breaking the initial position of the player when coming from another scene
+	//transform->SetGlobalPosition(runtimeCheckpointPositions[GameplaySystems::GetGlobalVariable(globalCheckpoint, 0)]);
 }
 
 void CheckpointManager::CheckDistanceWithCheckpoints() {
