@@ -5,6 +5,8 @@
 class PlayerController;
 class ComponentAudioSource;
 class ResourcePrefab;
+class ComponentBillboard;
+class ComponentTransform;
 
 class Shield : public Script
 {
@@ -33,12 +35,24 @@ public:
 	int currentAvailableCharges = 0;
 	UID playerUID = 0;
 	PlayerController* playerController = nullptr;
+	ComponentBillboard* shieldBilb = nullptr;
+	UID ShieldBilboardUID = 0;
+	float maxFrames = 0;
+	float shieldMaxScale = 0.9f;
+	float growthSpeed = 2.0f;
+	float fadeSpeed = 4.0f;
+	float growthThreshold = 0.05f;
+	float fadeThreshold = 0.05f;
 
 	UID particlesColliderUID = 0;
 	ResourcePrefab* particlesCollider = nullptr;
 
 private:
 	bool isActive = false;
-	ComponentAudioSource* audio;
-
+	ComponentAudioSource* audio = nullptr;
+	float currentFrame = 0;
+	float factor = 0;
+	ComponentTransform* transform;
+	enum class ShieldState { OFFLINE, GROWING, IDLE, FADING };
+	ShieldState shieldState = ShieldState::OFFLINE;
 };

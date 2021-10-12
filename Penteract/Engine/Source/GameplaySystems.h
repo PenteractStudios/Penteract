@@ -513,6 +513,9 @@ namespace Physics {
 	TESSERACT_ENGINE_API void CreateRigidbody(Component* collider);
 	TESSERACT_ENGINE_API void UpdateRigidbody(Component* collider);
 	TESSERACT_ENGINE_API void RemoveRigidbody(Component* collider);
+	TESSERACT_ENGINE_API void CreateParticleRigidbody(ComponentParticleSystem::Particle* currentParticle);
+	TESSERACT_ENGINE_API void UpdateParticleRigidbody(ComponentParticleSystem::Particle* currentParticle);
+	TESSERACT_ENGINE_API void RemoveParticleRigidbody(ComponentParticleSystem::Particle* currentParticle);
 
 } // namespace Physics
 
@@ -529,7 +532,15 @@ namespace Camera {
 }; // namespace Camera
 
 namespace Audio {
+	// ModuleAudio
 	TESSERACT_ENGINE_API void StopAllSources();
+
+	TESSERACT_ENGINE_API float GetGainMainChannel();
+	TESSERACT_ENGINE_API float GetGainMusicChannel();
+	TESSERACT_ENGINE_API float GetGainSFXChannel();
+	TESSERACT_ENGINE_API void SetGainMainChannel(float _gainMainChannel);
+	TESSERACT_ENGINE_API void SetGainMusicChannel(float _gainMusicChannel);
+	TESSERACT_ENGINE_API void SetGainSFXChannel(float _gainSFXChannel);
 }; // namespace Audio
 
 namespace UserInterface {
@@ -538,4 +549,5 @@ namespace UserInterface {
 
 namespace Navigation {
 	TESSERACT_ENGINE_API void Raycast(float3 startPosition, float3 targetPosition, bool& hitResult, float3& hitPosition);
-}
+	TESSERACT_ENGINE_API void GetNavMeshHeightInPosition(const float3 position, float& height);
+}; // namespace Navigation

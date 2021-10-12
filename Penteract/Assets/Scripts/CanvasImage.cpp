@@ -15,7 +15,7 @@ void CanvasImage::Start() {
 	if (background != nullptr) {
 		ComponentTransform2D* transform2D = background->GetComponent<ComponentTransform2D>();
 		if (transform2D) {
-			float2 newSize = float2(Screen::GetWidth(), Screen::GetHeight());
+			float2 newSize = float2(static_cast<float>(Screen::GetWidth()), static_cast<float>(Screen::GetHeight()));
 			transform2D->SetSize(newSize);
 		}
 	}
@@ -25,7 +25,7 @@ void CanvasImage::Update() {
 	if (background != nullptr) {
 		ComponentTransform2D* transform2D = background->GetComponent<ComponentTransform2D>();
 		if (transform2D) {
-			float2 newSize = float2(Screen::GetWidth(), Screen::GetHeight());
+			float2 newSize = float2(static_cast<float>(Screen::GetWidth()), static_cast<float>(Screen::GetHeight()));
 			transform2D->SetSize(newSize);
 		}
 	}

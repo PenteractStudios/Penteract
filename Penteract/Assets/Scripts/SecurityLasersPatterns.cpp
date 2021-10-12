@@ -4,10 +4,6 @@
 #include "LasersGenerator.h"
 
 #include <algorithm>
-#include <random>
-
-std::random_device rd;
-std::mt19937 g(rd());
 
 EXPOSE_MEMBERS(SecurityLasersPatterns) {
     MEMBER(MemberType::FLOAT, laserActiveDuration),
@@ -21,6 +17,8 @@ EXPOSE_MEMBERS(SecurityLasersPatterns) {
 GENERATE_BODY_IMPL(SecurityLasersPatterns);
 
 void SecurityLasersPatterns::Start() {
+    gen = std::minstd_rand(rd());
+
     GameObject* generator1 = GameplaySystems::GetGameObject(generator1UID);
     GameObject* generator2 = GameplaySystems::GetGameObject(generator2UID);
     GameObject* generator3 = GameplaySystems::GetGameObject(generator3UID);
@@ -56,10 +54,10 @@ void SecurityLasersPatterns::Update() {
     if (permutationTimer > permutationDuration) {
         // Create a random permutation
         permutationTimer = 0;
-        std::shuffle(generators.begin(), generators.end(), g);
+        std::shuffle(generators.begin(), generators.end(), gen);
 
         // Set the times for this round
-        for (int i = 0; i < generators.size(); ++i) {
+        for (unsigned i = 0; i < generators.size(); ++i) {
             generators[i]->coolDownOnTimer = 0.f;
             generators[i]->coolDownOffTimer = permutationDuration - intervalDuration*i;
             generators[i]->coolDownOn = laserActiveDuration;

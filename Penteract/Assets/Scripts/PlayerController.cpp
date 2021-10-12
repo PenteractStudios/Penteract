@@ -8,7 +8,7 @@
 #include "HUDManager.h"
 #include "OnimaruBullet.h"
 #include "SwitchParticles.h"
-#include "GameController.h"
+#include "GlobalVariables.h"
 
 #include "Math/Quat.h"
 #include "Geometry/Plane.h"
@@ -93,11 +93,14 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, playerOnimaru.sprintMovementSpeed),
 	MEMBER(MemberType::FLOAT, playerOnimaru.aimTime),
 	MEMBER(MemberType::FLOAT, onimaruRecoveryRate),
+		MEMBER(MemberType::FLOAT, playerOnimaru.offsetWeaponAngle),
+		MEMBER(MemberType::FLOAT, playerOnimaru.limitAngle),
 	MEMBER_SEPARATOR("Onimaru Shoot"),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruBulletUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruLaserUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruRightHandUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruWeaponUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerOnimaru.lookAtPointUID),
 	MEMBER_SEPARATOR("Onimaru Abilities"),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruShieldUID),
@@ -120,7 +123,7 @@ GENERATE_BODY_IMPL(PlayerController);
 
 void PlayerController::Start() {
 	playerFang.Init(fangUID, fangParticleDashUID, fangLeftGunUID, fangRightGunUID, fangRightBulletUID, fangLeftBulletUID, fangLaserUID, cameraUID, HUDManagerObjectUID, fangDashDamageUID, EMPUID, EMPEffectsUID, fangUltimateUID, fangUltimateVFXUID, fangRightFootVFX, fangLeftFootVFX);
-	playerOnimaru.Init(onimaruUID, onimaruLaserUID, onimaruBulletUID, onimaruGunUID, onimaruRightHandUID, onimaruShieldUID, onimaruUltimateBulletUID, onimaruBlastEffectsUID, cameraUID, HUDManagerObjectUID, onimaruRightFootVFX, onimaruLeftFootVFX);
+	playerOnimaru.Init(onimaruUID, onimaruWeaponUID, onimaruLaserUID, onimaruBulletUID, onimaruGunUID, onimaruRightHandUID, onimaruShieldUID, onimaruUltimateBulletUID, onimaruBlastEffectsUID, cameraUID, HUDManagerObjectUID, onimaruRightFootVFX, onimaruLeftFootVFX);
 
 	GameObject* HUDManagerGO = GameplaySystems::GetGameObject(HUDManagerObjectUID);
 	if (HUDManagerGO) {
@@ -179,7 +182,7 @@ float PlayerController::GetFangMaxHealth() const {
 }
 
 bool PlayerController::IsPlayerDead() {
-	return !playerFang.isAlive && (!playerOnimaru.isAlive || !GameController::IsSwitchTutorialReached());
+	return !playerFang.isAlive && (!playerOnimaru.isAlive || !GameplaySystems::GetGlobalVariable(globalSwitchTutorialReached, true));
 }
 
 void PlayerController::SetNoCooldown(bool status) {
@@ -217,11 +220,13 @@ void PlayerController::SwitchCharacter() {
 			audios[static_cast<int>(AudioType::SWITCH)]->Play();
 		}
 		if (playerFang.characterGameObject->IsActive()) {
+			playerOnimaru.ResetToIdle();
 			playerFang.characterGameObject->Disable();
 			playerOnimaru.characterGameObject->Enable();
 
 			fangRecovering = 0.0f;
 		} else {
+			playerFang.ResetToIdle();
 			playerOnimaru.characterGameObject->Disable();
 			playerFang.characterGameObject->Enable();
 
@@ -235,7 +240,7 @@ void PlayerController::SwitchCharacter() {
 		if (sCollider) sCollider->Disable();
 		switchFirstHit = true;
 
-		if (GameController::IsSwitchTutorialActive()) GameController::ActivateSwitchTutorial(false);
+		if (GameplaySystems::GetGlobalVariable(globalswitchTutorialActive, true)) GameplaySystems::SetGlobalVariable(globalswitchTutorialActive, false);
 
 	} else {
 		if (playSwitchParticles) {
@@ -438,17 +443,8 @@ void PlayerController::Update() {
 	}
 }
 
-void PlayerController::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+void PlayerController::OnCollision(GameObject& collidedWith, float3 /* collisionNormal */ , float3 /* penetrationDistance */, void* /* particle */) {
 	if (collidedWith.name == "MeleeGrunt" || collidedWith.name == "RangedGrunt") {
 		switchCollisionedGO.push_back(&collidedWith);
-		if (playerOnimaru.IsActive()) {
-			ComponentAgent* agent = collidedWith.GetComponent<ComponentAgent>();
-			if (agent) {
-				agent->RemoveAgentFromCrowd();
-				float3 actualPenDistance = -penetrationDistance.ProjectTo(collisionNormal);
-				collidedWith.GetComponent<ComponentTransform>()->SetGlobalPosition(collidedWith.GetComponent<ComponentTransform>()->GetGlobalPosition() + actualPenDistance);
-				agent->AddAgentToCrowd();
-			}
-		}
 	}
 }

@@ -6,6 +6,7 @@
 #include "GameplaySystems.h"
 #include "StatsDisplayer.h"
 #include "PauseController.h"
+#include "GlobalVariables.h"
 
 #include "Math/float3x3.h"
 #include "Geometry/frustum.h"
@@ -34,14 +35,23 @@ EXPOSE_MEMBERS(GameController) {
 GENERATE_BODY_IMPL(GameController);
 
 void GameController::Start() {
-
+	isPaused = false;
 	showWireframe = false;
 	transitionFinished = false;
-	isGameplayBlocked = false;
-	switchTutorialActive = false;
+	GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, false);
+	GameplaySystems::SetGlobalVariable(globalswitchTutorialActive, false);
 
-	if (PlayerController::currentLevel == 1) switchTutorialReached = false;
-	else switchTutorialReached = true;
+	if (PlayerController::currentLevel == 1) {
+		GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, false);
+		GameplaySystems::SetGlobalVariable(globalSkill2TutorialReached, false);
+		GameplaySystems::SetGlobalVariable(globalSkill3TutorialReached, false);
+		GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, false);
+	} else {
+		GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, true);
+		GameplaySystems::SetGlobalVariable(globalSkill2TutorialReached, true);
+		GameplaySystems::SetGlobalVariable(globalSkill3TutorialReached, true);
+		GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, true);
+	}
 
 	gameCamera = GameplaySystems::GetGameObject(gameCameraUID);
 	godCamera = GameplaySystems::GetGameObject(godCameraUID);
@@ -51,6 +61,10 @@ void GameController::Start() {
 	staticCamera4 = GameplaySystems::GetGameObject(staticCamera4UID) ? GameplaySystems::GetGameObject(staticCamera4UID)->GetComponent<ComponentCamera>() : nullptr;
 
 	player = GameplaySystems::GetGameObject(playerUID);
+
+	if (player) {
+		playerController = GET_SCRIPT(player, PlayerController);
+	}
 
 	pauseCanvas = GameplaySystems::GetGameObject(pauseUID);
 	hudCanvas = GameplaySystems::GetGameObject(hudUID);
@@ -69,6 +83,8 @@ void GameController::Start() {
 	Debug::SetGodModeOn(false);
 	if (gameCamera && godCamera) godModeAvailable = true;
 	godModeController = GameplaySystems::GetGameObject(godModeControllerUID);
+
+	ClearPauseMenus();
 }
 
 void GameController::Update() {
@@ -93,11 +109,10 @@ void GameController::Update() {
 		}
 	}
 
-	if ((Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)) && !isVideoActive) {
+	if (CanPause() && ((Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)))) {
 		if (isPaused) {
 			ResumeGame();
-		}
-		else {
+		} else {
 			PauseGame();
 		}
 	}
@@ -242,43 +257,17 @@ void GameController::PauseGame() {
 	Time::PauseGame();
 	EnablePauseMenus();
 	isPaused = true;
-	isGameplayBlocked = true;
+	Screen::SetChromaticAberration(false);
+	if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) gameplayWasAlreadyBlocked = true;
+	else GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, true);
 }
 
 void GameController::ResumeGame() {
 	Time::ResumeGame();
 	ClearPauseMenus();
 	isPaused = false;
-	isGameplayBlocked = false;
-}
-
-bool const GameController::IsGameplayBlocked() {
-	return isGameplayBlocked;
-}
-
-void GameController::BlockGameplay(bool blockIt) {
-	isGameplayBlocked = blockIt;
-}
-
-bool const GameController::IsSwitchTutorialActive() {
-	return switchTutorialActive;
-}
-
-void GameController::ActivateSwitchTutorial(bool isFinished) {
-	switchTutorialActive = isFinished;
-}
-
-bool const GameController::IsSwitchTutorialReached() {
-	return switchTutorialReached;
-}
-
-void GameController::ReachSwitchTutorial(bool isReached) {
-	switchTutorialReached = isReached;
-}
-
-void GameController::SetVideoActive(bool isActived)
-{
-	isVideoActive = isActived;
+	if (gameplayWasAlreadyBlocked) gameplayWasAlreadyBlocked = false;
+	else GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, false);
 }
 
 void GameController::DoTransition() {
@@ -300,14 +289,14 @@ void GameController::ClearPauseMenus() {
 	if (pauseCanvas) {
 		PauseController::SetIsPause(false);
 		pauseCanvas->Disable();
-		
+
 	}
 
 	if (settingsCanvas) {
 		std::vector<GameObject*> settingsChildren = settingsCanvas->GetChildren();
 		if (settingsChildren.size() > 0) {
 			settingsChildren[0]->Enable();		// Enables first screen of CanvasSettingsPlus
-			for (int i = 1; i < settingsChildren.size(); ++i) {
+			for (unsigned i = 1; i < settingsChildren.size(); ++i) {
 				settingsChildren[i]->Disable();
 			}
 		}
@@ -323,8 +312,7 @@ void GameController::ClearPauseMenus() {
 	}
 }
 
-void GameController::EnablePauseMenus()
-{
+void GameController::EnablePauseMenus() {
 	if (hudCanvas) {
 		hudCanvas->Disable();
 	}
@@ -341,4 +329,8 @@ void GameController::EnablePauseMenus()
 	if (statsController) {
 		statsController->SetPanelActive(false);
 	}
+}
+
+bool GameController::CanPause() {
+	return !GameplaySystems::GetGlobalVariable(isVideoActive, true) && (!playerController || playerController && !playerController->IsPlayerDead());
 }

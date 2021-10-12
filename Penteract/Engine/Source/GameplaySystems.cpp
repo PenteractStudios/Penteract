@@ -274,7 +274,7 @@ bool Input::GetKeyCodeRepeat(KEYCODE keycode) {
 }
 
 bool Input::GetKeyCode(KEYCODE keycode) {
-	return App->input->GetKeyboard()[keycode] == KeyState::KS_IDLE? false : true;
+	return App->input->GetKeyboard()[keycode] == KeyState::KS_IDLE ? false : true;
 }
 
 bool Input::GetControllerButtonDown(SDL_GameControllerButton button, int playerID) {
@@ -353,55 +353,64 @@ GameObject* Physics::Raycast(const float3& start, const float3& end, const int m
 	return closestGo;
 }
 
-void Physics::CreateRigidbody(Component* collider)
-{
+void Physics::CreateRigidbody(Component* collider) {
 	switch (collider->GetType()) {
 	case ComponentType::BOX_COLLIDER:
-		App->physics->CreateBoxRigidbody((ComponentBoxCollider*)collider);
+		App->physics->CreateBoxRigidbody((ComponentBoxCollider*) collider);
 		break;
 	case ComponentType::SPHERE_COLLIDER:
-		App->physics->CreateSphereRigidbody((ComponentSphereCollider*)collider);
+		App->physics->CreateSphereRigidbody((ComponentSphereCollider*) collider);
 		break;
 	case ComponentType::CAPSULE_COLLIDER:
-		App->physics->CreateCapsuleRigidbody((ComponentCapsuleCollider*)collider);
+		App->physics->CreateCapsuleRigidbody((ComponentCapsuleCollider*) collider);
 		break;
 	default:
 		break;
 	}
 }
 
-void Physics::UpdateRigidbody(Component* collider)
-{
+void Physics::UpdateRigidbody(Component* collider) {
 	switch (collider->GetType()) {
 	case ComponentType::BOX_COLLIDER:
-		App->physics->UpdateBoxRigidbody((ComponentBoxCollider*)collider);
+		App->physics->UpdateBoxRigidbody((ComponentBoxCollider*) collider);
 		break;
 	case ComponentType::SPHERE_COLLIDER:
-		App->physics->UpdateSphereRigidbody((ComponentSphereCollider*)collider);
+		App->physics->UpdateSphereRigidbody((ComponentSphereCollider*) collider);
 		break;
 	case ComponentType::CAPSULE_COLLIDER:
-		App->physics->UpdateCapsuleRigidbody((ComponentCapsuleCollider*)collider);
+		App->physics->UpdateCapsuleRigidbody((ComponentCapsuleCollider*) collider);
 		break;
 	default:
 		break;
 	}
 }
 
-void Physics::RemoveRigidbody(Component* collider)
-{
+void Physics::RemoveRigidbody(Component* collider) {
 	switch (collider->GetType()) {
 	case ComponentType::BOX_COLLIDER:
-		App->physics->RemoveBoxRigidbody((ComponentBoxCollider*)collider);
+		App->physics->RemoveBoxRigidbody((ComponentBoxCollider*) collider);
 		break;
 	case ComponentType::SPHERE_COLLIDER:
-		App->physics->RemoveSphereRigidbody((ComponentSphereCollider*)collider);
+		App->physics->RemoveSphereRigidbody((ComponentSphereCollider*) collider);
 		break;
 	case ComponentType::CAPSULE_COLLIDER:
-		App->physics->RemoveCapsuleRigidbody((ComponentCapsuleCollider*)collider);
+		App->physics->RemoveCapsuleRigidbody((ComponentCapsuleCollider*) collider);
 		break;
 	default:
 		break;
 	}
+}
+
+void Physics::CreateParticleRigidbody(ComponentParticleSystem::Particle* currentParticle) {
+	App->physics->CreateParticleRigidbody(currentParticle);
+}
+
+void Physics::RemoveParticleRigidbody(ComponentParticleSystem::Particle* currentParticle) {
+	App->physics->RemoveParticleRigidbody(currentParticle);
+}
+
+void Physics::UpdateParticleRigidbody(ComponentParticleSystem::Particle* currentParticle) {
+	App->physics->UpdateParticleRigidbody(currentParticle);
 }
 
 float3 Colors::Red() {
@@ -544,12 +553,46 @@ void Audio::StopAllSources() {
 	App->audio->StopAllSources();
 }
 
+float Audio::GetGainMainChannel() {
+	return App->audio->GetGainMainChannel();
+}
+
+float Audio::GetGainMusicChannel() {
+	return App->audio->GetGainMusicChannel();
+}
+
+float Audio::GetGainSFXChannel() {
+	return App->audio->GetGainSFXChannel();
+}
+
+void Audio::SetGainMainChannel(float _gainMainChannel) {
+	return App->audio->SetGainMainChannel(_gainMainChannel);
+}
+
+void Audio::SetGainMusicChannel(float _gainMusicChannel) {
+	return App->audio->SetGainMusicChannel(_gainMusicChannel);
+}
+
+void Audio::SetGainSFXChannel(float _gainSFXChannel) {
+	return App->audio->SetGainSFXChannel(_gainSFXChannel);
+}
+
+// --------- UserInterface --------- //
+
 ComponentEventSystem* UserInterface::GetCurrentEventSystem() {
 	return App->userInterface->GetCurrentEventSystem();
 }
 
+// --------- Navigation --------- //
+
 void Navigation::Raycast(float3 startPosition, float3 targetPosition, bool& hitResult, float3& hitPosition) {
 	if (App->navigation != nullptr) {
 		App->navigation->Raycast(startPosition, targetPosition, hitResult, hitPosition);
+	}
+}
+
+void Navigation::GetNavMeshHeightInPosition(const float3 position, float& height) {
+	if (App->navigation != nullptr) {
+		App->navigation->GetNavMeshHeightInPosition(position, height);
 	}
 }

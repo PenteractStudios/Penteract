@@ -4,7 +4,7 @@
 #include "GameplaySystems.h"
 #include "Components/ComponentTransform.h"
 
-int AIMovement::maxAcceleration = 9999;
+float AIMovement::maxAcceleration = 9999.0f;
 
 EXPOSE_MEMBERS(AIMovement) {
 	MEMBER(MemberType::FLOAT, rotationSmoothness)
@@ -21,7 +21,29 @@ void AIMovement::Update() {
 
 }
 
-void AIMovement::Flee(AIState state, const float3& fromPosition, int speed, bool orientateToDir) {
+void AIMovement::Seek(AIState state, const float3& newPosition, float speed, bool orientateToDir) {
+	if (!ownerTransform) return;
+
+	float3 position = ownerTransform->GetGlobalPosition();
+	float3 direction = newPosition - position;
+
+	if (state == AIState::START) {
+		velocity = direction.Normalized() * speed;
+		position += velocity * Time::GetDeltaTime();
+		ownerTransform->SetGlobalPosition(position);
+	}
+	else {
+		if (agent) {
+			agent->SetMoveTarget(newPosition, true);
+			velocity = agent->GetVelocity();
+		}
+	}
+	if (state != AIState::START && orientateToDir) {
+		Orientate(velocity);
+	}
+}
+
+void AIMovement::Flee(AIState state, const float3& fromPosition, float /* speed */, bool orientateToDir) {
 
 	if (!ownerTransform || !agent) return;
 
@@ -49,32 +71,26 @@ void AIMovement::Stop() {
 
 }
 
-void AIMovement::Seek(AIState state, const float3& newPosition, int speed, bool orientateToDir) {
-	if (!ownerTransform) return;
+void AIMovement::Orientate(const float3& direction, float orientationSpeed, float orientationThreshold) {
 
-	float3 position = ownerTransform->GetGlobalPosition();
-	float3 direction = newPosition - position;
+	float3 normalizedDirection = direction.Normalized();
 
-	if (state == AIState::START) {
-		velocity = direction.Normalized() * speed;
-		position += velocity * Time::GetDeltaTime();
-		ownerTransform->SetGlobalPosition(position);
+	Quat rotation = ownerTransform->GetGlobalRotation();
+	if (orientationSpeed <= 0) {
+		targetRotation = Quat::LookAt(float3(0, 0, 1), normalizedDirection, float3(0, 1, 0), float3(0, 1, 0));
+		rotation = Quat::Slerp(ownerTransform->GetGlobalRotation(), targetRotation, Min(Time::GetDeltaTime() / Max(rotationSmoothness, 0.000001f), 1.0f));
 	} else {
-		if (agent) {
-			agent->SetMoveTarget(newPosition, true);
-			velocity = agent->GetVelocity();
-		}
-	}
-	if (state != AIState::START && orientateToDir) {
-		Orientate(velocity);
-	}
 
-}
+		float angle = normalizedDirection.AngleBetweenNorm(GetOwner().GetComponent<ComponentTransform>()->GetFront());
+		float3 axis = GetOwner().GetComponent<ComponentTransform>()->GetFront().Cross(normalizedDirection);
 
-void AIMovement::Orientate(const float3& direction) {
-		targetRotation = Quat::LookAt(float3(0, 0, 1), direction.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
-		Quat rotation = Quat::Slerp(ownerTransform->GetGlobalRotation(), targetRotation, Min(Time::GetDeltaTime() / Max(rotationSmoothness, 0.000001f), 1.0f));
-		ownerTransform->SetGlobalRotation(rotation);
+		if (angle < orientationThreshold) return;
+
+		targetRotation = Quat::RotateAxisAngle(axis, orientationSpeed * Time::GetDeltaTime()) * ownerTransform->GetGlobalRotation();
+
+		rotation = Quat::Slerp(ownerTransform->GetGlobalRotation(), targetRotation, Min(Time::GetDeltaTime() / Max(rotationSmoothness, 0.000001f), 1.0f));
+	}
+	ownerTransform->SetGlobalRotation(rotation);
 }
 
 bool AIMovement::CharacterInSight(const GameObject* character, const float searchRadius) {
@@ -105,13 +121,12 @@ void AIMovement::SetClipSpeed(UID clipUID, float speed) {
 }
 
 GameObject* AIMovement::SearchReferenceInHierarchy(GameObject* root, std::string name) {
-	
+
 	if (root->name == name) {
 		return root;
 	}
 	GameObject* reference = nullptr;
-	for (GameObject* child : root->GetChildren())
-	{
+	for (GameObject* child : root->GetChildren()) {
 		reference = SearchReferenceInHierarchy(child, name);
 		if (reference != nullptr) return reference;
 

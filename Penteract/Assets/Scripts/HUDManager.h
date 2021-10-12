@@ -88,11 +88,9 @@ public:
 	SwitchState switchState = SwitchState::IDLE;
 	PictoState pictoStates[static_cast<int>(Cooldowns::TOTAL)];
 
-	float switchColorTimer = 0.0f;
-	float switchColorTotalTime = 1.25f;
-	bool switchColorIncreasing = true;
+	float abilityAlphaWavingTotalTime = 1.25f;
 
-	float rotationSpeed = 3.1416 / 4.0f;
+	float rotationSpeed = 3.1416f / 4.0f;
 
 	// Health HUD
 	UID fangHealthParentUID = 0;
@@ -132,6 +130,7 @@ public:
 	float criticalHealthPercentage = 15.f;
 
 	std::string shieldObjName = "VFXShield";
+	std::pair<bool, float> abilityWavingEffects[static_cast<int>(Cooldowns::TOTAL)] = { {true,0.0f},{true,0.0f} ,{true,0.0f} ,{true,0.0f} ,{true,0.0f} ,{true,0.0f} ,{true,0.0f} };
 public:
 	void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown, float fangUltimateRemainingNormalizedValue, float oniUltimateRemainingNormalizedValue);
 	void UpdateHealth(float fangHealth, float onimaruHealth);
@@ -157,7 +156,6 @@ private:
 	ComponentImage* switchGlowImage = nullptr;
 	float switchTimer = 0.0f;
 	bool abilityCoolDownsRetreived[static_cast<int>(Cooldowns::TOTAL)] = { false,false,false,false,false,false,false };
-	bool switchSkillActivated = false;
 
 	// Health HUD
 	GameObject* fangHealthParent = nullptr;
@@ -191,12 +189,12 @@ private:
 private:
 	void AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canvas);
 	void UpdateVisualCooldowns(GameObject* canvas, int startingIt); //Update visual cooldown on all abilities of a given character
-	void SetRemainingDurationNormalizedValue(GameObject* canvas, int index, float normalizedValue);
+	void SetRemainingDurationNormalizedValue(GameObject* canvas, unsigned index, float normalizedValue);
 
 	void UpdateCommonSkillVisualCooldown(); //Update visual cooldown on switch ability
 	void ManageSwitch();	//This method manages visual effects regarding the Switching of characters (UI WISE) as well 
 							//as the color changin and rotation of the picto for the switch icon
-	void PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns cooldown);
+	void PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns /* cooldown */);
 	void PlayHitEffect();
 	void ShowCriticalHealthWarning();
 	void HideCriticalHealthWarning();
@@ -211,7 +209,7 @@ private:
 	void InitializeHealth();
 	void InitializeHUDSides();
 
-	void ManageSwitchPreCollapseState(GameObject* activeParent, const std::vector<GameObject*>& skills);
+	void ManageSwitchPreCollapseState(GameObject* /* activeParent */, const std::vector<GameObject*>& skills);
 	void ManageSwitchCollapseState(GameObject* activeParent, const std::vector<GameObject*>& skills);
 
 	void ManageSwitchGreenEffect(bool growing, float timer);
