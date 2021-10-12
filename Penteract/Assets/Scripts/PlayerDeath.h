@@ -37,6 +37,7 @@ public:
 	float meleeDamageTaken = 1.0f;
 	float dukeDamageTaken = 1.0f;
 	float dukeChargeDamageTaken = 1.0f;
+	float attackDroneDamageTaken = 1.0f;
 	float barrelDamageTaken = 1.0f;
 	float laserBeamTaken = 1.0f;
 
