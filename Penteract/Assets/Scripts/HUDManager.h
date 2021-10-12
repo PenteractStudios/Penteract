@@ -3,6 +3,7 @@
 #include "Scripting/Script.h"
 
 class PlayerController;
+class AIDuke;
 class ComponentTransform2D;
 class ComponentImage;
 class AbilityRefeshFX;
@@ -47,6 +48,7 @@ public:
 	ComponentAudioSource* audios[static_cast<int>(HUDManagerAudio::TOTAL)] = { nullptr };
 
 	UID playerObjectUID = 0;
+	UID dukeObjectUID = 0;
 
 	//Skill HUD
 
@@ -96,7 +98,9 @@ public:
 	UID fangHealthParentUID = 0;
 	UID onimaruHealthParentUID = 0;
 	UID switchHealthParentUID = 0;
+	UID dukeHealthParentUID = 0;
 
+	// Onimaru's & Fang's HUD Colors
 	float4 healthBarBackgroundColorInBackground = float4(0.f / 255.f, 40.f / 255.f, 60.f / 255.f, 30.f / 255.f);
 	float4 healthFillBarColorInBackground = float4(255.f / 255.f, 0.f / 255.f, 0.f / 255.f, 30.f / 255.f);
 	float4 healthOverlayColorInBackground = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 100.f / 255.f);
@@ -104,7 +108,12 @@ public:
 	float4 healthFillBarColor = float4(255.f / 255.f, 0.f / 255.f, 0.f / 255.f, 255.f / 255.f);
 	float4 healthOverlayColor = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 255.f / 255.f);
 
-	// Health lost feedback
+	// Duke's HUD Colors
+	float4 dukeHealthBarBackgroundColor = float4(0.f / 255.f, 40.f / 255.f, 60.f / 255.f, 220.f / 255.f);
+	float4 dukeHealthFillBarColor = float4(255.f / 255.f, 0.f / 255.f, 0.f / 255.f, 255.f / 255.f);
+	float4 dukeHealthOverlayColor = float4(255.f / 255.f, 255.f / 255.f, 255.f / 255.f, 255.f / 255.f);
+
+	// Health lost feedback (Fang & Onimaru & Duke)
 	float4 healthLostFeedbackFillBarInitialColor = float4(0.f / 255.f, 177.f / 255.f, 227.f / 255.f, 204.f / 255.f);
 	float4 healthLostFeedbackFillBarFinalColor = float4(0.f / 255.f, 177.f / 255.f, 227.f / 255.f, 0.f / 255.f);
 	float lostHealthFeedbackAlpha = 204.f / 255.f;
@@ -117,6 +126,7 @@ public:
 
 	std::vector<GameObject*> fangHealthChildren;
 	std::vector<GameObject*> onimaruHealthChildren;
+	std::vector<GameObject*> dukeHealthChildren;
 	std::vector<GameObject*> switchHealthChildren;
 
 	// Sides
@@ -128,12 +138,14 @@ public:
 	float4 sideHitColor = float4(248.f / 255.f, 47.f / 255.f, 47.f / 255.f, 30.f / 255.f);
 
 	float criticalHealthPercentage = 15.f;
+	float showBossHealthTotalTime = 1.f;
 
 	std::string shieldObjName = "VFXShield";
 	std::pair<bool, float> abilityWavingEffects[static_cast<int>(Cooldowns::TOTAL)] = { {true,0.0f},{true,0.0f} ,{true,0.0f} ,{true,0.0f} ,{true,0.0f} ,{true,0.0f} ,{true,0.0f} };
 public:
 	void UpdateCooldowns(float onimaruCooldown1, float onimaruCooldown2, float onimaruCooldown3, float fangCooldown1, float fangCooldown2, float fangCooldown3, float switchCooldown, float fangUltimateRemainingNormalizedValue, float oniUltimateRemainingNormalizedValue);
 	void UpdateHealth(float fangHealth, float onimaruHealth);
+	void UpdateDukeHealth(float dukeHealth);
 	void HealthRegeneration(float health);
 	void StartCharacterSwitch();
 	void SetCooldownRetreival(Cooldowns cooldown);
@@ -141,10 +153,12 @@ public:
 	void StopUsingSkill(Cooldowns cooldown);
 	void OnCharacterDeath();
 	void OnCharacterResurrect();
+	void ShowBossHealth();
 
 private:
 
 	PlayerController* playerController = nullptr;
+	AIDuke* dukeScript = nullptr;
 	GameObject* fangObj = nullptr;
 	GameObject* onimaruObj = nullptr;
 
@@ -160,6 +174,7 @@ private:
 	// Health HUD
 	GameObject* fangHealthParent = nullptr;
 	GameObject* onimaruHealthParent = nullptr;
+	GameObject* dukeHealthParent = nullptr;
 	GameObject* switchHealthParent = nullptr;
 
 	float3 originalFangHealthPosition = { 0,0,0 };
@@ -173,10 +188,15 @@ private:
 
 	float fangPreviousHealth = 0.f;
 	float onimaruPreviousHealth = 0.f;
+	float dukePreviousHealth = 0.f;
 
 	bool playingLostHealthFeedback = false;
+	bool playingDukeLostHealthFeedback = false;
 	float lostHealthTimer = 0.0f;
+	float lostHealthDukeTimer = 0.f;
 	float lostHealthFeedbackTotalTime = 1.0f;
+	float showBossHealthTimer = 0.f;
+	bool playingBossHealthEffect = false;
 
 	bool playingHitEffect = false;
 	float hitEffectTimer = 0.0f;
@@ -198,10 +218,11 @@ private:
 	void PlayHitEffect();
 	void ShowCriticalHealthWarning();
 	void HideCriticalHealthWarning();
-	void PlayLostHealthFeedback();
-	void StartLostHealthFeedback();
-	void StopLostHealthFeedback();
-	void ResetLostHealthFeedback();
+	void PlayLostHealthFeedback(float& timer, bool& playingEffect, const std::vector<GameObject*>& healthChildren, bool isBoss);
+	void StartLostHealthFeedback(float& timer, bool& playingEffect, const std::vector<GameObject*>& healthChildren, bool isBoss);
+	void StopLostHealthFeedback(float& timer, bool& playingEffect, const std::vector<GameObject*>& healthChildren, bool isBoss);
+	void ResetLostHealthFeedback(float& timer, bool& playingEffect, const std::vector<GameObject*>& healthChildren, bool isBoss);
+	void PlayShowHealthBossEffect();
 	void SetPictoState(Cooldowns cooldown, PictoState newState);
 
 	void GetAllHealthColors();
@@ -214,5 +235,6 @@ private:
 
 	void ManageSwitchGreenEffect(bool growing, float timer);
 
+	void UpdateHealthFillBar(float health, float maxHealth, const std::vector<GameObject*>& healthChildren);
 };
 

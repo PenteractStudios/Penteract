@@ -3,6 +3,7 @@
 #include "AIMovement.h"
 #include "PlayerController.h"
 #include "DukeShield.h"
+#include "HUDManager.h"
 #include "AttackDronesController.h"
 #include <string>
 #include <vector>
@@ -22,6 +23,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, secondEncounterUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, thirdEncounterUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fourthEncounterUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, hudManagerUID),
 
 	MEMBER_SEPARATOR("Duke Atributes"),
 	MEMBER(MemberType::FLOAT, dukeCharacter.lifePoints),
@@ -95,6 +97,11 @@ void AIDuke::Start() {
 	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, encounters, dronesController);
 
 	dukeCharacter.winSceneUID = winSceneUID; // TODO: REPLACE
+	
+	GameObject* hudManagerGO = GameplaySystems::GetGameObject(hudManagerUID);
+
+	if (hudManagerGO) hudManager = GET_SCRIPT(hudManagerGO, HUDManager);
+	if (hudManager) hudManager->ShowBossHealth();
 }
 
 void AIDuke::Update() {
@@ -492,15 +499,15 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 				float damage = playerController->playerFang.dashDamage;
 				dukeCharacter.GetHit(dukeCharacter.reducedDamaged ? damage / 3 : damage + playerController->GetOverPowerMode());
 			}
-
-		}
+    }
 
 		if (hitTaken) {
-			// TODO: play audio and VFX
-			/*if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
-			if (componentMeshRenderer) {
-				if (damageMaterialID != 0) componentMeshRenderer->materialId = damageMaterialID;
-			}
+			if (hudManager) hudManager->UpdateDukeHealth(dukeCharacter.lifePoints);
+      // TODO: play audio and VFX
+      /*if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
+      if (componentMeshRenderer) {
+        if (damageMaterialID != 0) componentMeshRenderer->materialId = damageMaterialID;
+      }
 
 			timeSinceLastHurt = 0.0f;*/
 		}
@@ -696,4 +703,8 @@ void AIDuke::TeleportDuke(bool toPlatform) {
 		if (dukeCharacter.agent) dukeCharacter.agent->AddAgentToCrowd();
 		isInArena = true;
 	}
+}
+
+float AIDuke::GetDukeMaxHealth() const {
+	return dukeCharacter.GetTotalLifePoints();
 }

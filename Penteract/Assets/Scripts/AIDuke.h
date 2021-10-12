@@ -13,6 +13,7 @@ class HUDController;
 class PlayerController;
 class DukeShield;
 class Player;
+class HUDManager;
 //class PlayerDeath;
 class AIMovement;
 
@@ -46,6 +47,7 @@ public:
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
 	void TeleportDuke(bool toPlatform);
+	float GetDukeMaxHealth() const;
 
 private:
 	void CalculatePushBackRealDistance();
@@ -70,6 +72,7 @@ public:
 	UID meleeAttackColliderUID = 0;
 	UID barrelSpawnerUID = 0;
 	UID chargeAttackUID = 0;
+	UID hudManagerUID = 0;
 
 	GameObject* duke = nullptr;
 	GameObject* player = nullptr;
@@ -103,6 +106,8 @@ private:
 	AIMovement* movementScript = nullptr;
 
 	PlayerController* playerController = nullptr;
+
+	HUDManager* hudManager = nullptr;
 
 	float currentShieldCooldown = 0.f;
 	float currentShieldActiveTime = 0.f;
