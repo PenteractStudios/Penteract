@@ -1,8 +1,8 @@
 {
     "Name": "WalkBack",
     "AnimationUID": 16102588795477284283,
-    "BeginIndex": 69,
-    "EndIndex": 99,
+    "BeginIndex": 70,
+    "EndIndex": 98,
     "Loop": true,
     "Speed": 1.0,
     "FrameRate": 0.04163135588169098,

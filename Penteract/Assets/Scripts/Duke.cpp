@@ -3,7 +3,9 @@
 #include "GameplaySystems.h"
 #include "RangerProjectileScript.h"
 #include "PlayerController.h"
+#include "BarrelSpawner.h"
 #include "AIMovement.h"
+#include "AttackDronesController.h"
 
 #include <string>
 
@@ -11,7 +13,7 @@
 
 std::uniform_real_distribution<float> rng(-1.0f, 1.0f);
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID chargeAttackColliderUID, std::vector<UID> encounterUIDs)
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController)
 {
 	gen = std::minstd_rand(rd());
 
@@ -19,8 +21,11 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 	characterGameObject = GameplaySystems::GetGameObject(dukeUID);
 	player = GameplaySystems::GetGameObject(playerUID);
 	chargeCollider = GameplaySystems::GetGameObject(chargeColliderUID);
+
 	meleeAttackCollider = GameplaySystems::GetGameObject(meleeAttackColliderUID);
 	chargeAttack = GameplaySystems::GetGameObject(chargeAttackColliderUID);
+
+	barrelSpawneScript = GET_SCRIPT(GameplaySystems::GetGameObject(barrelSpawnerUID), BarrelSpawner);
 
 	barrel = GameplaySystems::GetResource<ResourcePrefab>(barrelUID);
 
@@ -30,7 +35,7 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 		if (bullet) {
 			bullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
 			bullet->Play();
-			bullet->SetMaxParticles(attackBurst);
+			bullet->SetMaxParticles(attackBurst*2);
 			bullet->SetParticlesPerSecond(float2(attackSpeed, attackSpeed));
 			bullet->SetDuration(attackBurst / attackSpeed);
 		}
@@ -69,10 +74,14 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 	distanceCorrectionThreshold = distanceCorrectEvery;
 
 	for (auto itr : encounterUIDs) encounters.push_back(GameplaySystems::GetGameObject(itr));
+
+	attackDronesController = dronesController;
 }
 
 void Duke::ShootAndMove(const float3& playerDirection) {
 	// Shoot
+	Shoot();
+
 	movementTimer += Time::GetDeltaTime();
 	if (movementTimer >= movementChangeThreshold) {
 		perpendicular = playerDirection.Cross(float3(0, 1, 0));
@@ -86,9 +95,14 @@ void Duke::ShootAndMove(const float3& playerDirection) {
 		distanceCorrectionThreshold = distanceCorrectEvery + rng(gen);
 		distanceCorrectionTimer = 0.f;
 	}
-	agent->SetMoveTarget(dukeTransform->GetGlobalPosition() + perpendicular);
-	Shoot();
-	Debug::Log("I'm moving while shooting");
+
+	Navigation::Raycast(dukeTransform->GetGlobalPosition(), dukeTransform->GetGlobalPosition() + perpendicular, navigationHit, navigationHitPos);
+	if (navigationHit) perpendicular = -perpendicular;
+	if (agent) agent->SetMoveTarget(navigationHitPos);
+	int movementAnim = GetWalkAnimation();
+	if (compAnimation && compAnimation->GetCurrentState()->name != animationStates[movementAnim]) {
+		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[movementAnim]);
+	}
 }
 
 void Duke::MeleeAttack()
@@ -105,6 +119,26 @@ void Duke::MeleeAttack()
 
 void Duke::BulletHell() {
 	Debug::Log("Bullet hell");
+	if (attackDronesController) {
+		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]);
+		ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentState()->clipUid);
+		if (clip) clip->loop = true;
+		attackDronesController->StartBulletHell();
+	}
+}
+
+void Duke::DisableBulletHell() {
+	ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentState()->clipUid);
+	if (clip) clip->loop = false;
+}
+
+bool Duke::BulletHellActive() {
+	return attackDronesController && attackDronesController->BulletHellActive();
+}
+
+bool Duke::BulletHellFinished() {
+	if (!attackDronesController) return true;
+	return attackDronesController->BulletHellFinished();
 }
 
 void Duke::InitCharge(DukeState nextState_)
@@ -117,7 +151,6 @@ void Duke::InitCharge(DukeState nextState_)
 	if (compAnimation) {
 		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_START)]);
 	}
-	Debug::Log("Electric Tackle!");
 }
 
 void Duke::UpdateCharge(bool forceStop)
@@ -145,30 +178,67 @@ void Duke::UpdateCharge(bool forceStop)
 }
 
 void Duke::CallTroops() {
-	Debug::Log("Come, guys!");
 	if (encounters.size() > currentEncounter && encounters[currentEncounter] && !encounters[currentEncounter]->IsActive()) encounters[currentEncounter]->Enable();
 	currentEncounter++;
 }
 
-void Duke::Shoot() {
+void Duke::Shoot()
+{
 	attackTimePool -= Time::GetDeltaTime();
-	if (attackTimePool <= 0) {
+	if (bullet) {
+		ComponentTransform* bulletTransform = bullet->GetOwner().GetComponent<ComponentTransform>();
+		float3 targetDirection = player->GetComponent<ComponentTransform>()->GetGlobalPosition() + float3(0.f, 2.7f, 0.f) - bulletTransform->GetGlobalPosition();
+		bulletTransform->SetGlobalRotation(Quat::LookAt(float3(0,1,0), targetDirection, float3(0,0,-1), float3(0,1,0)));
+	}
+	if (isShooting) {
+		isShootingTimer += Time::GetDeltaTime();
+		if (isShootingTimer >= (attackBurst-1) / attackSpeed) {
+			isShooting = false;
+			if (compAnimation && compAnimation->GetCurrentStateSecondary()) {
+				if (compAnimation->GetCurrentStateSecondary()->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)]) {
+					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+				}
+			}
+		}
+	} else if (attackTimePool <= 0) {
 		if (bullet) {
 			if (!meshObj) return;
 			bullet->PlayChildParticles();
 		}
 		attackTimePool = (attackBurst / attackSpeed) + timeInterBurst + rng(gen) * RNG_SCALE;
+		isShooting = true;
+		isShootingTimer = 0.f;
 		// Animation
+		if (compAnimation) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)]);
+		}
 	}
-	Debug::Log("PIUM!");
 }
 
 void Duke::ThrowBarrels() {
-	Debug::Log("Here, barrel in your face!");
-
 	if (compAnimation->GetCurrentState()->name != animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]) {
 		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]);
 		instantiateBarrel = true;
+	}
+}
+
+void Duke::StartUsingShield() {
+	state = DukeState::SHOOT_SHIELD;
+	if (compAnimation) {
+		if (compAnimation->GetCurrentStateSecondary()) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT_SHIELD)]);
+		} else if (compAnimation->GetCurrentState()) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT_SHIELD)]);
+		}
+		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
+	}
+}
+
+void Duke::StopUsingShield() {
+	if (compAnimation) {
+		if (compAnimation->GetCurrentState() && compAnimation->GetCurrentStateSecondary()) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+		}
 	}
 }
 
@@ -178,7 +248,6 @@ void Duke::OnAnimationFinished()
 	State* currentState = compAnimation->GetCurrentState();
 	if (!currentState) return;
 
-	Debug::Log("Finishing");
 	if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PUNCH)]) {
 		hasMeleeAttacked = false;
 		compAnimation->SendTrigger(currentState->name + animationStates[DUKE_ANIMATION_STATES::IDLE]);
@@ -189,14 +258,20 @@ void Duke::OnAnimationFinished()
 		agent->SetMoveTarget(chargeTarget);
 		agent->SetMaxSpeed(chargeSpeed);
 		if (chargeCollider) chargeCollider->Enable();
-		Debug::Log("Start");
 		compAnimation->SendTrigger(currentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE)]);
 	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_END)]) {
 		if (chargeAttack) chargeAttack->Disable();
 		state = nextState;
 		agent->SetMaxSpeed(movementSpeed);
-		Debug::Log("End");
 		compAnimation->SendTrigger(currentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
+	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::DEATH)]) {
+		GameplaySystems::DestroyGameObject(characterGameObject);
+		SceneManager::ChangeScene(winSceneUID); // TODO: Replace with the correct trigger (for the video or whatever)
+	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::ENRAGE)]) {
+		state = DukeState::BASIC_BEHAVIOUR;
+	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::STUN)] && state == DukeState::INVULNERABLE) {
+		CallTroops();
+		StartUsingShield();
 	}
 }
 
@@ -230,7 +305,14 @@ void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 		}
 
 		if (strcmp(eventName, "ThrowBarrels") == 0 && instantiateBarrel) {
-			InstantiateBarrel();
+			if (startSpawnBarrel) {
+				barrelSpawneScript->SpawnBarrels();
+				startSpawnBarrel = false;
+			}
+			else {
+				InstantiateBarrel();
+				startSpawnBarrel = true;
+			}
 			instantiateBarrel = false;
 		}
 		break;
@@ -241,10 +323,42 @@ void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 	}
 }
 
+void Duke::StopShooting()
+{
+	if (compAnimation && compAnimation->GetCurrentStateSecondary()) {
+		if (compAnimation->GetCurrentStateSecondary()->name == animationStates[Duke::DUKE_ANIMATION_STATES::SHOOT]) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name +
+				compAnimation->GetCurrentState()->name);
+		}
+	}
+	if (isShooting) isShooting = false;
+}
+
 void Duke::InstantiateBarrel()
 {
 	//Instantiate barrel and play animation throw barrels for Duke and the barrel
 	if (barrel) {
 		GameObject* auxBarrel = GameplaySystems::Instantiate(barrel, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), Quat(0, 0, 0, 1));
 	}
+}
+
+int Duke::GetWalkAnimation()
+{
+	float dot = Dot(perpendicular.Normalized(), dukeTransform->GetFront());
+	float3 cross = Cross(perpendicular.Normalized(), dukeTransform->GetFront());
+
+	int animNum = 0;
+	if (dot >= 0.707) {
+		animNum = static_cast<int>(DUKE_ANIMATION_STATES::WALK_FORWARD);
+	} else if (dot <= -0.707) {
+		animNum = static_cast<int>(DUKE_ANIMATION_STATES::WALK_BACK);
+	} else {
+		if (cross.y > 0) {
+			animNum = static_cast<int>(DUKE_ANIMATION_STATES::WALK_RIGHT);
+		}
+		else {
+			animNum = static_cast<int>(DUKE_ANIMATION_STATES::WALK_LEFT);
+		}
+	}
+	return animNum;
 }
