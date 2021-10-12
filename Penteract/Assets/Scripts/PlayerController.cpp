@@ -122,6 +122,14 @@ EXPOSE_MEMBERS(PlayerController) {
 GENERATE_BODY_IMPL(PlayerController);
 
 void PlayerController::Start() {
+	// Audio Listener
+	listener = GetOwner().GetComponent<ComponentAudioListener>();
+	transform = GetOwner().GetComponent<ComponentTransform>();
+	if (listener) {
+		listener->SetDirection(float3(0.0f, 0.0f, -1.0f), float3(0.0f, 1.0f, 0.0f));
+		listener->SetPosition(transform->GetGlobalPosition());
+	}
+
 	playerFang.Init(fangUID, fangParticleDashUID, fangLeftGunUID, fangRightGunUID, fangRightBulletUID, fangLeftBulletUID, fangLaserUID, cameraUID, HUDManagerObjectUID, fangDashDamageUID, EMPUID, EMPEffectsUID, fangUltimateUID, fangUltimateVFXUID, fangRightFootVFX, fangLeftFootVFX);
 	playerOnimaru.Init(onimaruUID, onimaruWeaponUID, onimaruLaserUID, onimaruBulletUID, onimaruGunUID, onimaruRightHandUID, onimaruShieldUID, onimaruUltimateBulletUID, onimaruBlastEffectsUID, cameraUID, HUDManagerObjectUID, onimaruRightFootVFX, onimaruLeftFootVFX);
 
@@ -405,6 +413,11 @@ void PlayerController::OnCharacterResurrect() {
 }
 
 void PlayerController::Update() {
+	// Audio Listener
+	if (listener) {
+		listener->SetPosition(transform->GetGlobalPosition());
+	}
+
 	if (!playerFang.characterGameObject) return;
 	if (!playerOnimaru.characterGameObject) return;
 	if (!camera) return;
