@@ -7,6 +7,7 @@
 
 class ComponentParticleSystem;
 class ResourcePrefab;
+class AttackDronesController;
 class BarrelSpawner;
 enum class DukeState {
 	BASIC_BEHAVIOUR,
@@ -54,17 +55,21 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID videoParentCanvasUID, UID videoCanvasUID, std::vector<UID> encounterUIDs);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID,UID videoParentCanvasUID, UID videoCanvasUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void BulletHell();
+	void DisableBulletHell();
+	bool BulletHellActive();
+	bool BulletHellFinished();
 	void InitCharge(DukeState nextState);
 	void UpdateCharge(bool forceStop = false);
 	void CallTroops();
 	void Shoot();
 	void ThrowBarrels();
 	void StartUsingShield();
-	void StopUsingShield();
+	void BePushed();
+	void BecomeStunned();
 
 	// ------- Animation Functions ------ //
 	void OnAnimationFinished();
@@ -174,6 +179,9 @@ private:
 
 	ResourcePrefab* barrel = nullptr;
 	bool instantiateBarrel = false;
+
+	// AttackDrones
+	AttackDronesController* attackDronesController = nullptr;
 
 	// Audios
 	ComponentAudioSource* dukeAudios[static_cast<int>(DUKE_AUDIOS::TOTAL)] = { nullptr };

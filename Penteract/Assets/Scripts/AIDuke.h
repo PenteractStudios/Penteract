@@ -13,6 +13,7 @@ class HUDController;
 class PlayerController;
 class DukeShield;
 class Player;
+class HUDManager;
 //class PlayerDeath;
 class AIMovement;
 
@@ -46,12 +47,17 @@ public:
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
 	void TeleportDuke(bool toPlatform);
+	float GetDukeMaxHealth() const;
 
 private:
 	void CalculatePushBackRealDistance();
 	void UpdatePushBackPosition();
 	void ParticleHit(GameObject& collidedWith, void* particle, Player& player_);
 	void InitPlayerVictory();
+	bool CanBeHurtDuringCriticalMode() const;
+	bool IsInvulnerable()const;
+	void OnShieldInterrupted();
+	void PerformBulletHell();
 
 public:
 	UID dukeUID = 0;
@@ -69,6 +75,7 @@ public:
 	UID chargeAttackUID = 0;
 	UID videoParentCanvasUID = 0;
 	UID videoCanvasUID = 0;
+	UID hudManagerUID = 0;
 
 	GameObject* duke = nullptr;
 	GameObject* player = nullptr;
@@ -103,11 +110,13 @@ private:
 
 	PlayerController* playerController = nullptr;
 
+	HUDManager* hudManager = nullptr;
+
 	float currentShieldCooldown = 0.f;
 	float currentShieldActiveTime = 0.f;
 
 	float currentBulletHellCooldown = 0.f;
-	float currentBulletHellActiveTime = 0.f;
+	bool bulletHellIsActive = false;
 
 	float currentAbilityChangeCooldown = 0.f;
 

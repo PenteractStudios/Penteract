@@ -7,6 +7,7 @@
 #include "AIMovement.h"
 #include "GlobalVariables.h" 
 #include "VideoSceneEnd.h"
+#include "AttackDronesController.h"
 
 #include <string>
 
@@ -14,7 +15,7 @@
 
 std::uniform_real_distribution<float> rng(-1.0f, 1.0f);
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID videoParentCanvasUID, UID videoCanvasUID, std::vector<UID> encounterUIDs)
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID,  UID videoParentCanvasUID, UID videoCanvasUID,std::vector<UID> encounterUIDs, AttackDronesController* dronesController)
 {
 	gen = std::minstd_rand(rd());
 
@@ -77,6 +78,8 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 	distanceCorrectionThreshold = distanceCorrectEvery;
 
 	for (auto itr : encounterUIDs) encounters.push_back(GameplaySystems::GetGameObject(itr));
+
+	attackDronesController = dronesController;
 }
 
 void Duke::ShootAndMove(const float3& playerDirection) {
@@ -120,6 +123,26 @@ void Duke::MeleeAttack()
 
 void Duke::BulletHell() {
 	Debug::Log("Bullet hell");
+	if (attackDronesController) {
+		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]);
+		ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentState()->clipUid);
+		if (clip) clip->loop = true;
+		attackDronesController->StartBulletHell();
+	}
+}
+
+void Duke::DisableBulletHell() {
+	ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentState()->clipUid);
+	if (clip) clip->loop = false;
+}
+
+bool Duke::BulletHellActive() {
+	return attackDronesController && attackDronesController->BulletHellActive();
+}
+
+bool Duke::BulletHellFinished() {
+	if (!attackDronesController) return true;
+	return attackDronesController->BulletHellFinished();
 }
 
 void Duke::InitCharge(DukeState nextState_)
@@ -190,8 +213,12 @@ void Duke::Shoot()
 		isShooting = true;
 		isShootingTimer = 0.f;
 		// Animation
-		if (compAnimation) {
-			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)]);
+		if (state != DukeState::SHOOT_SHIELD) {
+			if (compAnimation) {
+				if (compAnimation->GetCurrentState()) {
+					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)]);
+				}
+			}
 		}
 	}
 }
@@ -203,22 +230,45 @@ void Duke::ThrowBarrels() {
 	}
 }
 
+//Not to be confused with AIDuke StartUsing shield, this one manages both state and animations
 void Duke::StartUsingShield() {
+	
+	if (isShooting) {
+		StopShooting();
+	}
+
 	state = DukeState::SHOOT_SHIELD;
 	if (compAnimation) {
-		if (compAnimation->GetCurrentStateSecondary()) {
-			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT_SHIELD)]);
-		} else if (compAnimation->GetCurrentState()) {
-			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT_SHIELD)]);
+		if (compAnimation->GetCurrentState()) {
+			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT_SHIELD)]);
 		}
-		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
+	}
+
+}
+
+void Duke::BePushed() {
+	state = DukeState::PUSHED;
+	beingPushed = true;
+
+	if (compAnimation) {
+		if (compAnimation->GetCurrentStateSecondary()) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+		}
+		if (compAnimation->GetCurrentState()) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PUSHED)]);
+		}
 	}
 }
 
-void Duke::StopUsingShield() {
+void Duke::BecomeStunned() {
 	if (compAnimation) {
-		if (compAnimation->GetCurrentState() && compAnimation->GetCurrentStateSecondary()) {
-			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+		if (compAnimation) {
+			if (compAnimation->GetCurrentStateSecondary()) {
+				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+			}
+			if (compAnimation->GetCurrentState()) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::STUN)]);
+			}
 		}
 	}
 }
@@ -250,6 +300,7 @@ void Duke::OnAnimationFinished()
 	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::ENRAGE)]) {
 		state = DukeState::BASIC_BEHAVIOUR;
 	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::STUN)] && state == DukeState::INVULNERABLE) {
+		//Coming from critical mode
 		CallTroops();
 		StartUsingShield();
 	}
