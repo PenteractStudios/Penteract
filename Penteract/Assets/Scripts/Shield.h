@@ -45,6 +45,8 @@ public:
 	float fadeThreshold = 0.05f;
 
 	UID particlesColliderUID = 0;
+	UID particlesUpgradeColliderUID = 0;
+	ResourcePrefab* particlesReboundCollider = nullptr;
 	ResourcePrefab* particlesCollider = nullptr;
 
 private:

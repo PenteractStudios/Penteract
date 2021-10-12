@@ -18,6 +18,7 @@ EXPOSE_MEMBERS(Shield) {
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, particlesColliderUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, ShieldBilboardUID),
 	MEMBER(MemberType::FLOAT, maxFrames),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, particlesUpgradeColliderUID),
 	MEMBER_SEPARATOR("Debug only"),
 	MEMBER(MemberType::INT, currentAvailableCharges),
 	MEMBER(MemberType::FLOAT, shieldMaxScale),
@@ -40,6 +41,7 @@ void Shield::Start() {
 
 	GameObject* bilboAux = GameplaySystems::GetGameObject(ShieldBilboardUID);
 	if (bilboAux)shieldBilb = bilboAux->GetComponent<ComponentBillboard>();
+	particlesReboundCollider = GameplaySystems::GetResource<ResourcePrefab>(particlesUpgradeColliderUID);
 }
 
 void Shield::Update() {
@@ -129,9 +131,11 @@ void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 				pSystem->layer = WorldLayers::BULLET_ENEMY;
 				pSystem->layerIndex = 6;
 
+				if (particlesReboundCollider)GameplaySystems::Instantiate(particlesReboundCollider, position, rotation);
 			} else {
-				if (pSystem) pSystem->KillParticle(p);
+				if (particlesCollider)GameplaySystems::Instantiate(particlesCollider, position, rotation);
 			}
+			if (pSystem) pSystem->KillParticle(p);
 		}
 
 		currentAvailableCharges--;
