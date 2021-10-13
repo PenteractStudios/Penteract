@@ -16,7 +16,7 @@ void OnimaruBullet::Update() {
 	if (life >= 0) {
 		life -= Time::GetDeltaTime();
 		ComponentTransform* transform = GetOwner().GetComponent<ComponentTransform>();
-		float3 aux = onimaruDirection * float3(0.0f, 0.0f, 1.0f);
+		float3 aux = onimaruDirection * float3(1.0f, 0.0f, 0.0f);
 		aux *= speed * Time::GetDeltaTime();
 		float3 newPosition = transform->GetGlobalPosition();
 		newPosition += aux;
@@ -31,7 +31,7 @@ void OnimaruBullet::SetOnimaruDirection(Quat direction) {
 	onimaruDirection = direction;
 }
 
-void OnimaruBullet::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+void OnimaruBullet::OnCollision(GameObject& collidedWith, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* /* particle */) {
 	if (collidedWith.name == "Fang" || collidedWith.name == "Onimaru" || collidedWith.name == "OnimaruBullet" || collidedWith.name == "Shield") return;
 	GameplaySystems::DestroyGameObject(&GetOwner());
 }

@@ -1,9 +1,7 @@
 #pragma once
 
 #include "Scripting/Script.h"
-#include "UIAudioType.h"
 
-class ComponentAudioSource;
 class ComponentSelectable;
 
 class GameObject;
@@ -18,7 +16,6 @@ public:
 	void Start() override;
 	void Update() override;
 	void OnButtonClick() override;
-	void PlayAudio(UIAudio type);
 
 public:
 	UID transitionUID = 0;
@@ -26,9 +23,5 @@ public:
 private:
 	GameObject* transitionGO = nullptr;
 	SceneTransition* sceneTransition = nullptr;
-
-	/* Audio */
-	bool playHoveredAudio = true;
 	ComponentSelectable* selectable = nullptr;
-	ComponentAudioSource* audios[static_cast<int>(UIAudio::TOTAL)] = { nullptr };
 };

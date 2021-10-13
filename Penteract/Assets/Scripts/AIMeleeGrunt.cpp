@@ -2,13 +2,13 @@
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
-#include "GameController.h"
 #include "PlayerController.h"
 #include "PlayerDeath.h"
 #include "EnemySpawnPoint.h"
 #include "HUDController.h"
 #include "AIMovement.h"
 #include "Onimaru.h"
+#include "GlobalVariables.h"
 
 #include <math.h>
 #include <random>
@@ -16,42 +16,45 @@
 
 EXPOSE_MEMBERS(AIMeleeGrunt) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, materialsUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, damageMaterialPlaceHolderUID),
-		MEMBER_SEPARATOR("Enemy stats"),
-		MEMBER(MemberType::FLOAT, gruntCharacter.lifePoints),
-		MEMBER(MemberType::FLOAT, gruntCharacter.movementSpeed),
-		MEMBER(MemberType::FLOAT, gruntCharacter.damageHit),
-		MEMBER(MemberType::INT, gruntCharacter.fallingSpeed),
-		MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
-		MEMBER(MemberType::FLOAT, gruntCharacter.attackRange),
-		MEMBER(MemberType::FLOAT, gruntCharacter.barrelDamageTaken),
-		MEMBER_SEPARATOR("Push variables"),
-		MEMBER(MemberType::FLOAT, gruntCharacter.pushBackDistance),
-		MEMBER(MemberType::FLOAT, gruntCharacter.pushBackSpeed),
-		MEMBER(MemberType::FLOAT, gruntCharacter.slowedDownSpeed),
-		MEMBER(MemberType::FLOAT, gruntCharacter.slowedDownTime),
-		MEMBER_SEPARATOR("Stun variables"),
-		MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
-		MEMBER(MemberType::FLOAT, stunDuration),
-		MEMBER(MemberType::FLOAT, groundPosition),
-		MEMBER_SEPARATOR("Attack1"),
-		MEMBER(MemberType::FLOAT, att1AttackSpeed),
-		MEMBER(MemberType::FLOAT, att1MovementSpeedWhileAttacking),
-		MEMBER(MemberType::INT, att1AbilityChance),
-		MEMBER_SEPARATOR("Attack2"),
-		MEMBER(MemberType::FLOAT, att2AttackSpeed),
-		MEMBER(MemberType::FLOAT, att2MovementSpeedWhileAttacking),
-		MEMBER(MemberType::INT, att2AbilityChance),
-		MEMBER_SEPARATOR("Attack3"),
-		MEMBER(MemberType::FLOAT, att3AttackSpeed),
-		MEMBER(MemberType::FLOAT, att3MovementSpeedWhileAttacking),
-		MEMBER(MemberType::INT, att3AbilityChance),
-		MEMBER_SEPARATOR("Dissolve properties"),
-		MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialObj),
-		MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialWeaponObj),
-		MEMBER(MemberType::FLOAT, dissolveTimerToStart)
+	MEMBER(MemberType::GAME_OBJECT_UID, materialsUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fangUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, damageMaterialPlaceHolderUID),
+	MEMBER_SEPARATOR("Enemy stats"),
+	MEMBER(MemberType::FLOAT, gruntCharacter.lifePoints),
+	MEMBER(MemberType::FLOAT, gruntCharacter.movementSpeed),
+	MEMBER(MemberType::FLOAT, gruntCharacter.damageHit),
+	MEMBER(MemberType::INT, gruntCharacter.fallingSpeed),
+	MEMBER(MemberType::FLOAT, gruntCharacter.searchRadius),
+	MEMBER(MemberType::FLOAT, gruntCharacter.attackRange),
+	MEMBER(MemberType::FLOAT, gruntCharacter.barrelDamageTaken),
+	MEMBER_SEPARATOR("Push variables"),
+	MEMBER(MemberType::FLOAT, gruntCharacter.pushBackDistance),
+	MEMBER(MemberType::FLOAT, gruntCharacter.pushBackTime),
+	MEMBER(MemberType::FLOAT, gruntCharacter.slowedDownSpeed),
+	MEMBER(MemberType::FLOAT, gruntCharacter.slowedDownTime),
+	MEMBER_SEPARATOR("Stun variables"),
+	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
+	MEMBER(MemberType::FLOAT, stunDuration),
+	MEMBER(MemberType::FLOAT, groundPosition),
+	MEMBER_SEPARATOR("Push Random Feedback"),
+	MEMBER(MemberType::FLOAT, minTimePushEffect),
+	MEMBER(MemberType::FLOAT, maxTimePushEffect),
+	MEMBER_SEPARATOR("Attack1"),
+	MEMBER(MemberType::FLOAT, att1AttackSpeed),
+	MEMBER(MemberType::FLOAT, att1MovementSpeedWhileAttacking),
+	MEMBER(MemberType::INT, att1AbilityChance),
+	MEMBER_SEPARATOR("Attack2"),
+	MEMBER(MemberType::FLOAT, att2AttackSpeed),
+	MEMBER(MemberType::FLOAT, att2MovementSpeedWhileAttacking),
+	MEMBER(MemberType::INT, att2AbilityChance),
+	MEMBER_SEPARATOR("Attack3"),
+	MEMBER(MemberType::FLOAT, att3AttackSpeed),
+	MEMBER(MemberType::FLOAT, att3MovementSpeedWhileAttacking),
+	MEMBER(MemberType::INT, att3AbilityChance),
+	MEMBER_SEPARATOR("Dissolve properties"),
+	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialObj),
+	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialWeaponObj),
+	MEMBER(MemberType::FLOAT, dissolveTimerToStart)
 };
 
 GENERATE_BODY_IMPL(AIMeleeGrunt);
@@ -105,7 +108,7 @@ void AIMeleeGrunt::Start() {
 	if (gameObject) {
 		ComponentMeshRenderer* meshRenderer = gameObject->GetComponent<ComponentMeshRenderer>();
 		if (meshRenderer) {
-			damageMaterialID = meshRenderer->materialId;
+			damageMaterialID = meshRenderer->GetMaterial();
 		}
 	}
 
@@ -114,7 +117,7 @@ void AIMeleeGrunt::Start() {
 	if (dissolveObj) {
 		ComponentMeshRenderer* dissolveMeshRenderer = dissolveObj->GetComponent<ComponentMeshRenderer>();
 		if (dissolveMeshRenderer) {
-			dissolveMaterialID = dissolveMeshRenderer->materialId;
+			dissolveMaterialID = dissolveMeshRenderer->GetMaterial();
 		}
 	}
 
@@ -123,15 +126,33 @@ void AIMeleeGrunt::Start() {
 	if (dissolveObj) {
 		ComponentMeshRenderer* dissolveMeshRenderer = dissolveObj->GetComponent<ComponentMeshRenderer>();
 		if (dissolveMeshRenderer) {
-			dissolveMaterialWeaponID = dissolveMeshRenderer->materialId;
+			dissolveMaterialWeaponID = dissolveMeshRenderer->GetMaterial();
 		}
 	}
 
+	//EMP Feedback
+	objectEMP = GetOwner().GetChild("EmpParticles");
+	if (objectEMP) {
+		ComponentParticleSystem* particlesEmpAux = objectEMP->GetComponent<ComponentParticleSystem>();
+		if (particlesEmpAux) {
+			particlesEmp = particlesEmpAux;
+		}
+	}
+
+	//Push Feedback
+	objectPush = GetOwner().GetChild("PushParticles");
+	if (objectPush) {
+		ComponentParticleSystem* particlesPushAux = objectPush->GetComponent<ComponentParticleSystem>();
+		if (particlesPushAux) {
+			particlesPush = particlesPushAux;
+		}
+	}
+	
 	gameObject = &GetOwner();
 	if (gameObject) {
 		// Workaround get the first children - Create a Prefab overrides childs IDs
 		gameObject = gameObject->GetChildren()[0];
-		if (gameObject) {			
+		if (gameObject) {
 			// Since we are not getting a vector of Components, this is the only workarround possible
 			// !! IMPORTANT !! if the order of meshes changes, this will have to be reviewed
 			int meshCount = 0;
@@ -144,12 +165,10 @@ void AIMeleeGrunt::Start() {
 			}
 
 			if (componentMeshRendererLeftBlade) {
-				bladesMaterialID = componentMeshRendererLeftBlade->materialId;
+				bladesMaterialID = componentMeshRendererLeftBlade->GetMaterial();
 			}
 		}
 	}
-
-	pushBackRealDistance = gruntCharacter.pushBackDistance;
 	SetRandomMaterial();
 }
 
@@ -188,7 +207,7 @@ void AIMeleeGrunt::Update() {
 		currentSlowedDownTime += Time::GetDeltaTime();
 	}
 
-	if (GameController::IsGameplayBlocked() && state != AIState::START && state != AIState::SPAWN) {
+	if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && state != AIState::START && state != AIState::SPAWN) {
 		state = AIState::IDLE;
 	}
 
@@ -206,7 +225,7 @@ void AIMeleeGrunt::Update() {
 		break;
 	case AIState::IDLE:
 		if (!playerController->IsPlayerDead()) {
-			if (movementScript->CharacterInSight(player, gruntCharacter.searchRadius) && !GameController::IsGameplayBlocked()) {
+			if (movementScript->CharacterInSight(player, gruntCharacter.searchRadius) && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 				animation->SendTrigger("IdleWalkForward");
 				if (agent) agent->SetMaxSpeed(speedToUse);
 				state = AIState::RUN;
@@ -263,11 +282,27 @@ void AIMeleeGrunt::Update() {
 		}
 		break;
 	case AIState::PUSHED:
+		if (pushBackTimer > gruntCharacter.pushBackTime) {
+			pushBackTimer = gruntCharacter.pushBackTime;
+		}
+		// Reactivate collider
+		if (reactivateCollider && pushBackTimer >= gruntCharacter.pushBackTime / 4.0f) {
+			ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
+			if (collider) collider->Enable();
+			reactivateCollider = false;
+		}
 		UpdatePushBackPosition();
+		if (pushBackTimer == gruntCharacter.pushBackTime) {
+			DisableBlastPushBack();
+		}
+		else {
+			pushBackTimer += Time::GetDeltaTime();
+		}
 		break;
 	case AIState::DEATH:
 		if (!dissolveAlreadyStarted) {
 			dissolveAlreadyStarted = true;
+			gruntCharacter.IncreasePlayerUltimateCharges(playerController);
 		}
 		break;
 	}
@@ -276,15 +311,6 @@ void AIMeleeGrunt::Update() {
 		if (!killSent) {
 			if (enemySpawnPointScript) enemySpawnPointScript->UpdateRemainingEnemies();
 			killSent = true;
-
-			if (playerController) {
-				if (playerController->playerOnimaru.characterGameObject->IsActive()) {
-					playerController->playerOnimaru.IncreaseUltimateCounter();
-				}
-				else if (playerController->playerFang.characterGameObject->IsActive()) {
-					playerController->playerFang.IncreaseUltimateCounter();
-				}
-			}
 		}
 		if (componentMeshRenderer && componentMeshRenderer->HasDissolveAnimationFinished()) {
 			if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
@@ -295,6 +321,8 @@ void AIMeleeGrunt::Update() {
 	if (!gruntCharacter.isAlive) {
 		Death();
 	}
+
+	if (pushEffectHasToStart)EnablePushFeedback();
 }
 
 void AIMeleeGrunt::OnAnimationFinished() {
@@ -324,16 +352,16 @@ void AIMeleeGrunt::OnAnimationFinished() {
 	}
 }
 
-void AIMeleeGrunt::ParticleHit(GameObject& collidedWith, void* particle, Player& player) {
+void AIMeleeGrunt::ParticleHit(GameObject& collidedWith, void* particle, Player& player_) {
 	if (!particle) return;
 	ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 	if (pSystem) pSystem->KillParticle(p);
-	if (state == AIState::STUNNED && player.level2Upgrade) {
+	if (state == AIState::STUNNED && player_.level2Upgrade) {
 		gruntCharacter.GetHit(99);
 	}
 	else {
-		gruntCharacter.GetHit(player.damageHit + playerController->GetOverPowerMode());
+		gruntCharacter.GetHit(player_.damageHit + playerController->GetOverPowerMode());
 	}
 }
 
@@ -365,10 +393,42 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 				hitTaken = true;
 				gruntCharacter.GetHit(playerController->playerFang.dashDamage + playerController->GetOverPowerMode());
 			}
-			else if (collidedWith.name == "RangerProjectile" && playerController->playerOnimaru.level1Upgrade) {
+			else if (collidedWith.name == "WeaponParticles" && playerController->playerOnimaru.level1Upgrade) {
 				hitTaken = true;
-				gruntCharacter.GetHit(playerController->playerOnimaru.shieldReboundedDamage + playerController->GetOverPowerMode());
-				GameplaySystems::DestroyGameObject(&collidedWith);
+				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
+			}
+			else if (collidedWith.name == "VFXShield") {
+				if (state == AIState::RUN) {
+					int random = std::rand() % 100;
+					if (random < att1AbilityChance) {
+						attackNumber = 1;
+						attackSpeed = att1AttackSpeed;
+						attackMovementSpeed = att1MovementSpeedWhileAttacking;
+					}
+					else if (random < att1AbilityChance + att2AbilityChance) {
+						attackNumber = 2;
+						attackSpeed = att2AttackSpeed;
+						attackMovementSpeed = att2MovementSpeedWhileAttacking;
+					}
+					else {
+						attackNumber = 3;
+						attackSpeed = att3AttackSpeed;
+						attackMovementSpeed = att3MovementSpeedWhileAttacking;
+					}
+
+					animation->SendTrigger("WalkForwardAttack" + std::to_string(attackNumber));
+					movementScript->SetClipSpeed(animation->GetCurrentState()->clipUid, attackSpeed);
+					if (audios[static_cast<int>(AudioType::ATTACK)]) audios[static_cast<int>(AudioType::ATTACK)]->Play();
+					state = AIState::ATTACK;
+				}
+			}
+			else if (collidedWith.name == "Impenetrable") {
+				if (agent) {
+					agent->RemoveAgentFromCrowd();
+					float3 actualPenDistance = penetrationDistance.ProjectTo(collisionNormal);
+					GetOwner().GetComponent<ComponentTransform>()->SetGlobalPosition(GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition() + actualPenDistance);
+					agent->AddAgentToCrowd();
+				}
 			}
 
 			if (hitTaken) {
@@ -376,25 +436,44 @@ void AIMeleeGrunt::OnCollision(GameObject& collidedWith, float3 collisionNormal,
 			}
 
 			if (collidedWith.name == "EMP") {
-				if (state != AIState::STUNNED) {
-					if (animation->GetCurrentState()) {
-						animation->SendTrigger(animation->GetCurrentState()->name + "StunStart");
-					}
-					agent->RemoveAgentFromCrowd();
-					stunTimeRemaining = stunDuration;
-					state = AIState::STUNNED;
-				}
+				DoStunned();
 			}
 		}
+	}
+}
+
+void AIMeleeGrunt::DoStunned()
+{
+	if (state != AIState::STUNNED) {
+		if (animation->GetCurrentState()) {
+			animation->SendTrigger(animation->GetCurrentState()->name + "StunStart");
+		}
+		if(particlesEmp)particlesEmp->PlayChildParticles();
+		agent->RemoveAgentFromCrowd();
+		stunTimeRemaining = stunDuration;
+		state = AIState::STUNNED;
+	}
+}
+
+void AIMeleeGrunt::EnablePushFeedback() {
+	if (timeToSrartPush < 0) {
+		pushEffectHasToStart = false;
+		if (particlesPush) particlesPush->PlayChildParticles();
+	}
+	else {
+		timeToSrartPush -= Time::GetDeltaTime(); 
 	}
 }
 
 void AIMeleeGrunt::EnableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		gruntCharacter.beingPushed = true;
+		pushBackTimer = 0.f;
 		state = AIState::PUSHED;
+		pushEffectHasToStart = true;
+		timeToSrartPush = (minTimePushEffect + 1) + (((float)rand()) / (float)RAND_MAX) * (maxTimePushEffect - (minTimePushEffect + 1));
 		if (animation->GetCurrentState()) animation->SendTrigger(animation->GetCurrentState()->name + "Hurt");
-		CalculatePushBackRealDistance();
+		gruntCharacter.CalculatePushBackFinalPos(GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition(), player->GetComponent<ComponentTransform>()->GetGlobalPosition(), gruntCharacter.pushBackDistance);
 		// Damage
 		if (playerController->playerOnimaru.level2Upgrade) {
 			gruntCharacter.GetHit(playerController->playerOnimaru.blastDamage + playerController->GetOverPowerMode());
@@ -403,6 +482,12 @@ void AIMeleeGrunt::EnableBlastPushBack() {
 			PlayHitMaterialEffect();
 			timeSinceLastHurt = 0.0f;
 		}
+		agent->Disable();
+
+		// Need to do this. When the enemy is too close to the player the collider causes the enemy to stay in place
+		ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
+		if (collider) collider->Disable();
+		reactivateCollider = true;
 	}
 }
 
@@ -411,6 +496,9 @@ void AIMeleeGrunt::DisableBlastPushBack() {
 		gruntCharacter.beingPushed = false;
 		if (animation->GetCurrentState()) animation->SendTrigger(animation->GetCurrentState()->name + "Idle");
 		state = AIState::IDLE;
+		agent->Enable();
+		gruntCharacter.slowedDown = true;
+		currentSlowedDownTime = 0.f;
 	}
 }
 
@@ -426,51 +514,13 @@ void AIMeleeGrunt::PlayHit()
 }
 
 void AIMeleeGrunt::UpdatePushBackPosition() {
-	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
-	float3 initialPos = enemyPos;
-
-	float3 direction = (enemyPos - playerPos).Normalized();
-
-	if (agent) {
-		enemyPos += direction * gruntCharacter.pushBackSpeed * Time::GetDeltaTime();
-		agent->SetMoveTarget(enemyPos, false);
-		agent->SetMaxSpeed(gruntCharacter.pushBackSpeed);
-		float distance = enemyPos.Distance(initialPos);
-		currentPushBackDistance += distance;
-
-		if (currentPushBackDistance >= pushBackRealDistance) {
-			DisableBlastPushBack();
-			gruntCharacter.slowedDown = true;
-			currentPushBackDistance = 0.f;
-			currentSlowedDownTime = 0.f;
-			pushBackRealDistance = gruntCharacter.pushBackDistance;
-		}
-	}
-}
-
-void AIMeleeGrunt::CalculatePushBackRealDistance() {
-	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
-
-	float3 direction = (enemyPos - playerPos).Normalized();
-
-	bool hitResult = false;
-
-	float3 finalPos = enemyPos + direction * gruntCharacter.pushBackDistance;
-	float3 resultPos = { 0,0,0 };
-
-	Navigation::Raycast(enemyPos, finalPos, hitResult, resultPos);
-
-	if (hitResult) {
-		pushBackRealDistance = resultPos.Distance(enemyPos) - 1; // Should be agent radius but it's not exposed
-	}
+	ownerTransform->SetGlobalPosition(float3::Lerp(gruntCharacter.pushBackInitialPos, gruntCharacter.pushBackFinalPos, pushBackTimer / gruntCharacter.pushBackTime));
 }
 
 void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
 	switch (stateMachineEnum)
 	{
-	case PRINCIPAL:
+	case StateMachineEnum::PRINCIPAL:
 		if (strcmp(eventName,"FootstepRight") == 0) {
 			if (audios[static_cast<int>(AudioType::FOOTSTEP_RIGHT)]) audios[static_cast<int>(AudioType::FOOTSTEP_RIGHT)]->Play();
 		}
@@ -527,8 +577,8 @@ void AIMeleeGrunt::OnAnimationEvent(StateMachineEnum stateMachineEnum, const cha
 }
 
 void AIMeleeGrunt::Death()
-{	
-	if (!GameController::IsGameplayBlocked()) {
+{
+	if (!GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 		if (animation->GetCurrentState() && state != AIState::DEATH) {
 			std::string changeState = animation->GetCurrentState()->name + "Death";
 			deathType = 1 + rand() % 2;
@@ -584,20 +634,20 @@ void AIMeleeGrunt::SetRandomMaterial()
 		std::vector<UID> materials;
 		for (const auto& child : materialsHolder->GetChildren()) {
 			ComponentMeshRenderer* meshRenderer = child->GetComponent<ComponentMeshRenderer>();
-			if (meshRenderer && meshRenderer->materialId) {
-				materials.push_back(meshRenderer->materialId);
+			if (meshRenderer && meshRenderer->GetMaterial()) {
+				materials.push_back(meshRenderer->GetMaterial());
 			}
 		}
 
-		
+
 		if (!materials.empty()) {
-			//Random distribution it cant be saved into global 
+			//Random distribution it cant be saved into global
 			std::random_device rd;  //Will be used to obtain a seed for the random number engine
 			std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
 			std::uniform_int_distribution<int> distrib(1, materials.size());
 
 			int position = distrib(gen)-1;
-			componentMeshRenderer->materialId = materials[position];
+			componentMeshRenderer->SetMaterial(materials[position]);
 			defaultMaterialID = materials[position];
 		}
 	}
@@ -605,7 +655,7 @@ void AIMeleeGrunt::SetRandomMaterial()
 
 void AIMeleeGrunt::SetMaterial(ComponentMeshRenderer* mesh, UID newMaterialID, bool needToPlayDissolve) {
 	if (newMaterialID > 0 && mesh) {
-		mesh->materialId = newMaterialID;
+		mesh->SetMaterial(newMaterialID);
 		if (needToPlayDissolve) {
 			mesh->PlayDissolveAnimation();
 		}

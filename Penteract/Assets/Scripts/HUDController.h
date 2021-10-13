@@ -33,11 +33,11 @@ public:
 		float fangCooldown1, float fangCooldown2, float fangCooldown3,
 		float switchCooldown);
 
-	void UpdateHP(float currentHp, float altHp);
+	//void UpdateHP(float currentHp, float altHp);
 	void UpdateDurableHPLoss(GameObject* targetCanvas);
 	void ChangePlayerHUD(int fangLives, int oniLives);
-	void HealthRegeneration(float currentHp, float hpRecovered);
-	void ResetHealthRegenerationEffects(float currentHp);
+	void HealthRegeneration(int currentHp, float hpRecovered);
+	void ResetHealthRegenerationEffects(int currentHp);
 	void ResetCooldownProgressBar();
 
 	void UpdateScore(int score_);
@@ -82,14 +82,14 @@ private:
 	void UpdateComponents();
 	void UpdateCommonSkill();
 	void UpdateVisualCooldowns(GameObject* canvas, bool isMain, int startingAbilityIndex);
-	void UpdateCanvasHP(GameObject* targetCanvas, int health, bool darkened);
+	void UpdateCanvasHP(GameObject* targetCanvas, int health, bool /* darkened */);
 	void OnHealthLost(GameObject* targetCanvas, int health);
 	void StopHealthLostInstantEffects(GameObject* targetCanvas);
 	void LoadHealthFeedbackStates(GameObject* targetCanvas, int health);
 	void LoadCooldownFeedbackStates(GameObject* targetCanvas, int startingIndex);
 	void AbilityCoolDownEffectCheck(Cooldowns cooldown, GameObject* canvas);
-	void PlayCoolDownEffect(AbilityRefreshEffect* effect, Cooldowns cooldown);
-	void PlayProgressBarEffect(AbilityRefreshEffectProgressBar* effect, Cooldowns cooldown);
+	void PlayCoolDownEffect(AbilityRefreshEffect* effect, Cooldowns /* cooldown */);
+	void PlayProgressBarEffect(AbilityRefreshEffectProgressBar* effect, Cooldowns /* cooldown */);
 	bool AnyTimerCounting(bool isFang);
 private:
 

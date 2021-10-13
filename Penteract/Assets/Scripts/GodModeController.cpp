@@ -4,6 +4,7 @@
 
 #include "GameplaySystems.h"
 #include "GameObject.h"
+#include "GlobalVariables.h"
 
 #include "Components/UI/ComponentToggle.h"
 
@@ -23,7 +24,9 @@ EXPOSE_MEMBERS(GodModeController) {
 	/* Level Doors */
 	MEMBER(MemberType::GAME_OBJECT_UID, plazaDoorUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, cafeteriaDoorUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, bridgeDoorUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, bridgeDoorUID),
+	/* Dialog triggers */
+	MEMBER(MemberType::GAME_OBJECT_UID, dialogTriggersUID)
 };
 
 GENERATE_BODY_IMPL(GodModeController);
@@ -48,6 +51,14 @@ void GodModeController::Start() {
 	plazaDoor = GameplaySystems::GetGameObject(plazaDoorUID);
 	cafeteriaDoor = GameplaySystems::GetGameObject(cafeteriaDoorUID);
 	bridgeDoor = GameplaySystems::GetGameObject(bridgeDoorUID);
+
+	/* Dialog triggers */
+	dialogTriggers = GameplaySystems::GetGameObject(dialogTriggersUID);
+	/* Blocked skills */
+	skill1WasActive = false;
+	skill2WasActive = false;
+	skill3WasActive = false;
+	switchWasActive = false;
 
 	doorPreviousStates.emplace_back(plazaDoor, plazaDoor ? plazaDoor->IsActive() : false);
 	doorPreviousStates.emplace_back(cafeteriaDoor, cafeteriaDoor ? cafeteriaDoor->IsActive() : false);
@@ -105,6 +116,29 @@ void GodModeController::OnChildToggle(unsigned int index, bool isChecked) {
 		break;
 	case 3:
 		if (isChecked) {
+			if (dialogTriggers) dialogTriggers->Enable();
+			// Recover skills activation state
+			GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, skill1WasActive);
+			GameplaySystems::SetGlobalVariable(globalSkill2TutorialReached, skill2WasActive);
+			GameplaySystems::SetGlobalVariable(globalSkill3TutorialReached, skill3WasActive);
+			GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, switchWasActive);
+		}
+		else {
+			if (dialogTriggers) dialogTriggers->Disable();
+			// Store previous tutorials state
+			skill1WasActive = GameplaySystems::GetGlobalVariable(globalSkill1TutorialReached, true);
+			skill2WasActive = GameplaySystems::GetGlobalVariable(globalSkill2TutorialReached, true);
+			skill3WasActive = GameplaySystems::GetGlobalVariable(globalSkill3TutorialReached, true);
+			switchWasActive = GameplaySystems::GetGlobalVariable(globalSwitchTutorialReached, true);
+			// Activate all skills
+			GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, true);
+			GameplaySystems::SetGlobalVariable(globalSkill2TutorialReached, true);
+			GameplaySystems::SetGlobalVariable(globalSkill3TutorialReached, true);
+			GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, true);
+		}
+		break;
+	case 4:
+		if (isChecked) {
 			if (toggles[index + 1]->IsChecked()) {
 				toggles[index + 1]->SetChecked(false);
 			}
@@ -116,7 +150,7 @@ void GodModeController::OnChildToggle(unsigned int index, bool isChecked) {
 			toggles[index]->SetChecked(true);
 		}
 		break;
-	case 4:
+	case 5:
 		if (isChecked) {
 			if (toggles[index - 1]->IsChecked()) {
 				toggles[index - 1]->SetChecked(false);
@@ -130,7 +164,7 @@ void GodModeController::OnChildToggle(unsigned int index, bool isChecked) {
 			toggles[index]->SetChecked(true);
 		}
 		break;
-	case 5:
+	case 6:
 		if (isChecked) {
 			if (playerControllerScript) playerControllerScript->SetOverpower(true);
 		}
@@ -138,7 +172,7 @@ void GodModeController::OnChildToggle(unsigned int index, bool isChecked) {
 			if (playerControllerScript) playerControllerScript->SetOverpower(false);
 		}
 		break;
-	case 6:
+	case 7:
 		if (isChecked) {
 			if (playerControllerScript) playerControllerScript->SetNoCooldown(true);
 		}
@@ -146,7 +180,7 @@ void GodModeController::OnChildToggle(unsigned int index, bool isChecked) {
 			if (playerControllerScript) playerControllerScript->SetNoCooldown(false);
 		}
 		break;
-	case 7:
+	case 8:
 		if (isChecked) {
 			if (playerControllerScript) playerControllerScript->SetInvincible(true);
 		}

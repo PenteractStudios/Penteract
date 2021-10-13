@@ -1,13 +1,13 @@
 {
     "Root": {
         "Name": "DeathScreen",
-        "Active": true,
+        "Active": false,
         "RootBoneName": "",
         "Mask": 0,
         "Components": [
             {
                 "Type": "Transform2D",
-                "Active": true,
+                "Active": false,
                 "Position": [
                     0.0,
                     0.0,
@@ -50,43 +50,63 @@
             },
             {
                 "Type": "Script",
-                "Active": true,
+                "Active": false,
                 "Script": 1795085235405539910,
                 "Values": [
                     {
                         "Name": "backgroundUID",
                         "Type": "GameObjectUID",
-                        "Value": 7795550498316423022
-                    },
-                    {
-                        "Name": "playAgainButtonUID",
-                        "Type": "GameObjectUID",
-                        "Value": 10524194915938984956
+                        "Value": 14835596042719268687
                     },
                     {
                         "Name": "scrollingBackgroundObjUID",
                         "Type": "GameObjectUID",
-                        "Value": 15619019341942753131
+                        "Value": 16915980686576582153
+                    },
+                    {
+                        "Name": "playAgainButtonUID",
+                        "Type": "GameObjectUID",
+                        "Value": 10181371517413657289
                     },
                     {
                         "Name": "mainMenuButtonUID",
                         "Type": "GameObjectUID",
-                        "Value": 1223936139276477804
+                        "Value": 18025388680066172782
                     },
                     {
                         "Name": "inOutPlayerUID",
                         "Type": "GameObjectUID",
-                        "Value": 5933972757940718185
+                        "Value": 3370845497554427431
                     },
                     {
                         "Name": "loopPlayerUID",
                         "Type": "GameObjectUID",
-                        "Value": 319198281573650438
+                        "Value": 5547730621808429069
+                    },
+                    {
+                        "Name": "canvasFaderObjUID",
+                        "Type": "GameObjectUID",
+                        "Value": 523319495878074962
                     },
                     {
                         "Name": "vibrationPlayerUID",
                         "Type": "GameObjectUID",
-                        "Value": 9261878078690991983
+                        "Value": 6280204311435065338
+                    },
+                    {
+                        "Name": "outInPlayerUID",
+                        "Type": "GameObjectUID",
+                        "Value": 11645819428265854143
+                    },
+                    {
+                        "Name": "canvasPlayerHUDObjUID",
+                        "Type": "GameObjectUID",
+                        "Value": 16394295769786396849
+                    },
+                    {
+                        "Name": "exitButtonUID",
+                        "Type": "GameObjectUID",
+                        "Value": 18025388680066172782
                     }
                 ]
             }
@@ -100,7 +120,7 @@
                 "Components": [
                     {
                         "Type": "Transform2D",
-                        "Active": true,
+                        "Active": false,
                         "Position": [
                             0.0,
                             0.0,
@@ -143,11 +163,11 @@
                     },
                     {
                         "Type": "CanvasRenderer",
-                        "Active": true
+                        "Active": false
                     },
                     {
                         "Type": "Image",
-                        "Active": true,
+                        "Active": false,
                         "TextureId": 0,
                         "Color": [
                             0.06666667014360428,
@@ -177,7 +197,7 @@
                         "Components": [
                             {
                                 "Type": "Transform2D",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     0.0,
@@ -220,11 +240,11 @@
                             },
                             {
                                 "Type": "CanvasRenderer",
-                                "Active": true
+                                "Active": false
                             },
                             {
                                 "Type": "Image",
-                                "Active": true,
+                                "Active": false,
                                 "TextureId": 16088894305820618009,
                                 "Color": [
                                     1.0,
@@ -257,7 +277,7 @@
                 "Components": [
                     {
                         "Type": "Transform2D",
-                        "Active": true,
+                        "Active": false,
                         "Position": [
                             0.0,
                             325.0,
@@ -308,7 +328,7 @@
                         "Components": [
                             {
                                 "Type": "Transform2D",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     0.0,
@@ -351,7 +371,7 @@
                             },
                             {
                                 "Type": "Script",
-                                "Active": true,
+                                "Active": false,
                                 "Script": 15815488295708913647,
                                 "Values": null
                             }
@@ -365,7 +385,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -408,12 +428,12 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
-                                        "TextureId": 3043613875438492148,
+                                        "Active": false,
+                                        "TextureId": 16363530423460008148,
                                         "Color": [
                                             1.0,
                                             1.0,
@@ -443,7 +463,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -486,11 +506,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 7097050797936835035,
                                         "Color": [
                                             1.0,
@@ -521,7 +541,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -564,11 +584,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 7062301636225051713,
                                         "Color": [
                                             1.0,
@@ -599,7 +619,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -642,11 +662,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 17580139162309151403,
                                         "Color": [
                                             1.0,
@@ -677,7 +697,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -720,12 +740,12 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
-                                        "TextureId": 15433794224612662839,
+                                        "Active": false,
+                                        "TextureId": 17271155541296877995,
                                         "Color": [
                                             1.0,
                                             1.0,
@@ -755,7 +775,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -798,11 +818,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 2580265354118792599,
                                         "Color": [
                                             1.0,
@@ -833,7 +853,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -876,11 +896,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 9306520051442473715,
                                         "Color": [
                                             1.0,
@@ -911,7 +931,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -954,12 +974,12 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
-                                        "TextureId": 11239309165038142496,
+                                        "Active": false,
+                                        "TextureId": 5406200266399156444,
                                         "Color": [
                                             1.0,
                                             1.0,
@@ -989,7 +1009,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -1032,11 +1052,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 8613890449906493529,
                                         "Color": [
                                             1.0,
@@ -1067,7 +1087,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -1110,246 +1130,12 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 1028116885161712249,
-                                        "Color": [
-                                            1.0,
-                                            1.0,
-                                            1.0,
-                                            1.0
-                                        ],
-                                        "AlphaTransparency": true,
-                                        "IsFill": false,
-                                        "FillValue": 1.0,
-                                        "Offset": [
-                                            0.0,
-                                            0.0
-                                        ],
-                                        "Tiling": [
-                                            1.0,
-                                            1.0
-                                        ]
-                                    }
-                                ],
-                                "Children": null
-                            },
-                            {
-                                "Name": "11",
-                                "Active": true,
-                                "RootBoneName": "",
-                                "Mask": 0,
-                                "Components": [
-                                    {
-                                        "Type": "Transform2D",
-                                        "Active": true,
-                                        "Position": [
-                                            0.0,
-                                            0.0,
-                                            0.0
-                                        ],
-                                        "Rotation": [
-                                            0.0,
-                                            0.0,
-                                            0.0,
-                                            1.0
-                                        ],
-                                        "Scale": [
-                                            1.0,
-                                            1.0,
-                                            1.0
-                                        ],
-                                        "LocalEulerAngles": [
-                                            0.0,
-                                            0.0,
-                                            0.0
-                                        ],
-                                        "Pivot": [
-                                            0.5,
-                                            0.5
-                                        ],
-                                        "Size": [
-                                            3840.0,
-                                            780.0
-                                        ],
-                                        "AnchorMin": [
-                                            0.5,
-                                            0.5
-                                        ],
-                                        "AnchorMax": [
-                                            0.5,
-                                            0.5
-                                        ],
-                                        "AnchorSelected": 5,
-                                        "IsCustomAnchor": false
-                                    },
-                                    {
-                                        "Type": "CanvasRenderer",
-                                        "Active": true
-                                    },
-                                    {
-                                        "Type": "Image",
-                                        "Active": true,
-                                        "TextureId": 4487341131113877661,
-                                        "Color": [
-                                            1.0,
-                                            1.0,
-                                            1.0,
-                                            1.0
-                                        ],
-                                        "AlphaTransparency": true,
-                                        "IsFill": false,
-                                        "FillValue": 1.0,
-                                        "Offset": [
-                                            0.0,
-                                            0.0
-                                        ],
-                                        "Tiling": [
-                                            1.0,
-                                            1.0
-                                        ]
-                                    }
-                                ],
-                                "Children": null
-                            },
-                            {
-                                "Name": "12",
-                                "Active": true,
-                                "RootBoneName": "",
-                                "Mask": 0,
-                                "Components": [
-                                    {
-                                        "Type": "Transform2D",
-                                        "Active": true,
-                                        "Position": [
-                                            0.0,
-                                            0.0,
-                                            0.0
-                                        ],
-                                        "Rotation": [
-                                            0.0,
-                                            0.0,
-                                            0.0,
-                                            1.0
-                                        ],
-                                        "Scale": [
-                                            1.0,
-                                            1.0,
-                                            1.0
-                                        ],
-                                        "LocalEulerAngles": [
-                                            0.0,
-                                            0.0,
-                                            0.0
-                                        ],
-                                        "Pivot": [
-                                            0.5,
-                                            0.5
-                                        ],
-                                        "Size": [
-                                            3840.0,
-                                            780.0
-                                        ],
-                                        "AnchorMin": [
-                                            0.5,
-                                            0.5
-                                        ],
-                                        "AnchorMax": [
-                                            0.5,
-                                            0.5
-                                        ],
-                                        "AnchorSelected": 5,
-                                        "IsCustomAnchor": false
-                                    },
-                                    {
-                                        "Type": "CanvasRenderer",
-                                        "Active": true
-                                    },
-                                    {
-                                        "Type": "Image",
-                                        "Active": true,
-                                        "TextureId": 739371484746604584,
-                                        "Color": [
-                                            1.0,
-                                            1.0,
-                                            1.0,
-                                            1.0
-                                        ],
-                                        "AlphaTransparency": true,
-                                        "IsFill": false,
-                                        "FillValue": 1.0,
-                                        "Offset": [
-                                            0.0,
-                                            0.0
-                                        ],
-                                        "Tiling": [
-                                            1.0,
-                                            1.0
-                                        ]
-                                    }
-                                ],
-                                "Children": null
-                            },
-                            {
-                                "Name": "13",
-                                "Active": true,
-                                "RootBoneName": "",
-                                "Mask": 0,
-                                "Components": [
-                                    {
-                                        "Type": "Transform2D",
-                                        "Active": true,
-                                        "Position": [
-                                            0.0,
-                                            0.0,
-                                            0.0
-                                        ],
-                                        "Rotation": [
-                                            0.0,
-                                            0.0,
-                                            0.0,
-                                            1.0
-                                        ],
-                                        "Scale": [
-                                            1.0,
-                                            1.0,
-                                            1.0
-                                        ],
-                                        "LocalEulerAngles": [
-                                            0.0,
-                                            0.0,
-                                            0.0
-                                        ],
-                                        "Pivot": [
-                                            0.5,
-                                            0.5
-                                        ],
-                                        "Size": [
-                                            3840.0,
-                                            780.0
-                                        ],
-                                        "AnchorMin": [
-                                            0.5,
-                                            0.5
-                                        ],
-                                        "AnchorMax": [
-                                            0.5,
-                                            0.5
-                                        ],
-                                        "AnchorSelected": 5,
-                                        "IsCustomAnchor": false
-                                    },
-                                    {
-                                        "Type": "CanvasRenderer",
-                                        "Active": true
-                                    },
-                                    {
-                                        "Type": "Image",
-                                        "Active": true,
-                                        "TextureId": 7718246259985211212,
                                         "Color": [
                                             1.0,
                                             1.0,
@@ -1381,7 +1167,7 @@
                         "Components": [
                             {
                                 "Type": "Transform2D",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     0.0,
@@ -1424,7 +1210,7 @@
                             },
                             {
                                 "Type": "Script",
-                                "Active": true,
+                                "Active": false,
                                 "Script": 15815488295708913647,
                                 "Values": [
                                     {
@@ -1444,7 +1230,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -1487,11 +1273,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 9161901506193462286,
                                         "Color": [
                                             1.0,
@@ -1522,7 +1308,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -1565,12 +1351,12 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
-                                        "TextureId": 7688953961205071389,
+                                        "Active": false,
+                                        "TextureId": 11505458743066656769,
                                         "Color": [
                                             1.0,
                                             1.0,
@@ -1600,7 +1386,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -1643,11 +1429,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 11758151328454959491,
                                         "Color": [
                                             1.0,
@@ -1678,7 +1464,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -1721,11 +1507,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 7894286287363448005,
                                         "Color": [
                                             1.0,
@@ -1756,7 +1542,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -1799,12 +1585,12 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
-                                        "TextureId": 16801988005517954804,
+                                        "Active": false,
+                                        "TextureId": 8767793447301152404,
                                         "Color": [
                                             1.0,
                                             1.0,
@@ -1834,7 +1620,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -1877,12 +1663,12 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
-                                        "TextureId": 6716093140336321975,
+                                        "Active": false,
+                                        "TextureId": 16013769403457571387,
                                         "Color": [
                                             1.0,
                                             1.0,
@@ -1912,7 +1698,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -1955,11 +1741,11 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
+                                        "Active": false,
                                         "TextureId": 10635694128557141974,
                                         "Color": [
                                             1.0,
@@ -1990,7 +1776,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -2033,12 +1819,12 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
-                                        "TextureId": 13257651826125652814,
+                                        "Active": false,
+                                        "TextureId": 5540180540504260945,
                                         "Color": [
                                             1.0,
                                             1.0,
@@ -2068,7 +1854,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -2111,12 +1897,12 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
-                                        "TextureId": 3645195616204217040,
+                                        "Active": false,
+                                        "TextureId": 14903093653502567534,
                                         "Color": [
                                             1.0,
                                             1.0,
@@ -2146,7 +1932,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -2189,12 +1975,12 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
-                                        "TextureId": 17233524953229872153,
+                                        "Active": false,
+                                        "TextureId": 2627889335629206844,
                                         "Color": [
                                             1.0,
                                             1.0,
@@ -2224,7 +2010,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -2267,12 +2053,12 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
-                                        "TextureId": 11486628891721466297,
+                                        "Active": false,
+                                        "TextureId": 7727861634972874419,
                                         "Color": [
                                             1.0,
                                             1.0,
@@ -2302,7 +2088,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -2345,12 +2131,168 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
-                                        "TextureId": 1589469510139262643,
+                                        "Active": false,
+                                        "TextureId": 4004128632120985910,
+                                        "Color": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": false,
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "13",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            3840.0,
+                                            780.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Active": false,
+                                        "TextureId": 939244417911547962,
+                                        "Color": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": false,
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "14",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            3840.0,
+                                            780.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Active": false,
+                                        "TextureId": 14658128328278934182,
                                         "Color": [
                                             1.0,
                                             1.0,
@@ -2382,7 +2324,7 @@
                         "Components": [
                             {
                                 "Type": "Transform2D",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     0.0,
@@ -2425,7 +2367,7 @@
                             },
                             {
                                 "Type": "Script",
-                                "Active": true,
+                                "Active": false,
                                 "Script": 15815488295708913647,
                                 "Values": null
                             }
@@ -2439,7 +2381,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -2482,12 +2424,12 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
-                                        "TextureId": 16875905475144447108,
+                                        "Active": false,
+                                        "TextureId": 13014202847159776368,
                                         "Color": [
                                             1.0,
                                             1.0,
@@ -2517,7 +2459,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -2560,12 +2502,12 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
-                                        "TextureId": 13026082643211683828,
+                                        "Active": false,
+                                        "TextureId": 2977971220558352475,
                                         "Color": [
                                             1.0,
                                             1.0,
@@ -2595,7 +2537,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -2638,12 +2580,12 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
-                                        "TextureId": 1290767330470962043,
+                                        "Active": false,
+                                        "TextureId": 1189069550218563138,
                                         "Color": [
                                             1.0,
                                             1.0,
@@ -2673,7 +2615,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -2716,12 +2658,12 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
-                                        "TextureId": 7874014716726283706,
+                                        "Active": false,
+                                        "TextureId": 3036945366366376063,
                                         "Color": [
                                             1.0,
                                             1.0,
@@ -2751,7 +2693,7 @@
                                 "Components": [
                                     {
                                         "Type": "Transform2D",
-                                        "Active": true,
+                                        "Active": false,
                                         "Position": [
                                             0.0,
                                             0.0,
@@ -2794,12 +2736,714 @@
                                     },
                                     {
                                         "Type": "CanvasRenderer",
-                                        "Active": true
+                                        "Active": false
                                     },
                                     {
                                         "Type": "Image",
-                                        "Active": true,
-                                        "TextureId": 15433794224612662839,
+                                        "Active": false,
+                                        "TextureId": 7874014716726283706,
+                                        "Color": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": false,
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "6",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            3840.0,
+                                            780.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Active": false,
+                                        "TextureId": 13968259299353459622,
+                                        "Color": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": false,
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "7",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            3840.0,
+                                            780.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Active": false,
+                                        "TextureId": 16814401429755934215,
+                                        "Color": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": false,
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "8",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            3840.0,
+                                            780.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Active": false,
+                                        "TextureId": 2412364368827601391,
+                                        "Color": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": false,
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "9",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            3840.0,
+                                            780.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Active": false,
+                                        "TextureId": 2127587764819452184,
+                                        "Color": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": false,
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "10",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            3840.0,
+                                            780.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Active": false,
+                                        "TextureId": 2118570520187841633,
+                                        "Color": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": false,
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "11",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            3840.0,
+                                            780.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Active": false,
+                                        "TextureId": 8840683785105221949,
+                                        "Color": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": false,
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "12",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            3840.0,
+                                            780.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Active": false,
+                                        "TextureId": 8112325657744046571,
+                                        "Color": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": false,
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "13",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            3840.0,
+                                            780.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Active": false,
+                                        "TextureId": 7752678491438625375,
+                                        "Color": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": false,
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "14",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            3840.0,
+                                            780.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Active": false,
+                                        "TextureId": 17790459209348860945,
                                         "Color": [
                                             1.0,
                                             1.0,
@@ -2822,155 +3466,19 @@
                                 "Children": null
                             }
                         ]
-                    }
-                ]
-            },
-            {
-                "Name": "MainMenuButton",
-                "Active": true,
-                "RootBoneName": "",
-                "Mask": 0,
-                "Components": [
-                    {
-                        "Type": "Transform2D",
-                        "Active": true,
-                        "Position": [
-                            0.0,
-                            -420.0,
-                            0.0
-                        ],
-                        "Rotation": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            1.0
-                        ],
-                        "Scale": [
-                            1.0,
-                            1.0,
-                            1.0
-                        ],
-                        "LocalEulerAngles": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ],
-                        "Pivot": [
-                            0.5,
-                            0.5
-                        ],
-                        "Size": [
-                            262.0,
-                            62.0
-                        ],
-                        "AnchorMin": [
-                            0.5,
-                            0.5
-                        ],
-                        "AnchorMax": [
-                            0.5,
-                            0.5
-                        ],
-                        "AnchorSelected": 5,
-                        "IsCustomAnchor": false
                     },
                     {
-                        "Type": "CanvasRenderer",
-                        "Active": true
-                    },
-                    {
-                        "Type": "BoundingBox2D",
-                        "Active": true,
-                        "LocalBoundingBox2D": [
-                            -0.5,
-                            -0.5,
-                            0.5,
-                            0.5
-                        ]
-                    },
-                    {
-                        "Type": "Selectable",
-                        "Active": true,
-                        "ColorHover": [
-                            0.8399999737739563,
-                            0.8399999737739563,
-                            0.8399999737739563,
-                            1.0
-                        ],
-                        "ColorDisable": [
-                            0.5,
-                            0.5,
-                            0.5,
-                            1.0
-                        ],
-                        "Interactable": true,
-                        "NavigationType": 1,
-                        "TransitionType": 1,
-                        "SelectableType": 10,
-                        "OnAxisDown": 0,
-                        "OnAxisUp": 0,
-                        "OnAxisRight": 0,
-                        "OnAxisLeft": 0
-                    },
-                    {
-                        "Type": "Button",
-                        "Active": true,
-                        "Clicked": false,
-                        "ColorClick": [
-                            0.6399999856948853,
-                            0.6399999856948853,
-                            0.6399999856948853,
-                            1.0
-                        ]
-                    },
-                    {
-                        "Type": "Image",
-                        "Active": true,
-                        "TextureId": 9771556415350180533,
-                        "Color": [
-                            0.0,
-                            0.18431372940540315,
-                            0.2823529541492462,
-                            1.0
-                        ],
-                        "AlphaTransparency": true,
-                        "IsFill": false,
-                        "FillValue": 1.0,
-                        "Offset": [
-                            0.0,
-                            0.0
-                        ],
-                        "Tiling": [
-                            1.0,
-                            1.0
-                        ]
-                    },
-                    {
-                        "Type": "Script",
-                        "Active": true,
-                        "Script": 15139721463718087939,
-                        "Values": [
-                            {
-                                "Name": "sceneUID",
-                                "Type": "SceneResourceUID",
-                                "Value": 2968379164312150788
-                            }
-                        ]
-                    }
-                ],
-                "Children": [
-                    {
-                        "Name": "Text",
+                        "Name": "GameOverOutIn",
                         "Active": true,
                         "RootBoneName": "",
                         "Mask": 0,
                         "Components": [
                             {
                                 "Type": "Transform2D",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
-                                    -3.0,
+                                    0.0,
                                     0.0
                                 ],
                                 "Rotation": [
@@ -3009,39 +3517,812 @@
                                 "IsCustomAnchor": false
                             },
                             {
-                                "Type": "CanvasRenderer",
-                                "Active": true
-                            },
-                            {
-                                "Type": "Text",
-                                "Active": true,
-                                "FontID": 9939030777484332345,
-                                "FontSize": 24.0,
-                                "LineHeight": 16.0,
-                                "LetterSpacing": 4.0,
-                                "Alignment": 1,
-                                "Value": "MAIN MENU",
-                                "Color": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
+                                "Type": "Script",
+                                "Active": false,
+                                "Script": 15815488295708913647,
+                                "Values": [
+                                    {
+                                        "Name": "secondsPerFrame",
+                                        "Type": "Float",
+                                        "Value": 0.0010000000474974514
+                                    }
                                 ]
                             }
                         ],
-                        "Children": null
+                        "Children": [
+                            {
+                                "Name": "10",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            3840.0,
+                                            780.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Active": false,
+                                        "TextureId": 1028116885161712249,
+                                        "Color": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": false,
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "9",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            3840.0,
+                                            780.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Active": false,
+                                        "TextureId": 8613890449906493529,
+                                        "Color": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": false,
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "8",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            3840.0,
+                                            780.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Active": false,
+                                        "TextureId": 5406200266399156444,
+                                        "Color": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": false,
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "7",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            3840.0,
+                                            780.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Active": false,
+                                        "TextureId": 9306520051442473715,
+                                        "Color": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": false,
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "6",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            3840.0,
+                                            780.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Active": false,
+                                        "TextureId": 2580265354118792599,
+                                        "Color": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": false,
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "5",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            3840.0,
+                                            780.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Active": false,
+                                        "TextureId": 17271155541296877995,
+                                        "Color": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": false,
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "4",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            3840.0,
+                                            780.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Active": false,
+                                        "TextureId": 17580139162309151403,
+                                        "Color": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": false,
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "3",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            3840.0,
+                                            780.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Active": false,
+                                        "TextureId": 7062301636225051713,
+                                        "Color": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": false,
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "2",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            3840.0,
+                                            780.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Active": false,
+                                        "TextureId": 7097050797936835035,
+                                        "Color": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": false,
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "1",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            3840.0,
+                                            780.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Active": false,
+                                        "TextureId": 16363530423460008148,
+                                        "Color": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": false,
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            }
+                        ]
                     }
                 ]
             },
             {
-                "Name": "PlayAgainButton",
+                "Name": "RetryButton",
                 "Active": true,
                 "RootBoneName": "",
                 "Mask": 0,
                 "Components": [
                     {
                         "Type": "Transform2D",
-                        "Active": true,
+                        "Active": false,
                         "Position": [
                             0.0,
                             -300.0,
@@ -3068,8 +4349,8 @@
                             0.5
                         ],
                         "Size": [
-                            262.0,
-                            62.0
+                            304.0,
+                            81.0
                         ],
                         "AnchorMin": [
                             0.5,
@@ -3084,11 +4365,11 @@
                     },
                     {
                         "Type": "CanvasRenderer",
-                        "Active": true
+                        "Active": false
                     },
                     {
                         "Type": "BoundingBox2D",
-                        "Active": true,
+                        "Active": false,
                         "LocalBoundingBox2D": [
                             -0.5,
                             -0.5,
@@ -3098,12 +4379,12 @@
                     },
                     {
                         "Type": "Selectable",
-                        "Active": true,
+                        "Active": false,
                         "ColorHover": [
-                            0.8399999737739563,
-                            0.8399999737739563,
-                            0.8399999737739563,
-                            1.0
+                            0.0,
+                            0.686274528503418,
+                            0.7568627595901489,
+                            0.9019607901573181
                         ],
                         "ColorDisable": [
                             0.5,
@@ -3122,23 +4403,23 @@
                     },
                     {
                         "Type": "Button",
-                        "Active": true,
+                        "Active": false,
                         "Clicked": false,
                         "ColorClick": [
-                            0.6399999856948853,
-                            0.6399999856948853,
-                            0.6399999856948853,
+                            0.9254902005195618,
+                            0.23529411852359773,
+                            0.5372549295425415,
                             1.0
                         ]
                     },
                     {
                         "Type": "Image",
-                        "Active": true,
-                        "TextureId": 9771556415350180533,
+                        "Active": false,
+                        "TextureId": 2836308617326386907,
                         "Color": [
-                            0.0,
-                            0.18431372940540315,
-                            0.2823529541492462,
+                            1.0,
+                            1.0,
+                            1.0,
                             1.0
                         ],
                         "AlphaTransparency": true,
@@ -3155,18 +4436,206 @@
                     },
                     {
                         "Type": "Script",
-                        "Active": true,
+                        "Active": false,
                         "Script": 15139721463718087939,
                         "Values": [
                             {
                                 "Name": "sceneUID",
                                 "Type": "SceneResourceUID",
-                                "Value": 15793319920030420872
+                                "Value": 16893504836010757748
+                            },
+                            {
+                                "Name": "levelNum",
+                                "Type": "Int",
+                                "Value": 1
+                            },
+                            {
+                                "Name": "transitionUID",
+                                "Type": "GameObjectUID",
+                                "Value": 13381817022858866322
+                            }
+                        ]
+                    },
+                    {
+                        "Type": "Script",
+                        "Active": false,
+                        "Script": 14613544446749292252,
+                        "Values": [
+                            {
+                                "Name": "buttonIdleImageObjUID",
+                                "Type": "GameObjectUID",
+                                "Value": 10181371517413657289
+                            },
+                            {
+                                "Name": "buttonHoveredImageObjUID",
+                                "Type": "GameObjectUID",
+                                "Value": 14123684273942739439
+                            },
+                            {
+                                "Name": "buttonClickedImageObjUID",
+                                "Type": "GameObjectUID",
+                                "Value": 12994410148437360195
                             }
                         ]
                     }
                 ],
                 "Children": [
+                    {
+                        "Name": "RetryButtonHovered",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform2D",
+                                "Active": false,
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Pivot": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "Size": [
+                                    304.0,
+                                    81.0
+                                ],
+                                "AnchorMin": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorMax": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorSelected": 5,
+                                "IsCustomAnchor": false
+                            },
+                            {
+                                "Type": "CanvasRenderer",
+                                "Active": false
+                            },
+                            {
+                                "Type": "Image",
+                                "Active": false,
+                                "TextureId": 5993758774357394277,
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "AlphaTransparency": true,
+                                "IsFill": false,
+                                "FillValue": 1.0,
+                                "Offset": [
+                                    0.0,
+                                    0.0
+                                ],
+                                "Tiling": [
+                                    1.0,
+                                    1.0
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Name": "RetryButtonClicked",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform2D",
+                                "Active": false,
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Pivot": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "Size": [
+                                    304.0,
+                                    81.0
+                                ],
+                                "AnchorMin": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorMax": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorSelected": 5,
+                                "IsCustomAnchor": false
+                            },
+                            {
+                                "Type": "CanvasRenderer",
+                                "Active": false
+                            },
+                            {
+                                "Type": "Image",
+                                "Active": false,
+                                "TextureId": 17083678890629101974,
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "AlphaTransparency": true,
+                                "IsFill": false,
+                                "FillValue": 1.0,
+                                "Offset": [
+                                    0.0,
+                                    0.0
+                                ],
+                                "Tiling": [
+                                    1.0,
+                                    1.0
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    },
                     {
                         "Name": "Text",
                         "Active": true,
@@ -3175,7 +4644,7 @@
                         "Components": [
                             {
                                 "Type": "Transform2D",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     -6.0,
@@ -3218,11 +4687,11 @@
                             },
                             {
                                 "Type": "CanvasRenderer",
-                                "Active": true
+                                "Active": false
                             },
                             {
                                 "Type": "Text",
-                                "Active": true,
+                                "Active": false,
                                 "FontID": 9939030777484332345,
                                 "FontSize": 28.0,
                                 "LineHeight": 16.0,
@@ -3242,92 +4711,14 @@
                 ]
             },
             {
-                "Name": "PlayAgainButtonStroke",
+                "Name": "MainMenuButton",
                 "Active": true,
                 "RootBoneName": "",
                 "Mask": 0,
                 "Components": [
                     {
                         "Type": "Transform2D",
-                        "Active": true,
-                        "Position": [
-                            0.0,
-                            -300.0,
-                            0.0
-                        ],
-                        "Rotation": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            1.0
-                        ],
-                        "Scale": [
-                            1.5,
-                            1.5,
-                            1.0
-                        ],
-                        "LocalEulerAngles": [
-                            0.0,
-                            0.0,
-                            0.0
-                        ],
-                        "Pivot": [
-                            0.5,
-                            0.5
-                        ],
-                        "Size": [
-                            262.0,
-                            62.0
-                        ],
-                        "AnchorMin": [
-                            0.5,
-                            0.5
-                        ],
-                        "AnchorMax": [
-                            0.5,
-                            0.5
-                        ],
-                        "AnchorSelected": 5,
-                        "IsCustomAnchor": false
-                    },
-                    {
-                        "Type": "CanvasRenderer",
-                        "Active": true
-                    },
-                    {
-                        "Type": "Image",
-                        "Active": true,
-                        "TextureId": 3904950738888863925,
-                        "Color": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0
-                        ],
-                        "AlphaTransparency": true,
-                        "IsFill": false,
-                        "FillValue": 1.0,
-                        "Offset": [
-                            0.0,
-                            0.0
-                        ],
-                        "Tiling": [
-                            1.0,
-                            1.0
-                        ]
-                    }
-                ],
-                "Children": null
-            },
-            {
-                "Name": "MainMenuButtonStroke",
-                "Active": true,
-                "RootBoneName": "",
-                "Mask": 0,
-                "Components": [
-                    {
-                        "Type": "Transform2D",
-                        "Active": true,
+                        "Active": false,
                         "Position": [
                             0.0,
                             -420.0,
@@ -3370,15 +4761,60 @@
                     },
                     {
                         "Type": "CanvasRenderer",
-                        "Active": true
+                        "Active": false
+                    },
+                    {
+                        "Type": "BoundingBox2D",
+                        "Active": false,
+                        "LocalBoundingBox2D": [
+                            -0.5,
+                            -0.5,
+                            0.5,
+                            0.5
+                        ]
+                    },
+                    {
+                        "Type": "Selectable",
+                        "Active": false,
+                        "ColorHover": [
+                            0.0,
+                            0.686274528503418,
+                            0.7568627595901489,
+                            0.9019607901573181
+                        ],
+                        "ColorDisable": [
+                            0.5,
+                            0.5,
+                            0.5,
+                            1.0
+                        ],
+                        "Interactable": true,
+                        "NavigationType": 1,
+                        "TransitionType": 1,
+                        "SelectableType": 10,
+                        "OnAxisDown": 0,
+                        "OnAxisUp": 0,
+                        "OnAxisRight": 0,
+                        "OnAxisLeft": 0
+                    },
+                    {
+                        "Type": "Button",
+                        "Active": false,
+                        "Clicked": false,
+                        "ColorClick": [
+                            0.9254902005195618,
+                            0.23529411852359773,
+                            0.5372549295425415,
+                            1.0
+                        ]
                     },
                     {
                         "Type": "Image",
-                        "Active": true,
-                        "TextureId": 3904950738888863925,
+                        "Active": false,
+                        "TextureId": 5246324672998598713,
                         "Color": [
-                            1.0,
-                            1.0,
+                            0.9999997019767761,
+                            0.9999999403953552,
                             1.0,
                             1.0
                         ],
@@ -3393,9 +4829,663 @@
                             1.0,
                             1.0
                         ]
+                    },
+                    {
+                        "Type": "Script",
+                        "Active": false,
+                        "Script": 15139721463718087939,
+                        "Values": [
+                            {
+                                "Name": "sceneUID",
+                                "Type": "SceneResourceUID",
+                                "Value": 2968379164312150788
+                            },
+                            {
+                                "Name": "transitionUID",
+                                "Type": "GameObjectUID",
+                                "Value": 14147189387972212390
+                            }
+                        ]
+                    },
+                    {
+                        "Type": "Script",
+                        "Active": false,
+                        "Script": 14613544446749292252,
+                        "Values": [
+                            {
+                                "Name": "buttonIdleImageObjUID",
+                                "Type": "GameObjectUID",
+                                "Value": 4424689193863751271
+                            },
+                            {
+                                "Name": "buttonHoveredImageObjUID",
+                                "Type": "GameObjectUID",
+                                "Value": 16208708030983994392
+                            },
+                            {
+                                "Name": "buttonClickedImageObjUID",
+                                "Type": "GameObjectUID",
+                                "Value": 5325333962690734145
+                            }
+                        ]
                     }
                 ],
-                "Children": null
+                "Children": [
+                    {
+                        "Name": "MainMenuButtonHovered",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform2D",
+                                "Active": false,
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Pivot": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "Size": [
+                                    262.0,
+                                    62.0
+                                ],
+                                "AnchorMin": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorMax": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorSelected": 5,
+                                "IsCustomAnchor": false
+                            },
+                            {
+                                "Type": "CanvasRenderer",
+                                "Active": false
+                            },
+                            {
+                                "Type": "Image",
+                                "Active": false,
+                                "TextureId": 12052583771053742201,
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "AlphaTransparency": true,
+                                "IsFill": false,
+                                "FillValue": 1.0,
+                                "Offset": [
+                                    0.0,
+                                    0.0
+                                ],
+                                "Tiling": [
+                                    1.0,
+                                    1.0
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Name": "MainMenuButtonClicked",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform2D",
+                                "Active": false,
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Pivot": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "Size": [
+                                    262.0,
+                                    62.0
+                                ],
+                                "AnchorMin": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorMax": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorSelected": 5,
+                                "IsCustomAnchor": false
+                            },
+                            {
+                                "Type": "CanvasRenderer",
+                                "Active": false
+                            },
+                            {
+                                "Type": "Image",
+                                "Active": false,
+                                "TextureId": 17579252613526960775,
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "AlphaTransparency": true,
+                                "IsFill": false,
+                                "FillValue": 1.0,
+                                "Offset": [
+                                    0.0,
+                                    0.0
+                                ],
+                                "Tiling": [
+                                    1.0,
+                                    1.0
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Name": "Text",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform2D",
+                                "Active": false,
+                                "Position": [
+                                    0.0,
+                                    -3.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Pivot": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "Size": [
+                                    200.0,
+                                    200.0
+                                ],
+                                "AnchorMin": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorMax": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorSelected": 5,
+                                "IsCustomAnchor": false
+                            },
+                            {
+                                "Type": "CanvasRenderer",
+                                "Active": false
+                            },
+                            {
+                                "Type": "Text",
+                                "Active": false,
+                                "FontID": 9939030777484332345,
+                                "FontSize": 24.0,
+                                "LineHeight": 16.0,
+                                "LetterSpacing": 4.0,
+                                "Alignment": 1,
+                                "Value": "MAIN MENU",
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    }
+                ]
+            },
+            {
+                "Name": "ExitGameButton",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform2D",
+                        "Active": false,
+                        "Position": [
+                            -775.0,
+                            -475.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Pivot": [
+                            0.5,
+                            0.5
+                        ],
+                        "Size": [
+                            262.0,
+                            62.0
+                        ],
+                        "AnchorMin": [
+                            0.5,
+                            0.5
+                        ],
+                        "AnchorMax": [
+                            0.5,
+                            0.5
+                        ],
+                        "AnchorSelected": 5,
+                        "IsCustomAnchor": false
+                    },
+                    {
+                        "Type": "CanvasRenderer",
+                        "Active": false
+                    },
+                    {
+                        "Type": "BoundingBox2D",
+                        "Active": false,
+                        "LocalBoundingBox2D": [
+                            -0.5,
+                            -0.5,
+                            0.5,
+                            0.5
+                        ]
+                    },
+                    {
+                        "Type": "Selectable",
+                        "Active": false,
+                        "ColorHover": [
+                            0.0,
+                            0.686274528503418,
+                            0.7568627595901489,
+                            0.9019607901573181
+                        ],
+                        "ColorDisable": [
+                            0.5,
+                            0.5,
+                            0.5,
+                            1.0
+                        ],
+                        "Interactable": true,
+                        "NavigationType": 1,
+                        "TransitionType": 1,
+                        "SelectableType": 10,
+                        "OnAxisDown": 0,
+                        "OnAxisUp": 0,
+                        "OnAxisRight": 0,
+                        "OnAxisLeft": 0
+                    },
+                    {
+                        "Type": "Button",
+                        "Active": false,
+                        "Clicked": false,
+                        "ColorClick": [
+                            0.9254902005195618,
+                            0.23529411852359773,
+                            0.5372549295425415,
+                            1.0
+                        ]
+                    },
+                    {
+                        "Type": "Image",
+                        "Active": false,
+                        "TextureId": 5246324672998598713,
+                        "Color": [
+                            0.9999987483024597,
+                            0.9999997019767761,
+                            1.0,
+                            1.0
+                        ],
+                        "AlphaTransparency": true,
+                        "IsFill": false,
+                        "FillValue": 1.0,
+                        "Offset": [
+                            0.0,
+                            0.0
+                        ],
+                        "Tiling": [
+                            1.0,
+                            1.0
+                        ]
+                    },
+                    {
+                        "Type": "Script",
+                        "Active": false,
+                        "Script": 11787012945619397912,
+                        "Values": [
+                            {
+                                "Name": "transitionUID",
+                                "Type": "GameObjectUID",
+                                "Value": 14147189387972212390
+                            }
+                        ]
+                    },
+                    {
+                        "Type": "Script",
+                        "Active": false,
+                        "Script": 14613544446749292252,
+                        "Values": [
+                            {
+                                "Name": "buttonIdleImageObjUID",
+                                "Type": "GameObjectUID",
+                                "Value": 18025388680066172782
+                            },
+                            {
+                                "Name": "buttonHoveredImageObjUID",
+                                "Type": "GameObjectUID",
+                                "Value": 15291398443586255322
+                            },
+                            {
+                                "Name": "buttonClickedImageObjUID",
+                                "Type": "GameObjectUID",
+                                "Value": 4082075156213852622
+                            }
+                        ]
+                    }
+                ],
+                "Children": [
+                    {
+                        "Name": "MainMenuButtonHovered",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform2D",
+                                "Active": false,
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Pivot": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "Size": [
+                                    262.0,
+                                    62.0
+                                ],
+                                "AnchorMin": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorMax": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorSelected": 5,
+                                "IsCustomAnchor": false
+                            },
+                            {
+                                "Type": "CanvasRenderer",
+                                "Active": false
+                            },
+                            {
+                                "Type": "Image",
+                                "Active": false,
+                                "TextureId": 12052583771053742201,
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "AlphaTransparency": true,
+                                "IsFill": false,
+                                "FillValue": 1.0,
+                                "Offset": [
+                                    0.0,
+                                    0.0
+                                ],
+                                "Tiling": [
+                                    1.0,
+                                    1.0
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Name": "MainMenuButtonClicked",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform2D",
+                                "Active": false,
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Pivot": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "Size": [
+                                    262.0,
+                                    62.0
+                                ],
+                                "AnchorMin": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorMax": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorSelected": 5,
+                                "IsCustomAnchor": false
+                            },
+                            {
+                                "Type": "CanvasRenderer",
+                                "Active": false
+                            },
+                            {
+                                "Type": "Image",
+                                "Active": false,
+                                "TextureId": 17579252613526960775,
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "AlphaTransparency": true,
+                                "IsFill": false,
+                                "FillValue": 1.0,
+                                "Offset": [
+                                    0.0,
+                                    0.0
+                                ],
+                                "Tiling": [
+                                    1.0,
+                                    1.0
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Name": "Text",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform2D",
+                                "Active": false,
+                                "Position": [
+                                    0.0,
+                                    -3.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Pivot": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "Size": [
+                                    200.0,
+                                    200.0
+                                ],
+                                "AnchorMin": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorMax": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorSelected": 5,
+                                "IsCustomAnchor": false
+                            },
+                            {
+                                "Type": "CanvasRenderer",
+                                "Active": false
+                            },
+                            {
+                                "Type": "Text",
+                                "Active": false,
+                                "FontID": 9939030777484332345,
+                                "FontSize": 24.0,
+                                "LineHeight": 16.0,
+                                "LetterSpacing": 4.0,
+                                "Alignment": 1,
+                                "Value": "EXIT GAME",
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    }
+                ]
             }
         ]
     }

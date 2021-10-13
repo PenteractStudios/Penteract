@@ -1,0 +1,19 @@
+{
+    "Name": "Punch",
+    "AnimationUID": 16102588795477284283,
+    "BeginIndex": 170,
+    "EndIndex": 210,
+    "Loop": false,
+    "Speed": 1.2999999523162842,
+    "FrameRate": 0.04163135588169098,
+    "KeyEventClip": [
+        {
+            "KeyFrame": 192,
+            "Name": "EnablePunch"
+        },
+        {
+            "KeyFrame": 200,
+            "Name": "DisablePunch"
+        }
+    ]
+}

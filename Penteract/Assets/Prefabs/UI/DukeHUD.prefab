@@ -1,0 +1,420 @@
+{
+    "Root": {
+        "Name": "Duke",
+        "Active": true,
+        "RootBoneName": "",
+        "Mask": 0,
+        "Components": [
+            {
+                "Type": "Transform2D",
+                "Active": true,
+                "Position": [
+                    -444.54998779296877,
+                    -106.75,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    0.5,
+                    0.5,
+                    0.5
+                ],
+                "LocalEulerAngles": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "Size": [
+                    200.0,
+                    200.0
+                ],
+                "AnchorMin": [
+                    1.0,
+                    1.0
+                ],
+                "AnchorMax": [
+                    1.0,
+                    1.0
+                ],
+                "AnchorSelected": 2,
+                "IsCustomAnchor": false
+            }
+        ],
+        "Children": [
+            {
+                "Name": "Health",
+                "Active": false,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform2D",
+                        "Active": false,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Pivot": [
+                            0.5,
+                            0.5
+                        ],
+                        "Size": [
+                            200.0,
+                            200.0
+                        ],
+                        "AnchorMin": [
+                            0.5,
+                            0.5
+                        ],
+                        "AnchorMax": [
+                            0.5,
+                            0.5
+                        ],
+                        "AnchorSelected": 5,
+                        "IsCustomAnchor": false
+                    }
+                ],
+                "Children": [
+                    {
+                        "Name": "Background",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform2D",
+                                "Active": false,
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.7071068286895752,
+                                    0.7071068286895752
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    0.0,
+                                    0.0,
+                                    90.0
+                                ],
+                                "Pivot": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "Size": [
+                                    113.0,
+                                    1416.0
+                                ],
+                                "AnchorMin": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorMax": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorSelected": 5,
+                                "IsCustomAnchor": false
+                            },
+                            {
+                                "Type": "CanvasRenderer",
+                                "Active": false
+                            },
+                            {
+                                "Type": "Image",
+                                "Active": false,
+                                "TextureId": 10768968364524584142,
+                                "Color": [
+                                    0.0,
+                                    0.1568627506494522,
+                                    0.23529411852359773,
+                                    0.800000011920929
+                                ],
+                                "AlphaTransparency": true,
+                                "IsFill": false,
+                                "FillValue": 1.0,
+                                "Offset": [
+                                    0.0,
+                                    0.0
+                                ],
+                                "Tiling": [
+                                    1.0,
+                                    1.0
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Name": "FillHealthLost",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform2D",
+                                "Active": false,
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.7071068286895752,
+                                    0.7071068286895752
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    0.0,
+                                    0.0,
+                                    90.0
+                                ],
+                                "Pivot": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "Size": [
+                                    113.0,
+                                    1416.0
+                                ],
+                                "AnchorMin": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorMax": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorSelected": 5,
+                                "IsCustomAnchor": false
+                            },
+                            {
+                                "Type": "CanvasRenderer",
+                                "Active": false
+                            },
+                            {
+                                "Type": "Image",
+                                "Active": false,
+                                "TextureId": 10768968364524584142,
+                                "Color": [
+                                    0.0,
+                                    0.4588235318660736,
+                                    0.8901960849761963,
+                                    0.0
+                                ],
+                                "AlphaTransparency": true,
+                                "IsFill": true,
+                                "FillValue": 0.6499999761581421,
+                                "Offset": [
+                                    0.0,
+                                    0.0
+                                ],
+                                "Tiling": [
+                                    1.0,
+                                    1.0
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Name": "Fill",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform2D",
+                                "Active": false,
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.7071068286895752,
+                                    0.7071068286895752
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    0.0,
+                                    0.0,
+                                    90.0
+                                ],
+                                "Pivot": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "Size": [
+                                    113.0,
+                                    1416.0
+                                ],
+                                "AnchorMin": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorMax": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorSelected": 5,
+                                "IsCustomAnchor": false
+                            },
+                            {
+                                "Type": "CanvasRenderer",
+                                "Active": false
+                            },
+                            {
+                                "Type": "Image",
+                                "Active": false,
+                                "TextureId": 10768968364524584142,
+                                "Color": [
+                                    0.9215686321258545,
+                                    0.6797498464584351,
+                                    0.09938492625951767,
+                                    1.0
+                                ],
+                                "AlphaTransparency": true,
+                                "IsFill": true,
+                                "FillValue": 0.6499999761581421,
+                                "Offset": [
+                                    0.0,
+                                    0.0
+                                ],
+                                "Tiling": [
+                                    1.0,
+                                    1.0
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Name": "Overlay",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform2D",
+                                "Active": false,
+                                "Position": [
+                                    42.400001525878909,
+                                    2.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Pivot": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "Size": [
+                                    1509.0,
+                                    221.0
+                                ],
+                                "AnchorMin": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorMax": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "AnchorSelected": 5,
+                                "IsCustomAnchor": false
+                            },
+                            {
+                                "Type": "CanvasRenderer",
+                                "Active": false
+                            },
+                            {
+                                "Type": "Image",
+                                "Active": false,
+                                "TextureId": 9436128391869253624,
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "AlphaTransparency": true,
+                                "IsFill": false,
+                                "FillValue": 1.0,
+                                "Offset": [
+                                    0.0,
+                                    0.0
+                                ],
+                                "Tiling": [
+                                    1.0,
+                                    1.0
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    }
+                ]
+            }
+        ]
+    }
+}

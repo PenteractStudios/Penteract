@@ -46,6 +46,11 @@
                         "Value": 12467949130155930994
                     },
                     {
+                        "Name": "enemiesUID",
+                        "Type": "GameObjectUID",
+                        "Value": 1174092149252714195
+                    },
+                    {
                         "Name": "spawnRangedUID",
                         "Type": "GameObjectUID",
                         "Value": 17732647909550886280
@@ -56,24 +61,19 @@
                         "Value": 9424093591244721738
                     },
                     {
-                        "Name": "enemiesUID",
-                        "Type": "GameObjectUID",
-                        "Value": 9424093591244721738
-                    },
-                    {
-                        "Name": "debugEnemiesUID",
-                        "Type": "GameObjectUID",
-                        "Value": 8956077401393633822
-                    },
-                    {
                         "Name": "playerControllerUID",
                         "Type": "GameObjectUID",
-                        "Value": 403437826872113792
+                        "Value": 9835691270176894595
                     },
                     {
                         "Name": "gameCameraUID",
                         "Type": "GameObjectUID",
                         "Value": 680618938873982628
+                    },
+                    {
+                        "Name": "debugEnemiesUID",
+                        "Type": "GameObjectUID",
+                        "Value": 8956077401393633822
                     },
                     {
                         "Name": "godCameraUID",
@@ -84,6 +84,26 @@
                         "Name": "invincibleUID",
                         "Type": "GameObjectUID",
                         "Value": 13769132984260842721
+                    },
+                    {
+                        "Name": "plazaDoorUID",
+                        "Type": "GameObjectUID",
+                        "Value": 10136555471852881612
+                    },
+                    {
+                        "Name": "cafeteriaDoorUID",
+                        "Type": "GameObjectUID",
+                        "Value": 10817006889250974331
+                    },
+                    {
+                        "Name": "bridgeDoorUID",
+                        "Type": "GameObjectUID",
+                        "Value": 9841789898228557983
+                    },
+                    {
+                        "Name": "dialogTriggersUID",
+                        "Type": "GameObjectUID",
+                        "Value": 15147416890449434185
                     }
                 ]
             }
@@ -141,14 +161,19 @@
                                 "Value": 11128356192968719727
                             },
                             {
-                                "Name": "prefabUID",
-                                "Type": "PrefabResourceUID",
-                                "Value": 6161494011548713161
-                            },
-                            {
                                 "Name": "enemiesUID",
                                 "Type": "GameObjectUID",
                                 "Value": 8956077401393633822
+                            },
+                            {
+                                "Name": "prefabUID",
+                                "Type": "PrefabResourceUID",
+                                "Value": 1840291781387796334
+                            },
+                            {
+                                "Name": "playerUID",
+                                "Type": "GameObjectUID",
+                                "Value": 9835691270176894595
                             }
                         ]
                     }
@@ -200,7 +225,7 @@
                         "Active": false,
                         "Position": [
                             30.0,
-                            -150.0,
+                            -290.0,
                             0.0
                         ],
                         "Rotation": [
@@ -228,14 +253,14 @@
                             200.0
                         ],
                         "AnchorMin": [
-                            0.5,
-                            0.5
+                            1.0,
+                            1.0
                         ],
                         "AnchorMax": [
-                            0.5,
-                            0.5
+                            1.0,
+                            1.0
                         ],
-                        "AnchorSelected": 5,
+                        "AnchorSelected": 2,
                         "IsCustomAnchor": false
                     },
                     {
@@ -254,8 +279,8 @@
                                 "Type": "Transform2D",
                                 "Active": false,
                                 "Position": [
-                                    220.0,
-                                    -267.95001220703127,
+                                    -230.0,
+                                    -346.0,
                                     0.0
                                 ],
                                 "Rotation": [
@@ -280,17 +305,17 @@
                                 ],
                                 "Size": [
                                     400.0,
-                                    590.0
+                                    550.0
                                 ],
                                 "AnchorMin": [
-                                    0.0,
+                                    1.0,
                                     1.0
                                 ],
                                 "AnchorMax": [
-                                    0.0,
+                                    1.0,
                                     1.0
                                 ],
-                                "AnchorSelected": 0,
+                                "AnchorSelected": 2,
                                 "IsCustomAnchor": false
                             },
                             {
@@ -313,7 +338,15 @@
                                 ],
                                 "AlphaTransparency": true,
                                 "IsFill": false,
-                                "FillValue": 1.0
+                                "FillValue": 1.0,
+                                "Offset": [
+                                    0.0,
+                                    0.0
+                                ],
+                                "Tiling": [
+                                    1.0,
+                                    1.0
+                                ]
                             }
                         ],
                         "Children": null
@@ -353,8 +386,8 @@
                                 "Type": "Transform2D",
                                 "Active": false,
                                 "Position": [
-                                    50.0,
-                                    -10.0,
+                                    -400.0,
+                                    -110.0,
                                     0.0
                                 ],
                                 "Rotation": [
@@ -382,14 +415,14 @@
                                     25.0
                                 ],
                                 "AnchorMin": [
-                                    0.0,
+                                    1.0,
                                     1.0
                                 ],
                                 "AnchorMax": [
-                                    0.0,
+                                    1.0,
                                     1.0
                                 ],
-                                "AnchorSelected": 0,
+                                "AnchorSelected": 2,
                                 "IsCustomAnchor": false
                             },
                             {
@@ -454,7 +487,15 @@
                                 ],
                                 "AlphaTransparency": false,
                                 "IsFill": false,
-                                "FillValue": 0.8999999761581421
+                                "FillValue": 0.8999999761581421,
+                                "Offset": [
+                                    0.0,
+                                    0.0
+                                ],
+                                "Tiling": [
+                                    1.0,
+                                    1.0
+                                ]
                             },
                             {
                                 "Type": "Script",
@@ -560,7 +601,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": true,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -649,6 +698,7 @@
                                         "FontID": 18326526522212889354,
                                         "FontSize": 20.0,
                                         "LineHeight": 16.0,
+                                        "LetterSpacing": 0.0,
                                         "Alignment": 0,
                                         "Value": "Toggle spawn melee enemy",
                                         "Color": [
@@ -698,8 +748,8 @@
                                 "Type": "Transform2D",
                                 "Active": false,
                                 "Position": [
-                                    50.0,
-                                    -85.0,
+                                    -400.0,
+                                    -170.0,
                                     0.0
                                 ],
                                 "Rotation": [
@@ -727,14 +777,14 @@
                                     25.0
                                 ],
                                 "AnchorMin": [
-                                    0.0,
+                                    1.0,
                                     1.0
                                 ],
                                 "AnchorMax": [
-                                    0.0,
+                                    1.0,
                                     1.0
                                 ],
-                                "AnchorSelected": 0,
+                                "AnchorSelected": 2,
                                 "IsCustomAnchor": false
                             },
                             {
@@ -799,7 +849,15 @@
                                 ],
                                 "AlphaTransparency": false,
                                 "IsFill": false,
-                                "FillValue": 1.0
+                                "FillValue": 1.0,
+                                "Offset": [
+                                    0.0,
+                                    0.0
+                                ],
+                                "Tiling": [
+                                    1.0,
+                                    1.0
+                                ]
                             },
                             {
                                 "Type": "Script",
@@ -910,7 +968,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": true,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -999,6 +1065,7 @@
                                         "FontID": 18326526522212889354,
                                         "FontSize": 20.0,
                                         "LineHeight": 16.0,
+                                        "LetterSpacing": 0.0,
                                         "Alignment": 0,
                                         "Value": "Toggle spawn ranged enemy",
                                         "Color": [
@@ -1048,8 +1115,8 @@
                                 "Type": "Transform2D",
                                 "Active": false,
                                 "Position": [
-                                    50.0,
-                                    -160.0,
+                                    -400.0,
+                                    -230.0,
                                     0.0
                                 ],
                                 "Rotation": [
@@ -1077,14 +1144,14 @@
                                     25.0
                                 ],
                                 "AnchorMin": [
-                                    0.0,
+                                    1.0,
                                     1.0
                                 ],
                                 "AnchorMax": [
-                                    0.0,
+                                    1.0,
                                     1.0
                                 ],
-                                "AnchorSelected": 0,
+                                "AnchorSelected": 2,
                                 "IsCustomAnchor": false
                             },
                             {
@@ -1149,7 +1216,15 @@
                                 ],
                                 "AlphaTransparency": false,
                                 "IsFill": false,
-                                "FillValue": 1.0
+                                "FillValue": 1.0,
+                                "Offset": [
+                                    0.0,
+                                    0.0
+                                ],
+                                "Tiling": [
+                                    1.0,
+                                    1.0
+                                ]
                             },
                             {
                                 "Type": "Script",
@@ -1260,7 +1335,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": true,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -1349,6 +1432,7 @@
                                         "FontID": 18326526522212889354,
                                         "FontSize": 20.0,
                                         "LineHeight": 16.0,
+                                        "LetterSpacing": 0.0,
                                         "Alignment": 0,
                                         "Value": "Toggle enemies",
                                         "Color": [
@@ -1364,7 +1448,7 @@
                         ]
                     },
                     {
-                        "Name": "ToggleGameCamera",
+                        "Name": "ToggleDialogs",
                         "Active": true,
                         "RootBoneName": "",
                         "Mask": 0,
@@ -1398,8 +1482,8 @@
                                 "Type": "Transform2D",
                                 "Active": false,
                                 "Position": [
-                                    50.0,
-                                    -235.0,
+                                    -400.0,
+                                    -290.0,
                                     0.0
                                 ],
                                 "Rotation": [
@@ -1427,14 +1511,14 @@
                                     25.0
                                 ],
                                 "AnchorMin": [
-                                    0.0,
+                                    1.0,
                                     1.0
                                 ],
                                 "AnchorMax": [
-                                    0.0,
+                                    1.0,
                                     1.0
                                 ],
-                                "AnchorSelected": 0,
+                                "AnchorSelected": 2,
                                 "IsCustomAnchor": false
                             },
                             {
@@ -1479,7 +1563,7 @@
                                 "Type": "Toggle",
                                 "Active": false,
                                 "IsOn": true,
-                                "EnabledImageID": 14728015836096530733,
+                                "EnabledImageID": 11823047749855920968,
                                 "ClickedColor": [
                                     0.6399999856948853,
                                     0.6399999856948853,
@@ -1499,7 +1583,15 @@
                                 ],
                                 "AlphaTransparency": false,
                                 "IsFill": false,
-                                "FillValue": 1.0
+                                "FillValue": 1.0,
+                                "Offset": [
+                                    0.0,
+                                    0.0
+                                ],
+                                "Tiling": [
+                                    1.0,
+                                    1.0
+                                ]
                             },
                             {
                                 "Type": "Script",
@@ -1610,7 +1702,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": true,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -1651,7 +1751,7 @@
                                         "Active": false,
                                         "Position": [
                                             140.0,
-                                            -6.0,
+                                            -8.0,
                                             0.0
                                         ],
                                         "Rotation": [
@@ -1699,8 +1799,9 @@
                                         "FontID": 18326526522212889354,
                                         "FontSize": 20.0,
                                         "LineHeight": 16.0,
+                                        "LetterSpacing": 0.0,
                                         "Alignment": 0,
-                                        "Value": "Game camera",
+                                        "Value": "Toggle dialogs",
                                         "Color": [
                                             1.0,
                                             1.0,
@@ -1714,7 +1815,7 @@
                         ]
                     },
                     {
-                        "Name": "ToggleGodCamera",
+                        "Name": "ToggleGameCamera",
                         "Active": true,
                         "RootBoneName": "",
                         "Mask": 0,
@@ -1748,8 +1849,8 @@
                                 "Type": "Transform2D",
                                 "Active": false,
                                 "Position": [
-                                    50.0,
-                                    -310.0,
+                                    -400.0,
+                                    -350.0,
                                     0.0
                                 ],
                                 "Rotation": [
@@ -1777,14 +1878,14 @@
                                     25.0
                                 ],
                                 "AnchorMin": [
-                                    0.0,
+                                    1.0,
                                     1.0
                                 ],
                                 "AnchorMax": [
-                                    0.0,
+                                    1.0,
                                     1.0
                                 ],
-                                "AnchorSelected": 0,
+                                "AnchorSelected": 2,
                                 "IsCustomAnchor": false
                             },
                             {
@@ -1828,8 +1929,8 @@
                             {
                                 "Type": "Toggle",
                                 "Active": false,
-                                "IsOn": false,
-                                "EnabledImageID": 10656359969022409623,
+                                "IsOn": true,
+                                "EnabledImageID": 14728015836096530733,
                                 "ClickedColor": [
                                     0.6399999856948853,
                                     0.6399999856948853,
@@ -1849,7 +1950,15 @@
                                 ],
                                 "AlphaTransparency": false,
                                 "IsFill": false,
-                                "FillValue": 1.0
+                                "FillValue": 1.0,
+                                "Offset": [
+                                    0.0,
+                                    0.0
+                                ],
+                                "Tiling": [
+                                    1.0,
+                                    1.0
+                                ]
                             },
                             {
                                 "Type": "Script",
@@ -1960,7 +2069,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": true,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -2049,8 +2166,9 @@
                                         "FontID": 18326526522212889354,
                                         "FontSize": 20.0,
                                         "LineHeight": 16.0,
+                                        "LetterSpacing": 0.0,
                                         "Alignment": 0,
-                                        "Value": "God camera",
+                                        "Value": "Game camera",
                                         "Color": [
                                             1.0,
                                             1.0,
@@ -2064,7 +2182,7 @@
                         ]
                     },
                     {
-                        "Name": "ToggleOverpower",
+                        "Name": "ToggleGodCamera",
                         "Active": true,
                         "RootBoneName": "",
                         "Mask": 0,
@@ -2098,8 +2216,8 @@
                                 "Type": "Transform2D",
                                 "Active": false,
                                 "Position": [
-                                    50.0,
-                                    -385.0,
+                                    -400.0,
+                                    -410.0,
                                     0.0
                                 ],
                                 "Rotation": [
@@ -2127,14 +2245,14 @@
                                     25.0
                                 ],
                                 "AnchorMin": [
-                                    0.0,
+                                    1.0,
                                     1.0
                                 ],
                                 "AnchorMax": [
-                                    0.0,
+                                    1.0,
                                     1.0
                                 ],
-                                "AnchorSelected": 0,
+                                "AnchorSelected": 2,
                                 "IsCustomAnchor": false
                             },
                             {
@@ -2179,7 +2297,7 @@
                                 "Type": "Toggle",
                                 "Active": false,
                                 "IsOn": false,
-                                "EnabledImageID": 1911355769506919142,
+                                "EnabledImageID": 10656359969022409623,
                                 "ClickedColor": [
                                     0.6399999856948853,
                                     0.6399999856948853,
@@ -2199,7 +2317,15 @@
                                 ],
                                 "AlphaTransparency": false,
                                 "IsFill": false,
-                                "FillValue": 1.0
+                                "FillValue": 1.0,
+                                "Offset": [
+                                    0.0,
+                                    0.0
+                                ],
+                                "Tiling": [
+                                    1.0,
+                                    1.0
+                                ]
                             },
                             {
                                 "Type": "Script",
@@ -2310,7 +2436,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": true,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -2399,8 +2533,9 @@
                                         "FontID": 18326526522212889354,
                                         "FontSize": 20.0,
                                         "LineHeight": 16.0,
+                                        "LetterSpacing": 0.0,
                                         "Alignment": 0,
-                                        "Value": "Overpower mode",
+                                        "Value": "God camera",
                                         "Color": [
                                             1.0,
                                             1.0,
@@ -2414,7 +2549,7 @@
                         ]
                     },
                     {
-                        "Name": "ToggleCooldowns",
+                        "Name": "ToggleOverpower",
                         "Active": true,
                         "RootBoneName": "",
                         "Mask": 0,
@@ -2448,7 +2583,7 @@
                                 "Type": "Transform2D",
                                 "Active": false,
                                 "Position": [
-                                    50.0,
+                                    -400.0,
                                     -460.0,
                                     0.0
                                 ],
@@ -2477,14 +2612,14 @@
                                     25.0
                                 ],
                                 "AnchorMin": [
-                                    0.0,
+                                    1.0,
                                     1.0
                                 ],
                                 "AnchorMax": [
-                                    0.0,
+                                    1.0,
                                     1.0
                                 ],
-                                "AnchorSelected": 0,
+                                "AnchorSelected": 2,
                                 "IsCustomAnchor": false
                             },
                             {
@@ -2529,7 +2664,7 @@
                                 "Type": "Toggle",
                                 "Active": false,
                                 "IsOn": false,
-                                "EnabledImageID": 13129980299266511618,
+                                "EnabledImageID": 1911355769506919142,
                                 "ClickedColor": [
                                     0.6399999856948853,
                                     0.6399999856948853,
@@ -2549,7 +2684,15 @@
                                 ],
                                 "AlphaTransparency": false,
                                 "IsFill": false,
-                                "FillValue": 1.0
+                                "FillValue": 1.0,
+                                "Offset": [
+                                    0.0,
+                                    0.0
+                                ],
+                                "Tiling": [
+                                    1.0,
+                                    1.0
+                                ]
                             },
                             {
                                 "Type": "Script",
@@ -2660,7 +2803,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": true,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -2749,8 +2900,9 @@
                                         "FontID": 18326526522212889354,
                                         "FontSize": 20.0,
                                         "LineHeight": 16.0,
+                                        "LetterSpacing": 0.0,
                                         "Alignment": 0,
-                                        "Value": "Toggle cooldowns",
+                                        "Value": "Overpower mode",
                                         "Color": [
                                             1.0,
                                             1.0,
@@ -2764,7 +2916,7 @@
                         ]
                     },
                     {
-                        "Name": "ToggleInvincible",
+                        "Name": "ToggleCooldowns",
                         "Active": true,
                         "RootBoneName": "",
                         "Mask": 0,
@@ -2798,8 +2950,8 @@
                                 "Type": "Transform2D",
                                 "Active": false,
                                 "Position": [
-                                    50.0,
-                                    -535.0,
+                                    -400.0,
+                                    -520.0,
                                     0.0
                                 ],
                                 "Rotation": [
@@ -2827,14 +2979,14 @@
                                     25.0
                                 ],
                                 "AnchorMin": [
-                                    0.0,
+                                    1.0,
                                     1.0
                                 ],
                                 "AnchorMax": [
-                                    0.0,
+                                    1.0,
                                     1.0
                                 ],
-                                "AnchorSelected": 0,
+                                "AnchorSelected": 2,
                                 "IsCustomAnchor": false
                             },
                             {
@@ -2879,7 +3031,7 @@
                                 "Type": "Toggle",
                                 "Active": false,
                                 "IsOn": false,
-                                "EnabledImageID": 819362138375602651,
+                                "EnabledImageID": 13129980299266511618,
                                 "ClickedColor": [
                                     0.6399999856948853,
                                     0.6399999856948853,
@@ -2899,7 +3051,15 @@
                                 ],
                                 "AlphaTransparency": false,
                                 "IsFill": false,
-                                "FillValue": 1.0
+                                "FillValue": 1.0,
+                                "Offset": [
+                                    0.0,
+                                    0.0
+                                ],
+                                "Tiling": [
+                                    1.0,
+                                    1.0
+                                ]
                             },
                             {
                                 "Type": "Script",
@@ -3010,7 +3170,15 @@
                                         ],
                                         "AlphaTransparency": true,
                                         "IsFill": true,
-                                        "FillValue": 1.0
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
                                     }
                                 ],
                                 "Children": null
@@ -3099,6 +3267,374 @@
                                         "FontID": 18326526522212889354,
                                         "FontSize": 20.0,
                                         "LineHeight": 16.0,
+                                        "LetterSpacing": 0.0,
+                                        "Alignment": 0,
+                                        "Value": "Toggle cooldowns",
+                                        "Color": [
+                                            1.0,
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            }
+                        ]
+                    },
+                    {
+                        "Name": "ToggleInvincible",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Active": false,
+                                "Position": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ]
+                            },
+                            {
+                                "Type": "Transform2D",
+                                "Active": false,
+                                "Position": [
+                                    -400.0,
+                                    -580.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "Pivot": [
+                                    0.5,
+                                    0.5
+                                ],
+                                "Size": [
+                                    25.0,
+                                    25.0
+                                ],
+                                "AnchorMin": [
+                                    1.0,
+                                    1.0
+                                ],
+                                "AnchorMax": [
+                                    1.0,
+                                    1.0
+                                ],
+                                "AnchorSelected": 2,
+                                "IsCustomAnchor": false
+                            },
+                            {
+                                "Type": "CanvasRenderer",
+                                "Active": false
+                            },
+                            {
+                                "Type": "BoundingBox2D",
+                                "Active": false,
+                                "LocalBoundingBox2D": [
+                                    -0.5,
+                                    -0.5,
+                                    0.5,
+                                    0.5
+                                ]
+                            },
+                            {
+                                "Type": "Selectable",
+                                "Active": false,
+                                "ColorHover": [
+                                    0.8399999737739563,
+                                    0.8399999737739563,
+                                    0.8399999737739563,
+                                    1.0
+                                ],
+                                "ColorDisable": [
+                                    0.5,
+                                    0.5,
+                                    0.5,
+                                    1.0
+                                ],
+                                "Interactable": true,
+                                "NavigationType": 1,
+                                "TransitionType": 1,
+                                "SelectableType": 13,
+                                "OnAxisDown": 0,
+                                "OnAxisUp": 0,
+                                "OnAxisRight": 0,
+                                "OnAxisLeft": 0
+                            },
+                            {
+                                "Type": "Toggle",
+                                "Active": false,
+                                "IsOn": false,
+                                "EnabledImageID": 819362138375602651,
+                                "ClickedColor": [
+                                    0.6399999856948853,
+                                    0.6399999856948853,
+                                    0.6399999856948853,
+                                    1.0
+                                ]
+                            },
+                            {
+                                "Type": "Image",
+                                "Active": false,
+                                "TextureId": 0,
+                                "Color": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "AlphaTransparency": false,
+                                "IsFill": false,
+                                "FillValue": 1.0,
+                                "Offset": [
+                                    0.0,
+                                    0.0
+                                ],
+                                "Tiling": [
+                                    1.0,
+                                    1.0
+                                ]
+                            },
+                            {
+                                "Type": "Script",
+                                "Active": false,
+                                "Script": 6707620942478976228,
+                                "Values": [
+                                    {
+                                        "Name": "godControllerUID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 2104300630684251741
+                                    },
+                                    {
+                                        "Name": "index",
+                                        "Type": "UInt",
+                                        "Value": 8
+                                    }
+                                ]
+                            }
+                        ],
+                        "Children": [
+                            {
+                                "Name": "Checkmark",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ]
+                                    },
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            15.0,
+                                            15.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Image",
+                                        "Active": false,
+                                        "TextureId": 0,
+                                        "Color": [
+                                            0.9254902005195618,
+                                            0.23529411852359773,
+                                            0.5372549295425415,
+                                            1.0
+                                        ],
+                                        "AlphaTransparency": true,
+                                        "IsFill": true,
+                                        "FillValue": 1.0,
+                                        "Offset": [
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Tiling": [
+                                            1.0,
+                                            1.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "Text",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform",
+                                        "Active": false,
+                                        "Position": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ]
+                                    },
+                                    {
+                                        "Type": "Transform2D",
+                                        "Active": false,
+                                        "Position": [
+                                            140.0,
+                                            -6.0,
+                                            0.0
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                        ],
+                                        "Pivot": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "Size": [
+                                            200.0,
+                                            200.0
+                                        ],
+                                        "AnchorMin": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorMax": [
+                                            0.5,
+                                            0.5
+                                        ],
+                                        "AnchorSelected": 5,
+                                        "IsCustomAnchor": false
+                                    },
+                                    {
+                                        "Type": "CanvasRenderer",
+                                        "Active": false
+                                    },
+                                    {
+                                        "Type": "Text",
+                                        "Active": false,
+                                        "FontID": 18326526522212889354,
+                                        "FontSize": 20.0,
+                                        "LineHeight": 16.0,
+                                        "LetterSpacing": 0.0,
                                         "Alignment": 0,
                                         "Value": "Toggle invincible",
                                         "Color": [
@@ -3162,14 +3698,19 @@
                                 "Value": 564339191826698320
                             },
                             {
-                                "Name": "prefabUID",
-                                "Type": "PrefabResourceUID",
-                                "Value": 12995336514148150898
-                            },
-                            {
                                 "Name": "enemiesUID",
                                 "Type": "GameObjectUID",
                                 "Value": 8956077401393633822
+                            },
+                            {
+                                "Name": "prefabUID",
+                                "Type": "PrefabResourceUID",
+                                "Value": 6679582708807788623
+                            },
+                            {
+                                "Name": "playerUID",
+                                "Type": "GameObjectUID",
+                                "Value": 9835691270176894595
                             }
                         ]
                     }

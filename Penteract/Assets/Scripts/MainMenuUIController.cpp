@@ -27,23 +27,23 @@ void MainMenuUIController::Start() {
 }
 
 void MainMenuUIController::Update() {
+	if (!rightFaderImage || !leftFaderImage) return;
+
 	float4 color = rightFaderImage->GetColor();
-	if (rightFaderImage && leftFaderImage) {
-		if (fadeLoopTimer < (fadeLoopDuration / 2)) {
-			float delta = fadeLoopTimer / (fadeLoopDuration / 2);
-			rightFaderImage->SetColor(float4(color.xyz(), Lerp(minFadeAlpha, maxFadeAlpha, delta)));
-			leftFaderImage->SetColor(float4(color.xyz(), Lerp(minFadeAlpha, maxFadeAlpha, delta)));
+	if (fadeLoopTimer < (fadeLoopDuration / 2)) {
+		float delta = fadeLoopTimer / (fadeLoopDuration / 2);
+		rightFaderImage->SetColor(float4(color.xyz(), Lerp(minFadeAlpha, maxFadeAlpha, delta)));
+		leftFaderImage->SetColor(float4(color.xyz(), Lerp(minFadeAlpha, maxFadeAlpha, delta)));
 
-		} else {
-			float delta = (fadeLoopTimer - (fadeLoopDuration / 2)) / (fadeLoopDuration / 2);
-			rightFaderImage->SetColor(float4(color.xyz(), Lerp(maxFadeAlpha, minFadeAlpha, delta)));
-			leftFaderImage->SetColor(float4(color.xyz(), Lerp(maxFadeAlpha, minFadeAlpha, delta)));
+	} else {
+		float delta = (fadeLoopTimer - (fadeLoopDuration / 2)) / (fadeLoopDuration / 2);
+		rightFaderImage->SetColor(float4(color.xyz(), Lerp(maxFadeAlpha, minFadeAlpha, delta)));
+		leftFaderImage->SetColor(float4(color.xyz(), Lerp(maxFadeAlpha, minFadeAlpha, delta)));
 
-		}
+	}
 
-		fadeLoopTimer += Time::GetDeltaTime();
-		if (fadeLoopTimer > fadeLoopDuration) {
-			fadeLoopTimer = 0.0f;
-		}
+	fadeLoopTimer += Time::GetDeltaTime();
+	if (fadeLoopTimer > fadeLoopDuration) {
+		fadeLoopTimer = 0.0f;
 	}
 }

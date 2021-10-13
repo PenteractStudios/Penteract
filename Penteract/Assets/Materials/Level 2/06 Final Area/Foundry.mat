@@ -1,13 +1,15 @@
 {
     "ShaderType": 2,
     "RenderingMode": 0,
+    "CastShadows": false,
+    "ShadowType": 0,
     "DiffuseColor": [
         1.0,
         1.0,
         1.0,
         1.0
     ],
-    "DiffuseMap": 16502246833585041256,
+    "DiffuseMap": 15801572876051914719,
     "SpecularColor": [
         0.15000000596046449,
         0.15000000596046449,
