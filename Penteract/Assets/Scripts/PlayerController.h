@@ -11,6 +11,7 @@ class GameObject;
 class ComponentTransform;
 class ComponentCamera;
 class ComponentAudioSource;
+class ComponentAudioListener;
 class ComponentParticleSystem;
 class HUDController;
 class HUDManager;
@@ -102,6 +103,7 @@ public:
 	UID onimaruLaserUID = 0;
 	UID onimaruRightFootVFX = 0;
 	UID onimaruLeftFootVFX = 0;
+	UID onimaruWeaponUID = 0;
 
 	//HUD
 	UID HUDManagerObjectUID = 0;
@@ -161,6 +163,8 @@ private:
 
 	//Audio
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
+	ComponentAudioListener* listener = nullptr;
+	ComponentTransform* transform = nullptr;
 
 	friend class DialogueManager;
 };

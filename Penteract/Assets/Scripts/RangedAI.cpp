@@ -1,5 +1,6 @@
 #include "RangedAI.h"
 
+#include "GameController.h"
 #include "PlayerController.h"
 #include "PlayerDeath.h"
 #include "HUDController.h"
@@ -16,9 +17,9 @@
 #include "Components/ComponentAnimation.h"
 #include "Components/ComponentMeshRenderer.h"
 #include "Resources/ResourcePrefab.h"
-#include "GlobalVariables.h"
 //clang-format off
 #include <random>
+#include "GlobalVariables.h"
 
 #define HIERARCHY_POSITION_WEAPON 2
 #define HIERARCHY_POSITION_BACKPACK 3
@@ -31,6 +32,8 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerMeshUIDOnimaru),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID1),
 	MEMBER(MemberType::GAME_OBJECT_UID, meshUID2),
+	MEMBER_SEPARATOR("Shoot"),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, bulletUID),
 	MEMBER_SEPARATOR("Enemy stats"),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.movementSpeed),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.lifePoints),
@@ -40,7 +43,7 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::BOOL, isSniper),
 	MEMBER_SEPARATOR("Push variables"),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackDistance),
-	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackSpeed),
+	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackTime),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownSpeed),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownTime),
 	MEMBER(MemberType::FLOAT, minAttackSpeed),
@@ -77,6 +80,8 @@ void RangedAI::Start() {
 	if (weapon) {
 		shootTrailPrefab = weapon->GetComponent<ComponentParticleSystem>();
 	}
+
+	bulletRange = GameplaySystems::GetResource<ResourcePrefab>(bulletUID);
 
 	if (meshObj) {
 		ComponentBoundingBox* bb = meshObj->GetComponent<ComponentBoundingBox>();
@@ -139,26 +144,6 @@ void RangedAI::Start() {
 		}
 	}
 
-
-	//EMP Feedback
-	objectEMP = GetOwner().GetChild("EmpParticles");
-	if (objectEMP) {
-		ComponentParticleSystem* particlesEmpAux = objectEMP->GetComponent<ComponentParticleSystem>();
-		if (particlesEmpAux) {
-			particlesEmp = particlesEmpAux;
-		}
-	}
-
-	//Push Feedback
-	objectPush = GetOwner().GetChild("PushParticles");
-
-	if (objectPush) {
-		ComponentParticleSystem* particlesPushAux = objectPush->GetComponent<ComponentParticleSystem>();
-		if (particlesPushAux) {
-			particlesPush = particlesPushAux;
-		}
-	}
-
 	fang = GameplaySystems::GetGameObject(fangUID);
 
 	if (fang) {
@@ -196,7 +181,6 @@ void RangedAI::Start() {
 
 	enemySpawnPointScript = GET_SCRIPT(GetOwner().GetParent(), EnemySpawnPoint);
 
-	pushBackRealDistance = rangerGruntCharacter.pushBackDistance;
 	SetRandomMaterial();
 }
 
@@ -298,7 +282,9 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 /* collisionNormal *
 			}
 
 			if (collidedWith.name == "EMP") {
-				DoStunned();
+				if (agent) agent->RemoveAgentFromCrowd();
+				stunTimeRemaining = stunDuration;
+				if (state != AIState::STUNNED) ChangeState(AIState::STUNNED);
 			}
 		}
 	}
@@ -356,8 +342,6 @@ void RangedAI::Update() {
 	}
 
 	UpdateState();
-	if (pushEffectHasToStart)EnablePushFeedback();
-
 }
 
 void RangedAI::EnterState(AIState newState) {
@@ -451,7 +435,7 @@ void RangedAI::UpdateState() {
 						break;
 					}
 
-					if (!CharacterInRange(player, rangerGruntCharacter.attackRange, true) && !isSniper) {
+					if (!CharacterInRange(player, rangerGruntCharacter.attackRange, true)) {
 						ChangeState(AIState::RUN);
 						break;
 					}
@@ -539,7 +523,16 @@ void RangedAI::UpdateState() {
 
 		break;
 	case AIState::PUSHED:
+		if (pushBackTimer > rangerGruntCharacter.pushBackTime) {
+			pushBackTimer = rangerGruntCharacter.pushBackTime;
+		}
 		UpdatePushBackPosition();
+		if (pushBackTimer == rangerGruntCharacter.pushBackTime) {
+			DisableBlastPushBack();
+		}
+		else {
+			pushBackTimer += Time::GetDeltaTime();
+		}
 		break;
 	default:
 		break;
@@ -595,7 +588,6 @@ bool RangedAI::FindsRayToPlayer(bool useForward) {
 			dir.y = 0;
 			dir.Normalize();
 		}
-
 		int mask = static_cast<int>(MaskType::PLAYER);
 		GameObject* hitGo = Physics::Raycast(start, start + dir * rangerGruntCharacter.attackRange, mask);
 		return hitGo != nullptr;
@@ -612,8 +604,12 @@ void RangedAI::ActualShot() {
 	if (shootTrailPrefab) {
 		//TODO WAIT STRETCH FROM LOWY AND IMPLEMENT SOME SHOOT EFFECT
 		if (!meshObj) return;
-
-		shootTrailPrefab->PlayChildParticles();
+		GameObject* bullet = GameplaySystems::Instantiate(bulletRange, weapon->GetComponent<ComponentTransform>()->GetGlobalPosition(), weapon->GetComponent<ComponentTransform>()->GetGlobalRotation());
+		if (bullet) {
+			GET_SCRIPT(bullet, RangerProjectileScript)->SetRangerDirection(weapon->GetComponent<ComponentTransform>()->GetGlobalRotation());
+			shootTrailPrefab->PlayChildParticles();
+			bullet->GetComponent<ComponentParticleSystem>()->PlayChildParticles();
+		}
 	}
 
 	attackSpeed = (minAttackSpeed + 1) + (((float)rand()) / (float)RAND_MAX) * (maxAttackSpeed - (minAttackSpeed + 1));
@@ -627,31 +623,12 @@ void RangedAI::PlayAudio(AudioType audioType) {
 	if (audios[static_cast<int>(audioType)]) audios[static_cast<int>(audioType)]->Play();
 }
 
-void RangedAI::DoStunned()
-{
-	if (agent) agent->RemoveAgentFromCrowd();
-	stunTimeRemaining = stunDuration;
-	if (state != AIState::STUNNED) ChangeState(AIState::STUNNED);
-	if(particlesEmp) particlesEmp->PlayChildParticles();
-}
-
-void RangedAI::EnablePushFeedback() {
-	if (timeToSrartPush < 0) {
-		pushEffectHasToStart = false;
-		if (particlesPush) particlesPush->PlayChildParticles();
-	}
-	else {
-		timeToSrartPush -= Time::GetDeltaTime();
-	}
-}
-
 void RangedAI::EnableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		ChangeState(AIState::PUSHED);
-		pushEffectHasToStart = true;
-		timeToSrartPush = (minTimePushEffect + 1) + (((float)rand()) / (float)RAND_MAX) * (maxTimePushEffect - (minTimePushEffect + 1));
 		rangerGruntCharacter.beingPushed = true;
-		CalculatePushBackRealDistance();
+		pushBackTimer = 0.f;
+		rangerGruntCharacter.CalculatePushBackFinalPos(GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition(), player->GetComponent<ComponentTransform>()->GetGlobalPosition(), rangerGruntCharacter.pushBackDistance);
 		// Damage
 		if (playerController->playerOnimaru.level2Upgrade) {
 			rangerGruntCharacter.GetHit(playerController->playerOnimaru.blastDamage + playerController->GetOverPowerMode());
@@ -660,6 +637,7 @@ void RangedAI::EnableBlastPushBack() {
 			PlayHitMaterialEffect();
 			timeSinceLastHurt = 0.0f;
 		}
+		agent->Disable();
 	}
 }
 
@@ -667,6 +645,10 @@ void RangedAI::DisableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		ChangeState(AIState::IDLE);
 		rangerGruntCharacter.beingPushed = false;
+		agent->Enable();
+		agent->SetMaxSpeed(rangerGruntCharacter.slowedDownSpeed);
+		rangerGruntCharacter.slowedDown = true;
+		currentSlowedDownTime = 0.f;
 	}
 }
 
@@ -698,46 +680,7 @@ void RangedAI::ShootPlayerInRange() {
 }
 
 void RangedAI::UpdatePushBackPosition() {
-	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
-	float3 initialPos = enemyPos;
-
-	float3 direction = (enemyPos - playerPos).Normalized();
-
-	if (agent) {
-		enemyPos += direction * rangerGruntCharacter.pushBackSpeed * Time::GetDeltaTime();
-		agent->SetMoveTarget(enemyPos, false);
-		agent->SetMaxSpeed(rangerGruntCharacter.pushBackSpeed);
-		float distance = enemyPos.Distance(initialPos);
-		currentPushBackDistance += distance;
-
-		if (currentPushBackDistance >= pushBackRealDistance) {
-			agent->SetMaxSpeed(rangerGruntCharacter.slowedDownSpeed);
-			DisableBlastPushBack();
-			rangerGruntCharacter.slowedDown = true;
-			currentPushBackDistance = 0.f;
-			currentSlowedDownTime = 0.f;
-			pushBackRealDistance = rangerGruntCharacter.pushBackDistance;
-		}
-	}
-}
-
-void RangedAI::CalculatePushBackRealDistance() {
-	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
-
-	float3 direction = (enemyPos - playerPos).Normalized();
-
-	bool hitResult = false;
-
-	float3 finalPos = enemyPos + direction * rangerGruntCharacter.pushBackDistance;
-	float3 resultPos = { 0,0,0 };
-
-	Navigation::Raycast(enemyPos, finalPos, hitResult, resultPos);
-
-	if (hitResult) {
-		pushBackRealDistance = resultPos.Distance(enemyPos) - 1; // Should be agent radius but it's not exposed
-	}
+	ownerTransform->SetGlobalPosition(float3::Lerp(rangerGruntCharacter.pushBackInitialPos, rangerGruntCharacter.pushBackFinalPos, pushBackTimer / rangerGruntCharacter.pushBackTime));
 }
 
 void RangedAI::PlayHitMaterialEffect()

@@ -13,7 +13,7 @@ class VehicleLine : public Script
 	GENERATE_BODY(VehicleLine);
 
 public:
-	
+
 	void Start() override;
 	void Update() override;
 
@@ -38,9 +38,9 @@ public:
 	UID vehicle9 = 0;
 
 private:
-	UID vehiclesUID[9] = {0,0,0,0,0,0,0,0,0};
+	UID vehiclesUID[9] = { 0,0,0,0,0,0,0,0,0 };
 	std::vector<GameObject*> vehicles;
-	
+
 	float timeToSpawn = 0.f;
 	int actualVehicle = 0;
 	int previousVehicle = 0;

@@ -17,6 +17,9 @@ public:
 	UID doorObstacleUID = 0;
 	UID laserDoorObstacleUID = 0;
 
+	float openDoorTime = 0;
+	float closeButtonTime = 0;
+
 public:
 
 	void Start() override;
@@ -30,5 +33,11 @@ private:
 	FactoryDoors* doorScript = nullptr;
 	FloorIsLava* bridgeTilesScript = nullptr;
 	FloorIsLava* arenaTilesScript = nullptr;
+
+	float elapsedTime = 0;
+	float elapsedButtonTime = 0;
+	bool openedDoor = false;
+	bool moveButton = false;
+	float3 initialPosition = float3(0, 0, 0);
 };
 

@@ -41,8 +41,6 @@ public:
 	void OnCollision(GameObject& collidedWith, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* particle = nullptr) override; //This is commented until merge with collisions
 	void ShootPlayerInRange(); //Sets in motion the shooting at the player, if found and close enough
 
-	void DoStunned();
-	void EnablePushFeedback();
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
@@ -61,7 +59,6 @@ private:
 	void PlayAudio(AudioType audioType);											//Plays audio (if not null)
 
 	void UpdatePushBackPosition();
-	void CalculatePushBackRealDistance();											// Calculates the real distance of the pushback taking into account any obstacles in the path
 	void PlayHitMaterialEffect();													// Changes material hit
 	void UpdateDissolveTimer();														// If the currentDissolveTime is reached, Plays animation
 	void ParticleHit(GameObject& collidedWith, void* particle, Player& player_);
@@ -70,13 +67,17 @@ private:
 
 
 public:
-	Enemy rangerGruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 5.f, 5.f, 3.f, 2.f); //Enemy class instance (for shared values)
+	Enemy rangerGruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 15.f, 0.2f, 3.f, 2.f); //Enemy class instance (for shared values)
 	UID playerUID = 0;				//Reference to player main Gameobject UID, used to check distances
 	UID playerMeshUIDFang = 0;		//Reference to player Fang mesh holding Gameobject UID, used for raycasting if fang is active
 	UID playerMeshUIDOnimaru = 0;	//Reference to player Fang mesh holding Gameobject UID, used for raycasting if onimaru is active
 	UID meshUID1 = 0;				//Second mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID meshUID2 = 0;				//Third mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID fangUID = 0;
+
+
+	ResourcePrefab* bulletRange = nullptr;
+	UID bulletUID = 0;
 
 	ComponentParticleSystem* shootTrailPrefab = nullptr; //Reference to projectile prefab , for shooting
 	GameObject* player = nullptr;				//Reference to player main Gameobject, used to check distances
@@ -118,6 +119,7 @@ public:
 	float dissolveTimerToStart = 0.0f;	//Timer until the dissolve animation is played
 	UID materialsUID = 0;				//Reference to materials placeholder for random
 
+
 	//EMP Stun feedback
 	ComponentParticleSystem* particlesEmp = nullptr;
 	GameObject* objectEMP = nullptr;
@@ -156,9 +158,8 @@ private:
 
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr }; //Array of ints used to play audios
 
-	float currentPushBackDistance = 0.f;
+	float pushBackTimer = 0.f;
 	float currentSlowedDownTime = 0.f;
-	float pushBackRealDistance = 0.f;
 
 	float currentFleeingUpdateTime = 0.f; // Current Time that needs to compare against the fleeingUpdateTime in the flee state
 	float3 currentFleeDestination;        // Destination position where it is going to move far away from the player
@@ -167,7 +168,4 @@ private:
 	float currentDissolveTime = 0.0f;
 	bool dissolveAlreadyStarted = false;	//Used to control other material setters so it doesn't interfere with Dissolve's material
 	bool dissolveAlreadyPlayed = false;		//Controls whether the animation function has already been played (called material->PlayAnimation) or not
-
-	bool  pushEffectHasToStart = false;
-	float timeToSrartPush = 0.0f;
 };

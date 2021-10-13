@@ -3,6 +3,7 @@
 #include "Scripting/Script.h"
 
 class ComponentVideo;
+class ComponentAudioSource;
 class GameObject;
 class DialogueManager;
 class CanvasFader;
@@ -19,6 +20,8 @@ public:
 public:
 	UID canvasFaderUID = 0;
 	UID gameControllerUID = 0;
+	UID audioControllerUID = 0;
+	UID audioVideoSourceUID = 0;
 	int dialogueID = 0;
 
 private: 
@@ -28,5 +31,7 @@ private:
 	GameObject* gameController = nullptr;
 	DialogueManager* dialogueManagerScript = nullptr;
 	CanvasFader* faderScript = nullptr;
+	ComponentAudioSource* music = nullptr;
+	ComponentAudioSource* audioVideo = nullptr;
 };
 

@@ -3,6 +3,7 @@
 #include "Scripting/Script.h"
 
 class UISpriteSheetPlayer;
+class ComponentAudioSource;
 class ComponentImage;
 class ComponentText;
 class CanvasFader;
@@ -17,6 +18,9 @@ public:
 	void GameOver();
 
 public:
+
+	enum class GlitchTitleAudio { FADE_IN, GLITCH, FADE_OUT, TOTAL };
+
 	float minVibrationTime = 2.0f;
 	float maxVibrationTime = 3.0f;
 	float fadeInTime = 1.0f;
@@ -34,12 +38,17 @@ public:
 	UID backgroundUID = 0;
 	UID scrollingBackgroundObjUID = 0;
 	UID canvasFaderObjUID = 0;
-	UID canvasPlayerHUDObjUID = 0;
+	UID canvasPlayerSkillsObjUID = 0;
+	UID canvasPlayerLifeBarsObjUID = 0;
+	UID canvasDukeLifeBarObjUID = 0;
+	UID audioSourcesUID = 0;
 
 private:
 	void EnterIdleState();
 	void SetColors(float delta);
 	void DisablePlayerHUD();
+	void PlayAudio(GlitchTitleAudio type);
+
 private:
 	GameOverState state = GameOverState::OFFLINE;
 	float vibrationTimer = 0.0f;
@@ -57,13 +66,21 @@ private:
 	ComponentImage* scrollingBackgroundImage = nullptr;
 
 	ComponentText* playAgainButtonText = nullptr;
+	ComponentText* playAgainButtonShadowText = nullptr;
 	ComponentText* mainMenuButtonText = nullptr;
+	ComponentText* mainMenuButtonShadowText = nullptr;
 	ComponentText* exitButtonText = nullptr;
+	ComponentText* exitButtonShadowText = nullptr;
 	float4 backgroundOriginalColor = float4(0, 0, 0, 0);
 	float4 playAgainButtonImageOriginalColor = float4(0, 0, 0, 0);
 	float4 mainMenuButtonImageOriginalColor = float4(0, 0, 0, 0);
+	float4 exitButtonImageOriginalColor = float4(0, 0, 0, 0);
 	float4 scrollingBackgroundImageOriginalColor = float4(20,70,100,225);
 	CanvasFader* canvasFader = nullptr;
-	GameObject* canvasPlayerHUDObj = nullptr;
+	GameObject* canvasPlayerSkillsObj = nullptr;
+	GameObject* canvasPlayerLifeBarsObj = nullptr;
+	GameObject* canvasDukeLifeBarObj = nullptr;
+
+	ComponentAudioSource* audios[static_cast<int>(GlitchTitleAudio::TOTAL)] = { nullptr };
 };
 

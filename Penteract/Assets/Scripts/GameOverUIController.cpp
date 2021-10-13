@@ -11,7 +11,9 @@
 //TODO MAKE BACKGROUND ANIMATED
 //TODO ADJUST UI SIZES
 
-#define HIERARCHY_INDEX_PLAY_AGAIN_TEXT 2
+#define HIERARCHY_INDEX_PLAY_AGAIN_TEXT 4
+#define HIERARCHY_INDEX_PLAY_AGAIN_SHADOW_TEXT 3
+#define HIERARCHY_INDEX_PLAY_AGAIN_IMAGE 0
 
 EXPOSE_MEMBERS(GameOverUIController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, inOutPlayerUID),
@@ -27,8 +29,11 @@ EXPOSE_MEMBERS(GameOverUIController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, backgroundUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, scrollingBackgroundObjUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, canvasFaderObjUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, canvasPlayerHUDObjUID),
-	MEMBER(MemberType::FLOAT, scrollDuration)
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasPlayerSkillsObjUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasPlayerLifeBarsObjUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasDukeLifeBarObjUID),
+	MEMBER(MemberType::FLOAT, scrollDuration),
+	MEMBER(MemberType::GAME_OBJECT_UID, audioSourcesUID)
 };
 
 GENERATE_BODY_IMPL(GameOverUIController);
@@ -39,6 +44,7 @@ void GameOverUIController::Start() {
 	GameObject* loopPlayerGO = GameplaySystems::GetGameObject(loopPlayerUID);
 	GameObject* vibrationPlayerGO = GameplaySystems::GetGameObject(vibrationPlayerUID);
 	GameObject* outInPlayerGO = GameplaySystems::GetGameObject(outInPlayerUID);
+	GameObject* audioSourcesObj = GameplaySystems::GetGameObject(audioSourcesUID);
 
 	if (inOutPlayerGO) inOutPlayer = GET_SCRIPT(inOutPlayerGO, UISpriteSheetPlayer);
 	if (loopPlayerGO) loopPlayer = GET_SCRIPT(loopPlayerGO, UISpriteSheetPlayer);
@@ -51,7 +57,9 @@ void GameOverUIController::Start() {
 	GameObject* backgroundGO = GameplaySystems::GetGameObject(backgroundUID);
 	GameObject* scrollingBackgroundObj = GameplaySystems::GetGameObject(scrollingBackgroundObjUID);
 
-	canvasPlayerHUDObj = GameplaySystems::GetGameObject(canvasPlayerHUDObjUID);
+	canvasPlayerSkillsObj = GameplaySystems::GetGameObject(canvasPlayerSkillsObjUID);
+	canvasPlayerLifeBarsObj = GameplaySystems::GetGameObject(canvasPlayerLifeBarsObjUID);
+	canvasDukeLifeBarObj = GameplaySystems::GetGameObject(canvasDukeLifeBarObjUID);
 
 	if (canvasFaderObjUID != 0) {
 		GameObject* canvasFaderObj = GameplaySystems::GetGameObject(canvasFaderObjUID);
@@ -62,26 +70,27 @@ void GameOverUIController::Start() {
 
 
 	if (playAgainGO) {
-		playAgainButtonImage = playAgainGO->GetComponent<ComponentImage>();
 		std::vector<GameObject*>children = playAgainGO->GetChildren();
 		if (children.size() > HIERARCHY_INDEX_PLAY_AGAIN_TEXT - 1) {
-			playAgainButtonText = children[HIERARCHY_INDEX_PLAY_AGAIN_TEXT]->GetComponent < ComponentText>();
+			playAgainButtonImage = children[HIERARCHY_INDEX_PLAY_AGAIN_IMAGE]->GetComponent<ComponentImage>();
+			playAgainButtonText = children[HIERARCHY_INDEX_PLAY_AGAIN_TEXT]->GetComponent<ComponentText>();
+			playAgainButtonShadowText = children[HIERARCHY_INDEX_PLAY_AGAIN_SHADOW_TEXT]->GetComponent<ComponentText>();
 		}
 	}
 	if (mainMenuGO) {
-		mainMenuButtonImage = mainMenuGO->GetComponent<ComponentImage>();
-
 		std::vector<GameObject*>children = mainMenuGO->GetChildren();
 		if (children.size() > HIERARCHY_INDEX_PLAY_AGAIN_TEXT - 1) {
-			mainMenuButtonText = children[HIERARCHY_INDEX_PLAY_AGAIN_TEXT]->GetComponent < ComponentText>();
+			mainMenuButtonImage = children[HIERARCHY_INDEX_PLAY_AGAIN_IMAGE]->GetComponent<ComponentImage>();
+			mainMenuButtonText = children[HIERARCHY_INDEX_PLAY_AGAIN_TEXT]->GetComponent<ComponentText>();
+			mainMenuButtonShadowText = children[HIERARCHY_INDEX_PLAY_AGAIN_SHADOW_TEXT]->GetComponent<ComponentText>();
 		}
 	}
 	if (exitButtonGO) {
-		exitButtonImage = exitButtonGO->GetComponent<ComponentImage>();
-
 		std::vector<GameObject*>children = exitButtonGO->GetChildren();
 		if (children.size() > HIERARCHY_INDEX_PLAY_AGAIN_TEXT - 1) {
+			exitButtonImage = children[HIERARCHY_INDEX_PLAY_AGAIN_IMAGE]->GetComponent<ComponentImage>();
 			exitButtonText = children[HIERARCHY_INDEX_PLAY_AGAIN_TEXT]->GetComponent < ComponentText>();
+			exitButtonShadowText = children[HIERARCHY_INDEX_PLAY_AGAIN_SHADOW_TEXT]->GetComponent < ComponentText>();
 		}
 	}
 
@@ -93,7 +102,13 @@ void GameOverUIController::Start() {
 		scrollingBackgroundImage = scrollingBackgroundObj->GetComponent<ComponentImage>();
 	}
 
-
+	if (audioSourcesObj) {
+		int i = 0;
+		for (ComponentAudioSource& src : audioSourcesObj->GetComponents<ComponentAudioSource>()) {
+			if (i < static_cast<int>(GlitchTitleAudio::TOTAL)) audios[i] = &src;
+			++i;
+		}
+	}
 
 	std::vector<GameObject*> children = GetOwner().GetChildren();
 
@@ -115,6 +130,7 @@ void GameOverUIController::Update() {
 					if (loopPlayer)loopPlayer->Stop();
 					if (vibrationPlayer)vibrationPlayer->Stop();
 					outInPlayer->Play();
+					PlayAudio(GlitchTitleAudio::FADE_OUT);
 				}
 			}
 		}
@@ -141,6 +157,7 @@ void GameOverUIController::Update() {
 		}
 		if (delta >= 0.5f && !inOutPlayer->IsPlaying()) {
 			inOutPlayer->Play();
+			PlayAudio(GlitchTitleAudio::GLITCH);
 		}
 
 		break;
@@ -159,6 +176,7 @@ void GameOverUIController::Update() {
 			vibrationTimer = 0.0f;
 			loopPlayer->Stop();
 			vibrationPlayer->Play();
+			PlayAudio(GlitchTitleAudio::FADE_IN);
 		}
 
 		break;
@@ -186,10 +204,11 @@ void GameOverUIController::GameOver() {
 			(*it)->Enable();
 		}
 
-		if (backgroundImage && playAgainButtonImage && mainMenuButtonImage && scrollingBackgroundImage) {
+		if (backgroundImage && playAgainButtonImage && mainMenuButtonImage && scrollingBackgroundImage && exitButtonImage) {
 			backgroundOriginalColor = backgroundImage->GetColor();
 			playAgainButtonImageOriginalColor = playAgainButtonImage->GetColor();
 			mainMenuButtonImageOriginalColor = mainMenuButtonImage->GetColor();
+			exitButtonImageOriginalColor = exitButtonImage->GetColor();
 			scrollingBackgroundImageOriginalColor = scrollingBackgroundImage->GetColor();
 			SetColors(0);
 		}
@@ -207,19 +226,28 @@ void GameOverUIController::EnterIdleState() {
 }
 
 void GameOverUIController::SetColors(float delta) {
-	if (!playAgainButtonImage || !playAgainButtonText || !mainMenuButtonImage || !mainMenuButtonText || !backgroundImage)return;
+	if (!playAgainButtonImage || !playAgainButtonText || !playAgainButtonShadowText || !mainMenuButtonImage || !mainMenuButtonText || !mainMenuButtonShadowText || !exitButtonText || !exitButtonShadowText || !exitButtonImage || !backgroundImage)return;
 
 	playAgainButtonImage->SetColor(float4(playAgainButtonImageOriginalColor.xyz(), delta));
-	playAgainButtonText->SetFontColor(float4(1, 1, 1, delta));
+	playAgainButtonText->SetFontColor(float4(1.f, 1.f, 1.f, delta));
+	playAgainButtonShadowText->SetFontColor(float4(0, 0.1568627f, 0.235294f, delta));
 	mainMenuButtonImage->SetColor(float4(mainMenuButtonImageOriginalColor.xyz(), delta));
-	mainMenuButtonText->SetFontColor(float4(1, 1, 1, delta));
+	mainMenuButtonText->SetFontColor(float4(1.f, 1.f, 1.f, delta));
+	mainMenuButtonShadowText->SetFontColor(float4(0, 0.1568627f, 0.235294f, delta));
+	exitButtonImage->SetColor(float4(exitButtonImageOriginalColor.xyz(), delta));
+	exitButtonText->SetFontColor(float4(1.f, 1.f, 1.f, delta));
+	exitButtonShadowText->SetFontColor(float4(0, 0.1568627f, 0.235294f, delta));
 	backgroundImage->SetColor(float4(backgroundOriginalColor.xyz(), delta * backgroundOriginalColor.w));
 
 	scrollingBackgroundImage->SetColor(float4(scrollingBackgroundImageOriginalColor.xyz(), delta * scrollingBackgroundImageOriginalColor.w));
 }
 
 void GameOverUIController::DisablePlayerHUD() {
-	if (canvasPlayerHUDObj) {
-		canvasPlayerHUDObj->Disable();
-	}
+	if (canvasPlayerSkillsObj) canvasPlayerSkillsObj->Disable();
+	if (canvasPlayerLifeBarsObj) canvasPlayerLifeBarsObj->Disable();
+	if (canvasDukeLifeBarObj) canvasDukeLifeBarObj->Disable();
+}
+
+void GameOverUIController::PlayAudio(GlitchTitleAudio type) {
+	if (audios[static_cast<int>(type)]) audios[static_cast<int>(type)]->Play();
 }

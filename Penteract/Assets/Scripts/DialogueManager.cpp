@@ -37,6 +37,7 @@ EXPOSE_MEMBERS(DialogueManager) {
 	MEMBER(MemberType::FLOAT, disappearAnimationTime),
 	MEMBER(MemberType::FLOAT3, zoomedCameraPosition),
 	MEMBER(MemberType::FLOAT3, twoPersonCameraPosition),
+	MEMBER(MemberType::FLOAT3, zoomOutCameraPosition),
 	MEMBER_SEPARATOR("Transition Configuration"),
 	MEMBER(MemberType::GAME_OBJECT_UID, flashUID),
 	MEMBER(MemberType::FLOAT, flashTime),
@@ -112,12 +113,12 @@ void DialogueManager::Start() {
 	dialoguesArray[7] = Dialogue(DialogueWindow::ONIMARU, true, "Upgrade complete.\n All systems ready.", nullptr);
 
 	// LEVEL 1 - START
-	dialoguesArray[9] = Dialogue(DialogueWindow::DUKE, true, "Fang...\nMy favorite assassin.", &dialoguesArray[10], true);
-	dialoguesArray[10] = Dialogue(DialogueWindow::DUKE, true, "After all these years\nyou finally came back.\nHoping to join Milibot again?", &dialoguesArray[11], true);
-	dialoguesArray[11] = Dialogue(DialogueWindow::FANG, true, "You wish.\nI'm here to kill you.\nA 5 million bounty\nand the pleasure of\ndoing it myself.", &dialoguesArray[12], true);
-	dialoguesArray[12] = Dialogue(DialogueWindow::DUKE, true, "I made you what you are,\neven if you hate it!\nYou should\nbe more grateful.", &dialoguesArray[13], true);
-	dialoguesArray[13] = Dialogue(DialogueWindow::DUKE, true, "Let's see how\nyou perform against\nmy latest designs...", &dialoguesArray[14], true);
-	dialoguesArray[14] = Dialogue(DialogueWindow::DUKE, true, "SECURITY!", nullptr, true);
+	dialoguesArray[9] = Dialogue(DialogueWindow::DUKE, true, "Fang...\nMy favorite assassin.", &dialoguesArray[10], 1);
+	dialoguesArray[10] = Dialogue(DialogueWindow::DUKE, true, "After all these years\nyou finally came back.\nHoping to join Milibot again?", &dialoguesArray[11], 1);
+	dialoguesArray[11] = Dialogue(DialogueWindow::FANG, true, "You wish.\nI'm here to kill you.\nA 5 million bounty\nand the pleasure of\ndoing it myself.", &dialoguesArray[12], 1);
+	dialoguesArray[12] = Dialogue(DialogueWindow::DUKE, true, "I made you what you are,\neven if you hate it!\nYou should\nbe more grateful.", &dialoguesArray[13], 1);
+	dialoguesArray[13] = Dialogue(DialogueWindow::DUKE, true, "Let's see how\nyou perform against\nmy latest designs...", &dialoguesArray[14], 1);
+	dialoguesArray[14] = Dialogue(DialogueWindow::DUKE, true, "SECURITY!", nullptr, 1);
 
 	// LEVEL 1 - FANG TUTORIAL
 	dialoguesArray[15] = Dialogue(DialogueWindow::TUTO_FANG, true, "Movement", &dialoguesArray[16]);
@@ -154,6 +155,35 @@ void DialogueManager::Start() {
 
 	// LEVEL 1 - Duke Walk To Factory
 	dialoguesArray[45] = Dialogue(DialogueWindow::ONIMARU, true, "Duke is running away.\nDo not let him escape!", nullptr);
+
+	// LEVEL 2 - START
+	dialoguesArray[50] = Dialogue(DialogueWindow::FANG, true, "I was hoping we\nwouldn't have to\ncome back here", &dialoguesArray[51]);
+	dialoguesArray[51] = Dialogue(DialogueWindow::ONIMARU, true, "We are close.\nFocus on the mission.", nullptr);
+
+	// LEVEL 2 - DUKE ROUND 1
+	dialoguesArray[52] = Dialogue(DialogueWindow::DUKE, true, "I thought you would\nbe dead already.", &dialoguesArray[53], 2);
+	dialoguesArray[53] = Dialogue(DialogueWindow::DUKE, true, "Fine.\nI'll stop you myself.", nullptr, 2);
+
+	// LEVEL 2 - DUKE DEFEATED 1
+	dialoguesArray[54] = Dialogue(DialogueWindow::DUKE, true, "You...\nI see you have\nbecome stronger,\nI'll give you that.", &dialoguesArray[55], 2);
+	dialoguesArray[55] = Dialogue(DialogueWindow::DUKE, true, "Come to the Core.\nI'll be waiting\nfor you there.", nullptr, 2);
+
+	// LEVEL 2 - FINAL
+	dialoguesArray[56] = Dialogue(DialogueWindow::ONIMARU, true, "OK, Fang.\nThis leads to\nthe Factory Core.\nAre you ready?", &dialoguesArray[57]);
+	dialoguesArray[57] = Dialogue(DialogueWindow::FANG, true, "Always.", nullptr);
+
+	// BOSS LEVEL - INTRO
+	dialoguesArray[60] = Dialogue(DialogueWindow::DUKE, true, "Welcome to the end\nof the line.", &dialoguesArray[61], 2);
+	dialoguesArray[61] = Dialogue(DialogueWindow::DUKE, true, "This is your last\nchance to rejoin\nMilibot and leave\nthis place alive.", &dialoguesArray[62], 2);
+	dialoguesArray[62] = Dialogue(DialogueWindow::FANG, true, "Never!", &dialoguesArray[63], 2);
+	dialoguesArray[63] = Dialogue(DialogueWindow::ONIMARU, true, "Get down here and\nFace us, Duke!", &dialoguesArray[64], 2);
+	dialoguesArray[64] = Dialogue(DialogueWindow::DUKE, true, "As you wish...", nullptr, 2);
+
+	// BOSS LEVEL - FINAL
+	dialoguesArray[65] = Dialogue(DialogueWindow::DUKE, true, "Ugh...\nImpossible...", &dialoguesArray[66], 2);
+	dialoguesArray[66] = Dialogue(DialogueWindow::ONIMARU, true, "It is over, Duke.", &dialoguesArray[67], 2);
+	dialoguesArray[67] = Dialogue(DialogueWindow::DUKE, true, "Stop!\n I'll pay you anything!\nJust don't kill me!", &dialoguesArray[68], 2);
+	dialoguesArray[68] = Dialogue(DialogueWindow::FANG, true, "No target left alive.", nullptr, 2);
 }
 
 void DialogueManager::Update() {
@@ -318,10 +348,18 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 
 		// Camera Zoom In
 		if (cameraControllerScript) {
-			if (activeDialogue->twoPersonDialogue) {
+			switch (activeDialogue->cameraView)
+			{
+			case 1:
 				cameraControllerScript->ChangeCameraOffset(twoPersonCameraPosition.x, twoPersonCameraPosition.y, twoPersonCameraPosition.z);
-			} else {
+				break;
+			case 2:
+				cameraControllerScript->ChangeCameraOffset(zoomOutCameraPosition.x, zoomOutCameraPosition.y, zoomOutCameraPosition.z);
+				break;
+			case 0:
+			default:
 				cameraControllerScript->ChangeCameraOffset(zoomedCameraPosition.x, zoomedCameraPosition.y, zoomedCameraPosition.z);
+				break;
 			}
 		}
 	} else {

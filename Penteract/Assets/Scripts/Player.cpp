@@ -28,7 +28,7 @@ bool Player::CanShoot() {
 	return !shootingOnCooldown;
 }
 
-MovementDirection Player::GetControllerMovementDirection(bool useGamepad) const {
+MovementDirection Player::GetControllerMovementDirection(bool useGamepad) {
 	float2 leftAxisInput = GetInputFloat2(InputActions::MOVEMENT, useGamepad);
 	MovementDirection md = MovementDirection::NONE;
 
@@ -123,7 +123,7 @@ void Player::MoveTo() {
 	agent->SetMoveTarget(newPosition, false);
 }
 
-MovementDirection Player::GetInputMovementDirection(bool useGamepad) const {
+MovementDirection Player::GetInputMovementDirection(bool useGamepad) {
 	MovementDirection md = GetControllerMovementDirection(useGamepad);
 	return md;
 }
@@ -225,8 +225,9 @@ bool Player::GetInputBool(InputActions action, bool useGamepad) {
 
 }
 
-float2 Player::GetInputFloat2(InputActions action, bool useGamepad) const {
-	float2 result = float2(0, 0);
+float2 Player::GetInputFloat2(InputActions action, bool useGamepad) {
+	result = float2(0, 0);
+
 	switch (action) {
 	case InputActions::MOVEMENT:
 		if (useGamepad && Input::IsGamepadConnected(0)) {
@@ -263,7 +264,6 @@ float2 Player::GetInputFloat2(InputActions action, bool useGamepad) const {
 	default:
 		return float2(0, 0);
 	}
-
 	return result;
 }
 

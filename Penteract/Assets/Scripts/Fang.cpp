@@ -180,7 +180,8 @@ void Fang::InitDash() {
 			dashDirection = GetDirection();
 			dashMovementDirection = movementInputDirection;
 		} else {
-			dashDirection = facePointDir;
+			dashDirection = playerMainTransform->GetFront();
+			dashMovementDirection = MovementDirection::RIGHT;
 		}
 
 		if (dashParticle) {
@@ -320,6 +321,8 @@ void Fang::OnAnimationFinished() {
 				movementSpeed = normalMovementSpeed;
 				ultimateScript->EndUltimate();
 
+				ultimateTimeRemaining = 0.0f;
+
 				if (hudManagerScript) {
 					hudManagerScript->StopUsingSkill(HUDManager::Cooldowns::FANG_SKILL_3);
 				}
@@ -424,7 +427,7 @@ void Fang::PlayAnimation() {
 					}
 				}
 			} else {
-				if (compAnimation->GetCurrentState()->name == states[static_cast<int>(FANG_STATES::SPRINT)]) {
+				if (compAnimation->GetCurrentState()->name == states[static_cast<int>(FANG_STATES::SPRINT)] || compAnimation->GetCurrentState()->name == states[static_cast<int>(FANG_STATES::DASH)]) {
 					compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::DRIFT)]);
 					decelerating = true;
 				} else if (!decelerating) {
@@ -436,12 +439,15 @@ void Fang::PlayAnimation() {
 					compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::EMP)]);
 				}
 			}
-		} else {
-			if (compAnimation->GetCurrentState()->name != states[aiming ? (GetMouseDirectionState() + dashAnimation) : static_cast<int>(FANG_STATES::SPRINT)]) {
-				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[aiming ? (GetMouseDirectionState() + dashAnimation) : static_cast<int>(FANG_STATES::SPRINT)]);
-				ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentState()->clipUid);
-				SetClipSpeed(clip, agent->GetMaxSpeed());
+		} else { // movementInputDirection != MovementDirection::NONE
+			if (dashing && compAnimation->GetCurrentState()->name != states[static_cast<int>(FANG_STATES::DASH)]) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::DASH)]);
 			}
+			else if (!dashing && compAnimation->GetCurrentState()->name != states[aiming ? (GetMouseDirectionState() + dashAnimation) : static_cast<int>(FANG_STATES::SPRINT)]) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[aiming ? (GetMouseDirectionState() + dashAnimation) : static_cast<int>(FANG_STATES::SPRINT)]);
+			}
+			ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentState()->clipUid);
+			SetClipSpeed(clip, agent->GetMaxSpeed());
 		}
 	}
 }
@@ -519,7 +525,7 @@ void Fang::Update(bool useGamepad, bool /* lockMovement */, bool /* lockRotation
 		}
 	} else {
 		if (agent) agent->RemoveAgentFromCrowd();
-		movementInputDirection = MovementDirection::NONE;
+		if (!dashing) movementInputDirection = MovementDirection::NONE;
 	}
 	PlayAnimation();
 }
