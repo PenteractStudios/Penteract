@@ -5,10 +5,13 @@
 
 EXPOSE_MEMBERS(MovingLasers) {
     MEMBER(MemberType::FLOAT, chargingDuration),
+    MEMBER(MemberType::FLOAT, movementSpeed),
     MEMBER(MemberType::FLOAT3, initialGeneratorPosition),
     MEMBER(MemberType::FLOAT3, finalGeneratorPosition),
     MEMBER(MemberType::FLOAT3, minLaserEscale),
     MEMBER(MemberType::FLOAT3, maxLaserEscale),
+    MEMBER(MemberType::FLOAT3, minLaserColliderSize),
+    MEMBER(MemberType::FLOAT3, maxLaserColliderSize),
     MEMBER(MemberType::FLOAT3, minLaserPosition),
     MEMBER(MemberType::FLOAT3, maxLaserPosition),
     MEMBER(MemberType::FLOAT2, LaserWarningStartScale),
@@ -36,6 +39,7 @@ void MovingLasers::Start() {
     if (laserObject) {
         laserObject->Disable();
         laserTransform = laserObject->GetComponent<ComponentTransform>();
+        laserCollider = laserObject->GetComponent<ComponentBoxCollider>();
     }
 
     laserWarning = GameplaySystems::GetGameObject(laserWarningUID);
@@ -47,7 +51,7 @@ void MovingLasers::Start() {
 
 void MovingLasers::Update() {
     if (!animationComp) return;
-
+    if (!laserTransform || !laserCollider) return;
     switch (currentState)
     {
     case GeneratorState::IDLE:
@@ -106,10 +110,10 @@ void MovingLasers::Update() {
 }
 
 bool MovingLasers::Move() {
-
     float3 destination = (movingToInit) ? initialGeneratorPosition : finalGeneratorPosition;
     float3 newLaserScale = (movingToInit) ? minLaserEscale : maxLaserEscale;
     float3 newLaserPosition = (movingToInit) ? minLaserPosition : maxLaserPosition;
+    float3 newColliderSize = (movingToInit) ? minLaserColliderSize : maxLaserColliderSize;
     float3 generatorPosition = transform->GetGlobalPosition();
 
     generatorPosition = Lerp(generatorPosition, destination, movementSpeed * Time::GetDeltaTime());
@@ -117,18 +121,24 @@ bool MovingLasers::Move() {
 
     if (positionReached) {
         movingToInit = !movingToInit;
-        if (pairScript->movingToInit != movingToInit) pairScript->Synchronize(movingToInit);
+        if (pairScript && pairScript->movingToInit != movingToInit) pairScript->Synchronize(movingToInit);
         generatorPosition = destination;
         laserTransform->SetGlobalScale(newLaserScale);
         laserTransform->SetPosition(newLaserPosition);
+        laserCollider->size = newColliderSize;
+        Physics::UpdateRigidbody(laserCollider);
     }
     else {
         float3 laserScale = laserTransform->GetGlobalScale();
         float3 laserPosition = laserTransform->GetPosition();
+        float3 laserSize = laserCollider->size;
         laserScale = Lerp(laserScale, newLaserScale, movementSpeed * Time::GetDeltaTime());
         laserPosition = Lerp(laserPosition, newLaserPosition, movementSpeed * Time::GetDeltaTime());
+        laserSize = Lerp(laserSize, newColliderSize, movementSpeed * Time::GetDeltaTime());
         laserTransform->SetGlobalScale(laserScale);
         laserTransform->SetPosition(laserPosition);
+        laserCollider->size = laserSize;
+        Physics::UpdateRigidbody(laserCollider);
     }
     transform->SetGlobalPosition(generatorPosition);
     return positionReached;
@@ -154,8 +164,11 @@ void MovingLasers::Synchronize(bool movingToInit_) {
     float3 destination = (movingToInit) ? initialGeneratorPosition : finalGeneratorPosition;
     float3 newLaserScale = (movingToInit) ? minLaserEscale : maxLaserEscale;
     float3 newLaserPosition = (movingToInit) ? minLaserPosition : maxLaserPosition;
+    float3 newColliderSize = (movingToInit) ? minLaserColliderSize : maxLaserColliderSize;
     laserTransform->SetGlobalScale(newLaserScale);
     laserTransform->SetPosition(newLaserPosition);
+    laserCollider->size = newColliderSize;
+    Physics::UpdateRigidbody(laserCollider);
     transform->SetGlobalPosition(destination);
     movingToInit = movingToInit_;
     if (pairScript->movingToInit != movingToInit) pairScript->Synchronize(movingToInit);
