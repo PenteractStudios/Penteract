@@ -41,6 +41,8 @@ void PlayerDeath::Start() {
 	if (gameOverGO)gameOverController = GET_SCRIPT(gameOverGO, GameOverUIController);
 
 	laserHitCooldownTimer = laserHitCooldown;
+
+	deadAnimationFinishedFlag = false;
 }
 
 void PlayerDeath::Update() {
@@ -76,7 +78,10 @@ void PlayerDeath::OnAnimationFinished() {
 	if (dead) {
 		if (playerController) {
 			if (playerController->IsPlayerDead()) {
-				OnLoseConditionMet();
+				if (!deadAnimationFinishedFlag) {
+					OnLoseConditionMet();
+					deadAnimationFinishedFlag = true; // Fix repeatedly calling OnLoseConditionMet().
+				}
 			} else {
 				playerController->OnCharacterDeath();
 			}
@@ -113,13 +118,28 @@ void PlayerDeath::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char
 }
 
 void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 /* penetrationDistance */, void* particle) {
-	if (collidedWith.name == "WeaponParticles") {
+	if (collidedWith.name == "BulletRange") {
 		if (!particle) return;
 		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 		if (pSystem) pSystem->KillParticle(p);
 		if (playerController) playerController->TakeDamage(rangedDamageTaken);
-	} else if (collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") { //meleegrunt
+	}
+	else if (collidedWith.name == "Electricity") {
+		if (!particle) return;
+		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+		if (pSystem) pSystem->KillParticle(p);
+		if (pSystem) pSystem->SetParticlesPerSecond(float2(0.0f, 0.0f));
+	}
+	else if (collidedWith.name == "SmallParticles") {
+		if (!particle) return;
+		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+		if (pSystem) pSystem->KillParticle(p);
+		if (pSystem) pSystem->SetParticlesPerSecond(float2(0.0f,0.0f));
+	}
+	else if (collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") { //meleegrunt
 		if (playerController) {
 			float3 onimaruFront = -playerController->playerOnimaru.playerMainTransform->GetFront();
 			if (!(playerController->playerOnimaru.IsShielding() && collisionNormal.Dot(onimaruFront) > 0.f)) {

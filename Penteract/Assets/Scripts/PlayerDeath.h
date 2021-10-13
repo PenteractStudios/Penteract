@@ -56,5 +56,6 @@ private:
 	float timerFireDamage = 0.f;
 	bool fireDamageActive = false;
 
+	bool deadAnimationFinishedFlag = false;
 };
 

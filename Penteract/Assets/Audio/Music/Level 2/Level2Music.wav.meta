@@ -1,7 +1,9 @@
 {
+    "IsMono": false,
+    "AudioFormat": 0,
     "Resources": [
         {
-            "Id": 17372225060132201854,
+            "Id": 13067766985847229454,
             "Type": "Audio"
         }
     ]

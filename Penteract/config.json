@@ -23,5 +23,8 @@
     "MSAAActive": true,
     "MSAASampleType": 1,
     "ChromaticAberrationActive": false,
-    "ChromaticAberrationStrength": 1.5
+    "ChromaticAberrationStrength": 1.5,
+    "GainMainChannel": 1.0,
+    "GainMusicChannel": 1.0,
+    "GainSFXChannel": 1.0
 }

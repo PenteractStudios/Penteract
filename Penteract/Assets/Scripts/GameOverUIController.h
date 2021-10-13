@@ -66,11 +66,15 @@ private:
 	ComponentImage* scrollingBackgroundImage = nullptr;
 
 	ComponentText* playAgainButtonText = nullptr;
+	ComponentText* playAgainButtonShadowText = nullptr;
 	ComponentText* mainMenuButtonText = nullptr;
+	ComponentText* mainMenuButtonShadowText = nullptr;
 	ComponentText* exitButtonText = nullptr;
+	ComponentText* exitButtonShadowText = nullptr;
 	float4 backgroundOriginalColor = float4(0, 0, 0, 0);
 	float4 playAgainButtonImageOriginalColor = float4(0, 0, 0, 0);
 	float4 mainMenuButtonImageOriginalColor = float4(0, 0, 0, 0);
+	float4 exitButtonImageOriginalColor = float4(0, 0, 0, 0);
 	float4 scrollingBackgroundImageOriginalColor = float4(20,70,100,225);
 	CanvasFader* canvasFader = nullptr;
 	GameObject* canvasPlayerSkillsObj = nullptr;
