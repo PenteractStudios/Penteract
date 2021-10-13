@@ -4,6 +4,7 @@
 class ComponentAnimation;
 class ComponentTransform;
 class ComponentParticleSystem;
+class ComponentBoxCollider;
 
 class MovingLasers : public Script
 {
@@ -34,6 +35,9 @@ public:
 	float3 minLaserEscale = float3(1.f, 1.f, 1.f);
 	float3 maxLaserEscale = float3(1.f, 2.05f,1.f);
 
+	float3 minLaserColliderSize = float3(0.250f, 20.f, 0.250f);
+	float3 maxLaserColliderSize = float3(0.250f, 41.f, 0.250f);
+
 	float3 minLaserPosition = float3(10.f, 4.f, 0.f);
 	float3 maxLaserPosition = float3(20.f, 4.f, 0.f);
 
@@ -60,6 +64,7 @@ private:
 	ComponentTransform* transform = nullptr;
 	ComponentTransform* laserTransform = nullptr;
 	GameObject* laserObject = nullptr;
+	ComponentBoxCollider* laserCollider = nullptr;
 	GameObject* laserWarning = nullptr;
 	MovingLasers* pairScript = nullptr;
 	ComponentParticleSystem* laserWarningVFX = nullptr;
