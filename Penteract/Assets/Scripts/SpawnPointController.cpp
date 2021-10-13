@@ -74,7 +74,7 @@ void SpawnPointController::Start() {
 void SpawnPointController::Update() {
 	if (unlockStarted) {
 		if (currentUnlockTime >= timerToUnlock) {
-			if (!isClosing) {			// Must open the door
+			if (!isClosing) {	// Must open the door
 				if (finalDoor && finalDoor->IsActive()) {
 					finalDoor->Disable();
 				}
@@ -83,16 +83,12 @@ void SpawnPointController::Update() {
 				}
 				gameObject->Disable();
 			}
-			
 			unlockStarted = false;
-			
 			if (!mustKeepOpen) {			// Perform light animation
 				SetLightIntensity(initialDoorLight, isClosing ? initialDoorLightStartIntensity : 0.0f);
 				SetLightIntensity(finalDoorLight, isClosing ? finalDoorLightStartIntensity : 0.0f);
 			}
-
-		}
-		else {
+		} else {
 			currentUnlockTime += Time::GetDeltaTime();
 
 			if (!mustKeepOpen) {			// Perform light animation
