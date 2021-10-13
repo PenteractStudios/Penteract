@@ -158,7 +158,7 @@ void AIDuke::Update() {
 			activeFireTiles = false;
 			Debug::Log("Fire tiles disabled");
 			movementScript->Stop();
-			if (dukeCharacter.isInArena) TeleportDuke(true);
+			if (dukeCharacter.isInArena) dukeCharacter.TeleportDuke(true);
 
 			if (dukeShield && dukeShield->GetIsActive()) {
 				OnShieldInterrupted();
@@ -695,10 +695,6 @@ void AIDuke::PerformBulletHell() {
 		currentBulletHellCooldown = 0.f;
 		dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 	}
-}
-
-void AIDuke::TeleportDuke(bool toMapCenter) {
-	dukeCharacter.TeleportDuke(toMapCenter);
 }
 
 float AIDuke::GetDukeMaxHealth() const {

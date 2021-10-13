@@ -276,8 +276,10 @@ void Duke::BecomeStunned() {
 void Duke::TeleportDuke(bool toMapCenter)
 {
 	if (toMapCenter) {
-		agent->SetMoveTarget(phase2CenterPosition);
-		agent->SetMaxSpeed(movementSpeed * 2.f);
+		if (agent) {
+			agent->SetMoveTarget(phase2CenterPosition);
+			agent->SetMaxSpeed(movementSpeed * 2.f);
+		}
 		float3 dir = phase2CenterPosition - dukeTransform->GetGlobalPosition();
 		dir.y = 0;
 		movementScript->Orientate(dir);

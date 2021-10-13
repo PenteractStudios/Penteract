@@ -46,7 +46,6 @@ public:
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
-	void TeleportDuke(bool toMapCenter);
 	float GetDukeMaxHealth() const;
 
 private:
