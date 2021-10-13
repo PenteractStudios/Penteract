@@ -18,6 +18,14 @@ void DukeDoor::Start() {
 	if (obstacle) {
 		obstacle->Disable();
 	}
+
+	GameObject* duke = GameplaySystems::GetGameObject(dukeUID);
+	if (duke) {
+		AIDuke* dukeScript = GET_SCRIPT(duke, AIDuke);
+		if (dukeScript) {
+			dukeScript->SetReady(false);
+		}
+	}
 }
 
 void DukeDoor::Update() {

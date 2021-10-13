@@ -116,7 +116,7 @@ private:
 
 	HUDManager* hudManager = nullptr;
 
-	bool isReady = false;
+	bool isReady = true;
 
 	float currentShieldCooldown = 0.f;
 	float currentShieldActiveTime = 0.f;
