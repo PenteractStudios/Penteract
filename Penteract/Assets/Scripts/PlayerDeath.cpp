@@ -156,7 +156,7 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 			PushPlayerBack(collisionNormal);
 		}
 		collidedWith.Disable();
-	} else if (collidedWith.name == "DukeShield") {
+	} else if (collidedWith.name == "DukeShield" || collidedWith.name == "DukeShield360") {
 		if (playerController) {
 			// don't let the player penetrate duke shield
 			float3 truePenetrationDistance = penetrationDistance.ProjectTo(collisionNormal);

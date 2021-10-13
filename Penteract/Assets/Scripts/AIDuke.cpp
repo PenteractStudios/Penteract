@@ -14,11 +14,11 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, shieldObjUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, bulletUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, chargeColliderUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, meleeAttackColliderUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, barrelSpawnerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargeAttackUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargeColliderUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, phase2ShieldUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, firstEncounterUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, secondEncounterUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, thirdEncounterUID),
@@ -94,10 +94,10 @@ void AIDuke::Start() {
 	AttackDronesController* dronesController = GET_SCRIPT(&GetOwner(), AttackDronesController);
 
 	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, encounters, dronesController);
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, encounters, dronesController);
 
 	dukeCharacter.winSceneUID = winSceneUID; // TODO: REPLACE
-	
+
 	GameObject* hudManagerGO = GameplaySystems::GetGameObject(hudManagerUID);
 
 	if (hudManagerGO) hudManager = GET_SCRIPT(hudManagerGO, HUDManager);
@@ -139,7 +139,7 @@ void AIDuke::Update() {
 			dukeCharacter.criticalMode = true;
 			// Phase change VFX? and anim?
 			movementScript->Stop();
-			if (dukeShield && dukeShield->GetIsActive()) { 
+			if (dukeShield && dukeShield->GetIsActive()) {
 				OnShieldInterrupted();
 			}
 			if (dukeCharacter.compAnimation) {
@@ -158,8 +158,7 @@ void AIDuke::Update() {
 			activeFireTiles = false;
 			Debug::Log("Fire tiles disabled");
 			movementScript->Stop();
-			if (isInArena) TeleportDuke(true);
-			dukeCharacter.CallTroops();
+			if (dukeCharacter.isInArena) TeleportDuke(true);
 
 			if (dukeShield && dukeShield->GetIsActive()) {
 				OnShieldInterrupted();
@@ -220,19 +219,19 @@ void AIDuke::Update() {
 			break;
 		case DukeState::SHOOT_SHIELD:
 			if (player) movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition(), orientationSpeed, orientationThreshold);
-			
+
 			//Actual activating of the shield, when it is found not active during this state
 			if (dukeShield && !dukeShield->GetIsActive()) {
 				dukeShield->InitShield();
 				movementScript->Stop();
 			}
-			
+
 			dukeCharacter.Shoot();
 			currentShieldActiveTime += Time::GetDeltaTime();
 			if (currentShieldActiveTime >= shieldActiveTime) {
-				
+
 				OnShieldInterrupted();
-				
+
 				dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 
 				dukeCharacter.StopShooting();
@@ -267,7 +266,7 @@ void AIDuke::Update() {
 			Debug::Log("Lasers enabled");
 		}
 
-		if (isInArena) {
+		if (dukeCharacter.isInArena) {
 			activeFireTiles = true;
 			Debug::Log("Fire tiles enabled");
 			phase = Phase::PHASE1;
@@ -275,14 +274,19 @@ void AIDuke::Update() {
 			currentBulletHellCooldown = 0.f;
 			currentShieldCooldown = 0.f;
 		} else {
-			if (player) {
-				float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
-				movementScript->Orientate(dir);
+			if (dukeCharacter.phase2Shield && !dukeCharacter.phase2Shield->GetIsActive()) {
+				dukeCharacter.StartPhase2Shield();
 			}
-			currentBarrelTimer += Time::GetDeltaTime();
-			if (currentBarrelTimer >= throwBarrelTimer) {
-				dukeCharacter.ThrowBarrels();
-				currentBarrelTimer = 0.f;
+			else {
+				if (player) {
+					float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
+					movementScript->Orientate(dir);
+				}
+				currentBarrelTimer += Time::GetDeltaTime();
+				if (currentBarrelTimer >= throwBarrelTimer) {
+					dukeCharacter.ThrowBarrels();
+					currentBarrelTimer = 0.f;
+				}
 			}
 		}
 		break;
@@ -400,7 +404,7 @@ void AIDuke::Update() {
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
 					currentAbilityChangeCooldown = 0.f;
 						dukeCharacter.StartUsingShield();
-					
+
 				}
 				else {
 					if (player) {
@@ -476,7 +480,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 			if (!dukeCharacter.criticalMode || CanBeHurtDuringCriticalMode()) {
 				float damage = playerController->playerFang.damageHit;
 				dukeCharacter.GetHit(dukeCharacter.reducedDamaged ? damage / 3 : damage + playerController->GetOverPowerMode());
-			} 
+			}
 		}
 		else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
 			hitTaken = true;
@@ -511,7 +515,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 
 			timeSinceLastHurt = 0.0f;*/
 		}
-		
+
 
 		if (collidedWith.name == "EMP" && dukeCharacter.state != DukeState::INVULNERABLE && dukeCharacter.state != DukeState::CHARGE) {
 			OnShieldInterrupted();
@@ -693,16 +697,8 @@ void AIDuke::PerformBulletHell() {
 	}
 }
 
-void AIDuke::TeleportDuke(bool toPlatform) {
-	if (toPlatform) {
-		if (dukeCharacter.agent) dukeCharacter.agent->RemoveAgentFromCrowd();
-		ownerTransform->SetGlobalPosition(float3(40.0f, 0.0f, 0.0f));
-		isInArena = false;
-	} else {
-		ownerTransform->SetGlobalPosition(float3(0.0f, 0.0f, 0.0f));
-		if (dukeCharacter.agent) dukeCharacter.agent->AddAgentToCrowd();
-		isInArena = true;
-	}
+void AIDuke::TeleportDuke(bool toMapCenter) {
+	dukeCharacter.TeleportDuke(toMapCenter);
 }
 
 float AIDuke::GetDukeMaxHealth() const {
