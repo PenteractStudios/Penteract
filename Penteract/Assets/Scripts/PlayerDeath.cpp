@@ -18,6 +18,7 @@ EXPOSE_MEMBERS(PlayerDeath) {
 	MEMBER(MemberType::FLOAT, meleeDamageTaken),
 	MEMBER(MemberType::FLOAT, dukeDamageTaken),
 	MEMBER(MemberType::FLOAT, dukeChargeDamageTaken),
+	MEMBER(MemberType::FLOAT, attackDroneDamageTaken),
 	MEMBER(MemberType::FLOAT, barrelDamageTaken),
 	MEMBER(MemberType::FLOAT, laserBeamTaken),
 	MEMBER(MemberType::FLOAT, laserHitCooldown),
@@ -175,7 +176,7 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 		if (pSystem && p) pSystem->KillParticle(p);
 
-		if (playerController) playerController->TakeDamage(rangedDamageTaken);
+		if (playerController) playerController->TakeDamage(attackDroneDamageTaken);
 		AttackDroneProjectile* projectileScript = GET_SCRIPT(&collidedWith, AttackDroneProjectile);
 		if (projectileScript) projectileScript->Collide();
 	}

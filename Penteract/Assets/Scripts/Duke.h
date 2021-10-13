@@ -57,7 +57,7 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void BulletHell();
@@ -67,6 +67,7 @@ public:
 	void InitCharge(DukeState nextState);
 	void UpdateCharge(bool forceStop = false);
 	void CallTroops();
+	void Move(const float3& playerDirection);
 	void Shoot();
 	void ThrowBarrels();
 	void StartUsingShield();
@@ -79,6 +80,7 @@ public:
 	void OnAnimationSecondaryFinished();
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
 	void StopShooting();
+	void InitPlayerVictory();
 	void StartPhase2Shield();
 
 private:
@@ -100,6 +102,7 @@ public:
 	float barrelDamageTaken = 3.f;
 	float moveChangeEvery = 2.0f;
 	float distanceCorrectEvery = 2.0f;
+	float delayForDisplayVideo = 1.0f;
 
 	DukeShield* phase2Shield = nullptr;
 
@@ -111,8 +114,7 @@ public:
 	bool slowedDown = false;
 	bool reducedDamaged = false;
 	bool startSpawnBarrel = false;
-
-	// Conditions
+	bool isDead = false;
 	bool isShooting = false;
 	bool isInArena = true;
 
@@ -156,6 +158,9 @@ private:
 	GameObject* chargeAttack = nullptr;
 	ComponentTransform* dukeTransform = nullptr;
 
+	GameObject* videoParentCanvas = nullptr;
+	GameObject* videoCanvas = nullptr;
+
 	bool hasMeleeAttacked = false;
 
 	BarrelSpawner* barrelSpawneScript = nullptr;
@@ -195,6 +200,9 @@ private:
 	/* Boss encounters */
 	std::vector<GameObject*> encounters;
 	unsigned currentEncounter = 0;
+
+	bool endVideoRunning= false;
+	float currentDelayVideo = 0.0f;
 
 	float3 phase2CenterPosition = float3(13.0f, 0.799f, 0.0f);
 

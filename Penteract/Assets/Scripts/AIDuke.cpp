@@ -5,6 +5,7 @@
 #include "DukeShield.h"
 #include "HUDManager.h"
 #include "AttackDronesController.h"
+#include "FloorIsLava.h"
 #include <string>
 #include <vector>
 
@@ -24,6 +25,12 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, thirdEncounterUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fourthEncounterUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, hudManagerUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fireTilesUID),
+
+	MEMBER_SEPARATOR("Video UIDs"),
+	MEMBER(MemberType::GAME_OBJECT_UID, videoParentCanvasUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, videoCanvasUID),
+	MEMBER(MemberType::FLOAT, dukeCharacter.delayForDisplayVideo),
 
 	MEMBER_SEPARATOR("Duke Atributes"),
 	MEMBER(MemberType::FLOAT, dukeCharacter.lifePoints),
@@ -47,11 +54,11 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::FLOAT, shieldCooldown),
 	MEMBER(MemberType::FLOAT, shieldActiveTime),
 	MEMBER(MemberType::FLOAT, bulletHellCooldown),
-	MEMBER(MemberType::FLOAT, bulletHellActiveTime),
 	MEMBER(MemberType::FLOAT, abilityChangeCooldown),
 	MEMBER(MemberType::FLOAT, throwBarrelTimer),
 	MEMBER(MemberType::FLOAT, orientationSpeed),
 	MEMBER(MemberType::FLOAT, orientationThreshold),
+	MEMBER(MemberType::FLOAT, timerBetweenAbilities),
 
 	MEMBER_SEPARATOR("Particles UIDs"),
 
@@ -90,11 +97,15 @@ void AIDuke::Start() {
 		dukeShield = GET_SCRIPT(shieldObj, DukeShield);
 	}
 
+	//Fire Tiles Script
+	GameObject* tilesObj = GameplaySystems::GetGameObject(fireTilesUID);
+	if(tilesObj) fireTilesScript = GET_SCRIPT(tilesObj, FloorIsLava);
+
 	// AttackDronesController
 	AttackDronesController* dronesController = GET_SCRIPT(&GetOwner(), AttackDronesController);
 
 	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, encounters, dronesController);
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, videoParentCanvasUID, videoCanvasUID, encounters, dronesController);
 
 	dukeCharacter.winSceneUID = winSceneUID; // TODO: REPLACE
 
@@ -107,9 +118,17 @@ void AIDuke::Start() {
 void AIDuke::Update() {
 	std::string life = std::to_string(dukeCharacter.lifePoints);
 	life = "Life points: " + life;
-	Debug::Log(life.c_str());
+	//Debug::Log(life.c_str());
 
 	float speedToUse = dukeCharacter.slowedDown ? dukeCharacter.slowedDownSpeed : dukeCharacter.movementSpeed;
+
+	if (dukeCharacter.isDead) {
+		if (activeFireTiles) fireTilesScript->StopFire();
+		// TODO: Substitute the following for actual destruction of the troops
+		GameObject* encounter = GameplaySystems::GetGameObject(fourthEncounterUID);
+		if (encounter && encounter->IsActive()) encounter->Disable();
+		dukeCharacter.InitPlayerVictory();
+	}
 
 	if (dukeCharacter.slowedDown) {
 		if (currentSlowedDownTime >= dukeCharacter.slowedDownTime) {
@@ -124,8 +143,10 @@ void AIDuke::Update() {
 		currentShieldCooldown += Time::GetDeltaTime();
 		if ((dukeCharacter.lifePoints < 0.85 * dukeCharacter.GetTotalLifePoints()) && !activeFireTiles) {
 			Debug::Log("BulletHell active and fire tiles on");
-			activeFireTiles = true;
-			// TODO: signal fire tiles activation
+			if (fireTilesScript) {
+				fireTilesScript->StartFire();
+				activeFireTiles = true;
+			}
 			currentBulletHellCooldown = 0.8f * bulletHellCooldown;
 		}
 		if (activeFireTiles) {
@@ -147,7 +168,12 @@ void AIDuke::Update() {
 				dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::ENRAGE]);
 			}
 			dukeCharacter.state = DukeState::INVULNERABLE;
-			return;
+			if (fireTilesScript) {
+				fireTilesScript->StopFire();
+				fireTilesScript->SetInterphase(false);
+				fireTilesScript->StartFire();
+			}
+			break;
 		} else if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints() &&
 				 dukeCharacter.state != DukeState::BULLET_HELL && dukeCharacter.state != DukeState::CHARGE) {
 			phase = Phase::PHASE2;
@@ -155,17 +181,27 @@ void AIDuke::Update() {
 			// Phase change VFX?
 			// Anim + dissolve for teleportation
 			lifeThreshold -= 0.15f;
-			activeFireTiles = false;
+
 			Debug::Log("Fire tiles disabled");
+			if (fireTilesScript && activeFireTiles) {
+				fireTilesScript->StopFire();
+				activeFireTiles = false;
+			}
 			movementScript->Stop();
 			if (dukeCharacter.isInArena) dukeCharacter.TeleportDuke(true);
 
+			//Second time Duke teleports out of the arena, there is a new fire pattern active.
+			if (dukeCharacter.lifePoints <= 0.55f * dukeCharacter.GetTotalLifePoints()) {
+				if (fireTilesScript) {
+					fireTilesScript->SetInterphase(true);
+					fireTilesScript->StartFire();
+					activeFireTiles = true;
+				}
+			}
+			dukeCharacter.state = DukeState::INVULNERABLE;
 			if (dukeShield && dukeShield->GetIsActive()) {
 				OnShieldInterrupted();
 			}
-
-			dukeCharacter.state = DukeState::INVULNERABLE;
-
 			dukeCharacter.StopShooting();
 			break;
 		}
@@ -194,7 +230,7 @@ void AIDuke::Update() {
 						// If player dominates the center for too long, perform charge
 						timeSinceLastCharge += Time::GetDeltaTime();
 					}
-					if (timeSinceLastCharge >= 3.0f) {
+					if (timeSinceLastCharge >= 4.5f) {
 						timeSinceLastCharge = 0.f;
 						// Charge
 						movementScript->Stop();
@@ -266,9 +302,14 @@ void AIDuke::Update() {
 			Debug::Log("Lasers enabled");
 		}
 
-		if (dukeCharacter.isInArena) {
-			activeFireTiles = true;
+		if (isInArena) {
 			Debug::Log("Fire tiles enabled");
+			if (fireTilesScript) {
+				if(activeFireTiles) fireTilesScript->StopFire();
+				fireTilesScript->SetInterphase(false);
+				fireTilesScript->StartFire();
+				activeFireTiles = true;
+			}
 			phase = Phase::PHASE1;
 			dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 			currentBulletHellCooldown = 0.f;
@@ -307,7 +348,11 @@ void AIDuke::Update() {
 					dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::STUN]);
 				}
 				dukeCharacter.state = DukeState::INVULNERABLE;
-
+				if (fireTilesScript) {
+					fireTilesScript->StopFire();
+					fireTilesScript->SetInterphase(true);
+					fireTilesScript->StartFire();
+				}
 
 			} else {
 				movementScript->Stop();
@@ -319,6 +364,11 @@ void AIDuke::Update() {
 					dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::ENRAGE]);
 				}
 				dukeCharacter.state = DukeState::INVULNERABLE;
+				if (fireTilesScript) {
+					fireTilesScript->StopFire();
+					fireTilesScript->SetInterphase(false);
+					fireTilesScript->StartFire();
+				}
 			}
 		}
 		if (dukeCharacter.state != DukeState::BULLET_HELL && dukeCharacter.state != DukeState::STUNNED &&
@@ -407,33 +457,33 @@ void AIDuke::Update() {
 
 				}
 				else {
-					if (player) {
-						if ((float3(0, 0, 0) - player->GetComponent<ComponentTransform>()->GetGlobalPosition()).LengthSq() <
-							(float3(0, 0, 0) - ownerTransform->GetGlobalPosition()).LengthSq()) {
-							// If player dominates the center for too long, perform charge
-							timeSinceLastCharge += Time::GetDeltaTime();
-						}
-						if (timeSinceLastCharge >= 4.0f) {
-							timeSinceLastCharge = 0.f;
-							// Charge
-							movementScript->Stop();
-							dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
-
-							dukeCharacter.StopShooting();
-						}
-						else {
-							// Normal behavior
-							if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(speedToUse);
-							float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
-							dir.y = 0.0f;
-							movementScript->Orientate(dir);
-							dukeCharacter.ShootAndMove(dir);
-						}
+					if ((float3(0, 0, 0) - player->GetComponent<ComponentTransform>()->GetGlobalPosition()).LengthSq() <
+						(float3(0, 0, 0) - ownerTransform->GetGlobalPosition()).LengthSq()) {
+						// If player dominates the center for too long, perform charge
+						timeSinceLastCharge += Time::GetDeltaTime();
+					}
+					if (timeSinceLastCharge >= 3.0f) {
+						timeSinceLastCharge = 0.f;
+						// Charge
+						movementScript->Stop();
+						dukeCharacter.InitCharge(DukeState::SHOOT_SHIELD);
+						dukeCharacter.StopShooting();
+					}
+					else {
+						// Normal behavior
+						if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(speedToUse);
+						float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
+						dir.y = 0.0f;
+						movementScript->Orientate(dir);
+						dukeCharacter.ShootAndMove(dir);
 					}
 				}
 				break;
 			case DukeState::MELEE_ATTACK:
 				dukeCharacter.MeleeAttack();
+				break;
+			case DukeState::CHARGE:
+				dukeCharacter.UpdateCharge();
 				break;
 			case DukeState::STUNNED:
 				if (stunTimeRemaining <= 0.f) {
@@ -683,6 +733,24 @@ void AIDuke::OnShieldInterrupted() {
 }
 
 void AIDuke::PerformBulletHell() {
+	if (mustWaitForTimerBetweenAbilities) {
+		if (currentTimeBetweenAbilities >= timerBetweenAbilities) {
+			mustWaitForTimerBetweenAbilities = false;
+			currentTimeBetweenAbilities = 0.0f;
+		}
+		else {
+			currentTimeBetweenAbilities += Time::GetDeltaTime();
+
+			float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
+			dir.y = 0.0f;
+			movementScript->Orientate(dir);
+			dukeCharacter.Move(dir);
+
+			return;
+		}
+	}
+	movementScript->Stop();
+
 	dukeCharacter.reducedDamaged = true;
 	if (!bulletHellIsActive) {
 		dukeCharacter.BulletHell();
@@ -694,6 +762,8 @@ void AIDuke::PerformBulletHell() {
 		dukeCharacter.reducedDamaged = false;
 		currentBulletHellCooldown = 0.f;
 		dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
+		currentTimeBetweenAbilities = 0.0f;
+		mustWaitForTimerBetweenAbilities = true;
 	}
 }
 

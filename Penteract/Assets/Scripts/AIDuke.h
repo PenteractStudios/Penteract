@@ -16,6 +16,7 @@ class Player;
 class HUDManager;
 //class PlayerDeath;
 class AIMovement;
+class FloorIsLava;
 
 enum class Phase {
 	PHASE1,
@@ -52,6 +53,7 @@ private:
 	void CalculatePushBackRealDistance();
 	void UpdatePushBackPosition();
 	void ParticleHit(GameObject& collidedWith, void* particle, Player& player_);
+	void InitPlayerVictory();
 	bool CanBeHurtDuringCriticalMode() const;
 	bool IsInvulnerable()const;
 	void OnShieldInterrupted();
@@ -72,7 +74,10 @@ public:
 	UID meleeAttackColliderUID = 0;
 	UID barrelSpawnerUID = 0;
 	UID chargeAttackUID = 0;
+	UID videoParentCanvasUID = 0;
+	UID videoCanvasUID = 0;
 	UID hudManagerUID = 0;
+	UID fireTilesUID = 0;
 
 	GameObject* duke = nullptr;
 	GameObject* player = nullptr;
@@ -86,7 +91,6 @@ public:
 	float shieldActiveTime = 5.f;
 
 	float bulletHellCooldown = 0.f;
-	float bulletHellActiveTime = 5.f;
 
 	float abilityChangeCooldown = 8.f;
 
@@ -99,6 +103,8 @@ public:
 	float orientationSpeed = 1.0f;
 	float orientationThreshold = 0.1f;
 
+	float timerBetweenAbilities = 1.5f;
+
 	UID winSceneUID = 0;
 
 private:
@@ -106,6 +112,7 @@ private:
 	AIMovement* movementScript = nullptr;
 
 	PlayerController* playerController = nullptr;
+	FloorIsLava* fireTilesScript = nullptr;
 
 	HUDManager* hudManager = nullptr;
 
@@ -138,5 +145,9 @@ private:
 	float currentSlowedDownTime = 0.f;
 	float pushBackRealDistance = 0.f;
 
+	float currentTimeBetweenAbilities = 0.f;
+	bool mustWaitForTimerBetweenAbilities = true;
+
+	bool isInArena = true;
 };
 
