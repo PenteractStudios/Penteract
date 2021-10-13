@@ -174,8 +174,7 @@ void AIDuke::Update() {
 				fireTilesScript->StartFire();
 			}
 			break;
-		} else if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints() &&
-				 dukeCharacter.state != DukeState::BULLET_HELL && dukeCharacter.state != DukeState::CHARGE) {
+		} else if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints() && dukeCharacter.state != DukeState::BULLET_HELL && dukeCharacter.state != DukeState::CHARGE) {
 			phase = Phase::PHASE2;
 			if (!phase2Reached) phase2Reached = true;
 			// Phase change VFX?
@@ -190,7 +189,7 @@ void AIDuke::Update() {
 			movementScript->Stop();
 			if (dukeCharacter.isInArena) dukeCharacter.TeleportDuke(true);
 
-			//Second time Duke teleports out of the arena, there is a new fire pattern active.
+			// Second time Duke teleports out of the arena, there is a new fire pattern active.
 			if (dukeCharacter.lifePoints <= 0.55f * dukeCharacter.GetTotalLifePoints()) {
 				if (fireTilesScript) {
 					fireTilesScript->SetInterphase(true);
@@ -302,7 +301,7 @@ void AIDuke::Update() {
 			Debug::Log("Lasers enabled");
 		}
 
-		if (isInArena) {
+		if (dukeCharacter.isInArena) {
 			Debug::Log("Fire tiles enabled");
 			if (fireTilesScript) {
 				if(activeFireTiles) fireTilesScript->StopFire();

@@ -5,7 +5,7 @@
 #include "PlayerController.h"
 #include "BarrelSpawner.h"
 #include "AIMovement.h"
-#include "GlobalVariables.h" 
+#include "GlobalVariables.h"
 #include "VideoSceneEnd.h"
 #include "AttackDronesController.h"
 #include "DukeShield.h"
@@ -441,7 +441,7 @@ int Duke::GetWalkAnimation()
 void Duke::InitPlayerVictory()
 {
 	if (isDead && !endVideoRunning) {
-		
+
 		currentDelayVideo += Time::GetDeltaTime();
 
 		if (currentDelayVideo >= delayForDisplayVideo) {

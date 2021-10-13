@@ -53,7 +53,6 @@ private:
 	void CalculatePushBackRealDistance();
 	void UpdatePushBackPosition();
 	void ParticleHit(GameObject& collidedWith, void* particle, Player& player_);
-	void InitPlayerVictory();
 	bool CanBeHurtDuringCriticalMode() const;
 	bool IsInvulnerable()const;
 	void OnShieldInterrupted();
@@ -148,6 +147,5 @@ private:
 	float currentTimeBetweenAbilities = 0.f;
 	bool mustWaitForTimerBetweenAbilities = true;
 
-	bool isInArena = true;
 };
 
