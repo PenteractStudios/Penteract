@@ -10,16 +10,22 @@ EXPOSE_MEMBERS(BossLaserGenerator) {
     MEMBER(MemberType::FLOAT, coolDownOffTimer),
     MEMBER(MemberType::FLOAT, chargingDuration),
     MEMBER(MemberType::GAME_OBJECT_UID, laserTargetUID),
-    MEMBER(MemberType::GAME_OBJECT_UID, laserWarningUID)
+    MEMBER(MemberType::GAME_OBJECT_UID, laserWarningUID),
+    MEMBER(MemberType::GAME_OBJECT_UID, pairGeneratorUID)
 };
 
 GENERATE_BODY_IMPL(BossLaserGenerator);
 
 void BossLaserGenerator::Start() {
 	GameObject* ownerGo = &GetOwner();
+    GameObject* pair = GameplaySystems::GetGameObject(pairGeneratorUID);
 
     if (ownerGo) {
         animationComp = ownerGo->GetComponent<ComponentAnimation>();
+    }
+    if (pair) {
+        pairAnimationComp = pair->GetComponent<ComponentAnimation>();
+        pairScript = GET_SCRIPT(pair, BossLaserGenerator);
     }
 
     laserObject = GameplaySystems::GetGameObject(laserTargetUID);
@@ -48,8 +54,12 @@ void BossLaserGenerator::Update() {
                     ComponentParticleSystem* laserWarningVFX = laserWarning->GetComponent<ComponentParticleSystem>();
                     if (laserWarningVFX) laserWarningVFX->PlayChildParticles();
                 }
+                if(pairScript) pairScript->beingUsed = true;
                 if (!beingUsed) {
                     animationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::IDLE)] + states[static_cast<unsigned int>(GeneratorState::START)]);
+                }
+                if (pairScript && pairScript->currentState == GeneratorState::IDLE) {
+                    pairAnimationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::IDLE)] + states[static_cast<unsigned int>(GeneratorState::START)]);
                 }
             }
         }
@@ -69,8 +79,12 @@ void BossLaserGenerator::Update() {
             if (coolDownOnTimer > coolDownOn) {
                 coolDownOnTimer = 0;
                 currentState = GeneratorState::IDLE;
+                if(pairScript) pairScript->beingUsed = false;
                 if (!beingUsed) {
                     animationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::SHOOT)] + states[static_cast<unsigned int>(GeneratorState::IDLE)]);
+                }
+                if (pairScript && pairScript->currentState == GeneratorState::IDLE) {
+                    pairAnimationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::SHOOT)] + states[static_cast<unsigned int>(GeneratorState::IDLE)]);
                 }
             }
         }

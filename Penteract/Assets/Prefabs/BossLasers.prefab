@@ -72,13 +72,8 @@
                     {
                         "Type": "Script",
                         "Active": true,
-                        "Script": 10832327878487702776,
+                        "Script": 11693071366661286888,
                         "Values": [
-                            {
-                                "Name": "pairGeneratorUID",
-                                "Type": "GameObjectUID",
-                                "Value": 16379177681054387756
-                            },
                             {
                                 "Name": "laserTargetUID",
                                 "Type": "GameObjectUID",
@@ -93,6 +88,11 @@
                                 "Name": "chargingDuration",
                                 "Type": "Float",
                                 "Value": 3.0
+                            },
+                            {
+                                "Name": "pairGeneratorUID",
+                                "Type": "GameObjectUID",
+                                "Value": 16379177681054387756
                             }
                         ]
                     }
@@ -295,23 +295,8 @@
                     {
                         "Type": "Script",
                         "Active": true,
-                        "Script": 10832327878487702776,
+                        "Script": 11693071366661286888,
                         "Values": [
-                            {
-                                "Name": "pairGeneratorUID",
-                                "Type": "GameObjectUID",
-                                "Value": 499692356175010116
-                            },
-                            {
-                                "Name": "laserTargetUID",
-                                "Type": "GameObjectUID",
-                                "Value": 18126878880704063045
-                            },
-                            {
-                                "Name": "laserWarningUID",
-                                "Type": "GameObjectUID",
-                                "Value": 9161977557122903840
-                            },
                             {
                                 "Name": "chargingDuration",
                                 "Type": "Float",
@@ -518,13 +503,8 @@
                     {
                         "Type": "Script",
                         "Active": true,
-                        "Script": 10832327878487702776,
+                        "Script": 11693071366661286888,
                         "Values": [
-                            {
-                                "Name": "pairGeneratorUID",
-                                "Type": "GameObjectUID",
-                                "Value": 14916908196225352611
-                            },
                             {
                                 "Name": "laserTargetUID",
                                 "Type": "GameObjectUID",
@@ -539,6 +519,11 @@
                                 "Name": "chargingDuration",
                                 "Type": "Float",
                                 "Value": 3.0
+                            },
+                            {
+                                "Name": "pairGeneratorUID",
+                                "Type": "GameObjectUID",
+                                "Value": 14916908196225352611
                             }
                         ]
                     }
@@ -741,23 +726,8 @@
                     {
                         "Type": "Script",
                         "Active": true,
-                        "Script": 10832327878487702776,
+                        "Script": 11693071366661286888,
                         "Values": [
-                            {
-                                "Name": "pairGeneratorUID",
-                                "Type": "GameObjectUID",
-                                "Value": 11054448817594968885
-                            },
-                            {
-                                "Name": "laserWarningUID",
-                                "Type": "GameObjectUID",
-                                "Value": 13994016073850616395
-                            },
-                            {
-                                "Name": "laserTargetUID",
-                                "Type": "GameObjectUID",
-                                "Value": 7040107540852011924
-                            },
                             {
                                 "Name": "chargingDuration",
                                 "Type": "Float",
@@ -964,13 +934,8 @@
                     {
                         "Type": "Script",
                         "Active": true,
-                        "Script": 10832327878487702776,
+                        "Script": 11693071366661286888,
                         "Values": [
-                            {
-                                "Name": "pairGeneratorUID",
-                                "Type": "GameObjectUID",
-                                "Value": 15655036742546442388
-                            },
                             {
                                 "Name": "laserTargetUID",
                                 "Type": "GameObjectUID",
@@ -985,6 +950,11 @@
                                 "Name": "chargingDuration",
                                 "Type": "Float",
                                 "Value": 3.0
+                            },
+                            {
+                                "Name": "pairGeneratorUID",
+                                "Type": "GameObjectUID",
+                                "Value": 15655036742546442388
                             }
                         ]
                     }
@@ -1187,23 +1157,8 @@
                     {
                         "Type": "Script",
                         "Active": true,
-                        "Script": 10832327878487702776,
+                        "Script": 11693071366661286888,
                         "Values": [
-                            {
-                                "Name": "pairGeneratorUID",
-                                "Type": "GameObjectUID",
-                                "Value": 1607643454644632739
-                            },
-                            {
-                                "Name": "laserTargetUID",
-                                "Type": "GameObjectUID",
-                                "Value": 5377309002875495148
-                            },
-                            {
-                                "Name": "laserWarningUID",
-                                "Type": "GameObjectUID",
-                                "Value": 4092905622198498705
-                            },
                             {
                                 "Name": "chargingDuration",
                                 "Type": "Float",
@@ -1410,13 +1365,8 @@
                     {
                         "Type": "Script",
                         "Active": true,
-                        "Script": 10832327878487702776,
+                        "Script": 11693071366661286888,
                         "Values": [
-                            {
-                                "Name": "pairGeneratorUID",
-                                "Type": "GameObjectUID",
-                                "Value": 16166382149646472663
-                            },
                             {
                                 "Name": "laserTargetUID",
                                 "Type": "GameObjectUID",
@@ -1431,6 +1381,11 @@
                                 "Name": "chargingDuration",
                                 "Type": "Float",
                                 "Value": 3.0
+                            },
+                            {
+                                "Name": "pairGeneratorUID",
+                                "Type": "GameObjectUID",
+                                "Value": 16166382149646472663
                             }
                         ]
                     }
@@ -1633,23 +1588,8 @@
                     {
                         "Type": "Script",
                         "Active": true,
-                        "Script": 10832327878487702776,
+                        "Script": 11693071366661286888,
                         "Values": [
-                            {
-                                "Name": "pairGeneratorUID",
-                                "Type": "GameObjectUID",
-                                "Value": 2889109359949861798
-                            },
-                            {
-                                "Name": "laserTargetUID",
-                                "Type": "GameObjectUID",
-                                "Value": 788499981218001204
-                            },
-                            {
-                                "Name": "laserWarningUID",
-                                "Type": "GameObjectUID",
-                                "Value": 15270587217614796528
-                            },
                             {
                                 "Name": "chargingDuration",
                                 "Type": "Float",
@@ -1818,13 +1758,13 @@
             },
             {
                 "Name": "Laser Beams",
-                "Active": true,
+                "Active": false,
                 "RootBoneName": "",
                 "Mask": 0,
                 "Components": [
                     {
                         "Type": "Transform",
-                        "Active": true,
+                        "Active": false,
                         "Position": [
                             0.0,
                             0.0,
@@ -1849,13 +1789,13 @@
                     },
                     {
                         "Type": "Script",
-                        "Active": true,
+                        "Active": false,
                         "Script": 0,
                         "Values": null
                     },
                     {
                         "Type": "Script",
-                        "Active": true,
+                        "Active": false,
                         "Script": 9074135605843359041,
                         "Values": [
                             {
@@ -1901,7 +1841,12 @@
                             {
                                 "Name": "laserActiveDuration",
                                 "Type": "Float",
-                                "Value": 3.0
+                                "Value": 2.0
+                            },
+                            {
+                                "Name": "intervalDuration",
+                                "Type": "Float",
+                                "Value": 5.0
                             }
                         ]
                     }
@@ -1915,7 +1860,7 @@
                         "Components": [
                             {
                                 "Type": "Transform",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     13.0,
                                     4.5,
@@ -1940,13 +1885,13 @@
                             },
                             {
                                 "Type": "MeshRenderer",
-                                "Active": true,
+                                "Active": false,
                                 "MeshID": 7038944248903619060,
                                 "MaterialID": 14968097780833281546
                             },
                             {
                                 "Type": "BoundingBox",
-                                "Active": true,
+                                "Active": false,
                                 "LocalBoundingBox": [
                                     -0.5,
                                     -10.0,
@@ -1958,7 +1903,7 @@
                             },
                             {
                                 "Type": "BoxCollider",
-                                "Active": true,
+                                "Active": false,
                                 "colliderType": 2,
                                 "layerType": 6,
                                 "mass": 1.0,
@@ -1985,7 +1930,7 @@
                         "Components": [
                             {
                                 "Type": "Transform",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     12.730999946594239,
                                     1.0,
@@ -2010,7 +1955,7 @@
                             },
                             {
                                 "Type": "Particle",
-                                "Active": true,
+                                "Active": false,
                                 "DrawGizmo": true,
                                 "Duration": 0.10000000149011612,
                                 "Looping": false,
@@ -2899,7 +2844,7 @@
                         "Components": [
                             {
                                 "Type": "Transform",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     13.0,
                                     4.5,
@@ -2924,13 +2869,13 @@
                             },
                             {
                                 "Type": "MeshRenderer",
-                                "Active": true,
+                                "Active": false,
                                 "MeshID": 7038944248903619060,
                                 "MaterialID": 14968097780833281546
                             },
                             {
                                 "Type": "BoundingBox",
-                                "Active": true,
+                                "Active": false,
                                 "LocalBoundingBox": [
                                     -0.5,
                                     -10.0,
@@ -2942,7 +2887,7 @@
                             },
                             {
                                 "Type": "BoxCollider",
-                                "Active": true,
+                                "Active": false,
                                 "colliderType": 2,
                                 "layerType": 6,
                                 "mass": 1.0,
@@ -2969,7 +2914,7 @@
                         "Components": [
                             {
                                 "Type": "Transform",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     12.730999946594239,
                                     3.5,
@@ -2994,7 +2939,7 @@
                             },
                             {
                                 "Type": "Particle",
-                                "Active": true,
+                                "Active": false,
                                 "DrawGizmo": true,
                                 "Duration": 0.10000000149011612,
                                 "Looping": false,
@@ -3883,7 +3828,7 @@
                         "Components": [
                             {
                                 "Type": "Transform",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     4.5,
@@ -3908,13 +3853,13 @@
                             },
                             {
                                 "Type": "MeshRenderer",
-                                "Active": true,
+                                "Active": false,
                                 "MeshID": 7038944248903619060,
                                 "MaterialID": 14968097780833281546
                             },
                             {
                                 "Type": "BoundingBox",
-                                "Active": true,
+                                "Active": false,
                                 "LocalBoundingBox": [
                                     -0.5,
                                     -10.0,
@@ -3926,7 +3871,7 @@
                             },
                             {
                                 "Type": "BoxCollider",
-                                "Active": true,
+                                "Active": false,
                                 "colliderType": 2,
                                 "layerType": 6,
                                 "mass": 1.0,
@@ -3953,7 +3898,7 @@
                         "Components": [
                             {
                                 "Type": "Transform",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     0.0,
                                     3.5,
@@ -3978,7 +3923,7 @@
                             },
                             {
                                 "Type": "Particle",
-                                "Active": true,
+                                "Active": false,
                                 "DrawGizmo": true,
                                 "Duration": 0.10000000149011612,
                                 "Looping": false,
@@ -4867,7 +4812,7 @@
                         "Components": [
                             {
                                 "Type": "Transform",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     25.0,
                                     4.5,
@@ -4892,13 +4837,13 @@
                             },
                             {
                                 "Type": "MeshRenderer",
-                                "Active": true,
+                                "Active": false,
                                 "MeshID": 7038944248903619060,
                                 "MaterialID": 14968097780833281546
                             },
                             {
                                 "Type": "BoundingBox",
-                                "Active": true,
+                                "Active": false,
                                 "LocalBoundingBox": [
                                     -0.5,
                                     -10.0,
@@ -4910,7 +4855,7 @@
                             },
                             {
                                 "Type": "BoxCollider",
-                                "Active": true,
+                                "Active": false,
                                 "colliderType": 2,
                                 "layerType": 6,
                                 "mass": 1.0,
@@ -4937,7 +4882,7 @@
                         "Components": [
                             {
                                 "Type": "Transform",
-                                "Active": true,
+                                "Active": false,
                                 "Position": [
                                     25.0,
                                     3.5,
@@ -4962,7 +4907,7 @@
                             },
                             {
                                 "Type": "Particle",
-                                "Active": true,
+                                "Active": false,
                                 "DrawGizmo": true,
                                 "Duration": 0.10000000149011612,
                                 "Looping": false,

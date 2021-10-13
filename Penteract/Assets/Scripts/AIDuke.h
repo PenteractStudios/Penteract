@@ -115,6 +115,7 @@ private:
 	FloorIsLava* fireTilesScript = nullptr;
 
 	HUDManager* hudManager = nullptr;
+	GameObject* lasers = nullptr;
 
 	float currentShieldCooldown = 0.f;
 	float currentShieldActiveTime = 0.f;

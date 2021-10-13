@@ -85,12 +85,15 @@ void AIDuke::Start() {
 
 	ownerTransform = GetOwner().GetComponent<ComponentTransform>();
 
-	/* Encounters */
+	// Encounters
 	std::vector<UID> encounters;
 	encounters.push_back(firstEncounterUID);
 	encounters.push_back(secondEncounterUID);
 	encounters.push_back(thirdEncounterUID);
 	encounters.push_back(fourthEncounterUID);
+
+	// Lasers
+	lasers = GameplaySystems::GetGameObject(lasersUID);
 
 	// Debug
 	GameObject* shieldObj = GameplaySystems::GetGameObject(shieldObjUID);
@@ -298,7 +301,7 @@ void AIDuke::Update() {
 	case Phase::PHASE2:
 		if (!activeLasers && dukeCharacter.lifePoints < lasersThreshold * dukeCharacter.GetTotalLifePoints()) {
 			activeLasers = true;
-			// TODO: signal lasers activation
+			if (lasers && !lasers->IsActive()) lasers->Enable();
 			Debug::Log("Lasers enabled");
 		}
 

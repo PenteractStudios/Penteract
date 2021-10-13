@@ -4,7 +4,7 @@
 #include <vector>
 #include <random>
 
-class LasersGenerator;
+class BossLaserGenerator;
 
 class BossLasersPatterns : public Script {
 	GENERATE_BODY(BossLasersPatterns);
@@ -26,7 +26,7 @@ private:
 	float permutationDuration = 0.f;
 	float permutationTimer = 0.0f;
 
-	std::vector<LasersGenerator*> generators;
+	std::vector<BossLaserGenerator*> generators;
 
 	std::random_device rd;
 	std::minstd_rand gen;

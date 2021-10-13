@@ -21,6 +21,7 @@ public:
 
 	UID laserTargetUID = 0;
 	UID laserWarningUID = 0;
+	UID pairGeneratorUID = 0;
 
 	float coolDownOnTimer = 0.0f;
 	float coolDownOn = 2.0f;
@@ -32,10 +33,12 @@ public:
 
 private:
 	ComponentAnimation* animationComp = nullptr;
+	ComponentAnimation* pairAnimationComp = nullptr;
 	GeneratorState currentState = GeneratorState::IDLE;
 
 	GameObject* laserObject = nullptr;
 	GameObject* laserWarning = nullptr;
+	BossLaserGenerator* pairScript = nullptr;
 
 	bool beingUsed = false;
 

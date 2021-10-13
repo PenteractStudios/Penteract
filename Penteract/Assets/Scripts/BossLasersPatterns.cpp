@@ -1,7 +1,7 @@
 #include "BossLasersPatterns.h"
 
 #include "GameplaySystems.h"
-#include "LasersGenerator.h"
+#include "BossLaserGenerator.h"
 
 #include <algorithm>
 
@@ -33,22 +33,22 @@ void BossLasersPatterns::Start() {
 	
 	float chargingTime = 0.f;
 	if (generatorA1) {
-		LasersGenerator* script = GET_SCRIPT(generatorA1, LasersGenerator);
+		BossLaserGenerator* script = GET_SCRIPT(generatorA1, BossLaserGenerator);
 		if (script) {
 			generators.push_back(script);
 			chargingTime = script->chargingDuration;
 		}
 	}
 	if (generatorB1) {
-		LasersGenerator* script = GET_SCRIPT(generatorB1, LasersGenerator);
+		BossLaserGenerator* script = GET_SCRIPT(generatorB1, BossLaserGenerator);
 		if (script) generators.push_back(script);
 	}
 	if (generatorC1) {
-		LasersGenerator* script = GET_SCRIPT(generatorC1, LasersGenerator);
+		BossLaserGenerator* script = GET_SCRIPT(generatorC1, BossLaserGenerator);
 		if (script) generators.push_back(script);
 	}
 	if (generatorD1) {
-		LasersGenerator* script = GET_SCRIPT(generatorD1, LasersGenerator);
+		BossLaserGenerator* script = GET_SCRIPT(generatorD1, BossLaserGenerator);
 		if (script) generators.push_back(script);
 	}
 
