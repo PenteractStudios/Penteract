@@ -277,8 +277,10 @@ void Duke::TeleportDuke(bool toMapCenter)
 {
 	if (toMapCenter) {
 		agent->SetMoveTarget(phase2CenterPosition);
-		agent->SetMaxSpeed(movementSpeed * 1.5f);
-		movementScript->Orientate(phase2CenterPosition - dukeTransform->GetGlobalPosition());
+		agent->SetMaxSpeed(movementSpeed * 2.f);
+		float3 dir = phase2CenterPosition - dukeTransform->GetGlobalPosition();
+		dir.y = 0;
+		movementScript->Orientate(dir);
 		if (compAnimation) {
 			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[Duke::DUKE_ANIMATION_STATES::WALK_NO_AIM]);
 		}
@@ -385,9 +387,13 @@ void Duke::StopShooting()
 
 void Duke::StartPhase2Shield()
 {
+	float3 dir = phase2CenterPosition - dukeTransform->GetGlobalPosition();
+	dir.y = 0;
+	movementScript->Orientate(dir);
+
 	if (compAnimation && compAnimation->GetCurrentState()->name != animationStates[Duke::DUKE_ANIMATION_STATES::IDLE] &&
 		compAnimation->GetCurrentState()->name != animationStates[Duke::DUKE_ANIMATION_STATES::PDA] &&
-		(dukeTransform->GetGlobalPosition() - phase2CenterPosition).Length() <= 0.1f) {
+		(dukeTransform->GetGlobalPosition() - phase2CenterPosition).Length() <= 0.5f) {
 
 		if (phase2Shield) phase2Shield->InitShield();
 		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[Duke::DUKE_ANIMATION_STATES::PDA]);
