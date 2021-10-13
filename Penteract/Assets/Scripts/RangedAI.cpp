@@ -435,7 +435,7 @@ void RangedAI::UpdateState() {
 						break;
 					}
 
-					if (!CharacterInRange(player, rangerGruntCharacter.attackRange, true)) {
+					if (!CharacterInRange(player, rangerGruntCharacter.attackRange, true) && !isSniper) {
 						ChangeState(AIState::RUN);
 						break;
 					}

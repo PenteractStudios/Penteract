@@ -4,7 +4,6 @@
 #include "Duke.h"
 
 class GameObject;
-class ComponentAnimation;
 class ComponentTransform;
 class ComponentAgent;
 class ComponentAudioSource;
@@ -14,8 +13,10 @@ class HUDController;
 class PlayerController;
 class DukeShield;
 class Player;
+class HUDManager;
 //class PlayerDeath;
 class AIMovement;
+class FloorIsLava;
 
 enum class Phase {
 	PHASE1,
@@ -43,14 +44,20 @@ public:
 	void OnAnimationSecondaryFinished() override;
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
+	void SetReady(bool value);
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
+	float GetDukeMaxHealth() const;
 
 private:
 	void CalculatePushBackRealDistance();
 	void UpdatePushBackPosition();
 	void ParticleHit(GameObject& collidedWith, void* particle, Player& player_);
+	bool CanBeHurtDuringCriticalMode() const;
+	bool IsInvulnerable()const;
+	void OnShieldInterrupted();
+	void PerformBulletHell();
 
 public:
 	UID dukeUID = 0;
@@ -59,7 +66,19 @@ public:
 	UID bulletUID = 0;
 	UID barrelUID = 0;
 	UID chargeColliderUID = 0;
+	UID phase2ShieldUID = 0;
+	UID firstEncounterUID = 0;
+	UID secondEncounterUID = 0;
+	UID thirdEncounterUID = 0;
+	UID fourthEncounterUID = 0;
 	UID meleeAttackColliderUID = 0;
+	UID barrelSpawnerUID = 0;
+	UID chargeAttackUID = 0;
+	UID lasersUID = 0;
+	UID videoParentCanvasUID = 0;
+	UID videoCanvasUID = 0;
+	UID hudManagerUID = 0;
+	UID fireTilesUID = 0;
 
 	GameObject* duke = nullptr;
 	GameObject* player = nullptr;
@@ -73,7 +92,6 @@ public:
 	float shieldActiveTime = 5.f;
 
 	float bulletHellCooldown = 0.f;
-	float bulletHellActiveTime = 5.f;
 
 	float abilityChangeCooldown = 8.f;
 
@@ -86,22 +104,27 @@ public:
 	float orientationSpeed = 1.0f;
 	float orientationThreshold = 0.1f;
 
-	bool toggleShield = false;
+	float timerBetweenAbilities = 1.5f;
 
 	UID winSceneUID = 0;
 
 private:
-
 	ComponentTransform* ownerTransform = nullptr;
 	AIMovement* movementScript = nullptr;
 
 	PlayerController* playerController = nullptr;
+	FloorIsLava* fireTilesScript = nullptr;
+
+	HUDManager* hudManager = nullptr;
+	GameObject* lasers = nullptr;
+
+	bool isReady = true;
 
 	float currentShieldCooldown = 0.f;
 	float currentShieldActiveTime = 0.f;
 
 	float currentBulletHellCooldown = 0.f;
-	float currentBulletHellActiveTime = 0.f;
+	bool bulletHellIsActive = false;
 
 	float currentAbilityChangeCooldown = 0.f;
 
@@ -113,7 +136,6 @@ private:
 	float lasersThreshold = 0.6f;
 
 	bool activeFireTiles = false;
-	bool activeLasers = false;
 
 	bool phase2Reached = false;
 
@@ -125,6 +147,9 @@ private:
 	float currentPushBackDistance = 0.f;
 	float currentSlowedDownTime = 0.f;
 	float pushBackRealDistance = 0.f;
+
+	float currentTimeBetweenAbilities = 0.f;
+	bool mustWaitForTimerBetweenAbilities = true;
 
 };
 

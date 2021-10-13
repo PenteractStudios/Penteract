@@ -37,6 +37,9 @@ public:
 	ComponentObstacle* obstacle = nullptr;
 	ComponentAudioSource* audio = nullptr;
 	ComponentAudioSource* audioForTimer = nullptr;
+	GameObject* barrelShadow = nullptr;
+	ComponentParticleSystem* particlesShadow = nullptr;
+
 	bool isHit = false;
 	bool destroy = false;
 	float timeToDestroy = 1.0f;
@@ -49,6 +52,7 @@ public:
 	float shakeMultiplier = 1.85f;
 
 	bool onFloor = true;	//Boolean to say if the barrel is on the ground (normal behavior) or is thrown by the boos
+	float heightOfThrow = 15.0f;
 	float forceOfFall = 0.25f;
 
 private:

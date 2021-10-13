@@ -11,6 +11,7 @@ EXPOSE_MEMBERS(Barrel) {
 	MEMBER(MemberType::FLOAT, timeWillDoDamage),
 	MEMBER(MemberType::FLOAT, timerToDestroy),
 	MEMBER(MemberType::BOOL, onFloor),
+	MEMBER(MemberType::FLOAT, heightOfThrow),
 	MEMBER(MemberType::FLOAT, forceOfFall),
 	MEMBER(MemberType::FLOAT, shakeMultiplier)
 };
@@ -32,7 +33,7 @@ void Barrel::Start() {
 		barrelCollider->Disable();
 	}
 
-	GameObject* cameraAux = GameplaySystems::GetGameObject("Game Camera"); 
+	GameObject* cameraAux = GameplaySystems::GetGameObject("Game Camera");
 	if (cameraAux) {
 		cameraController = GET_SCRIPT(cameraAux, CameraController);
 	}
@@ -49,7 +50,18 @@ void Barrel::Start() {
 		audioForTimer = particleForTimerAux->GetComponent<ComponentAudioSource>();
 	}
 
+	if (!onFloor) {
+		float3 pos = parentTransform->GetGlobalPosition();
+		parentTransform->SetGlobalPosition(float3(pos.x, heightOfThrow, pos.z));
+	}
 
+	barrelShadow = barrel->GetParent()->GetParent()->GetChild("BarrelShadowWarning");
+	if (barrelShadow) {
+		particlesShadow = barrelShadow->GetComponent<ComponentParticleSystem>();
+		if (particlesShadow) {
+			if (!onFloor) particlesShadow->PlayChildParticles();
+		}
+	}
 }
 
 void Barrel::Update() {
@@ -57,11 +69,11 @@ void Barrel::Update() {
 
 	if (startTimerToDestroy && timerDestroyActivated) {
 		particlesForTimer->PlayChildParticles();
-		//audioForTimer->Play(); // TODO uncomment this line when BarrelWarning have is proper sound (right now doesn't have and produce bugs) 
+		//audioForTimer->Play(); // TODO uncomment this line when BarrelWarning have is proper sound (right now doesn't have and produce bugs)
 
 		currentTimerToDestroy += Time::GetDeltaTime();
 		if (currentTimerToDestroy >= timerToDestroy) {
-			//audioForTimer->Stop(); // TODO uncomment this line when BarrelWarning have is proper sound (right now doesn't have and produce bugs) 
+			//audioForTimer->Stop(); // TODO uncomment this line when BarrelWarning have is proper sound (right now doesn't have and produce bugs)
 			isHit = true;
 			startTimerToDestroy = false;
 		}
@@ -90,21 +102,32 @@ void Barrel::Update() {
 		}
 		else {
 			destroy = false;
-			GameplaySystems::DestroyGameObject(barrel->GetParent());
+			if (particlesShadow) {
+				GameplaySystems::DestroyGameObject(barrel->GetParent()->GetParent());
+			}
+			else {
+				GameplaySystems::DestroyGameObject(barrel->GetParent());
+			}
 		}
 	}
 
 	if (!onFloor) {
-		if (barrelMesh->GetComponent<ComponentTransform>()->GetGlobalPosition().y > 0.25f) {
+		if (parentTransform->GetGlobalPosition().y > 2.38f) {
 			float3 barrelPos = parentTransform->GetGlobalPosition();
 			barrelPos += float3(0, -forceOfFall, 0);
 			parentTransform->SetGlobalPosition(barrelPos);
 		}
 		else {
+			float3 barrelPos = parentTransform->GetGlobalPosition();
+			barrelPos.y = 2.38f;
+			parentTransform->SetGlobalPosition(barrelPos);
 			startTimerToDestroy = true;
 			timerDestroyActivated = true;
 			onFloor = true;
 			obstacle->Enable();
+			if (particlesShadow) {
+				particlesShadow->StopChildParticles();
+			}
 		}
 	}
 }
