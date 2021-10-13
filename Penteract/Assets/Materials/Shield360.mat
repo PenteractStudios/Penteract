@@ -1,5 +1,5 @@
 {
-    "ShaderType": 2,
+    "ShaderType": 4,
     "RenderingMode": 1,
     "CastShadows": false,
     "ShadowType": 0,
@@ -42,19 +42,19 @@
     ],
     "DissolveNoiseMap": 0,
     "DissolveColor": [
-        0.0,
-        0.0,
-        0.0,
+        0.8872548937797546,
+        0.16092365980148316,
+        0.16092365980148316,
         0.0
     ],
-    "DissolveIntensity": 0.0,
-    "DissolveScale": 0.0,
+    "DissolveIntensity": 15.0,
+    "DissolveScale": 6.0,
     "DissolveOffset": [
         0.0,
         0.0
     ],
-    "DissolveDuration": 0.0,
-    "DissolveEdgeSize": 0.0,
+    "DissolveDuration": 0.5,
+    "DissolveEdgeSize": 0.20000000298023225,
     "VolumetricLightIntensity": 0.0,
     "VolumetricLightAttenuationExponent": 0.0,
     "IsSoft": false,
