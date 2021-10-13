@@ -166,7 +166,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 200.0,
-                            "HorizontalFov": 1.4755951166152955,
+                            "HorizontalFov": 1.9240119457244874,
                             "VerticalFov": 1.0
                         }
                     },
@@ -189,10 +189,11 @@
                         "Type": "AudioListener",
                         "Id": 13146572848985661355,
                         "Active": true,
-                        "Gain": 0.3019999861717224,
+                        "IsCustomPos": false,
                         "ModelIndex": 2,
                         "DistanceModel": 2,
-                        "Clamped": true
+                        "Clamped": true,
+                        "DopplerFactor": 0.0
                     }
                 ],
                 "Children": null
@@ -330,7 +331,31 @@
                                 "OuterGain": 0.0,
                                 "RolloffFactor": 1.0,
                                 "ReferenceDistance": 10.0,
-                                "MaxDistance": 30.0
+                                "MaxDistance": 30.0,
+                                "IsMusic": true
+                            },
+                            {
+                                "Type": "Script",
+                                "Id": 12760060039090201849,
+                                "Active": true,
+                                "Script": 9961171467095894443,
+                                "Values": [
+                                    {
+                                        "Name": "mainGain",
+                                        "Type": "Float",
+                                        "Value": 0.5
+                                    },
+                                    {
+                                        "Name": "sfxGain",
+                                        "Type": "Float",
+                                        "Value": 0.5
+                                    },
+                                    {
+                                        "Name": "musicGain",
+                                        "Type": "Float",
+                                        "Value": 0.5
+                                    }
+                                ]
                             }
                         ],
                         "Children": null
@@ -387,7 +412,8 @@
                                 "OuterGain": 0.0,
                                 "RolloffFactor": 1.0,
                                 "ReferenceDistance": 10.0,
-                                "MaxDistance": 30.0
+                                "MaxDistance": 30.0,
+                                "IsMusic": false
                             },
                             {
                                 "Type": "AudioSource",
@@ -406,7 +432,8 @@
                                 "OuterGain": 0.0,
                                 "RolloffFactor": 1.0,
                                 "ReferenceDistance": 10.0,
-                                "MaxDistance": 30.0
+                                "MaxDistance": 30.0,
+                                "IsMusic": false
                             }
                         ],
                         "Children": null
@@ -463,7 +490,8 @@
                                 "OuterGain": 0.0,
                                 "RolloffFactor": 1.0,
                                 "ReferenceDistance": 10.0,
-                                "MaxDistance": 30.0
+                                "MaxDistance": 30.0,
+                                "IsMusic": false
                             },
                             {
                                 "Type": "AudioSource",
@@ -482,7 +510,8 @@
                                 "OuterGain": 0.0,
                                 "RolloffFactor": 1.0,
                                 "ReferenceDistance": 10.0,
-                                "MaxDistance": 30.0
+                                "MaxDistance": 30.0,
+                                "IsMusic": false
                             },
                             {
                                 "Type": "AudioSource",
@@ -501,7 +530,8 @@
                                 "OuterGain": 0.0,
                                 "RolloffFactor": 1.0,
                                 "ReferenceDistance": 10.0,
-                                "MaxDistance": 30.0
+                                "MaxDistance": 30.0,
+                                "IsMusic": false
                             }
                         ],
                         "Children": null
@@ -17686,19 +17716,8 @@
                                                                 "Type": "Script",
                                                                 "Id": 7262001444532878739,
                                                                 "Active": true,
-                                                                "Script": 2686017189653035029,
-                                                                "Values": [
-                                                                    {
-                                                                        "Name": "sliderUID",
-                                                                        "Type": "GameObjectUID",
-                                                                        "Value": 15777271348677138761
-                                                                    },
-                                                                    {
-                                                                        "Name": "gameCameraUID",
-                                                                        "Type": "GameObjectUID",
-                                                                        "Value": 2161515125610565667
-                                                                    }
-                                                                ]
+                                                                "Script": 4803676625564176549,
+                                                                "Values": null
                                                             }
                                                         ],
                                                         "Children": [
@@ -18250,7 +18269,7 @@
                                                                 "Type": "Script",
                                                                 "Id": 16258618571007931275,
                                                                 "Active": true,
-                                                                "Script": 0,
+                                                                "Script": 7686865982813125388,
                                                                 "Values": null
                                                             }
                                                         ],
@@ -18803,7 +18822,7 @@
                                                                 "Type": "Script",
                                                                 "Id": 18098344580712168604,
                                                                 "Active": true,
-                                                                "Script": 0,
+                                                                "Script": 255110710965514242,
                                                                 "Values": null
                                                             }
                                                         ],

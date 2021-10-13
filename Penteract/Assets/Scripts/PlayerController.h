@@ -11,6 +11,7 @@ class GameObject;
 class ComponentTransform;
 class ComponentCamera;
 class ComponentAudioSource;
+class ComponentAudioListener;
 class ComponentParticleSystem;
 class HUDController;
 class HUDManager;
@@ -162,6 +163,8 @@ private:
 
 	//Audio
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr };
+	ComponentAudioListener* listener = nullptr;
+	ComponentTransform* transform = nullptr;
 
 	friend class DialogueManager;
 };

@@ -6,6 +6,7 @@
 #include "GameController.h"
 #include "DialogueManager.h"
 #include "CanvasFader.h"
+#include "Components/ComponentAudioSource.h"
 #include "Components/UI/ComponentVideo.h"
 #include "Components/UI/ComponentCanvas.h"
 #include "GlobalVariables.h" 
@@ -13,6 +14,8 @@
 EXPOSE_MEMBERS(VideoScene1Start) {
     MEMBER(MemberType::GAME_OBJECT_UID, canvasFaderUID),
     MEMBER(MemberType::GAME_OBJECT_UID, gameControllerUID),
+    MEMBER(MemberType::GAME_OBJECT_UID, audioControllerUID),
+    MEMBER(MemberType::GAME_OBJECT_UID, audioVideoSourceUID),
     MEMBER(MemberType::INT, dialogueID)
 };
 
@@ -34,6 +37,14 @@ void VideoScene1Start::Start() {
         }
     }
 
+    // Set Up Audio
+    GameObject* musicObj = GameplaySystems::GetGameObject(audioControllerUID);
+    if (musicObj) music = musicObj->GetComponent<ComponentAudioSource>();
+
+    GameObject* audioObj = GameplaySystems::GetGameObject(audioVideoSourceUID);
+    if (audioObj) audioVideo = audioObj->GetComponent<ComponentAudioSource>();
+    if (audioVideo) audioVideo->Play();
+
     componentVideo->SetVideoFrameSize(static_cast<int>(Screen::GetResolution().x), static_cast<int>(Screen::GetResolution().y));
 
     if (componentVideo) {
@@ -52,6 +63,8 @@ void VideoScene1Start::Start() {
 
 void VideoScene1Start::Update() {
 
+    if (music && music->IsPlaying()) music->Stop();
+
     if ((componentVideo->HasVideoFinished() && componentVideo->IsActive()) || Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE)) {
         BackToNormalGameplay();
     }
@@ -60,6 +73,8 @@ void VideoScene1Start::Update() {
 void VideoScene1Start::BackToNormalGameplay() {
     Time::ResumeGame();
     componentVideo->Stop();
+    if (audioVideo) audioVideo->Stop();
+    if (music) music->Play();
     GameplaySystems::SetGlobalVariable(isVideoActive, false);
     parent->Disable();
     if (faderScript) {

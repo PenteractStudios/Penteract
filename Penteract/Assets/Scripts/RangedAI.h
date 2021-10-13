@@ -41,8 +41,6 @@ public:
 	void OnCollision(GameObject& collidedWith, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* particle = nullptr) override; //This is commented until merge with collisions
 	void ShootPlayerInRange(); //Sets in motion the shooting at the player, if found and close enough
 
-	void DoStunned();
-	void EnablePushFeedback();
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
@@ -76,6 +74,10 @@ public:
 	UID meshUID1 = 0;				//Second mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID meshUID2 = 0;				//Third mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID fangUID = 0;
+
+
+	ResourcePrefab* bulletRange = nullptr;
+	UID bulletUID = 0;
 
 	ComponentParticleSystem* shootTrailPrefab = nullptr; //Reference to projectile prefab , for shooting
 	GameObject* player = nullptr;				//Reference to player main Gameobject, used to check distances
@@ -116,6 +118,7 @@ public:
 	UID dissolveMaterialID = 0;			//Reference to dissolve material, used to be set whenever Ai has been recently hurt
 	float dissolveTimerToStart = 0.0f;	//Timer until the dissolve animation is played
 	UID materialsUID = 0;				//Reference to materials placeholder for random
+
 
 	//EMP Stun feedback
 	ComponentParticleSystem* particlesEmp = nullptr;
@@ -165,7 +168,4 @@ private:
 	float currentDissolveTime = 0.0f;
 	bool dissolveAlreadyStarted = false;	//Used to control other material setters so it doesn't interfere with Dissolve's material
 	bool dissolveAlreadyPlayed = false;		//Controls whether the animation function has already been played (called material->PlayAnimation) or not
-
-	bool  pushEffectHasToStart = false;
-	float timeToSrartPush = 0.0f;
 };
