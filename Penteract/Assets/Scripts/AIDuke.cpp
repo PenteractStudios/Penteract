@@ -103,7 +103,7 @@ void AIDuke::Start() {
 	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, encounters, dronesController);
 
 	dukeCharacter.winSceneUID = winSceneUID; // TODO: REPLACE
-	
+
 	GameObject* hudManagerGO = GameplaySystems::GetGameObject(hudManagerUID);
 
 	if (hudManagerGO) hudManager = GET_SCRIPT(hudManagerGO, HUDManager);
@@ -113,7 +113,7 @@ void AIDuke::Start() {
 void AIDuke::Update() {
 	std::string life = std::to_string(dukeCharacter.lifePoints);
 	life = "Life points: " + life;
-	Debug::Log(life.c_str());
+	//Debug::Log(life.c_str());
 
 	float speedToUse = dukeCharacter.slowedDown ? dukeCharacter.slowedDownSpeed : dukeCharacter.movementSpeed;
 
@@ -147,7 +147,7 @@ void AIDuke::Update() {
 			dukeCharacter.criticalMode = true;
 			// Phase change VFX? and anim?
 			movementScript->Stop();
-			if (dukeShield && dukeShield->GetIsActive()) { 
+			if (dukeShield && dukeShield->GetIsActive()) {
 				OnShieldInterrupted();
 			}
 			if (dukeCharacter.compAnimation) {
@@ -168,7 +168,7 @@ void AIDuke::Update() {
 			// Phase change VFX?
 			// Anim + dissolve for teleportation
 			lifeThreshold -= 0.15f;
-			
+
 			Debug::Log("Fire tiles disabled");
 			if (fireTilesScript && activeFireTiles) {
 				fireTilesScript->StopFire();
@@ -177,11 +177,10 @@ void AIDuke::Update() {
 			movementScript->Stop();
 			if (isInArena) TeleportDuke(true);
 			dukeCharacter.CallTroops();
-			
+
 			//Second time Duke teleports out of the arena, there is a new fire pattern active.
 			if (dukeCharacter.lifePoints <= 0.55f * dukeCharacter.GetTotalLifePoints()) {
 				if (fireTilesScript) {
-					if (activeFireTiles) fireTilesScript->StopFire();
 					fireTilesScript->SetInterphase(true);
 					fireTilesScript->StartFire();
 					activeFireTiles = true;
@@ -219,7 +218,7 @@ void AIDuke::Update() {
 						// If player dominates the center for too long, perform charge
 						timeSinceLastCharge += Time::GetDeltaTime();
 					}
-					if (timeSinceLastCharge >= 3.0f) {
+					if (timeSinceLastCharge >= 4.5f) {
 						timeSinceLastCharge = 0.f;
 						// Charge
 						movementScript->Stop();
@@ -244,19 +243,19 @@ void AIDuke::Update() {
 			break;
 		case DukeState::SHOOT_SHIELD:
 			if (player) movementScript->Orientate(player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition(), orientationSpeed, orientationThreshold);
-			
+
 			//Actual activating of the shield, when it is found not active during this state
 			if (dukeShield && !dukeShield->GetIsActive()) {
 				dukeShield->InitShield();
 				movementScript->Stop();
 			}
-			
+
 			dukeCharacter.Shoot();
 			currentShieldActiveTime += Time::GetDeltaTime();
 			if (currentShieldActiveTime >= shieldActiveTime) {
-				
+
 				OnShieldInterrupted();
-				
+
 				dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 
 				dukeCharacter.StopShooting();
@@ -438,36 +437,36 @@ void AIDuke::Update() {
 				if (currentAbilityChangeCooldown >= abilityChangeCooldown) {
 					currentAbilityChangeCooldown = 0.f;
 						dukeCharacter.StartUsingShield();
-					
+
 				}
 				else {
-					if (player) {
-						if ((float3(0, 0, 0) - player->GetComponent<ComponentTransform>()->GetGlobalPosition()).LengthSq() <
-							(float3(0, 0, 0) - ownerTransform->GetGlobalPosition()).LengthSq()) {
-							// If player dominates the center for too long, perform charge
-							timeSinceLastCharge += Time::GetDeltaTime();
-						}
-						if (timeSinceLastCharge >= 4.0f) {
-							timeSinceLastCharge = 0.f;
-							// Charge
-							movementScript->Stop();
-							dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
-
-							dukeCharacter.StopShooting();
-						}
-						else {
-							// Normal behavior
-							if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(speedToUse);
-							float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
-							dir.y = 0.0f;
-							movementScript->Orientate(dir);
-							dukeCharacter.ShootAndMove(dir);
-						}
+					if ((float3(0, 0, 0) - player->GetComponent<ComponentTransform>()->GetGlobalPosition()).LengthSq() <
+						(float3(0, 0, 0) - ownerTransform->GetGlobalPosition()).LengthSq()) {
+						// If player dominates the center for too long, perform charge
+						timeSinceLastCharge += Time::GetDeltaTime();
+					}
+					if (timeSinceLastCharge >= 3.0f) {
+						timeSinceLastCharge = 0.f;
+						// Charge
+						movementScript->Stop();
+						dukeCharacter.InitCharge(DukeState::SHOOT_SHIELD);
+						dukeCharacter.StopShooting();
+					}
+					else {
+						// Normal behavior
+						if (dukeCharacter.agent) dukeCharacter.agent->SetMaxSpeed(speedToUse);
+						float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
+						dir.y = 0.0f;
+						movementScript->Orientate(dir);
+						dukeCharacter.ShootAndMove(dir);
 					}
 				}
 				break;
 			case DukeState::MELEE_ATTACK:
 				dukeCharacter.MeleeAttack();
+				break;
+			case DukeState::CHARGE:
+				dukeCharacter.UpdateCharge();
 				break;
 			case DukeState::STUNNED:
 				if (stunTimeRemaining <= 0.f) {
@@ -514,7 +513,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 			if (!dukeCharacter.criticalMode || CanBeHurtDuringCriticalMode()) {
 				float damage = playerController->playerFang.damageHit;
 				dukeCharacter.GetHit(dukeCharacter.reducedDamaged ? damage / 3 : damage + playerController->GetOverPowerMode());
-			} 
+			}
 		}
 		else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
 			hitTaken = true;
@@ -549,7 +548,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 
 			timeSinceLastHurt = 0.0f;*/
 		}
-		
+
 
 		if (collidedWith.name == "EMP" && dukeCharacter.state != DukeState::INVULNERABLE && dukeCharacter.state != DukeState::CHARGE) {
 			OnShieldInterrupted();
