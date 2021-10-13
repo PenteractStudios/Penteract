@@ -74,6 +74,7 @@ public:
 	UID meleeAttackColliderUID = 0;
 	UID barrelSpawnerUID = 0;
 	UID chargeAttackUID = 0;
+	UID lasersUID = 0;
 	UID videoParentCanvasUID = 0;
 	UID videoCanvasUID = 0;
 	UID hudManagerUID = 0;
@@ -115,6 +116,7 @@ private:
 	FloorIsLava* fireTilesScript = nullptr;
 
 	HUDManager* hudManager = nullptr;
+	GameObject* lasers = nullptr;
 
 	bool isReady = true;
 
@@ -134,7 +136,6 @@ private:
 	float lasersThreshold = 0.6f;
 
 	bool activeFireTiles = false;
-	bool activeLasers = false;
 
 	bool phase2Reached = false;
 

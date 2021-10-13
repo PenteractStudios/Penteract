@@ -18,6 +18,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, meleeAttackColliderUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, barrelSpawnerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargeAttackUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, lasersUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargeColliderUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, phase2ShieldUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, firstEncounterUID),
@@ -84,12 +85,15 @@ void AIDuke::Start() {
 
 	ownerTransform = GetOwner().GetComponent<ComponentTransform>();
 
-	/* Encounters */
+	// Encounters
 	std::vector<UID> encounters;
 	encounters.push_back(firstEncounterUID);
 	encounters.push_back(secondEncounterUID);
 	encounters.push_back(thirdEncounterUID);
 	encounters.push_back(fourthEncounterUID);
+
+	// Lasers
+	lasers = GameplaySystems::GetGameObject(lasersUID);
 
 	// Debug
 	GameObject* shieldObj = GameplaySystems::GetGameObject(shieldObjUID);
@@ -179,6 +183,8 @@ void AIDuke::Update() {
 			break;
 		} else if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints() && dukeCharacter.state != DukeState::BULLET_HELL && dukeCharacter.state != DukeState::CHARGE) {
 			phase = Phase::PHASE2;
+			if (lasers && !lasers->IsActive()) lasers->Enable();
+			Debug::Log("Lasers enabled");
 			if (!phase2Reached) phase2Reached = true;
 			// Phase change VFX?
 			// Anim + dissolve for teleportation
@@ -299,12 +305,6 @@ void AIDuke::Update() {
 
 		break;
 	case Phase::PHASE2:
-		if (!activeLasers && dukeCharacter.lifePoints < lasersThreshold * dukeCharacter.GetTotalLifePoints()) {
-			activeLasers = true;
-			// TODO: signal lasers activation
-			Debug::Log("Lasers enabled");
-		}
-
 		if (dukeCharacter.isInArena) {
 			Debug::Log("Fire tiles enabled");
 			if (fireTilesScript) {
