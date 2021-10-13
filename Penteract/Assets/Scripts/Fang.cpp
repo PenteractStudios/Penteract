@@ -321,6 +321,8 @@ void Fang::OnAnimationFinished() {
 				movementSpeed = normalMovementSpeed;
 				ultimateScript->EndUltimate();
 
+				ultimateTimeRemaining = 0.0f;
+
 				if (hudManagerScript) {
 					hudManagerScript->StopUsingSkill(HUDManager::Cooldowns::FANG_SKILL_3);
 				}
