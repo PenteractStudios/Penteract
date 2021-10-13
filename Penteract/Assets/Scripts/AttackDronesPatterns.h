@@ -24,8 +24,8 @@ public:
 
 	// Attack Drones Pattern Constructor (USE THIS TO ADD NEW PATTERNS)
 	AttackDronesPattern(float droneSeparationHorizontal_, float droneSeparationDepth_, float droneRadiusFormation_, float droneVerticalOffset_, float droneSeparationFromCenter_,
-						float droneShotDelay_, int dronesNumber_, DronesFormation droneFormation_, int waves_, float timeBetweenWaves_, 
-						std::vector<WaveCycle> cycles_, 
+						float droneShotDelay_, int dronesNumber_, DronesFormation droneFormation_, int waves_, float timeBetweenWaves_,
+						std::vector<WaveCycle> cycles_,
 						int pickChance_,
 						bool rotationDronesActive_, bool rotationDronesClockwise_, float rotationDronesSpeed_)
 
@@ -75,21 +75,27 @@ public:
 extern inline std::vector<AttackDronesPattern> patterns = {
 
 	AttackDronesPattern(3.0f, 4.0f, 6.0f, 2.0f, 4.0f,
-						0.1f, 5, DronesFormation::ARROW, 7, 0.5f, 
+						0.1f, 7, DronesFormation::ARROW, 7, 0.5f,
 						{ WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED},
-						50,
+						15,
 						false, false, 0.0f),
 
 	AttackDronesPattern(3.0f, 4.0f, 6.0f, 2.0f, 2.0f,
 						0.0f, 9, DronesFormation::CIRCLE, 12, 0.5f,
 						{ WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED },
-						0,
+						35,
 						true, true, 1.0f),
 
-	AttackDronesPattern(3.0f, 4.0f, 6.0f, 2.0f, 3.0f,
-						0.3f, 5, DronesFormation::LINE, 6, 0.5f, 
+	AttackDronesPattern(2.0f, 4.0f, 6.0f, 2.0f, 3.0f,
+						0.3f, 7, DronesFormation::LINE, 6, 0.5f,
 						{ WaveCycle::LEFT_TO_RIGHT, WaveCycle::RIGHT_TO_LEFT, WaveCycle::LEFT_TO_RIGHT, WaveCycle::RIGHT_TO_LEFT, WaveCycle::LEFT_TO_RIGHT, WaveCycle::RIGHT_TO_LEFT },
-						50,
+						15,
 						false, false, 0.0f),
+
+	AttackDronesPattern(3.0f, 4.0f, 6.0f, 2.0f, 2.0f,
+						0.1f, 9, DronesFormation::CIRCLE, 12, 0.5f,
+						{ WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED },
+						35,
+						true, true, 1.0f),
 
 };

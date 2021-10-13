@@ -107,7 +107,7 @@ void Duke::MeleeAttack()
 void Duke::BulletHell() {
 	Debug::Log("Bullet hell");
 	if (attackDronesController) {
-		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]);
+		if (compAnimation) compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]);
 		ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentState()->clipUid);
 		if (clip) clip->loop = true;
 		attackDronesController->StartBulletHell();
@@ -146,7 +146,7 @@ void Duke::UpdateCharge(bool forceStop)
 	if (trackingChargeTarget) {
 		float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - dukeTransform->GetGlobalPosition();
 		dir.y = 0.0f;
-		movementScript->Orientate(dir);
+		if (movementScript) movementScript->Orientate(dir);
 	}
 	if (forceStop || (dukeTransform->GetGlobalPosition() - chargeTarget).Length() <= 0.2f) {
 		if (chargeCollider) chargeCollider->Disable();
