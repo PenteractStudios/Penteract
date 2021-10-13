@@ -81,28 +81,7 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 void Duke::ShootAndMove(const float3& playerDirection) {
 	// Shoot
 	Shoot();
-
-	movementTimer += Time::GetDeltaTime();
-	if (movementTimer >= movementChangeThreshold) {
-		perpendicular = playerDirection.Cross(float3(0, 1, 0));
-		perpendicular = perpendicular * rng(gen);
-		movementChangeThreshold = moveChangeEvery + rng(gen);
-		movementTimer = 0.f;
-	}
-	distanceCorrectionTimer += Time::GetDeltaTime();
-	if (distanceCorrectionTimer >= distanceCorrectionThreshold) {
-		perpendicular += playerDirection.Normalized() * (playerDirection.Length() - searchRadius);
-		distanceCorrectionThreshold = distanceCorrectEvery + rng(gen);
-		distanceCorrectionTimer = 0.f;
-	}
-
-	Navigation::Raycast(dukeTransform->GetGlobalPosition(), dukeTransform->GetGlobalPosition() + perpendicular, navigationHit, navigationHitPos);
-	if (navigationHit) perpendicular = -perpendicular;
-	if (agent) agent->SetMoveTarget(navigationHitPos);
-	int movementAnim = GetWalkAnimation();
-	if (compAnimation && compAnimation->GetCurrentState()->name != animationStates[movementAnim]) {
-		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[movementAnim]);
-	}
+	Move(playerDirection);
 }
 
 void Duke::MeleeAttack()
@@ -180,6 +159,30 @@ void Duke::UpdateCharge(bool forceStop)
 void Duke::CallTroops() {
 	if (encounters.size() > currentEncounter && encounters[currentEncounter] && !encounters[currentEncounter]->IsActive()) encounters[currentEncounter]->Enable();
 	currentEncounter++;
+}
+
+void Duke::Move(const float3& playerDirection) {
+	movementTimer += Time::GetDeltaTime();
+	if (movementTimer >= movementChangeThreshold) {
+		perpendicular = playerDirection.Cross(float3(0, 1, 0));
+		perpendicular = perpendicular * rng(gen);
+		movementChangeThreshold = moveChangeEvery + rng(gen);
+		movementTimer = 0.f;
+	}
+	distanceCorrectionTimer += Time::GetDeltaTime();
+	if (distanceCorrectionTimer >= distanceCorrectionThreshold) {
+		perpendicular += playerDirection.Normalized() * (playerDirection.Length() - searchRadius);
+		distanceCorrectionThreshold = distanceCorrectEvery + rng(gen);
+		distanceCorrectionTimer = 0.f;
+	}
+
+	Navigation::Raycast(dukeTransform->GetGlobalPosition(), dukeTransform->GetGlobalPosition() + perpendicular, navigationHit, navigationHitPos);
+	if (navigationHit) perpendicular = -perpendicular;
+	if (agent) agent->SetMoveTarget(navigationHitPos);
+	int movementAnim = GetWalkAnimation();
+	if (compAnimation && compAnimation->GetCurrentState()->name != animationStates[movementAnim]) {
+		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[movementAnim]);
+	}
 }
 
 void Duke::Shoot()

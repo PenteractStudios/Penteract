@@ -49,11 +49,11 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::FLOAT, shieldCooldown),
 	MEMBER(MemberType::FLOAT, shieldActiveTime),
 	MEMBER(MemberType::FLOAT, bulletHellCooldown),
-	MEMBER(MemberType::FLOAT, bulletHellActiveTime),
 	MEMBER(MemberType::FLOAT, abilityChangeCooldown),
 	MEMBER(MemberType::FLOAT, throwBarrelTimer),
 	MEMBER(MemberType::FLOAT, orientationSpeed),
 	MEMBER(MemberType::FLOAT, orientationThreshold),
+	MEMBER(MemberType::FLOAT, timerBetweenAbilities),
 
 	MEMBER_SEPARATOR("Particles UIDs"),
 
@@ -716,6 +716,24 @@ void AIDuke::OnShieldInterrupted() {
 }
 
 void AIDuke::PerformBulletHell() {
+	if (mustWaitForTimerBetweenAbilities) {
+		if (currentTimeBetweenAbilities >= timerBetweenAbilities) {
+			mustWaitForTimerBetweenAbilities = false;
+			currentTimeBetweenAbilities = 0.0f;
+		}
+		else {
+			currentTimeBetweenAbilities += Time::GetDeltaTime();
+
+			float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
+			dir.y = 0.0f;
+			movementScript->Orientate(dir);
+			dukeCharacter.Move(dir);
+
+			return;
+		}
+	}
+	movementScript->Stop();
+
 	dukeCharacter.reducedDamaged = true;
 	if (!bulletHellIsActive) {
 		dukeCharacter.BulletHell();
@@ -727,6 +745,8 @@ void AIDuke::PerformBulletHell() {
 		dukeCharacter.reducedDamaged = false;
 		currentBulletHellCooldown = 0.f;
 		dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
+		currentTimeBetweenAbilities = 0.0f;
+		mustWaitForTimerBetweenAbilities = true;
 	}
 }
 
