@@ -7,7 +7,9 @@
 
 class ComponentParticleSystem;
 class ResourcePrefab;
+class AttackDronesController;
 class BarrelSpawner;
+class DukeShield;
 
 enum class DukeState {
 	BASIC_BEHAVIOUR,
@@ -55,23 +57,31 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, std::vector<UID> encounterUIDs);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void BulletHell();
+	void DisableBulletHell();
+	bool BulletHellActive();
+	bool BulletHellFinished();
 	void InitCharge(DukeState nextState);
 	void UpdateCharge(bool forceStop = false);
 	void CallTroops();
+	void Move(const float3& playerDirection);
 	void Shoot();
 	void ThrowBarrels();
 	void StartUsingShield();
-	void StopUsingShield();
+	void BePushed();
+	void BecomeStunned();
+	void TeleportDuke(bool toMapCenter);
 
 	// ------- Animation Functions ------ //
 	void OnAnimationFinished();
 	void OnAnimationSecondaryFinished();
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
 	void StopShooting();
+	void InitPlayerVictory();
+	void StartPhase2Shield();
 
 private:
 	int GetWalkAnimation();
@@ -92,6 +102,9 @@ public:
 	float barrelDamageTaken = 3.f;
 	float moveChangeEvery = 2.0f;
 	float distanceCorrectEvery = 2.0f;
+	float delayForDisplayVideo = 1.0f;
+
+	DukeShield* phase2Shield = nullptr;
 
 	DukeState state = DukeState::BASIC_BEHAVIOUR;
 	bool criticalMode = false;
@@ -101,8 +114,9 @@ public:
 	bool slowedDown = false;
 	bool reducedDamaged = false;
 	bool startSpawnBarrel = false;
-
+	bool isDead = false;
 	bool isShooting = false;
+	bool isInArena = true;
 
 	float3 chargeTarget;
 
@@ -144,6 +158,9 @@ private:
 	GameObject* chargeAttack = nullptr;
 	ComponentTransform* dukeTransform = nullptr;
 
+	GameObject* videoParentCanvas = nullptr;
+	GameObject* videoCanvas = nullptr;
+
 	bool hasMeleeAttacked = false;
 
 	BarrelSpawner* barrelSpawneScript = nullptr;
@@ -170,6 +187,9 @@ private:
 	ResourcePrefab* barrel = nullptr;
 	bool instantiateBarrel = false;
 
+	// AttackDrones
+	AttackDronesController* attackDronesController = nullptr;
+
 	// Audios
 	ComponentAudioSource* dukeAudios[static_cast<int>(DUKE_AUDIOS::TOTAL)] = { nullptr };
 
@@ -180,4 +200,10 @@ private:
 	/* Boss encounters */
 	std::vector<GameObject*> encounters;
 	unsigned currentEncounter = 0;
+
+	bool endVideoRunning= false;
+	float currentDelayVideo = 0.0f;
+
+	float3 phase2CenterPosition = float3(13.0f, 0.799f, 0.0f);
+
 };

@@ -6,6 +6,7 @@
 #include "PlayerController.h"
 #include "SceneTransition.h"
 #include "GameOverUIController.h"
+#include "AttackDroneProjectile.h"
 
 #define LEFT_SHOT "LeftShot"
 #define RIGHT_SHOT "RightShot"
@@ -17,6 +18,7 @@ EXPOSE_MEMBERS(PlayerDeath) {
 	MEMBER(MemberType::FLOAT, meleeDamageTaken),
 	MEMBER(MemberType::FLOAT, dukeDamageTaken),
 	MEMBER(MemberType::FLOAT, dukeChargeDamageTaken),
+	MEMBER(MemberType::FLOAT, attackDroneDamageTaken),
 	MEMBER(MemberType::FLOAT, barrelDamageTaken),
 	MEMBER(MemberType::FLOAT, laserBeamTaken),
 	MEMBER(MemberType::FLOAT, laserHitCooldown),
@@ -155,7 +157,7 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 			PushPlayerBack(collisionNormal);
 		}
 		collidedWith.Disable();
-	} else if (collidedWith.name == "DukeShield") {
+	} else if (collidedWith.name == "DukeShield" || collidedWith.name == "DukeShield360") {
 		if (playerController) {
 			// don't let the player penetrate duke shield
 			float3 truePenetrationDistance = penetrationDistance.ProjectTo(collisionNormal);
@@ -168,6 +170,15 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 	} else if (collidedWith.name == "ChargeAttack") {
 		if (playerController) playerController->TakeDamage(dukeChargeDamageTaken);
 		collidedWith.Disable();
+	}
+	else if (collidedWith.name == "AttackDroneProjectile") {
+		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+		if (pSystem && p) pSystem->KillParticle(p);
+
+		if (playerController) playerController->TakeDamage(attackDroneDamageTaken);
+		AttackDroneProjectile* projectileScript = GET_SCRIPT(&collidedWith, AttackDroneProjectile);
+		if (projectileScript) projectileScript->Collide();
 	}
 }
 

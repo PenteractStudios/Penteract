@@ -5,6 +5,10 @@
 #include "PlayerController.h"
 #include "BarrelSpawner.h"
 #include "AIMovement.h"
+#include "GlobalVariables.h"
+#include "VideoSceneEnd.h"
+#include "AttackDronesController.h"
+#include "DukeShield.h"
 
 #include <string>
 
@@ -12,7 +16,7 @@
 
 std::uniform_real_distribution<float> rng(-1.0f, 1.0f);
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, std::vector<UID> encounterUIDs)
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID,std::vector<UID> encounterUIDs, AttackDronesController* dronesController)
 {
 	gen = std::minstd_rand(rd());
 
@@ -23,6 +27,13 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 
 	meleeAttackCollider = GameplaySystems::GetGameObject(meleeAttackColliderUID);
 	chargeAttack = GameplaySystems::GetGameObject(chargeAttackColliderUID);
+	videoParentCanvas = GameplaySystems::GetGameObject(videoParentCanvasUID);
+	videoCanvas = GameplaySystems::GetGameObject(videoCanvasUID);
+
+	GameObject* shieldObj = GameplaySystems::GetGameObject(phase2ShieldUID);
+	if (shieldObj) {
+		phase2Shield = GET_SCRIPT(shieldObj, DukeShield);
+	}
 
 	barrelSpawneScript = GET_SCRIPT(GameplaySystems::GetGameObject(barrelSpawnerUID), BarrelSpawner);
 
@@ -57,49 +68,28 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 			agent->SetMaxAcceleration(MAX_ACCELERATION);
 		}
 
-		if (characterGameObject) {
-			characterGameObject->GetComponent<ComponentCapsuleCollider>()->Enable();
+		characterGameObject->GetComponent<ComponentCapsuleCollider>()->Enable();
 
-			//Get audio sources
-			int i = 0;
+		//Get audio sources
+		int i = 0;
 
-			for (ComponentAudioSource& src : characterGameObject->GetComponents<ComponentAudioSource>()) {
-				if (i < static_cast<int>(DUKE_AUDIOS::TOTAL)) dukeAudios[i] = &src;
-				i++;
-			}
+		for (ComponentAudioSource& src : characterGameObject->GetComponents<ComponentAudioSource>()) {
+			if (i < static_cast<int>(DUKE_AUDIOS::TOTAL)) dukeAudios[i] = &src;
+			i++;
 		}
 	}
 	movementChangeThreshold = moveChangeEvery;
 	distanceCorrectionThreshold = distanceCorrectEvery;
 
 	for (auto itr : encounterUIDs) encounters.push_back(GameplaySystems::GetGameObject(itr));
+
+	attackDronesController = dronesController;
 }
 
 void Duke::ShootAndMove(const float3& playerDirection) {
 	// Shoot
 	Shoot();
-
-	movementTimer += Time::GetDeltaTime();
-	if (movementTimer >= movementChangeThreshold) {
-		perpendicular = playerDirection.Cross(float3(0, 1, 0));
-		perpendicular = perpendicular * rng(gen);
-		movementChangeThreshold = moveChangeEvery + rng(gen);
-		movementTimer = 0.f;
-	}
-	distanceCorrectionTimer += Time::GetDeltaTime();
-	if (distanceCorrectionTimer >= distanceCorrectionThreshold) {
-		perpendicular += playerDirection.Normalized() * (playerDirection.Length() - searchRadius);
-		distanceCorrectionThreshold = distanceCorrectEvery + rng(gen);
-		distanceCorrectionTimer = 0.f;
-	}
-
-	Navigation::Raycast(dukeTransform->GetGlobalPosition(), dukeTransform->GetGlobalPosition() + perpendicular, navigationHit, navigationHitPos);
-	if (navigationHit) perpendicular = -perpendicular;
-	if (agent) agent->SetMoveTarget(navigationHitPos);
-	int movementAnim = GetWalkAnimation();
-	if (compAnimation && compAnimation->GetCurrentState()->name != animationStates[movementAnim]) {
-		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[movementAnim]);
-	}
+	Move(playerDirection);
 }
 
 void Duke::MeleeAttack()
@@ -107,7 +97,7 @@ void Duke::MeleeAttack()
 	if (!hasMeleeAttacked) {
 		if (compAnimation) {
 			if (compAnimation->GetCurrentState()) {
-				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[DUKE_ANIMATION_STATES::PUNCH]);
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PUNCH)]);
 				hasMeleeAttacked = true;
 			}
 		}
@@ -116,6 +106,26 @@ void Duke::MeleeAttack()
 
 void Duke::BulletHell() {
 	Debug::Log("Bullet hell");
+	if (attackDronesController) {
+		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]);
+		ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentState()->clipUid);
+		if (clip) clip->loop = true;
+		attackDronesController->StartBulletHell();
+	}
+}
+
+void Duke::DisableBulletHell() {
+	ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentState()->clipUid);
+	if (clip) clip->loop = false;
+}
+
+bool Duke::BulletHellActive() {
+	return attackDronesController && attackDronesController->BulletHellActive();
+}
+
+bool Duke::BulletHellFinished() {
+	if (!attackDronesController) return true;
+	return attackDronesController->BulletHellFinished();
 }
 
 void Duke::InitCharge(DukeState nextState_)
@@ -159,6 +169,30 @@ void Duke::CallTroops() {
 	currentEncounter++;
 }
 
+void Duke::Move(const float3& playerDirection) {
+	movementTimer += Time::GetDeltaTime();
+	if (movementTimer >= movementChangeThreshold) {
+		perpendicular = playerDirection.Cross(float3(0, 1, 0));
+		perpendicular = perpendicular * rng(gen);
+		movementChangeThreshold = moveChangeEvery + rng(gen);
+		movementTimer = 0.f;
+	}
+	distanceCorrectionTimer += Time::GetDeltaTime();
+	if (distanceCorrectionTimer >= distanceCorrectionThreshold) {
+		perpendicular += playerDirection.Normalized() * (playerDirection.Length() - searchRadius);
+		distanceCorrectionThreshold = distanceCorrectEvery + rng(gen);
+		distanceCorrectionTimer = 0.f;
+	}
+
+	Navigation::Raycast(dukeTransform->GetGlobalPosition(), dukeTransform->GetGlobalPosition() + perpendicular, navigationHit, navigationHitPos);
+	if (navigationHit) perpendicular = -perpendicular;
+	if (agent) agent->SetMoveTarget(navigationHitPos);
+	int movementAnim = GetWalkAnimation();
+	if (compAnimation && compAnimation->GetCurrentState()->name != animationStates[movementAnim]) {
+		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[movementAnim]);
+	}
+}
+
 void Duke::Shoot()
 {
 	attackTimePool -= Time::GetDeltaTime();
@@ -186,8 +220,12 @@ void Duke::Shoot()
 		isShooting = true;
 		isShootingTimer = 0.f;
 		// Animation
-		if (compAnimation) {
-			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)]);
+		if (state != DukeState::SHOOT_SHIELD) {
+			if (compAnimation) {
+				if (compAnimation->GetCurrentState()) {
+					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)]);
+				}
+			}
 		}
 	}
 }
@@ -199,23 +237,67 @@ void Duke::ThrowBarrels() {
 	}
 }
 
+//Not to be confused with AIDuke StartUsing shield, this one manages both state and animations
 void Duke::StartUsingShield() {
+
+	if (isShooting) {
+		StopShooting();
+	}
+
 	state = DukeState::SHOOT_SHIELD;
 	if (compAnimation) {
-		if (compAnimation->GetCurrentStateSecondary()) {
-			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT_SHIELD)]);
-		} else if (compAnimation->GetCurrentState()) {
-			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT_SHIELD)]);
+		if (compAnimation->GetCurrentState()) {
+			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT_SHIELD)]);
 		}
-		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
+	}
+
+}
+
+void Duke::BePushed() {
+	state = DukeState::PUSHED;
+	beingPushed = true;
+
+	if (compAnimation) {
+		if (compAnimation->GetCurrentStateSecondary()) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+		}
+		if (compAnimation->GetCurrentState()) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PUSHED)]);
+		}
 	}
 }
 
-void Duke::StopUsingShield() {
+void Duke::BecomeStunned() {
 	if (compAnimation) {
-		if (compAnimation->GetCurrentState() && compAnimation->GetCurrentStateSecondary()) {
-			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+		if (compAnimation) {
+			if (compAnimation->GetCurrentStateSecondary()) {
+				compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
+			}
+			if (compAnimation->GetCurrentState()) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::STUN)]);
+			}
 		}
+	}
+}
+
+void Duke::TeleportDuke(bool toMapCenter)
+{
+	if (toMapCenter) {
+		if (agent) {
+			agent->SetMoveTarget(phase2CenterPosition);
+			agent->SetMaxSpeed(movementSpeed * 2.f);
+		}
+		float3 dir = phase2CenterPosition - dukeTransform->GetGlobalPosition();
+		dir.y = 0;
+		movementScript->Orientate(dir);
+		if (compAnimation) {
+			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[Duke::DUKE_ANIMATION_STATES::WALK_NO_AIM]);
+		}
+		isInArena = false;
+	}
+	else {
+		if (phase2Shield) phase2Shield->FadeShield();
+		isInArena = true;
 	}
 }
 
@@ -242,11 +324,11 @@ void Duke::OnAnimationFinished()
 		agent->SetMaxSpeed(movementSpeed);
 		compAnimation->SendTrigger(currentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
 	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::DEATH)]) {
-		GameplaySystems::DestroyGameObject(characterGameObject);
-		SceneManager::ChangeScene(winSceneUID); // TODO: Replace with the correct trigger (for the video or whatever)
+		isDead = true;
 	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::ENRAGE)]) {
 		state = DukeState::BASIC_BEHAVIOUR;
 	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::STUN)] && state == DukeState::INVULNERABLE) {
+		//Coming from critical mode
 		CallTroops();
 		StartUsingShield();
 	}
@@ -311,6 +393,22 @@ void Duke::StopShooting()
 	if (isShooting) isShooting = false;
 }
 
+void Duke::StartPhase2Shield()
+{
+	float3 dir = phase2CenterPosition - dukeTransform->GetGlobalPosition();
+	dir.y = 0;
+	movementScript->Orientate(dir);
+
+	if (compAnimation && compAnimation->GetCurrentState()->name != animationStates[Duke::DUKE_ANIMATION_STATES::IDLE] &&
+		compAnimation->GetCurrentState()->name != animationStates[Duke::DUKE_ANIMATION_STATES::PDA] &&
+		(dukeTransform->GetGlobalPosition() - phase2CenterPosition).Length() <= 0.5f) {
+
+		if (phase2Shield) phase2Shield->InitShield();
+		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[Duke::DUKE_ANIMATION_STATES::PDA]);
+		CallTroops();
+	}
+}
+
 void Duke::InstantiateBarrel()
 {
 	//Instantiate barrel and play animation throw barrels for Duke and the barrel
@@ -338,4 +436,25 @@ int Duke::GetWalkAnimation()
 		}
 	}
 	return animNum;
+}
+
+void Duke::InitPlayerVictory()
+{
+	if (isDead && !endVideoRunning) {
+
+		currentDelayVideo += Time::GetDeltaTime();
+
+		if (currentDelayVideo >= delayForDisplayVideo) {
+			endVideoRunning = true;
+			GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, true);
+			if (videoParentCanvas && videoCanvas) {
+				videoParentCanvas->Enable();
+				VideoSceneEnd* videoSceneEndScript = GET_SCRIPT(videoCanvas, VideoSceneEnd);
+				if (videoSceneEndScript) {
+					videoSceneEndScript->PlayVideo();
+				}
+
+			}
+		}
+	}
 }

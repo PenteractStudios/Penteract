@@ -13,8 +13,10 @@ class HUDController;
 class PlayerController;
 class DukeShield;
 class Player;
+class HUDManager;
 //class PlayerDeath;
 class AIMovement;
+class FloorIsLava;
 
 enum class Phase {
 	PHASE1,
@@ -45,12 +47,16 @@ public:
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
-	void TeleportDuke(bool toPlatform);
+	float GetDukeMaxHealth() const;
 
 private:
 	void CalculatePushBackRealDistance();
 	void UpdatePushBackPosition();
 	void ParticleHit(GameObject& collidedWith, void* particle, Player& player_);
+	bool CanBeHurtDuringCriticalMode() const;
+	bool IsInvulnerable()const;
+	void OnShieldInterrupted();
+	void PerformBulletHell();
 
 public:
 	UID dukeUID = 0;
@@ -59,6 +65,7 @@ public:
 	UID bulletUID = 0;
 	UID barrelUID = 0;
 	UID chargeColliderUID = 0;
+	UID phase2ShieldUID = 0;
 	UID firstEncounterUID = 0;
 	UID secondEncounterUID = 0;
 	UID thirdEncounterUID = 0;
@@ -67,6 +74,10 @@ public:
 	UID barrelSpawnerUID = 0;
 	UID chargeAttackUID = 0;
 	UID lasersUID = 0;
+	UID videoParentCanvasUID = 0;
+	UID videoCanvasUID = 0;
+	UID hudManagerUID = 0;
+	UID fireTilesUID = 0;
 
 	GameObject* duke = nullptr;
 	GameObject* player = nullptr;
@@ -80,7 +91,6 @@ public:
 	float shieldActiveTime = 5.f;
 
 	float bulletHellCooldown = 0.f;
-	float bulletHellActiveTime = 5.f;
 
 	float abilityChangeCooldown = 8.f;
 
@@ -93,6 +103,8 @@ public:
 	float orientationSpeed = 1.0f;
 	float orientationThreshold = 0.1f;
 
+	float timerBetweenAbilities = 1.5f;
+
 	UID winSceneUID = 0;
 
 private:
@@ -100,12 +112,15 @@ private:
 	AIMovement* movementScript = nullptr;
 
 	PlayerController* playerController = nullptr;
+	FloorIsLava* fireTilesScript = nullptr;
+
+	HUDManager* hudManager = nullptr;
 
 	float currentShieldCooldown = 0.f;
 	float currentShieldActiveTime = 0.f;
 
 	float currentBulletHellCooldown = 0.f;
-	float currentBulletHellActiveTime = 0.f;
+	bool bulletHellIsActive = false;
 
 	float currentAbilityChangeCooldown = 0.f;
 
@@ -130,6 +145,8 @@ private:
 	float currentSlowedDownTime = 0.f;
 	float pushBackRealDistance = 0.f;
 
-	bool isInArena = true;
+	float currentTimeBetweenAbilities = 0.f;
+	bool mustWaitForTimerBetweenAbilities = true;
+
 };
 
