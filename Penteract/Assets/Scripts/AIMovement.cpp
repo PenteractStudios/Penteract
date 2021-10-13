@@ -31,8 +31,7 @@ void AIMovement::Seek(AIState state, const float3& newPosition, float speed, boo
 		velocity = direction.Normalized() * speed;
 		position += velocity * Time::GetDeltaTime();
 		ownerTransform->SetGlobalPosition(position);
-	}
-	else {
+	} else {
 		if (agent) {
 			agent->SetMoveTarget(newPosition, true);
 			velocity = agent->GetVelocity();
@@ -78,9 +77,8 @@ void AIMovement::Orientate(const float3& direction, float orientationSpeed, floa
 	Quat rotation = ownerTransform->GetGlobalRotation();
 	if (orientationSpeed <= 0) {
 		targetRotation = Quat::LookAt(float3(0, 0, 1), normalizedDirection, float3(0, 1, 0), float3(0, 1, 0));
-		rotation = Quat::Slerp(ownerTransform->GetGlobalRotation(), targetRotation, Min(Time::GetDeltaTime() / Max(rotationSmoothness, 0.000001f), 1.0f));
+		rotation = Quat::Lerp(ownerTransform->GetGlobalRotation(), targetRotation, Min(Time::GetDeltaTime() / Max(rotationSmoothness, 0.000001f), 1.0f));
 	} else {
-
 		float angle = normalizedDirection.AngleBetweenNorm(GetOwner().GetComponent<ComponentTransform>()->GetFront());
 		float3 axis = GetOwner().GetComponent<ComponentTransform>()->GetFront().Cross(normalizedDirection);
 
@@ -88,8 +86,10 @@ void AIMovement::Orientate(const float3& direction, float orientationSpeed, floa
 
 		targetRotation = Quat::RotateAxisAngle(axis, orientationSpeed * Time::GetDeltaTime()) * ownerTransform->GetGlobalRotation();
 
-		rotation = Quat::Slerp(ownerTransform->GetGlobalRotation(), targetRotation, Min(Time::GetDeltaTime() / Max(rotationSmoothness, 0.000001f), 1.0f));
+		rotation = Quat::Lerp(ownerTransform->GetGlobalRotation(), targetRotation, Min(Time::GetDeltaTime() / Max(rotationSmoothness, 0.000001f), 1.0f));
 	}
+	//We work rotating only Y axis, so X and Z can be both hardcoded to 0 to prevent issues
+	rotation.x = rotation.z = 0.0f;
 	ownerTransform->SetGlobalRotation(rotation);
 }
 

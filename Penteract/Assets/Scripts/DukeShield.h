@@ -5,6 +5,7 @@
 class AIDuke;
 class ComponentAudioSource;
 class ComponentTransform;
+class ComponentMeshRenderer;
 
 class DukeShield : public Script {
 	GENERATE_BODY(DukeShield);
@@ -33,6 +34,7 @@ private:
 	bool isActive = false;
 	ComponentAudioSource* audio;
 	ComponentTransform* transform;
+	ComponentMeshRenderer* mesh;
 	enum class ShieldState { OFFLINE, GROWING, IDLE, FADING };
 	ShieldState shieldState = ShieldState::OFFLINE;
 };

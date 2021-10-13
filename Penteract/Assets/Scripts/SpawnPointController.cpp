@@ -8,18 +8,18 @@
 
 EXPOSE_MEMBERS(SpawnPointController) {
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, meleeEnemyPrefabUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, rangeEnemyPrefabUID),
-	MEMBER(MemberType::BOOL, unlocksInitialDoor),
-	MEMBER(MemberType::BOOL, isInitiallyLocked),
-	MEMBER(MemberType::BOOL, isLastDoor),
-	MEMBER_SEPARATOR("Activated/Deactivated GameObject Refs"),
-	MEMBER(MemberType::GAME_OBJECT_UID, initialDoorUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, finalDoorUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, gameObjectActivatedOnCombatEndUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, gameObjectDeactivatedOnCombatEndUID),
-	MEMBER(MemberType::FLOAT, timerToUnlock),
-	MEMBER_SEPARATOR("Dissolve material reference in placeholders"),
-	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID)
+		MEMBER(MemberType::PREFAB_RESOURCE_UID, rangeEnemyPrefabUID),
+		MEMBER(MemberType::BOOL, unlocksInitialDoor),
+		MEMBER(MemberType::BOOL, isInitiallyLocked),
+		MEMBER(MemberType::BOOL, isLastDoor),
+		MEMBER_SEPARATOR("Activated/Deactivated GameObject Refs"),
+		MEMBER(MemberType::GAME_OBJECT_UID, initialDoorUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, finalDoorUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, gameObjectActivatedOnCombatEndUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, gameObjectDeactivatedOnCombatEndUID),
+		MEMBER(MemberType::FLOAT, timerToUnlock),
+		MEMBER_SEPARATOR("Dissolve material reference in placeholders"),
+		MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID)
 };
 
 GENERATE_BODY_IMPL(SpawnPointController);
@@ -149,7 +149,10 @@ void SpawnPointController::SetCurrentEnemyAmount(unsigned int pos, unsigned int 
 
 void SpawnPointController::SetEnemySpawnStatus(unsigned int pos, bool status) {
 	enemySpawnPointStatus[pos] = status;
-	if (!status) OpenDoor();
+	if (!status && CheckSpawnPointStatus() && !enemiesSpawned) {
+		OpenDoor();
+		enemiesSpawned = true;
+	}
 }
 
 bool SpawnPointController::CanSpawn() {

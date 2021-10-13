@@ -1,0 +1,80 @@
+{
+    "Root": {
+        "Name": "AttackDroneProjectile",
+        "Active": true,
+        "RootBoneName": "",
+        "Mask": 0,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Active": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    0.05000000074505806,
+                    0.05000000074505806,
+                    0.05000000074505806
+                ],
+                "LocalEulerAngles": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ]
+            },
+            {
+                "Type": "MeshRenderer",
+                "Active": true,
+                "MeshID": 3372544751270605688,
+                "MaterialID": 14143455869754041353
+            },
+            {
+                "Type": "BoundingBox",
+                "Active": true,
+                "LocalBoundingBox": [
+                    -2.6257340908050539,
+                    -2.6209895610809328,
+                    -2.6419196128845217,
+                    2.641207456588745,
+                    2.645951986312866,
+                    2.6250219345092775
+                ]
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 4554423229758110213,
+                "Values": [
+                    {
+                        "Name": "speed",
+                        "Type": "Float",
+                        "Value": 30.0
+                    }
+                ]
+            },
+            {
+                "Type": "SphereCollider",
+                "Active": true,
+                "colliderType": 2,
+                "layerType": 6,
+                "mass": 1.0,
+                "radius": 0.13167354464530946,
+                "centerOffset": [
+                    0.00038683414459228516,
+                    0.0006240606307983398,
+                    -0.0004224419535603374
+                ],
+                "freezeRotation": false
+            }
+        ],
+        "Children": null
+    }
+}

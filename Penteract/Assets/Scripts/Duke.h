@@ -3,9 +3,13 @@
 #include "Character.h"
 
 #include <random>
+#include <vector>
 
 class ComponentParticleSystem;
 class ResourcePrefab;
+class AttackDronesController;
+class BarrelSpawner;
+class DukeShield;
 
 enum class DukeState {
 	BASIC_BEHAVIOUR,
@@ -13,6 +17,7 @@ enum class DukeState {
 	SHOOT_SHIELD,
 	BULLET_HELL,
 	CHARGE,
+	CHARGE_ATTACK,
 	INVULNERABLE,
 	STUNNED,
 	PUSHED,
@@ -52,24 +57,38 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void BulletHell();
+	void DisableBulletHell();
+	bool BulletHellActive();
+	bool BulletHellFinished();
 	void InitCharge(DukeState nextState);
 	void UpdateCharge(bool forceStop = false);
-	void EndCharge();
 	void CallTroops();
+	void Move(const float3& playerDirection);
 	void Shoot();
 	void ThrowBarrels();
+	void StartUsingShield();
+	void BePushed();
+	void BecomeStunned();
+	void TeleportDuke(bool toMapCenter);
 
 	// ------- Animation Functions ------ //
 	void OnAnimationFinished();
 	void OnAnimationSecondaryFinished();
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
+	void StopShooting();
+	void InitPlayerVictory();
+	void StartPhase2Shield();
+
+private:
+	int GetWalkAnimation();
 
 public:
 	float chargeSpeed = 5.f;
+	float chargeMinimumDistance = 10.f;
 	float searchRadius = 8.f;
 	float attackRange = 2.0f;
 	float attackSpeed = 0.5f;
@@ -83,6 +102,9 @@ public:
 	float barrelDamageTaken = 3.f;
 	float moveChangeEvery = 2.0f;
 	float distanceCorrectEvery = 2.0f;
+	float delayForDisplayVideo = 1.0f;
+
+	DukeShield* phase2Shield = nullptr;
 
 	DukeState state = DukeState::BASIC_BEHAVIOUR;
 	bool criticalMode = false;
@@ -91,30 +113,12 @@ public:
 	bool beingPushed = false;
 	bool slowedDown = false;
 	bool reducedDamaged = false;
+	bool startSpawnBarrel = false;
+	bool isDead = false;
+	bool isShooting = false;
+	bool isInArena = true;
 
 	float3 chargeTarget;
-
-private:
-	GameObject* player = nullptr;
-	GameObject* chargeCollider = nullptr;
-	GameObject* meleeAttackCollider = nullptr;
-	ComponentTransform* dukeTransform = nullptr;
-
-	bool hasMeleeAttacked = false;
-
-	float3 perpendicular;
-	float movementTimer = 0.f;
-	float movementChangeThreshold = 2.0f;
-	float distanceCorrectionTimer = 0.f;
-	float distanceCorrectionThreshold = 2.0f;
-
-	// Shooting
-	float attackTimePool = 0.f;
-	ComponentParticleSystem* bullet = nullptr;
-
-	GameObject* meshObj = nullptr;	//Main mesh for Getting MeshRenderer reference and checking frustum presence (if not inside frustum shooting won't happen)
-
-	ResourcePrefab* barrel = nullptr;
 
 	// Animations
 	enum DUKE_ANIMATION_STATES {
@@ -136,10 +140,55 @@ private:
 		WALK_NO_AIM,
 		WALK_LEFT,
 		WALK_RIGHT,
-		LENGTH };
+		LENGTH
+	};
 	std::string animationStates[static_cast<int>(DUKE_ANIMATION_STATES::LENGTH)] = { "Charge", "ChargeEnd", "ChargeStart",
 		"Punch", "Death", "Idle", "Enrage", "Shooting", "PDA", "Pushed", "Shield", "ShootingShield", "Stun",
-		"WalkBack", "WalkForward", "WalkForwardNoAim", "WalkLeft", "WalkRight"};
+		"WalkBack", "WalkForward", "WalkForwardNoAim", "WalkLeft", "WalkRight" };
+
+	UID winSceneUID = 0; // TODO: Delete
+
+private:
+	void InstantiateBarrel();
+
+private:
+	GameObject* player = nullptr;
+	GameObject* chargeCollider = nullptr;
+	GameObject* meleeAttackCollider = nullptr;
+	GameObject* chargeAttack = nullptr;
+	ComponentTransform* dukeTransform = nullptr;
+
+	GameObject* videoParentCanvas = nullptr;
+	GameObject* videoCanvas = nullptr;
+
+	bool hasMeleeAttacked = false;
+
+	BarrelSpawner* barrelSpawneScript = nullptr;
+
+	// Movement
+	float3 perpendicular;
+	float movementTimer = 0.f;
+	float movementChangeThreshold = 2.0f;
+	float distanceCorrectionTimer = 0.f;
+	float distanceCorrectionThreshold = 2.0f;
+	bool navigationHit;
+	float3 navigationHitPos;
+
+	// Charge
+	bool trackingChargeTarget = false;
+
+	// Shooting
+	float attackTimePool = 0.f;
+	ComponentParticleSystem* bullet = nullptr;
+	float isShootingTimer = 0.f;
+
+	GameObject* meshObj = nullptr;	//Main mesh for Getting MeshRenderer reference and checking frustum presence (if not inside frustum shooting won't happen)
+
+	ResourcePrefab* barrel = nullptr;
+	bool instantiateBarrel = false;
+
+	// AttackDrones
+	AttackDronesController* attackDronesController = nullptr;
 
 	// Audios
 	ComponentAudioSource* dukeAudios[static_cast<int>(DUKE_AUDIOS::TOTAL)] = { nullptr };
@@ -147,4 +196,14 @@ private:
 	DukeState nextState = DukeState::BASIC_BEHAVIOUR;
 	std::random_device rd;
 	std::minstd_rand gen;
+
+	/* Boss encounters */
+	std::vector<GameObject*> encounters;
+	unsigned currentEncounter = 0;
+
+	bool endVideoRunning= false;
+	float currentDelayVideo = 0.0f;
+
+	float3 phase2CenterPosition = float3(13.0f, 0.799f, 0.0f);
+
 };
