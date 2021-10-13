@@ -118,13 +118,18 @@ void Duke::DisableBulletHell() {
 	if (clip) clip->loop = false;
 }
 
-bool Duke::BulletHellActive() {
+bool Duke::BulletHellActive() const {
 	return attackDronesController && attackDronesController->BulletHellActive();
 }
 
-bool Duke::BulletHellFinished() {
+bool Duke::BulletHellFinished() const {
 	if (!attackDronesController) return true;
 	return attackDronesController->BulletHellFinished();
+}
+
+bool Duke::IsBulletHellCircular() const
+{
+	return !BulletHellFinished() && attackDronesController->IsBulletHellCircular();
 }
 
 void Duke::InitCharge(DukeState nextState_)

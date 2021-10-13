@@ -749,12 +749,19 @@ void AIDuke::PerformBulletHell() {
 		}
 	}
 	movementScript->Stop();
-
 	dukeCharacter.reducedDamaged = true;
+
 	if (!bulletHellIsActive) {
 		dukeCharacter.BulletHell();
 		bulletHellIsActive = true;
 	}
+
+	if (!dukeCharacter.IsBulletHellCircular()) {
+		float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
+		dir.y = 0.0f;
+		movementScript->Orientate(dir, orientationSpeed, orientationThreshold);
+	}
+
 	if (dukeCharacter.BulletHellFinished()) {
 		dukeCharacter.DisableBulletHell();
 		bulletHellIsActive = false;
