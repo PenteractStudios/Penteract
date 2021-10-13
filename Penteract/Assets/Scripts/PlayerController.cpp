@@ -351,13 +351,14 @@ void PlayerController::TakeDamage(float damage) {
 		if (playerFang.IsActive()) {
 			if (playerFang.IsVulnerable()) {
 				playerFang.GetHit(damage);
+				hitTaken = true;
 			}
 		} else {
 			if (playerOnimaru.IsVulnerable()) {
 				playerOnimaru.GetHit(damage);
+				hitTaken = true;
 			}
 		}
-		hitTaken = true;
 	}
 }
 
