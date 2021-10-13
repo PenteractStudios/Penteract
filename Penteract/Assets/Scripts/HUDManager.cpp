@@ -1,10 +1,13 @@
 #include "HUDManager.h"
-#include "PlayerController.h";
+
+#include "PlayerController.h"
+#include "AIDuke.h"
 #include "GameController.h"
 #include "Components/UI/ComponentTransform2D.h"
 #include "Components/UI/ComponentImage.h"
 #include "ImageColorFader.h"
 #include "AbilityRefeshFX.h"
+#include "GlobalVariables.h"
 
 #define HIERARCHY_INDEX_ABILITY_FILL 1
 #define HIERARCHY_INDEX_ABILITY_DURATION_FILL 2
@@ -47,8 +50,12 @@
 #define HUD_HIT_FEEDBACK_SIDES 2
 #define SWITCH_HEALTH_HIERARCHY_NUM_CHILDREN 2
 
+#define WAVING_EFFECT_MIN_ALPHA 0.3f
+#define WAVING_EFFECT_MAX_ALPHA 0.7f
+
 EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerObjectUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dukeObjectUID),
 	MEMBER_SEPARATOR("HUD Abilities"),
 	MEMBER(MemberType::GAME_OBJECT_UID, fangSkillParentUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruSkillParentUID),
@@ -58,6 +65,9 @@ EXPOSE_MEMBERS(HUDManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruHealthParentUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, switchHealthParentUID),
 	MEMBER(MemberType::FLOAT, lostHealthFeedbackAlpha),
+	MEMBER_SEPARATOR("HUD Duke"),
+	MEMBER(MemberType::GAME_OBJECT_UID, dukeHealthParentUID),
+	MEMBER(MemberType::FLOAT, showBossHealthTotalTime),
 	MEMBER_SEPARATOR("HUD Sides"),
 	MEMBER(MemberType::GAME_OBJECT_UID, sidesHUDParentUID),
 	MEMBER(MemberType::FLOAT, criticalHealthPercentage),
@@ -74,17 +84,22 @@ void HUDManager::Start() {
 		onimaruObj = playerControllerObj->GetChild("Onimaru");
 		fangObj = playerControllerObj->GetChild("Fang");
 	}
+
+	GameObject* dukeAIObj = GameplaySystems::GetGameObject(dukeObjectUID);
+	if (dukeAIObj) {
+		dukeScript = GET_SCRIPT(dukeAIObj, AIDuke);
+	}
+
 	fangSkillParent = GameplaySystems::GetGameObject(fangSkillParentUID);
 	onimaruSkillParent = GameplaySystems::GetGameObject(onimaruSkillParentUID);
 	switchSkillParent = GameplaySystems::GetGameObject(switchSkillParentUID);
-	switchSkillActivated = false;
 
 	if (fangSkillParent && onimaruSkillParent && switchSkillParent) {
 		skillsFang = fangSkillParent->GetChildren();
 		skillsOni = onimaruSkillParent->GetChildren();
 		switchSkillParent->Disable();
 
-		//Vector used later to avoid a flicker on first swtich
+		//Vector used later to avoid a flicker on first switch
 		std::vector<ComponentTransform2D*>oniTransforms;
 
 		for (int i = 0; i < static_cast<int>(Cooldowns::TOTAL); i++) {
@@ -92,6 +107,8 @@ void HUDManager::Start() {
 			if (i < static_cast<int>(Cooldowns::ONIMARU_SKILL_1)) {
 				//Fang skill
 				transform2D = skillsFang[i]->GetComponent<ComponentTransform2D>();
+				//Disable the skill until the tutorial
+				skillsFang[i]->Disable();
 
 			} else if (i != static_cast<int>(Cooldowns::SWITCH_SKILL)) {
 				//Onimaru skill
@@ -109,7 +126,7 @@ void HUDManager::Start() {
 		}
 
 		//Set onimaru abilities position to the collapsed position so as to avoid a flicker on first swtich
-		for (int i = 0; i < oniTransforms.size(); i++) {
+		for (unsigned i = 0; i < oniTransforms.size(); i++) {
 			oniTransforms[i]->SetPosition(cooldownTransformOriginalPositions[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
 		}
 
@@ -147,7 +164,12 @@ void HUDManager::Start() {
 
 	fangHealthParent = GameplaySystems::GetGameObject(fangHealthParentUID);
 	onimaruHealthParent = GameplaySystems::GetGameObject(onimaruHealthParentUID);
+	dukeHealthParent = GameplaySystems::GetGameObject(dukeHealthParentUID);
 	switchHealthParent = GameplaySystems::GetGameObject(switchHealthParentUID);
+
+	if (dukeHealthParent) {
+		dukeHealthChildren = dukeHealthParent->GetChildren();
+	}
 
 	if (fangHealthParent && onimaruHealthParent) {
 		ComponentTransform2D* pos = nullptr;
@@ -158,10 +180,10 @@ void HUDManager::Start() {
 		if (pos) originalOnimaruHealthPosition = pos->GetPosition();
 		fangHealthChildren = fangHealthParent->GetChildren();
 		onimaruHealthChildren = onimaruHealthParent->GetChildren();
-
-		GetAllHealthColors();
-		InitializeHealth();
 	}
+
+	GetAllHealthColors();
+	InitializeHealth();
 
 	if (switchHealthParent) {
 		switchHealthChildren = switchHealthParent->GetChildren();
@@ -183,18 +205,36 @@ void HUDManager::Start() {
 }
 
 void HUDManager::Update() {
-	// This checks for when the Switch tutorial is reached.When this happens, switch is activated and Player will be able to switch from then on.
-	if (GameController::IsSwitchTutorialReached() && !switchSkillActivated) {
-		if (switchSkillParent) {
-			if (!switchSkillParent->IsActive()) {
-				switchSkillParent->Enable();
-				switchSkillActivated = true;
-			}
-		}
+	// Tutorial activated skills
+		// Switch
+	if (GameplaySystems::GetGlobalVariable(globalSwitchTutorialReached, true)) {
+		if (switchSkillParent && !switchSkillParent->IsActive()) switchSkillParent->Enable();
+	} else {
+		if (switchSkillParent && switchSkillParent->IsActive()) switchSkillParent->Disable();
+	}
+	// Dash/Shield
+	if (GameplaySystems::GetGlobalVariable(globalSkill1TutorialReached, true)) {
+		if (skillsFang[0] && !skillsFang[0]->IsActive()) skillsFang[0]->Enable();
+	} else {
+		if (skillsFang[0] && skillsFang[0]->IsActive()) skillsFang[0]->Disable();
+	}
+	// EMP/Blast
+	if (GameplaySystems::GetGlobalVariable(globalSkill2TutorialReached, true)) {
+		if (skillsFang[1] && !skillsFang[1]->IsActive()) skillsFang[1]->Enable();
+	} else {
+		if (skillsFang[1] && skillsFang[1]->IsActive()) skillsFang[1]->Disable();
+	}
+	// Ultimate
+	if (GameplaySystems::GetGlobalVariable(globalSkill3TutorialReached, true)) {
+		if (skillsFang[2] && !skillsFang[2]->IsActive()) skillsFang[2]->Enable();
+	} else {
+		if (skillsFang[2] && skillsFang[2]->IsActive()) skillsFang[2]->Disable();
 	}
 
 	ManageSwitch();
-	if (playingLostHealthFeedback) PlayLostHealthFeedback();
+	if (playingBossHealthEffect) PlayShowHealthBossEffect();
+	if (playingLostHealthFeedback) PlayLostHealthFeedback(lostHealthTimer, playingLostHealthFeedback, fangObj->IsActive() ? fangHealthChildren : onimaruHealthChildren, false);
+	if (playingDukeLostHealthFeedback) PlayLostHealthFeedback(lostHealthDukeTimer, playingDukeLostHealthFeedback, dukeHealthChildren, true);
 	if (playingHitEffect) PlayHitEffect();
 }
 
@@ -224,28 +264,45 @@ void HUDManager::UpdateHealth(float fangHealth, float onimaruHealth) {
 	if (!fangObj || !onimaruObj || !playerController) return;
 	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
-	if (switchState == SwitchState::IDLE) StartLostHealthFeedback(); // Temporary hack
+	if (switchState == SwitchState::IDLE) StartLostHealthFeedback(lostHealthTimer, playingLostHealthFeedback, fangObj->IsActive() ? fangHealthChildren : onimaruHealthChildren, false); // Temporary hack
 
 	float health = fangObj->IsActive() ? fangHealth : onimaruHealth;
 	float maxHealth = fangObj->IsActive() ? playerController->GetFangMaxHealth() : playerController->GetOnimaruMaxHealth();
 
-	ComponentImage* healthFill = nullptr;
-	healthFill = fangObj->IsActive() ? fangHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>() : onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
-	if (healthFill) {
-		if (healthFill->IsFill()) {
-			healthFill->SetFillValue(health / maxHealth);
-		}
-	}
+	UpdateHealthFillBar(health, maxHealth, fangObj->IsActive() ? fangHealthChildren : onimaruHealthChildren);
 
 	if (fangObj->IsActive()) fangPreviousHealth = fangHealth;
 	else onimaruPreviousHealth = onimaruHealth;
 
-	if (switchState != SwitchState::IDLE) ResetLostHealthFeedback();
+	if (switchState != SwitchState::IDLE) ResetLostHealthFeedback(lostHealthTimer, playingLostHealthFeedback, fangObj->IsActive() ? fangHealthChildren : onimaruHealthChildren, 0);
 
 	if (!criticalHealthWarning && health <= maxHealth * (criticalHealthPercentage / 100.f)) ShowCriticalHealthWarning();
 
 	playingHitEffect = true;
 	hitEffectTimer = 0.0f;
+}
+
+void HUDManager::UpdateDukeHealth(float dukeHealth) {
+	if (!dukeScript) return;
+	if (dukeHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
+
+	float maxHealth = dukeScript->GetDukeMaxHealth();
+
+	StartLostHealthFeedback(lostHealthDukeTimer, playingDukeLostHealthFeedback, dukeHealthChildren, true);
+
+	UpdateHealthFillBar(dukeHealth, maxHealth, dukeHealthChildren);
+
+	dukePreviousHealth = dukeHealth;
+}
+
+void HUDManager::UpdateHealthFillBar(float health, float maxHealth, const std::vector<GameObject*>& healthChildren) {
+	ComponentImage* healthFill = nullptr;
+	healthFill = healthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
+	if (healthFill) {
+		if (healthFill->IsFill()) {
+			healthFill->SetFillValue(health / maxHealth);
+		}
+	}
 }
 
 void HUDManager::HealthRegeneration(float health) {
@@ -294,7 +351,7 @@ void HUDManager::StartCharacterSwitch() {
 			switchChildren[HIERARCHY_INDEX_SWITCH_ABILITY_GREEN_EFFECT]->Enable();
 		}
 	}
-	if (playingLostHealthFeedback) StopLostHealthFeedback();
+	if (playingLostHealthFeedback) StopLostHealthFeedback(lostHealthTimer, playingLostHealthFeedback, fangObj->IsActive() ? fangHealthChildren : onimaruHealthChildren, false);
 
 	// Check if the new character needs the health warning
 
@@ -327,6 +384,13 @@ void HUDManager::OnCharacterDeath() {
 
 void HUDManager::OnCharacterResurrect() {
 
+}
+
+void HUDManager::ShowBossHealth() {
+	if (!dukeHealthParent) return;
+	showBossHealthTimer = 0.f;
+	playingBossHealthEffect = true;
+	dukeHealthParent->Enable();
 }
 
 void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
@@ -364,10 +428,30 @@ void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 
 				if (cooldowns[skill] < 1) {
 					//On Cooldown
-					fillImage->SetColor(float4(skillColorNotAvailable.xyz(), 0.3f + cooldowns[skill]));
+					fillImage->SetColor(float4(skillColorNotAvailable.xyz(), Clamp(WAVING_EFFECT_MIN_ALPHA + cooldowns[skill], WAVING_EFFECT_MIN_ALPHA, WAVING_EFFECT_MAX_ALPHA)));
 				} else {
+					float4 colorToSet = skillColorAvailable;
+					float delta = abilityWavingEffects[static_cast<int>(skill)].second / abilityAlphaWavingTotalTime;
+
 					//Available
-					fillImage->SetColor(skillColorAvailable);
+
+					if (abilityWavingEffects[static_cast<int>(skill)].first) {
+						colorToSet = float4::Lerp(float4(skillColorAvailable.xyz(), WAVING_EFFECT_MIN_ALPHA), float4(skillColorAvailable.xyz(), WAVING_EFFECT_MAX_ALPHA), delta);
+					} else {
+						colorToSet = float4::Lerp(float4(skillColorAvailable.xyz(), WAVING_EFFECT_MAX_ALPHA), float4(skillColorAvailable.xyz(), WAVING_EFFECT_MIN_ALPHA), delta);
+					}
+
+					abilityWavingEffects[static_cast<int>(skill)].second += Time::GetDeltaTime();
+
+					if (abilityWavingEffects[static_cast<int>(skill)].second > abilityAlphaWavingTotalTime) {
+						abilityWavingEffects[static_cast<int>(skill)].first = !abilityWavingEffects[static_cast<int>(skill)].first;
+						abilityWavingEffects[static_cast<int>(skill)].second = 0;
+					}
+
+					fillImage->SetColor(colorToSet);
+
+
+					//fillImage->SetColor(skillColorAvailable);
 				}
 
 				if (fillImage->IsFill()) {
@@ -417,7 +501,7 @@ void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 }
 
 
-void HUDManager::SetRemainingDurationNormalizedValue(GameObject* canvas, int index, float normalizedValue) {
+void HUDManager::SetRemainingDurationNormalizedValue(GameObject* canvas, unsigned index, float normalizedValue) {
 	if (!canvas)return;
 	std::vector<GameObject*> children = canvas->GetChildren();
 	if (children.size() <= index) return;
@@ -539,10 +623,15 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 	ComponentImage* textFill = children[HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL]->GetComponent<ComponentImage>();
 
 	if (fillColor && image) {
+
+		if (!fillColor->IsFill() )fillColor->SetIsFill(true); //Double check the image being fill
+
 		fillColor->SetFillValue(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
 		if (playerController) {
 			if (playerController->AreBothCharactersAlive()) {
-				fillColor->SetColor(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1 ? float4(switchSkillColorNotAvailable.xyz(), 0.3f + cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]) : switchSkillColorAvailable);
+				if (cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1) {
+					fillColor->SetColor(float4(switchSkillColorNotAvailable.xyz(), Clamp(WAVING_EFFECT_MIN_ALPHA + cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)],WAVING_EFFECT_MIN_ALPHA, WAVING_EFFECT_MAX_ALPHA)));
+				}
 			} else {
 				fillColor->SetColor(switchSkillColorDeadCharacter);
 			}
@@ -572,8 +661,6 @@ void HUDManager::ManageSwitch() {
 	ComponentImage* backgroundImage = nullptr;
 	ComponentImage* fillImage = nullptr;
 	ComponentImage* overlayImage = nullptr;
-	ComponentText* healthText = nullptr;
-	ComponentImage* switchBarFillImage = nullptr;
 	ComponentImage* switchHealthStroke = nullptr;
 	ComponentTransform2D* switchHealthStrokeTransform2D = nullptr;
 	ComponentTransform2D* switchHealthFillTransform2D = nullptr;
@@ -591,24 +678,24 @@ void HUDManager::ManageSwitch() {
 		//This code handles the color grading progressively increasing and decreasing alpha
 		if (switchSkillParent) {
 			std::vector<GameObject*> children = switchSkillParent->GetChildren();
-			ComponentImage* fillImage = children[HIERARCHY_INDEX_SWITCH_ABILITY_FILL]->GetComponent<ComponentImage>();
+			fillImage = children[HIERARCHY_INDEX_SWITCH_ABILITY_FILL]->GetComponent<ComponentImage>();
 			if (fillImage) {
 
-				float delta = switchColorTimer / switchColorTotalTime;
+				float delta = abilityWavingEffects[static_cast<int>(Cooldowns::SWITCH_SKILL)].second / abilityAlphaWavingTotalTime;
 
-				if (switchColorIncreasing) {
+				if (abilityWavingEffects[static_cast<int>(Cooldowns::SWITCH_SKILL)].first) {
 					fillImage->SetColor(float4(fillImage->GetColor().xyz(), Lerp(0.3f, 0.7f, delta)));
 				} else {
 					fillImage->SetColor(float4(fillImage->GetColor().xyz(), Lerp(0.7f, 0.3f, delta)));
 				}
-				switchColorTimer += Time::GetDeltaTime();
+				abilityWavingEffects[static_cast<int>(Cooldowns::SWITCH_SKILL)].second += Time::GetDeltaTime();
 			}
 		}
 
 		//Reset color timer and invert the toggle for increasing/decreasing
-		if (switchColorTimer >= switchColorTotalTime) {
-			switchColorTimer = 0;
-			switchColorIncreasing = !switchColorIncreasing;
+		if (abilityWavingEffects[static_cast<int>(Cooldowns::SWITCH_SKILL)].second >= abilityAlphaWavingTotalTime) {
+			abilityWavingEffects[static_cast<int>(Cooldowns::SWITCH_SKILL)].second = 0;
+			abilityWavingEffects[static_cast<int>(Cooldowns::SWITCH_SKILL)].first = !abilityWavingEffects[static_cast<int>(Cooldowns::SWITCH_SKILL)].first;
 		}
 
 		break;
@@ -775,14 +862,14 @@ void HUDManager::ManageSwitch() {
 
 			if (switchTimer < switchDeployMovementTime / 3) {
 				float delta = (switchTimer / (switchDeployMovementTime / 3));
-				for (int i = 0; i < skillsFang.size(); ++i) {
+				for (unsigned i = 0; i < skillsFang.size(); ++i) {
 					transform2D = skillsFang[i]->GetComponent<ComponentTransform2D>();
 					if (transform2D) {
-						transform2D->SetScale(float3::Lerp(float3(0, 0, 0), float3(1, 1, 1), delta));
+						transform2D->SetScale(float3::Lerp(float3(0, 1, 0), float3(1, 1, 1), delta));
 					}
 				}
 			} else {
-				for (int i = 0; i < skillsFang.size(); ++i) {
+				for (unsigned i = 0; i < skillsFang.size(); ++i) {
 					transform2D = skillsFang[i]->GetComponent<ComponentTransform2D>();
 					if (transform2D) {
 						transform2D->SetScale(float3(1, 1, 1));
@@ -790,7 +877,7 @@ void HUDManager::ManageSwitch() {
 				}
 			}
 
-			for (int i = 0; i < skillsFang.size(); ++i) {
+			for (unsigned i = 0; i < skillsFang.size(); ++i) {
 				transform2D = skillsFang[i]->GetComponent<ComponentTransform2D>();
 
 				if (transform2D) {
@@ -802,14 +889,14 @@ void HUDManager::ManageSwitch() {
 
 			if (switchTimer < switchDeployMovementTime / 3) {
 				float delta = (switchTimer / (switchDeployMovementTime / 3));
-				for (int i = 0; i < skillsOni.size(); ++i) {
+				for (unsigned i = 0; i < skillsOni.size(); ++i) {
 					transform2D = skillsOni[i]->GetComponent<ComponentTransform2D>();
 					if (transform2D) {
 						transform2D->SetScale(float3::Lerp(float3(0, 0, 0), float3(1, 1, 1), delta));
 					}
 				}
 			} else {
-				for (int i = 0; i < skillsOni.size(); ++i) {
+				for (unsigned i = 0; i < skillsOni.size(); ++i) {
 					transform2D = skillsOni[i]->GetComponent<ComponentTransform2D>();
 					if (transform2D) {
 						transform2D->SetScale(float3(1, 1, 1));
@@ -817,7 +904,7 @@ void HUDManager::ManageSwitch() {
 				}
 			}
 
-			for (int i = 0; i < skillsOni.size(); ++i) {
+			for (unsigned i = 0; i < skillsOni.size(); ++i) {
 				transform2D = skillsOni[i]->GetComponent<ComponentTransform2D>();
 				if (transform2D) {
 					transform2D->SetPosition(float3::Lerp(cooldownTransformOriginalPositions[static_cast<int>(Cooldowns::SWITCH_SKILL)], cooldownTransformOriginalPositions[i + 3] + float3(switchExtraOffset + i * 10.0f, 0, 0), switchTimer / switchDeployMovementTime));
@@ -884,7 +971,7 @@ void HUDManager::ManageSwitch() {
 		}
 
 		if (fangSkillParent->IsActive()) {
-			for (int i = 0; i < skillsFang.size(); ++i) {
+			for (unsigned i = 0; i < skillsFang.size(); ++i) {
 				transform2D = skillsFang[i]->GetComponent<ComponentTransform2D>();
 				if (transform2D) {
 					transform2D->SetPosition(float3::Lerp(cooldownTransformOriginalPositions[i] + float3(switchExtraOffset + i * 10.0f, 0, 0), cooldownTransformOriginalPositions[i], switchTimer / switchPreCollapseMovementTime));
@@ -892,7 +979,7 @@ void HUDManager::ManageSwitch() {
 
 			}
 		} else {
-			for (int i = 0; i < skillsOni.size(); ++i) {
+			for (unsigned i = 0; i < skillsOni.size(); ++i) {
 				transform2D = skillsOni[i]->GetComponent<ComponentTransform2D>();
 				if (transform2D) {
 					transform2D->SetPosition(float3::Lerp(cooldownTransformOriginalPositions[i + 3] + float3(switchExtraOffset + i * 10.0f, 0, 0), cooldownTransformOriginalPositions[i + 3], switchTimer / switchPreCollapseMovementTime));
@@ -932,7 +1019,7 @@ void HUDManager::ManageSwitch() {
 	switchTimer += Time::GetDeltaTime();
 }
 
-void HUDManager::PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns cooldown) {
+void HUDManager::PlayCoolDownEffect(AbilityRefeshFX* effect, Cooldowns /* cooldown */) {
 	if (effect != nullptr) {
 		effect->PlayEffect();
 	}
@@ -1002,86 +1089,111 @@ void HUDManager::HideCriticalHealthWarning() {
 	criticalHealthWarning = false;
 }
 
-void HUDManager::PlayLostHealthFeedback() {
-	if (!fangObj || !onimaruObj || !fangHealthParent || !onimaruHealthParent) return;
-	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
+void HUDManager::PlayLostHealthFeedback(float& timer, bool& playingEffect, const std::vector<GameObject*>& healthChildren, bool isBoss) {
+	if (healthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
-	if (lostHealthTimer > lostHealthFeedbackTotalTime) {
-		lostHealthTimer = lostHealthFeedbackTotalTime;
+	if (timer > lostHealthFeedbackTotalTime) {
+		timer = lostHealthFeedbackTotalTime;
 	}
 
 	ComponentImage* lostHealth = nullptr;
-	lostHealth = fangObj->IsActive() ? fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>() : onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
+	lostHealth = healthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
 	if (lostHealth) {
-		lostHealth->SetColor(float4::Lerp(healthLostFeedbackFillBarInitialColor, healthLostFeedbackFillBarFinalColor, lostHealthTimer / lostHealthFeedbackTotalTime));
+		lostHealth->SetColor(float4::Lerp(healthLostFeedbackFillBarInitialColor, healthLostFeedbackFillBarFinalColor, timer / lostHealthFeedbackTotalTime));
 	}
 
-	if (lostHealthTimer == lostHealthFeedbackTotalTime) {
-		lostHealthTimer = 0.f;
-		playingLostHealthFeedback = false;
-		ResetLostHealthFeedback();
+	if (timer == lostHealthFeedbackTotalTime) {
+		timer = 0.f;
+		playingEffect = false;
+		ResetLostHealthFeedback(timer, playingEffect, healthChildren, isBoss);
 	} else {
-		lostHealthTimer += Time::GetDeltaTime();
+		timer += Time::GetDeltaTime();
 	}
 }
 
-void HUDManager::StartLostHealthFeedback() {
-	if (!fangObj || !onimaruObj || !fangHealthParent || !onimaruHealthParent) return;
-	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
+void HUDManager::StartLostHealthFeedback(float& timer, bool& playingEffect, const std::vector<GameObject*>& healthChildren, bool isBoss) {
+	if (healthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
-	lostHealthTimer = 0.f;
+	timer = 0.f;
 
-	if (!playingLostHealthFeedback) {
-		playingLostHealthFeedback = true;
+	if (!playingEffect) {
+		playingEffect = true;
 		ComponentImage* lostHealth = nullptr;
-		lostHealth = fangObj->IsActive() ? fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>() : onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
+		lostHealth = healthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
 		if (lostHealth) {
 			lostHealth->SetColor(healthLostFeedbackFillBarInitialColor);
 		}
 	} else {
-		ResetLostHealthFeedback();
+		ResetLostHealthFeedback(timer, playingEffect, healthChildren, isBoss);
 	}
 }
 
-void HUDManager::StopLostHealthFeedback() {
-	if (!fangObj || !onimaruObj || !fangHealthParent || !onimaruHealthParent || !playerController) return;
-	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
+void HUDManager::StopLostHealthFeedback(float& timer, bool& playingEffect, const std::vector<GameObject*>& healthChildren, bool isBoss) {
+	if (healthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
-	playingLostHealthFeedback = false;
+	playingEffect = false;
 
-	ResetLostHealthFeedback();
+	ResetLostHealthFeedback(timer, playingEffect, healthChildren, isBoss);
 }
 
-void HUDManager::ResetLostHealthFeedback() {
-	// We don't need to check for null because it's called from a function that already checks them but just in case it's called from anywhere else
-	if (!fangObj || !onimaruObj || !fangHealthParent || !onimaruHealthParent || !playerController) return;
-	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
+void HUDManager::ResetLostHealthFeedback(float& timer, bool& playingEffect, const std::vector<GameObject*>& healthChildren, bool isBoss) {
+	if (!fangObj || !playerController) return;
 
-	float maxHealth = fangObj->IsActive() ? playerController->GetFangMaxHealth() : playerController->GetOnimaruMaxHealth();
+	float maxHealth = dukeScript ? dukeScript->GetDukeMaxHealth() : 1.f;
+	if (!isBoss)  maxHealth = fangObj->IsActive() ? playerController->GetFangMaxHealth() : playerController->GetOnimaruMaxHealth();
+
 	ComponentImage* lostHealth = nullptr;
-	lostHealth = fangObj->IsActive() ? fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>() : onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
+	lostHealth = healthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
 	if (lostHealth) {
-		float feedbackHealth = fangObj->IsActive() ? fangPreviousHealth : onimaruPreviousHealth;
+		float feedbackHealth = dukePreviousHealth;
+		if (!isBoss) feedbackHealth = fangObj->IsActive() ? fangPreviousHealth : onimaruPreviousHealth;
 		if (lostHealth->IsFill()) {
 			lostHealth->SetFillValue(feedbackHealth / maxHealth);
 		}
 	}
 
 	// If we have switched, we need to reset the other health lost fill bar
-	if (switchState != SwitchState::IDLE) {
-		// If X character is active, we have already swapped so we get the other one feedback bar
-		ComponentImage* lostHealth = nullptr;
-		lostHealth = fangObj->IsActive() ? fangHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>() : onimaruHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
-		float maxHealth = fangObj->IsActive() ? playerController->GetFangMaxHealth() : playerController->GetOnimaruMaxHealth();
-		float feedbackHealth = fangObj->IsActive() ? fangPreviousHealth : onimaruPreviousHealth;
+	if (!isBoss) {
+		if (switchState != SwitchState::IDLE) {
+			lostHealth = nullptr;
+			lostHealth = healthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
+			maxHealth = fangObj->IsActive() ? playerController->GetFangMaxHealth() : playerController->GetOnimaruMaxHealth();
+			float feedbackHealth = fangObj->IsActive() ? fangPreviousHealth : onimaruPreviousHealth;
 
-		if (lostHealth) {
-			lostHealth->SetColor(healthLostFeedbackFillBarFinalColor);
-			if (lostHealth->IsFill()) {
-				lostHealth->SetFillValue(feedbackHealth / maxHealth);
+			if (lostHealth) {
+				lostHealth->SetColor(healthLostFeedbackFillBarFinalColor);
+				if (lostHealth->IsFill()) {
+					lostHealth->SetFillValue(feedbackHealth / maxHealth);
+				}
 			}
 		}
 	}
+}
+
+void HUDManager::PlayShowHealthBossEffect() {
+	if (dukeHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
+
+	if (showBossHealthTimer > showBossHealthTotalTime) {
+		showBossHealthTimer = showBossHealthTotalTime;
+	}
+
+	ComponentImage* image = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
+	if (image) image->SetColor(float4::Lerp(float4(dukeHealthBarBackgroundColor.xyz(), 0.0f), dukeHealthBarBackgroundColor, showBossHealthTimer / showBossHealthTotalTime));
+
+	image = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
+	if (image) image->SetColor(float4::Lerp(float4(dukeHealthFillBarColor.xyz(), 0.0f), dukeHealthFillBarColor, showBossHealthTimer / showBossHealthTotalTime));
+
+	image = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
+	if (image) image->SetColor(float4::Lerp(float4(dukeHealthOverlayColor.xyz(), 0.0f), dukeHealthOverlayColor, showBossHealthTimer / showBossHealthTotalTime));
+
+	if (showBossHealthTimer == showBossHealthTotalTime) {
+		playingBossHealthEffect = false;
+		showBossHealthTimer = 0.f;
+	}
+	else {
+		showBossHealthTimer += Time::GetDeltaTime();
+	}
+
 }
 
 void HUDManager::SetPictoState(Cooldowns cooldown, PictoState newState) {
@@ -1182,10 +1294,36 @@ void HUDManager::GetAllHealthColors() {
 	}
 
 	healthLostFeedbackFillBarInitialColor = float4(healthLostFeedbackFillBarFinalColor.xyz(), lostHealthFeedbackAlpha);
+
+	// This goes here so if the scene is not properly set or the Duke's HUD is not needed the other HUD elements keep working
+	if (!dukeHealthParent) return;
+	if (dukeHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
+
+	// Get Duke main background color
+	image = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_BACKGROUND]->GetComponent<ComponentImage>();
+	if (image) {
+		dukeHealthBarBackgroundColor = image->GetColor();
+		image->SetColor(float4(dukeHealthBarBackgroundColor.xyz(), 0.0f));
+	}
+
+	// Get Duke main fill color
+	image = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
+	if (image) {
+		dukeHealthFillBarColor = image->GetColor();
+		image->SetColor(float4(dukeHealthFillBarColor.xyz(), 0.0f));
+	}
+
+	// Get Duke main overlay color
+	image = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_OVERLAY]->GetComponent<ComponentImage>();
+	if (image) {
+		dukeHealthOverlayColor = image->GetColor();
+		image->SetColor(float4(dukeHealthOverlayColor.xyz(), 0.0f));
+	}
 }
 
 void HUDManager::InitializeHealth() {
 	if (!playerController) return;
+	if (fangHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN || onimaruHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
 
 	// Set initial health values
 	ComponentImage* health = fangHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
@@ -1230,6 +1368,27 @@ void HUDManager::InitializeHealth() {
 		}
 		healthLost->SetColor(healthLostFeedbackFillBarFinalColor);
 	}
+
+
+	// This goes here so if the scene is not properly set or the Duke's HUD is not needed the other HUD elements keep working
+	if (!dukeScript) return;
+	if (dukeHealthChildren.size() != HEALTH_HIERARCHY_NUM_CHILDREN) return;
+
+	// Set Duke's initial health values
+	healthValue = dukeScript->GetDukeMaxHealth();
+	health = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_FILL]->GetComponent<ComponentImage>();
+	if (health && health->IsFill()) {
+		health->SetFillValue(1);
+	}
+
+	// Set Duke's initial lost health bar
+	healthLost = dukeHealthChildren[HIERARCHY_INDEX_HEALTH_LOST_FEEDBACK]->GetComponent<ComponentImage>();
+	if (healthLost && healthLost->IsFill()) {
+		healthLost->SetFillValue(1);
+		healthLost->SetColor(healthLostFeedbackFillBarFinalColor);
+	}
+
+	dukePreviousHealth = healthValue;
 }
 
 void HUDManager::InitializeHUDSides() {
@@ -1252,8 +1411,8 @@ void HUDManager::InitializeHUDSides() {
 	}
 }
 
-void HUDManager::ManageSwitchPreCollapseState(GameObject* activeParent, const std::vector<GameObject*>& skills) {
-	for (int i = 0; i < skills.size(); ++i) {
+void HUDManager::ManageSwitchPreCollapseState(GameObject* /* activeParent */, const std::vector<GameObject*>& skills) {
+	for (unsigned i = 0; i < skills.size(); ++i) {
 		ComponentTransform2D* transform2D = skills[i]->GetComponent<ComponentTransform2D>();
 		if (transform2D) {
 			transform2D->SetPosition(float3::Lerp(cooldownTransformOriginalPositions[i], cooldownTransformOriginalPositions[i] + float3(switchExtraOffset + i * 10.0f, 0, 0), switchTimer / switchPreCollapseMovementTime));
@@ -1261,20 +1420,20 @@ void HUDManager::ManageSwitchPreCollapseState(GameObject* activeParent, const st
 	}
 }
 
-void HUDManager::ManageSwitchCollapseState(GameObject* skillsParent, const std::vector<GameObject*>& skills) {
+void HUDManager::ManageSwitchCollapseState(GameObject* /* skillsParent */, const std::vector<GameObject*>& skills) {
 	ComponentTransform2D* transform2D = nullptr;
 
 	if (switchTimer > switchCollapseMovementTime / 1.5f) {
 		float delta = (switchTimer - (switchCollapseMovementTime / 1.5f)) / (switchCollapseMovementTime / 1.5f);
-		for (int i = 0; i < skills.size(); ++i) {
+		for (unsigned i = 0; i < skills.size(); ++i) {
 			transform2D = skills[i]->GetComponent<ComponentTransform2D>();
 			if (transform2D) {
-				transform2D->SetScale(float3::Lerp(float3(1, 1, 1), float3(0, 0, 0), delta));
+				transform2D->SetScale(float3::Lerp(float3(1, 1, 1), float3(0, 1, 0), delta));
 			}
 		}
 	}
 
-	for (int i = 0; i < skills.size(); ++i) {
+	for (unsigned i = 0; i < skills.size(); ++i) {
 		transform2D = skills[i]->GetComponent<ComponentTransform2D>();
 		if (transform2D) {
 			transform2D->SetPosition(float3::Lerp(cooldownTransformOriginalPositions[i] + float3(switchExtraOffset + i * 10.0f, 0, 0), cooldownTransformOriginalPositions[static_cast<int>(Cooldowns::SWITCH_SKILL)], switchTimer / switchCollapseMovementTime));

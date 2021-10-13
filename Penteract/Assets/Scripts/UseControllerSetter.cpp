@@ -27,7 +27,7 @@ void UseControllerSetter::SearchForReferences() {
 	}
 }
 
-void UseControllerSetter::OnToggled(bool toggled_) {
+void UseControllerSetter::OnToggled(bool /* toggled_ */) {
 	if (!playerController) SearchForReferences();
 	if (!playerController) return;
 	playerController->SetUseGamepad(playerController->useGamepad);

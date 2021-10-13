@@ -8,6 +8,7 @@ class GameObject;
 class ComponentCamera;
 class ComponentTransform;
 class StatsDisplayer;
+class PlayerController;
 
 struct TesseractEvent;
 
@@ -24,15 +25,6 @@ public:
 	void PauseGame();
 	void ResumeGame();
 
-	static bool const IsGameplayBlocked();					// Getter for isGameplayBlocked
-	static void BlockGameplay(bool blockIt);				// Setter for isGameplayBlocked
-	static bool const IsSwitchTutorialActive();				// Getter for switchTutorialActive
-	static void ActivateSwitchTutorial(bool isFinished);	// Setter for switchTutorialActive
-	static bool const IsSwitchTutorialReached();			// Getter for switchTutorialReached
-	static void ReachSwitchTutorial(bool isReached);		// Setter for switchTutorialReached
-	static void SetVideoActive(bool isActived);				// Setter for 
-	
-
 public:
 	UID gameCameraUID = 0;
 	UID godCameraUID = 0;
@@ -44,7 +36,9 @@ public:
 
 	UID pauseUID = 0;
 	UID hudUID = 0;
-	UID settingsPlusUID = 0;
+	UID settingsUID = 0;
+	UID controlsUID = 0;
+	UID controlsDevUID = 0;
 	UID dialoguesUID = 0;
 	UID statsDisplayerUID = 0;
 
@@ -60,7 +54,7 @@ private:
 	void DoTransition();
 	void ClearPauseMenus();
 	void EnablePauseMenus();
-
+	bool CanPause();
 private:
 	GameObject* gameCamera = nullptr;
 	GameObject* godCamera = nullptr;
@@ -70,15 +64,17 @@ private:
 	ComponentCamera* staticCamera3 = nullptr;
 	ComponentCamera* staticCamera4 = nullptr;
 	GameObject* player = nullptr;
+	PlayerController* playerController = nullptr;
 
 	GameObject* pauseCanvas = nullptr;
 	GameObject* hudCanvas = nullptr;
 	GameObject* settingsCanvas = nullptr;
+	GameObject* controlsCanvas = nullptr;
+	GameObject* controlsDevCanvas = nullptr;
 	GameObject* dialogueCanvas = nullptr;
 	StatsDisplayer* statsController = nullptr;
 
 	GameObject* godModeController = nullptr;
-
 	float yaw = 0.f;
 	float pitch = 0.f;
 	bool showWireframe = false;
@@ -86,10 +82,6 @@ private:
 	bool transitionFinished = false;
 
 	bool isPaused = false;
-	static inline bool isGameplayBlocked = false;		// isGameplayBlocked is used to stop the gameplay without pausing the game itself. When true, all entities will remain in an IDLE state, and player input will be mostly ignored.
-	static inline bool switchTutorialActive = false;	// This overrides the previous bool on Fang's 'CanSwitch()', used when the Switch Tutorial appears.
-	static inline bool switchTutorialReached = false;	// This blocks the Switch skill until the player reaches the Switch Tutorial dialogues.
-	static inline bool isVideoActive = false;	// isVideoActive is used for know if any video is Active and then block pause menu.
-
+	bool gameplayWasAlreadyBlocked = false;				// This is used to check if the gameplay must (or not) be blocked when entering pause menu.
 };
 

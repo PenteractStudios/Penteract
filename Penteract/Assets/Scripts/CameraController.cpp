@@ -1,13 +1,13 @@
 #include "CameraController.h"
 
 #include "PlayerController.h"
-#include "GameController.h"
 #include "Components/ComponentTransform.h"
+#include "GlobalVariables.h"
 
 #include "Geometry/LineSegment.h"
 #include "Geometry/Plane.h"
 
-#define PI 3.14159
+#define PI 3.14159f
 
 
 EXPOSE_MEMBERS(CameraController) {
@@ -42,11 +42,13 @@ void CameraController::Start() {
 	cameraInitialOffsetZ = cameraOffsetZ;
 
 	RestoreCameraOffset();
+
+	shakeMultiplierStoredValue = shakeMultiplier;
 }
 
 void CameraController::Update() {
 	if (playerController == nullptr || transform == nullptr || camera == nullptr) return;
-
+	if (playerController->IsPlayerDead()) return;
 	float3 playerGlobalPos = playerController->playerFang.playerMainTransform->GetGlobalPosition();
 	float3 desiredPosition = playerGlobalPos + float3(cameraOffsetX, cameraOffsetY, cameraOffsetZ);
 	float3 smoothedPosition = desiredPosition;
@@ -65,7 +67,7 @@ void CameraController::Update() {
 		}
 	}
 
-	if (shakeTimer > 0 && !GameController::IsGameplayBlocked()) {
+	if (shakeTimer > 0 && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 		float2 shakeDir = GetRandomPosInUnitaryCircle(float2(0, 0));
 		transform->SetGlobalPosition(smoothedPosition + transform->GetRight() * shakeDir.x * shakeMultiplier + transform->GetUp() * shakeDir.y * shakeMultiplier);
 		shakeTimer -= Time::GetDeltaTime();
@@ -74,13 +76,15 @@ void CameraController::Update() {
 	} else {
 		transform->SetGlobalPosition(smoothedPosition);
 		Screen::SetChromaticAberration(false);
+		shakeMultiplier = shakeMultiplierStoredValue;
 	}
 }
 
 
 
-void CameraController::StartShake() {
+void CameraController::StartShake(float shakeMult) {
 	shakeTimer = shakeTotalTime;
+	if (shakeMult > 0) shakeMultiplier = shakeMult;
 }
 
 void CameraController::ChangeCameraOffset(float x, float y, float z) {
@@ -101,7 +105,7 @@ float2 CameraController::GetRandomPosInUnitaryCircle(float2 center) {
 	float random2 = (static_cast<float>(rand() % 101)) / 100.0f;
 
 	float r = sqrt(random);
-	float theta = random2 * 2 * PI;
+	float theta = random2 * 2.0f * PI;
 	float x = center.x + r * cos(theta);
 	float y = center.y + r * sin(theta);
 

@@ -8,18 +8,18 @@
 
 EXPOSE_MEMBERS(SpawnPointController) {
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, meleeEnemyPrefabUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, rangeEnemyPrefabUID),
-	MEMBER(MemberType::BOOL, unlocksInitialDoor),
-	MEMBER(MemberType::BOOL, isInitiallyLocked),
-	MEMBER(MemberType::BOOL, isLastDoor),
-	MEMBER_SEPARATOR("Activated/Deactivated GameObject Refs"),
-	MEMBER(MemberType::GAME_OBJECT_UID, initialDoorUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, finalDoorUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, gameObjectActivatedOnCombatEndUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, gameObjectDeactivatedOnCombatEndUID),
-	MEMBER(MemberType::FLOAT, timerToUnlock),
-	MEMBER_SEPARATOR("Dissolve material reference in placeholders"),
-	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID)
+		MEMBER(MemberType::PREFAB_RESOURCE_UID, rangeEnemyPrefabUID),
+		MEMBER(MemberType::BOOL, unlocksInitialDoor),
+		MEMBER(MemberType::BOOL, isInitiallyLocked),
+		MEMBER(MemberType::BOOL, isLastDoor),
+		MEMBER_SEPARATOR("Activated/Deactivated GameObject Refs"),
+		MEMBER(MemberType::GAME_OBJECT_UID, initialDoorUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, finalDoorUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, gameObjectActivatedOnCombatEndUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, gameObjectDeactivatedOnCombatEndUID),
+		MEMBER(MemberType::FLOAT, timerToUnlock),
+		MEMBER_SEPARATOR("Dissolve material reference in placeholders"),
+		MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID)
 };
 
 GENERATE_BODY_IMPL(SpawnPointController);
@@ -50,7 +50,7 @@ void SpawnPointController::Start() {
 	if (dissolveObj) {
 		ComponentMeshRenderer* dissolveMeshRenderer = dissolveObj->GetComponent<ComponentMeshRenderer>();
 		if (dissolveMeshRenderer) {
-			dissolveMaterialID = dissolveMeshRenderer->materialId;
+			dissolveMaterialID = dissolveMeshRenderer->GetMaterial();
 		}
 	}
 
@@ -74,7 +74,7 @@ void SpawnPointController::Start() {
 void SpawnPointController::Update() {
 	if (unlockStarted) {
 		if (currentUnlockTime >= timerToUnlock) {
-			if (!isClosing) {			// Must open the door
+			if (!isClosing) {	// Must open the door
 				if (finalDoor && finalDoor->IsActive()) {
 					finalDoor->Disable();
 				}
@@ -83,16 +83,12 @@ void SpawnPointController::Update() {
 				}
 				gameObject->Disable();
 			}
-			
 			unlockStarted = false;
-			
 			if (!mustKeepOpen) {			// Perform light animation
 				SetLightIntensity(initialDoorLight, isClosing ? initialDoorLightStartIntensity : 0.0f);
 				SetLightIntensity(finalDoorLight, isClosing ? finalDoorLightStartIntensity : 0.0f);
 			}
-
-		}
-		else {
+		} else {
 			currentUnlockTime += Time::GetDeltaTime();
 
 			if (!mustKeepOpen) {			// Perform light animation
@@ -105,15 +101,16 @@ void SpawnPointController::Update() {
 	}
 }
 
-void SpawnPointController::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+void SpawnPointController::OnCollision(GameObject& /* collidedWith */, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* /* particle */) {
 	if (!gameObject) return;
 	for (GameObject* child : gameObject->GetChildren()) {
-		if (!child->IsActive()) child->Enable();
+		Component* childScript = child->GetComponent<ComponentScript>();
+		if (childScript) childScript->Enable();
 	}
 	if (initialDoor && !initialDoor->IsActive()) initialDoor->Enable();
 	if (finalDoor && !finalDoor->IsActive()) finalDoor->Enable();
-	if (gameObjectActivatedOnCombatEnd) gameObjectActivatedOnCombatEnd->Disable();
-	if (gameObjectDeactivatedOnCombatEnd) gameObjectDeactivatedOnCombatEnd->Enable();
+	if (gameObjectActivatedOnCombatEnd && gameObjectActivatedOnCombatEnd->IsActive()) gameObjectActivatedOnCombatEnd->Disable();
+	if (gameObjectDeactivatedOnCombatEnd && !gameObjectDeactivatedOnCombatEnd->IsActive()) gameObjectDeactivatedOnCombatEnd->Enable();
 
 	ComponentBoxCollider* boxCollider = gameObject->GetComponent<ComponentBoxCollider>();
 	if (boxCollider) boxCollider->Disable();
@@ -136,8 +133,8 @@ void SpawnPointController::OpenDoor() {
 			PlayDissolveAnimation(initialDoor, false);
 		}
 
-		if (gameObjectActivatedOnCombatEnd) gameObjectActivatedOnCombatEnd->Enable();
-		if (gameObjectDeactivatedOnCombatEnd) gameObjectDeactivatedOnCombatEnd->Disable();
+		if (gameObjectActivatedOnCombatEnd && !gameObjectActivatedOnCombatEnd->IsActive()) gameObjectActivatedOnCombatEnd->Enable();
+		if (gameObjectDeactivatedOnCombatEnd && gameObjectDeactivatedOnCombatEnd->IsActive()) gameObjectDeactivatedOnCombatEnd->Disable();
 
 		if (!unlockStarted) ResetUnlockAnimation();
 		if (!isLastDoor) mustKeepOpen = true;
@@ -152,7 +149,10 @@ void SpawnPointController::SetCurrentEnemyAmount(unsigned int pos, unsigned int 
 
 void SpawnPointController::SetEnemySpawnStatus(unsigned int pos, bool status) {
 	enemySpawnPointStatus[pos] = status;
-	if (!status) OpenDoor();
+	if (!status && CheckSpawnPointStatus() && !enemiesSpawned) {
+		OpenDoor();
+		enemiesSpawned = true;
+	}
 }
 
 bool SpawnPointController::CanSpawn() {
@@ -170,7 +170,7 @@ void SpawnPointController::PlayDissolveAnimation(GameObject* root, bool playReve
 	if (doorBack) {
 		ComponentMeshRenderer* meshRenderer = doorBack->GetComponent<ComponentMeshRenderer>();
 		if (meshRenderer) {
-			meshRenderer->materialId = dissolveMaterialID;
+			meshRenderer->SetMaterial(dissolveMaterialID);
 			meshRenderer->PlayDissolveAnimation(playReverse);
 		}
 	}
@@ -179,7 +179,7 @@ void SpawnPointController::PlayDissolveAnimation(GameObject* root, bool playReve
 	if (doorFront) {
 		ComponentMeshRenderer* meshRenderer = doorFront->GetComponent<ComponentMeshRenderer>();
 		if (meshRenderer ) {
-			meshRenderer->materialId = dissolveMaterialID;
+			meshRenderer->SetMaterial(dissolveMaterialID);
 			meshRenderer->PlayDissolveAnimation(playReverse);
 		}
 	}

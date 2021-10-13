@@ -1,0 +1,473 @@
+{
+    "Root": {
+        "Name": "Grille Door",
+        "Active": true,
+        "RootBoneName": "root",
+        "Mask": 0,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Active": true,
+                "Position": [
+                    12.0,
+                    0.0,
+                    67.63500213623047
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    0.39500001072883608,
+                    0.39500001072883608,
+                    0.39500001072883608
+                ],
+                "LocalEulerAngles": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ]
+            },
+            {
+                "Type": "Animation",
+                "Active": true,
+                "StateMachinePrincipalId": 13658619514034805053,
+                "StateMachineSecondaryId": 8127031876454331549
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 5328168712317670617,
+                "Values": null
+            }
+        ],
+        "Children": [
+            {
+                "Name": "root",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            -0.05658409744501114,
+                            -0.7100858092308044,
+                            0.05575022101402283,
+                            0.6996201276779175
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            179.99948120117188,
+                            -89.14935302734375,
+                            -170.8883819580078
+                        ]
+                    }
+                ],
+                "Children": [
+                    {
+                        "Name": "rightDoor",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Active": true,
+                                "Position": [
+                                    14.65565013885498,
+                                    1.764161467552185,
+                                    -0.2027430385351181
+                                ],
+                                "Rotation": [
+                                    0.056584153324365619,
+                                    0.7100858688354492,
+                                    -0.055750180035829547,
+                                    0.6996200680732727
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    95.35658264160156,
+                                    80.84858703613281,
+                                    -95.28878021240235
+                                ]
+                            }
+                        ],
+                        "Children": [
+                            {
+                                "Name": "rightDownLock",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform",
+                                        "Active": true,
+                                        "Position": [
+                                            -0.11360658705234528,
+                                            5.612613677978516,
+                                            -13.25008773803711
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            -0.0,
+                                            0.0,
+                                            -0.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "rightUpLock",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform",
+                                        "Active": true,
+                                        "Position": [
+                                            -0.11360658705234528,
+                                            8.447310447692871,
+                                            -13.25008773803711
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            -0.0,
+                                            0.0,
+                                            -0.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            }
+                        ]
+                    },
+                    {
+                        "Name": "leftDoor",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Active": true,
+                                "Position": [
+                                    -13.36860466003418,
+                                    6.259003639221191,
+                                    0.21870304644107819
+                                ],
+                                "Rotation": [
+                                    0.7100858092308044,
+                                    -0.05658417195081711,
+                                    0.6996201276779175,
+                                    0.055750202387571338
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    95.35653686523438,
+                                    80.84858703613281,
+                                    84.7113037109375
+                                ]
+                            }
+                        ],
+                        "Children": [
+                            {
+                                "Name": "leftDownLock",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform",
+                                        "Active": true,
+                                        "Position": [
+                                            0.11360716819763184,
+                                            -5.61260986328125,
+                                            13.250126838684082
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            -0.0,
+                                            0.0,
+                                            -0.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            },
+                            {
+                                "Name": "leftUpLock",
+                                "Active": true,
+                                "RootBoneName": "",
+                                "Mask": 0,
+                                "Components": [
+                                    {
+                                        "Type": "Transform",
+                                        "Active": true,
+                                        "Position": [
+                                            0.11360716819763184,
+                                            -8.447330474853516,
+                                            13.250126838684082
+                                        ],
+                                        "Rotation": [
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            1.0
+                                        ],
+                                        "Scale": [
+                                            1.0,
+                                            1.0,
+                                            1.0
+                                        ],
+                                        "LocalEulerAngles": [
+                                            -0.0,
+                                            0.0,
+                                            -0.0
+                                        ]
+                                    }
+                                ],
+                                "Children": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "Name": "GrilleDoor",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "MeshRenderer",
+                        "Active": true,
+                        "MeshID": 6704212611184044889,
+                        "MaterialID": 7381969345662269289
+                    },
+                    {
+                        "Type": "MeshRenderer",
+                        "Active": true,
+                        "MeshID": 1178915421083753688,
+                        "MaterialID": 7381969345662269289
+                    },
+                    {
+                        "Type": "BoundingBox",
+                        "Active": true,
+                        "LocalBoundingBox": [
+                            -1.5239795446395875,
+                            -0.9741812348365784,
+                            -18.41292381286621,
+                            1.5240211486816407,
+                            25.525209426879884,
+                            18.412918090820314
+                        ]
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "Door Button",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            -1.1529674530029297,
+                            6.266483783721924,
+                            -23.524185180664064
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "SphereCollider",
+                        "Active": true,
+                        "colliderType": 1,
+                        "layerType": 1,
+                        "mass": 1.0,
+                        "radius": 1.0,
+                        "centerOffset": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "freezeRotation": false
+                    },
+                    {
+                        "Type": "Script",
+                        "Active": true,
+                        "Script": 17837163582535891834,
+                        "Values": [
+                            {
+                                "Name": "doorObstacleUID",
+                                "Type": "GameObjectUID",
+                                "Value": 3686065482970400856
+                            },
+                            {
+                                "Name": "bridgeDoorUID",
+                                "Type": "GameObjectUID",
+                                "Value": 7484947424681902563
+                            },
+                            {
+                                "Name": "fireArenaUID",
+                                "Type": "GameObjectUID",
+                                "Value": 12889789178203051301
+                            },
+                            {
+                                "Name": "fireBridgeUID",
+                                "Type": "GameObjectUID",
+                                "Value": 5623290770547259036
+                            },
+                            {
+                                "Name": "laserDoorObstacleUID",
+                                "Type": "GameObjectUID",
+                                "Value": 12871032089420108905
+                            }
+                        ]
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "Bridge Door Obstacle",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            0.2800617218017578,
+                            -2.339170455932617,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.7071068286895752,
+                            0.0,
+                            0.7071068286895752
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            90.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Obstacle",
+                        "Active": true,
+                        "Size": [
+                            8.399999618530274,
+                            3.25,
+                            3.950000047683716
+                        ],
+                        "ObstacleType": 2,
+                        "DrawGizmo": false
+                    }
+                ],
+                "Children": null
+            }
+        ]
+    }
+}

@@ -1,10 +1,10 @@
 #include "Fang.h"
 #include "GameplaySystems.h"
-#include "GameController.h"
 #include "HUDController.h"
 #include "HUDManager.h"
 #include "CameraController.h"
 #include "UltimateFang.h"
+#include "GlobalVariables.h"
 
 void Fang::Init(UID fangUID, UID dashParticleUID, UID leftGunUID, UID rightGunUID, UID rightBulletUID, UID leftBulletUID, UID laserUID, UID cameraUID, UID HUDManagerObjectUID, UID dashUID, UID EMPUID, UID EMPEffectsUID, UID fangUltimateUID, UID ultimateVFXUID, UID rightFootVFX, UID leftFootVFX) {
 	SetTotalLifePoints(lifePoints);
@@ -133,9 +133,18 @@ bool Fang::IsVulnerable() const {
 	return !ultimateOn;
 }
 
+void Fang::ResetToIdle()
+{
+	if (compAnimation) {
+		if (compAnimation->GetCurrentState()) {
+			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::IDLE)]);
+		}
+	}
+}
+
 bool Fang::CanSwitch() const {
 	if (!EMP) return false;
-	return isAlive && !EMP->IsActive() && !ultimateOn && GameController::IsSwitchTutorialReached() && (!GameController::IsGameplayBlocked() || GameController::IsSwitchTutorialActive());
+	return isAlive && !EMP->IsActive() && !ultimateOn && (!GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) || GameplaySystems::GetGlobalVariable(globalswitchTutorialActive, true)) && GameplaySystems::GetGlobalVariable(globalSwitchTutorialReached, true);
 }
 
 void Fang::IncreaseUltimateCounter() {
@@ -149,7 +158,7 @@ bool Fang::IsInstantOrientation(bool useGamepad) const {
 void Fang::GetHit(float damage_) {
 	if (!dashing && isAlive) {
 		if (cameraController) {
-			cameraController->StartShake();
+			cameraController->StartShake(-1.f);
 		}
 
 		lifePoints -= damage_;
@@ -171,7 +180,8 @@ void Fang::InitDash() {
 			dashDirection = GetDirection();
 			dashMovementDirection = movementInputDirection;
 		} else {
-			dashDirection = facePointDir;
+			dashDirection = playerMainTransform->GetFront();
+			dashMovementDirection = MovementDirection::RIGHT;
 		}
 
 		if (dashParticle) {
@@ -207,7 +217,7 @@ void Fang::Dash() {
 }
 
 bool Fang::CanDash() {
-	return isAlive && !dashing && !dashInCooldown && !EMP->IsActive() && !ultimateOn && !GameController::IsGameplayBlocked();
+	return isAlive && !dashing && !dashInCooldown && !EMP->IsActive() && !ultimateOn && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && GameplaySystems::GetGlobalVariable(globalSkill1TutorialReached, true);;
 }
 
 void Fang::ActivateEMP() {
@@ -228,7 +238,7 @@ void Fang::ActivateEMP() {
 }
 
 bool Fang::CanEMP() {
-	return !EMP->IsActive() && !EMPInCooldown && !dashing && !ultimateOn && !GameController::IsGameplayBlocked();
+	return !EMP->IsActive() && !EMPInCooldown && !dashing && !ultimateOn && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && GameplaySystems::GetGlobalVariable(globalSkill2TutorialReached, true);
 }
 
 void Fang::CheckCoolDowns(bool noCooldownMode) {
@@ -242,7 +252,7 @@ void Fang::CheckCoolDowns(bool noCooldownMode) {
 			fangLaser->Disable();
 		}
 		timeWithoutCombat += Time::GetDeltaTime();
-		if (timeWithoutCombat >= aimTime || GameController::IsGameplayBlocked()) {
+		if (timeWithoutCombat >= aimTime || GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 			aiming = false;
 			transitioning = 0;
 			timeWithoutCombat = aimTime;
@@ -311,6 +321,8 @@ void Fang::OnAnimationFinished() {
 				movementSpeed = normalMovementSpeed;
 				ultimateScript->EndUltimate();
 
+				ultimateTimeRemaining = 0.0f;
+
 				if (hudManagerScript) {
 					hudManagerScript->StopUsingSkill(HUDManager::Cooldowns::FANG_SKILL_3);
 				}
@@ -369,7 +381,7 @@ float Fang::GetRealUltimateCooldown() {
 }
 
 bool Fang::CanShoot() {
-	return !shooting && !ultimateOn && !compAnimation->GetCurrentStateSecondary() && !GameController::IsGameplayBlocked();
+	return !shooting && !ultimateOn && !compAnimation->GetCurrentStateSecondary() && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && !switchInProgress;
 }
 
 bool Fang::IsAiming() {
@@ -415,7 +427,7 @@ void Fang::PlayAnimation() {
 					}
 				}
 			} else {
-				if (compAnimation->GetCurrentState()->name == states[static_cast<int>(FANG_STATES::SPRINT)]) {
+				if (compAnimation->GetCurrentState()->name == states[static_cast<int>(FANG_STATES::SPRINT)] || compAnimation->GetCurrentState()->name == states[static_cast<int>(FANG_STATES::DASH)]) {
 					compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::DRIFT)]);
 					decelerating = true;
 				} else if (!decelerating) {
@@ -427,12 +439,15 @@ void Fang::PlayAnimation() {
 					compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::EMP)]);
 				}
 			}
-		} else {
-			if (compAnimation->GetCurrentState()->name != states[aiming ? (GetMouseDirectionState() + dashAnimation) : static_cast<int>(FANG_STATES::SPRINT)]) {
-				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[aiming ? (GetMouseDirectionState() + dashAnimation) : static_cast<int>(FANG_STATES::SPRINT)]);
-				ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentState()->clipUid);
-				SetClipSpeed(clip, agent->GetMaxSpeed());
+		} else { // movementInputDirection != MovementDirection::NONE
+			if (dashing && compAnimation->GetCurrentState()->name != states[static_cast<int>(FANG_STATES::DASH)]) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::DASH)]);
 			}
+			else if (!dashing && compAnimation->GetCurrentState()->name != states[aiming ? (GetMouseDirectionState() + dashAnimation) : static_cast<int>(FANG_STATES::SPRINT)]) {
+				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[aiming ? (GetMouseDirectionState() + dashAnimation) : static_cast<int>(FANG_STATES::SPRINT)]);
+			}
+			ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentState()->clipUid);
+			SetClipSpeed(clip, agent->GetMaxSpeed());
 		}
 	}
 }
@@ -463,10 +478,10 @@ void Fang::ActiveUltimate() {
 }
 
 bool Fang::CanUltimate() {
-	return !dashing && !EMP->IsActive() && ultimateCooldownRemaining >= ultimateCooldown && !ultimateOn && !GameController::IsGameplayBlocked();
+	return !dashing && !EMP->IsActive() && ultimateCooldownRemaining >= ultimateCooldown && !ultimateOn && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && !switchInProgress && GameplaySystems::GetGlobalVariable(globalSkill3TutorialReached, true);
 }
 
-void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
+void Fang::Update(bool useGamepad, bool /* lockMovement */, bool /* lockRotation */) {
 	if (isAlive) {
 		if (ultimateOn) {
 			ultimateTimeRemaining -= Time::GetDeltaTime();
@@ -483,7 +498,7 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 			}
 
 			if (!dashing && !EMP->IsActive()) {
-				if (GetInputBool(InputActions::SHOOT, useGamepad) && !GameController::IsGameplayBlocked()) {
+				if (GetInputBool(InputActions::SHOOT, useGamepad) && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 					ResetIsInCombatValues();
 					Shoot();
 				}
@@ -494,7 +509,7 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 			}
 
 			Dash();
-			if (!GetInputBool(InputActions::SHOOT, useGamepad) || dashing || EMP->IsActive() || ultimateOn || GameController::IsGameplayBlocked()) {
+			if (!GetInputBool(InputActions::SHOOT, useGamepad) || dashing || EMP->IsActive() || ultimateOn || GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 				if (shooting) {
 					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 					shooting = false;
@@ -510,7 +525,7 @@ void Fang::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 		}
 	} else {
 		if (agent) agent->RemoveAgentFromCrowd();
-		movementInputDirection = MovementDirection::NONE;
+		if (!dashing) movementInputDirection = MovementDirection::NONE;
 	}
 	PlayAnimation();
 }

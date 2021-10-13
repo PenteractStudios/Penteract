@@ -46,7 +46,30 @@
                 "OuterGain": 0.0,
                 "RolloffFactor": 1.0,
                 "ReferenceDistance": 10.0,
-                "MaxDistance": 30.0
+                "MaxDistance": 30.0,
+                "IsMusic": true
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 9961171467095894443,
+                "Values": [
+                    {
+                        "Name": "mainGain",
+                        "Type": "Float",
+                        "Value": 0.5
+                    },
+                    {
+                        "Name": "sfxGain",
+                        "Type": "Float",
+                        "Value": 0.5
+                    },
+                    {
+                        "Name": "musicGain",
+                        "Type": "Float",
+                        "Value": 0.5
+                    }
+                ]
             }
         ],
         "Children": null
