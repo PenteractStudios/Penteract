@@ -8,6 +8,7 @@
 #include "GlobalVariables.h" 
 #include "VideoSceneEnd.h"
 #include "AttackDronesController.h"
+#include "DukeShield.h"
 
 #include <string>
 
@@ -15,7 +16,7 @@
 
 std::uniform_real_distribution<float> rng(-1.0f, 1.0f);
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID,  UID videoParentCanvasUID, UID videoCanvasUID,std::vector<UID> encounterUIDs, AttackDronesController* dronesController)
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID,std::vector<UID> encounterUIDs, AttackDronesController* dronesController)
 {
 	gen = std::minstd_rand(rd());
 
@@ -28,6 +29,11 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 	chargeAttack = GameplaySystems::GetGameObject(chargeAttackColliderUID);
 	videoParentCanvas = GameplaySystems::GetGameObject(videoParentCanvasUID);
 	videoCanvas = GameplaySystems::GetGameObject(videoCanvasUID);
+
+	GameObject* shieldObj = GameplaySystems::GetGameObject(phase2ShieldUID);
+	if (shieldObj) {
+		phase2Shield = GET_SCRIPT(shieldObj, DukeShield);
+	}
 
 	barrelSpawneScript = GET_SCRIPT(GameplaySystems::GetGameObject(barrelSpawnerUID), BarrelSpawner);
 
@@ -62,16 +68,14 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 			agent->SetMaxAcceleration(MAX_ACCELERATION);
 		}
 
-		if (characterGameObject) {
-			characterGameObject->GetComponent<ComponentCapsuleCollider>()->Enable();
+		characterGameObject->GetComponent<ComponentCapsuleCollider>()->Enable();
 
-			//Get audio sources
-			int i = 0;
+		//Get audio sources
+		int i = 0;
 
-			for (ComponentAudioSource& src : characterGameObject->GetComponents<ComponentAudioSource>()) {
-				if (i < static_cast<int>(DUKE_AUDIOS::TOTAL)) dukeAudios[i] = &src;
-				i++;
-			}
+		for (ComponentAudioSource& src : characterGameObject->GetComponents<ComponentAudioSource>()) {
+			if (i < static_cast<int>(DUKE_AUDIOS::TOTAL)) dukeAudios[i] = &src;
+			i++;
 		}
 	}
 	movementChangeThreshold = moveChangeEvery;
@@ -235,7 +239,7 @@ void Duke::ThrowBarrels() {
 
 //Not to be confused with AIDuke StartUsing shield, this one manages both state and animations
 void Duke::StartUsingShield() {
-	
+
 	if (isShooting) {
 		StopShooting();
 	}
@@ -273,6 +277,27 @@ void Duke::BecomeStunned() {
 				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::STUN)]);
 			}
 		}
+	}
+}
+
+void Duke::TeleportDuke(bool toMapCenter)
+{
+	if (toMapCenter) {
+		if (agent) {
+			agent->SetMoveTarget(phase2CenterPosition);
+			agent->SetMaxSpeed(movementSpeed * 2.f);
+		}
+		float3 dir = phase2CenterPosition - dukeTransform->GetGlobalPosition();
+		dir.y = 0;
+		movementScript->Orientate(dir);
+		if (compAnimation) {
+			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[Duke::DUKE_ANIMATION_STATES::WALK_NO_AIM]);
+		}
+		isInArena = false;
+	}
+	else {
+		if (phase2Shield) phase2Shield->FadeShield();
+		isInArena = true;
 	}
 }
 
@@ -366,6 +391,22 @@ void Duke::StopShooting()
 		}
 	}
 	if (isShooting) isShooting = false;
+}
+
+void Duke::StartPhase2Shield()
+{
+	float3 dir = phase2CenterPosition - dukeTransform->GetGlobalPosition();
+	dir.y = 0;
+	movementScript->Orientate(dir);
+
+	if (compAnimation && compAnimation->GetCurrentState()->name != animationStates[Duke::DUKE_ANIMATION_STATES::IDLE] &&
+		compAnimation->GetCurrentState()->name != animationStates[Duke::DUKE_ANIMATION_STATES::PDA] &&
+		(dukeTransform->GetGlobalPosition() - phase2CenterPosition).Length() <= 0.5f) {
+
+		if (phase2Shield) phase2Shield->InitShield();
+		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[Duke::DUKE_ANIMATION_STATES::PDA]);
+		CallTroops();
+	}
 }
 
 void Duke::InstantiateBarrel()

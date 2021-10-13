@@ -1,0 +1,54 @@
+{
+    "Root": {
+        "Name": "DukeShield360",
+        "Active": false,
+        "RootBoneName": "",
+        "Mask": 16,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Active": false,
+                "Position": [
+                    0.0,
+                    21.986108779907228,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.7071068286895752,
+                    0.0,
+                    0.7071067094802856
+                ],
+                "Scale": [
+                    50.0,
+                    50.0,
+                    50.0
+                ],
+                "LocalEulerAngles": [
+                    -180.0,
+                    89.98021697998047,
+                    -180.0
+                ]
+            },
+            {
+                "Type": "MeshRenderer",
+                "Active": false,
+                "MeshID": 3372544751270605688,
+                "MaterialID": 16102959236735944607
+            },
+            {
+                "Type": "BoundingBox",
+                "Active": false,
+                "LocalBoundingBox": [
+                    -2.6257340908050539,
+                    -2.6209895610809328,
+                    -2.6419196128845217,
+                    2.641207456588745,
+                    2.645951986312866,
+                    2.6250219345092775
+                ]
+            }
+        ],
+        "Children": null
+    }
+}

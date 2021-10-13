@@ -47,7 +47,6 @@ public:
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
-	void TeleportDuke(bool toPlatform);
 	float GetDukeMaxHealth() const;
 
 private:
@@ -67,6 +66,7 @@ public:
 	UID bulletUID = 0;
 	UID barrelUID = 0;
 	UID chargeColliderUID = 0;
+	UID phase2ShieldUID = 0;
 	UID firstEncounterUID = 0;
 	UID secondEncounterUID = 0;
 	UID thirdEncounterUID = 0;

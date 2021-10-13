@@ -15,11 +15,11 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, shieldObjUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, bulletUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, chargeColliderUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, meleeAttackColliderUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, barrelSpawnerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargeAttackUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargeColliderUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, phase2ShieldUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, firstEncounterUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, secondEncounterUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, thirdEncounterUID),
@@ -105,7 +105,7 @@ void AIDuke::Start() {
 	AttackDronesController* dronesController = GET_SCRIPT(&GetOwner(), AttackDronesController);
 
 	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, videoParentCanvasUID, videoCanvasUID, encounters, dronesController);
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, videoParentCanvasUID, videoCanvasUID, encounters, dronesController);
 
 	dukeCharacter.winSceneUID = winSceneUID; // TODO: REPLACE
 
@@ -188,8 +188,7 @@ void AIDuke::Update() {
 				activeFireTiles = false;
 			}
 			movementScript->Stop();
-			if (isInArena) TeleportDuke(true);
-			dukeCharacter.CallTroops();
+			if (dukeCharacter.isInArena) dukeCharacter.TeleportDuke(true);
 
 			//Second time Duke teleports out of the arena, there is a new fire pattern active.
 			if (dukeCharacter.lifePoints <= 0.55f * dukeCharacter.GetTotalLifePoints()) {
@@ -316,14 +315,19 @@ void AIDuke::Update() {
 			currentBulletHellCooldown = 0.f;
 			currentShieldCooldown = 0.f;
 		} else {
-			if (player) {
-				float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
-				movementScript->Orientate(dir);
+			if (dukeCharacter.phase2Shield && !dukeCharacter.phase2Shield->GetIsActive()) {
+				dukeCharacter.StartPhase2Shield();
 			}
-			currentBarrelTimer += Time::GetDeltaTime();
-			if (currentBarrelTimer >= throwBarrelTimer) {
-				dukeCharacter.ThrowBarrels();
-				currentBarrelTimer = 0.f;
+			else {
+				if (player) {
+					float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
+					movementScript->Orientate(dir);
+				}
+				currentBarrelTimer += Time::GetDeltaTime();
+				if (currentBarrelTimer >= throwBarrelTimer) {
+					dukeCharacter.ThrowBarrels();
+					currentBarrelTimer = 0.f;
+				}
 			}
 		}
 		break;
@@ -760,18 +764,6 @@ void AIDuke::PerformBulletHell() {
 		dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 		currentTimeBetweenAbilities = 0.0f;
 		mustWaitForTimerBetweenAbilities = true;
-	}
-}
-
-void AIDuke::TeleportDuke(bool toPlatform) {
-	if (toPlatform) {
-		if (dukeCharacter.agent) dukeCharacter.agent->RemoveAgentFromCrowd();
-		ownerTransform->SetGlobalPosition(float3(40.0f, 0.0f, 0.0f));
-		isInArena = false;
-	} else {
-		ownerTransform->SetGlobalPosition(float3(0.0f, 0.0f, 0.0f));
-		if (dukeCharacter.agent) dukeCharacter.agent->AddAgentToCrowd();
-		isInArena = true;
 	}
 }
 
