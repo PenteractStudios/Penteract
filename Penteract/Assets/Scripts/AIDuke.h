@@ -44,6 +44,7 @@ public:
 	void OnAnimationSecondaryFinished() override;
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
+	void SetReady(bool value);
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
@@ -114,6 +115,8 @@ private:
 	FloorIsLava* fireTilesScript = nullptr;
 
 	HUDManager* hudManager = nullptr;
+
+	bool isReady = false;
 
 	float currentShieldCooldown = 0.f;
 	float currentShieldActiveTime = 0.f;

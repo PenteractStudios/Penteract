@@ -2,9 +2,10 @@
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
-
 #include "Components/Physics/ComponentBoxCollider.h"
 #include "Components/ComponentObstacle.h"
+
+#include "AIDuke.h"
 
 EXPOSE_MEMBERS(DukeDoor) {
      MEMBER(MemberType::GAME_OBJECT_UID, dukeUID)
@@ -32,5 +33,13 @@ void DukeDoor::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 	ComponentObstacle* obstacle = GetOwner().GetComponent<ComponentObstacle>();
 	if (obstacle) {
 		obstacle->Enable();
+	}
+
+	GameObject* duke = GameplaySystems::GetGameObject(dukeUID);
+	if (duke) {
+		AIDuke* dukeScript = GET_SCRIPT(duke, AIDuke);
+		if (dukeScript) {
+			dukeScript->SetReady(true);
+		}
 	}
 }

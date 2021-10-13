@@ -116,6 +116,7 @@ void AIDuke::Start() {
 }
 
 void AIDuke::Update() {
+	if (!isReady) return;
 	std::string life = std::to_string(dukeCharacter.lifePoints);
 	life = "Life points: " + life;
 	//Debug::Log(life.c_str());
@@ -590,6 +591,10 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 		if (dukeCharacter.beingPushed) dukeCharacter.beingPushed = false;
 		dukeCharacter.state = DukeState::DEATH;
 	}
+}
+
+void AIDuke::SetReady(bool value) {
+	isReady = value;
 }
 
 void AIDuke::EnableBlastPushBack() {
