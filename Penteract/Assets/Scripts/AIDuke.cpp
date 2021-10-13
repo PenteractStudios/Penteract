@@ -117,7 +117,7 @@ void AIDuke::Start() {
 
 void AIDuke::Update() {
 	if (!isReady) return;
-	if (!player) return;
+	if (!player || !movementScript) return;
 
 	std::string life = std::to_string(dukeCharacter.lifePoints);
 	life = "Life points: " + life;
@@ -126,7 +126,7 @@ void AIDuke::Update() {
 	float speedToUse = dukeCharacter.slowedDown ? dukeCharacter.slowedDownSpeed : dukeCharacter.movementSpeed;
 
 	if (dukeCharacter.isDead) {
-		if (activeFireTiles) fireTilesScript->StopFire();
+		if (activeFireTiles && fireTilesScript) fireTilesScript->StopFire();
 		// TODO: Substitute the following for actual destruction of the troops
 		GameObject* encounter = GameplaySystems::GetGameObject(fourthEncounterUID);
 		if (encounter && encounter->IsActive()) encounter->Disable();
@@ -613,7 +613,7 @@ void AIDuke::EnableBlastPushBack() {
 		// Damage
 		if (playerController->playerOnimaru.level2Upgrade) {
 			dukeCharacter.GetHit(playerController->playerOnimaru.blastDamage + playerController->GetOverPowerMode());
-
+			if (hudManager) hudManager->UpdateDukeHealth(dukeCharacter.lifePoints);
 			// TODO: play audio and VFX
 			//if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
 			//PlayHitMaterialEffect();
