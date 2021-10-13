@@ -86,6 +86,11 @@
                         "Value": 10.0
                     },
                     {
+                        "Name": "bulletUID",
+                        "Type": "PrefabResourceUID",
+                        "Value": 18310981961101033254
+                    },
+                    {
                         "Name": "rangerGruntCharacter.pushBackSpeed",
                         "Type": "Float",
                         "Value": 40.0
@@ -1854,7 +1859,7 @@
                             },
                             {
                                 "Type": "Particle",
-                                "Active": true,
+                                "Active": false,
                                 "DrawGizmo": true,
                                 "Duration": 0.10000000149011612,
                                 "Looping": false,
@@ -1915,7 +1920,7 @@
                                 ],
                                 "SpeedRM": 0,
                                 "Speed": [
-                                    15.0,
+                                    0.0,
                                     20.0
                                 ],
                                 "SpeedCurve": [
@@ -2344,7 +2349,7 @@
                                 ],
                                 "IsSoft": false,
                                 "SoftRange": 1.0,
-                                "HasCollision": true,
+                                "HasCollision": false,
                                 "LayerIndex": 6,
                                 "CollRadius": 0.25,
                                 "HasTrail": false,
