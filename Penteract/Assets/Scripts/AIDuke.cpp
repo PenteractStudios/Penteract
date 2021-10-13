@@ -16,6 +16,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, meleeAttackColliderUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, barrelSpawnerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargeAttackUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, lasersUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargeColliderUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, firstEncounterUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, secondEncounterUID),
