@@ -24,7 +24,8 @@ public:
 
 	// Attack Drones Pattern Constructor (USE THIS TO ADD NEW PATTERNS)
 	AttackDronesPattern(float droneSeparationHorizontal_, float droneSeparationDepth_, float droneRadiusFormation_, float droneVerticalOffset_, float droneSeparationFromCenter_,
-						float droneShotDelay_, int dronesNumber_, DronesFormation droneFormation_, int waves_, float timeBetweenWaves_, std::vector<WaveCycle> cycles_, 
+						float droneShotDelay_, int dronesNumber_, DronesFormation droneFormation_, int waves_, float timeBetweenWaves_, 
+						std::vector<WaveCycle> cycles_, 
 						int pickChance_,
 						bool rotationDronesActive_, bool rotationDronesClockwise_, float rotationDronesSpeed_)
 
@@ -72,23 +73,23 @@ public:
 //	4- !!!IMPORTANT!!! The cycles vector MUST have a value for each WAVE, for example, if it has 3 waves, it MUST HAVE an array of 3 cycles.
 
 extern inline std::vector<AttackDronesPattern> patterns = {
-	AttackDronesPattern(),
 
-	AttackDronesPattern(3.0f, 4.0f, 6.0f, 1.0f, 1.0f,
-						0.1f, 5, DronesFormation::ARROW, 5, 0.5f, 
-						{ WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED },
-						30,
+	AttackDronesPattern(3.0f, 4.0f, 6.0f, 2.0f, 4.0f,
+						0.1f, 5, DronesFormation::ARROW, 7, 0.5f, 
+						{ WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED},
+						50,
 						false, false, 0.0f),
 
-	AttackDronesPattern(3.0f, 4.0f, 6.0f, 1.0f, 1.0f,
+	AttackDronesPattern(3.0f, 4.0f, 6.0f, 2.0f, 2.0f,
 						0.0f, 9, DronesFormation::CIRCLE, 12, 0.5f,
 						{ WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED },
-						30,
+						0,
 						true, true, 1.0f),
 
-	AttackDronesPattern(3.0f, 4.0f, 6.0f, 1.0f, 1.0f,
-						0.3f, 5, DronesFormation::LINE, 3, 1.0f, { WaveCycle::LEFT_TO_RIGHT, WaveCycle::RIGHT_TO_LEFT, WaveCycle::LEFT_TO_RIGHT },
-						10,
+	AttackDronesPattern(3.0f, 4.0f, 6.0f, 2.0f, 3.0f,
+						0.3f, 5, DronesFormation::LINE, 6, 0.5f, 
+						{ WaveCycle::LEFT_TO_RIGHT, WaveCycle::RIGHT_TO_LEFT, WaveCycle::LEFT_TO_RIGHT, WaveCycle::RIGHT_TO_LEFT, WaveCycle::LEFT_TO_RIGHT, WaveCycle::RIGHT_TO_LEFT },
+						50,
 						false, false, 0.0f),
 
 };

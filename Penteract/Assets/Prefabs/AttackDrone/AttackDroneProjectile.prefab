@@ -52,7 +52,13 @@
                 "Type": "Script",
                 "Active": true,
                 "Script": 4554423229758110213,
-                "Values": null
+                "Values": [
+                    {
+                        "Name": "speed",
+                        "Type": "Float",
+                        "Value": 30.0
+                    }
+                ]
             },
             {
                 "Type": "SphereCollider",
