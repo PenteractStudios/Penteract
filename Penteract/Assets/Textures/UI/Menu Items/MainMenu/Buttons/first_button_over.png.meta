@@ -8,5 +8,6 @@
     "Flip": false,
     "Wrap": 2,
     "MinFilter": 5,
-    "MagFilter": 1
+    "MagFilter": 1,
+    "Compression": 0
 }

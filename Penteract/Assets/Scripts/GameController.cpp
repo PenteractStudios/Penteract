@@ -12,6 +12,7 @@
 #include "Geometry/frustum.h"
 
 EXPOSE_MEMBERS(GameController) {
+	MEMBER_SEPARATOR("Cameras"),
 	MEMBER(MemberType::GAME_OBJECT_UID, gameCameraUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, godCameraUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, staticCamera1UID),
@@ -19,12 +20,16 @@ EXPOSE_MEMBERS(GameController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, staticCamera3UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, staticCamera4UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
+	MEMBER_SEPARATOR("HUD elements references"),
 	MEMBER(MemberType::GAME_OBJECT_UID, pauseUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, hudUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, settingsPlusUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, settingsUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, controlsUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, controlsDevUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, dialoguesUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, statsDisplayerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, godModeControllerUID),
+	MEMBER_SEPARATOR("Game Camera controls"),
 	MEMBER(MemberType::FLOAT, speed),
 	MEMBER(MemberType::FLOAT, rotationSpeedX),
 	MEMBER(MemberType::FLOAT, rotationSpeedY),
@@ -68,7 +73,9 @@ void GameController::Start() {
 
 	pauseCanvas = GameplaySystems::GetGameObject(pauseUID);
 	hudCanvas = GameplaySystems::GetGameObject(hudUID);
-	settingsCanvas = GameplaySystems::GetGameObject(settingsPlusUID);
+	settingsCanvas = GameplaySystems::GetGameObject(settingsUID);
+	controlsCanvas = GameplaySystems::GetGameObject(controlsUID);
+	controlsDevCanvas = GameplaySystems::GetGameObject(controlsDevUID);
 	dialogueCanvas = GameplaySystems::GetGameObject(dialoguesUID);
 	GameObject* statsGameObject = GameplaySystems::GetGameObject(statsDisplayerUID);
 	if (statsGameObject) {
@@ -292,24 +299,13 @@ void GameController::ClearPauseMenus() {
 
 	}
 
-	if (settingsCanvas) {
-		std::vector<GameObject*> settingsChildren = settingsCanvas->GetChildren();
-		if (settingsChildren.size() > 0) {
-			settingsChildren[0]->Enable();		// Enables first screen of CanvasSettingsPlus
-			for (unsigned i = 1; i < settingsChildren.size(); ++i) {
-				settingsChildren[i]->Disable();
-			}
-		}
-		settingsCanvas->Disable();
-	}
+	if (settingsCanvas) settingsCanvas->Disable();
+	if (controlsCanvas) controlsCanvas->Disable();
+	if (controlsDevCanvas) controlsDevCanvas->Disable();
 
-	if (dialogueCanvas) {
-		dialogueCanvas->Enable();
-	}
+	if (dialogueCanvas) dialogueCanvas->Enable();
 
-	if (hudCanvas) {
-		hudCanvas->Enable();
-	}
+	if (hudCanvas) hudCanvas->Enable();
 }
 
 void GameController::EnablePauseMenus() {

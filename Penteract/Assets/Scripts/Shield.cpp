@@ -98,7 +98,7 @@ void Shield::FadeShield() {
 
 
 void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
-	if ((collidedWith.name == "WeaponParticles" || collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") && isActive && playerController) {
+	if ((collidedWith.name == "BulletRange" || collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") && isActive && playerController) {
 
 		if (!particle) {
 			collidedWith.Disable();
@@ -106,7 +106,7 @@ void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 			ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 			ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 
-			if (playerController->playerOnimaru.level1Upgrade && collidedWith.name == "WeaponParticles") {		// Reflect projectile
+			if (playerController->playerOnimaru.level1Upgrade && collidedWith.name == "BulletRange") {		// Reflect projectile
 				if (!particle) return;
 				// Separate Bullet from shield
 				float3 actualPenDistance = penetrationDistance.ProjectTo(collisionNormal);

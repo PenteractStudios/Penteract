@@ -41,6 +41,8 @@ void PlayerDeath::Start() {
 	if (gameOverGO)gameOverController = GET_SCRIPT(gameOverGO, GameOverUIController);
 
 	laserHitCooldownTimer = laserHitCooldown;
+
+	deadAnimationFinishedFlag = false;
 }
 
 void PlayerDeath::Update() {
@@ -76,7 +78,10 @@ void PlayerDeath::OnAnimationFinished() {
 	if (dead) {
 		if (playerController) {
 			if (playerController->IsPlayerDead()) {
-				OnLoseConditionMet();
+				if (!deadAnimationFinishedFlag) {
+					OnLoseConditionMet();
+					deadAnimationFinishedFlag = true; // Fix repeatedly calling OnLoseConditionMet().
+				}
 			} else {
 				playerController->OnCharacterDeath();
 			}

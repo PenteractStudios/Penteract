@@ -177,6 +177,8 @@ void Onimaru::StartUltimate() {
 	movementSpeed = ultimateMovementSpeed;
 	movementInputDirection = MovementDirection::NONE;
 	Player::MoveTo();
+	// TODO: reset arm rotation
+	// weaponTransform->SetGlobalRotation(float3(0, 1.468, 50.899));
 	ultimateOn = true;
 }
 
@@ -706,7 +708,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */
 		Blast();
 	}
 	PlayAnimation();
-	if (!GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) UpdateWeaponRotation();
+	if (!GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && !ultimateOn) UpdateWeaponRotation();
 }
 
 float Onimaru::GetRealUltimateCooldown() {
