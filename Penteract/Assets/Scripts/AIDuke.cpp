@@ -536,14 +536,17 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 			}
 		}
 		else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
+			if (!particle) return;
 			hitTaken = true;
 			ParticleHit(collidedWith, particle, playerController->playerFang);
 		}
 		else if (collidedWith.name == "OnimaruBullet") {
+			if (!particle) return;
 			hitTaken = true;
 			ParticleHit(collidedWith, particle, playerController->playerOnimaru);
 		}
 		else if (collidedWith.name == "OnimaruBulletUltimate") {
+			if (!particle) return;
 			hitTaken = true;
 			ParticleHit(collidedWith, particle, playerController->playerOnimaru);
 		}
