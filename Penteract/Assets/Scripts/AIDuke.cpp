@@ -180,6 +180,8 @@ void AIDuke::Update() {
 			break;
 		} else if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints() && dukeCharacter.state != DukeState::BULLET_HELL && dukeCharacter.state != DukeState::CHARGE) {
 			phase = Phase::PHASE2;
+			if (lasers && !lasers->IsActive()) lasers->Enable();
+			Debug::Log("Lasers enabled");
 			if (!phase2Reached) phase2Reached = true;
 			// Phase change VFX?
 			// Anim + dissolve for teleportation
@@ -299,12 +301,6 @@ void AIDuke::Update() {
 
 		break;
 	case Phase::PHASE2:
-		if (!activeLasers && dukeCharacter.lifePoints < lasersThreshold * dukeCharacter.GetTotalLifePoints()) {
-			activeLasers = true;
-			if (lasers && !lasers->IsActive()) lasers->Enable();
-			Debug::Log("Lasers enabled");
-		}
-
 		if (dukeCharacter.isInArena) {
 			Debug::Log("Fire tiles enabled");
 			if (fireTilesScript) {

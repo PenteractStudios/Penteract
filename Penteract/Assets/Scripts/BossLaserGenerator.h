@@ -10,7 +10,8 @@ class BossLaserGenerator : public Script {
 	enum class GeneratorState {
 		START = 0,
 		SHOOT,
-		IDLE
+		IDLE,
+		OFF
 	};
 
 public:
@@ -34,7 +35,7 @@ public:
 private:
 	ComponentAnimation* animationComp = nullptr;
 	ComponentAnimation* pairAnimationComp = nullptr;
-	GeneratorState currentState = GeneratorState::IDLE;
+	GeneratorState currentState = GeneratorState::OFF;
 
 	GameObject* laserObject = nullptr;
 	GameObject* laserWarning = nullptr;

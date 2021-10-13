@@ -133,7 +133,6 @@ private:
 	float lasersThreshold = 0.6f;
 
 	bool activeFireTiles = false;
-	bool activeLasers = false;
 
 	bool phase2Reached = false;
 
