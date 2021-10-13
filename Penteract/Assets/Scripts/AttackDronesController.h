@@ -20,6 +20,7 @@ public:
 	void StartBulletHell();
 	bool BulletHellActive() const;
 	bool BulletHellFinished() const;
+	float GetPatternProjectileSpeed() const;
 	void EndOfWave();
 
 	void SetDronesFormation(DronesFormation newFormation);
