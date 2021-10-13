@@ -116,6 +116,8 @@ void AIDuke::Start() {
 }
 
 void AIDuke::Update() {
+	if (!player) return;
+
 	std::string life = std::to_string(dukeCharacter.lifePoints);
 	life = "Life points: " + life;
 	//Debug::Log(life.c_str());
@@ -214,6 +216,7 @@ void AIDuke::Update() {
 				dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::IDLE]);
 			} else if (phase2Reached && playerController->playerOnimaru.shieldBeingUsed >= 2.0f) {
 				// If onimaru shields -> perform charge
+				float3 distance = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
 				movementScript->Stop();
 				dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
 			} else if (currentShieldCooldown >= shieldCooldown) {
@@ -229,7 +232,7 @@ void AIDuke::Update() {
 						// If player dominates the center for too long, perform charge
 						timeSinceLastCharge += Time::GetDeltaTime();
 					}
-					if (timeSinceLastCharge >= 4.5f) {
+					if (timeSinceLastCharge >= 3.5f) {
 						timeSinceLastCharge = 0.f;
 						// Charge
 						movementScript->Stop();
@@ -318,10 +321,10 @@ void AIDuke::Update() {
 				dukeCharacter.StartPhase2Shield();
 			}
 			else {
-				if (player) {
+				/*if (player) {
 					float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
 					movementScript->Orientate(dir);
-				}
+				}*/
 				currentBarrelTimer += Time::GetDeltaTime();
 				if (currentBarrelTimer >= throwBarrelTimer) {
 					dukeCharacter.ThrowBarrels();
@@ -461,7 +464,7 @@ void AIDuke::Update() {
 						// If player dominates the center for too long, perform charge
 						timeSinceLastCharge += Time::GetDeltaTime();
 					}
-					if (timeSinceLastCharge >= 3.0f) {
+					if (timeSinceLastCharge >= 4.0f) {
 						timeSinceLastCharge = 0.f;
 						// Charge
 						movementScript->Stop();
@@ -611,21 +614,10 @@ void AIDuke::EnableBlastPushBack() {
 			//PlayHitMaterialEffect();
 			//timeSinceLastHurt = 0.0f;
 		}
+
+		dukeCharacter.BePushed();
 	}
 
-
-	dukeCharacter.BePushed();
-
-	//if (animation->GetCurrentState()) animation->SendTrigger(animation->GetCurrentState()->name + "Hurt");
-	CalculatePushBackRealDistance();
-	// Damage
-	if (playerController->playerOnimaru.level2Upgrade) {
-		dukeCharacter.GetHit(playerController->playerOnimaru.blastDamage + playerController->GetOverPowerMode());
-
-		//if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
-		//PlayHitMaterialEffect();
-		//timeSinceLastHurt = 0.0f;
-	}
 }
 
 void AIDuke::DisableBlastPushBack() {
