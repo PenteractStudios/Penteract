@@ -44,7 +44,6 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 		bullet = bulletGO->GetComponent<ComponentParticleSystem>();
 		if (bullet) {
 			bullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
-			bullet->Play();
 			bullet->SetMaxParticles(attackBurst*2);
 			bullet->SetParticlesPerSecond(float2(attackSpeed, attackSpeed));
 			bullet->SetDuration(attackBurst / attackSpeed);
