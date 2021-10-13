@@ -123,6 +123,10 @@ void AIDuke::Update() {
 	float speedToUse = dukeCharacter.slowedDown ? dukeCharacter.slowedDownSpeed : dukeCharacter.movementSpeed;
 
 	if (dukeCharacter.isDead) {
+		if (activeFireTiles) fireTilesScript->StopFire();
+		// TODO: Substitute the following for actual destruction of the troops
+		GameObject* encounter = GameplaySystems::GetGameObject(fourthEncounterUID);
+		if (encounter && encounter->IsActive()) encounter->Disable();
 		dukeCharacter.InitPlayerVictory();
 	}
 
