@@ -16,6 +16,7 @@ class Player;
 class HUDManager;
 //class PlayerDeath;
 class AIMovement;
+class FloorIsLava;
 
 enum class Phase {
 	PHASE1,
@@ -73,6 +74,7 @@ public:
 	UID barrelSpawnerUID = 0;
 	UID chargeAttackUID = 0;
 	UID hudManagerUID = 0;
+	UID fireTilesUID = 0;
 
 	GameObject* duke = nullptr;
 	GameObject* player = nullptr;
@@ -106,6 +108,7 @@ private:
 	AIMovement* movementScript = nullptr;
 
 	PlayerController* playerController = nullptr;
+	FloorIsLava* fireTilesScript = nullptr;
 
 	HUDManager* hudManager = nullptr;
 

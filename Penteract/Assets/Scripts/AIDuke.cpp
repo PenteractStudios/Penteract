@@ -5,6 +5,7 @@
 #include "DukeShield.h"
 #include "HUDManager.h"
 #include "AttackDronesController.h"
+#include "FloorIsLava.h"
 #include <string>
 #include <vector>
 
@@ -24,6 +25,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, thirdEncounterUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fourthEncounterUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, hudManagerUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, fireTilesUID),
 
 	MEMBER_SEPARATOR("Duke Atributes"),
 	MEMBER(MemberType::FLOAT, dukeCharacter.lifePoints),
@@ -90,6 +92,10 @@ void AIDuke::Start() {
 		dukeShield = GET_SCRIPT(shieldObj, DukeShield);
 	}
 
+	//Fire Tiles Script
+	GameObject* tilesObj = GameplaySystems::GetGameObject(fireTilesUID);
+	if(tilesObj) fireTilesScript = GET_SCRIPT(tilesObj, FloorIsLava);
+
 	// AttackDronesController
 	AttackDronesController* dronesController = GET_SCRIPT(&GetOwner(), AttackDronesController);
 
@@ -124,8 +130,10 @@ void AIDuke::Update() {
 		currentShieldCooldown += Time::GetDeltaTime();
 		if ((dukeCharacter.lifePoints < 0.85 * dukeCharacter.GetTotalLifePoints()) && !activeFireTiles) {
 			Debug::Log("BulletHell active and fire tiles on");
-			activeFireTiles = true;
-			// TODO: signal fire tiles activation
+			if (fireTilesScript) {
+				fireTilesScript->StartFire();
+				activeFireTiles = true;
+			}
 			currentBulletHellCooldown = 0.8f * bulletHellCooldown;
 		}
 		if (activeFireTiles) {
@@ -147,7 +155,12 @@ void AIDuke::Update() {
 				dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::ENRAGE]);
 			}
 			dukeCharacter.state = DukeState::INVULNERABLE;
-			return;
+			if (fireTilesScript) {
+				fireTilesScript->StopFire();
+				fireTilesScript->SetInterphase(false);
+				fireTilesScript->StartFire();
+			}
+			break;
 		} else if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints() &&
 				 dukeCharacter.state != DukeState::BULLET_HELL && dukeCharacter.state != DukeState::CHARGE) {
 			phase = Phase::PHASE2;
@@ -155,18 +168,29 @@ void AIDuke::Update() {
 			// Phase change VFX?
 			// Anim + dissolve for teleportation
 			lifeThreshold -= 0.15f;
-			activeFireTiles = false;
+			
 			Debug::Log("Fire tiles disabled");
+			if (fireTilesScript && activeFireTiles) {
+				fireTilesScript->StopFire();
+				activeFireTiles = false;
+			}
 			movementScript->Stop();
 			if (isInArena) TeleportDuke(true);
 			dukeCharacter.CallTroops();
-
+			
+			//Second time Duke teleports out of the arena, there is a new fire pattern active.
+			if (dukeCharacter.lifePoints <= 0.55f * dukeCharacter.GetTotalLifePoints()) {
+				if (fireTilesScript) {
+					if (activeFireTiles) fireTilesScript->StopFire();
+					fireTilesScript->SetInterphase(true);
+					fireTilesScript->StartFire();
+					activeFireTiles = true;
+				}
+			}
+			dukeCharacter.state = DukeState::INVULNERABLE;
 			if (dukeShield && dukeShield->GetIsActive()) {
 				OnShieldInterrupted();
 			}
-
-			dukeCharacter.state = DukeState::INVULNERABLE;
-
 			dukeCharacter.StopShooting();
 			break;
 		}
@@ -268,8 +292,13 @@ void AIDuke::Update() {
 		}
 
 		if (isInArena) {
-			activeFireTiles = true;
 			Debug::Log("Fire tiles enabled");
+			if (fireTilesScript) {
+				if(activeFireTiles) fireTilesScript->StopFire();
+				fireTilesScript->SetInterphase(false);
+				fireTilesScript->StartFire();
+				activeFireTiles = true;
+			}
 			phase = Phase::PHASE1;
 			dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
 			currentBulletHellCooldown = 0.f;
@@ -303,7 +332,11 @@ void AIDuke::Update() {
 					dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::STUN]);
 				}
 				dukeCharacter.state = DukeState::INVULNERABLE;
-
+				if (fireTilesScript) {
+					fireTilesScript->StopFire();
+					fireTilesScript->SetInterphase(true);
+					fireTilesScript->StartFire();
+				}
 
 			} else {
 				movementScript->Stop();
@@ -315,6 +348,11 @@ void AIDuke::Update() {
 					dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::ENRAGE]);
 				}
 				dukeCharacter.state = DukeState::INVULNERABLE;
+				if (fireTilesScript) {
+					fireTilesScript->StopFire();
+					fireTilesScript->SetInterphase(false);
+					fireTilesScript->StartFire();
+				}
 			}
 		}
 		if (dukeCharacter.state != DukeState::BULLET_HELL && dukeCharacter.state != DukeState::STUNNED &&
