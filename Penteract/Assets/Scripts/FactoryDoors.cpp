@@ -5,14 +5,17 @@
 #include "Components/ComponentAudioSource.h"
 #include "Components/ComponentTransform.h"
 
+
 EXPOSE_MEMBERS(FactoryDoors) {
 	MEMBER(MemberType::FLOAT, speed),
-	MEMBER(MemberType::FLOAT, yEndPos)
+	MEMBER(MemberType::FLOAT, yEndPos),
+	MEMBER(MemberType::BOOL, animByScript)
 };
 
 GENERATE_BODY_IMPL(FactoryDoors);
 
 void FactoryDoors::Start() {
+	animation = GetOwner().GetComponent<ComponentAnimation>();
 	audio = GetOwner().GetComponent<ComponentAudioSource>();
 	transform = GetOwner().GetComponent<ComponentTransform>();
 	float3 pos = transform->GetGlobalPosition();
@@ -20,6 +23,7 @@ void FactoryDoors::Start() {
 }
 
 void FactoryDoors::Update() {
+	if (!animByScript) return;
 	if (isOpen) {
 		float3 pos = float3::Lerp(transform->GetGlobalPosition(), endPos, speed * Time::GetDeltaTime());
 		transform->SetGlobalPosition(pos);
@@ -28,7 +32,8 @@ void FactoryDoors::Update() {
 }
 
 void FactoryDoors::Open() {
-	if (!isOpen){
+	if (!isOpen) {
+		if (animation) animation->SendTrigger("ClosedOpening");
 		if (audio) audio->Play();
 		isOpen = true;
 	}

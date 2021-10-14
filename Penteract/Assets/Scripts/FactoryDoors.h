@@ -3,6 +3,7 @@
 #include "Scripting/Script.h"
 
 class ComponentAudioSource;
+class ComponentAnimation;
 class ComponentTransform;
 
 class FactoryDoors : public Script {
@@ -13,11 +14,13 @@ public:
 	void Update() override;
 	void Open();
 
-public: 
+public:
 	float speed = 1.0f;
 	float yEndPos = -9.0f;
+	bool animByScript = false;
 
 private:
+	ComponentAnimation* animation = nullptr;
 	ComponentAudioSource* audio = nullptr;
 	bool isOpen = false;
 	ComponentTransform* transform = nullptr;
