@@ -51,7 +51,7 @@ public:
 	float GetDukeMaxHealth() const;
 
 private:
-	void CalculatePushBackRealDistance();
+	void UpdatePushStatus();
 	void UpdatePushBackPosition();
 	void ParticleHit(GameObject& collidedWith, void* particle, Player& player_);
 	bool CanBeHurtDuringCriticalMode() const;
@@ -144,9 +144,8 @@ private:
 	float timeSinceLastCharge = 0.f;
 
 	// Onimaru blast effect
-	float currentPushBackDistance = 0.f;
 	float currentSlowedDownTime = 0.f;
-	float pushBackRealDistance = 0.f;
+	float pushBackTimer = 0.f;
 
 	float currentTimeBetweenAbilities = 0.f;
 	bool mustWaitForTimerBetweenAbilities = true;
