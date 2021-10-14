@@ -8,23 +8,24 @@
 #include "AIDuke.h"
 
 EXPOSE_MEMBERS(DukeDoor) {
-     MEMBER(MemberType::GAME_OBJECT_UID, dukeUID)
+     MEMBER(MemberType::GAME_OBJECT_UID, dukeUID),
+     MEMBER(MemberType::GAME_OBJECT_UID, doorObstacleUID)
 };
 
 GENERATE_BODY_IMPL(DukeDoor);
 
 void DukeDoor::Start() {
-	ComponentObstacle* obstacle = GetOwner().GetComponent<ComponentObstacle>();
-	if (obstacle) {
-		obstacle->Disable();
-	}
-
 	GameObject* duke = GameplaySystems::GetGameObject(dukeUID);
 	if (duke) {
 		AIDuke* dukeScript = GET_SCRIPT(duke, AIDuke);
 		if (dukeScript) {
 			dukeScript->SetReady(false);
 		}
+	}
+
+	GameObject* obstacle = GameplaySystems::GetGameObject(doorObstacleUID);
+	if (obstacle) {
+		obstacle->Disable();
 	}
 }
 
@@ -38,7 +39,7 @@ void DukeDoor::OnCollision(GameObject& collidedWith, float3 collisionNormal, flo
 		collider->Disable();
 	}
 
-	ComponentObstacle* obstacle = GetOwner().GetComponent<ComponentObstacle>();
+	GameObject* obstacle = GameplaySystems::GetGameObject(doorObstacleUID);
 	if (obstacle) {
 		obstacle->Enable();
 	}
