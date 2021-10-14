@@ -82,8 +82,11 @@ void BridgeDoorButton::Update() {
 			}
 		} else {
 			// When the door has been opened, activate the fires
-			bridgeTilesScript->StartFire();
-			arenaTilesScript->StartFire();
+			if (!fireEnabled) {
+				fireEnabled = true;
+				bridgeTilesScript->StartFire();
+				arenaTilesScript->StartFire();
+			}
 		}
 	}
 }

@@ -234,8 +234,8 @@ void AIDuke::Update() {
 				movementScript->Stop();
 			} else {
 				if (player) {
-					if ((float3(0, 0, 0) - player->GetComponent<ComponentTransform>()->GetGlobalPosition()).LengthSq() <
-						(float3(0, 0, 0) - ownerTransform->GetGlobalPosition()).LengthSq()) {
+					if ((float3(13.0f, 0.799f, 0.0f) - player->GetComponent<ComponentTransform>()->GetGlobalPosition()).LengthSq() <
+						(float3(13.0f, 0.799f, 0.0f) - ownerTransform->GetGlobalPosition()).LengthSq()) {
 						// If player dominates the center for too long, perform charge
 						timeSinceLastCharge += Time::GetDeltaTime();
 					}
@@ -460,8 +460,8 @@ void AIDuke::Update() {
 
 				}
 				else {
-					if ((float3(0, 0, 0) - player->GetComponent<ComponentTransform>()->GetGlobalPosition()).LengthSq() <
-						(float3(0, 0, 0) - ownerTransform->GetGlobalPosition()).LengthSq()) {
+					if ((float3(13.0f, 0.799f, 0.0f) - player->GetComponent<ComponentTransform>()->GetGlobalPosition()).LengthSq() <
+						(float3(13.0f, 0.799f, 0.0f) - ownerTransform->GetGlobalPosition()).LengthSq()) {
 						// If player dominates the center for too long, perform charge
 						timeSinceLastCharge += Time::GetDeltaTime();
 					}

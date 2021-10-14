@@ -39,5 +39,6 @@ private:
 	bool openedDoor = false;
 	bool moveButton = false;
 	float3 initialPosition = float3(0, 0, 0);
+	bool fireEnabled = false;
 };
 
