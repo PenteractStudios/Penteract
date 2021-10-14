@@ -13,6 +13,7 @@ public:
 	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
 
 public:
-	UID dukeUID;
+	UID dukeUID = 0;
+	UID doorObstacleUID = 0;
 };
 
