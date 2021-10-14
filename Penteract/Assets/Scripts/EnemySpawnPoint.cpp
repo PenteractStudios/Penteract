@@ -88,7 +88,7 @@ void EnemySpawnPoint::RenderEnemy(EnemyType type, unsigned int amount) {
 		GameObject* go = GameplaySystems::GetGameObject(prefabUID);
 		ComponentTransform* goTransform = go->GetComponent<ComponentTransform>();
 		if (go) {
-			goTransform->SetPosition(EnemyLocation(amount, i, type == EnemyType::MELEE ? 0 : -2));
+			goTransform->SetPosition(EnemyLocation(amount, i, type == EnemyType::MELEE ? 0 : -0.5));
 			if (playerScript) playerScript->AddEnemyInMap(go);
 		}
 	}
