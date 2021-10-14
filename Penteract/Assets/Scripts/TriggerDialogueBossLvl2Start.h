@@ -20,6 +20,7 @@ public:
 	UID gameControllerUID = 0;
 	UID afterDialogCallbackUID = 0;
 	UID laserUID = 0;
+	UID HUDUID = 0;
 	bool SwitchOn = true;
 	GameObject* boss = nullptr;
 	GameObject* gameController = nullptr;

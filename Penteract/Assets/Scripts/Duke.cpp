@@ -35,7 +35,8 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 		phase2Shield = GET_SCRIPT(shieldObj, DukeShield);
 	}
 
-	barrelSpawneScript = GET_SCRIPT(GameplaySystems::GetGameObject(barrelSpawnerUID), BarrelSpawner);
+	GameObject* barrelSpawnerOBj = GameplaySystems::GetGameObject(barrelSpawnerUID);
+	if(barrelSpawnerOBj) barrelSpawneScript = GET_SCRIPT(barrelSpawnerOBj, BarrelSpawner);
 
 	barrel = GameplaySystems::GetResource<ResourcePrefab>(barrelUID);
 
@@ -363,7 +364,7 @@ void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 		}
 
 		if (strcmp(eventName, "ThrowBarrels") == 0 && instantiateBarrel) {
-			if (startSpawnBarrel) {
+			if (startSpawnBarrel && barrelSpawneScript) {
 				barrelSpawneScript->SpawnBarrels();
 				startSpawnBarrel = false;
 			}
