@@ -116,7 +116,6 @@ void AIDuke::Start() {
 	GameObject* hudManagerGO = GameplaySystems::GetGameObject(hudManagerUID);
 
 	if (hudManagerGO) hudManager = GET_SCRIPT(hudManagerGO, HUDManager);
-	if (hudManager) hudManager->ShowBossHealth();
 }
 
 void AIDuke::Update() {
