@@ -182,6 +182,13 @@ void RangedAI::Start() {
 	enemySpawnPointScript = GET_SCRIPT(GetOwner().GetParent(), EnemySpawnPoint);
 
 	SetRandomMaterial();
+
+	/* Rotate the spawn point to the player location */
+	if (player && ownerTransform) {
+		float3 playerDirection = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
+		playerDirection.y = 0.f;
+		OrientateTo(playerDirection);
+	}
 }
 
 void RangedAI::OnAnimationFinished() {

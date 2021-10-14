@@ -184,6 +184,13 @@ void AIMeleeGrunt::Update() {
 	if (!playerDeath) return;
 	if (!rightBladeCollider || !leftBladeCollider) return;
 
+	if (mustOrientateFirstTime && player && ownerTransform) {
+		float3 playerDirection = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
+		playerDirection.y = 0.f;
+		OrientateTo(playerDirection);
+		mustOrientateFirstTime = false;
+	}
+
 	if (!dissolveAlreadyPlayed && componentMeshRenderer) {
 		if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
 			timeSinceLastHurt += Time::GetDeltaTime();
@@ -660,4 +667,9 @@ void AIMeleeGrunt::SetMaterial(ComponentMeshRenderer* mesh, UID newMaterialID, b
 			mesh->PlayDissolveAnimation();
 		}
 	}
+}
+
+void AIMeleeGrunt::OrientateTo(const float3& direction) {
+	Quat newRotation = Quat::LookAt(float3(0, 0, 1), direction.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
+	ownerTransform->SetGlobalRotation(newRotation);
 }
