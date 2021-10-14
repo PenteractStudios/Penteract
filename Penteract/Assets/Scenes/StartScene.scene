@@ -14,9 +14,9 @@
         0.0
     ],
     "NavMesh": 0,
-    "CursorHeight": 0,
-    "CursorWidth": 0,
-    "Cursor": 0,
+    "CursorHeight": 90,
+    "CursorWidth": 90,
+    "Cursor": 13004582807876962819,
     "Root": {
         "Id": 15386627610009304279,
         "Name": "Scene",
@@ -166,7 +166,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 200.0,
-                            "HorizontalFov": 1.9240119457244874,
+                            "HorizontalFov": 1.7108821868896485,
                             "VerticalFov": 1.0
                         }
                     },

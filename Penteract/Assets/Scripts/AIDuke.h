@@ -79,6 +79,7 @@ public:
 	UID videoCanvasUID = 0;
 	UID hudManagerUID = 0;
 	UID fireTilesUID = 0;
+	UID triggerBosslvl2EndUID = 0;
 
 	GameObject* duke = nullptr;
 	GameObject* player = nullptr;
@@ -105,6 +106,8 @@ public:
 	float orientationThreshold = 0.1f;
 
 	float timerBetweenAbilities = 1.5f;
+
+	bool islevel2 = false;
 
 	UID winSceneUID = 0;
 
@@ -147,6 +150,9 @@ private:
 	float currentPushBackDistance = 0.f;
 	float currentSlowedDownTime = 0.f;
 	float pushBackRealDistance = 0.f;
+
+	//Only for level2
+	GameObject* triggerBosslvl2End = nullptr;
 
 	float currentTimeBetweenAbilities = 0.f;
 	bool mustWaitForTimerBetweenAbilities = true;

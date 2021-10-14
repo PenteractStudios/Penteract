@@ -85,5 +85,4 @@ private:
 private:
 	void RenderEnemy(EnemyType type, unsigned int amount);
 	float3 EnemyLocation(int amount, int k, int y);
-	void LookAtPlayer(const float3& direction);
 };

@@ -2,7 +2,7 @@
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
-
+#include "GlobalVariables.h"
 #include "PlayerController.h"
 #include "SceneTransition.h"
 #include "GameOverUIController.h"
@@ -120,6 +120,7 @@ void PlayerDeath::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char
 }
 
 void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+	if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) return;
 	if (collidedWith.name == "BulletRange") {
 		if (!particle) return;
 		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;

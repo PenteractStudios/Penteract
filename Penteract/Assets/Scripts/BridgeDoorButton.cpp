@@ -4,6 +4,7 @@
 #include "FloorIsLava.h"
 #include "GameplaySystems.h"
 #include "GameObject.h"
+#include "Components/ComponentParticleSystem.h"
 
 
 EXPOSE_MEMBERS(BridgeDoorButton) {
@@ -13,6 +14,7 @@ EXPOSE_MEMBERS(BridgeDoorButton) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fireArenaUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, doorObstacleUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, laserDoorObstacleUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, buttonGlassParticlesObjUID),
 	MEMBER_SEPARATOR("Timing Controls"),
 	MEMBER(MemberType::FLOAT, closeButtonTime),
 	MEMBER(MemberType::FLOAT, openDoorTime)
@@ -44,6 +46,18 @@ void BridgeDoorButton::Start() {
 	elapsedButtonTime = 0;
 	ComponentTransform* transform = gameObject->GetComponent<ComponentTransform>();
 	if (transform) initialPosition = transform->GetGlobalPosition();
+
+	GameObject* buttonParticlesObj = GetOwner().GetChild("Particles Glow");
+	if (buttonParticlesObj) {
+		buttonParticles = buttonParticlesObj->GetComponent<ComponentParticleSystem>();
+		if (buttonParticles) buttonParticles->PlayChildParticles();
+	}
+
+	GameObject* glassParticlesObj = GameplaySystems::GetGameObject(buttonGlassParticlesObjUID);
+	if (glassParticlesObj) {
+		glassParticles = glassParticlesObj->GetComponent<ComponentParticleSystem>();
+		if (buttonParticles) glassParticles->StopChildParticles();
+	}
 }
 
 void BridgeDoorButton::Update() {
@@ -58,6 +72,8 @@ void BridgeDoorButton::Update() {
 		} else {
 			moveButton = false;
 		}
+		if (buttonParticles) buttonParticles->StopChildParticles();
+		if (glassParticles) glassParticles->PlayChildParticles();
 	}
 
 

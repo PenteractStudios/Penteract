@@ -15,5 +15,6 @@ public:
 public:
 	UID dukeUID = 0;
 	UID doorObstacleUID = 0;
+	UID canvasHUDUID = 0;
 };
 
