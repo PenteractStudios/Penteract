@@ -105,7 +105,7 @@ public:
 	bool IsVulnerable() const override;
 	float GetNormalizedRemainingUltimateTime()const;
 
-	void UpdateWeaponRotation();
+	void UpdateWeaponRotation(bool useGamepad = false);
 	void ResetToIdle() override;
 
 private:

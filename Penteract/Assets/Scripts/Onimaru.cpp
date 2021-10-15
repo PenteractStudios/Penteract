@@ -217,14 +217,22 @@ float Onimaru::GetNormalizedRemainingUltimateTime() const {
 	return 0.0f;
 }
 
-void Onimaru::UpdateWeaponRotation()
+void Onimaru::UpdateWeaponRotation(bool useGamepad)
 {
+	weaponPointDir = float3(0, 0, 0);
+	float2 mousePos = float2(0, 0);
+	if (!useGamepad) {
+		mousePos = Input::GetMousePositionNormalized();
+	} else {
+		mousePos = GetInputFloat2(InputActions::ORIENTATION, useGamepad);
+		if (abs(mousePos.x) < 0.05f && abs(mousePos.y) < 0.05f) return; //No gamepad input detected
+		mousePos = mousePos.Mul(float2(1.0f,-1.0f)).Normalized() * 1.5f;
+	}
+	
 
-	float2 mousePos = Input::GetMousePositionNormalized();
 	LineSegment ray = lookAtMouseCameraComp->frustum.UnProjectLineSegment(mousePos.x, mousePos.y);
 	float3 planeTransform = lookAtMousePlanePosition;
 	Plane p = Plane(planeTransform, float3(0, 1, 0));
-	weaponPointDir = float3(0, 0, 0);
 	weaponPointDir = (p.ClosestPoint(ray) - (weaponTransform->GetGlobalPosition()));
 	float aux = p.ClosestPoint(ray).DistanceSq(weaponTransform->GetGlobalPosition());
 
@@ -708,7 +716,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */
 		Blast();
 	}
 	PlayAnimation();
-	if (!GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && !ultimateOn) UpdateWeaponRotation();
+	if (!GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && !ultimateOn) UpdateWeaponRotation(useGamepad);
 }
 
 float Onimaru::GetRealUltimateCooldown() {

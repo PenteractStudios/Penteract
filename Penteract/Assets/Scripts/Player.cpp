@@ -269,11 +269,17 @@ float2 Player::GetInputFloat2(InputActions action, bool useGamepad) {
 
 void Player::UpdateFacePointDir(bool useGamepad, bool faceToFront_) {
 		if (useGamepad) {
-			float2 inputFloat2 = GetInputFloat2(InputActions::ORIENTATION, useGamepad);
 
-			facePointDir.x = inputFloat2.x;
-			facePointDir.z = inputFloat2.y;
-
+			if (!faceToFront_) {
+				float2 inputFloat2 = GetInputFloat2(InputActions::ORIENTATION, useGamepad);
+				facePointDir.x = inputFloat2.x;
+				facePointDir.z = inputFloat2.y;
+			} else {
+				float2 inputFloat2 = GetInputFloat2(InputActions::MOVEMENT, useGamepad);
+				facePointDir.x = inputFloat2.x;
+				facePointDir.z = inputFloat2.y;
+				Debug::Log("UseMovement");
+			}
 		} else {
 			if (faceToFront_) {
 				float2 inputFloat2 = GetInputFloat2(InputActions::MOVEMENT, false);

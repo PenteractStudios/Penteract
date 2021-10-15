@@ -65,7 +65,7 @@ void VideoScene1Start::Update() {
 
     if (music && music->IsPlaying()) music->Stop();
 
-    if ((componentVideo->HasVideoFinished() && componentVideo->IsActive()) || Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE)) {
+    if ((componentVideo->HasVideoFinished() && componentVideo->IsActive()) || Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)) {
         BackToNormalGameplay();
     }
 }
