@@ -32,6 +32,11 @@ void LaserTurret::Start() {
         laserWarning->Disable();
     }
 
+    int i = 0;
+    for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
+        if (i < static_cast<int>(Audios::TOTAL)) audios[i] = &src;
+        i++;
+    }
 }
 
 void LaserTurret::Update() {
@@ -52,6 +57,8 @@ void LaserTurret::Update() {
                     if (laserWarningVFX) laserWarningVFX->PlayChildParticles();
                 }
                 animationComp->SendTrigger(states[static_cast<unsigned int>(TurretState::IDLE_START)] + states[static_cast<unsigned int>(TurretState::START)]);
+
+                if (audios[static_cast<int>(Audios::UP)]) audios[static_cast<int>(Audios::UP)]->Play();
             }
         }
         break;
@@ -62,6 +69,8 @@ void LaserTurret::Update() {
                 coolDownOnTimer = 0;
                 currentState = TurretState::END;
                 animationComp->SendTrigger(states[static_cast<unsigned int>(TurretState::SHOOTING_END)] + states[static_cast<unsigned int>(TurretState::END)]);
+
+                if (audios[static_cast<int>(Audios::DOWN)]) audios[static_cast<int>(Audios::DOWN)]->Play();
             }
         }
         break;

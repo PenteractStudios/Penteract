@@ -2,11 +2,18 @@
 
 #include "Scripting/Script.h"
 
+class ComponentAudioSource;
 class ComponentAnimation;
 
 class LaserTurret : public Script
 {
 	GENERATE_BODY(LaserTurret);
+
+	enum class Audios {
+		UP,
+		DOWN,
+		TOTAL
+	};
 
 	enum class TurretState {
 		START = 0,
@@ -44,6 +51,8 @@ private:
 	GameObject* laserWarning = nullptr;
 
 	const std::string states[5] = { "Startup", "Shoot", "End", "StartUpIdle", "EndIdle"};
+
+	ComponentAudioSource* audios[static_cast<int>(Audios::TOTAL)] = { nullptr };
 
 };
 
