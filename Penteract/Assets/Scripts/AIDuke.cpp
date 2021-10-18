@@ -297,6 +297,9 @@ void AIDuke::Update() {
 		case DukeState::CHARGE:
 			dukeCharacter.UpdateCharge();
 			break;
+		case DukeState::CHARGE_ATTACK:
+			dukeCharacter.UpdateChargeAttack();
+			break;
 		case DukeState::STUNNED:
 			if (stunTimeRemaining <= 0.f) {
 				stunTimeRemaining = 0.f;
@@ -412,6 +415,9 @@ void AIDuke::Update() {
 			case DukeState::CHARGE:
 				dukeCharacter.UpdateCharge();
 				break;
+			case DukeState::CHARGE_ATTACK:
+				dukeCharacter.UpdateChargeAttack();
+				break;
 			case DukeState::MELEE_ATTACK:
 				dukeCharacter.MeleeAttack();
 				dukeCharacter.state = DukeState::BULLET_HELL;
@@ -496,6 +502,9 @@ void AIDuke::Update() {
 				break;
 			case DukeState::CHARGE:
 				dukeCharacter.UpdateCharge();
+				break;
+			case DukeState::CHARGE_ATTACK:
+				dukeCharacter.UpdateChargeAttack();
 				break;
 			case DukeState::STUNNED:
 				if (stunTimeRemaining <= 0.f) {

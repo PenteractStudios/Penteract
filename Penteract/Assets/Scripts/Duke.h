@@ -66,6 +66,7 @@ public:
 	bool BulletHellFinished();
 	void InitCharge(DukeState nextState);
 	void UpdateCharge(bool forceStop = false);
+	void UpdateChargeAttack();
 	void CallTroops();
 	void Move(const float3& playerDirection);
 	void Shoot();
@@ -206,4 +207,6 @@ private:
 
 	float3 phase2CenterPosition = float3(13.0f, 0.799f, 0.0f);
 
+	float3 chargeDir = float3(0, 0, 0);
+	float decelerationLerp = 1.0f;
 };
