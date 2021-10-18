@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "AfterDialogCallback.h"
 #include "MovingLasers.h"
+#include "Components/ComponentScript.h"
 #include "GlobalVariables.h"
 
 
@@ -22,18 +23,42 @@ GENERATE_BODY_IMPL(TriggerDialogueBossLvl2Start);
 
 void TriggerDialogueBossLvl2Start::Start() {
     boss = GameplaySystems::GetGameObject(BossUID);
+    if (boss) {
+        for (ComponentScript& src : boss->GetComponents<ComponentScript>()) {
+            if (strcmp(src.GetScriptName(), "AIDuke") == 0) {
+                aiDukeScript = &src;
+            }
+        }
+
+        if (aiDukeScript) aiDukeScript->Disable();
+    }
+
     gameController = GameplaySystems::GetGameObject(gameControllerUID);
     if (gameController) dialogueManagerScript = GET_SCRIPT(gameController, DialogueManager);
 
-    GameObject* laser = GameplaySystems::GetGameObject(laserUID);
-    laserScript = GET_SCRIPT(laser, MovingLasers);
+    laserScript = GET_SCRIPT(GameplaySystems::GetGameObject(laserUID), MovingLasers);
 }
 
 void TriggerDialogueBossLvl2Start::Update() {
-    if (triggered && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
-        if (laserScript) (SwitchOn) ? laserScript->TurnOn() : laserScript->TurnOff();
-        GetOwner().Disable();
-        triggered = false;
+    if (triggered) {
+        if (SwitchOn) {
+            if (!GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
+                laserScript->TurnOn();
+                GetOwner().Disable();
+                triggered = false;
+            }
+        } else {
+            laserScript->TurnOff();
+            //play duke death animation
+            if (!GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
+                // perform duke get away
+                // if (got away) {
+                GetOwner().Disable();
+                triggered = false;
+                // }
+            }
+        }
+
     }
 }
 
@@ -54,8 +79,8 @@ void TriggerDialogueBossLvl2Start::OnCollision(GameObject& /*collidedWith*/, flo
         
     }
     if (SwitchOn) {
-        boss->Enable();
         if (hudManager) hudManager->ShowBossHealth();
+        if (aiDukeScript) aiDukeScript->Enable();
     }
     else {
         boss->Disable();
