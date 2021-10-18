@@ -64,6 +64,7 @@ public:
 	void DisableBulletHell();
 	bool BulletHellActive();
 	bool BulletHellFinished();
+	bool IsInAttackRange();
 	void InitCharge(DukeState nextState);
 	void UpdateCharge(bool forceStop = false);
 	void CallTroops();

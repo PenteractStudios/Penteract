@@ -128,6 +128,12 @@ bool Duke::BulletHellFinished() {
 	return attackDronesController->BulletHellFinished();
 }
 
+bool Duke::IsInAttackRange()
+{
+	float3 playerPosition = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	return playerPosition.Distance(dukeTransform->GetGlobalPosition()) <= attackRange;
+}
+
 void Duke::InitCharge(DukeState nextState_)
 {
 	trackingChargeTarget = true;
