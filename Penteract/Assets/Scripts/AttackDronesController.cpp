@@ -414,3 +414,7 @@ bool AttackDronesController::BulletHellActive() const {
 bool AttackDronesController::BulletHellFinished() const {
     return bulletHellFinished;
 }
+
+float AttackDronesController::GetPatternProjectileSpeed() const {
+    return chosenPattern.droneProjectileSpeed;
+}

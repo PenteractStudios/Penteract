@@ -4,6 +4,7 @@
 #include "Components/ComponentTransform.h"
 #include "Components/ComponentParticleSystem.h"
 #include "AttackDronesController.h"
+#include "AttackDroneProjectile.h"
 #include "RandomNumberGenerator.h"
 #include "CurvesGenerator.h"
 
@@ -80,7 +81,14 @@ void AttackDroneBehavior::Shoot() {
     if (remainingWaves > 0 && availableShot) {
         if (currentTime >= delay) {
             remainingWaves--;
-            shooter.Shoot(projectilePrefabUID, transform->GetGlobalPosition(), transform->GetGlobalRotation());
+            GameObject* projectile = shooter.Shoot(projectilePrefabUID, transform->GetGlobalPosition(), transform->GetGlobalRotation());
+            if (projectile) {
+                AttackDroneProjectile* projectileScript = GET_SCRIPT(projectile, AttackDroneProjectile);
+                if (projectileScript && dronesControllerScript) {
+                    projectileScript->SetSpeed(dronesControllerScript->GetPatternProjectileSpeed());
+                }
+            }
+
             currentTime = 0.0f;
             if (droneMustRecoil) isRecoiling = true;
             if (mustWaitEndOfWave) availableShot = false;
