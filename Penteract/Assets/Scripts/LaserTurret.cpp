@@ -24,6 +24,7 @@ void LaserTurret::Start() {
 
     laserObject = GameplaySystems::GetGameObject(laserTargetUID);
     if (laserObject) {
+        laserAudio = laserObject->GetComponent<ComponentAudioSource>();
         laserObject->Disable();
     }
 
@@ -54,7 +55,11 @@ void LaserTurret::Update() {
                 if (laserWarning) {
                     laserWarning->Enable();
                     ComponentParticleSystem* laserWarningVFX = laserWarning->GetComponent<ComponentParticleSystem>();
-                    if (laserWarningVFX) laserWarningVFX->PlayChildParticles();
+                    ComponentAudioSource* audioWarning = laserWarning->GetComponent<ComponentAudioSource>();
+                    if (laserWarningVFX) {
+                        laserWarningVFX->PlayChildParticles();
+                        if (audioWarning) audioWarning->Play();
+                    }
                 }
                 animationComp->SendTrigger(states[static_cast<unsigned int>(TurretState::IDLE_START)] + states[static_cast<unsigned int>(TurretState::START)]);
 
@@ -77,10 +82,16 @@ void LaserTurret::Update() {
     }
 
     if (currentState != TurretState::SHOOT && currentState != TurretState::SHOOTING_END) {
-        if (laserObject && laserObject->IsActive()) laserObject->Disable();
+        if (laserObject && laserObject->IsActive()) {
+            if (laserAudio) laserAudio->Stop();
+            laserObject->Disable();
+        }
     }
     else {
-        if (laserObject && !laserObject->IsActive()) laserObject->Enable();
+        if (laserObject && !laserObject->IsActive()) {
+            laserObject->Enable();
+            if (laserAudio) laserAudio->Play();
+        }
     }
 
 }

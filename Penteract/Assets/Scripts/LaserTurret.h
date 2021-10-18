@@ -48,6 +48,7 @@ private:
 	TurretState currentState = TurretState::IDLE_START;
 
 	GameObject* laserObject = nullptr;
+	ComponentAudioSource* laserAudio = nullptr;
 	GameObject* laserWarning = nullptr;
 
 	const std::string states[5] = { "Startup", "Shoot", "End", "StartUpIdle", "EndIdle"};

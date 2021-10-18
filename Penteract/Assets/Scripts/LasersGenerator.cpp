@@ -32,6 +32,7 @@ void LasersGenerator::Start() {
 
     laserObject = GameplaySystems::GetGameObject(laserTargetUID);
     if (laserObject) {
+        laserAudio = laserObject->GetComponent<ComponentAudioSource>();
         laserObject->Disable();
     }
 
@@ -57,7 +58,11 @@ void LasersGenerator::Update() {
                 if (laserWarning) {
                     laserWarning->Enable();
                     ComponentParticleSystem* laserWarningVFX = laserWarning->GetComponent<ComponentParticleSystem>();
-                    if (laserWarningVFX) laserWarningVFX->PlayChildParticles();
+                    ComponentAudioSource* audioWarning = laserWarning->GetComponent<ComponentAudioSource>();
+                    if (laserWarningVFX) {
+                        laserWarningVFX->PlayChildParticles();
+                        if (audioWarning) audioWarning->Play();
+                    }
                 }
                 pairScript->beingUsed = true;
                 if (!beingUsed) {
@@ -101,10 +106,16 @@ void LasersGenerator::Update() {
     }
 
     if (currentState != GeneratorState::SHOOT) {
-        if (laserObject && laserObject->IsActive()) laserObject->Disable();
+        if (laserObject && laserObject->IsActive()) {
+            if (laserAudio) laserAudio->Stop();
+            laserObject->Disable();
+        }
     }
     else {
-        if (laserObject && !laserObject->IsActive()) laserObject->Enable();
+        if (laserObject && !laserObject->IsActive()) {
+            laserObject->Enable();
+            if (laserAudio) laserAudio->Play();
+        }
     }
 }
 

@@ -43,6 +43,7 @@ private:
 	GeneratorState currentState = GeneratorState::IDLE;
 
 	GameObject* laserObject = nullptr;
+	ComponentAudioSource* laserAudio = nullptr;
 	GameObject* laserWarning = nullptr;
 	LasersGenerator* pairScript = nullptr;
 
