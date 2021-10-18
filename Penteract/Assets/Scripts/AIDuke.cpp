@@ -68,6 +68,12 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER_SEPARATOR("Prefabs UIDs"),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, barrelUID),
 
+	MEMBER_SEPARATOR("Charge Skid"),
+	MEMBER(MemberType::FLOAT, dukeCharacter.chargeSkidDuration),
+	MEMBER(MemberType::FLOAT, dukeCharacter.chargeSkidMaxSpeed),
+	MEMBER(MemberType::FLOAT, dukeCharacter.chargeSkidMinSpeed),
+
+
 	MEMBER_SEPARATOR("Debug"),
 	MEMBER(MemberType::SCENE_RESOURCE_UID, winSceneUID),
 	MEMBER(MemberType::BOOL, islevel2),

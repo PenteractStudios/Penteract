@@ -105,6 +105,11 @@ public:
 	float distanceCorrectEvery = 2.0f;
 	float delayForDisplayVideo = 1.0f;
 
+	float chargeSkidMaxSpeed = 5.f;
+	float chargeSkidMinSpeed = 2.f;
+	float chargeSkidDuration = 1.0f;
+
+
 	DukeShield* phase2Shield = nullptr;
 
 	DukeState state = DukeState::BASIC_BEHAVIOUR;
@@ -208,5 +213,5 @@ private:
 	float3 phase2CenterPosition = float3(13.0f, 0.799f, 0.0f);
 
 	float3 chargeDir = float3(0, 0, 0);
-	float decelerationLerp = 1.0f;
+	float chargeSkidTimer = 0.0f;
 };

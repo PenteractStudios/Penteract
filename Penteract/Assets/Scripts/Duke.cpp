@@ -134,7 +134,7 @@ void Duke::InitCharge(DukeState nextState_)
 	state = DukeState::CHARGE;
 	this->nextState = nextState_;
 	reducedDamaged = true;
-	decelerationLerp = 0.3f;
+	chargeSkidTimer = 0.0f;
 	if (compAnimation) {
 		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_START)]);
 	}
@@ -168,9 +168,9 @@ void Duke::UpdateCharge(bool forceStop)
 
 void Duke::UpdateChargeAttack() {
 
-	if (decelerationLerp < 1.0f) {
+	if (chargeSkidTimer < chargeSkidDuration) {
 		if (agent) {
-			agent->SetMaxSpeed(Lerp(chargeSpeed,movementSpeed, decelerationLerp));
+			agent->SetMaxSpeed(Lerp(chargeSkidMaxSpeed,chargeSkidMinSpeed, chargeSkidTimer / chargeSkidDuration));
 			
 			if (dukeTransform)
 				agent->SetMoveTarget(dukeTransform->GetGlobalPosition() + chargeDir, true);
@@ -183,7 +183,7 @@ void Duke::UpdateChargeAttack() {
 		}
 	}
 
-	decelerationLerp += Time::GetDeltaTime();
+	chargeSkidTimer += Time::GetDeltaTime();
 
 }
 
