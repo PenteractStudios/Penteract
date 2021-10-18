@@ -22,9 +22,11 @@ void LasersGenerator::Start() {
 
     if (ownerGo) {
         animationComp = ownerGo->GetComponent<ComponentAnimation>();
+        audioComp = ownerGo->GetComponent<ComponentAudioSource>();
     }
     if (pair) {
         pairAnimationComp = pair->GetComponent<ComponentAnimation>();
+        pairAudioComp = pair->GetComponent<ComponentAudioSource>();
         pairScript = GET_SCRIPT(pair, LasersGenerator);
     }
 
@@ -37,6 +39,8 @@ void LasersGenerator::Start() {
     if (laserWarning) {
         laserWarning->Disable();
     }
+
+    
 }
 
 void LasersGenerator::Update() {
@@ -58,9 +62,11 @@ void LasersGenerator::Update() {
                 pairScript->beingUsed = true;
                 if (!beingUsed) {
                     animationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::IDLE)] + states[static_cast<unsigned int>(GeneratorState::START)]);
+                    if (audioComp && !audioComp->IsPlaying()) audioComp->Play();
                 }
                 if (pairScript->currentState == GeneratorState::IDLE) {
                     pairAnimationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::IDLE)] + states[static_cast<unsigned int>(GeneratorState::START)]);
+                    if (pairAudioComp && !pairAudioComp->IsPlaying()) pairAudioComp->Play();
                 }
             }
         }
@@ -83,9 +89,11 @@ void LasersGenerator::Update() {
                 pairScript->beingUsed = false;
                 if (!beingUsed) {
                     animationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::SHOOT)] + states[static_cast<unsigned int>(GeneratorState::IDLE)]);
+                    if (audioComp && audioComp->IsPlaying()) audioComp->Stop();
                 }
                 if (pairScript->currentState == GeneratorState::IDLE) {
                     pairAnimationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::SHOOT)] + states[static_cast<unsigned int>(GeneratorState::IDLE)]);
+                    if (pairAudioComp && pairAudioComp->IsPlaying()) pairAudioComp->Stop();
                 }
             }
         }
