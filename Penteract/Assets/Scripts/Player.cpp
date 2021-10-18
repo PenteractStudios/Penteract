@@ -219,6 +219,20 @@ bool Player::GetInputBool(InputActions action, bool useGamepad) {
 			return Input::GetMouseButtonRepeat(1);
 		}
 		break;
+	case InputActions::CANCEL_A:
+		if (useGamepad && Input::IsGamepadConnected(0)) {
+			return Input::GetControllerButton(Input::SDL_CONTROLLER_BUTTON_B, 0);
+		} else {
+			return Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE);
+		}
+		break;
+	case InputActions::CANCEL_B:
+		if (useGamepad && Input::IsGamepadConnected(0)) {
+			return Input::GetControllerButton(Input::SDL_CONTROLLER_BUTTON_START, 0);
+		} else {
+			return Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE);
+		}
+		break;
 	default:
 		return false;
 	}

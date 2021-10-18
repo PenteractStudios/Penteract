@@ -27,7 +27,9 @@ enum class InputActions {
 	ABILITY_2,
 	ABILITY_3,
 	INTERACT,
-	AIM
+	AIM,
+	CANCEL_A,
+	CANCEL_B
 };
 
 class Player : public Character {

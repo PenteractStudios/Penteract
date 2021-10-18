@@ -57,11 +57,21 @@ void SpecialHoverButton::Update() {
 			ComponentEventSystem* eventSystem = UserInterface::GetCurrentEventSystem();
 			if (eventSystem) {
 				ComponentSelectable* hoveredComponent = eventSystem->GetCurrentlyHovered();
+				ComponentSelectable* selectedComponent = eventSystem->GetCurrentSelected();
+
 				if (hoveredComponent) {
 					bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
 
 					if (hovered) {
 						EnterButtonState(ButtonState::HOVERED);
+					}
+				} else {
+					if (selectedComponent) {
+						bool selected = selectable->GetID() == selectedComponent->GetID() ? true : false;
+
+						if (selected) {
+							EnterButtonState(ButtonState::HOVERED);
+						}
 					}
 				}
 			}
@@ -71,22 +81,33 @@ void SpecialHoverButton::Update() {
 		if (selectable) {
 			ComponentEventSystem* eventSystem = UserInterface::GetCurrentEventSystem();
 			if (eventSystem) {
+				ComponentSelectable* selectedComponent = eventSystem->GetCurrentSelected();
+
 				ComponentSelectable* hoveredComponent = eventSystem->GetCurrentlyHovered();
 				if (hoveredComponent) {
 					bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
 
 					if (!hovered) {
 						EnterButtonState(ButtonState::IDLE);
+					} else {
+						if (Input::GetMouseButton(0)) {
+							EnterButtonState(ButtonState::CLICKED);
+						}
+					}
+
+					if (selectedComponent) {
+						if (selectedComponent != hoveredComponent) {
+							eventSystem->SetSelected(hoveredComponent->GetID());
+						}
 					}
 
 				} else {
-					EnterButtonState(ButtonState::IDLE);
+					bool selected = selectedComponent ? (selectable->GetID() == selectedComponent->GetID() ? true : false) : false;
+					if(!selected) EnterButtonState(ButtonState::IDLE);
 				}
+
 			}
 
-			if (Input::GetMouseButton(0)) {
-				EnterButtonState(ButtonState::CLICKED);
-			}
 		}
 		break;
 	case ButtonState::CLICKED:
@@ -98,6 +119,10 @@ void SpecialHoverButton::Update() {
 
 void SpecialHoverButton::OnButtonClick() {
 	EnterButtonState(ButtonState::IDLE);
+}
+
+void SpecialHoverButton::OnDisable() {
+	buttonState = ButtonState::IDLE;
 }
 
 void SpecialHoverButton::EnterButtonState(ButtonState newState) {
