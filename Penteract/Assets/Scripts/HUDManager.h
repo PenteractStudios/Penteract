@@ -154,6 +154,7 @@ public:
 	void OnCharacterDeath();
 	void OnCharacterResurrect();
 	void ShowBossHealth();
+	void HideBossHealth();
 
 private:
 

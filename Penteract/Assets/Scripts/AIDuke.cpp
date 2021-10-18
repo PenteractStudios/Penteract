@@ -3,6 +3,7 @@
 #include "AIMovement.h"
 #include "PlayerController.h"
 #include "DukeShield.h"
+#include "GlobalVariables.h"
 #include "HUDManager.h"
 #include "AttackDronesController.h"
 #include "FloorIsLava.h"
@@ -27,6 +28,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fourthEncounterUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, hudManagerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fireTilesUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, triggerBosslvl2EndUID),
 
 	MEMBER_SEPARATOR("Video UIDs"),
 	MEMBER(MemberType::GAME_OBJECT_UID, videoParentCanvasUID),
@@ -68,6 +70,7 @@ EXPOSE_MEMBERS(AIDuke) {
 
 	MEMBER_SEPARATOR("Debug"),
 	MEMBER(MemberType::SCENE_RESOURCE_UID, winSceneUID),
+	MEMBER(MemberType::BOOL, islevel2),
 
 
 };
@@ -103,7 +106,7 @@ void AIDuke::Start() {
 
 	//Fire Tiles Script
 	GameObject* tilesObj = GameplaySystems::GetGameObject(fireTilesUID);
-	if(tilesObj) fireTilesScript = GET_SCRIPT(tilesObj, FloorIsLava);
+	if (tilesObj) fireTilesScript = GET_SCRIPT(tilesObj, FloorIsLava);
 
 	// AttackDronesController
 	AttackDronesController* dronesController = GET_SCRIPT(&GetOwner(), AttackDronesController);
@@ -111,17 +114,19 @@ void AIDuke::Start() {
 	// Init Duke character
 	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, videoParentCanvasUID, videoCanvasUID, encounters, dronesController);
 
+	if (islevel2) triggerBosslvl2End = GameplaySystems::GetGameObject(triggerBosslvl2EndUID);
+
 	dukeCharacter.winSceneUID = winSceneUID; // TODO: REPLACE
 
 	GameObject* hudManagerGO = GameplaySystems::GetGameObject(hudManagerUID);
 
 	if (hudManagerGO) hudManager = GET_SCRIPT(hudManagerGO, HUDManager);
-	if (hudManager) hudManager->ShowBossHealth();
 }
 
 void AIDuke::Update() {
 	if (!isReady) return;
 	if (!player || !movementScript) return;
+	if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) return;
 
 	std::string life = std::to_string(dukeCharacter.lifePoints);
 	life = "Life points: " + life;
@@ -182,6 +187,10 @@ void AIDuke::Update() {
 			}
 			break;
 		} else if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints() && dukeCharacter.state != DukeState::BULLET_HELL && dukeCharacter.state != DukeState::CHARGE) {
+			if(islevel2) {// only for level 2
+				// call animation teleport and disable gameobject
+				triggerBosslvl2End->Enable();
+			}
 			phase = Phase::PHASE2;
 			if (lasers && !lasers->IsActive()) lasers->Enable();
 			Debug::Log("Lasers enabled");
@@ -234,8 +243,8 @@ void AIDuke::Update() {
 				movementScript->Stop();
 			} else {
 				if (player) {
-					if ((float3(0, 0, 0) - player->GetComponent<ComponentTransform>()->GetGlobalPosition()).LengthSq() <
-						(float3(0, 0, 0) - ownerTransform->GetGlobalPosition()).LengthSq()) {
+					if ((float3(13.0f, 0.799f, 0.0f) - player->GetComponent<ComponentTransform>()->GetGlobalPosition()).LengthSq() <
+						(float3(13.0f, 0.799f, 0.0f) - ownerTransform->GetGlobalPosition()).LengthSq()) {
 						// If player dominates the center for too long, perform charge
 						timeSinceLastCharge += Time::GetDeltaTime();
 					}
@@ -460,8 +469,8 @@ void AIDuke::Update() {
 
 				}
 				else {
-					if ((float3(0, 0, 0) - player->GetComponent<ComponentTransform>()->GetGlobalPosition()).LengthSq() <
-						(float3(0, 0, 0) - ownerTransform->GetGlobalPosition()).LengthSq()) {
+					if ((float3(13.0f, 0.799f, 0.0f) - player->GetComponent<ComponentTransform>()->GetGlobalPosition()).LengthSq() <
+						(float3(13.0f, 0.799f, 0.0f) - ownerTransform->GetGlobalPosition()).LengthSq()) {
 						// If player dominates the center for too long, perform charge
 						timeSinceLastCharge += Time::GetDeltaTime();
 					}

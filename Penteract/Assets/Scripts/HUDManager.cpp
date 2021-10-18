@@ -393,6 +393,12 @@ void HUDManager::ShowBossHealth() {
 	dukeHealthParent->Enable();
 }
 
+void HUDManager::HideBossHealth()
+{
+	if (!dukeHealthParent) return;
+	dukeHealthParent->Disable();
+}
+
 void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 
 	std::vector<GameObject*> skills = canvas->GetChildren();
