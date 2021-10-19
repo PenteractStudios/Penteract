@@ -94,6 +94,11 @@ void Duke::ShootAndMove(const float3& playerDirection) {
 
 void Duke::MeleeAttack()
 {
+	
+	float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - dukeTransform->GetGlobalPosition();
+	dir.y = 0.0f;
+	if (movementScript) movementScript->Orientate(dir);
+
 	if (!hasMeleeAttacked) {
 		if (compAnimation) {
 			if (compAnimation->GetCurrentState()) {
