@@ -50,11 +50,12 @@ void CheckpointManager::Start() {
 
 	if (!transform) return;
 
+	// agent->RemoveAgentFromCrowd();
 
 	// TODO: This was breaking the initial position of the player when coming from another scene
 	//transform->SetGlobalPosition(runtimeCheckpointPositions[GameplaySystems::GetGlobalVariable(globalCheckpoint, 0)]);
 	
-	//playerScript = GET_SCRIPT(avatarObj, PlayerController);
+	playerScript = GET_SCRIPT(avatarObj, PlayerController);
 }
 
 void CheckpointManager::CheckDistanceWithCheckpoints() {
@@ -75,7 +76,7 @@ void CheckpointManager::Update() {
 		timeBetweenChecksCounter = 0;
 	}
 
-	/*if (dirty) {
+	if (dirty) {
 		dirty = false;
 		if (!avatarObj) return;
 		ComponentTransform* transform = avatarObj->GetComponent<ComponentTransform>();
@@ -83,9 +84,9 @@ void CheckpointManager::Update() {
 		agent = playerScript->playerFang.agent; // The first time to load the game (always be Fang)
 		if (!agent && !transform) return;
 		agent->RemoveAgentFromCrowd();
-		transform->SetGlobalPosition(runtimeCheckpointPositions[checkpoint]);
+		transform->SetGlobalPosition(runtimeCheckpointPositions[globalCheckpoint, 0]);
 		agent->AddAgentToCrowd();
-	}*/
+	}
 
 	/////////////////////////////////////Debug function (GODMODE?)/////////////////////////////////////////
 	/////////////////////////////////////Debug function (GODMODE?)/////////////////////////////////////////
@@ -106,7 +107,7 @@ void CheckpointManager::Update() {
 		if (checkpointToSet > -1) {
 			if (!avatarObj) return;
 			ComponentTransform* transform = avatarObj->GetComponent<ComponentTransform>();
-			/*if (!playerScript) return;
+			if (!playerScript) return;
 			if (playerScript->playerFang.characterGameObject->IsActive()) {
 				agent = playerScript->playerFang.agent;
 			} else {
@@ -114,12 +115,9 @@ void CheckpointManager::Update() {
 			}
 			if (!agent && !transform) return;
 			agent->RemoveAgentFromCrowd();
-			checkpoint = checkpointToSet;
-			transform->SetPosition(runtimeCheckpointPositions[checkpoint]);
-			agent->AddAgentToCrowd();*/
-			if (!transform) return;
 			GameplaySystems::SetGlobalVariable(globalCheckpoint, checkpointToSet);
 			transform->SetGlobalPosition(runtimeCheckpointPositions[checkpointToSet]);
+			agent->AddAgentToCrowd();
 		}
 	}
 	/////////////////////////////////////Debug function (GODMODE?)/////////////////////////////////////////
