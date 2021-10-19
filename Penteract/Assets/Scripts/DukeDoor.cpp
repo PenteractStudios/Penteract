@@ -84,6 +84,7 @@ void DukeDoor::Update() {
 			dialogueManagerScript->PlayOpeningAudio();
 			dialogueManagerScript->SetActiveDialogue(&dialogueManagerScript->dialoguesArray[dialogueID]);
 		}
+		startDialogue = false;
 	}
 }
 
@@ -113,6 +114,5 @@ void DukeDoor::OnCollision(GameObject& /*collidedWith*/, float3 /*collisionNorma
 
 		triggered = true;
 
-		if (aiDuke) aiDuke->SetReady(true);
-	}
+		//if (aiDuke) aiDuke->SetReady(true);
 }
