@@ -6,7 +6,7 @@
 #include "GameObject.h"
 #include "AfterDialogCallback.h"
 #include "MovingLasers.h"
-#include "Components/ComponentScript.h"
+#include "AIDuke.h"
 #include "GlobalVariables.h"
 
 
@@ -24,13 +24,10 @@ GENERATE_BODY_IMPL(TriggerDialogueBossLvl2Start);
 void TriggerDialogueBossLvl2Start::Start() {
     boss = GameplaySystems::GetGameObject(BossUID);
     if (boss) {
-        for (ComponentScript& src : boss->GetComponents<ComponentScript>()) {
-            if (strcmp(src.GetScriptName(), "AIDuke") == 0) {
-                aiDukeScript = &src;
-            }
-        }
+        boss->Enable();
 
-        if (aiDukeScript) aiDukeScript->Disable();
+        aiDuke = GET_SCRIPT(boss, AIDuke);
+        if (aiDuke) aiDuke->SetReady(false);
     }
 
     gameController = GameplaySystems::GetGameObject(gameControllerUID);
@@ -53,6 +50,7 @@ void TriggerDialogueBossLvl2Start::Update() {
             if (!GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
                 // perform duke get away
                 // if (got away) {
+                boss->Disable();
                 GetOwner().Disable();
                 triggered = false;
                 // }
@@ -80,10 +78,9 @@ void TriggerDialogueBossLvl2Start::OnCollision(GameObject& /*collidedWith*/, flo
     }
     if (SwitchOn) {
         if (hudManager) hudManager->ShowBossHealth();
-        if (aiDukeScript) aiDukeScript->Enable();
+        if (aiDuke) aiDuke->SetReady(true);
     }
     else {
-        boss->Disable();
         if (hudManager) hudManager->HideBossHealth();
     }
 }
