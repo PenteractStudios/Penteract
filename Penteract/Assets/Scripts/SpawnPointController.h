@@ -6,6 +6,7 @@
 
 class GameObject;
 class ResourcePrefab;
+class ComponentAudioSource;
 class ComponentLight;
 class FloorIsLava;
 
@@ -13,6 +14,13 @@ class SpawnPointController : public Script {
 	GENERATE_BODY(SpawnPointController);
 
 public:
+
+	enum class Audios {
+		DOWN,
+		UP,
+		TOTAL
+	};
+
 	/* Enemy prefab UIDs */
 	UID meleeEnemyPrefabUID = 0;
 	UID rangeEnemyPrefabUID = 0;
@@ -67,7 +75,9 @@ private:
 
 	/* Door object */
 	GameObject* initialDoor = nullptr;
+	ComponentAudioSource* initialDoorAudios[static_cast<int>(Audios::TOTAL)] = { nullptr };
 	GameObject* finalDoor = nullptr;
+	ComponentAudioSource* finalDoorAudios[static_cast<int>(Audios::TOTAL)] = { nullptr };
 
 	GameObject* gameObjectActivatedOnCombatEnd = nullptr;	// This gameObject will be disabled when triggering the combat, and will be enabled again when the combat ends (in 'OpenDoor()'). Useful to set up triggers and other gameplay features after a combat encounter.
 	GameObject* gameObjectDeactivatedOnCombatEnd = nullptr;	// This gameObject will be enabled when triggering the combat, and will be disabled again when the combat ends (in 'OpenDoor()'). Useful to set down triggers and other gameplay features after a combat encounter.
@@ -97,6 +107,7 @@ private:
 	//Scripts to stop fire
 	FloorIsLava* bridgeTilesScript = nullptr;
 	FloorIsLava* arenaTilesScript = nullptr;
+
 private:
 	bool CheckSpawnPointStatus();
 	void PlayDissolveAnimation(GameObject* root, bool playReverse);				// Searches on root the GameObject called "DoorEnergyBack" and "DoorEnergyFront" and calls PlayDissolveAnimation on their materials. PlayReverse will play the reverse animation.
