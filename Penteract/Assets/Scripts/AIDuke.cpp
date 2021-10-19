@@ -230,7 +230,7 @@ void AIDuke::Update() {
 				movementScript->Stop();
 				// TODO: Delete next line
 				dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::IDLE]);
-			} else if (phase2Reached && playerController->playerOnimaru.shieldBeingUsed >= 2.0f && dukeCharacter.IsInAttackRange()) {
+			} else if (phase2Reached && playerController->playerOnimaru.shieldBeingUsed >= 2.0f && dukeCharacter.PlayerIsInChargeRangeDistance()) {
 				// If onimaru shields -> perform charge
 				movementScript->Stop();
 				dukeCharacter.InitCharge(DukeState::BASIC_BEHAVIOUR);
@@ -247,7 +247,7 @@ void AIDuke::Update() {
 						// If player dominates the center for too long, perform charge
 						timeSinceLastCharge += Time::GetDeltaTime();
 					}
-					if (timeSinceLastCharge >= 3.5f && dukeCharacter.IsInAttackRange()) {
+					if (timeSinceLastCharge >= 3.5f && dukeCharacter.PlayerIsInChargeRangeDistance()) {
 						timeSinceLastCharge = 0.f;
 						// Charge
 						movementScript->Stop();
@@ -395,7 +395,7 @@ void AIDuke::Update() {
 			switch (dukeCharacter.state) {
 			case DukeState::BASIC_BEHAVIOUR:
 				currentAbilityChangeCooldown += Time::GetDeltaTime();
-				if (currentAbilityChangeCooldown >= abilityChangeCooldown && dukeCharacter.IsInAttackRange()) {
+				if (currentAbilityChangeCooldown >= abilityChangeCooldown && dukeCharacter.PlayerIsInChargeRangeDistance()) {
 					currentAbilityChangeCooldown = 0.f;
 					movementScript->Stop();
 					dukeCharacter.InitCharge(DukeState::MELEE_ATTACK);
@@ -473,7 +473,7 @@ void AIDuke::Update() {
 						// If player dominates the center for too long, perform charge
 						timeSinceLastCharge += Time::GetDeltaTime();
 					}
-					if (timeSinceLastCharge >= 4.0f && dukeCharacter.IsInAttackRange()) {
+					if (timeSinceLastCharge >= 4.0f && dukeCharacter.PlayerIsInChargeRangeDistance()) {
 						timeSinceLastCharge = 0.f;
 						// Charge
 						movementScript->Stop();
