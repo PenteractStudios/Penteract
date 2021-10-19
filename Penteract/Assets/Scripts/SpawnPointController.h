@@ -7,6 +7,7 @@
 class GameObject;
 class ResourcePrefab;
 class ComponentLight;
+class FloorIsLava;
 
 class SpawnPointController : public Script {
 	GENERATE_BODY(SpawnPointController);
@@ -21,6 +22,13 @@ public:
 	UID finalDoorUID = 0;
 	UID gameObjectActivatedOnCombatEndUID = 0;
 	UID gameObjectDeactivatedOnCombatEndUID = 0;
+
+	//UID to stop fire
+	UID fireBridgeUID = 0;
+	UID fireArenaUID = 0;
+
+	//Bool to stop fire
+	bool stopFire = false;
 
 	std::string doorEnergyBack = "DoorEnergyBack";
 	std::string doorEnergyFront = "DoorEnergyFront";
@@ -85,6 +93,10 @@ private:
 
 	bool isClosing = false;
 	bool enemiesSpawned = false;
+
+	//Scripts to stop fire
+	FloorIsLava* bridgeTilesScript = nullptr;
+	FloorIsLava* arenaTilesScript = nullptr;
 private:
 	bool CheckSpawnPointStatus();
 	void PlayDissolveAnimation(GameObject* root, bool playReverse);				// Searches on root the GameObject called "DoorEnergyBack" and "DoorEnergyFront" and calls PlayDissolveAnimation on their materials. PlayReverse will play the reverse animation.

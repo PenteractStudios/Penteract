@@ -1,5 +1,6 @@
 #include "TriggerDialogueBossLvl2Start.h"
 
+#include "HUDManager.h"
 #include "DialogueManager.h"
 #include "GameplaySystems.h"
 #include "GameObject.h"
@@ -7,10 +8,12 @@
 #include "MovingLasers.h"
 #include "GlobalVariables.h"
 
+
 EXPOSE_MEMBERS(TriggerDialogueBossLvl2Start) {
     MEMBER(MemberType::GAME_OBJECT_UID, BossUID),
     MEMBER(MemberType::GAME_OBJECT_UID, gameControllerUID),     
     MEMBER(MemberType::GAME_OBJECT_UID, laserUID),
+    MEMBER(MemberType::GAME_OBJECT_UID, HUDUID),
     MEMBER(MemberType::INT, dialogueID),
     MEMBER(MemberType::BOOL, SwitchOn)
 };
@@ -44,5 +47,18 @@ void TriggerDialogueBossLvl2Start::OnCollision(GameObject& /*collidedWith*/, flo
             triggered = true;
         }
     }
-    boss->Enable();
+    GameObject* hudManagerGO = GameplaySystems::GetGameObject(HUDUID);
+    HUDManager* hudManager = nullptr;
+    if (hudManagerGO) {
+        hudManager = GET_SCRIPT(hudManagerGO, HUDManager);
+        
+    }
+    if (SwitchOn) {
+        boss->Enable();
+        if (hudManager) hudManager->ShowBossHealth();
+    }
+    else {
+        boss->Disable();
+        if (hudManager) hudManager->HideBossHealth();
+    }
 }

@@ -5,6 +5,7 @@
 #include "EnemySpawnPoint.h"
 #include "GameObjectUtils.h"
 #include "Components/ComponentLight.h"
+#include "FloorIsLava.h"
 
 EXPOSE_MEMBERS(SpawnPointController) {
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, meleeEnemyPrefabUID),
@@ -19,7 +20,11 @@ EXPOSE_MEMBERS(SpawnPointController) {
 		MEMBER(MemberType::GAME_OBJECT_UID, gameObjectDeactivatedOnCombatEndUID),
 		MEMBER(MemberType::FLOAT, timerToUnlock),
 		MEMBER_SEPARATOR("Dissolve material reference in placeholders"),
-		MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID)
+		MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID),
+		MEMBER_SEPARATOR("FireTiles"),
+		MEMBER(MemberType::GAME_OBJECT_UID, fireBridgeUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, fireArenaUID),
+		MEMBER(MemberType::BOOL, stopFire)
 };
 
 GENERATE_BODY_IMPL(SpawnPointController);
@@ -69,6 +74,15 @@ void SpawnPointController::Start() {
 			finalDoorLightStartIntensity = finalDoorLight->GetIntensity();
 		}
 	}
+
+	GameObject* fireBridge = GameplaySystems::GetGameObject(fireBridgeUID);
+	if (fireBridge) {
+		bridgeTilesScript = GET_SCRIPT(fireBridge, FloorIsLava);
+	}
+	GameObject* fireArena = GameplaySystems::GetGameObject(fireArenaUID);
+	if (fireArena) {
+		arenaTilesScript = GET_SCRIPT(fireArena, FloorIsLava);
+	}
 }
 
 void SpawnPointController::Update() {
@@ -77,6 +91,10 @@ void SpawnPointController::Update() {
 			if (!isClosing) {	// Must open the door
 				if (finalDoor && finalDoor->IsActive()) {
 					finalDoor->Disable();
+					if (stopFire) {
+						if (bridgeTilesScript) bridgeTilesScript->StopFire();
+						if (arenaTilesScript) arenaTilesScript->StopFire();
+					}
 				}
 				if (unlocksInitialDoor && initialDoor && initialDoor->IsActive()) {
 					initialDoor->Disable();

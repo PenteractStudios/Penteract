@@ -35,7 +35,8 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 		phase2Shield = GET_SCRIPT(shieldObj, DukeShield);
 	}
 
-	barrelSpawneScript = GET_SCRIPT(GameplaySystems::GetGameObject(barrelSpawnerUID), BarrelSpawner);
+	GameObject* barrelSpawnerOBj = GameplaySystems::GetGameObject(barrelSpawnerUID);
+	if(barrelSpawnerOBj) barrelSpawneScript = GET_SCRIPT(barrelSpawnerOBj, BarrelSpawner);
 
 	barrel = GameplaySystems::GetResource<ResourcePrefab>(barrelUID);
 
@@ -118,13 +119,18 @@ void Duke::DisableBulletHell() {
 	if (clip) clip->loop = false;
 }
 
-bool Duke::BulletHellActive() {
+bool Duke::BulletHellActive() const {
 	return attackDronesController && attackDronesController->BulletHellActive();
 }
 
-bool Duke::BulletHellFinished() {
+bool Duke::BulletHellFinished() const {
 	if (!attackDronesController) return true;
 	return attackDronesController->BulletHellFinished();
+}
+
+bool Duke::IsBulletHellCircular() const
+{
+	return !BulletHellFinished() && attackDronesController->IsBulletHellCircular();
 }
 
 void Duke::InitCharge(DukeState nextState_)
@@ -363,7 +369,7 @@ void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 		}
 
 		if (strcmp(eventName, "ThrowBarrels") == 0 && instantiateBarrel) {
-			if (startSpawnBarrel) {
+			if (startSpawnBarrel && barrelSpawneScript) {
 				barrelSpawneScript->SpawnBarrels();
 				startSpawnBarrel = false;
 			}
