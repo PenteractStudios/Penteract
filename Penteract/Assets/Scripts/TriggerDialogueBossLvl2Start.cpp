@@ -11,6 +11,7 @@
 
 
 EXPOSE_MEMBERS(TriggerDialogueBossLvl2Start) {
+    // TODO: DELETE THIS SCRIPT, WHEN THE POST COMBAT SCENE IS READY, AND MERGED TO LVL 2
     MEMBER(MemberType::GAME_OBJECT_UID, BossUID),
     MEMBER(MemberType::GAME_OBJECT_UID, gameControllerUID),     
     MEMBER(MemberType::GAME_OBJECT_UID, laserUID),

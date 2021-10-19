@@ -11,7 +11,9 @@
 #include "CameraController.h"
 #include "HUDManager.h"
 #include "DialogueManager.h"
+#include "MovingLasers.h"
 
+#include "GameObjectUtils.h"
 #include "GlobalVariables.h"
 
 EXPOSE_MEMBERS(DukeDoor) {
@@ -23,7 +25,12 @@ EXPOSE_MEMBERS(DukeDoor) {
 	MEMBER(MemberType::GAME_OBJECT_UID, gameCameraUID),
 	MEMBER_SEPARATOR("Scene Parameters"),
 	MEMBER(MemberType::INT, dialogueID),
-	MEMBER(MemberType::FLOAT3, initialTalkPosition)
+	MEMBER(MemberType::FLOAT3, initialTalkPosition),
+	MEMBER_SEPARATOR("Level 2 only references"),
+	MEMBER(MemberType::GAME_OBJECT_UID, optionalExitDoorObstacleUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, optionalLaserUID),
+	MEMBER_SEPARATOR("Dissolve material reference in placeholders"),
+	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID),
 };
 
 GENERATE_BODY_IMPL(DukeDoor);
@@ -36,14 +43,29 @@ void DukeDoor::Start() {
 	// Get Duke and set to IDLE state
 	GameObject* duke = GameplaySystems::GetGameObject(dukeUID);
 	if (duke) {
+		duke->Enable();
 		aiDuke = GET_SCRIPT(duke, AIDuke);
 		if (aiDuke) aiDuke->SetReady(false);
 	}
 
 	// Get obstacle element & disable
-	GameObject* obstacle = GameplaySystems::GetGameObject(doorObstacleUID);
+	obstacle = GameplaySystems::GetGameObject(doorObstacleUID);
 	if (obstacle) {
 		obstacle->Disable();
+	}
+
+	exitObstacle = GameplaySystems::GetGameObject(optionalExitDoorObstacleUID);
+	if (exitObstacle) {
+		exitObstacle->Disable();
+	}
+
+	// Get dissolve object
+	GameObject* dissolveObj = GameplaySystems::GetGameObject(dissolveMaterialGOUID);
+	if (dissolveObj) {
+		ComponentMeshRenderer* dissolveMeshRenderer = dissolveObj->GetComponent<ComponentMeshRenderer>();
+		if (dissolveMeshRenderer) {
+			dissolveMaterialID = dissolveMeshRenderer->GetMaterial();
+		}
 	}
 
 	// Get Dialogues
@@ -54,7 +76,10 @@ void DukeDoor::Start() {
 	GameObject* cameraObj = GameplaySystems::GetGameObject(gameCameraUID);
 	if (cameraObj) camera = GET_SCRIPT(cameraObj, CameraController);
 
-	// Scene Flow variables
+	// Lasers
+	optionalLaserScript = GET_SCRIPT(GameplaySystems::GetGameObject(optionalLaserUID), MovingLasers);
+
+	// Scene flow triggers
 	GameplaySystems::SetGlobalVariable(globalMovePlayerFromCode, false);
 	triggered = false;
 	startDialogue = false;
@@ -104,12 +129,18 @@ void DukeDoor::Update() {
 
 	// 3rd part - Boss "BOOM!"
 	if (finishScene && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
+		// Start optional lasers
+		if (optionalLaserScript) optionalLaserScript->TurnOn();
+
 		if (aiDuke) aiDuke->SetReady(true);
 		// Send trigger to Ragé
 		// TODO
 		
 		// Start boss music and stop previous music
 		// TODO
+
+		finishScene = false;
+		GetOwner().Disable();
 	}
 }
 
@@ -120,9 +151,13 @@ void DukeDoor::OnCollision(GameObject& /*collidedWith*/, float3 /*collisionNorma
 			collider->Disable();
 		}
 
-		GameObject* obstacle = GameplaySystems::GetGameObject(doorObstacleUID);
+		// Close doors
 		if (obstacle) {
 			obstacle->Enable();
+			PlayDissolveAnimation(obstacle, true);
+		}
+		if (exitObstacle) exitObstacle->Enable(); {
+			PlayDissolveAnimation(exitObstacle, true);
 		}
 
 
@@ -137,4 +172,27 @@ void DukeDoor::OnCollision(GameObject& /*collidedWith*/, float3 /*collisionNorma
 		}
 
 		triggered = true;
+}
+
+// Almost duplicated code, imported from SpawnPointController
+void DukeDoor::PlayDissolveAnimation(GameObject* root, bool playReverse) {
+	if (dissolveMaterialID == 0 || !root) return;
+
+	GameObject* doorBack = SearchReferenceInHierarchy(root, "DoorEnergyBack");
+	if (doorBack) {
+		ComponentMeshRenderer* meshRenderer = doorBack->GetComponent<ComponentMeshRenderer>();
+		if (meshRenderer) {
+			meshRenderer->SetMaterial(dissolveMaterialID);
+			meshRenderer->PlayDissolveAnimation(playReverse);
+		}
+	}
+
+	GameObject* doorFront = SearchReferenceInHierarchy(root, "DoorEnergyFront");
+	if (doorFront) {
+		ComponentMeshRenderer* meshRenderer = doorFront->GetComponent<ComponentMeshRenderer>();
+		if (meshRenderer) {
+			meshRenderer->SetMaterial(dissolveMaterialID);
+			meshRenderer->PlayDissolveAnimation(playReverse);
+		}
+	}
 }
