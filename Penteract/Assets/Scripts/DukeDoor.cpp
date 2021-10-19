@@ -8,6 +8,7 @@
 
 #include "AIDuke.h"
 #include "PlayerController.h"
+#include "CameraController.h"
 #include "HUDManager.h"
 #include "DialogueManager.h"
 
@@ -19,35 +20,45 @@ EXPOSE_MEMBERS(DukeDoor) {
     MEMBER(MemberType::GAME_OBJECT_UID, doorObstacleUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, canvasHUDUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, gameControllerUID),
-	MEMBER(MemberType::INT, dialogueID),
+	MEMBER(MemberType::GAME_OBJECT_UID, gameCameraUID),
 	MEMBER_SEPARATOR("Scene Parameters"),
+	MEMBER(MemberType::INT, dialogueID),
 	MEMBER(MemberType::FLOAT3, initialTalkPosition)
 };
 
 GENERATE_BODY_IMPL(DukeDoor);
 
 void DukeDoor::Start() {
+	// Get Player
 	player = GameplaySystems::GetGameObject(playerUID);
 	if (player) playerController = GET_SCRIPT(player, PlayerController);
 
+	// Get Duke and set to IDLE state
 	GameObject* duke = GameplaySystems::GetGameObject(dukeUID);
 	if (duke) {
 		aiDuke = GET_SCRIPT(duke, AIDuke);
 		if (aiDuke) aiDuke->SetReady(false);
 	}
 
+	// Get obstacle element & disable
 	GameObject* obstacle = GameplaySystems::GetGameObject(doorObstacleUID);
 	if (obstacle) {
 		obstacle->Disable();
 	}
 
-	// Dialogue
+	// Get Dialogues
 	GameObject* gameController = GameplaySystems::GetGameObject(gameControllerUID);
 	if (gameController) dialogueManagerScript = GET_SCRIPT(gameController, DialogueManager);
 
+	// Get Camera
+	GameObject* cameraObj = GameplaySystems::GetGameObject(gameCameraUID);
+	if (cameraObj) camera = GET_SCRIPT(cameraObj, CameraController);
+
+	// Scene Flow variables
 	GameplaySystems::SetGlobalVariable(globalMovePlayerFromCode, false);
 	triggered = false;
 	startDialogue = false;
+	finishScene = false;
 }
 
 void DukeDoor::Update() {
@@ -56,6 +67,9 @@ void DukeDoor::Update() {
 	if (triggered && player && playerController) {
 		GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, true);
 		GameplaySystems::SetGlobalVariable(globalMovePlayerFromCode, true);
+
+		// Zoom out camera pre-dialogues
+		if (camera && dialogueManagerScript) camera->ChangeCameraOffset(dialogueManagerScript->zoomOutCameraPosition.x, dialogueManagerScript->zoomOutCameraPosition.y, dialogueManagerScript->zoomOutCameraPosition.z);
 
 		// Get the active character in the scene
 		Player* playerReference;
@@ -85,11 +99,21 @@ void DukeDoor::Update() {
 			dialogueManagerScript->SetActiveDialogue(&dialogueManagerScript->dialoguesArray[dialogueID]);
 		}
 		startDialogue = false;
+		finishScene = true;
+	}
+
+	// 3rd part - Boss "BOOM!"
+	if (finishScene && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
+		if (aiDuke) aiDuke->SetReady(true);
+		// Send trigger to Ragé
+		// TODO
+		
+		// Start boss music and stop previous music
+		// TODO
 	}
 }
 
 void DukeDoor::OnCollision(GameObject& /*collidedWith*/, float3 /*collisionNormal*/ , float3 /*penetrationDistance*/ , void* /*particle*/ ) {
-
 
 		ComponentBoxCollider* collider = GetOwner().GetComponent<ComponentBoxCollider>();
 		if (collider) {
@@ -113,6 +137,4 @@ void DukeDoor::OnCollision(GameObject& /*collidedWith*/, float3 /*collisionNorma
 		}
 
 		triggered = true;
-
-		//if (aiDuke) aiDuke->SetReady(true);
 }

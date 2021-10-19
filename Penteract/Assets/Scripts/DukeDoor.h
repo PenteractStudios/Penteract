@@ -6,6 +6,7 @@ class GameObject;
 class DialogueManager;
 class AIDuke;
 class PlayerController;
+class CameraController;
 
 class DukeDoor : public Script
 {
@@ -23,6 +24,7 @@ public:
 	UID doorObstacleUID = 0;
 	UID canvasHUDUID = 0;
 	UID gameControllerUID = 0;
+	UID gameCameraUID = 0;
 	int dialogueID = 0;
 
 	float3 initialTalkPosition = float3(7.f, 1.f, 0.f);
@@ -32,8 +34,10 @@ private:
 	DialogueManager* dialogueManagerScript = nullptr;
 	AIDuke* aiDuke = nullptr;
 	PlayerController* playerController = nullptr;
+	CameraController* camera = nullptr;
 
 	bool triggered = false;			// Two objects can collide with the trigger at the same time. This boolean prevents the OnCollision() code to be executed twice when that happens
 	bool startDialogue = false;		// This triggers the dialogue between Fang and Duke, and it is set to true when Fang arrives in front of Duke.
+	bool finishScene = false;		// This will start the combat after duke performs the RAGE animation
 };
 
