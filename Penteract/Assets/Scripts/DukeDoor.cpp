@@ -132,11 +132,12 @@ void DukeDoor::Update() {
 		// Start optional lasers
 		if (optionalLaserScript) optionalLaserScript->TurnOn();
 
+		// Duke Ready animation
 		if (aiDuke) aiDuke->SetReady(true);
-		// Send trigger to Ragé
-		// TODO
+		// TODO Send trigger to Ragé
 		
-		// Start boss music and stop previous music
+		// If final scene, Start boss music and stop previous music
+		if (playerController->currentLevel == 3) {}
 		// TODO
 
 		finishScene = false;
@@ -156,7 +157,8 @@ void DukeDoor::OnCollision(GameObject& /*collidedWith*/, float3 /*collisionNorma
 			obstacle->Enable();
 			PlayDissolveAnimation(obstacle, true);
 		}
-		if (exitObstacle) exitObstacle->Enable(); {
+		if (exitObstacle) {
+			exitObstacle->Enable();
 			PlayDissolveAnimation(exitObstacle, true);
 		}
 
@@ -178,7 +180,7 @@ void DukeDoor::OnCollision(GameObject& /*collidedWith*/, float3 /*collisionNorma
 void DukeDoor::PlayDissolveAnimation(GameObject* root, bool playReverse) {
 	if (dissolveMaterialID == 0 || !root) return;
 
-	GameObject* doorBack = SearchReferenceInHierarchy(root, "DoorEnergyBack");
+	GameObject* doorBack = GameObjectUtils::SearchReferenceInHierarchy(root, "DoorEnergyBack");
 	if (doorBack) {
 		ComponentMeshRenderer* meshRenderer = doorBack->GetComponent<ComponentMeshRenderer>();
 		if (meshRenderer) {
@@ -187,7 +189,7 @@ void DukeDoor::PlayDissolveAnimation(GameObject* root, bool playReverse) {
 		}
 	}
 
-	GameObject* doorFront = SearchReferenceInHierarchy(root, "DoorEnergyFront");
+	GameObject* doorFront = GameObjectUtils::SearchReferenceInHierarchy(root, "DoorEnergyFront");
 	if (doorFront) {
 		ComponentMeshRenderer* meshRenderer = doorFront->GetComponent<ComponentMeshRenderer>();
 		if (meshRenderer) {
