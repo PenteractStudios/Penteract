@@ -18,7 +18,8 @@ EXPOSE_MEMBERS(FloorIsLava) {
 
 	MEMBER_SEPARATOR("Sound Positioning"),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-	MEMBER(MemberType::FLOAT, soundDistance)
+	MEMBER(MemberType::FLOAT, soundDistance),
+	MEMBER(MemberType::GAME_OBJECT_UID, fireAudioUID)
 };
 
 GENERATE_BODY_IMPL(FloorIsLava);
@@ -62,6 +63,7 @@ void FloorIsLava::Start() {
 	}
 
 	playerGameObject = GameplaySystems::GetGameObject(playerUID);
+	fireAudioGameObject = GameplaySystems::GetGameObject(fireAudioUID);
 }
 
 void FloorIsLava::Update() {
@@ -160,6 +162,16 @@ void FloorIsLava::StartFire()
 	else {
 		timeTilesActive = timeTilesActiveNormal;
 	}
+
+	if (fireAudioGameObject) {
+		std::vector<GameObject*> children = fireAudioGameObject->GetChildren();
+		for (GameObject* gameObject : children) {
+			if (gameObject) {
+				ComponentAudioSource* audio = gameObject->GetComponent<ComponentAudioSource>();
+				if (audio) audio->Play();
+			}
+		}
+	}
 }
 
 void FloorIsLava::StopFire()
@@ -182,6 +194,16 @@ void FloorIsLava::StopFire()
 		}
 	}
 	if (sequential) sequentialCount = 0;
+
+	if (fireAudioGameObject) {
+		std::vector<GameObject*> children = fireAudioGameObject->GetChildren();
+		for (GameObject* gameObject : children) {
+			if (gameObject) {
+				ComponentAudioSource* audio = gameObject->GetComponent<ComponentAudioSource>();
+				if (audio) audio->Stop();
+			}
+		}
+	}
 }
 
 void FloorIsLava::SetRandomPattern(int pattern, const bool*& boolPattern)

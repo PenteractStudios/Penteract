@@ -39,6 +39,7 @@ public:
 
 	UID playerUID = 0;
 	float soundDistance = 10;
+	UID fireAudioUID = 0;
 
 private:
 	std::vector<GameObject*> tiles;
@@ -84,6 +85,7 @@ private:
 
 	GameObject* playerGameObject = nullptr;
 	float3 playerPosition = float3(0.0f, 0.0f, 0.0f);
+	GameObject* fireAudioGameObject = nullptr;
 
 private:
 	void SetRandomPattern(int pattern, const bool*& boolPattern);
