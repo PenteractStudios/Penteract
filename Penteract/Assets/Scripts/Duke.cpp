@@ -9,17 +9,17 @@
 #include "VideoSceneEnd.h"
 #include "AttackDronesController.h"
 #include "DukeShield.h"
+#include "RandomNumberGenerator.h"
 
 #include <string>
 
 #define RNG_SCALE 1.3f
+#define RNG_MIN -1.0f
+#define RNG_MAX 1.0f
 
-std::uniform_real_distribution<float> rng(-1.0f, 1.0f);
 
 void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID,std::vector<UID> encounterUIDs, AttackDronesController* dronesController)
 {
-	gen = std::minstd_rand(rd());
-
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(dukeUID);
 	player = GameplaySystems::GetGameObject(playerUID);
@@ -94,6 +94,11 @@ void Duke::ShootAndMove(const float3& playerDirection) {
 
 void Duke::MeleeAttack()
 {
+	
+	float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - dukeTransform->GetGlobalPosition();
+	dir.y = 0.0f;
+	if (movementScript) movementScript->Orientate(dir);
+
 	if (!hasMeleeAttacked) {
 		if (compAnimation) {
 			if (compAnimation->GetCurrentState()) {
@@ -134,7 +139,7 @@ void Duke::InitCharge(DukeState nextState_)
 	state = DukeState::CHARGE;
 	this->nextState = nextState_;
 	reducedDamaged = true;
-
+	chargeSkidTimer = 0.0f;
 	if (compAnimation) {
 		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_START)]);
 	}
@@ -147,6 +152,7 @@ void Duke::UpdateCharge(bool forceStop)
 		float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - dukeTransform->GetGlobalPosition();
 		dir.y = 0.0f;
 		if (movementScript) movementScript->Orientate(dir);
+		chargeDir = dir;
 	}
 	if (forceStop || (dukeTransform->GetGlobalPosition() - chargeTarget).Length() <= 0.2f) {
 		if (chargeCollider) chargeCollider->Disable();
@@ -156,12 +162,34 @@ void Duke::UpdateCharge(bool forceStop)
 		// Perform arm attack (either use the same or another collider as the melee attack)
 		if (chargeAttack) chargeAttack->Enable();
 		state = DukeState::CHARGE_ATTACK;
+
 		reducedDamaged = false;
 		if (player) {
 			PlayerController* playerController = GET_SCRIPT(player, PlayerController);
 			if (playerController) playerController->playerOnimaru.shieldBeingUsed = 0.0f;
 		}
 	}
+}
+
+void Duke::UpdateChargeAttack() {
+
+	if (chargeSkidTimer < chargeSkidDuration) {
+		if (agent) {
+			agent->SetMaxSpeed(Lerp(chargeSkidMaxSpeed,chargeSkidMinSpeed, chargeSkidTimer / chargeSkidDuration));
+			
+			if (dukeTransform)
+				agent->SetMoveTarget(dukeTransform->GetGlobalPosition() + chargeDir, true);
+		}
+
+	} else {
+		if (agent) {
+			agent->SetMaxSpeed(movementSpeed);
+			agent->SetMoveTarget(dukeTransform->GetGlobalPosition());
+		}
+	}
+
+	chargeSkidTimer += Time::GetDeltaTime();
+
 }
 
 void Duke::CallTroops() {
@@ -173,14 +201,14 @@ void Duke::Move(const float3& playerDirection) {
 	movementTimer += Time::GetDeltaTime();
 	if (movementTimer >= movementChangeThreshold) {
 		perpendicular = playerDirection.Cross(float3(0, 1, 0));
-		perpendicular = perpendicular * rng(gen);
-		movementChangeThreshold = moveChangeEvery + rng(gen);
+		perpendicular = perpendicular * RandomNumberGenerator::GenerateFloat(-1.0f,1.0f);
+		movementChangeThreshold = moveChangeEvery + RandomNumberGenerator::GenerateFloat(RNG_MIN, RNG_MAX);
 		movementTimer = 0.f;
 	}
 	distanceCorrectionTimer += Time::GetDeltaTime();
 	if (distanceCorrectionTimer >= distanceCorrectionThreshold) {
 		perpendicular += playerDirection.Normalized() * (playerDirection.Length() - searchRadius);
-		distanceCorrectionThreshold = distanceCorrectEvery + rng(gen);
+		distanceCorrectionThreshold = distanceCorrectEvery + RandomNumberGenerator::GenerateFloat(RNG_MIN, RNG_MAX);
 		distanceCorrectionTimer = 0.f;
 	}
 
@@ -216,7 +244,7 @@ void Duke::Shoot()
 			if (!meshObj) return;
 			bullet->PlayChildParticles();
 		}
-		attackTimePool = (attackBurst / attackSpeed) + timeInterBurst + rng(gen) * RNG_SCALE;
+		attackTimePool = (attackBurst / attackSpeed) + timeInterBurst + RandomNumberGenerator::GenerateFloat(RNG_MIN, RNG_MAX) * RNG_SCALE;
 		isShooting = true;
 		isShootingTimer = 0.f;
 		// Animation
@@ -265,6 +293,11 @@ void Duke::BePushed() {
 			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PUSHED)]);
 		}
 	}
+
+	if (agent) {
+		agent->SetMaxSpeed(movementSpeed);
+	}
+
 }
 
 void Duke::BecomeStunned() {
@@ -277,6 +310,9 @@ void Duke::BecomeStunned() {
 				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::STUN)]);
 			}
 		}
+	}
+	if (agent) {
+		agent->SetMaxSpeed(movementSpeed);
 	}
 }
 

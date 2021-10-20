@@ -69,6 +69,12 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER_SEPARATOR("Prefabs UIDs"),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, barrelUID),
 
+	MEMBER_SEPARATOR("Charge Skid"),
+	MEMBER(MemberType::FLOAT, dukeCharacter.chargeSkidDuration),
+	MEMBER(MemberType::FLOAT, dukeCharacter.chargeSkidMaxSpeed),
+	MEMBER(MemberType::FLOAT, dukeCharacter.chargeSkidMinSpeed),
+
+
 	MEMBER_SEPARATOR("Debug"),
 	MEMBER(MemberType::SCENE_RESOURCE_UID, winSceneUID),
 	MEMBER(MemberType::BOOL, islevel2),
@@ -298,6 +304,9 @@ void AIDuke::Update() {
 		case DukeState::CHARGE:
 			dukeCharacter.UpdateCharge();
 			break;
+		case DukeState::CHARGE_ATTACK:
+			dukeCharacter.UpdateChargeAttack();
+			break;
 		case DukeState::STUNNED:
 			if (stunTimeRemaining <= 0.f) {
 				stunTimeRemaining = 0.f;
@@ -380,6 +389,9 @@ void AIDuke::Update() {
 				break;
 			case DukeState::CHARGE:
 				dukeCharacter.UpdateCharge();
+				break;
+			case DukeState::CHARGE_ATTACK:
+				dukeCharacter.UpdateChargeAttack();
 				break;
 			case DukeState::MELEE_ATTACK:
 				dukeCharacter.MeleeAttack();
@@ -494,6 +506,9 @@ void AIDuke::Update() {
 			case DukeState::CHARGE:
 				dukeCharacter.UpdateCharge();
 				break;
+			case DukeState::CHARGE_ATTACK:
+				dukeCharacter.UpdateChargeAttack();
+				break;
 			case DukeState::STUNNED:
 				if (stunTimeRemaining <= 0.f) {
 					stunTimeRemaining = 0.f;
@@ -587,7 +602,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 		}
 
 
-		if (collidedWith.name == "EMP" && dukeCharacter.state != DukeState::INVULNERABLE && dukeCharacter.state != DukeState::CHARGE) {
+		if (collidedWith.name == "EMP" && dukeCharacter.state != DukeState::INVULNERABLE && dukeCharacter.state != DukeState::BULLET_HELL) {
 			OnShieldInterrupted();
 			dukeCharacter.BecomeStunned();
 			dukeCharacter.StopShooting();
@@ -618,7 +633,7 @@ void AIDuke::SetReady(bool value) {
 }
 
 void AIDuke::EnableBlastPushBack() {
-	if (dukeCharacter.state != DukeState::INVULNERABLE && dukeCharacter.state != DukeState::CHARGE && dukeCharacter.state != DukeState::BULLET_HELL) {
+	if (dukeCharacter.state != DukeState::INVULNERABLE && dukeCharacter.state != DukeState::BULLET_HELL) {
 		dukeCharacter.beingPushed = true;
 		dukeCharacter.state = DukeState::PUSHED;
 		dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::PUSHED]);
