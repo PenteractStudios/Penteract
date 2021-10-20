@@ -131,7 +131,7 @@ bool Duke::BulletHellFinished() {
 bool Duke::PlayerIsInChargeRangeDistance()
 {
 	float3 playerPosition = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-	return playerPosition.Distance(dukeTransform->GetGlobalPosition()) <= chargeMinimumDistance;
+	return playerPosition.Distance(dukeTransform->GetGlobalPosition()) >= chargeMinimumDistance;
 }
 
 void Duke::InitCharge(DukeState nextState_)
