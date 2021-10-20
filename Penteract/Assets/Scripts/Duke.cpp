@@ -489,3 +489,15 @@ void Duke::InitPlayerVictory()
 		}
 	}
 }
+
+void Duke::ActivateDissolve(UID dissolveMaterialID) {
+	ComponentMeshRenderer* meshRenderer = meshObj->GetComponent<ComponentMeshRenderer>();
+	if (meshRenderer && dissolveMaterialID != 0) {
+		meshRenderer->SetMaterial(dissolveMaterialID);
+		meshRenderer->PlayDissolveAnimation();
+	}
+}
+
+ComponentMeshRenderer* Duke::GetDukeMeshRenderer() {
+	return meshObj->GetComponent<ComponentMeshRenderer>();
+}

@@ -78,6 +78,8 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::SCENE_RESOURCE_UID, winSceneUID),
 	MEMBER(MemberType::BOOL, islevel2),
 
+	MEMBER_SEPARATOR("Dissolve material reference in placeholders"),
+	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID)
 
 };
 
@@ -116,6 +118,15 @@ void AIDuke::Start() {
 
 	// AttackDronesController
 	AttackDronesController* dronesController = GET_SCRIPT(&GetOwner(), AttackDronesController);
+
+	// Dissolve Material
+	GameObject* dissolveObj = GameplaySystems::GetGameObject(dissolveMaterialGOUID);
+	if (dissolveObj) {
+		ComponentMeshRenderer* dissolveMeshRenderer = dissolveObj->GetComponent<ComponentMeshRenderer>();
+		if (dissolveMeshRenderer) {
+			dissolveMaterialID = dissolveMeshRenderer->GetMaterial();
+		}
+	}
 
 	// Init Duke character
 	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, videoParentCanvasUID, videoCanvasUID, encounters, dronesController);
@@ -193,9 +204,13 @@ void AIDuke::Update() {
 			}
 			break;
 		} else if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints() && dukeCharacter.state != DukeState::BULLET_HELL && dukeCharacter.state != DukeState::CHARGE) {
-			if(islevel2) {// only for level 2
-				// call animation teleport and disable gameobject
+			if(islevel2) { // only for level 2
+				// "Fake" Duke death
+				dukeCharacter.isAlive = false;
+				SetReady(false);
+				// Activate the combat end trigger. This will activate a dialogue and dissolve Duke.
 				triggerBosslvl2End->Enable();
+				return;
 			}
 			phase = Phase::PHASE2;
 			if (lasers && !lasers->IsActive()) lasers->Enable();
@@ -528,6 +543,7 @@ void AIDuke::Update() {
 				break;
 			}
 		}
+		break;
 	default:
 		break;
 	}
@@ -792,4 +808,8 @@ void AIDuke::PerformBulletHell() {
 
 float AIDuke::GetDukeMaxHealth() const {
 	return dukeCharacter.GetTotalLifePoints();
+}
+
+void AIDuke::ActivateDissolve() {
+	dukeCharacter.ActivateDissolve(dissolveMaterialID);
 }

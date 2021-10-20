@@ -84,6 +84,12 @@ public:
 	void InitPlayerVictory();
 	void StartPhase2Shield();
 
+	// ---- Auxiliary Functions ---- //
+	void ActivateDissolve(UID dissolveMaterialID);
+
+	// ------ Getters/Setters ------ //
+	ComponentMeshRenderer* GetDukeMeshRenderer();
+
 private:
 	int GetWalkAnimation();
 
