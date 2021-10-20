@@ -54,7 +54,7 @@ private:
 	void CalculatePushBackRealDistance();
 	void UpdatePushBackPosition();
 	void ParticleHit(GameObject& collidedWith, void* particle, Player& player_);
-	bool CanBeHurtDuringCriticalMode() const;
+	bool CanBeFullyHurtDuringCriticalMode() const;
 	bool IsInvulnerable()const;
 	void OnShieldInterrupted();
 	void PerformBulletHell();
@@ -96,6 +96,8 @@ public:
 
 	float abilityChangeCooldown = 8.f;
 
+	float criticalModeCooldown = 7.0f;
+
 	float stunDuration = 3.f;
 
 	float troopsCounter = 5.f;
@@ -104,6 +106,9 @@ public:
 
 	float orientationSpeed = 1.0f;
 	float orientationThreshold = 0.1f;
+
+	float orientationSpeedBulletHell = 1.0f;
+	float orientationThresholdBulletHell = 0.1f;
 
 	float timerBetweenAbilities = 1.5f;
 
@@ -130,6 +135,8 @@ private:
 	bool bulletHellIsActive = false;
 
 	float currentAbilityChangeCooldown = 0.f;
+
+	float currentCriticalModeCooldown = 0.f;
 
 	float currentMovingTime = 0.f;
 
