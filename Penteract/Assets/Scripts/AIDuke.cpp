@@ -151,14 +151,6 @@ void AIDuke::Update() {
 
 	float speedToUse = dukeCharacter.slowedDown ? dukeCharacter.slowedDownSpeed : dukeCharacter.movementSpeed;
 
-	if (dukeCharacter.isDead && !islevel2) {
-		if (activeFireTiles && fireTilesScript) fireTilesScript->StopFire();
-		// TODO: Substitute the following for actual destruction of the troops
-		GameObject* encounter = GameplaySystems::GetGameObject(fourthEncounterUID);
-		if (encounter && encounter->IsActive()) encounter->Disable();
-		dukeCharacter.InitPlayerVictory();
-	}
-
 	if (dukeCharacter.slowedDown) {
 		if (currentSlowedDownTime >= dukeCharacter.slowedDownTime) {
 			dukeCharacter.agent->SetMaxSpeed(dukeCharacter.movementSpeed);
@@ -212,7 +204,6 @@ void AIDuke::Update() {
 				triggerBosslvl2End->Enable();
 				return;
 			}
-
 			phase = Phase::PHASE2;
 			if (lasers && !lasers->IsActive()) lasers->Enable();
 			Debug::Log("Lasers enabled");
@@ -810,6 +801,16 @@ void AIDuke::PerformDeath() {
 	dukeCharacter.agent->RemoveAgentFromCrowd();
 	if (dukeCharacter.beingPushed) dukeCharacter.beingPushed = false;
 	dukeCharacter.state = DukeState::DEATH;
+
+	// Stop environment hazards
+	if (!islevel2) {
+		if (activeFireTiles && fireTilesScript) fireTilesScript->StopFire();
+		if (lasers && lasers->IsActive()) lasers->Disable();
+		// TODO: Substitute the following for actual destruction of the troops
+		GameObject* encounter = GameplaySystems::GetGameObject(fourthEncounterUID);
+		if (encounter && encounter->IsActive()) encounter->Disable();
+		dukeCharacter.InitPlayerVictory();
+	}
 }
 
 float AIDuke::GetDukeMaxHealth() const {
