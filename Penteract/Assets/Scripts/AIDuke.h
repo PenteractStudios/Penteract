@@ -60,6 +60,7 @@ private:
 	bool IsInvulnerable()const;
 	void OnShieldInterrupted();
 	void PerformBulletHell();
+	void PerformDeath();
 
 public:
 	UID dukeUID = 0;

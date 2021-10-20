@@ -151,7 +151,7 @@ void AIDuke::Update() {
 
 	float speedToUse = dukeCharacter.slowedDown ? dukeCharacter.slowedDownSpeed : dukeCharacter.movementSpeed;
 
-	if (dukeCharacter.isDead) {
+	if (dukeCharacter.isDead && !islevel2) {
 		if (activeFireTiles && fireTilesScript) fireTilesScript->StopFire();
 		// TODO: Substitute the following for actual destruction of the troops
 		GameObject* encounter = GameplaySystems::GetGameObject(fourthEncounterUID);
@@ -206,12 +206,13 @@ void AIDuke::Update() {
 		} else if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints() && dukeCharacter.state != DukeState::BULLET_HELL && dukeCharacter.state != DukeState::CHARGE) {
 			if(islevel2) { // only for level 2
 				// "Fake" Duke death
-				dukeCharacter.isAlive = false;
+				PerformDeath();
 				SetReady(false);
 				// Activate the combat end trigger. This will activate a dialogue and dissolve Duke.
 				triggerBosslvl2End->Enable();
 				return;
 			}
+
 			phase = Phase::PHASE2;
 			if (lasers && !lasers->IsActive()) lasers->Enable();
 			Debug::Log("Lasers enabled");
@@ -624,18 +625,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 	}
 
 	if (!dukeCharacter.isAlive) {
-		movementScript->Stop();
-		dukeCharacter.StopShooting();
-		dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::DEATH]);
-
-		// TODO: play audio and VFX
-		//if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
-		ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
-		if (collider) collider->Disable();
-
-		dukeCharacter.agent->RemoveAgentFromCrowd();
-		if (dukeCharacter.beingPushed) dukeCharacter.beingPushed = false;
-		dukeCharacter.state = DukeState::DEATH;
+		PerformDeath();
 	}
 }
 
@@ -804,6 +794,22 @@ void AIDuke::PerformBulletHell() {
 		currentTimeBetweenAbilities = 0.0f;
 		mustWaitForTimerBetweenAbilities = true;
 	}
+}
+
+void AIDuke::PerformDeath() {
+	movementScript->Stop();
+	OnShieldInterrupted();
+	dukeCharacter.StopShooting();
+	dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::DEATH]);
+
+	// TODO: play audio and VFX
+	//if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
+	ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
+	if (collider) collider->Disable();
+
+	dukeCharacter.agent->RemoveAgentFromCrowd();
+	if (dukeCharacter.beingPushed) dukeCharacter.beingPushed = false;
+	dukeCharacter.state = DukeState::DEATH;
 }
 
 float AIDuke::GetDukeMaxHealth() const {
