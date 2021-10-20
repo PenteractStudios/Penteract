@@ -12,7 +12,10 @@
 EXPOSE_MEMBERS(StartTitleGlitchOnPlay) {
 	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, controllerObjUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, parentCanvasUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, parentCanvasUID),
+	MEMBER_SEPARATOR("Control level & chekpoint"),
+	MEMBER(MemberType::INT, levelSelected),
+	MEMBER(MemberType::INT, checkpointSelected)
 };
 
 GENERATE_BODY_IMPL(StartTitleGlitchOnPlay);
@@ -44,15 +47,18 @@ void StartTitleGlitchOnPlay::OnButtonClick() {
 
 void StartTitleGlitchOnPlay::DoTransition() {
 	if (sceneUID != 0) {
-		GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, true);
-		GameplaySystems::SetGlobalVariable(globalCheckpoint, 0);
+		if (levelSelected == 0) { // Start the game in START
+			GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, true);
+			GameplaySystems::SetGlobalVariable(globalCheckpoint, 0);
+			GameplaySystems::SetGlobalVariable(globalLevel, 1);
 
-		SceneManager::ChangeScene(sceneUID);
+			SceneManager::ChangeScene(sceneUID);
 
-		PlayerController::currentLevel = 1;
-		Player::level1Upgrade = false;
-		Player::level2Upgrade = false;
+			PlayerController::currentLevel = 1;
+			Player::level1Upgrade = false;
+			Player::level2Upgrade = false;
 
-		if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
+			if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
+		}
 	}
 }

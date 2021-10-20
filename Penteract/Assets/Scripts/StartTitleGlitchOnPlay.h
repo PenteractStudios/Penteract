@@ -21,6 +21,10 @@ public:
 	UID sceneUID = 0;
 	UID parentCanvasUID = 0;
 
+	/* To control the checkpoint*/
+	int checkpointSelected = -1;
+	int levelSelected = 0;
+
 private:
 	GameObject* parentCanvas = nullptr;
 	GlitchyTitleController* controller = nullptr;

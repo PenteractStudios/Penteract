@@ -32,7 +32,8 @@ public:
 	float3 checkpointPosition1, checkpointPosition2, checkpointPosition3, checkpointPosition4, checkpointPosition5;
 	float distanceThreshold, timeBetweenChecks, timeBetweenChecksCounter;
 
-	static int actualCheckpoint;
+	/* Encounters Level...*/
+
 private:
 	void CheckDistanceWithCheckpoints();
 

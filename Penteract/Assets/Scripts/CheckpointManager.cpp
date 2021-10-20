@@ -11,11 +11,13 @@ EXPOSE_MEMBERS(CheckpointManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, avatarUID),
 	MEMBER(MemberType::FLOAT, distanceThreshold),
 	MEMBER(MemberType::FLOAT, timeBetweenChecks),
+	MEMBER_SEPARATOR("CHECKPOINT POSITIONS IN LEVEL"),
 	MEMBER(MemberType::FLOAT3, checkpointPosition1),
 	MEMBER(MemberType::FLOAT3, checkpointPosition2),
 	MEMBER(MemberType::FLOAT3, checkpointPosition3),
 	MEMBER(MemberType::FLOAT3, checkpointPosition4),
-	MEMBER(MemberType::FLOAT3, checkpointPosition5)
+	MEMBER(MemberType::FLOAT3, checkpointPosition5),
+	MEMBER_SEPARATOR("BUTTONS IN START MENU"),
 };
 
 GENERATE_BODY_IMPL(CheckpointManager);
@@ -50,10 +52,8 @@ void CheckpointManager::Start() {
 
 	if (!transform) return;
 
-	// agent->RemoveAgentFromCrowd();
-
 	// TODO: This was breaking the initial position of the player when coming from another scene
-	//transform->SetGlobalPosition(runtimeCheckpointPositions[GameplaySystems::GetGlobalVariable(globalCheckpoint, 0)]);
+	// transform->SetGlobalPosition(runtimeCheckpointPositions[GameplaySystems::GetGlobalVariable(globalCheckpoint, 0)]);
 	
 	playerScript = GET_SCRIPT(avatarObj, PlayerController);
 }
