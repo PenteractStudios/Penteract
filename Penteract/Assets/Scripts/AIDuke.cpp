@@ -68,6 +68,12 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER_SEPARATOR("Prefabs UIDs"),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, barrelUID),
 
+	MEMBER_SEPARATOR("Charge Skid"),
+	MEMBER(MemberType::FLOAT, dukeCharacter.chargeSkidDuration),
+	MEMBER(MemberType::FLOAT, dukeCharacter.chargeSkidMaxSpeed),
+	MEMBER(MemberType::FLOAT, dukeCharacter.chargeSkidMinSpeed),
+
+
 	MEMBER_SEPARATOR("Debug"),
 	MEMBER(MemberType::SCENE_RESOURCE_UID, winSceneUID),
 	MEMBER(MemberType::BOOL, islevel2),
@@ -297,6 +303,9 @@ void AIDuke::Update() {
 		case DukeState::CHARGE:
 			dukeCharacter.UpdateCharge();
 			break;
+		case DukeState::CHARGE_ATTACK:
+			dukeCharacter.UpdateChargeAttack();
+			break;
 		case DukeState::STUNNED:
 			if (stunTimeRemaining <= 0.f) {
 				stunTimeRemaining = 0.f;
@@ -412,6 +421,9 @@ void AIDuke::Update() {
 			case DukeState::CHARGE:
 				dukeCharacter.UpdateCharge();
 				break;
+			case DukeState::CHARGE_ATTACK:
+				dukeCharacter.UpdateChargeAttack();
+				break;
 			case DukeState::MELEE_ATTACK:
 				dukeCharacter.MeleeAttack();
 				dukeCharacter.state = DukeState::BULLET_HELL;
@@ -496,6 +508,9 @@ void AIDuke::Update() {
 				break;
 			case DukeState::CHARGE:
 				dukeCharacter.UpdateCharge();
+				break;
+			case DukeState::CHARGE_ATTACK:
+				dukeCharacter.UpdateChargeAttack();
 				break;
 			case DukeState::STUNNED:
 				if (stunTimeRemaining <= 0.f) {

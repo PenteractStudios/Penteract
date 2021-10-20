@@ -134,7 +134,7 @@ void Duke::InitCharge(DukeState nextState_)
 	state = DukeState::CHARGE;
 	this->nextState = nextState_;
 	reducedDamaged = true;
-
+	chargeSkidTimer = 0.0f;
 	if (compAnimation) {
 		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_START)]);
 	}
@@ -147,6 +147,7 @@ void Duke::UpdateCharge(bool forceStop)
 		float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - dukeTransform->GetGlobalPosition();
 		dir.y = 0.0f;
 		if (movementScript) movementScript->Orientate(dir);
+		chargeDir = dir;
 	}
 	if (forceStop || (dukeTransform->GetGlobalPosition() - chargeTarget).Length() <= 0.2f) {
 		if (chargeCollider) chargeCollider->Disable();
@@ -156,12 +157,34 @@ void Duke::UpdateCharge(bool forceStop)
 		// Perform arm attack (either use the same or another collider as the melee attack)
 		if (chargeAttack) chargeAttack->Enable();
 		state = DukeState::CHARGE_ATTACK;
+
 		reducedDamaged = false;
 		if (player) {
 			PlayerController* playerController = GET_SCRIPT(player, PlayerController);
 			if (playerController) playerController->playerOnimaru.shieldBeingUsed = 0.0f;
 		}
 	}
+}
+
+void Duke::UpdateChargeAttack() {
+
+	if (chargeSkidTimer < chargeSkidDuration) {
+		if (agent) {
+			agent->SetMaxSpeed(Lerp(chargeSkidMaxSpeed,chargeSkidMinSpeed, chargeSkidTimer / chargeSkidDuration));
+			
+			if (dukeTransform)
+				agent->SetMoveTarget(dukeTransform->GetGlobalPosition() + chargeDir, true);
+		}
+
+	} else {
+		if (agent) {
+			agent->SetMaxSpeed(movementSpeed);
+			agent->SetMoveTarget(dukeTransform->GetGlobalPosition());
+		}
+	}
+
+	chargeSkidTimer += Time::GetDeltaTime();
+
 }
 
 void Duke::CallTroops() {
