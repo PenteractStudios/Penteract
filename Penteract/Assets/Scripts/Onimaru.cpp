@@ -327,7 +327,7 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 	}
 	//ShieldCooldown
 	if (shield->NeedsRecharging()) {
-		if (shieldCooldownRemainingCharge <= 0.f) {
+		if (shieldCooldownRemainingCharge <= 0.f && !IsShielding()) {
 			shield->IncreaseCharge();
 			shieldCooldownRemainingCharge = shield->GetChargeCooldown();
 			if (!shield->NeedsRecharging()) {
