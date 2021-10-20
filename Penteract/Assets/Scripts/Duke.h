@@ -7,6 +7,7 @@
 
 class ComponentParticleSystem;
 class ResourcePrefab;
+class ResourceMaterial;
 class AttackDronesController;
 class BarrelSpawner;
 class DukeShield;
@@ -57,7 +58,7 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID, UID chargeDustUID, UID areaChargeUID, UID chargeTelegraphAreaUID);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void BulletHell();
@@ -180,6 +181,10 @@ private:
 	GameObject* chargeCollider = nullptr;
 	GameObject* chargeAttack = nullptr;
 	bool trackingChargeTarget = false;
+	ComponentBillboard* chargeTelegraphArea = nullptr;
+	GameObject* areaChargeGO = nullptr;
+	ResourceMaterial* areaCharge = nullptr;
+	ComponentParticleSystem* chargeDust = nullptr;
 
 	// Shooting
 	float attackTimePool = 0.f;

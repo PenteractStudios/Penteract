@@ -116,7 +116,7 @@ void AIDuke::Start() {
 	AttackDronesController* dronesController = GET_SCRIPT(&GetOwner(), AttackDronesController);
 
 	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, videoParentCanvasUID, videoCanvasUID, encounters, dronesController, punchSlashUID);
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, videoParentCanvasUID, videoCanvasUID, encounters, dronesController, punchSlashUID, chargeDustUID, areaChargeUID, chargeTelegraphAreaUID);
 
 	if (islevel2) triggerBosslvl2End = GameplaySystems::GetGameObject(triggerBosslvl2EndUID);
 

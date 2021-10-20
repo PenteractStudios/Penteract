@@ -1,6 +1,7 @@
 #include "Duke.h"
 
 #include "GameplaySystems.h"
+#include "Resources/ResourceMaterial.h"
 #include "RangerProjectileScript.h"
 #include "PlayerController.h"
 #include "BarrelSpawner.h"
@@ -16,7 +17,7 @@
 
 std::uniform_real_distribution<float> rng(-1.0f, 1.0f);
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID,std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID)
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID,std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID, UID chargeDustUID, UID areaChargeUID, UID chargeTelegraphAreaUID)
 {
 	gen = std::minstd_rand(rd());
 
@@ -87,6 +88,25 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 
 	GameObject* punchSlashGO = GameplaySystems::GetGameObject(punchSlashUID);
 	if (punchSlashGO) punchSlash = punchSlashGO->GetComponent<ComponentParticleSystem>();
+
+	GameObject* chargeDustGO = GameplaySystems::GetGameObject(chargeDustUID);
+	if(chargeDustGO) chargeDust = chargeDustGO->GetComponent<ComponentParticleSystem>();
+
+	areaChargeGO = GameplaySystems::GetGameObject(areaChargeUID);
+	if (areaChargeGO) {
+		GameObject* areaChargeChildGO = areaChargeGO->GetChildren()[0];
+		if (areaChargeChildGO) {
+			ComponentMeshRenderer* areaChargeMesh = areaChargeChildGO->GetComponent<ComponentMeshRenderer>();
+			if (areaChargeMesh) {
+				UID areaChargeMaterialUID = areaChargeMesh->GetMaterial();
+				areaCharge = GameplaySystems::GetResource<ResourceMaterial>(areaChargeMaterialUID);
+			}
+		}
+		
+	}
+
+	GameObject* chargeTelegraphAreaGO = GameplaySystems::GetGameObject(chargeTelegraphAreaUID);
+	if (chargeTelegraphAreaGO) chargeTelegraphArea = chargeTelegraphAreaGO->GetComponent<ComponentBillboard>();
 
 }
 
@@ -347,9 +367,7 @@ void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 	switch (stateMachineEnum)
 	{
 	case StateMachineEnum::PRINCIPAL:
-		Debug::Log(eventName);
-		if (strcmp(eventName, "EnablePunch") == 0) {
-			
+		if (strcmp(eventName, "EnablePunch") == 0) {			
 			if (meleeAttackCollider && !meleeAttackCollider->IsActive()) {
 				meleeAttackCollider->Enable();
 				if (punchSlash && firstTimePunchParticlesActive) {
