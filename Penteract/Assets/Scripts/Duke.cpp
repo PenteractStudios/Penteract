@@ -16,7 +16,7 @@
 
 std::uniform_real_distribution<float> rng(-1.0f, 1.0f);
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID,std::vector<UID> encounterUIDs, AttackDronesController* dronesController)
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID,std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID)
 {
 	gen = std::minstd_rand(rd());
 
@@ -84,6 +84,10 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 	for (auto itr : encounterUIDs) encounters.push_back(GameplaySystems::GetGameObject(itr));
 
 	attackDronesController = dronesController;
+
+	GameObject* punchSlashGO = GameplaySystems::GetGameObject(punchSlashUID);
+	if (punchSlashGO) punchSlash = punchSlashGO->GetComponent<ComponentParticleSystem>();
+
 }
 
 void Duke::ShootAndMove(const float3& playerDirection) {
@@ -95,6 +99,7 @@ void Duke::ShootAndMove(const float3& playerDirection) {
 void Duke::MeleeAttack()
 {
 	if (!hasMeleeAttacked) {
+		firstTimePunchParticlesActive = true;
 		if (compAnimation) {
 			if (compAnimation->GetCurrentState()) {
 				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PUNCH)]);
@@ -342,10 +347,16 @@ void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 	switch (stateMachineEnum)
 	{
 	case StateMachineEnum::PRINCIPAL:
+		Debug::Log(eventName);
 		if (strcmp(eventName, "EnablePunch") == 0) {
+			
 			if (meleeAttackCollider && !meleeAttackCollider->IsActive()) {
 				meleeAttackCollider->Enable();
-			}
+				if (punchSlash && firstTimePunchParticlesActive) {
+					punchSlash->PlayChildParticles();
+					firstTimePunchParticlesActive = false;
+				}
+			}			
 		} else if (strcmp(eventName, "DisablePunch") == 0) {
 			if (meleeAttackCollider && meleeAttackCollider->IsActive()) {
 				meleeAttackCollider->Disable();

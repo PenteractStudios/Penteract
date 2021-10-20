@@ -64,6 +64,10 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::FLOAT, timerBetweenAbilities),
 
 	MEMBER_SEPARATOR("Particles UIDs"),
+	MEMBER(MemberType::GAME_OBJECT_UID, punchSlashUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, chargeDustUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, areaChargeUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, chargeTelegraphAreaUID),
 
 	MEMBER_SEPARATOR("Prefabs UIDs"),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, barrelUID),
@@ -112,7 +116,7 @@ void AIDuke::Start() {
 	AttackDronesController* dronesController = GET_SCRIPT(&GetOwner(), AttackDronesController);
 
 	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, videoParentCanvasUID, videoCanvasUID, encounters, dronesController);
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, videoParentCanvasUID, videoCanvasUID, encounters, dronesController, punchSlashUID);
 
 	if (islevel2) triggerBosslvl2End = GameplaySystems::GetGameObject(triggerBosslvl2EndUID);
 

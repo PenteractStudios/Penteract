@@ -8,6 +8,7 @@ class ComponentTransform;
 class ComponentAgent;
 class ComponentAudioSource;
 class ComponentMeshRenderer;
+class ComponentParticleSystem;
 class ResourcePrefab;
 class HUDController;
 class PlayerController;
@@ -80,6 +81,10 @@ public:
 	UID hudManagerUID = 0;
 	UID fireTilesUID = 0;
 	UID triggerBosslvl2EndUID = 0;
+	UID punchSlashUID = 0;
+	UID chargeDustUID = 0;
+	UID areaChargeUID = 0;
+	UID chargeTelegraphAreaUID = 0;
 
 	GameObject* duke = nullptr;
 	GameObject* player = nullptr;

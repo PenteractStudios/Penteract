@@ -57,7 +57,7 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void BulletHell();
@@ -153,9 +153,6 @@ private:
 
 private:
 	GameObject* player = nullptr;
-	GameObject* chargeCollider = nullptr;
-	GameObject* meleeAttackCollider = nullptr;
-	GameObject* chargeAttack = nullptr;
 	ComponentTransform* dukeTransform = nullptr;
 
 	GameObject* videoParentCanvas = nullptr;
@@ -173,8 +170,15 @@ private:
 	float distanceCorrectionThreshold = 2.0f;
 	bool navigationHit;
 	float3 navigationHitPos;
+	
+	// Melee Attack
+	GameObject* meleeAttackCollider = nullptr;
+	ComponentParticleSystem* punchSlash = nullptr;
+	bool firstTimePunchParticlesActive = true;
 
 	// Charge
+	GameObject* chargeCollider = nullptr;
+	GameObject* chargeAttack = nullptr;
 	bool trackingChargeTarget = false;
 
 	// Shooting
