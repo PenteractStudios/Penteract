@@ -6,7 +6,8 @@
 
 EXPOSE_MEMBERS(NoodleShop) {
     MEMBER(MemberType::GAME_OBJECT_UID, doorUID),
-    MEMBER(MemberType::GAME_OBJECT_UID, noodleShopObstacleUID)
+    MEMBER(MemberType::GAME_OBJECT_UID, noodleShopObstacleUID),
+    MEMBER(MemberType::GAME_OBJECT_UID, audioWarningUID)
 };
 
 GENERATE_BODY_IMPL(NoodleShop);
@@ -31,6 +32,11 @@ void NoodleShop::OnCollision(GameObject& /* collidedWith */, float3 /* collision
         GameObject* noodleShopObstacleGO = GameplaySystems::GetGameObject(noodleShopObstacleUID);
         if (noodleShopObstacleGO) {
             noodleShopObstacleGO->Disable();
+        }
+        GameObject* audioWarning = GameplaySystems::GetGameObject(audioWarningUID);
+        if (audioWarning) {
+            ComponentAudioSource* audioWarningComp = audioWarning->GetComponent<ComponentAudioSource>();
+            if (audioWarningComp) audioWarningComp->Stop();
         }
     }
 }

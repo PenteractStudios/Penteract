@@ -62,8 +62,9 @@ public:
 	void MeleeAttack();
 	void BulletHell();
 	void DisableBulletHell();
-	bool BulletHellActive();
-	bool BulletHellFinished();
+	bool BulletHellActive() const;
+	bool BulletHellFinished() const;
+	bool IsBulletHellCircular() const;
 	void InitCharge(DukeState nextState);
 	void UpdateCharge(bool forceStop = false);
 	void UpdateChargeAttack();

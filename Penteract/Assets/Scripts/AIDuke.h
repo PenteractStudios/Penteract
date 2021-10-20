@@ -107,6 +107,9 @@ public:
 	float orientationSpeed = 1.0f;
 	float orientationThreshold = 0.1f;
 
+	float orientationSpeedBulletHell = 1.0f;
+	float orientationThresholdBulletHell = 0.1f;
+
 	float timerBetweenAbilities = 1.5f;
 
 	bool islevel2 = false;
