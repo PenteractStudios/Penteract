@@ -58,6 +58,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::FLOAT, shieldActiveTime),
 	MEMBER(MemberType::FLOAT, bulletHellCooldown),
 	MEMBER(MemberType::FLOAT, abilityChangeCooldown),
+	MEMBER(MemberType::FLOAT, criticalModeCooldown),
 	MEMBER(MemberType::FLOAT, throwBarrelTimer),
 	MEMBER(MemberType::FLOAT, orientationSpeed),
 	MEMBER(MemberType::FLOAT, orientationThreshold),
@@ -359,38 +360,6 @@ void AIDuke::Update() {
 			if (playerController) playerController->RemoveEnemyFromMap(duke);
 			return;
 
-		} else if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints()) {
-			dukeCharacter.criticalMode = !dukeCharacter.criticalMode;
-			lifeThreshold -= 0.1f;
-			if (!dukeCharacter.criticalMode) {
-				movementScript->Stop();
-				if (dukeCharacter.compAnimation) {
-					dukeCharacter.StopShooting();
-					dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::STUN]);
-				}
-				dukeCharacter.state = DukeState::INVULNERABLE;
-				if (fireTilesScript) {
-					fireTilesScript->StopFire();
-					fireTilesScript->SetInterphase(true);
-					fireTilesScript->StartFire();
-				}
-
-			} else {
-				movementScript->Stop();
-				if (dukeShield && dukeShield->GetIsActive()) {
-					OnShieldInterrupted();
-				}
-				if (dukeCharacter.compAnimation) {
-					dukeCharacter.StopShooting();
-					dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::ENRAGE]);
-				}
-				dukeCharacter.state = DukeState::INVULNERABLE;
-				if (fireTilesScript) {
-					fireTilesScript->StopFire();
-					fireTilesScript->SetInterphase(false);
-					fireTilesScript->StartFire();
-				}
-			}
 		}
 		if (dukeCharacter.state != DukeState::BULLET_HELL && dukeCharacter.state != DukeState::STUNNED &&
 			player && !dukeCharacter.criticalMode &&
@@ -434,8 +403,16 @@ void AIDuke::Update() {
 			case DukeState::STUNNED:
 				if (stunTimeRemaining <= 0.f) {
 					stunTimeRemaining = 0.f;
-					dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
-					//animation->SendTrigger("StunStunEnd");
+					dukeCharacter.criticalMode = false;
+					dukeCharacter.state = DukeState::SHOOT_SHIELD;
+					movementScript->Stop();
+					if (fireTilesScript) {
+						fireTilesScript->StopFire();
+						fireTilesScript->SetInterphase(true);
+						fireTilesScript->StartFire();
+					}
+					dukeCharacter.CallTroops();
+					dukeCharacter.StartUsingShield();
 				} else {
 					stunTimeRemaining -= Time::GetDeltaTime();
 				}
@@ -447,6 +424,26 @@ void AIDuke::Update() {
 				break;
 			}
 		} else {
+			currentCriticalModeCooldown += Time::GetDeltaTime();
+			if (currentCriticalModeCooldown >= criticalModeCooldown && dukeCharacter.state != DukeState::CHARGE && dukeCharacter.state != DukeState::BULLET_HELL) {
+				currentCriticalModeCooldown = 0.f;
+				dukeCharacter.criticalMode = true;
+				movementScript->Stop();
+				if (dukeShield && dukeShield->GetIsActive()) {
+					OnShieldInterrupted();
+				}
+				if (dukeCharacter.compAnimation) {
+					dukeCharacter.StopShooting();
+					dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::ENRAGE]);
+				}
+				dukeCharacter.state = DukeState::INVULNERABLE;
+				if (fireTilesScript) {
+					fireTilesScript->StopFire();
+					fireTilesScript->SetInterphase(false);
+					fireTilesScript->StartFire();
+				}
+				return;
+			}
 			switch (dukeCharacter.state) {
 			case DukeState::SHOOT_SHIELD:
 
@@ -554,9 +551,13 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 			GameplaySystems::DestroyGameObject(&collidedWith);
 			hitTaken = true;
 			if (IsInvulnerable())return;
-			if (!dukeCharacter.criticalMode || CanBeHurtDuringCriticalMode()) {
+			if (CanBeFullyHurtDuringCriticalMode()) {
 				float damage = playerController->playerFang.damageHit;
 				dukeCharacter.GetHit(dukeCharacter.reducedDamaged ? damage / 3 : damage + playerController->GetOverPowerMode());
+			}
+			else {
+				// In critical mode only receives 1 damage
+				dukeCharacter.GetHit(1.f + playerController->GetOverPowerMode());
 			}
 		}
 		else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
@@ -579,9 +580,13 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 			float damage = playerController->playerFang.dashDamage;
 			//dukeCharacter.GetHit(dukeCharacter.reducedDamaged ? damage / 3 : damage + playerController->GetOverPowerMode());
 			if (IsInvulnerable()) return;
-			if (!dukeCharacter.criticalMode || CanBeHurtDuringCriticalMode()) {
+			if (CanBeFullyHurtDuringCriticalMode()) {
 				float damage = playerController->playerFang.dashDamage;
 				dukeCharacter.GetHit(dukeCharacter.reducedDamaged ? damage / 3 : damage + playerController->GetOverPowerMode());
+			}
+			else {
+				// In critical mode only receives 1 damage
+				dukeCharacter.GetHit(1.f + playerController->GetOverPowerMode());
 			}
     }
 
@@ -725,18 +730,23 @@ void AIDuke::ParticleHit(GameObject& collidedWith, void* particle, Player& playe
 			dukeCharacter.GetHit(damage + playerController->GetOverPowerMode());
 		}
 	} else {
-		if (!CanBeHurtDuringCriticalMode()) return;
-		if (dukeCharacter.state == DukeState::STUNNED && player_.level2Upgrade) {
-			dukeCharacter.GetHit(damage * 2 + playerController->GetOverPowerMode());
-		} else {
-			dukeCharacter.GetHit(damage + playerController->GetOverPowerMode());
+		if (CanBeFullyHurtDuringCriticalMode()) {
+			if (dukeCharacter.state == DukeState::STUNNED && player_.level2Upgrade) {
+				dukeCharacter.GetHit(damage * 2 + playerController->GetOverPowerMode());
+			}
+			else {
+				dukeCharacter.GetHit(damage + playerController->GetOverPowerMode());
+			}
+		}
+		else {
+			dukeCharacter.GetHit(1.f + playerController->GetOverPowerMode());
 		}
 	}
 
 }
 
-bool AIDuke::CanBeHurtDuringCriticalMode() const {
-	return !IsInvulnerable() && (dukeCharacter.slowedDown || IsBeingPushed() || dukeCharacter.state == DukeState::STUNNED);
+bool AIDuke::CanBeFullyHurtDuringCriticalMode() const {
+	return dukeCharacter.slowedDown || IsBeingPushed() || dukeCharacter.state == DukeState::STUNNED;
 }
 
 bool AIDuke::IsInvulnerable() const {

@@ -363,10 +363,6 @@ void Duke::OnAnimationFinished()
 		isDead = true;
 	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::ENRAGE)]) {
 		state = DukeState::BASIC_BEHAVIOUR;
-	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::STUN)] && state == DukeState::INVULNERABLE) {
-		//Coming from critical mode
-		CallTroops();
-		StartUsingShield();
 	}
 }
 
