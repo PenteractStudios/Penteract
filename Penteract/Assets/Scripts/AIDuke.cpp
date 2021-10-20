@@ -582,7 +582,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 		}
 
 
-		if (collidedWith.name == "EMP" && dukeCharacter.state != DukeState::INVULNERABLE && dukeCharacter.state != DukeState::CHARGE) {
+		if (collidedWith.name == "EMP" && dukeCharacter.state != DukeState::INVULNERABLE && dukeCharacter.state != DukeState::BULLET_HELL) {
 			OnShieldInterrupted();
 			dukeCharacter.BecomeStunned();
 			dukeCharacter.StopShooting();
@@ -613,7 +613,7 @@ void AIDuke::SetReady(bool value) {
 }
 
 void AIDuke::EnableBlastPushBack() {
-	if (dukeCharacter.state != DukeState::INVULNERABLE && dukeCharacter.state != DukeState::CHARGE && dukeCharacter.state != DukeState::BULLET_HELL) {
+	if (dukeCharacter.state != DukeState::INVULNERABLE && dukeCharacter.state != DukeState::BULLET_HELL) {
 		dukeCharacter.beingPushed = true;
 		dukeCharacter.state = DukeState::PUSHED;
 		dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::PUSHED]);

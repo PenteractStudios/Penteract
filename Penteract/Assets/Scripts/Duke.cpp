@@ -265,6 +265,11 @@ void Duke::BePushed() {
 			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PUSHED)]);
 		}
 	}
+
+	if (agent) {
+		agent->SetMaxSpeed(movementSpeed);
+	}
+
 }
 
 void Duke::BecomeStunned() {
@@ -277,6 +282,9 @@ void Duke::BecomeStunned() {
 				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::STUN)]);
 			}
 		}
+	}
+	if (agent) {
+		agent->SetMaxSpeed(movementSpeed);
 	}
 }
 
