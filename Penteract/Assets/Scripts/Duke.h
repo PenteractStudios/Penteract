@@ -194,8 +194,6 @@ private:
 	ComponentAudioSource* dukeAudios[static_cast<int>(DUKE_AUDIOS::TOTAL)] = { nullptr };
 
 	DukeState nextState = DukeState::BASIC_BEHAVIOUR;
-	std::random_device rd;
-	std::minstd_rand gen;
 
 	/* Boss encounters */
 	std::vector<GameObject*> encounters;
