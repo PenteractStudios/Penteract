@@ -156,7 +156,6 @@ void GlitchyTitleController::Update() {
 void GlitchyTitleController::PressedPlay(StartTitleGlitchOnPlay* pressedButton_) {
 	pressedButton = pressedButton_;
 	glitchState = GlitchState::PLAY;
-
 }
 
 bool GlitchyTitleController::ReadyForTransition() const {

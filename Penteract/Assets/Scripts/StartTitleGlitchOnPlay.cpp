@@ -47,18 +47,18 @@ void StartTitleGlitchOnPlay::OnButtonClick() {
 
 void StartTitleGlitchOnPlay::DoTransition() {
 	if (sceneUID != 0) {
-		if (levelSelected == 0) { // Start the game in START
-			GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, true);
-			GameplaySystems::SetGlobalVariable(globalCheckpoint, 0);
-			GameplaySystems::SetGlobalVariable(globalLevel, 1);
+		GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, true);
+		GameplaySystems::SetGlobalVariable(globalCheckpoint, checkpointSelected);
+		GameplaySystems::SetGlobalVariable(globalLevel, levelSelected);
 
-			SceneManager::ChangeScene(sceneUID);
+		SceneManager::ChangeScene(sceneUID);
 
-			PlayerController::currentLevel = 1;
-			Player::level1Upgrade = false;
-			Player::level2Upgrade = false;
+		PlayerController::currentLevel = levelSelected;
 
-			if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
-		}
+		/* TODO: Control the upgrades*/
+		//Player::level1Upgrade = false;
+		//Player::level2Upgrade = false;
+
+		if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
 	}
 }
