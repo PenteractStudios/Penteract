@@ -166,7 +166,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 200.0,
-                            "HorizontalFov": 1.7108821868896485,
+                            "HorizontalFov": 1.6124528646469117,
                             "VerticalFov": 1.0
                         }
                     },
@@ -10069,7 +10069,7 @@
                         "Name": "CanvasLevelSelect",
                         "Active": false,
                         "Static": false,
-                        "ActiveHierarchy": false,
+                        "ActiveHierarchy": true,
                         "RootBoneId": 0,
                         "Mask": 0,
                         "Components": [
@@ -16823,7 +16823,7 @@
                         "Name": "CanvasSettings",
                         "Active": false,
                         "Static": false,
-                        "ActiveHierarchy": false,
+                        "ActiveHierarchy": true,
                         "RootBoneId": 0,
                         "Mask": 0,
                         "Components": [
@@ -17670,15 +17670,15 @@
                                                                 "Id": 10807998343209974509,
                                                                 "Active": true,
                                                                 "ColorHover": [
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
+                                                                    0.0,
+                                                                    0.6941176652908325,
+                                                                    0.8901960849761963,
                                                                     1.0
                                                                 ],
                                                                 "ColorDisable": [
-                                                                    0.5,
-                                                                    0.5,
-                                                                    0.5,
+                                                                    1.0,
+                                                                    0.9999899864196777,
+                                                                    0.9999899864196777,
                                                                     1.0
                                                                 ],
                                                                 "Interactable": true,
@@ -17698,11 +17698,11 @@
                                                                 "MaxValue": 100.0,
                                                                 "CurrentValue": 27.69986343383789,
                                                                 "Direction": 0,
-                                                                "StopOnEdges": false,
+                                                                "StopOnEdges": true,
                                                                 "ColorClick": [
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
                                                                     1.0
                                                                 ],
                                                                 "ColorManualInput": [
@@ -18223,15 +18223,15 @@
                                                                 "Id": 11178335822358928852,
                                                                 "Active": true,
                                                                 "ColorHover": [
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
+                                                                    0.0,
+                                                                    0.6941176652908325,
+                                                                    0.8901960849761963,
                                                                     1.0
                                                                 ],
                                                                 "ColorDisable": [
-                                                                    0.5,
-                                                                    0.5,
-                                                                    0.5,
+                                                                    1.0,
+                                                                    0.9999899864196777,
+                                                                    0.9999899864196777,
                                                                     1.0
                                                                 ],
                                                                 "Interactable": true,
@@ -18251,11 +18251,11 @@
                                                                 "MaxValue": 100.0,
                                                                 "CurrentValue": 27.69986343383789,
                                                                 "Direction": 0,
-                                                                "StopOnEdges": false,
+                                                                "StopOnEdges": true,
                                                                 "ColorClick": [
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
                                                                     1.0
                                                                 ],
                                                                 "ColorManualInput": [
@@ -18776,15 +18776,15 @@
                                                                 "Id": 16607991870564774825,
                                                                 "Active": true,
                                                                 "ColorHover": [
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
+                                                                    0.0,
+                                                                    0.6941176652908325,
+                                                                    0.8901960849761963,
                                                                     1.0
                                                                 ],
                                                                 "ColorDisable": [
-                                                                    0.5,
-                                                                    0.5,
-                                                                    0.5,
+                                                                    1.0,
+                                                                    0.9999899864196777,
+                                                                    0.9999899864196777,
                                                                     1.0
                                                                 ],
                                                                 "Interactable": true,
@@ -18804,11 +18804,11 @@
                                                                 "MaxValue": 100.0,
                                                                 "CurrentValue": 27.69986343383789,
                                                                 "Direction": 0,
-                                                                "StopOnEdges": false,
+                                                                "StopOnEdges": true,
                                                                 "ColorClick": [
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
                                                                     1.0
                                                                 ],
                                                                 "ColorManualInput": [
@@ -20562,9 +20562,9 @@
                                                                 "Id": 246329652480785741,
                                                                 "Active": true,
                                                                 "ColorHover": [
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
+                                                                    0.0,
+                                                                    0.6941176652908325,
+                                                                    0.8901960849761963,
                                                                     1.0
                                                                 ],
                                                                 "ColorDisable": [
@@ -20588,9 +20588,9 @@
                                                                 "Active": true,
                                                                 "Clicked": false,
                                                                 "ColorClick": [
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
                                                                     1.0
                                                                 ]
                                                             },
@@ -21232,9 +21232,9 @@
                                                                 "Id": 5301066684851907687,
                                                                 "Active": true,
                                                                 "ColorHover": [
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
+                                                                    0.0,
+                                                                    0.6941176652908325,
+                                                                    0.8901960849761963,
                                                                     1.0
                                                                 ],
                                                                 "ColorDisable": [
@@ -21259,9 +21259,9 @@
                                                                 "IsOn": true,
                                                                 "EnabledImageID": 10528254761752465755,
                                                                 "ClickedColor": [
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
+                                                                    1.0,
+                                                                    0.9999899864196777,
+                                                                    0.9999899864196777,
                                                                     1.0
                                                                 ]
                                                             },
@@ -21626,9 +21626,9 @@
                                                                 "Id": 15948953506686998874,
                                                                 "Active": true,
                                                                 "ColorHover": [
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
+                                                                    0.0,
+                                                                    0.6941176652908325,
+                                                                    0.8901960849761963,
                                                                     1.0
                                                                 ],
                                                                 "ColorDisable": [
@@ -21653,9 +21653,9 @@
                                                                 "IsOn": true,
                                                                 "EnabledImageID": 2245618589352332313,
                                                                 "ClickedColor": [
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
+                                                                    1.0,
+                                                                    0.9999899864196777,
+                                                                    0.9999899864196777,
                                                                     1.0
                                                                 ]
                                                             },
@@ -22364,7 +22364,7 @@
                         "Name": "CanvasControls",
                         "Active": false,
                         "Static": false,
-                        "ActiveHierarchy": false,
+                        "ActiveHierarchy": true,
                         "RootBoneId": 0,
                         "Mask": 0,
                         "Components": [
@@ -24061,7 +24061,7 @@
                         "Name": "CanvasControlsDevelopment",
                         "Active": false,
                         "Static": false,
-                        "ActiveHierarchy": false,
+                        "ActiveHierarchy": true,
                         "RootBoneId": 0,
                         "Mask": 0,
                         "Components": [
@@ -25184,7 +25184,7 @@
                         "Name": "CanvasCredits",
                         "Active": false,
                         "Static": false,
-                        "ActiveHierarchy": false,
+                        "ActiveHierarchy": true,
                         "RootBoneId": 0,
                         "Mask": 0,
                         "Components": [
