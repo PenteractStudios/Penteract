@@ -29,6 +29,7 @@ void MovingLasers::Start() {
     if (ownerGo) {
         animationComp = ownerGo->GetComponent<ComponentAnimation>();
         transform = ownerGo->GetComponent<ComponentTransform>();
+        audioComp = ownerGo->GetComponent<ComponentAudioSource>();
     }
     if (pair) {
         pairAnimationComp = pair->GetComponent<ComponentAnimation>();
@@ -40,12 +41,14 @@ void MovingLasers::Start() {
         laserObject->Disable();
         laserTransform = laserObject->GetComponent<ComponentTransform>();
         laserCollider = laserObject->GetComponent<ComponentBoxCollider>();
+        laserObjectSFX = laserObject->GetComponent<ComponentAudioSource>();
     }
 
     laserWarning = GameplaySystems::GetGameObject(laserWarningUID);
     if (laserWarning) {
         laserWarning->Disable();
         laserWarningVFX = laserWarning->GetComponent<ComponentParticleSystem>();
+        laserWarningSFX = laserWarning->GetComponent<ComponentAudioSource>();
     }
 }
 
@@ -59,9 +62,13 @@ void MovingLasers::Update() {
                 currentState = GeneratorState::START;
                 if (laserWarning) {
                     laserWarning->Enable();
-                    if (laserWarningVFX) laserWarningVFX->PlayChildParticles();
-                    laserWarningVFX->SetLife(float2(chargingDuration, chargingDuration));
-                    laserWarningVFX->SetScale(LaserWarningStartScale);
+                    if (laserWarningVFX) {
+                        laserWarningVFX->PlayChildParticles();
+                        laserWarningVFX->SetLife(float2(chargingDuration, chargingDuration));
+                        laserWarningVFX->SetScale(LaserWarningStartScale);
+
+                        if (laserWarningSFX) laserWarningSFX->Play();
+                    }
                 }
                 if (animationComp->currentStatePrincipal.name != states[static_cast<unsigned int>(GeneratorState::START)]) {
                     animationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::IDLE)] + states[static_cast<unsigned int>(GeneratorState::START)]);
@@ -102,10 +109,16 @@ void MovingLasers::Update() {
     }
 
     if (currentState != GeneratorState::SHOOT) {
-        if (laserObject && laserObject->IsActive()) laserObject->Disable();
+        if (laserObject && laserObject->IsActive()) {
+            if (laserObjectSFX) laserObjectSFX->Stop();
+            laserObject->Disable();
+        }
     }
     else {
-        if (laserObject && !laserObject->IsActive()) laserObject->Enable();
+        if (laserObject && !laserObject->IsActive()) {
+            laserObject->Enable();
+            if (laserObjectSFX) laserObjectSFX->Play();
+        }
     }
 }
 
@@ -147,12 +160,14 @@ bool MovingLasers::Move() {
 void MovingLasers::TurnOn() {
     beingUsed = true;
     currentState = GeneratorState::IDLE;
+    if (audioComp) audioComp->Play();
     if (pairScript && !pairScript->BeingUsed()) pairScript->TurnOn();
 }
 
 void MovingLasers::TurnOff() {
     beingUsed = false;
     currentState = GeneratorState::DISABLE;
+    if (audioComp) audioComp->Stop();
     if (pairScript && pairScript->BeingUsed()) pairScript->TurnOff();
 }
 
