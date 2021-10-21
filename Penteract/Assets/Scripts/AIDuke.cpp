@@ -61,6 +61,8 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::FLOAT, throwBarrelTimer),
 	MEMBER(MemberType::FLOAT, orientationSpeed),
 	MEMBER(MemberType::FLOAT, orientationThreshold),
+	MEMBER(MemberType::FLOAT, orientationSpeedBulletHell),
+	MEMBER(MemberType::FLOAT, orientationThresholdBulletHell),
 	MEMBER(MemberType::FLOAT, timerBetweenAbilities),
 
 	MEMBER_SEPARATOR("Particles UIDs"),
@@ -758,12 +760,19 @@ void AIDuke::PerformBulletHell() {
 		}
 	}
 	movementScript->Stop();
-
 	dukeCharacter.reducedDamaged = true;
+
 	if (!bulletHellIsActive) {
 		dukeCharacter.BulletHell();
 		bulletHellIsActive = true;
 	}
+
+	if (!dukeCharacter.IsBulletHellCircular()) {
+		float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
+		dir.y = 0.0f;
+		movementScript->Orientate(dir, orientationSpeedBulletHell, orientationThresholdBulletHell);
+	}
+
 	if (dukeCharacter.BulletHellFinished()) {
 		dukeCharacter.DisableBulletHell();
 		bulletHellIsActive = false;

@@ -20,6 +20,7 @@ public:
 	void StartBulletHell();
 	bool BulletHellActive() const;
 	bool BulletHellFinished() const;
+	bool IsBulletHellCircular() const;
 	float GetPatternProjectileSpeed() const;
 	void EndOfWave();
 
