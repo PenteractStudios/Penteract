@@ -300,7 +300,8 @@ void PlayerController::CheckCoolDowns() {
 		if (!noCooldownMode) switchInProgress = false;
 	}
 	else {
-		switchCooldownRemaining -= Time::GetDeltaTime();
+		if (playerOnimaru.characterGameObject->IsActive() && !GameplaySystems::GetGlobalVariable(globalSkill3TutorialReachedOni, true)) switchCooldownRemaining = switchCooldown; // during Onimaru tutorial, do not recover Switch cooldown
+		else switchCooldownRemaining -= Time::GetDeltaTime();
 	}
 
 	if (playerOnimaru.characterGameObject->IsActive() && playerFang.lifePoints != playerFang.GetTotalLifePoints()) {

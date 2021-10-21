@@ -317,6 +317,23 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 			skillIconName = "Buttons" + std::to_string(tutorialSkillNumber);
 			GameObject* skillButtonIcon = activeDialogueObject->GetChild("Skill Buttons")->GetChild(skillIconName.c_str());
 			if (skillButtonIcon) skillButtonIcon->Enable();
+
+			// Activate the use of the skill
+			switch (tutorialSkillNumber) {
+			case 1:
+				GameplaySystems::SetGlobalVariable(globalSkill1TutorialReachedOni, true);
+				break;
+			case 2:
+				GameplaySystems::SetGlobalVariable(globalSkill2TutorialReachedOni, true);
+				break;
+			case 3:
+				GameplaySystems::SetGlobalVariable(globalSkill3TutorialReachedOni, true);
+				break;
+			default:
+				// Do nothing
+				break;
+			}
+
 			break;
 		}
 		case DialogueWindow::TUTO_ONIMARU_ULTI:
