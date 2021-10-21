@@ -182,11 +182,14 @@ private:
 	GameObject* chargeAttack = nullptr;
 	bool trackingChargeTarget = false;
 	ComponentBillboard* chargeTelegraphArea = nullptr;
+	GameObject* chargeTelegraphAreaGO = nullptr;
 	GameObject* areaChargeGO = nullptr;
 	ResourceMaterial* areaCharge = nullptr;
 	ComponentParticleSystem* chargeDust = nullptr;
 	float2 chargeDustOriginalParticlesPerSecond = float2(0.f, 0.f);
 	float areaChargeSpeedMultiplier = 4;
+	float dukeScale = 0.f;
+	float chargeTelegraphAreaPosOffset = 0.f;
 
 	// Shooting
 	float attackTimePool = 0.f;

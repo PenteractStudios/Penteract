@@ -107,9 +107,12 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 		
 	}
 
-	GameObject* chargeTelegraphAreaGO = GameplaySystems::GetGameObject(chargeTelegraphAreaUID);
-	if (chargeTelegraphAreaGO) chargeTelegraphArea = chargeTelegraphAreaGO->GetComponent<ComponentBillboard>();
-
+	chargeTelegraphAreaGO = GameplaySystems::GetGameObject(chargeTelegraphAreaUID);
+	if (chargeTelegraphAreaGO) {
+		chargeTelegraphArea = chargeTelegraphAreaGO->GetComponent<ComponentBillboard>();
+		dukeScale = dukeTransform->GetGlobalScale().x;
+		chargeTelegraphAreaPosOffset = chargeTelegraphAreaGO->GetComponent<ComponentTransform>()->GetPosition().z * dukeScale;
+	}
 }
 
 void Duke::ShootAndMove(const float3& playerDirection) {
@@ -165,6 +168,7 @@ void Duke::InitCharge(DukeState nextState_)
 	if (compAnimation) {
 		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_START)]);
 	}
+	if (chargeTelegraphArea) chargeTelegraphArea->Play();
 }
 
 void Duke::UpdateCharge(bool forceStop)
@@ -174,6 +178,15 @@ void Duke::UpdateCharge(bool forceStop)
 		float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - dukeTransform->GetGlobalPosition();
 		dir.y = 0.0f;
 		if (movementScript) movementScript->Orientate(dir);
+		float dist = Distance(player->GetComponent<ComponentTransform>()->GetGlobalPosition(), dukeTransform->GetGlobalPosition());
+		if (chargeTelegraphAreaGO) {
+			float3 scale = chargeTelegraphAreaGO->GetComponent<ComponentTransform>()->GetScale();
+			scale.x = dist / dukeScale;
+			chargeTelegraphAreaGO->GetComponent<ComponentTransform>()->SetScale(scale);
+			float3 pos = chargeTelegraphAreaGO->GetComponent<ComponentTransform>()->GetPosition();
+			pos.z = (scale.x * 0.5) + chargeTelegraphAreaPosOffset;
+			chargeTelegraphAreaGO->GetComponent<ComponentTransform>()->SetPosition(pos);
+		}
 	}
 	if (forceStop || (dukeTransform->GetGlobalPosition() - chargeTarget).Length() <= 0.2f) {
 		if (chargeCollider) chargeCollider->Disable();
