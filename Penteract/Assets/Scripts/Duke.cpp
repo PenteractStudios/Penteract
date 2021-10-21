@@ -92,6 +92,8 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 	GameObject* chargeDustGO = GameplaySystems::GetGameObject(chargeDustUID);
 	if(chargeDustGO) chargeDust = chargeDustGO->GetComponent<ComponentParticleSystem>();
 
+	if (chargeDust) chargeDustOriginalParticlesPerSecond = chargeDust->GetParticlesPerSecond();
+
 	areaChargeGO = GameplaySystems::GetGameObject(areaChargeUID);
 	if (areaChargeGO) {
 		GameObject* areaChargeChildGO = areaChargeGO->GetChildren()[0];
@@ -179,7 +181,7 @@ void Duke::UpdateCharge(bool forceStop)
 			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_END)]);
 		}
 		if (areaChargeGO && areaChargeGO->IsActive()) areaChargeGO->Disable();
-		if (areaCharge) areaCharge->offset = float2(0, 0);
+		if (chargeDust) chargeDust->SetParticlesPerSecondChild(float2(0.f, 0.f));
 		// Perform arm attack (either use the same or another collider as the melee attack)
 		if (chargeAttack) chargeAttack->Enable();
 		state = DukeState::CHARGE_ATTACK;
@@ -192,7 +194,7 @@ void Duke::UpdateCharge(bool forceStop)
 	else {
 		if (areaCharge) {
 			float2 matOffset = areaCharge->offset;
-			matOffset.y -= (Time::GetDeltaTime()*4);
+			matOffset.y -= (Time::GetDeltaTime()*areaChargeSpeedMultiplier);
 			areaCharge->offset = matOffset;
 		}
 	}
@@ -352,7 +354,14 @@ void Duke::OnAnimationFinished()
 		agent->SetMaxSpeed(chargeSpeed);
 		if (chargeCollider) chargeCollider->Enable();
 		compAnimation->SendTrigger(currentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE)]);
-		if (areaChargeGO && !areaChargeGO->IsActive()) areaChargeGO->Enable();		
+		if (areaChargeGO && !areaChargeGO->IsActive()) {
+			areaCharge->offset = float2(0, 0);
+			areaChargeGO->Enable();
+		}
+		if (chargeDust) {
+			chargeDust->SetParticlesPerSecondChild(chargeDustOriginalParticlesPerSecond);
+			chargeDust->PlayChildParticles();
+		}
 	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_END)]) {
 		if (chargeAttack) chargeAttack->Disable();
 		state = nextState;

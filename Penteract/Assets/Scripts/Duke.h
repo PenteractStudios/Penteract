@@ -185,6 +185,8 @@ private:
 	GameObject* areaChargeGO = nullptr;
 	ResourceMaterial* areaCharge = nullptr;
 	ComponentParticleSystem* chargeDust = nullptr;
+	float2 chargeDustOriginalParticlesPerSecond = float2(0.f, 0.f);
+	float areaChargeSpeedMultiplier = 4;
 
 	// Shooting
 	float attackTimePool = 0.f;
