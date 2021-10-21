@@ -151,6 +151,8 @@ void AIDuke::Update() {
 
 	float speedToUse = dukeCharacter.slowedDown ? dukeCharacter.slowedDownSpeed : dukeCharacter.movementSpeed;
 
+	if (dukeCharacter.isDead && !islevel2) dukeCharacter.InitPlayerVictory(); //TODO: remove this. This will be called differently when the boss post-encounter dialogues are developed
+
 	if (dukeCharacter.slowedDown) {
 		if (currentSlowedDownTime >= dukeCharacter.slowedDownTime) {
 			dukeCharacter.agent->SetMaxSpeed(dukeCharacter.movementSpeed);
@@ -809,7 +811,6 @@ void AIDuke::PerformDeath() {
 		// TODO: Substitute the following for actual destruction of the troops
 		GameObject* encounter = GameplaySystems::GetGameObject(fourthEncounterUID);
 		if (encounter && encounter->IsActive()) encounter->Disable();
-		dukeCharacter.InitPlayerVictory();
 	}
 }
 

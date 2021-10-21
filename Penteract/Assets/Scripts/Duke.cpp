@@ -471,7 +471,7 @@ int Duke::GetWalkAnimation()
 
 void Duke::InitPlayerVictory()
 {
-	if (isDead && !endVideoRunning) {
+	if (!endVideoRunning) {
 
 		currentDelayVideo += Time::GetDeltaTime();
 
@@ -498,6 +498,6 @@ void Duke::ActivateDissolve(UID dissolveMaterialID) {
 	}
 }
 
-ComponentMeshRenderer* Duke::GetDukeMeshRenderer() {
+ComponentMeshRenderer* Duke::GetDukeMeshRenderer() const {
 	return meshObj->GetComponent<ComponentMeshRenderer>();
 }

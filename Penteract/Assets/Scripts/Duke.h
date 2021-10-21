@@ -88,7 +88,7 @@ public:
 	void ActivateDissolve(UID dissolveMaterialID);
 
 	// ------ Getters/Setters ------ //
-	ComponentMeshRenderer* GetDukeMeshRenderer();
+	ComponentMeshRenderer* GetDukeMeshRenderer() const;
 
 private:
 	int GetWalkAnimation();
