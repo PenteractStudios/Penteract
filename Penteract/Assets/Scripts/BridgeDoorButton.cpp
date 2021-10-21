@@ -40,6 +40,9 @@ void BridgeDoorButton::Start() {
 	doorObstacle = GameplaySystems::GetGameObject(doorObstacleUID);
 
 	laserDoorObstacle = GameplaySystems::GetGameObject(laserDoorObstacleUID);
+	if (laserDoorObstacle) {
+		laserDoorAudio = laserDoorObstacle->GetComponent<ComponentAudioSource>();
+	}
 
 	openedDoor = false;
 	elapsedTime = 0;
@@ -71,6 +74,11 @@ void BridgeDoorButton::Update() {
 			elapsedButtonTime += Time::GetDeltaTime();
 		} else {
 			moveButton = false;
+		}
+		if (!audioButtonPlayed) {
+			ComponentAudioSource* audioButton = GetOwner().GetComponent<ComponentAudioSource>();
+			if (audioButton) audioButton->Play();
+			audioButtonPlayed = true;
 		}
 		if (buttonParticles) buttonParticles->StopChildParticles();
 		if (glassParticles) glassParticles->PlayChildParticles();
@@ -116,5 +124,6 @@ void BridgeDoorButton::OnCollision(GameObject& /*collidedWith*/, float3 /*collis
 
 	if (laserDoorObstacle) {
 		laserDoorObstacle->GetComponent<ComponentMeshRenderer>()->PlayDissolveAnimation();
+		if (laserDoorAudio) laserDoorAudio->Play();
 	}
 }

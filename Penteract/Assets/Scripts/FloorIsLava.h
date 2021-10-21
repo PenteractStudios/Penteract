@@ -6,11 +6,20 @@
 
 #include <vector>
 
+class ComponentAudioSource;
+class ComponentTransform;
+
 class FloorIsLava : public Script
 {
 	GENERATE_BODY(FloorIsLava);
 
 public:
+
+	enum class Audios {
+		OPEN,
+		CLOSE,
+		TOTAL
+	};
 
 	void Start() override;
 	void Update() override;
@@ -27,6 +36,10 @@ public:
 	float timeWarning = 1.5f;
 
 	bool sequential = false;
+
+	UID playerUID = 0;
+	float soundDistance = 10;
+	UID fireAudioUID = 0;
 
 private:
 	std::vector<GameObject*> tiles;
@@ -66,6 +79,13 @@ private:
 	bool started = false;
 
 	bool interphase = false;
+
+	std::vector<ComponentAudioSource*> audiosFireTilesOpening;
+	std::vector<ComponentAudioSource*> audiosFireTilesClosing;
+
+	GameObject* playerGameObject = nullptr;
+	float3 playerPosition = float3(0.0f, 0.0f, 0.0f);
+	GameObject* fireAudioGameObject = nullptr;
 
 private:
 	void SetRandomPattern(int pattern, const bool*& boolPattern);
