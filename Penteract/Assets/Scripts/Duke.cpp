@@ -178,6 +178,8 @@ void Duke::UpdateCharge(bool forceStop)
 		if (compAnimation) {
 			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_END)]);
 		}
+		if (areaChargeGO && areaChargeGO->IsActive()) areaChargeGO->Disable();
+		if (areaCharge) areaCharge->offset = float2(0, 0);
 		// Perform arm attack (either use the same or another collider as the melee attack)
 		if (chargeAttack) chargeAttack->Enable();
 		state = DukeState::CHARGE_ATTACK;
@@ -185,6 +187,13 @@ void Duke::UpdateCharge(bool forceStop)
 		if (player) {
 			PlayerController* playerController = GET_SCRIPT(player, PlayerController);
 			if (playerController) playerController->playerOnimaru.shieldBeingUsed = 0.0f;
+		}
+	}
+	else {
+		if (areaCharge) {
+			float2 matOffset = areaCharge->offset;
+			matOffset.y -= (Time::GetDeltaTime()*4);
+			areaCharge->offset = matOffset;
 		}
 	}
 }
@@ -343,6 +352,7 @@ void Duke::OnAnimationFinished()
 		agent->SetMaxSpeed(chargeSpeed);
 		if (chargeCollider) chargeCollider->Enable();
 		compAnimation->SendTrigger(currentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE)]);
+		if (areaChargeGO && !areaChargeGO->IsActive()) areaChargeGO->Enable();		
 	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_END)]) {
 		if (chargeAttack) chargeAttack->Disable();
 		state = nextState;
