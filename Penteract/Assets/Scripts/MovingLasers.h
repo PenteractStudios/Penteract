@@ -62,7 +62,6 @@ private:
 	ComponentAnimation* animationComp = nullptr;
 	ComponentAnimation* pairAnimationComp = nullptr;
 	ComponentAudioSource* audioComp = nullptr;
-	ComponentAudioSource* pairAudioComp = nullptr;
 
 	GeneratorState currentState = GeneratorState::IDLE;
 	ComponentTransform* transform = nullptr;

@@ -34,7 +34,6 @@ void MovingLasers::Start() {
     if (pair) {
         pairAnimationComp = pair->GetComponent<ComponentAnimation>();
         pairScript = GET_SCRIPT(pair, MovingLasers);
-        pairAudioComp = pair->GetComponent<ComponentAudioSource>();
     }
 
     laserObject = GameplaySystems::GetGameObject(laserTargetUID);
