@@ -65,6 +65,7 @@ public:
 	bool BulletHellActive() const;
 	bool BulletHellFinished() const;
 	bool IsBulletHellCircular() const;
+	bool PlayerIsInChargeRangeDistance() const;
 	void InitCharge(DukeState nextState);
 	void UpdateCharge(bool forceStop = false);
 	void UpdateChargeAttack();

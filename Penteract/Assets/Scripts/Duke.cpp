@@ -133,6 +133,11 @@ bool Duke::BulletHellFinished() const {
 	return attackDronesController->BulletHellFinished();
 }
 
+bool Duke::PlayerIsInChargeRangeDistance() const{
+	float3 playerPosition = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	return playerPosition.Distance(dukeTransform->GetGlobalPosition()) >= chargeMinimumDistance;
+}
+
 bool Duke::IsBulletHellCircular() const
 {
 	return !BulletHellFinished() && attackDronesController->IsBulletHellCircular();
