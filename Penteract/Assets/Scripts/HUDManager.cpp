@@ -638,6 +638,9 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 				if (cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1) {
 					fillColor->SetColor(float4(switchSkillColorNotAvailable.xyz(), Clamp(WAVING_EFFECT_MIN_ALPHA + cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)], WAVING_EFFECT_MIN_ALPHA, WAVING_EFFECT_MAX_ALPHA)));
 				}
+				else {
+					fillColor->SetColor(float4(switchSkillColorAvailable.xyz(), Clamp(WAVING_EFFECT_MIN_ALPHA + cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)], WAVING_EFFECT_MIN_ALPHA, WAVING_EFFECT_MAX_ALPHA)));
+				}
 			} else {
 				fillColor->SetColor(switchSkillColorDeadCharacter);
 			}
