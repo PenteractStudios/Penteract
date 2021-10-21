@@ -1234,8 +1234,10 @@ void HUDManager::SetPictoState(Cooldowns cooldown, PictoState newState) {
 
 		bool isUltimate = cooldown == Cooldowns::FANG_SKILL_3 || cooldown == Cooldowns::ONIMARU_SKILL_3;
 
+		int sizeToLookFor = isUltimate ? HIERARCHY_INDEX_ULTIMATE_ABILITY_PICTO_SHADE : HIERARCHY_INDEX_ABILITY_PICTO_SHADE;
+
 		//Character-specific ability picto state
-		if (children[static_cast<int>(cooldown) % 3]->GetChildren().size() > isUltimate ? (HIERARCHY_INDEX_ULTIMATE_ABILITY_PICTO_SHADE - 1) : (HIERARCHY_INDEX_ABILITY_PICTO_SHADE - 1)) {
+		if (children[static_cast<int>(cooldown) % 3]->GetChildren().size() > sizeToLookFor - 1) {
 			GameObject* pictoShade = children[(static_cast<int>(cooldown)) % 3]->GetChild(isUltimate ? HIERARCHY_INDEX_ULTIMATE_ABILITY_PICTO_SHADE : HIERARCHY_INDEX_ABILITY_PICTO_SHADE);
 
 			if (pictoShade->HasChildren()) {
