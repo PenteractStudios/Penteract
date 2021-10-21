@@ -83,12 +83,17 @@ void EnemySpawnPoint::UpdateRemainingEnemies() {
 }
 
 void EnemySpawnPoint::RenderEnemy(EnemyType type, unsigned int amount) {
+	/* Rotate the spawn point to the player location */
+	float3 playerDirection = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - gameObjectTransform->GetGlobalPosition();
+	playerDirection.y = 0.f;
 	for (unsigned int i = 0; i < amount; ++i) {
 		UID prefabUID = type == EnemyType::MELEE ? meleeEnemyPrefab->BuildPrefab(gameObject) : rangeEnemyPrefab->BuildPrefab(gameObject);
 		GameObject* go = GameplaySystems::GetGameObject(prefabUID);
 		ComponentTransform* goTransform = go->GetComponent<ComponentTransform>();
 		if (go) {
-			goTransform->SetPosition(EnemyLocation(amount, i, type == EnemyType::MELEE ? 0 : -0.5));
+			goTransform->SetPosition(EnemyLocation(amount, i, type == EnemyType::MELEE ? 0 : 2));
+			Quat newRotation = Quat::LookAt(float3(0, 0, 1), playerDirection.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
+			goTransform->SetGlobalRotation(newRotation);
 			if (playerScript) playerScript->AddEnemyInMap(go);
 		}
 	}
