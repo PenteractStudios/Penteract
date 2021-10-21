@@ -37,7 +37,22 @@ void SpawnPointController::Start() {
 	rangeEnemyPrefab = GameplaySystems::GetResource<ResourcePrefab>(rangeEnemyPrefabUID);
 
 	initialDoor = GameplaySystems::GetGameObject(initialDoorUID);
+	if (initialDoor) {
+		int i = 0;
+		for (ComponentAudioSource& src : initialDoor->GetComponents<ComponentAudioSource>()) {
+			if (i < static_cast<int>(Audios::TOTAL)) initialDoorAudios[i] = &src;
+			i++;
+		}
+	}
+
 	finalDoor = GameplaySystems::GetGameObject(finalDoorUID);
+	if (finalDoor) {
+		int i = 0;
+		for (ComponentAudioSource& src : finalDoor->GetComponents<ComponentAudioSource>()) {
+			if (i < static_cast<int>(Audios::TOTAL)) finalDoorAudios[i] = &src;
+			i++;
+		}
+	}
 
 	gameObjectActivatedOnCombatEnd = GameplaySystems::GetGameObject(gameObjectActivatedOnCombatEndUID);
 	gameObjectDeactivatedOnCombatEnd = GameplaySystems::GetGameObject(gameObjectDeactivatedOnCombatEndUID);
@@ -127,6 +142,7 @@ void SpawnPointController::OnCollision(GameObject& /* collidedWith */, float3 /*
 	}
 	if (initialDoor && !initialDoor->IsActive()) initialDoor->Enable();
 	if (finalDoor && !finalDoor->IsActive()) finalDoor->Enable();
+
 	if (gameObjectActivatedOnCombatEnd && gameObjectActivatedOnCombatEnd->IsActive()) gameObjectActivatedOnCombatEnd->Disable();
 	if (gameObjectDeactivatedOnCombatEnd && !gameObjectDeactivatedOnCombatEnd->IsActive()) gameObjectDeactivatedOnCombatEnd->Enable();
 
@@ -200,6 +216,26 @@ void SpawnPointController::PlayDissolveAnimation(GameObject* root, bool playReve
 			meshRenderer->SetMaterial(dissolveMaterialID);
 			meshRenderer->PlayDissolveAnimation(playReverse);
 		}
+	}
+
+	// Audio Manager
+	ComponentAudioSource* down = nullptr;
+	ComponentAudioSource* up = nullptr;
+	if (root == initialDoor) {
+		down = initialDoorAudios[static_cast<int>(Audios::DOWN)];
+		up = initialDoorAudios[static_cast<int>(Audios::UP)];
+	}
+	else if(root == finalDoor) {
+		down = finalDoorAudios[static_cast<int>(Audios::DOWN)];
+		up = finalDoorAudios[static_cast<int>(Audios::UP)];
+
+	}
+	if (playReverse) {
+		if (up) up->Play();
+	}
+	else {
+		if (down) down->Play();
+
 	}
 }
 
