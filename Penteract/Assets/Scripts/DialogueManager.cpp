@@ -134,8 +134,8 @@ void DialogueManager::Start() {
 	dialoguesArray[23] = Dialogue(DialogueWindow::ONIMARU, true, "In long hallways\nis where I perform best.\nWatch how it is done.", nullptr);
 
 	// LEVEL 1 - ONIMARU TUTORIAL
-	dialoguesArray[24] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "Particle Push", nullptr);
-	dialoguesArray[25] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "(Hold) Shield", nullptr);
+	dialoguesArray[24] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "(Hold) Shield", nullptr);
+	dialoguesArray[25] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "Particle Push", nullptr);
 	dialoguesArray[26] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "Ultimate", &dialoguesArray[27]);
 	dialoguesArray[27] = Dialogue(DialogueWindow::TUTO_ONIMARU_ULTI, true, "", nullptr);
 
