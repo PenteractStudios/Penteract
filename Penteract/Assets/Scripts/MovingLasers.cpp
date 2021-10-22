@@ -103,9 +103,12 @@ void MovingLasers::Update() {
 
     if (currentState != GeneratorState::SHOOT) {
         if (laserObject && laserObject->IsActive()) laserObject->Disable();
+        Physics::UpdateRigidbody(laserCollider);
+        laserCollider->Disable();
     }
     else {
         if (laserObject && !laserObject->IsActive()) laserObject->Enable();
+        Physics::UpdateRigidbody(laserCollider);
     }
 }
 
