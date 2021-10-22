@@ -13,7 +13,7 @@ void Character::OnDeath() {
 
 }
 
-void Character::Recover(float recoveryLife_) {
+void Character::Recover(float recoveryLife_) {  
 	float difference = totalLifePoints - lifePoints;
 	if (recoveryLife_ > difference) {
 		lifePoints = totalLifePoints;
