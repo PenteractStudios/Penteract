@@ -104,6 +104,7 @@ void GameController::Update() {
 					if (showWireframe) { // If Wireframe enabled when leaving God Mode, update to Shaded
 						Debug::UpdateShadingMode("Shaded");
 					}
+					if (camera) GameplaySystems::SetRenderCamera(camera);
 					godModeController->Disable();
 				} else {
 					if (showWireframe) { // If Wireframe enabled when entering GodMode, update to Wireframe
@@ -125,27 +126,22 @@ void GameController::Update() {
 	}
 
 	// Static cameras
-	if (!Debug::IsGodModeOn() && !isPaused) {
+	if (Debug::IsGodModeOn() && !isPaused) {
 		if (Input::GetKeyCode(Input::KEYCODE::KEY_0) && gameCamera) {
 			camera = gameCamera->GetComponent<ComponentCamera>();
 			GameplaySystems::SetRenderCamera(camera);
-			Debug::SetGodModeOn(false);
 		}
 		if (Input::GetKeyCode(Input::KEYCODE::KEY_1) && staticCamera1) {
 			GameplaySystems::SetRenderCamera(staticCamera1);
-			Debug::SetGodModeOn(false);
 		}
 		if (Input::GetKeyCode(Input::KEYCODE::KEY_2) && staticCamera2) {
 			GameplaySystems::SetRenderCamera(staticCamera2);
-			Debug::SetGodModeOn(false);
 		}
 		if (Input::GetKeyCode(Input::KEYCODE::KEY_3) && staticCamera3) {
 			GameplaySystems::SetRenderCamera(staticCamera3);
-			Debug::SetGodModeOn(false);
 		}
 		if (Input::GetKeyCode(Input::KEYCODE::KEY_4) && staticCamera4) {
 			GameplaySystems::SetRenderCamera(staticCamera4);
-			Debug::SetGodModeOn(false);
 		}
 	}
 
