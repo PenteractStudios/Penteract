@@ -176,13 +176,13 @@ void DialogueManager::Start() {
 	dialoguesArray[60] = Dialogue(DialogueWindow::DUKE, true, "Welcome to the end\nof the line.", &dialoguesArray[61], 2);
 	dialoguesArray[61] = Dialogue(DialogueWindow::DUKE, true, "This is your last\nchance to rejoin\nMilibot and leave\nthis place alive.", &dialoguesArray[62], 2);
 	dialoguesArray[62] = Dialogue(DialogueWindow::FANG, true, "Never!", &dialoguesArray[63], 2);
-	dialoguesArray[63] = Dialogue(DialogueWindow::ONIMARU, true, "Get down here and\nFace us, Duke!", &dialoguesArray[64], 2);
+	dialoguesArray[63] = Dialogue(DialogueWindow::ONIMARU, true, "Come and\nface us, Duke!", &dialoguesArray[64], 2);
 	dialoguesArray[64] = Dialogue(DialogueWindow::DUKE, true, "As you wish...", nullptr, 2);
 
 	// BOSS LEVEL - FINAL
 	dialoguesArray[65] = Dialogue(DialogueWindow::DUKE, true, "Ugh...\nImpossible...", &dialoguesArray[66], 2);
 	dialoguesArray[66] = Dialogue(DialogueWindow::ONIMARU, true, "It is over, Duke.", &dialoguesArray[67], 2);
-	dialoguesArray[67] = Dialogue(DialogueWindow::DUKE, true, "Stop!\n I'll pay you anything!\nJust don't kill me!", &dialoguesArray[68], 2);
+	dialoguesArray[67] = Dialogue(DialogueWindow::DUKE, true, "Stop!\n I'll pay you anything!\nI'll let you be free!\nJust don't kill me!", &dialoguesArray[68], 2);
 	dialoguesArray[68] = Dialogue(DialogueWindow::FANG, true, "No target left alive.", nullptr, 2);
 }
 
