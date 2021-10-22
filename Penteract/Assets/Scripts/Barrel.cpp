@@ -25,7 +25,7 @@ void Barrel::Start() {
 	barrelMesh = barrel->GetParent()->GetChild("BarrelMesh");
 	if (barrelMesh) {
 		obstacle = barrelMesh->GetComponent<ComponentObstacle>();
-		if(!onFloor) obstacle->Disable();
+		if(!onFloor && obstacle) obstacle->Disable();
 	}
 
 	barrelCollider = barrel->GetParent()->GetChild("Barrel");
@@ -121,10 +121,11 @@ void Barrel::Update() {
 			float3 barrelPos = parentTransform->GetGlobalPosition();
 			barrelPos.y = 2.765f;
 			parentTransform->SetGlobalPosition(barrelPos);
-			startTimerToDestroy = true;
-			timerDestroyActivated = true;
+			//startTimerToDestroy = true;
+			//timerDestroyActivated = true;
+			isHit = true;
 			onFloor = true;
-			obstacle->Enable();
+			//obstacle->Enable();
 			if (particlesShadow) {
 				particlesShadow->StopChildParticles();
 			}
