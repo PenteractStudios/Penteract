@@ -326,7 +326,7 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 		if (!blastInUse) blastCooldownRemaining -= Time::GetDeltaTime();
 	}
 	//ShieldCooldown
-	if (shield->NeedsRecharging()) {
+	if (shield->NeedsRecharging() && !IsShielding()) {
 		if (shieldCooldownRemainingCharge <= 0.f) {
 			shield->IncreaseCharge();
 			shieldCooldownRemainingCharge = shield->GetChargeCooldown();

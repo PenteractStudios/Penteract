@@ -12,6 +12,7 @@ class NoodleShop : public Script
 public:
 	UID doorUID = 0;
 	UID noodleShopObstacleUID = 0;
+	UID audioWarningUID = 0;
 
 public:
 	void Start() override;
@@ -21,6 +22,5 @@ public:
 private:
 	GameObject* gameObject = nullptr;
 	FactoryDoors* script = nullptr;
-
 };
 

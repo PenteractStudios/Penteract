@@ -22,14 +22,17 @@ void LasersGenerator::Start() {
 
     if (ownerGo) {
         animationComp = ownerGo->GetComponent<ComponentAnimation>();
+        audioComp = ownerGo->GetComponent<ComponentAudioSource>();
     }
     if (pair) {
         pairAnimationComp = pair->GetComponent<ComponentAnimation>();
+        pairAudioComp = pair->GetComponent<ComponentAudioSource>();
         pairScript = GET_SCRIPT(pair, LasersGenerator);
     }
 
     laserObject = GameplaySystems::GetGameObject(laserTargetUID);
     if (laserObject) {
+        laserAudio = laserObject->GetComponent<ComponentAudioSource>();
         laserObject->Disable();
     }
 
@@ -37,6 +40,8 @@ void LasersGenerator::Start() {
     if (laserWarning) {
         laserWarning->Disable();
     }
+
+    
 }
 
 void LasersGenerator::Update() {
@@ -53,14 +58,20 @@ void LasersGenerator::Update() {
                 if (laserWarning) {
                     laserWarning->Enable();
                     ComponentParticleSystem* laserWarningVFX = laserWarning->GetComponent<ComponentParticleSystem>();
-                    if (laserWarningVFX) laserWarningVFX->PlayChildParticles();
+                    ComponentAudioSource* audioWarning = laserWarning->GetComponent<ComponentAudioSource>();
+                    if (laserWarningVFX) {
+                        laserWarningVFX->PlayChildParticles();
+                        if (audioWarning) audioWarning->Play();
+                    }
                 }
                 pairScript->beingUsed = true;
                 if (!beingUsed) {
                     animationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::IDLE)] + states[static_cast<unsigned int>(GeneratorState::START)]);
+                    if (audioComp && !audioComp->IsPlaying()) audioComp->Play();
                 }
                 if (pairScript->currentState == GeneratorState::IDLE) {
                     pairAnimationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::IDLE)] + states[static_cast<unsigned int>(GeneratorState::START)]);
+                    if (pairAudioComp && !pairAudioComp->IsPlaying()) pairAudioComp->Play();
                 }
             }
         }
@@ -83,9 +94,11 @@ void LasersGenerator::Update() {
                 pairScript->beingUsed = false;
                 if (!beingUsed) {
                     animationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::SHOOT)] + states[static_cast<unsigned int>(GeneratorState::IDLE)]);
+                    if (audioComp && audioComp->IsPlaying()) audioComp->Stop();
                 }
                 if (pairScript->currentState == GeneratorState::IDLE) {
                     pairAnimationComp->SendTrigger(states[static_cast<unsigned int>(GeneratorState::SHOOT)] + states[static_cast<unsigned int>(GeneratorState::IDLE)]);
+                    if (pairAudioComp && pairAudioComp->IsPlaying()) pairAudioComp->Stop();
                 }
             }
         }
@@ -93,10 +106,16 @@ void LasersGenerator::Update() {
     }
 
     if (currentState != GeneratorState::SHOOT) {
-        if (laserObject && laserObject->IsActive()) laserObject->Disable();
+        if (laserObject && laserObject->IsActive()) {
+            if (laserAudio) laserAudio->Stop();
+            laserObject->Disable();
+        }
     }
     else {
-        if (laserObject && !laserObject->IsActive()) laserObject->Enable();
+        if (laserObject && !laserObject->IsActive()) {
+            laserObject->Enable();
+            if (laserAudio) laserAudio->Play();
+        }
     }
 }
 

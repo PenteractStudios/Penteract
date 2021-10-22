@@ -5,6 +5,7 @@ class ComponentAnimation;
 class ComponentTransform;
 class ComponentParticleSystem;
 class ComponentBoxCollider;
+class ComponentAudioSource;
 
 class MovingLasers : public Script
 {
@@ -30,7 +31,7 @@ public:
 
 	bool movingToInit = true;
 
-	float movementSpeed = 1.0f;
+	float movementSpeed = 10.0f;
 
 	float3 minLaserEscale = float3(1.f, 1.f, 1.f);
 	float3 maxLaserEscale = float3(1.f, 2.05f,1.f);
@@ -60,14 +61,19 @@ private:
 
 	ComponentAnimation* animationComp = nullptr;
 	ComponentAnimation* pairAnimationComp = nullptr;
+	ComponentAudioSource* audioComp = nullptr;
+
 	GeneratorState currentState = GeneratorState::IDLE;
 	ComponentTransform* transform = nullptr;
+
 	ComponentTransform* laserTransform = nullptr;
 	GameObject* laserObject = nullptr;
+	ComponentAudioSource* laserObjectSFX = nullptr;
 	ComponentBoxCollider* laserCollider = nullptr;
 	GameObject* laserWarning = nullptr;
 	MovingLasers* pairScript = nullptr;
 	ComponentParticleSystem* laserWarningVFX = nullptr;
+	ComponentAudioSource* laserWarningSFX = nullptr;
 	bool beingUsed = false;
 
 	float chargingTimer = 0.f;
