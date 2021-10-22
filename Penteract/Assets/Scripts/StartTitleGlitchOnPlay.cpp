@@ -53,7 +53,7 @@ void StartTitleGlitchOnPlay::DoTransition() {
 
 		SceneManager::ChangeScene(sceneUID);
 
-		PlayerController::currentLevel = levelSelected;
+		PlayerController::currentLevel = GameplaySystems::GetGlobalVariable(globalLevel, 1);
 
 		/* TODO: Control the upgrades*/
 		//Player::level1Upgrade = false;

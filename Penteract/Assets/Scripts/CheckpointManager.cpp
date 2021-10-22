@@ -7,7 +7,6 @@
 #include "GlobalVariables.h"
 
 EXPOSE_MEMBERS(CheckpointManager) {
-
 	MEMBER(MemberType::GAME_OBJECT_UID, avatarUID),
 	MEMBER(MemberType::FLOAT, distanceThreshold),
 	MEMBER(MemberType::FLOAT, timeBetweenChecks),
@@ -32,8 +31,6 @@ void CheckpointManager::Start() {
 		if (i < static_cast<int>(UIAudio::TOTAL)) audios[i] = &src;
 		++i;
 	}
-
-	GameplaySystems::SetGlobalVariable(globalCheckpoint, 0);
 
 	avatarObj = GameplaySystems::GetGameObject(avatarUID);
 
@@ -84,7 +81,7 @@ void CheckpointManager::Update() {
 		agent = playerScript->playerFang.agent; // The first time to load the game (always be Fang)
 		if (!agent && !transform) return;
 		agent->RemoveAgentFromCrowd();
-		transform->SetGlobalPosition(runtimeCheckpointPositions[globalCheckpoint, 0]);
+		transform->SetGlobalPosition(runtimeCheckpointPositions[GameplaySystems::GetGlobalVariable(globalCheckpoint, 0)]);
 		agent->AddAgentToCrowd();
 	}
 
@@ -116,7 +113,7 @@ void CheckpointManager::Update() {
 			if (!agent && !transform) return;
 			agent->RemoveAgentFromCrowd();
 			GameplaySystems::SetGlobalVariable(globalCheckpoint, checkpointToSet);
-			transform->SetGlobalPosition(runtimeCheckpointPositions[checkpointToSet]);
+			transform->SetGlobalPosition(runtimeCheckpointPositions[GameplaySystems::GetGlobalVariable(globalCheckpoint, 0)]);
 			agent->AddAgentToCrowd();
 		}
 	}

@@ -44,6 +44,5 @@ private:
 	ComponentSelectable* selectable = nullptr;
 	ComponentAudioSource* audios[static_cast<int>(UIAudio::TOTAL)] = { nullptr };
 	bool dirty = true;
-
 };
 

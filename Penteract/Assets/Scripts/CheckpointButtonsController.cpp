@@ -50,11 +50,13 @@ void CheckpointButtonsController::Start() {
 	buttonsLevel2.push_back(btnLevel2_Checkpoint2);
 	buttonsLevel2.push_back(btnLevel2_Checkpoint3);
 
-	// TODO: Transform const char* to int
-	GameplaySystems::GetGlobalVariable(globalLevel, actualLevel);
-	GameplaySystems::GetGlobalVariable(globalCheckpoint, actualCheckpoint);
+	/* TESTING TO unlock some buttons*/
+	GameplaySystems::SetGlobalVariable(globalLevel, 2);
+	GameplaySystems::SetGlobalVariable(globalCheckpoint, 1);
 
-	/* Disabled the buttons*/
+	actualLevel = GameplaySystems::GetGlobalVariable(globalLevel, 1);
+	actualCheckpoint = GameplaySystems::GetGlobalVariable(globalCheckpoint, 0);
+
 	switch (actualLevel) {
 		case 1:
 			for (int cp = 0; cp < buttonsLevel1.size(); cp++) {
@@ -66,14 +68,16 @@ void CheckpointButtonsController::Start() {
 			btnLevel3_Checkpoint0->Disable();
 			break;
 		case 2:
+			for (int cp = 0; cp < buttonsLevel2.size(); cp++) {
+				if (cp > actualCheckpoint) buttonsLevel2[cp]->Disable();
+			}
+			btnLevel3_Checkpoint0->Disable();
 			break;
 		case 3:
-			btnLevel3_Checkpoint0->Disable();
 			break;
 		default:
 			break;
 	}
-	
 }
 
 void CheckpointButtonsController::Update() {
