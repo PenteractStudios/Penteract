@@ -1213,7 +1213,6 @@ void HUDManager::SetPictoState(Cooldowns cooldown, PictoState newState) {
 		colorToUse = cooldown == Cooldowns::SWITCH_SKILL ? switchPictoColorNotInUse : skillPictoColorAvailable;
 		break;
 	case PictoState::UNAVAILABLE:
-		Debug::Log("NotAvailableColor");
 		colorToUse = cooldown == Cooldowns::SWITCH_SKILL ? switchPictoColorNotInUse : skillPictoColorNotAvailable;
 		break;
 	case PictoState::IN_USE:
