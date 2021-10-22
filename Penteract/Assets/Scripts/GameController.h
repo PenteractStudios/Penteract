@@ -44,6 +44,8 @@ public:
 
 	UID godModeControllerUID = 0;
 
+	UID skyboxUID = 0;
+
 	float speed = 50.f;
 	float rotationSpeedX = 10.f;
 	float rotationSpeedY = 10.f;
@@ -75,6 +77,9 @@ private:
 	StatsDisplayer* statsController = nullptr;
 
 	GameObject* godModeController = nullptr;
+
+	GameObject* skybox = nullptr;
+
 	float yaw = 0.f;
 	float pitch = 0.f;
 	bool showWireframe = false;
