@@ -25,6 +25,7 @@ EXPOSE_MEMBERS(GodModeController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, plazaDoorUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, cafeteriaDoorUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, bridgeDoorUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, extraDoorUID),
 	/* Dialog triggers */
 	MEMBER(MemberType::GAME_OBJECT_UID, dialogTriggersUID)
 };
@@ -51,6 +52,7 @@ void GodModeController::Start() {
 	plazaDoor = GameplaySystems::GetGameObject(plazaDoorUID);
 	cafeteriaDoor = GameplaySystems::GetGameObject(cafeteriaDoorUID);
 	bridgeDoor = GameplaySystems::GetGameObject(bridgeDoorUID);
+	extraDoor = GameplaySystems::GetGameObject(extraDoorUID);
 
 	/* Dialog triggers */
 	dialogTriggers = GameplaySystems::GetGameObject(dialogTriggersUID);
@@ -63,6 +65,7 @@ void GodModeController::Start() {
 	doorPreviousStates.emplace_back(plazaDoor, plazaDoor ? plazaDoor->IsActive() : false);
 	doorPreviousStates.emplace_back(cafeteriaDoor, cafeteriaDoor ? cafeteriaDoor->IsActive() : false);
 	doorPreviousStates.emplace_back(bridgeDoor, bridgeDoor ? bridgeDoor->IsActive() : false);
+	doorPreviousStates.emplace_back(extraDoor, extraDoor ? extraDoor->IsActive() : false);
 
 	for (GameObject* child : uiCanvas->GetChildren()) {
 		if (child->HasComponent<ComponentToggle>()) {
