@@ -3,6 +3,7 @@
 #include "Scripting/Script.h"
 
 class ComponentAnimation;
+class ComponentAudioSource;
 
 class LasersGenerator : public Script
 {
@@ -37,9 +38,12 @@ private:
 
 	ComponentAnimation* animationComp = nullptr;
 	ComponentAnimation* pairAnimationComp = nullptr;
+	ComponentAudioSource* audioComp = nullptr;
+	ComponentAudioSource* pairAudioComp = nullptr;
 	GeneratorState currentState = GeneratorState::IDLE;
 
 	GameObject* laserObject = nullptr;
+	ComponentAudioSource* laserAudio = nullptr;
 	GameObject* laserWarning = nullptr;
 	LasersGenerator* pairScript = nullptr;
 
