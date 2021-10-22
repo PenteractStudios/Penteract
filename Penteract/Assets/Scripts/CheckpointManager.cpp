@@ -16,7 +16,16 @@ EXPOSE_MEMBERS(CheckpointManager) {
 	MEMBER(MemberType::FLOAT3, checkpointPosition3),
 	MEMBER(MemberType::FLOAT3, checkpointPosition4),
 	MEMBER(MemberType::FLOAT3, checkpointPosition5),
-	MEMBER_SEPARATOR("BUTTONS IN START MENU"),
+	MEMBER_SEPARATOR("ENCOUNTERS LEVEL"),
+	MEMBER(MemberType::GAME_OBJECT_UID, encounter1UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, encounter2UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, encounter3UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, encounter4UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, encounter5UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, encounter6UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, encounter7UID),
+	MEMBER_SEPARATOR("DOORS LEVEL")
+
 };
 
 GENERATE_BODY_IMPL(CheckpointManager);
@@ -53,6 +62,16 @@ void CheckpointManager::Start() {
 	// transform->SetGlobalPosition(runtimeCheckpointPositions[GameplaySystems::GetGlobalVariable(globalCheckpoint, 0)]);
 	
 	playerScript = GET_SCRIPT(avatarObj, PlayerController);
+
+	/* Control encounters by actual checkpoint */
+	switch (GameplaySystems::GetGlobalVariable(globalCheckpoint,0)) {
+	case 1:
+		break;
+	case 2:
+		break;
+	default:
+		break;
+	}
 }
 
 void CheckpointManager::CheckDistanceWithCheckpoints() {

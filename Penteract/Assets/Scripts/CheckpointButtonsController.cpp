@@ -50,10 +50,6 @@ void CheckpointButtonsController::Start() {
 	buttonsLevel2.push_back(btnLevel2_Checkpoint2);
 	buttonsLevel2.push_back(btnLevel2_Checkpoint3);
 
-	/* TESTING TO unlock some buttons*/
-	GameplaySystems::SetGlobalVariable(globalLevel, 2);
-	GameplaySystems::SetGlobalVariable(globalCheckpoint, 1);
-
 	actualLevel = GameplaySystems::GetGlobalVariable(globalLevel, 1);
 	actualCheckpoint = GameplaySystems::GetGlobalVariable(globalCheckpoint, 0);
 

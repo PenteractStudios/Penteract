@@ -8,6 +8,7 @@
 class ComponentAudioSource;
 class ComponentAgent;
 class ComponentSelectable;
+class GameObject;
 class PlayerController;
 
 /// <summary>
@@ -33,6 +34,15 @@ public:
 	float distanceThreshold, timeBetweenChecks, timeBetweenChecksCounter;
 
 	/* Encounters Level...*/
+	UID encounter1UID, encounter2UID, encounter3UID, encounter4UID, encounter5UID, encounter6UID, encounter7UID;
+	GameObject* encounter1 = nullptr;
+	GameObject* encounter2 = nullptr;
+	GameObject* encounter3 = nullptr;
+	GameObject* encounter4 = nullptr;
+	GameObject* encounter5 = nullptr;
+	GameObject* encounter6 = nullptr;
+	GameObject* encounter7 = nullptr;
+
 
 private:
 	void CheckDistanceWithCheckpoints();

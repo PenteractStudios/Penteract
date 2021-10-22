@@ -2,6 +2,7 @@
 
 constexpr const char* globalCheckpoint = "Checkpoint";			// This variable keeps track of the last reached checkpoint. When the player dies, he will be able to resume the game at that point.
 constexpr const char* globalLevel = "Level";					// This variable keeps track of the last reached level. When the player dies, he will be able to resume the game at that level.
+constexpr const char* isFirstPlay = "IsFirstPlay";				// This variable change when press Retry -> To not load the video or the tutorial in the second gameplay of the user
 
 constexpr const char* globalVariableKeyPlayVideoScene1 = "CameFromMainMenu";
 constexpr const char* isVideoActive = "IsVideoActive";			// isVideoActive is used to check if any video is Active and playing on the scene.
