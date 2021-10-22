@@ -391,14 +391,18 @@ bool Onimaru::IsInstantOrientation(bool useGamepad) const {
 void Onimaru::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
 	if (stateMachineEnum == StateMachineEnum::PRINCIPAL) {
 		if (std::strcmp(eventName, "FootstepRight")) {
-			if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_RIGHT)]) {
-				onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_RIGHT)]->Play();
+			ComponentAudioSource* audio = onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_RIGHT)];
+			if (audio) {
+				audio->SetPitch((float) rand() / RAND_MAX * 0.5 + 0.75f);
+				audio->Play();
 			}
 			if (rightFootstepsVFX) rightFootstepsVFX->PlayChildParticles();
 		}
 		else if (std::strcmp(eventName, "FootstepLeft")) {
-			if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_LEFT)]) {
-				onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_LEFT)]->Play();
+			ComponentAudioSource* audio = onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_LEFT)];
+			if (audio) {
+				audio->SetPitch((float) rand() / RAND_MAX * 0.5 + 0.75f);
+				audio->Play();
 			}
 			if (leftFootstepsVFX) leftFootstepsVFX->PlayChildParticles();
 		}
