@@ -24,8 +24,12 @@ EXPOSE_MEMBERS(CheckpointManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, encounter5UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, encounter6UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, encounter7UID),
-	MEMBER_SEPARATOR("DOORS LEVEL")
-
+	MEMBER_SEPARATOR("DOORS & LASERS LEVEL"),
+	MEMBER(MemberType::GAME_OBJECT_UID, doors1UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, doors2UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, doors3UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, doors4UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, doors5UID),
 };
 
 GENERATE_BODY_IMPL(CheckpointManager);
@@ -63,14 +67,64 @@ void CheckpointManager::Start() {
 	
 	playerScript = GET_SCRIPT(avatarObj, PlayerController);
 
-	/* Control encounters by actual checkpoint */
-	switch (GameplaySystems::GetGlobalVariable(globalCheckpoint,0)) {
-	case 1:
-		break;
-	case 2:
-		break;
-	default:
-		break;
+	// TODO: Assign UID to GameObject
+	encounter1 = GameplaySystems::GetGameObject(encounter1UID);
+	encounter2 = GameplaySystems::GetGameObject(encounter2UID);
+	encounter3 = GameplaySystems::GetGameObject(encounter3UID);
+	encounter4 = GameplaySystems::GetGameObject(encounter4UID);
+	encounter5 = GameplaySystems::GetGameObject(encounter5UID);
+	encounter6 = GameplaySystems::GetGameObject(encounter6UID);
+	encounter7 = GameplaySystems::GetGameObject(encounter7UID);
+
+	doors1 = GameplaySystems::GetGameObject(doors1UID);
+	doors2 = GameplaySystems::GetGameObject(doors2UID);
+	doors3 = GameplaySystems::GetGameObject(doors3UID);
+	doors4 = GameplaySystems::GetGameObject(doors4UID);
+	doors5 = GameplaySystems::GetGameObject(doors5UID);
+
+	if (!encounter1 && !encounter2 && !encounter3 && !encounter4 && !encounter5 && !encounter6 && !encounter7) return;
+	if (!doors1 && !doors2 && !doors3 && !doors4 && !doors5) return;
+
+	/* Controller every particularity of the level */
+
+	if (GameplaySystems::GetGlobalVariable(globalLevel, 0) == 1) {
+		if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) > 0) {
+			/* Control encounters by actual checkpoint */
+			switch (1) {
+			case 1:
+				encounter1->Disable();
+				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 1) break;
+			case 2:
+				encounter2->Disable();
+				doors1->Disable();
+				doors2->Disable();
+				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 2) break;
+			case 3:
+				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 3) break;
+			case 4:
+				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 4) break;
+			default:
+				break;
+			}
+		}
+	}
+
+	if (GameplaySystems::GetGlobalVariable(globalLevel, 0) == 2) {
+		if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) > 0) {
+			/* Control encounters by actual checkpoint */
+			switch (1) {
+			case 1:
+				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 1) break;
+			case 2:
+
+				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 2) break;
+			case 3:
+
+				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 3) break;
+			default:
+				break;
+			}
+		}
 	}
 }
 

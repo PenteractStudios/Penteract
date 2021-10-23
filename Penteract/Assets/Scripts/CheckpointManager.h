@@ -33,7 +33,7 @@ public:
 	float3 checkpointPosition1, checkpointPosition2, checkpointPosition3, checkpointPosition4, checkpointPosition5;
 	float distanceThreshold, timeBetweenChecks, timeBetweenChecksCounter;
 
-	/* Encounters Level...*/
+	/* Encounters Level */
 	UID encounter1UID, encounter2UID, encounter3UID, encounter4UID, encounter5UID, encounter6UID, encounter7UID;
 	GameObject* encounter1 = nullptr;
 	GameObject* encounter2 = nullptr;
@@ -43,6 +43,15 @@ public:
 	GameObject* encounter6 = nullptr;
 	GameObject* encounter7 = nullptr;
 
+	/* Doors Level */
+	UID doors1UID, doors2UID, doors3UID, doors4UID, doors5UID;
+	GameObject* doors1 = nullptr;
+	GameObject* doors2 = nullptr;
+	GameObject* doors3 = nullptr;
+	GameObject* doors4 = nullptr;
+	GameObject* doors5 = nullptr;
+
+	/* Dialogs Level */
 
 private:
 	void CheckDistanceWithCheckpoints();
