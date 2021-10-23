@@ -374,8 +374,9 @@ void HUDManager::StartUsingSkill(Cooldowns cooldown) {
 }
 
 void HUDManager::StopUsingSkill(Cooldowns cooldown) {
-	if (cooldown != Cooldowns::SWITCH_SKILL)
+	if (cooldown != Cooldowns::SWITCH_SKILL) {
 		SetPictoState(cooldown, cooldowns[static_cast<int>(cooldown)] < 1.0f ? PictoState::UNAVAILABLE : PictoState::AVAILABLE);
+	}
 }
 
 void HUDManager::OnCharacterDeath() {
@@ -393,8 +394,7 @@ void HUDManager::ShowBossHealth() {
 	dukeHealthParent->Enable();
 }
 
-void HUDManager::HideBossHealth()
-{
+void HUDManager::HideBossHealth() {
 	if (!dukeHealthParent) return;
 	dukeHealthParent->Disable();
 }
@@ -630,13 +630,16 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 
 	if (fillColor && image) {
 
-		if (!fillColor->IsFill() )fillColor->SetIsFill(true); //Double check the image being fill
+		if (!fillColor->IsFill())fillColor->SetIsFill(true); //Double check the image being fill
 
 		fillColor->SetFillValue(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
 		if (playerController) {
 			if (playerController->AreBothCharactersAlive()) {
 				if (cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1) {
-					fillColor->SetColor(float4(switchSkillColorNotAvailable.xyz(), Clamp(WAVING_EFFECT_MIN_ALPHA + cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)],WAVING_EFFECT_MIN_ALPHA, WAVING_EFFECT_MAX_ALPHA)));
+					fillColor->SetColor(float4(switchSkillColorNotAvailable.xyz(), Clamp(WAVING_EFFECT_MIN_ALPHA + cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)], WAVING_EFFECT_MIN_ALPHA, WAVING_EFFECT_MAX_ALPHA)));
+				}
+				else {
+					fillColor->SetColor(float4(switchSkillColorAvailable.xyz(), Clamp(WAVING_EFFECT_MIN_ALPHA + cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)], WAVING_EFFECT_MIN_ALPHA, WAVING_EFFECT_MAX_ALPHA)));
 				}
 			} else {
 				fillColor->SetColor(switchSkillColorDeadCharacter);
@@ -1195,8 +1198,7 @@ void HUDManager::PlayShowHealthBossEffect() {
 	if (showBossHealthTimer == showBossHealthTotalTime) {
 		playingBossHealthEffect = false;
 		showBossHealthTimer = 0.f;
-	}
-	else {
+	} else {
 		showBossHealthTimer += Time::GetDeltaTime();
 	}
 
@@ -1216,6 +1218,8 @@ void HUDManager::SetPictoState(Cooldowns cooldown, PictoState newState) {
 	case PictoState::IN_USE:
 		colorToUse = cooldown == Cooldowns::SWITCH_SKILL ? switchPictoColorInUse : skillPictoColorInUse;
 		break;
+	default:
+		break;
 	}
 
 	std::vector<GameObject*>children;
@@ -1228,10 +1232,15 @@ void HUDManager::SetPictoState(Cooldowns cooldown, PictoState newState) {
 		children = switchSkillParent->GetChildren();
 	}
 
-	if (cooldown != Cooldowns::SWITCH_SKILL) {
+	if (cooldown < Cooldowns::SWITCH_SKILL) {
+
+		bool isUltimate = cooldown == Cooldowns::FANG_SKILL_3 || cooldown == Cooldowns::ONIMARU_SKILL_3;
+
+		int sizeToLookFor = isUltimate ? HIERARCHY_INDEX_ULTIMATE_ABILITY_PICTO_SHADE : HIERARCHY_INDEX_ABILITY_PICTO_SHADE;
+
 		//Character-specific ability picto state
-		if (children[static_cast<int>(cooldown) % 3]->GetChildren().size() > HIERARCHY_INDEX_ABILITY_PICTO_SHADE - 1) {
-			GameObject* pictoShade = children[(static_cast<int>(cooldown)) % 3]->GetChild(HIERARCHY_INDEX_ABILITY_PICTO_SHADE);
+		if (children[static_cast<int>(cooldown) % 3]->GetChildren().size() > sizeToLookFor - 1) {
+			GameObject* pictoShade = children[(static_cast<int>(cooldown)) % 3]->GetChild(isUltimate ? HIERARCHY_INDEX_ULTIMATE_ABILITY_PICTO_SHADE : HIERARCHY_INDEX_ABILITY_PICTO_SHADE);
 
 			if (pictoShade->HasChildren()) {
 				GameObject* pictoFillObj = pictoShade->GetChild(static_cast<unsigned int>(0));

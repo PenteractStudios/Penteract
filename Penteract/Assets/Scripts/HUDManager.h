@@ -39,6 +39,7 @@ public:
 	};
 
 	enum class PictoState {
+		START,
 		AVAILABLE,
 		UNAVAILABLE,
 		IN_USE
@@ -88,7 +89,11 @@ public:
 	float switchPostDeployMovementTime = 0.2f;
 	float switchExtraOffset = 20.0f;
 	SwitchState switchState = SwitchState::IDLE;
-	PictoState pictoStates[static_cast<int>(Cooldowns::TOTAL)];
+	PictoState pictoStates[static_cast<int>(Cooldowns::TOTAL)] = { 
+		PictoState::START,PictoState::START,PictoState::START,
+		PictoState::START,PictoState::START,PictoState::START,
+		PictoState::START 
+	};
 
 	float abilityAlphaWavingTotalTime = 1.25f;
 
