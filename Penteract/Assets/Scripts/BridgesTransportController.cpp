@@ -30,7 +30,13 @@ void BridgesTransportController::Start() {
 	}
 
 	initialBridge = GameplaySystems::GetGameObject(initialBridgeUID);
+	if (initialBridge) {
+		audioInitialBridge = initialBridge->GetComponent<ComponentAudioSource>();
+	}
 	finalBridge = GameplaySystems::GetGameObject(finalBridgeUID);
+	if (finalBridge) {
+		audioFinalBridge = finalBridge->GetComponent<ComponentAudioSource>();
+	}
 	bridgeObstacles = GameplaySystems::GetGameObject(bridgeObstaclesUID);
 
 	if (bridgeObstacles && bridgeObstacles->IsActive()) {
@@ -96,8 +102,15 @@ void BridgesTransportController::MoveBridges()
 			if (transformInitialBridge->GetPosition().x <= POS_X_CLOSE_INITIAL_BRIDGE && transformInitialBridge->GetPosition().z <= POS_Z_CLOSE_INITIAL_BRIDGE
 				&& transformFinalBridge->GetPosition().x >= POS_XZ_CLOSE_FINAL_BRIDGE && transformFinalBridge->GetPosition().z >= POS_XZ_CLOSE_FINAL_BRIDGE) {
 				CloseBridges();
+				audioPlayed = false;
 			}
 			else {
+				if (!audioPlayed) {
+					if (audioInitialBridge) audioInitialBridge->Play();
+					if (audioFinalBridge) audioFinalBridge->Play();
+					audioPlayed = true;
+				}
+
 				transformInitialBridge->SetPosition(float3(transformInitialBridge->GetPosition().x - (speedAnimationBridges * 1), transformInitialBridge->GetPosition().y, transformInitialBridge->GetPosition().z - (speedAnimationBridges * 1)));
 				transformFinalBridge->SetPosition(float3(transformFinalBridge->GetPosition().x + (speedAnimationBridges * 1), transformFinalBridge->GetPosition().y, transformFinalBridge->GetPosition().z + (speedAnimationBridges * 1)));
 			}
@@ -113,10 +126,16 @@ void BridgesTransportController::MoveBridges()
 					bridgeObstacles->Disable();
 				}
 				isClosedBridges = false;
+				audioPlayed = false;
 				gameObject->Disable();
-				
 			}
 			else {
+				if (!audioPlayed) {
+					if (audioInitialBridge) audioInitialBridge->Play();
+					if (audioFinalBridge) audioFinalBridge->Play();
+					audioPlayed = true;
+				}
+
 				transformInitialBridge->SetPosition(float3(transformInitialBridge->GetPosition().x + (speedAnimationBridges * 1), transformInitialBridge->GetPosition().y, transformInitialBridge->GetPosition().z + (speedAnimationBridges * 1)));
 				transformFinalBridge->SetPosition(float3(transformFinalBridge->GetPosition().x + - (speedAnimationBridges * 1), transformFinalBridge->GetPosition().y, transformFinalBridge->GetPosition().z - (speedAnimationBridges * 1)));
 			}

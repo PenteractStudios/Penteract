@@ -414,3 +414,11 @@ bool AttackDronesController::BulletHellActive() const {
 bool AttackDronesController::BulletHellFinished() const {
     return bulletHellFinished;
 }
+
+bool AttackDronesController::IsBulletHellCircular() const {
+    return chosenPattern.droneFormation == DronesFormation::CIRCLE;
+}
+
+float AttackDronesController::GetPatternProjectileSpeed() const {
+    return chosenPattern.droneProjectileSpeed;
+}
