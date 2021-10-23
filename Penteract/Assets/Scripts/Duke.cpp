@@ -94,7 +94,7 @@ void Duke::ShootAndMove(const float3& playerDirection) {
 
 void Duke::MeleeAttack()
 {
-	
+
 	float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - dukeTransform->GetGlobalPosition();
 	dir.y = 0.0f;
 	if (movementScript) movementScript->Orientate(dir);
@@ -186,7 +186,7 @@ void Duke::UpdateChargeAttack() {
 	if (chargeSkidTimer < chargeSkidDuration) {
 		if (agent) {
 			agent->SetMaxSpeed(Lerp(chargeSkidMaxSpeed,chargeSkidMinSpeed, chargeSkidTimer / chargeSkidDuration));
-			
+
 			if (dukeTransform)
 				agent->SetMoveTarget(dukeTransform->GetGlobalPosition() + chargeDir, true);
 		}
@@ -236,7 +236,14 @@ void Duke::Shoot()
 	attackTimePool -= Time::GetDeltaTime();
 	if (bullet) {
 		ComponentTransform* bulletTransform = bullet->GetOwner().GetComponent<ComponentTransform>();
-		float3 targetDirection = player->GetComponent<ComponentTransform>()->GetGlobalPosition() + float3(0.f, 2.7f, 0.f) - bulletTransform->GetGlobalPosition();
+		ComponentTransform* playerTransform = player->GetComponent<ComponentTransform>();
+		PlayerController* playerController = GET_SCRIPT(player, PlayerController);
+		float3 targetDirection = playerTransform->GetGlobalPosition() + playerTransform->GetFront() + float3(0.f, 2.7f, 0.f) - bulletTransform->GetGlobalPosition();
+		if (playerController) {
+			float3 dir = playerController->playerFang.IsActive() ? playerController->playerFang.GetDirection() : playerController->playerOnimaru.GetDirection();
+			targetDirection += dir * 3.f;
+		}
+
 		bulletTransform->SetGlobalRotation(Quat::LookAt(float3(0,1,0), targetDirection, float3(0,0,-1), float3(0,1,0)));
 	}
 	if (isShooting) {
