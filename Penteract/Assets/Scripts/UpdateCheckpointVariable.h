@@ -17,5 +17,8 @@ public:
 public:
 	int actualLevel = -1;
 	int newCheckpoint = -1;
+
+private:
+	GameObject* gameObjectTrigger = nullptr;
 };
 

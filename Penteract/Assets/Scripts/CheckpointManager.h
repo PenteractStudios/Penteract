@@ -33,6 +33,11 @@ public:
 	float3 checkpointPosition1, checkpointPosition2, checkpointPosition3, checkpointPosition4, checkpointPosition5;
 	float distanceThreshold, timeBetweenChecks, timeBetweenChecksCounter;
 
+	/* Triggers Object */
+	UID triggersUID;
+	GameObject* triggers = nullptr;
+	std::vector<GameObject*> listTriggers;
+
 	/* Encounters Level */
 	UID encounter1UID, encounter2UID, encounter3UID, encounter4UID, encounter5UID, encounter6UID, encounter7UID;
 	GameObject* encounter1 = nullptr;

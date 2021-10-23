@@ -16,6 +16,8 @@ EXPOSE_MEMBERS(CheckpointManager) {
 	MEMBER(MemberType::FLOAT3, checkpointPosition3),
 	MEMBER(MemberType::FLOAT3, checkpointPosition4),
 	MEMBER(MemberType::FLOAT3, checkpointPosition5),
+	MEMBER_SEPARATOR("TRIGGERS GENERAL GAMEOBJECT"),
+	MEMBER(MemberType::GAME_OBJECT_UID, triggersUID),
 	MEMBER_SEPARATOR("ENCOUNTERS LEVEL"),
 	MEMBER(MemberType::GAME_OBJECT_UID, encounter1UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, encounter2UID),
@@ -67,7 +69,8 @@ void CheckpointManager::Start() {
 	
 	playerScript = GET_SCRIPT(avatarObj, PlayerController);
 
-	// TODO: Assign UID to GameObject
+	triggers = GameplaySystems::GetGameObject(triggersUID);
+
 	encounter1 = GameplaySystems::GetGameObject(encounter1UID);
 	encounter2 = GameplaySystems::GetGameObject(encounter2UID);
 	encounter3 = GameplaySystems::GetGameObject(encounter3UID);
@@ -82,26 +85,38 @@ void CheckpointManager::Start() {
 	doors4 = GameplaySystems::GetGameObject(doors4UID);
 	doors5 = GameplaySystems::GetGameObject(doors5UID);
 
+	if (!triggers) return;
 	if (!encounter1 && !encounter2 && !encounter3 && !encounter4 && !encounter5 && !encounter6 && !encounter7) return;
 	if (!doors1 && !doors2 && !doors3 && !doors4 && !doors5) return;
 
-	/* Controller every particularity of the level */
+	/* Disabled the triggers of the checkpoint that already passed */
+	listTriggers = triggers->GetChildren();
+	for (int i = 0; i < listTriggers.size(); i++) {
+		if (i < GameplaySystems::GetGlobalVariable(globalCheckpoint, 0)) {
+			listTriggers[i]->Disable();
+		}
+	}
 
+	/* Controller every particularity of the level */
 	if (GameplaySystems::GetGlobalVariable(globalLevel, 0) == 1) {
 		if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) > 0) {
 			/* Control encounters by actual checkpoint */
 			switch (1) {
-			case 1:
+			case 1: // After Plaza
 				encounter1->Disable();
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 1) break;
-			case 2:
+			case 2: // After Cafeteria
 				encounter2->Disable();
 				doors1->Disable();
 				doors2->Disable();
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 2) break;
-			case 3:
+			case 3: // After Transport
+				encounter3->Disable();
+				encounter4->Disable();
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 3) break;
-			case 4:
+			case 4: // After Pre-security
+				encounter5->Disable();
+				encounter6->Disable();
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 4) break;
 			default:
 				break;

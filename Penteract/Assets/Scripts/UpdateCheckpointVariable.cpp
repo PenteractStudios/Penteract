@@ -12,7 +12,7 @@ EXPOSE_MEMBERS(UpdateCheckpointVariable) {
 GENERATE_BODY_IMPL(UpdateCheckpointVariable);
 
 void UpdateCheckpointVariable::Start() {
-	
+	gameObjectTrigger = &GetOwner();
 }
 
 void UpdateCheckpointVariable::Update() {
@@ -28,4 +28,7 @@ void UpdateCheckpointVariable::OnCollision(GameObject& collidedWith, float3 coll
 		GameplaySystems::SetGlobalVariable(globalCheckpoint, newCheckpoint);
 	}
 
+	// Disabled the trigger
+	ComponentBoxCollider* boxCollider = gameObjectTrigger->GetComponent<ComponentBoxCollider>();
+	if (boxCollider) boxCollider->Disable();
 }
