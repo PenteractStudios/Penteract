@@ -174,7 +174,7 @@ bool Player::GetInputBool(InputActions action, bool useGamepad) {
 		if (useGamepad && Input::IsGamepadConnected(0)) {
 			return Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0);
 		} else {
-			return Input::GetKeyCodeDown(Input::KEYCODE::KEY_R);
+			return Input::GetKeyCodeDown(Input::KEYCODE::KEY_Q);
 		}
 		break;
 	case InputActions::SHOOT:
@@ -194,14 +194,14 @@ bool Player::GetInputBool(InputActions action, bool useGamepad) {
 		if (useGamepad && Input::IsGamepadConnected(0)) {
 			return Input::GetControllerButton(Input::SDL_CONTROLLER_BUTTON_LEFTSHOULDER, 0);
 		} else {
-			return Input::GetKeyCodeDown(Input::KEYCODE::KEY_Q);
+			return Input::GetKeyCodeDown(Input::KEYCODE::KEY_E);
 		}
 		break;
 	case InputActions::ABILITY_3:
 		if (useGamepad && Input::IsGamepadConnected(0)) {
 			return Input::GetControllerButton(Input::SDL_CONTROLLER_BUTTON_RIGHTSHOULDER, 0);
 		} else {
-			return Input::GetKeyCodeDown(Input::KEYCODE::KEY_E);
+			return Input::GetKeyCodeDown(Input::KEYCODE::KEY_R);
 		}
 		break;
 	case InputActions::INTERACT:

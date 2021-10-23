@@ -450,14 +450,14 @@ void PlayerController::Update() {
 
 	if (CanSwitch()) {
 
-		if (switchInProgress || (noCooldownMode && (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R) && (!useGamepad || !Input::IsGamepadConnected(0))
+		if (switchInProgress || (noCooldownMode && (Player::GetInputBool(InputActions::SWITCH) && (!useGamepad || !Input::IsGamepadConnected(0))
 			|| useGamepad && Input::IsGamepadConnected(0) && Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0)))) {
 
 			switchInProgress = true;
 			SwitchCharacter();
 		}
 
-		if (!switchInProgress && (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R) && (!useGamepad || !Input::IsGamepadConnected(0))
+		if (!switchInProgress && (Player::GetInputBool(InputActions::SWITCH) && (!useGamepad || !Input::IsGamepadConnected(0))
 			|| useGamepad && Input::IsGamepadConnected(0) && Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0))) {
 
 			switchInProgress = true;
