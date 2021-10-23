@@ -14,7 +14,12 @@ EXPOSE_MEMBERS(FloorIsLava) {
 	MEMBER(MemberType::BOOL, sequential),
 
 	MEMBER_SEPARATOR("Boss Exclusive Attributes"),
-	MEMBER(MemberType::FLOAT, timeTilesActiveInterphase)
+	MEMBER(MemberType::FLOAT, timeTilesActiveInterphase),
+
+	MEMBER_SEPARATOR("Sound Positioning"),
+	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
+	MEMBER(MemberType::FLOAT, soundDistance),
+	MEMBER(MemberType::GAME_OBJECT_UID, fireAudioUID)
 };
 
 GENERATE_BODY_IMPL(FloorIsLava);
@@ -39,11 +44,35 @@ void FloorIsLava::Start() {
 	timeTilesActive = timeTilesActiveNormal;
 	timeRemainingTilesActive = timeTilesActive;
 	timeRemainingWarning = timeWarning;	
+
+	// Get audio sources
+	audiosFireTilesOpening.resize(tiles.size());
+	audiosFireTilesClosing.resize(tiles.size());
+	
+	for (unsigned i = 0; i < tiles.size(); ++i) {
+		int j = 0;
+		for (ComponentAudioSource& audioComp : tiles[i]->GetComponents<ComponentAudioSource>()) {
+			if (j == (int) Audios::OPEN) {
+				audiosFireTilesOpening.push_back(&audioComp);
+			}
+			else if (j == (int) Audios::CLOSE) {
+				audiosFireTilesClosing.push_back(&audioComp);
+			} 
+			j++;
+		}
+	}
+
+	playerGameObject = GameplaySystems::GetGameObject(playerUID);
+	fireAudioGameObject = GameplaySystems::GetGameObject(fireAudioUID);
 }
 
 void FloorIsLava::Update() {
 	
 	if (!started) return;
+
+	if (playerGameObject) {
+		playerPosition = playerGameObject->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	}
 
 	//select a random corridor and arena pattern
 	if (patternFinished) {
@@ -133,6 +162,16 @@ void FloorIsLava::StartFire()
 	else {
 		timeTilesActive = timeTilesActiveNormal;
 	}
+
+	if (fireAudioGameObject) {
+		std::vector<GameObject*> children = fireAudioGameObject->GetChildren();
+		for (GameObject* gameObject : children) {
+			if (gameObject) {
+				ComponentAudioSource* audio = gameObject->GetComponent<ComponentAudioSource>();
+				if (audio) audio->Play();
+			}
+		}
+	}
 }
 
 void FloorIsLava::StopFire()
@@ -155,6 +194,16 @@ void FloorIsLava::StopFire()
 		}
 	}
 	if (sequential) sequentialCount = 0;
+
+	if (fireAudioGameObject) {
+		std::vector<GameObject*> children = fireAudioGameObject->GetChildren();
+		for (GameObject* gameObject : children) {
+			if (gameObject) {
+				ComponentAudioSource* audio = gameObject->GetComponent<ComponentAudioSource>();
+				if (audio) audio->Stop();
+			}
+		}
+	}
 }
 
 void FloorIsLava::SetRandomPattern(int pattern, const bool*& boolPattern)
@@ -193,7 +242,20 @@ void FloorIsLava::UpdateWarningTiles()
 				ComponentAnimation* animation = tiles[i]->GetComponent<ComponentAnimation>();
 				if (animation) {
 					animation->SendTrigger(animation->GetCurrentState()->name + "Opening");
-				}				
+				}
+
+				ComponentTransform* tileTransform = tiles[i]->GetComponent<ComponentTransform>();
+				if (tileTransform) {
+					float3 position = tileTransform->GetGlobalPosition();
+					if (Distance(position, playerPosition) < soundDistance) {
+						GameObject* audioOpening = tiles[i]->GetChild("AudioOpening");
+						ComponentAudioSource* audioOpeningComp = nullptr;
+						if (audioOpening) audioOpeningComp = audioOpening->GetComponent<ComponentAudioSource>();
+						if (audioOpeningComp) {
+							audioOpeningComp->Play();
+						}
+					}
+				}
 			}			
 		}
 	}
@@ -207,6 +269,19 @@ void FloorIsLava::UpdateWarningNextTiles()
 				ComponentAnimation* animation = tiles[i]->GetComponent<ComponentAnimation>();
 				if (animation) {
 					animation->SendTrigger(animation->GetCurrentState()->name + "Opening");
+				}
+
+				ComponentTransform* tileTransform = tiles[i]->GetComponent<ComponentTransform>();
+				if (tileTransform) {
+					float3 position = tileTransform->GetGlobalPosition();
+					if (Distance(position, playerPosition) < soundDistance) {
+						GameObject* audioOpening = tiles[i]->GetChild("AudioOpening");
+						ComponentAudioSource* audioOpeningComp = nullptr;
+						if (audioOpening) audioOpeningComp = audioOpening->GetComponent<ComponentAudioSource>();
+						if (audioOpeningComp) {
+							audioOpeningComp->Play();
+						}
+					}
 				}
 			}
 		}
@@ -235,6 +310,19 @@ void FloorIsLava::UpdateFireActiveTiles(bool activate)
 							boxCollider->Disable();
 							fireParticles->StopChildParticles();
 							animation->SendTrigger(animation->GetCurrentState()->name + "Closing");
+
+							ComponentTransform* tileTransform = tiles[i]->GetComponent<ComponentTransform>();
+							if (tileTransform) {
+								float3 position = tileTransform->GetGlobalPosition();
+								if (Distance(position, playerPosition) < soundDistance) {
+									GameObject* audioClosing = tiles[i]->GetChild("AudioClosing");
+									ComponentAudioSource* audioClosingComp = nullptr;
+									if (audioClosing) audioClosingComp = audioClosing->GetComponent<ComponentAudioSource>();
+									if (audioClosingComp) {
+										audioClosingComp->Play();
+									}
+								}
+							}
 						}
 					}
 				}
