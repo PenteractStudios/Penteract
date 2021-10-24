@@ -72,6 +72,9 @@ private:
 	bool skill1WasActive = false;
 	bool skill2WasActive = false;
 	bool skill3WasActive = false;
+	bool skill1OniWasActive = false;
+	bool skill2OniWasActive = false;
+	bool skill3OniWasActive = false;
 	bool switchWasActive = false;
 
 	/* Door array to keep previous state */
