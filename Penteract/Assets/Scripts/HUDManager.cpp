@@ -202,6 +202,11 @@ void HUDManager::Start() {
 		sidesHUDChildren = sidesHUDParent->GetChildren();
 		InitializeHUDSides();
 	}
+
+
+	// Disable Onimaru's health if tutorials have not been reached
+	if (!GameplaySystems::GetGlobalVariable(globalSwitchTutorialReached, true) && onimaruHealthParent) onimaruHealthParent->Disable();
+
 }
 
 void HUDManager::Update() {
@@ -209,27 +214,51 @@ void HUDManager::Update() {
 		// Switch
 	if (GameplaySystems::GetGlobalVariable(globalSwitchTutorialReached, true)) {
 		if (switchSkillParent && !switchSkillParent->IsActive()) switchSkillParent->Enable();
+		if (onimaruHealthParent && !onimaruHealthParent->IsActive()) onimaruHealthParent->Enable();	// Switch tutorial also enables Onimaru's health
 	} else {
 		if (switchSkillParent && switchSkillParent->IsActive()) switchSkillParent->Disable();
+		if (onimaruHealthParent && !onimaruHealthParent->IsActive()) onimaruHealthParent->Disable();
 	}
-	// Dash/Shield
+	// Dash
 	if (GameplaySystems::GetGlobalVariable(globalSkill1TutorialReached, true)) {
 		if (skillsFang[0] && !skillsFang[0]->IsActive()) skillsFang[0]->Enable();
 	} else {
 		if (skillsFang[0] && skillsFang[0]->IsActive()) skillsFang[0]->Disable();
 	}
-	// EMP/Blast
+	// EMP
 	if (GameplaySystems::GetGlobalVariable(globalSkill2TutorialReached, true)) {
 		if (skillsFang[1] && !skillsFang[1]->IsActive()) skillsFang[1]->Enable();
 	} else {
 		if (skillsFang[1] && skillsFang[1]->IsActive()) skillsFang[1]->Disable();
 	}
-	// Ultimate
+	// Fang Ultimate
 	if (GameplaySystems::GetGlobalVariable(globalSkill3TutorialReached, true)) {
 		if (skillsFang[2] && !skillsFang[2]->IsActive()) skillsFang[2]->Enable();
 	} else {
 		if (skillsFang[2] && skillsFang[2]->IsActive()) skillsFang[2]->Disable();
 	}
+	// Shield
+	if (GameplaySystems::GetGlobalVariable(globalSkill1TutorialReachedOni, true)) {
+		if (skillsOni[0] && !skillsOni[0]->IsActive()) skillsOni[0]->Enable();
+	}
+	else {
+		if (skillsOni[0] && skillsOni[0]->IsActive()) skillsOni[0]->Disable();
+	}
+	// Blast
+	if (GameplaySystems::GetGlobalVariable(globalSkill2TutorialReachedOni, true)) {
+		if (skillsOni[1] && !skillsOni[1]->IsActive()) skillsOni[1]->Enable();
+	}
+	else {
+		if (skillsOni[1] && skillsOni[1]->IsActive()) skillsOni[1]->Disable();
+	}
+	// Onimaru Ultimate
+	if (GameplaySystems::GetGlobalVariable(globalSkill3TutorialReachedOni, true)) {
+		if (skillsOni[2] && !skillsOni[2]->IsActive()) skillsOni[2]->Enable();
+	}
+	else {
+		if (skillsOni[2] && skillsOni[2]->IsActive()) skillsOni[2]->Disable();
+	}
+
 
 	ManageSwitch();
 	if (playingBossHealthEffect) PlayShowHealthBossEffect();
@@ -374,8 +403,9 @@ void HUDManager::StartUsingSkill(Cooldowns cooldown) {
 }
 
 void HUDManager::StopUsingSkill(Cooldowns cooldown) {
-	if (cooldown != Cooldowns::SWITCH_SKILL)
+	if (cooldown != Cooldowns::SWITCH_SKILL) {
 		SetPictoState(cooldown, cooldowns[static_cast<int>(cooldown)] < 1.0f ? PictoState::UNAVAILABLE : PictoState::AVAILABLE);
+	}
 }
 
 void HUDManager::OnCharacterDeath() {
@@ -393,8 +423,7 @@ void HUDManager::ShowBossHealth() {
 	dukeHealthParent->Enable();
 }
 
-void HUDManager::HideBossHealth()
-{
+void HUDManager::HideBossHealth() {
 	if (!dukeHealthParent) return;
 	dukeHealthParent->Disable();
 }
@@ -630,13 +659,16 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 
 	if (fillColor && image) {
 
-		if (!fillColor->IsFill() )fillColor->SetIsFill(true); //Double check the image being fill
+		if (!fillColor->IsFill())fillColor->SetIsFill(true); //Double check the image being fill
 
 		fillColor->SetFillValue(cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)]);
 		if (playerController) {
 			if (playerController->AreBothCharactersAlive()) {
 				if (cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1) {
-					fillColor->SetColor(float4(switchSkillColorNotAvailable.xyz(), Clamp(WAVING_EFFECT_MIN_ALPHA + cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)],WAVING_EFFECT_MIN_ALPHA, WAVING_EFFECT_MAX_ALPHA)));
+					fillColor->SetColor(float4(switchSkillColorNotAvailable.xyz(), Clamp(WAVING_EFFECT_MIN_ALPHA + cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)], WAVING_EFFECT_MIN_ALPHA, WAVING_EFFECT_MAX_ALPHA)));
+				}
+				else {
+					fillColor->SetColor(float4(switchSkillColorAvailable.xyz(), Clamp(WAVING_EFFECT_MIN_ALPHA + cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)], WAVING_EFFECT_MIN_ALPHA, WAVING_EFFECT_MAX_ALPHA)));
 				}
 			} else {
 				fillColor->SetColor(switchSkillColorDeadCharacter);
@@ -1195,8 +1227,7 @@ void HUDManager::PlayShowHealthBossEffect() {
 	if (showBossHealthTimer == showBossHealthTotalTime) {
 		playingBossHealthEffect = false;
 		showBossHealthTimer = 0.f;
-	}
-	else {
+	} else {
 		showBossHealthTimer += Time::GetDeltaTime();
 	}
 
@@ -1216,6 +1247,8 @@ void HUDManager::SetPictoState(Cooldowns cooldown, PictoState newState) {
 	case PictoState::IN_USE:
 		colorToUse = cooldown == Cooldowns::SWITCH_SKILL ? switchPictoColorInUse : skillPictoColorInUse;
 		break;
+	default:
+		break;
 	}
 
 	std::vector<GameObject*>children;
@@ -1228,10 +1261,15 @@ void HUDManager::SetPictoState(Cooldowns cooldown, PictoState newState) {
 		children = switchSkillParent->GetChildren();
 	}
 
-	if (cooldown != Cooldowns::SWITCH_SKILL) {
+	if (cooldown < Cooldowns::SWITCH_SKILL) {
+
+		bool isUltimate = cooldown == Cooldowns::FANG_SKILL_3 || cooldown == Cooldowns::ONIMARU_SKILL_3;
+
+		int sizeToLookFor = isUltimate ? HIERARCHY_INDEX_ULTIMATE_ABILITY_PICTO_SHADE : HIERARCHY_INDEX_ABILITY_PICTO_SHADE;
+
 		//Character-specific ability picto state
-		if (children[static_cast<int>(cooldown) % 3]->GetChildren().size() > HIERARCHY_INDEX_ABILITY_PICTO_SHADE - 1) {
-			GameObject* pictoShade = children[(static_cast<int>(cooldown)) % 3]->GetChild(HIERARCHY_INDEX_ABILITY_PICTO_SHADE);
+		if (children[static_cast<int>(cooldown) % 3]->GetChildren().size() > sizeToLookFor - 1) {
+			GameObject* pictoShade = children[(static_cast<int>(cooldown)) % 3]->GetChild(isUltimate ? HIERARCHY_INDEX_ULTIMATE_ABILITY_PICTO_SHADE : HIERARCHY_INDEX_ABILITY_PICTO_SHADE);
 
 			if (pictoShade->HasChildren()) {
 				GameObject* pictoFillObj = pictoShade->GetChild(static_cast<unsigned int>(0));
