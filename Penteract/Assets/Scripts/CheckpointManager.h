@@ -38,6 +38,11 @@ public:
 	GameObject* triggers = nullptr;
 	std::vector<GameObject*> listTriggers;
 
+	UID upgrades1UID, upgrades2UID, upgrades3UID;
+	GameObject* upgrades1 = nullptr;
+	GameObject* upgrades2 = nullptr;
+	GameObject* upgrades3 = nullptr;
+
 	/* Encounters Level */
 	UID encounter1UID, encounter2UID, encounter3UID, encounter4UID, encounter5UID, encounter6UID, encounter7UID;
 	GameObject* encounter1 = nullptr;

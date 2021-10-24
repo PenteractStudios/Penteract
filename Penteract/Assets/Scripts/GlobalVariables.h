@@ -15,3 +15,10 @@ constexpr const char* globalSkill3TutorialReached = "Skill3Reached";	// Ultimate
 constexpr const char* globalSwitchTutorialReached = "SwitchReached";	// Switch
 constexpr const char* globalswitchTutorialActive = "IsSwitchTutorialActive";	// This overrides globalSwitchTutorialReached on Fang's 'CanSwitch()', used when the Switch Tutorial appears to allow the use of the Switch then.
 
+// Upgrades
+constexpr const char* globalUpgradeLevel1_Plaza = "UpgradeLevel1_Plaza";
+constexpr const char* globalUpgradeLevel1_Cafeteria = "UpgradeLevel1_Cafeteria";
+constexpr const char* globalUpgradeLevel1_Presecurity = "UpgradeLevel1_Presecurity";
+constexpr const char* globalUpgradeLevel2_Catwalks = "UpgradeLevel2_Catwalks";
+constexpr const char* globalUpgradeLevel2_AfterArena1 = "UpgradeLevel2_AfterArena1";
+constexpr const char* globalUpgradeLevel2_FireBridge = "UpgradeLevel2_FireBridge";

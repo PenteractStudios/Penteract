@@ -54,13 +54,30 @@ void StartTitleGlitchOnPlay::DoTransition() {
 		GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, true);
 		// GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, GameplaySystems::GetGlobalVariable(globalLevel, 0) == 1 && GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 0);
 
+		if (GameplaySystems::GetGlobalVariable(globalLevel, 1) == 1 && GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 0) {
+			GameplaySystems::SetGlobalVariable(globalUpgradeLevel1_Plaza, false);
+			GameplaySystems::SetGlobalVariable(globalUpgradeLevel1_Cafeteria, false);
+			GameplaySystems::SetGlobalVariable(globalUpgradeLevel1_Presecurity, false);
+		}
+
+		if (GameplaySystems::GetGlobalVariable(globalLevel, 2) == 2 && GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 0) {
+			GameplaySystems::SetGlobalVariable(globalUpgradeLevel2_Catwalks, false);
+			GameplaySystems::SetGlobalVariable(globalUpgradeLevel2_AfterArena1, false);
+			GameplaySystems::SetGlobalVariable(globalUpgradeLevel2_FireBridge, false);
+		}
+
 		SceneManager::ChangeScene(sceneUID);
 
 		PlayerController::currentLevel = GameplaySystems::GetGlobalVariable(globalLevel, 1);
 
 		/* TODO: Control the upgrades*/
-		//Player::level1Upgrade = false;
-		//Player::level2Upgrade = false;
+		Player::level1Upgrade = GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Plaza, false) && 
+								GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Cafeteria, false) && 
+								GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Presecurity, false);
+		
+		Player::level2Upgrade = GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_Catwalks, false) &&
+								GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_AfterArena1, false) && 
+								GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_FireBridge, false);
 
 		if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
 	}

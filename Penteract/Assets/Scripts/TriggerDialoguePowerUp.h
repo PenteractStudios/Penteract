@@ -22,5 +22,7 @@ public:
 	GameObject* player = nullptr;
 	DialogueManager* dialogueManagerScript = nullptr;
 	PlayerController* playerControllerScript = nullptr;
+
+	int numUpgrade = 0;
 };
 

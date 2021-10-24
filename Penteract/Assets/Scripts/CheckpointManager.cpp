@@ -38,6 +38,10 @@ EXPOSE_MEMBERS(CheckpointManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, dialogs3UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, dialogs4UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, dialogs5UID),
+	MEMBER_SEPARATOR("UPGRADES LEVEL"),
+	MEMBER(MemberType::GAME_OBJECT_UID, upgrades1UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, upgrades2UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, upgrades3UID),
 	MEMBER_SEPARATOR("VIDEOS LEVEL"),
 	MEMBER(MemberType::GAME_OBJECT_UID, video1UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, video2UID),
@@ -97,6 +101,10 @@ void CheckpointManager::Start() {
 	dialogs4 = GameplaySystems::GetGameObject(dialogs4UID);
 	dialogs5 = GameplaySystems::GetGameObject(dialogs5UID);
 
+	upgrades1 = GameplaySystems::GetGameObject(upgrades1UID);
+	upgrades2 = GameplaySystems::GetGameObject(upgrades2UID);
+	upgrades3 = GameplaySystems::GetGameObject(upgrades3UID);
+
 	video1 = GameplaySystems::GetGameObject(video1UID);
 	video2 = GameplaySystems::GetGameObject(video2UID);
 
@@ -104,7 +112,21 @@ void CheckpointManager::Start() {
 	if (!video1 && !video2) return;
 	if (!encounter1 && !encounter2 && !encounter3 && !encounter4 && !encounter5 && !encounter6 && !encounter7) return;
 	if (!doors1 && !doors2 && !doors3 && !doors4 && !doors5) return;
+	if (!upgrades1 && !upgrades2 && !upgrades3) return;
 	if (!dialogs1 && !dialogs2 && !dialogs3 && !dialogs4 && !dialogs5) return;
+
+	/* Disabled the upgrade that are already enabled */
+	if (GameplaySystems::GetGlobalVariable(globalLevel, 0) == 1) {
+		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Plaza, true)) upgrades1->Disable();
+		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Cafeteria, true)) upgrades2->Disable();
+		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Presecurity, true)) upgrades3->Disable();
+	}
+
+	if (GameplaySystems::GetGlobalVariable(globalLevel, 0) == 2) {
+		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_Catwalks, true)) upgrades1->Disable();
+		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_AfterArena1, true)) upgrades2->Disable();
+		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_FireBridge, true)) upgrades3->Disable();
+	}
 
 	/* Disabled the triggers of the checkpoint that already passed */
 	listTriggers = triggers->GetChildren();
