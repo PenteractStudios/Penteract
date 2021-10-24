@@ -32,6 +32,15 @@ EXPOSE_MEMBERS(CheckpointManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, doors3UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, doors4UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, doors5UID),
+	MEMBER_SEPARATOR("DIALOGS LEVEL"),
+	MEMBER(MemberType::GAME_OBJECT_UID, dialogs1UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dialogs2UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dialogs3UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dialogs4UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dialogs5UID),
+	MEMBER_SEPARATOR("VIDEOS LEVEL"),
+	MEMBER(MemberType::GAME_OBJECT_UID, video1UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, video2UID),
 };
 
 GENERATE_BODY_IMPL(CheckpointManager);
@@ -63,9 +72,6 @@ void CheckpointManager::Start() {
 	ComponentTransform* transform = avatarObj->GetComponent<ComponentTransform>();
 
 	if (!transform) return;
-
-	// TODO: This was breaking the initial position of the player when coming from another scene
-	// transform->SetGlobalPosition(runtimeCheckpointPositions[GameplaySystems::GetGlobalVariable(globalCheckpoint, 0)]);
 	
 	playerScript = GET_SCRIPT(avatarObj, PlayerController);
 
@@ -85,9 +91,20 @@ void CheckpointManager::Start() {
 	doors4 = GameplaySystems::GetGameObject(doors4UID);
 	doors5 = GameplaySystems::GetGameObject(doors5UID);
 
+	dialogs1 = GameplaySystems::GetGameObject(dialogs1UID);
+	dialogs2 = GameplaySystems::GetGameObject(dialogs2UID);
+	dialogs3 = GameplaySystems::GetGameObject(dialogs3UID);
+	dialogs4 = GameplaySystems::GetGameObject(dialogs4UID);
+	dialogs5 = GameplaySystems::GetGameObject(dialogs5UID);
+
+	video1 = GameplaySystems::GetGameObject(video1UID);
+	video2 = GameplaySystems::GetGameObject(video2UID);
+
 	if (!triggers) return;
+	if (!video1 && !video2) return;
 	if (!encounter1 && !encounter2 && !encounter3 && !encounter4 && !encounter5 && !encounter6 && !encounter7) return;
 	if (!doors1 && !doors2 && !doors3 && !doors4 && !doors5) return;
+	if (!dialogs1 && !dialogs2 && !dialogs3 && !dialogs4 && !dialogs5) return;
 
 	/* Disabled the triggers of the checkpoint that already passed */
 	listTriggers = triggers->GetChildren();
@@ -103,9 +120,17 @@ void CheckpointManager::Start() {
 			/* Control encounters by actual checkpoint */
 			switch (1) {
 			case 1: // After Plaza
+				GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, true);
+				GameplaySystems::SetGlobalVariable(globalSkill2TutorialReached, true);
+				GameplaySystems::SetGlobalVariable(globalSkill3TutorialReached, true);
+				//video1->Disable();
+				dialogs1->Disable();
 				encounter1->Disable();
+				doors5->Disable();
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 1) break;
 			case 2: // After Cafeteria
+				GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, true);
+				dialogs2->Disable();
 				encounter2->Disable();
 				doors1->Disable();
 				doors2->Disable();

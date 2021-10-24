@@ -83,13 +83,15 @@ void VideoScene1Start::BackToNormalGameplay() {
 
     GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, false);
   
-    // When the video finishes, open the initial dialogue directly
-    if (dialogueManagerScript) {
-        if (dialogueID < sizeof(dialogueManagerScript->dialoguesArray) / sizeof(dialogueManagerScript->dialoguesArray[0])
-            && &dialogueManagerScript->dialoguesArray[dialogueID] != nullptr) {
-            dialogueManagerScript->PlayOpeningAudio();
-            dialogueManagerScript->SetActiveDialogue(&dialogueManagerScript->dialoguesArray[dialogueID]);
+    // When the video finishes, open the initial dialogue directly, expect is not the initial chackpoint of the level
+    if (GameplaySystems::GetGlobalVariable(globalLevel, 0) == 1 && GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 0) {
+        if (dialogueManagerScript) {
+            if (dialogueID < sizeof(dialogueManagerScript->dialoguesArray) / sizeof(dialogueManagerScript->dialoguesArray[0])
+                && &dialogueManagerScript->dialoguesArray[dialogueID] != nullptr) {
+                dialogueManagerScript->PlayOpeningAudio();
+                dialogueManagerScript->SetActiveDialogue(&dialogueManagerScript->dialoguesArray[dialogueID]);
+            }
         }
     }
-  
+
 }

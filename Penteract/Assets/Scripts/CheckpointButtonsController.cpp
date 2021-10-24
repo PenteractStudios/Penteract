@@ -52,7 +52,7 @@ void CheckpointButtonsController::Start() {
 
 	/* TESTING */
 	GameplaySystems::SetGlobalVariable(globalLevel, 1);
-	GameplaySystems::SetGlobalVariable(globalCheckpoint, 2);
+	GameplaySystems::SetGlobalVariable(globalCheckpoint, 4);
 
 	actualLevel = GameplaySystems::GetGlobalVariable(globalLevel, 1);
 	actualCheckpoint = GameplaySystems::GetGlobalVariable(globalCheckpoint, 0);

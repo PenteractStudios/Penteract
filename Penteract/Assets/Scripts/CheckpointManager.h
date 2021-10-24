@@ -57,6 +57,17 @@ public:
 	GameObject* doors5 = nullptr;
 
 	/* Dialogs Level */
+	UID dialogs1UID, dialogs2UID, dialogs3UID, dialogs4UID, dialogs5UID;
+	GameObject* dialogs1 = nullptr;
+	GameObject* dialogs2 = nullptr;
+	GameObject* dialogs3 = nullptr;
+	GameObject* dialogs4 = nullptr;
+	GameObject* dialogs5 = nullptr;
+
+	/* Videos Level */
+	UID video1UID, video2UID;
+	GameObject* video1 = nullptr;
+	GameObject* video2 = nullptr;
 
 private:
 	void CheckDistanceWithCheckpoints();
