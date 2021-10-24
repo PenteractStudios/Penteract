@@ -151,6 +151,9 @@ void CheckpointManager::Start() {
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 1) break;
 			case 2: // After Cafeteria - In Transport
 				GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, true);
+				GameplaySystems::SetGlobalVariable(globalSkill1TutorialReachedOni, true);
+				GameplaySystems::SetGlobalVariable(globalSkill2TutorialReachedOni, true);
+				GameplaySystems::SetGlobalVariable(globalSkill3TutorialReachedOni, true);
 				dialogs2->Disable();
 				encounter2->Disable();
 				doors1->Disable();
