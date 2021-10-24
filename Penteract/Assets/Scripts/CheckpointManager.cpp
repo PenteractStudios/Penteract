@@ -119,29 +119,30 @@ void CheckpointManager::Start() {
 		if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) > 0) {
 			/* Control encounters by actual checkpoint */
 			switch (1) {
-			case 1: // After Plaza
+			case 1: // After Plaza - In Cafeteria
 				GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, true);
 				GameplaySystems::SetGlobalVariable(globalSkill2TutorialReached, true);
 				GameplaySystems::SetGlobalVariable(globalSkill3TutorialReached, true);
-				//video1->Disable();
 				dialogs1->Disable();
 				encounter1->Disable();
 				doors5->Disable();
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 1) break;
-			case 2: // After Cafeteria
+			case 2: // After Cafeteria - In Transport
 				GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, true);
 				dialogs2->Disable();
 				encounter2->Disable();
 				doors1->Disable();
 				doors2->Disable();
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 2) break;
-			case 3: // After Transport
+			case 3: // After Transport - In Pre-security
 				encounter3->Disable();
 				encounter4->Disable();
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 3) break;
-			case 4: // After Pre-security
+			case 4: // After Pre-security - In Security
 				encounter5->Disable();
 				encounter6->Disable();
+				dialogs3->Disable();
+				dialogs4->Disable();
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 4) break;
 			default:
 				break;
@@ -153,13 +154,22 @@ void CheckpointManager::Start() {
 		if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) > 0) {
 			/* Control encounters by actual checkpoint */
 			switch (1) {
-			case 1:
+			case 1: // After Elevator - In Test Arena 1
+				encounter1->Disable();
+				doors1->Disable();
+				doors2->Disable();
+				dialogs1->Disable();
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 1) break;
-			case 2:
-
+			case 2: // After Test Arena 1 - In Fire Bridge
+				encounter2->Disable();
+				encounter3->Disable();
+				doors3->Disable();
+				dialogs2->Disable();
+				dialogs3->Disable();
+				dialogs4->Disable();
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 2) break;
-			case 3:
-
+			case 3: // After Fire Bridge -  In Test Arena 2
+				encounter4->Enable();
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 3) break;
 			default:
 				break;
