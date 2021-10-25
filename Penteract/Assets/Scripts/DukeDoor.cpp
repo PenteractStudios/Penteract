@@ -97,17 +97,11 @@ void DukeDoor::Update() {
 
 		// Get the active character in the scene
 		Player* playerReference;
-		if (playerController->playerFang.IsActive()) {
-			playerReference = &playerController->playerFang;
-		}
-		else {
-			playerReference = &playerController->playerOnimaru;
-		}
+		if (playerController->playerFang.IsActive()) playerReference = &playerController->playerFang;
+		else playerReference = &playerController->playerOnimaru;
 
 		// Move the character in front of Duke
-		if (initialTalkPosition.Distance(playerReference->playerMainTransform->GetGlobalPosition()) > 0.5f) {
-			playerReference->MoveTo(initialTalkPosition);
-		}
+		if (initialTalkPosition.Distance(playerReference->playerMainTransform->GetGlobalPosition()) > 0.5f) playerReference->MoveTo(initialTalkPosition);
 		else {
 			triggered = false;
 			startDialogue = true;
@@ -126,7 +120,7 @@ void DukeDoor::Update() {
 		finishScene = true;
 	}
 
-	// 3rd part - Boss "BOOM!"
+	// 3rd part - Boss "BOOM!"  (waits for dialogue close with globalIsGameplayBlocked)
 	if (finishScene && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 		// Start optional lasers
 		if (optionalLaserScript) optionalLaserScript->TurnOn();
@@ -161,15 +155,11 @@ void DukeDoor::OnCollision(GameObject& /*collidedWith*/, float3 /*collisionNorma
 		PlayDissolveAnimation(exitObstacle, true);
 	}
 
-
+	// Enable boss health
 	GameObject* hudObj = GameplaySystems::GetGameObject(canvasHUDUID);
 	if (hudObj) {
-
 		HUDManager* hudMng = GET_SCRIPT(hudObj, HUDManager);
-
-		if (hudMng) {
-			hudMng->ShowBossHealth();
-		}
+		if (hudMng) hudMng->ShowBossHealth();
 	}
 
 	triggered = true;
