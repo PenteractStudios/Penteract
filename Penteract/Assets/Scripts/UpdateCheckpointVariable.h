@@ -15,8 +15,8 @@ public:
 	void OnCollision(GameObject& /*collidedWith*/, float3 /*collisionNormal*/, float3 /*penetrationDistance*/, void* /*particle*/) override;
 
 public:
-	int actualLevel = -1;
-	int newCheckpoint = -1;
+	int newLevel = 1;
+	int newCheckpoint = 0;
 
 private:
 	GameObject* gameObjectTrigger = nullptr;

@@ -90,9 +90,6 @@ void StartButton::OnButtonClick() {
 }
 
 void StartButton::DoTransition() {
-	checkpoint = GameplaySystems::GetGlobalVariable(globalCheckpoint, 0);
-	levelNum = GameplaySystems::GetGlobalVariable(globalLevel, 1);
-
 	if (sceneTransition) {
 		sceneTransition->StartTransition();
 	} else {

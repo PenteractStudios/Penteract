@@ -118,30 +118,30 @@ void CheckpointManager::Start() {
 
 	/* Disabled the upgrade that are already enabled */
 	if (GameplaySystems::GetGlobalVariable(globalLevel, 0) == 1) {
-		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Plaza, true)) {
+		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Plaza, false)) {
 			playerScript->obtainedUpgradeCells += 1;
 			upgrades1->Disable();
 		}
-		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Cafeteria, true)) {
+		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Cafeteria, false)) {
 			playerScript->obtainedUpgradeCells += 1;
 			upgrades2->Disable();
 		}
-		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Presecurity, true)) {
+		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Presecurity, false)) {
 			playerScript->obtainedUpgradeCells += 1;
 			upgrades3->Disable();
 		}
 	}
 
 	if (GameplaySystems::GetGlobalVariable(globalLevel, 0) == 2) {
-		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_Catwalks, true)) {
+		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_Catwalks, false)) {
 			playerScript->obtainedUpgradeCells += 1;
 			upgrades1->Disable();
 		}
-		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_AfterArena1, true)) {
+		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_AfterArena1, false)) {
 			playerScript->obtainedUpgradeCells += 1;
 			upgrades2->Disable();
 		}
-		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_FireBridge, true)) {
+		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_FireBridge, false)) {
 			playerScript->obtainedUpgradeCells += 1;
 			upgrades3->Disable();
 		}
@@ -164,14 +164,14 @@ void CheckpointManager::Start() {
 			/* Control encounters by actual checkpoint */
 			switch (1) {
 			case 1: // After Plaza - In Cafeteria
+				GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, false);
+				GameplaySystems::SetGlobalVariable(isVideoActive, false);
 				GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, true);
 				GameplaySystems::SetGlobalVariable(globalSkill2TutorialReached, true);
 				GameplaySystems::SetGlobalVariable(globalSkill3TutorialReached, true);
 				dialogs1->Disable();
 				encounter1->Disable();
 				doors5->Disable(); // Its Duke object!
-				video2->Disable(); // It's audio video scene 1
-				video1->Disable();
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 1) break;
 			case 2: // After Cafeteria - In Transport
 				GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, true);
@@ -218,7 +218,7 @@ void CheckpointManager::Start() {
 				dialogs4->Disable();
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 2) break;
 			case 3: // After Fire Bridge -  In Test Arena 2
-				encounter4->Enable();
+				encounter4->Enable(); // Enable fire & door
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 3) break;
 			default:
 				break;
@@ -246,13 +246,8 @@ void CheckpointManager::Update() {
 	}
 
 	if (dirty) {
-		if (GameplaySystems::GetGlobalVariable(globalLevel, 0) == 1 && GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) >= 1) {
-			Time::ResumeGame(); // To not blocked the scene when we dont play the start video
-			GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, false);
-			GameplaySystems::SetGlobalVariable(isVideoActive, false);
-			GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, false);
-		}
 		dirty = false;
+		GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, false);
 		if (!avatarObj) return;
 		ComponentTransform* transform = avatarObj->GetComponent<ComponentTransform>();
 		if (!playerScript) return;

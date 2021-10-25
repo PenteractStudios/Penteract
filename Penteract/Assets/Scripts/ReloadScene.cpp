@@ -7,19 +7,26 @@
 
 EXPOSE_MEMBERS(ReloadScene) {
 	MEMBER(MemberType::SCENE_RESOURCE_UID, sceneUID),
-	MEMBER(MemberType::INT, levelNum),
 	MEMBER(MemberType::GAME_OBJECT_UID, gameControllerUID)
 };
 
 GENERATE_BODY_IMPL(ReloadScene);
 
-void ReloadScene::Start() {}
+void ReloadScene::Start() {
+	lastLoadCheckpoint = GameplaySystems::GetGlobalVariable(globalCheckpoint, 0);
+}
 
 void ReloadScene::Update() {}
 
 void ReloadScene::OnButtonClick() {
-	if(sceneUID != 0) SceneManager::ChangeScene(sceneUID);
-	PlayerController::currentLevel = levelNum;
+	if (sceneUID != 0) {
+		SceneManager::ChangeScene(sceneUID);
+		int actualCP = GameplaySystems::GetGlobalVariable(globalCheckpoint, 0);
+		if (actualCP < lastLoadCheckpoint) {
+			GameplaySystems::SetGlobalVariable(globalCheckpoint, lastLoadCheckpoint);
+		}
+	}
+	PlayerController::currentLevel = GameplaySystems::GetGlobalVariable(globalLevel,1);
 
 	// If this is clicked from a Menu Button in which everything is frozen, this should resume it
 	PauseController::SetIsPause(false);

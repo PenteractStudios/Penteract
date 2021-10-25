@@ -14,7 +14,8 @@ public:
 public:
 
 	UID sceneUID = 0;
-	int levelNum = 0;
 	UID gameControllerUID = 0;
+
+	int lastLoadCheckpoint = 0;
 };
 
