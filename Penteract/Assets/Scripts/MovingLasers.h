@@ -15,7 +15,8 @@ class MovingLasers : public Script
 		START = 0,
 		SHOOT,
 		IDLE,
-		DISABLE
+		DISABLE,
+		WAIT
 	};
 
 public:
@@ -25,13 +26,14 @@ public:
 	UID pairGeneratorUID = 0;
 
 	float chargingDuration = 1.f;
+	float waitingDuration = 1.f;
 
 	float3 initialGeneratorPosition = float3(0, 0, 0);
 	float3 finalGeneratorPosition = float3(0, 0, 0);
 
 	bool movingToInit = true;
 
-	float movementSpeed = 1.0f;
+	float movementSpeed = 0.5f;
 
 	float3 minLaserEscale = float3(1.f, 1.f, 1.f);
 	float3 maxLaserEscale = float3(1.f, 2.05f,1.f);
@@ -77,6 +79,14 @@ private:
 	bool beingUsed = false;
 
 	float chargingTimer = 0.f;
+	float waitingTimer = 0.f;
+
+	float3 laserScale = float3(0.f, 0.f, 0.f);
+	float3 laserPosition = float3(0.f, 0.f, 0.f);
+	float3 laserColliderSize = float3(0.f, 0.f, 0.f);
+	float3 generatorPosition = float3(0.f,0.f,0.f);
+
+	float totalDistance = 0.f;
 
 	const std::string states[3] = { "Shooting", "Shooting", "Idle" };
 
