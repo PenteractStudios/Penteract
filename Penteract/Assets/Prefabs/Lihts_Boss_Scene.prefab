@@ -1,0 +1,887 @@
+{
+    "Root": {
+        "Name": "Lights",
+        "Active": true,
+        "RootBoneName": "",
+        "Mask": 0,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Active": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "LocalEulerAngles": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ]
+            }
+        ],
+        "Children": [
+            {
+                "Name": "GeneralLights",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            -31.425140380859376,
+                            1.8340749740600587,
+                            -43.05226516723633
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Light",
+                        "Active": true,
+                        "LightType": 1,
+                        "Color": [
+                            1.0,
+                            0.3944637179374695,
+                            0.2647058963775635
+                        ],
+                        "Intensity": 1400.0,
+                        "Radius": 40.0,
+                        "UseCustomFalloff": false,
+                        "FalloffExponent": 1.0,
+                        "InnerAngle": 0.2617993950843811,
+                        "OuterAngle": 0.5235987901687622
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "GeneralLights",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            12.644577026367188,
+                            9.382514953613282,
+                            -58.440818786621097
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Light",
+                        "Active": true,
+                        "LightType": 1,
+                        "Color": [
+                            1.0,
+                            0.3944637179374695,
+                            0.2647058963775635
+                        ],
+                        "Intensity": 1400.0,
+                        "Radius": 40.0,
+                        "UseCustomFalloff": true,
+                        "FalloffExponent": 0.007000000216066837,
+                        "InnerAngle": 0.2617993950843811,
+                        "OuterAngle": 0.5235987901687622
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "GeneralLights",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            51.098445892333987,
+                            -3.2176082134246828,
+                            -42.654014587402347
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Light",
+                        "Active": true,
+                        "LightType": 1,
+                        "Color": [
+                            1.0,
+                            0.3944637179374695,
+                            0.2647058963775635
+                        ],
+                        "Intensity": 1600.0,
+                        "Radius": 40.0,
+                        "UseCustomFalloff": false,
+                        "FalloffExponent": 1.0,
+                        "InnerAngle": 0.2617993950843811,
+                        "OuterAngle": 0.5235987901687622
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "GeneralLights",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            57.69966506958008,
+                            7.778547286987305,
+                            0.34171560406684878
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Light",
+                        "Active": true,
+                        "LightType": 1,
+                        "Color": [
+                            1.0,
+                            0.3944637179374695,
+                            0.2647058963775635
+                        ],
+                        "Intensity": 1400.0,
+                        "Radius": 40.0,
+                        "UseCustomFalloff": false,
+                        "FalloffExponent": 1.0,
+                        "InnerAngle": 0.2617993950843811,
+                        "OuterAngle": 0.5235987901687622
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "GeneralLights",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            13.144038200378418,
+                            16.026065826416017,
+                            -0.5066418647766113
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Light",
+                        "Active": true,
+                        "LightType": 1,
+                        "Color": [
+                            1.0,
+                            0.3944637179374695,
+                            0.2647058963775635
+                        ],
+                        "Intensity": 1400.0,
+                        "Radius": 30.0,
+                        "UseCustomFalloff": false,
+                        "FalloffExponent": 1.0,
+                        "InnerAngle": 0.2617993950843811,
+                        "OuterAngle": 0.5235987901687622
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "GeneralLights",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            12.609413146972657,
+                            14.948478698730469,
+                            42.5632438659668
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Light",
+                        "Active": true,
+                        "LightType": 1,
+                        "Color": [
+                            1.0,
+                            0.3944637179374695,
+                            0.2647058963775635
+                        ],
+                        "Intensity": 1400.0,
+                        "Radius": 30.0,
+                        "UseCustomFalloff": true,
+                        "FalloffExponent": 0.004999999888241291,
+                        "InnerAngle": 0.2617993950843811,
+                        "OuterAngle": 0.5235987901687622
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "GeneralLights",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            -22.4083194732666,
+                            7.035151481628418,
+                            33.62158966064453
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Light",
+                        "Active": true,
+                        "LightType": 1,
+                        "Color": [
+                            1.0,
+                            0.3944637179374695,
+                            0.2647058963775635
+                        ],
+                        "Intensity": 1400.0,
+                        "Radius": 40.0,
+                        "UseCustomFalloff": false,
+                        "FalloffExponent": 1.0,
+                        "InnerAngle": 0.2617993950843811,
+                        "OuterAngle": 0.5235987901687622
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "Light UnderBridge",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            -36.764400482177737,
+                            -7.496964454650879,
+                            14.519503593444825
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Light",
+                        "Active": true,
+                        "LightType": 1,
+                        "Color": [
+                            1.0,
+                            0.7825835943222046,
+                            0.4313725233078003
+                        ],
+                        "Intensity": 500.0,
+                        "Radius": 15.0,
+                        "UseCustomFalloff": true,
+                        "FalloffExponent": 0.01600000075995922,
+                        "InnerAngle": 0.2617993950843811,
+                        "OuterAngle": 0.5235987901687622
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "Directional Light",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            0.0,
+                            50.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.5968987941741943,
+                            0.7579463720321655,
+                            -0.25157496333122256,
+                            0.0770663246512413
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            151.21400451660157,
+                            -10.574000358581543,
+                            -106.2784194946289
+                        ]
+                    },
+                    {
+                        "Type": "Light",
+                        "Active": true,
+                        "LightType": 0,
+                        "Color": [
+                            0.9460784196853638,
+                            0.7687567472457886,
+                            0.48231446743011477
+                        ],
+                        "Intensity": 1.2000000476837159,
+                        "Radius": 0.0,
+                        "UseCustomFalloff": false,
+                        "FalloffExponent": 0.0,
+                        "InnerAngle": 0.2617993950843811,
+                        "OuterAngle": 0.5235987901687622
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "Light UnderBridge",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            -36.764400482177737,
+                            -7.496964454650879,
+                            0.03907811641693115
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Light",
+                        "Active": true,
+                        "LightType": 1,
+                        "Color": [
+                            1.0,
+                            0.7825835943222046,
+                            0.4313725233078003
+                        ],
+                        "Intensity": 500.0,
+                        "Radius": 15.0,
+                        "UseCustomFalloff": true,
+                        "FalloffExponent": 0.01600000075995922,
+                        "InnerAngle": 0.2617993950843811,
+                        "OuterAngle": 0.5235987901687622
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "Light UnderBridge",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            -36.764400482177737,
+                            -7.496964454650879,
+                            -12.92026138305664
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Light",
+                        "Active": true,
+                        "LightType": 1,
+                        "Color": [
+                            1.0,
+                            0.7825835943222046,
+                            0.4313725233078003
+                        ],
+                        "Intensity": 500.0,
+                        "Radius": 15.0,
+                        "UseCustomFalloff": true,
+                        "FalloffExponent": 0.01600000075995922,
+                        "InnerAngle": 0.2617993950843811,
+                        "OuterAngle": 0.5235987901687622
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "GeneralLights",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            41.85445785522461,
+                            3.633070945739746,
+                            31.3646297454834
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Light",
+                        "Active": true,
+                        "LightType": 1,
+                        "Color": [
+                            1.0,
+                            0.3944637179374695,
+                            0.2647058963775635
+                        ],
+                        "Intensity": 1000.0,
+                        "Radius": 30.0,
+                        "UseCustomFalloff": false,
+                        "FalloffExponent": 1.0,
+                        "InnerAngle": 0.2617993950843811,
+                        "OuterAngle": 0.5235987901687622
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "GeneralLights",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            12.081266403198243,
+                            10.551283836364746,
+                            -35.413551330566409
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Light",
+                        "Active": true,
+                        "LightType": 1,
+                        "Color": [
+                            1.0,
+                            0.3944637179374695,
+                            0.2647058963775635
+                        ],
+                        "Intensity": 1000.0,
+                        "Radius": 30.0,
+                        "UseCustomFalloff": false,
+                        "FalloffExponent": 1.0,
+                        "InnerAngle": 0.2617993950843811,
+                        "OuterAngle": 0.5235987901687622
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "GeneralLights",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            53.71010208129883,
+                            10.551280975341797,
+                            -13.276956558227539
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Light",
+                        "Active": true,
+                        "LightType": 1,
+                        "Color": [
+                            1.0,
+                            0.3944637179374695,
+                            0.2647058963775635
+                        ],
+                        "Intensity": 1000.0,
+                        "Radius": 30.0,
+                        "UseCustomFalloff": false,
+                        "FalloffExponent": 1.0,
+                        "InnerAngle": 0.2617993950843811,
+                        "OuterAngle": 0.5235987901687622
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "Light OverBridge",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            -51.10219192504883,
+                            8.49565315246582,
+                            -9.317818641662598
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Light",
+                        "Active": true,
+                        "LightType": 1,
+                        "Color": [
+                            1.0,
+                            0.8572662472724915,
+                            0.6764705777168274
+                        ],
+                        "Intensity": 300.0,
+                        "Radius": 15.0,
+                        "UseCustomFalloff": true,
+                        "FalloffExponent": 0.01600000075995922,
+                        "InnerAngle": 0.2617993950843811,
+                        "OuterAngle": 0.5235987901687622
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "Light OverBridge",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            -49.59633255004883,
+                            9.105768203735352,
+                            10.516403198242188
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Light",
+                        "Active": true,
+                        "LightType": 1,
+                        "Color": [
+                            1.0,
+                            0.8572662472724915,
+                            0.6764705777168274
+                        ],
+                        "Intensity": 300.0,
+                        "Radius": 15.0,
+                        "UseCustomFalloff": true,
+                        "FalloffExponent": 0.01600000075995922,
+                        "InnerAngle": 0.2617993950843811,
+                        "OuterAngle": 0.5235987901687622
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "Light OverBridge",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            -23.932100296020509,
+                            19.35567283630371,
+                            1.6137287616729737
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Light",
+                        "Active": true,
+                        "LightType": 1,
+                        "Color": [
+                            1.0,
+                            0.8572662472724915,
+                            0.6764705777168274
+                        ],
+                        "Intensity": 250.0,
+                        "Radius": 32.5,
+                        "UseCustomFalloff": true,
+                        "FalloffExponent": 0.01600000075995922,
+                        "InnerAngle": 0.2617993950843811,
+                        "OuterAngle": 0.5235987901687622
+                    }
+                ],
+                "Children": null
+            }
+        ]
+    }
+}

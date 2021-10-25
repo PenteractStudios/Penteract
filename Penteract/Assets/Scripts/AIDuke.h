@@ -8,6 +8,7 @@ class ComponentTransform;
 class ComponentAgent;
 class ComponentAudioSource;
 class ComponentMeshRenderer;
+class ComponentParticleSystem;
 class ResourcePrefab;
 class HUDController;
 class PlayerController;
@@ -56,7 +57,7 @@ private:
 	void CalculatePushBackRealDistance();
 	void UpdatePushBackPosition();
 	void ParticleHit(GameObject& collidedWith, void* particle, Player& player_);
-	bool CanBeHurtDuringCriticalMode() const;
+	bool CanBeFullyHurtDuringCriticalMode() const;
 	bool IsInvulnerable()const;
 	void OnShieldInterrupted();
 	void PerformBulletHell();
@@ -82,9 +83,14 @@ public:
 	UID videoCanvasUID = 0;
 	UID hudManagerUID = 0;
 	UID fireTilesUID = 0;
+  // Effects
+  UID punchSlashUID = 0;
+	UID chargeDustUID = 0;
+	UID areaChargeUID = 0;
+	UID chargeTelegraphAreaUID = 0;
 	// Only for level2
 	UID triggerBosslvl2EndUID = 0;
-	UID dissolveMaterialGOUID = 0;
+  UID dissolveMaterialGOUID = 0;
 
 	GameObject* duke = nullptr;
 	GameObject* player = nullptr;
@@ -101,6 +107,8 @@ public:
 
 	float abilityChangeCooldown = 8.f;
 
+	float criticalModeCooldown = 7.0f;
+
 	float stunDuration = 3.f;
 
 	float troopsCounter = 5.f;
@@ -109,6 +117,9 @@ public:
 
 	float orientationSpeed = 1.0f;
 	float orientationThreshold = 0.1f;
+
+	float orientationSpeedBulletHell = 1.0f;
+	float orientationThresholdBulletHell = 0.1f;
 
 	float timerBetweenAbilities = 1.5f;
 
@@ -135,6 +146,8 @@ private:
 	bool bulletHellIsActive = false;
 
 	float currentAbilityChangeCooldown = 0.f;
+
+	float currentCriticalModeCooldown = 0.f;
 
 	float currentMovingTime = 0.f;
 

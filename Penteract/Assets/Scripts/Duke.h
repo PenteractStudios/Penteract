@@ -7,6 +7,7 @@
 
 class ComponentParticleSystem;
 class ResourcePrefab;
+class ResourceMaterial;
 class AttackDronesController;
 class BarrelSpawner;
 class DukeShield;
@@ -57,13 +58,15 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID, UID chargeDustUID, UID areaChargeUID, UID chargeTelegraphAreaUID);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void BulletHell();
 	void DisableBulletHell();
-	bool BulletHellActive();
-	bool BulletHellFinished();
+	bool BulletHellActive() const;
+	bool BulletHellFinished() const;
+	bool IsBulletHellCircular() const;
+	bool PlayerIsInChargeRangeDistance() const;
 	void InitCharge(DukeState nextState);
 	void UpdateCharge(bool forceStop = false);
 	void UpdateChargeAttack();
@@ -165,9 +168,6 @@ private:
 
 private:
 	GameObject* player = nullptr;
-	GameObject* chargeCollider = nullptr;
-	GameObject* meleeAttackCollider = nullptr;
-	GameObject* chargeAttack = nullptr;
 	ComponentTransform* dukeTransform = nullptr;
 
 	GameObject* videoParentCanvas = nullptr;
@@ -185,9 +185,25 @@ private:
 	float distanceCorrectionThreshold = 2.0f;
 	bool navigationHit;
 	float3 navigationHitPos;
+	
+	// Melee Attack
+	GameObject* meleeAttackCollider = nullptr;
+	ComponentParticleSystem* punchSlash = nullptr;
+	bool firstTimePunchParticlesActive = true;
 
 	// Charge
+	GameObject* chargeCollider = nullptr;
+	GameObject* chargeAttack = nullptr;
 	bool trackingChargeTarget = false;
+	ComponentBillboard* chargeTelegraphArea = nullptr;
+	GameObject* chargeTelegraphAreaGO = nullptr;
+	GameObject* areaChargeGO = nullptr;
+	ResourceMaterial* areaCharge = nullptr;
+	ComponentParticleSystem* chargeDust = nullptr;
+	float2 chargeDustOriginalParticlesPerSecond = float2(0.f, 0.f);
+	float areaChargeSpeedMultiplier = 4;
+	float dukeScale = 0.f;
+	float chargeTelegraphAreaPosOffset = 0.f;
 
 	// Shooting
 	float attackTimePool = 0.f;
