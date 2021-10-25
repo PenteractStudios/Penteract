@@ -27,6 +27,7 @@ public:
 	UID videoCanvasUID = 0;
 
 	float relaxTime = 1.75f;
+	float talkingDistance = 10.f;
 	int dialogueID = 0;
 
 private:

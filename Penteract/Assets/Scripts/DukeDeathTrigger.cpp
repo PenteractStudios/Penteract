@@ -17,6 +17,7 @@ EXPOSE_MEMBERS(DukeDeathTrigger) {
     MEMBER(MemberType::GAME_OBJECT_UID, canvasHudUID),
     MEMBER(MemberType::GAME_OBJECT_UID, videoCanvasUID),
     MEMBER(MemberType::FLOAT, relaxTime),
+    MEMBER(MemberType::FLOAT, talkingDistance),
     MEMBER(MemberType::INT, dialogueID)
 };
 
@@ -83,7 +84,7 @@ void DukeDeathTrigger::Update() {
 
         // Get Duke in-front position
         ComponentTransform* dukeTransform = duke->GetComponent<ComponentTransform>();
-        if (dukeTransform) talkPosition = dukeTransform->GetGlobalPosition() + 10 * dukeTransform->GetFront();
+        if (dukeTransform) talkPosition = dukeTransform->GetGlobalPosition() + talkingDistance * dukeTransform->GetFront();
             
 
         // Move the character in front of Duke
