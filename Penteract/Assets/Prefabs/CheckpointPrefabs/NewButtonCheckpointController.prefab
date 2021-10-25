@@ -1,0 +1,93 @@
+{
+    "Root": {
+        "Name": "ButtonCheckpointController",
+        "Active": true,
+        "RootBoneName": "",
+        "Mask": 0,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Active": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "LocalEulerAngles": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ]
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 3759346074336272141,
+                "Values": [
+                    {
+                        "Name": "btnLevel1_Checkpoint0UID",
+                        "Type": "GameObjectUID",
+                        "Value": 247255645654211591
+                    },
+                    {
+                        "Name": "btnLevel2_Checkpoint2UID",
+                        "Type": "GameObjectUID",
+                        "Value": 671979686109196551
+                    },
+                    {
+                        "Name": "btnLevel1_Checkpoint1UID",
+                        "Type": "GameObjectUID",
+                        "Value": 1978117475670555111
+                    },
+                    {
+                        "Name": "btnLevel2_Checkpoint1UID",
+                        "Type": "GameObjectUID",
+                        "Value": 2894255826799132406
+                    },
+                    {
+                        "Name": "btnLevel1_Checkpoint2UID",
+                        "Type": "GameObjectUID",
+                        "Value": 17170644390799926500
+                    },
+                    {
+                        "Name": "btnLevel2_Checkpoint0UID",
+                        "Type": "GameObjectUID",
+                        "Value": 8760051803069056984
+                    },
+                    {
+                        "Name": "btnLevel1_Checkpoint3UID",
+                        "Type": "GameObjectUID",
+                        "Value": 4725460384404209977
+                    },
+                    {
+                        "Name": "btnLevel1_Checkpoint4UID",
+                        "Type": "GameObjectUID",
+                        "Value": 4994083082885296668
+                    },
+                    {
+                        "Name": "btnLevel2_Checkpoint3UID",
+                        "Type": "GameObjectUID",
+                        "Value": 8873426722153492555
+                    },
+                    {
+                        "Name": "btnLevel3_Checkpoint0UID",
+                        "Type": "GameObjectUID",
+                        "Value": 2782687568413920578
+                    }
+                ]
+            }
+        ],
+        "Children": null
+    }
+}
