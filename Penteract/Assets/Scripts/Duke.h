@@ -45,12 +45,12 @@ public:
 	// ------- Contructors ------- //
 	Duke() {}
 
-	Duke(float lifePoints_, float movementSpeed_, float damageHit_, float searchRadius_, float attackRange_, float timeToDie_, float pushBackDistance_, float pushBackSpeed_)
+	Duke(float lifePoints_, float movementSpeed_, float damageHit_, float searchRadius_, float attackRange_, float timeToDie_, float pushBackDistance_, float pushBackTime_)
 		: searchRadius(searchRadius_)
 		, attackRange(attackRange_)
 		, timeToDie(timeToDie_)
 		, pushBackDistance(pushBackDistance_)
-		, pushBackSpeed(pushBackSpeed_) {
+		, pushBackTime(pushBackTime_) {
 		lifePoints = lifePoints_;
 		movementSpeed = movementSpeed_;
 		damageHit = damageHit_;
@@ -105,8 +105,8 @@ public:
 	int attackBurst = 3;
 	float timeInterBurst = 1.0f;
 	float timeToDie = 5.f;
-	float pushBackDistance = 5.f;
-	float pushBackSpeed = 5.f;
+	float pushBackDistance = 7.f;
+	float pushBackTime = 1.f;
 	float slowedDownSpeed = 3.f;
 	float slowedDownTime = 2.f;
 	float barrelDamageTaken = 3.f;
