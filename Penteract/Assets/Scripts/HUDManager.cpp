@@ -202,6 +202,11 @@ void HUDManager::Start() {
 		sidesHUDChildren = sidesHUDParent->GetChildren();
 		InitializeHUDSides();
 	}
+
+
+	// Disable Onimaru's health if tutorials have not been reached
+	if (!GameplaySystems::GetGlobalVariable(globalSwitchTutorialReached, true) && onimaruHealthParent) onimaruHealthParent->Disable();
+
 }
 
 void HUDManager::Update() {
@@ -209,27 +214,51 @@ void HUDManager::Update() {
 		// Switch
 	if (GameplaySystems::GetGlobalVariable(globalSwitchTutorialReached, true)) {
 		if (switchSkillParent && !switchSkillParent->IsActive()) switchSkillParent->Enable();
+		if (onimaruHealthParent && !onimaruHealthParent->IsActive()) onimaruHealthParent->Enable();	// Switch tutorial also enables Onimaru's health
 	} else {
 		if (switchSkillParent && switchSkillParent->IsActive()) switchSkillParent->Disable();
+		if (onimaruHealthParent && !onimaruHealthParent->IsActive()) onimaruHealthParent->Disable();
 	}
-	// Dash/Shield
+	// Dash
 	if (GameplaySystems::GetGlobalVariable(globalSkill1TutorialReached, true)) {
 		if (skillsFang[0] && !skillsFang[0]->IsActive()) skillsFang[0]->Enable();
 	} else {
 		if (skillsFang[0] && skillsFang[0]->IsActive()) skillsFang[0]->Disable();
 	}
-	// EMP/Blast
+	// EMP
 	if (GameplaySystems::GetGlobalVariable(globalSkill2TutorialReached, true)) {
 		if (skillsFang[1] && !skillsFang[1]->IsActive()) skillsFang[1]->Enable();
 	} else {
 		if (skillsFang[1] && skillsFang[1]->IsActive()) skillsFang[1]->Disable();
 	}
-	// Ultimate
+	// Fang Ultimate
 	if (GameplaySystems::GetGlobalVariable(globalSkill3TutorialReached, true)) {
 		if (skillsFang[2] && !skillsFang[2]->IsActive()) skillsFang[2]->Enable();
 	} else {
 		if (skillsFang[2] && skillsFang[2]->IsActive()) skillsFang[2]->Disable();
 	}
+	// Shield
+	if (GameplaySystems::GetGlobalVariable(globalSkill1TutorialReachedOni, true)) {
+		if (skillsOni[0] && !skillsOni[0]->IsActive()) skillsOni[0]->Enable();
+	}
+	else {
+		if (skillsOni[0] && skillsOni[0]->IsActive()) skillsOni[0]->Disable();
+	}
+	// Blast
+	if (GameplaySystems::GetGlobalVariable(globalSkill2TutorialReachedOni, true)) {
+		if (skillsOni[1] && !skillsOni[1]->IsActive()) skillsOni[1]->Enable();
+	}
+	else {
+		if (skillsOni[1] && skillsOni[1]->IsActive()) skillsOni[1]->Disable();
+	}
+	// Onimaru Ultimate
+	if (GameplaySystems::GetGlobalVariable(globalSkill3TutorialReachedOni, true)) {
+		if (skillsOni[2] && !skillsOni[2]->IsActive()) skillsOni[2]->Enable();
+	}
+	else {
+		if (skillsOni[2] && skillsOni[2]->IsActive()) skillsOni[2]->Disable();
+	}
+
 
 	ManageSwitch();
 	if (playingBossHealthEffect) PlayShowHealthBossEffect();

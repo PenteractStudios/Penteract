@@ -18,7 +18,7 @@ bool Onimaru::CanShoot() {
 }
 
 bool Onimaru::CanBlast() const {
-	return !blastInCooldown && !IsShielding() && !ultimateOn && !blastInUse && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true);
+	return !blastInCooldown && !IsShielding() && !ultimateOn && !blastInUse && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && GameplaySystems::GetGlobalVariable(globalSkill2TutorialReachedOni, true);
 }
 
 void Onimaru::GetHit(float damage_) {
@@ -512,11 +512,11 @@ void Onimaru::OnAnimationFinished() {
 
 bool Onimaru::CanShield() const {
 	if (shield == nullptr || shieldGO == nullptr) return false;
-	return !ultimateOn && !shield->GetIsActive() && shield->CanUse() && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true);
+	return !ultimateOn && !shield->GetIsActive() && shield->CanUse() && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && GameplaySystems::GetGlobalVariable(globalSkill1TutorialReachedOni, true);
 }
 
 bool Onimaru::CanUltimate() const {
-	return !blastInUse && !IsShielding() && ultimateChargePoints >= ultimateChargePointsTotal && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && !switchInProgress;
+	return !blastInUse && !IsShielding() && ultimateChargePoints >= ultimateChargePointsTotal && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && !switchInProgress && GameplaySystems::GetGlobalVariable(globalSkill3TutorialReachedOni, true);
 }
 
 bool Onimaru::UltimateStarted() const {
