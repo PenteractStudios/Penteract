@@ -148,6 +148,7 @@ void CheckpointManager::Start() {
 				dialogs1->Disable();
 				encounter1->Disable();
 				doors5->Disable();
+				video1->Disable();
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 1) break;
 			case 2: // After Cafeteria - In Transport
 				GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, true);
@@ -222,6 +223,12 @@ void CheckpointManager::Update() {
 	}
 
 	if (dirty) {
+		if (GameplaySystems::GetGlobalVariable(globalLevel, 0) == 1 && GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) >= 1) {
+			Time::ResumeGame(); // To not blocked the scene when we dont play the start video
+			GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, false);
+			GameplaySystems::SetGlobalVariable(isVideoActive, false);
+			GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, false);
+		}
 		dirty = false;
 		if (!avatarObj) return;
 		ComponentTransform* transform = avatarObj->GetComponent<ComponentTransform>();
