@@ -35,6 +35,8 @@ EXPOSE_MEMBERS(GameController) {
 	MEMBER(MemberType::FLOAT, rotationSpeedY),
 	MEMBER(MemberType::FLOAT, focusDistance),
 	MEMBER(MemberType::FLOAT, transitionSpeed),
+	MEMBER_SEPARATOR("Skybox GameObject"),
+	MEMBER(MemberType::GAME_OBJECT_UID, skyboxUID),
 };
 
 GENERATE_BODY_IMPL(GameController);
@@ -93,6 +95,8 @@ void GameController::Start() {
 		GameplaySystems::SetRenderCamera(camera);
 	}
 
+	skybox = GameplaySystems::GetGameObject(skyboxUID);
+
 	Debug::SetGodModeOn(false);
 	if (gameCamera && godCamera) godModeAvailable = true;
 	godModeController = GameplaySystems::GetGameObject(godModeControllerUID);
@@ -110,6 +114,7 @@ void GameController::Update() {
 					if (showWireframe) { // If Wireframe enabled when leaving God Mode, update to Shaded
 						Debug::UpdateShadingMode("Shaded");
 					}
+					if (camera) GameplaySystems::SetRenderCamera(camera);
 					godModeController->Disable();
 				} else {
 					if (showWireframe) { // If Wireframe enabled when entering GodMode, update to Wireframe
@@ -131,27 +136,22 @@ void GameController::Update() {
 	}
 
 	// Static cameras
-	if (!Debug::IsGodModeOn() && !isPaused) {
-		if (Input::GetKeyCode(Input::KEYCODE::KEY_0) && gameCamera) {
+	if (Debug::IsGodModeOn() && !isPaused) {
+		if (Input::GetKeyCode(Input::KEYCODE::KEY_F5) && gameCamera) {
 			camera = gameCamera->GetComponent<ComponentCamera>();
 			GameplaySystems::SetRenderCamera(camera);
-			Debug::SetGodModeOn(false);
 		}
-		if (Input::GetKeyCode(Input::KEYCODE::KEY_1) && staticCamera1) {
+		if (Input::GetKeyCode(Input::KEYCODE::KEY_F6) && staticCamera1) {
 			GameplaySystems::SetRenderCamera(staticCamera1);
-			Debug::SetGodModeOn(false);
 		}
-		if (Input::GetKeyCode(Input::KEYCODE::KEY_2) && staticCamera2) {
+		if (Input::GetKeyCode(Input::KEYCODE::KEY_F7) && staticCamera2) {
 			GameplaySystems::SetRenderCamera(staticCamera2);
-			Debug::SetGodModeOn(false);
 		}
-		if (Input::GetKeyCode(Input::KEYCODE::KEY_3) && staticCamera3) {
+		if (Input::GetKeyCode(Input::KEYCODE::KEY_F8) && staticCamera3) {
 			GameplaySystems::SetRenderCamera(staticCamera3);
-			Debug::SetGodModeOn(false);
 		}
-		if (Input::GetKeyCode(Input::KEYCODE::KEY_4) && staticCamera4) {
+		if (Input::GetKeyCode(Input::KEYCODE::KEY_F9) && staticCamera4) {
 			GameplaySystems::SetRenderCamera(staticCamera4);
-			Debug::SetGodModeOn(false);
 		}
 	}
 
@@ -240,11 +240,13 @@ void GameController::Update() {
 		}
 		// --- Show/Hide Skybox
 		if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_K)) {
-			ComponentSkyBox* skybox = gameCamera->GetComponent<ComponentSkyBox>();
-			if (skybox->IsActive()) {
-				skybox->Disable();
-			} else {
-				skybox->Enable();
+			if (skybox) {
+				if (skybox->IsActive()) {
+					skybox->Disable();
+				}
+				else {
+					skybox->Enable();
+				}
 			}
 		}
 	}
