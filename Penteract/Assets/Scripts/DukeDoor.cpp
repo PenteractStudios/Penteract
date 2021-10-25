@@ -12,7 +12,7 @@
 #include "DialogueManager.h"
 #include "MovingLasers.h"
 
-//#include "GameObjectUtils.h"
+#include "GameObjectUtils.h"
 #include "GlobalVariables.h"
 
 EXPOSE_MEMBERS(DukeDoor) {
@@ -154,11 +154,11 @@ void DukeDoor::OnCollision(GameObject& /*collidedWith*/, float3 /*collisionNorma
 	// Close doors
 	if (obstacle) {
 		obstacle->Enable();
-		//PlayDissolveAnimation(obstacle, true);
+		PlayDissolveAnimation(obstacle, true);
 	}
 	if (exitObstacle) {
 		exitObstacle->Enable();
-		//PlayDissolveAnimation(exitObstacle, true);
+		PlayDissolveAnimation(exitObstacle, true);
 	}
 
 
@@ -175,25 +175,35 @@ void DukeDoor::OnCollision(GameObject& /*collidedWith*/, float3 /*collisionNorma
 	triggered = true;
 }
 
-// Almost duplicated code, imported from SpawnPointController
-/*void DukeDoor::PlayDissolveAnimation(GameObject* root, bool playReverse) {
-	if (dissolveMaterialID == 0 || !root) return;
+// TODO: Almost duplicated code, copied from SpawnPointController
+void DukeDoor::PlayDissolveAnimation(GameObject* root, bool playReverse) {
+	if (!root) return;
 
-	GameObject* doorBack = GameObjectUtils::SearchReferenceInHierarchy(root, "DoorEnergyBack");
-	if (doorBack) {
-		ComponentMeshRenderer* meshRenderer = doorBack->GetComponent<ComponentMeshRenderer>();
-		if (meshRenderer) {
-			meshRenderer->SetMaterial(dissolveMaterialID);
-			meshRenderer->PlayDissolveAnimation(playReverse);
+	if (dissolveMaterialID != 0) {
+		GameObject* doorBack = GameObjectUtils::SearchReferenceInHierarchy(root, "DoorEnergyBack");
+		if (doorBack) {
+			ComponentMeshRenderer* meshRenderer = doorBack->GetComponent<ComponentMeshRenderer>();
+			if (meshRenderer) {
+				meshRenderer->SetMaterial(dissolveMaterialID);
+				meshRenderer->PlayDissolveAnimation(playReverse);
+			}
+		}
+
+		GameObject* doorFront = GameObjectUtils::SearchReferenceInHierarchy(root, "DoorEnergyFront");
+		if (doorFront) {
+			ComponentMeshRenderer* meshRenderer = doorFront->GetComponent<ComponentMeshRenderer>();
+			if (meshRenderer) {
+				meshRenderer->SetMaterial(dissolveMaterialID);
+				meshRenderer->PlayDissolveAnimation(playReverse);
+			}
 		}
 	}
 
-	GameObject* doorFront = GameObjectUtils::SearchReferenceInHierarchy(root, "DoorEnergyFront");
-	if (doorFront) {
-		ComponentMeshRenderer* meshRenderer = doorFront->GetComponent<ComponentMeshRenderer>();
+	GameObject* bossDoor = GameObjectUtils::SearchReferenceInHierarchy(root, "BossLaserDoor");
+	if (bossDoor) {
+		ComponentMeshRenderer* meshRenderer = bossDoor->GetComponent<ComponentMeshRenderer>();
 		if (meshRenderer) {
-			meshRenderer->SetMaterial(dissolveMaterialID);
 			meshRenderer->PlayDissolveAnimation(playReverse);
 		}
 	}
-}*/
+}
