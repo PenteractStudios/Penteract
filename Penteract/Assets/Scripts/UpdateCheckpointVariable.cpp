@@ -19,12 +19,13 @@ void UpdateCheckpointVariable::Update() {
 	
 }
 
-void UpdateCheckpointVariable::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
-	if (GameplaySystems::GetGlobalVariable(globalLevel, 0) > actualLevel) {
+void UpdateCheckpointVariable::OnCollision(GameObject& /*collidedWith*/, float3 /*collisionNormal*/, float3 /*penetrationDistance*/, void* /*particle*/) {
+	// If the level you will change is bigger -> You're in the next level that you play
+	if (actualLevel > GameplaySystems::GetGlobalVariable(globalLevel, 0)) {
 		GameplaySystems::SetGlobalVariable(globalLevel, actualLevel);
 		GameplaySystems::SetGlobalVariable(globalCheckpoint, newCheckpoint);
 	}
-	if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) > newCheckpoint) {
+	if (newCheckpoint > GameplaySystems::GetGlobalVariable(globalCheckpoint, 0)) {
 		GameplaySystems::SetGlobalVariable(globalCheckpoint, newCheckpoint);
 	}
 

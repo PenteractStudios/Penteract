@@ -1,5 +1,6 @@
 #include "ReloadScene.h"
 #include "GameplaySystems.h"
+#include "GlobalVariables.h"
 #include "PlayerController.h"
 #include "PauseController.h"
 #include "GameController.h"
@@ -12,13 +13,9 @@ EXPOSE_MEMBERS(ReloadScene) {
 
 GENERATE_BODY_IMPL(ReloadScene);
 
-void ReloadScene::Start() {
+void ReloadScene::Start() {}
 
-}
-
-void ReloadScene::Update() {
-
-}
+void ReloadScene::Update() {}
 
 void ReloadScene::OnButtonClick() {
 	if(sceneUID != 0) SceneManager::ChangeScene(sceneUID);

@@ -47,12 +47,10 @@ void StartTitleGlitchOnPlay::OnButtonClick() {
 
 void StartTitleGlitchOnPlay::DoTransition() {
 	if (sceneUID != 0) {
-
 		GameplaySystems::SetGlobalVariable(globalCheckpoint, checkpointSelected);
 		GameplaySystems::SetGlobalVariable(globalLevel, levelSelected);
 
 		GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, true);
-		// GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, GameplaySystems::GetGlobalVariable(globalLevel, 0) == 1 && GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 0);
 
 		if (GameplaySystems::GetGlobalVariable(globalLevel, 1) == 1 && GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 0) {
 			GameplaySystems::SetGlobalVariable(globalUpgradeLevel1_Plaza, false);

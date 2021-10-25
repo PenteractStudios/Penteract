@@ -5,6 +5,7 @@
 #include "PlayerController.h"
 #include "Components/ComponentTransform.h"
 #include "GlobalVariables.h"
+#include "UpdateCheckpointVariable.h"
 
 EXPOSE_MEMBERS(CheckpointManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, avatarUID),
@@ -132,6 +133,9 @@ void CheckpointManager::Start() {
 	listTriggers = triggers->GetChildren();
 	for (int i = 0; i < listTriggers.size(); i++) {
 		if (i < GameplaySystems::GetGlobalVariable(globalCheckpoint, 0)) {
+			// Disabled the trigger
+			ComponentBoxCollider* boxCollider = listTriggers[i]->GetComponent<ComponentBoxCollider>();
+			if (boxCollider) boxCollider->Disable();
 			listTriggers[i]->Disable();
 		}
 	}
