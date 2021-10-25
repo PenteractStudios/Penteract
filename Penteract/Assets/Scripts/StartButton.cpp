@@ -8,6 +8,8 @@
 #include "GameObject.h"
 #include "CanvasFader.h"
 
+#include "GlobalVariables.h"
+
 int checkpoint;
 
 EXPOSE_MEMBERS(StartButton) {
@@ -88,7 +90,8 @@ void StartButton::OnButtonClick() {
 }
 
 void StartButton::DoTransition() {
-	checkpoint = checkpointNum;
+	checkpoint = GameplaySystems::GetGlobalVariable(globalCheckpoint, 0);
+	levelNum = GameplaySystems::GetGlobalVariable(globalLevel, 1);
 
 	if (sceneTransition) {
 		sceneTransition->StartTransition();
@@ -96,11 +99,18 @@ void StartButton::DoTransition() {
 		if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
 		if (levelNum == 2) {
 			PlayerController::currentLevel = 2;
-			Player::level2Upgrade = false;
+			Player::level2Upgrade = GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_Catwalks, false) &&
+				GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_AfterArena1, false) &&
+				GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_FireBridge, false);
 		} else if (levelNum == 1) {
 			PlayerController::currentLevel = 1;
-			Player::level1Upgrade = false;
-			Player::level2Upgrade = false;
+			Player::level1Upgrade = GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Plaza, false) &&
+				GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Cafeteria, false) &&
+				GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Presecurity, false);
+
+			Player::level2Upgrade = GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_Catwalks, false) &&
+				GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_AfterArena1, false) &&
+				GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_FireBridge, false);
 		}
 		if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
 	}

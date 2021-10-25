@@ -118,15 +118,33 @@ void CheckpointManager::Start() {
 
 	/* Disabled the upgrade that are already enabled */
 	if (GameplaySystems::GetGlobalVariable(globalLevel, 0) == 1) {
-		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Plaza, true)) upgrades1->Disable();
-		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Cafeteria, true)) upgrades2->Disable();
-		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Presecurity, true)) upgrades3->Disable();
+		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Plaza, true)) {
+			playerScript->obtainedUpgradeCells += 1;
+			upgrades1->Disable();
+		}
+		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Cafeteria, true)) {
+			playerScript->obtainedUpgradeCells += 1;
+			upgrades2->Disable();
+		}
+		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Presecurity, true)) {
+			playerScript->obtainedUpgradeCells += 1;
+			upgrades3->Disable();
+		}
 	}
 
 	if (GameplaySystems::GetGlobalVariable(globalLevel, 0) == 2) {
-		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_Catwalks, true)) upgrades1->Disable();
-		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_AfterArena1, true)) upgrades2->Disable();
-		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_FireBridge, true)) upgrades3->Disable();
+		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_Catwalks, true)) {
+			playerScript->obtainedUpgradeCells += 1;
+			upgrades1->Disable();
+		}
+		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_AfterArena1, true)) {
+			playerScript->obtainedUpgradeCells += 1;
+			upgrades2->Disable();
+		}
+		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_FireBridge, true)) {
+			playerScript->obtainedUpgradeCells += 1;
+			upgrades3->Disable();
+		}
 	}
 
 	/* Disabled the triggers of the checkpoint that already passed */
@@ -151,7 +169,8 @@ void CheckpointManager::Start() {
 				GameplaySystems::SetGlobalVariable(globalSkill3TutorialReached, true);
 				dialogs1->Disable();
 				encounter1->Disable();
-				doors5->Disable();
+				doors5->Disable(); // Its Duke object!
+				video2->Disable(); // It's audio video scene 1
 				video1->Disable();
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 1) break;
 			case 2: // After Cafeteria - In Transport
