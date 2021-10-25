@@ -52,11 +52,17 @@ void GameController::Start() {
 		GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, false);
 		GameplaySystems::SetGlobalVariable(globalSkill2TutorialReached, false);
 		GameplaySystems::SetGlobalVariable(globalSkill3TutorialReached, false);
+		GameplaySystems::SetGlobalVariable(globalSkill1TutorialReachedOni, false);
+		GameplaySystems::SetGlobalVariable(globalSkill2TutorialReachedOni, false);
+		GameplaySystems::SetGlobalVariable(globalSkill3TutorialReachedOni, false);
 		GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, false);
 	} else {
 		GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, true);
 		GameplaySystems::SetGlobalVariable(globalSkill2TutorialReached, true);
 		GameplaySystems::SetGlobalVariable(globalSkill3TutorialReached, true);
+		GameplaySystems::SetGlobalVariable(globalSkill1TutorialReachedOni, true);
+		GameplaySystems::SetGlobalVariable(globalSkill2TutorialReachedOni, true);
+		GameplaySystems::SetGlobalVariable(globalSkill3TutorialReachedOni, true);
 		GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, true);
 	}
 

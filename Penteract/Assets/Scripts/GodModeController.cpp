@@ -58,6 +58,9 @@ void GodModeController::Start() {
 	skill1WasActive = false;
 	skill2WasActive = false;
 	skill3WasActive = false;
+	skill1OniWasActive = false;
+	skill2OniWasActive = false;
+	skill3OniWasActive = false;
 	switchWasActive = false;
 
 	doorPreviousStates.emplace_back(plazaDoor, plazaDoor ? plazaDoor->IsActive() : false);
@@ -121,6 +124,9 @@ void GodModeController::OnChildToggle(unsigned int index, bool isChecked) {
 			GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, skill1WasActive);
 			GameplaySystems::SetGlobalVariable(globalSkill2TutorialReached, skill2WasActive);
 			GameplaySystems::SetGlobalVariable(globalSkill3TutorialReached, skill3WasActive);
+			GameplaySystems::SetGlobalVariable(globalSkill1TutorialReachedOni, skill1OniWasActive);
+			GameplaySystems::SetGlobalVariable(globalSkill2TutorialReachedOni, skill2OniWasActive);
+			GameplaySystems::SetGlobalVariable(globalSkill3TutorialReachedOni, skill3OniWasActive);
 			GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, switchWasActive);
 		}
 		else {
@@ -129,11 +135,17 @@ void GodModeController::OnChildToggle(unsigned int index, bool isChecked) {
 			skill1WasActive = GameplaySystems::GetGlobalVariable(globalSkill1TutorialReached, true);
 			skill2WasActive = GameplaySystems::GetGlobalVariable(globalSkill2TutorialReached, true);
 			skill3WasActive = GameplaySystems::GetGlobalVariable(globalSkill3TutorialReached, true);
+			skill1OniWasActive = GameplaySystems::GetGlobalVariable(globalSkill1TutorialReachedOni, true);
+			skill2OniWasActive = GameplaySystems::GetGlobalVariable(globalSkill2TutorialReachedOni, true);
+			skill3OniWasActive = GameplaySystems::GetGlobalVariable(globalSkill3TutorialReachedOni, true);
 			switchWasActive = GameplaySystems::GetGlobalVariable(globalSwitchTutorialReached, true);
 			// Activate all skills
 			GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, true);
 			GameplaySystems::SetGlobalVariable(globalSkill2TutorialReached, true);
 			GameplaySystems::SetGlobalVariable(globalSkill3TutorialReached, true);
+			GameplaySystems::SetGlobalVariable(globalSkill1TutorialReachedOni, true);
+			GameplaySystems::SetGlobalVariable(globalSkill2TutorialReachedOni, true);
+			GameplaySystems::SetGlobalVariable(globalSkill3TutorialReachedOni, true);
 			GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, true);
 		}
 		break;
