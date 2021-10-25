@@ -44,11 +44,15 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 	GameObject* bulletGO = GameplaySystems::GetGameObject(bulletUID);
 	if (bulletGO) {
 		bullet = bulletGO->GetComponent<ComponentParticleSystem>();
+		ComponentParticleSystem* muzzleFlash = bulletGO->GetChild("MuzzleFlash")->GetComponent<ComponentParticleSystem>();
 		if (bullet) {
 			bullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
 			bullet->SetMaxParticles(attackBurst*2);
 			bullet->SetParticlesPerSecond(float2(attackSpeed, attackSpeed));
-			bullet->SetDuration(attackBurst / attackSpeed);
+			bullet->SetDuration((attackBurst + 1) / attackSpeed);
+		}
+		if (muzzleFlash) {
+			muzzleFlash->SetDuration(attackBurst / attackSpeed);
 		}
 	}
 
@@ -104,7 +108,7 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 				areaCharge = GameplaySystems::GetResource<ResourceMaterial>(areaChargeMaterialUID);
 			}
 		}
-		
+
 	}
 
 	chargeTelegraphAreaGO = GameplaySystems::GetGameObject(chargeTelegraphAreaUID);
@@ -287,17 +291,20 @@ void Duke::Shoot()
 		ComponentTransform* bulletTransform = bullet->GetOwner().GetComponent<ComponentTransform>();
 		ComponentTransform* playerTransform = player->GetComponent<ComponentTransform>();
 		PlayerController* playerController = GET_SCRIPT(player, PlayerController);
-		float3 targetDirection = playerTransform->GetGlobalPosition() + playerTransform->GetFront() + float3(0.f, 2.7f, 0.f) - bulletTransform->GetGlobalPosition();
+		float3 targetDirection = playerTransform->GetGlobalPosition() + playerTransform->GetFront() + float3(0.f, 3.f, 0.f) - bulletTransform->GetGlobalPosition();
 		if (playerController) {
 			float3 dir = playerController->playerFang.IsActive() ? playerController->playerFang.GetDirection() : playerController->playerOnimaru.GetDirection();
-			targetDirection += dir * 3.f;
+			targetDirection += dir * 2.f;
 		}
-
-		bulletTransform->SetGlobalRotation(Quat::LookAt(float3(0,1,0), targetDirection, float3(0,0,-1), float3(0,1,0)));
+		// Limit the emitter rotation (Just rotate when angle is minor than 30 degrees)
+		float dotProd = targetDirection.Normalized().Dot(dukeTransform->GetFront().Normalized());
+		if (dotProd > 0.856) {
+			bulletTransform->SetGlobalRotation(Quat::LookAt(float3(0, 1, 0), targetDirection, float3(0, 0, -1), float3(0, 1, 0)));
+		}
 	}
 	if (isShooting) {
 		isShootingTimer += Time::GetDeltaTime();
-		if (isShootingTimer >= (attackBurst-1) / attackSpeed) {
+		if (isShootingTimer >= attackBurst / attackSpeed) {
 			isShooting = false;
 			if (compAnimation && compAnimation->GetCurrentStateSecondary()) {
 				if (compAnimation->GetCurrentStateSecondary()->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::SHOOT)]) {
@@ -310,7 +317,7 @@ void Duke::Shoot()
 			if (!meshObj) return;
 			bullet->PlayChildParticles();
 		}
-		attackTimePool = (attackBurst / attackSpeed) + timeInterBurst + RandomNumberGenerator::GenerateFloat(RNG_MIN, RNG_MAX) * RNG_SCALE;
+		attackTimePool = (attackBurst + 1) / attackSpeed + timeInterBurst + RandomNumberGenerator::GenerateFloat(0.5f, 1.3f);
 		isShooting = true;
 		isShootingTimer = 0.f;
 		// Animation
@@ -448,14 +455,14 @@ void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 	switch (stateMachineEnum)
 	{
 	case StateMachineEnum::PRINCIPAL:
-		if (strcmp(eventName, "EnablePunch") == 0) {			
+		if (strcmp(eventName, "EnablePunch") == 0) {
 			if (meleeAttackCollider && !meleeAttackCollider->IsActive()) {
 				meleeAttackCollider->Enable();
 				if (punchSlash && firstTimePunchParticlesActive) {
 					punchSlash->PlayChildParticles();
 					firstTimePunchParticlesActive = false;
 				}
-			}			
+			}
 		} else if (strcmp(eventName, "DisablePunch") == 0) {
 			if (meleeAttackCollider && meleeAttackCollider->IsActive()) {
 				meleeAttackCollider->Disable();
