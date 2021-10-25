@@ -28,12 +28,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fourthEncounterUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, hudManagerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fireTilesUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, triggerBosslvl2EndUID),
-
-	MEMBER_SEPARATOR("Video UIDs"),
-	MEMBER(MemberType::GAME_OBJECT_UID, videoParentCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, videoCanvasUID),
-	MEMBER(MemberType::FLOAT, dukeCharacter.delayForDisplayVideo),
+	MEMBER(MemberType::GAME_OBJECT_UID, triggerBossEndUID),
 
 	MEMBER_SEPARATOR("Duke Atributes"),
 	MEMBER(MemberType::FLOAT, dukeCharacter.lifePoints),
@@ -136,9 +131,9 @@ void AIDuke::Start() {
 	}
 
 	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, videoParentCanvasUID, videoCanvasUID, encounters, dronesController, punchSlashUID, chargeDustUID, areaChargeUID, chargeTelegraphAreaUID);
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, encounters, dronesController, punchSlashUID, chargeDustUID, areaChargeUID, chargeTelegraphAreaUID);
 
-	if (islevel2) triggerBosslvl2End = GameplaySystems::GetGameObject(triggerBosslvl2EndUID);
+	triggerBossEnd = GameplaySystems::GetGameObject(triggerBossEndUID);
 
 	dukeCharacter.winSceneUID = winSceneUID; // TODO: REPLACE
 
@@ -157,8 +152,6 @@ void AIDuke::Update() {
 	//Debug::Log(life.c_str());
 
 	float speedToUse = dukeCharacter.slowedDown ? dukeCharacter.slowedDownSpeed : dukeCharacter.movementSpeed;
-
-	if (dukeCharacter.isDead && !islevel2) dukeCharacter.InitPlayerVictory(); //TODO: remove this. This will be called differently when the boss post-encounter dialogues are developed
 
 	if (dukeCharacter.slowedDown) {
 		if (currentSlowedDownTime >= dukeCharacter.slowedDownTime) {
@@ -209,8 +202,6 @@ void AIDuke::Update() {
 				// "Fake" Duke death
 				PerformDeath();
 				SetReady(false);
-				// Activate the combat end trigger. This will activate a dialogue and dissolve Duke.
-				triggerBosslvl2End->Enable();
 				return;
 			}
 			phase = Phase::PHASE2;
@@ -825,6 +816,9 @@ void AIDuke::PerformDeath() {
 	dukeCharacter.agent->RemoveAgentFromCrowd();
 	if (dukeCharacter.beingPushed) dukeCharacter.beingPushed = false;
 	dukeCharacter.state = DukeState::DEATH;
+
+	// Activate the combat end trigger. This will activate a dialogue and dissolve Duke in level 2.
+	if (triggerBossEnd) triggerBossEnd->Enable();
 
 	// Stop environment hazards
 	if (!islevel2) {

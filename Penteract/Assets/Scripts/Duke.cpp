@@ -7,7 +7,6 @@
 #include "BarrelSpawner.h"
 #include "AIMovement.h"
 #include "GlobalVariables.h"
-#include "VideoSceneEnd.h"
 #include "AttackDronesController.h"
 #include "DukeShield.h"
 #include "RandomNumberGenerator.h"
@@ -19,7 +18,7 @@
 #define RNG_MAX 1.0f
 
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID,std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID, UID chargeDustUID, UID areaChargeUID, UID chargeTelegraphAreaUID)
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID, UID chargeDustUID, UID areaChargeUID, UID chargeTelegraphAreaUID)
 {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(dukeUID);
@@ -28,9 +27,7 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 
 	meleeAttackCollider = GameplaySystems::GetGameObject(meleeAttackColliderUID);
 	chargeAttack = GameplaySystems::GetGameObject(chargeAttackColliderUID);
-	videoParentCanvas = GameplaySystems::GetGameObject(videoParentCanvasUID);
-	videoCanvas = GameplaySystems::GetGameObject(videoCanvasUID);
-
+	
 	GameObject* shieldObj = GameplaySystems::GetGameObject(phase2ShieldUID);
 	if (shieldObj) {
 		phase2Shield = GET_SCRIPT(shieldObj, DukeShield);
@@ -546,27 +543,6 @@ int Duke::GetWalkAnimation()
 		}
 	}
 	return animNum;
-}
-
-void Duke::InitPlayerVictory()
-{
-	if (!endVideoRunning) {
-
-		currentDelayVideo += Time::GetDeltaTime();
-
-		if (currentDelayVideo >= delayForDisplayVideo) {
-			endVideoRunning = true;
-			GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, true);
-			if (videoParentCanvas && videoCanvas) {
-				videoParentCanvas->Enable();
-				VideoSceneEnd* videoSceneEndScript = GET_SCRIPT(videoCanvas, VideoSceneEnd);
-				if (videoSceneEndScript) {
-					videoSceneEndScript->PlayVideo();
-				}
-
-			}
-		}
-	}
 }
 
 void Duke::ActivateDissolve(UID dissolveMaterialID) {
