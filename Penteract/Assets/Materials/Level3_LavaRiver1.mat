@@ -33,12 +33,12 @@
     "Smoothness": 1.0,
     "HasSmoothnessInAlphaChannel": true,
     "Tiling": [
-        4.0,
-        0.4000000059604645
+        1.2000000476837159,
+        6.0
     ],
     "Offset": [
         0.0,
-        0.0
+        -29.354999542236329
     ],
     "DissolveNoiseMap": 0,
     "DissolveColor": [

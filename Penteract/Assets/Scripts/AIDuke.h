@@ -8,6 +8,7 @@ class ComponentTransform;
 class ComponentAgent;
 class ComponentAudioSource;
 class ComponentMeshRenderer;
+class ComponentParticleSystem;
 class ResourcePrefab;
 class HUDController;
 class PlayerController;
@@ -50,6 +51,8 @@ public:
 	bool IsBeingPushed() const;
 	float GetDukeMaxHealth() const;
 
+	void ActivateDissolve();
+
 private:
 	void CalculatePushBackRealDistance();
 	void UpdatePushBackPosition();
@@ -58,6 +61,7 @@ private:
 	bool IsInvulnerable()const;
 	void OnShieldInterrupted();
 	void PerformBulletHell();
+	void PerformDeath();
 
 public:
 	UID dukeUID = 0;
@@ -79,7 +83,14 @@ public:
 	UID videoCanvasUID = 0;
 	UID hudManagerUID = 0;
 	UID fireTilesUID = 0;
+  // Effects
+  UID punchSlashUID = 0;
+	UID chargeDustUID = 0;
+	UID areaChargeUID = 0;
+	UID chargeTelegraphAreaUID = 0;
+	// Only for level2
 	UID triggerBosslvl2EndUID = 0;
+  UID dissolveMaterialGOUID = 0;
 
 	GameObject* duke = nullptr;
 	GameObject* player = nullptr;
@@ -158,8 +169,9 @@ private:
 	float currentSlowedDownTime = 0.f;
 	float pushBackRealDistance = 0.f;
 
-	//Only for level2
+	// Only for level2
 	GameObject* triggerBosslvl2End = nullptr;
+	UID dissolveMaterialID = 0;
 
 	float currentTimeBetweenAbilities = 0.f;
 	bool mustWaitForTimerBetweenAbilities = true;
