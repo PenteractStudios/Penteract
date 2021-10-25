@@ -85,6 +85,8 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::SCENE_RESOURCE_UID, winSceneUID),
 	MEMBER(MemberType::BOOL, islevel2),
 
+	MEMBER_SEPARATOR("Dissolve material reference in placeholders"),
+	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID)
 
 };
 
@@ -124,6 +126,15 @@ void AIDuke::Start() {
 	// AttackDronesController
 	AttackDronesController* dronesController = GET_SCRIPT(&GetOwner(), AttackDronesController);
 
+	// Dissolve Material
+	GameObject* dissolveObj = GameplaySystems::GetGameObject(dissolveMaterialGOUID);
+	if (dissolveObj) {
+		ComponentMeshRenderer* dissolveMeshRenderer = dissolveObj->GetComponent<ComponentMeshRenderer>();
+		if (dissolveMeshRenderer) {
+			dissolveMaterialID = dissolveMeshRenderer->GetMaterial();
+		}
+	}
+
 	// Init Duke character
 	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, videoParentCanvasUID, videoCanvasUID, encounters, dronesController, punchSlashUID, chargeDustUID, areaChargeUID, chargeTelegraphAreaUID);
 
@@ -147,13 +158,7 @@ void AIDuke::Update() {
 
 	float speedToUse = dukeCharacter.slowedDown ? dukeCharacter.slowedDownSpeed : dukeCharacter.movementSpeed;
 
-	if (dukeCharacter.isDead) {
-		if (activeFireTiles && fireTilesScript) fireTilesScript->StopFire();
-		// TODO: Substitute the following for actual destruction of the troops
-		GameObject* encounter = GameplaySystems::GetGameObject(fourthEncounterUID);
-		if (encounter && encounter->IsActive()) encounter->Disable();
-		dukeCharacter.InitPlayerVictory();
-	}
+	if (dukeCharacter.isDead && !islevel2) dukeCharacter.InitPlayerVictory(); //TODO: remove this. This will be called differently when the boss post-encounter dialogues are developed
 
 	if (dukeCharacter.slowedDown) {
 		if (currentSlowedDownTime >= dukeCharacter.slowedDownTime) {
@@ -200,9 +205,13 @@ void AIDuke::Update() {
 			}
 			break;
 		} else if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints() && dukeCharacter.state != DukeState::BULLET_HELL && dukeCharacter.state != DukeState::CHARGE) {
-			if(islevel2) {// only for level 2
-				// call animation teleport and disable gameobject
+			if(islevel2) { // only for level 2
+				// "Fake" Duke death
+				PerformDeath();
+				SetReady(false);
+				// Activate the combat end trigger. This will activate a dialogue and dissolve Duke.
 				triggerBosslvl2End->Enable();
+				return;
 			}
 			phase = Phase::PHASE2;
 			if (lasers && !lasers->IsActive()) lasers->Enable();
@@ -530,6 +539,7 @@ void AIDuke::Update() {
 				break;
 			}
 		}
+		break;
 	default:
 		break;
 	}
@@ -618,18 +628,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 	}
 
 	if (!dukeCharacter.isAlive) {
-		movementScript->Stop();
-		dukeCharacter.StopShooting();
-		dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::DEATH]);
-
-		// TODO: play audio and VFX
-		//if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
-		ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
-		if (collider) collider->Disable();
-
-		dukeCharacter.agent->RemoveAgentFromCrowd();
-		if (dukeCharacter.beingPushed) dukeCharacter.beingPushed = false;
-		dukeCharacter.state = DukeState::DEATH;
+		PerformDeath();
 	}
 }
 
@@ -812,6 +811,35 @@ void AIDuke::PerformBulletHell() {
 	}
 }
 
+void AIDuke::PerformDeath() {
+	movementScript->Stop();
+	OnShieldInterrupted();
+	dukeCharacter.StopShooting();
+	dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::DEATH]);
+
+	// TODO: play audio and VFX
+	//if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
+	ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
+	if (collider) collider->Disable();
+
+	dukeCharacter.agent->RemoveAgentFromCrowd();
+	if (dukeCharacter.beingPushed) dukeCharacter.beingPushed = false;
+	dukeCharacter.state = DukeState::DEATH;
+
+	// Stop environment hazards
+	if (!islevel2) {
+		if (activeFireTiles && fireTilesScript) fireTilesScript->StopFire();
+		if (lasers && lasers->IsActive()) lasers->Disable();
+		// TODO: Substitute the following for actual destruction of the troops
+		GameObject* encounter = GameplaySystems::GetGameObject(fourthEncounterUID);
+		if (encounter && encounter->IsActive()) encounter->Disable();
+	}
+}
+
 float AIDuke::GetDukeMaxHealth() const {
 	return dukeCharacter.GetTotalLifePoints();
+}
+
+void AIDuke::ActivateDissolve() {
+	dukeCharacter.ActivateDissolve(dissolveMaterialID);
 }

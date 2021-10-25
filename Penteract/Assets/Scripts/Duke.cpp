@@ -550,7 +550,7 @@ int Duke::GetWalkAnimation()
 
 void Duke::InitPlayerVictory()
 {
-	if (isDead && !endVideoRunning) {
+	if (!endVideoRunning) {
 
 		currentDelayVideo += Time::GetDeltaTime();
 
@@ -567,4 +567,16 @@ void Duke::InitPlayerVictory()
 			}
 		}
 	}
+}
+
+void Duke::ActivateDissolve(UID dissolveMaterialID) {
+	ComponentMeshRenderer* meshRenderer = meshObj->GetComponent<ComponentMeshRenderer>();
+	if (meshRenderer && dissolveMaterialID != 0) {
+		meshRenderer->SetMaterial(dissolveMaterialID);
+		meshRenderer->PlayDissolveAnimation();
+	}
+}
+
+ComponentMeshRenderer* Duke::GetDukeMeshRenderer() const {
+	return meshObj->GetComponent<ComponentMeshRenderer>();
 }
