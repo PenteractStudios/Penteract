@@ -26,6 +26,7 @@ public:
 	enum class AudioType {
 		SPAWN,
 		ATTACK,
+		ATTACK_SECONDARY,
 		FOOTSTEP_RIGHT,
 		FOOTSTEP_LEFT,
 		HIT,

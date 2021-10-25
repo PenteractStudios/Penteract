@@ -627,7 +627,16 @@ void RangedAI::ActualShot() {
 }
 
 void RangedAI::PlayAudio(AudioType audioType) {
-	if (audios[static_cast<int>(audioType)]) audios[static_cast<int>(audioType)]->Play();
+	ComponentAudioSource* audio = audios[static_cast<int>(audioType)];
+	if (audio) {
+		if (audioType == AudioType::SPAWN) {
+			audio->SetPitch(rand() / (float)RAND_MAX * 0.05f + 0.95f);
+		}
+		else if (audioType == AudioType::DEATH) {
+			audio->SetPitch(rand() / (float)RAND_MAX * 0.3f + 0.85f);
+		}
+		audio->Play();
+	}
 }
 
 void RangedAI::EnableBlastPushBack() {
