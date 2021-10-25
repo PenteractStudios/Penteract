@@ -8,11 +8,11 @@
 
 EXPOSE_MEMBERS(SpecialHoverButton) {
 	MEMBER(MemberType::GAME_OBJECT_UID, buttonIdleImageObjUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, buttonHoveredImageObjUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, buttonClickedImageObjUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, buttonTextWhiteObjUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, buttonTextShadowObjUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, audioSourcesUID)
+		MEMBER(MemberType::GAME_OBJECT_UID, buttonHoveredImageObjUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, buttonClickedImageObjUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, buttonTextWhiteObjUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, buttonTextShadowObjUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, audioSourcesUID)
 };
 
 GENERATE_BODY_IMPL(SpecialHoverButton);
@@ -103,7 +103,7 @@ void SpecialHoverButton::Update() {
 
 				} else {
 					bool selected = selectedComponent ? (selectable->GetID() == selectedComponent->GetID() ? true : false) : false;
-					if(!selected) EnterButtonState(ButtonState::IDLE);
+					if (!selected) EnterButtonState(ButtonState::IDLE);
 				}
 
 			}
@@ -122,7 +122,7 @@ void SpecialHoverButton::OnButtonClick() {
 }
 
 void SpecialHoverButton::OnDisable() {
-	buttonState = ButtonState::IDLE;
+	EnterButtonState(ButtonState::IDLE);
 }
 
 void SpecialHoverButton::EnterButtonState(ButtonState newState) {

@@ -17,6 +17,7 @@ public:
 	void Update() override;
 	void OnButtonClick() override;
 	void OnDisable() override;
+	void OnEnable() override;
 	void PlayAudio(UIAudio type);
 
 public:
