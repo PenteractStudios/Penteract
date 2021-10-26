@@ -632,7 +632,7 @@ void RangedAI::PlayAudio(AudioType audioType) {
 		if (audioType == AudioType::SPAWN) {
 			audio->SetPitch(rand() / (float)RAND_MAX * 0.05f + 0.95f);
 		}
-		else if (audioType == AudioType::DEATH) {
+		else if (audioType == AudioType::DEATH || audioType == AudioType::HIT) {
 			audio->SetPitch(rand() / (float)RAND_MAX * 0.3f + 0.85f);
 		}
 		audio->Play();

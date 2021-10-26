@@ -494,7 +494,11 @@ void AIMeleeGrunt::EnableBlastPushBack() {
 		if (playerController->playerOnimaru.level2Upgrade) {
 			gruntCharacter.GetHit(playerController->playerOnimaru.blastDamage + playerController->GetOverPowerMode());
 
-			if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
+			ComponentAudioSource* audio = audios[static_cast<int>(AudioType::HIT)];
+			if (audio) {
+				audio->SetPitch(rand() / (float)RAND_MAX * 0.3f + 0.85f);
+				audio->Play();
+			}
 			PlayHitMaterialEffect();
 			timeSinceLastHurt = 0.0f;
 		}
@@ -524,7 +528,11 @@ bool AIMeleeGrunt::IsBeingPushed() const {
 
 void AIMeleeGrunt::PlayHit()
 {
-	if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
+	ComponentAudioSource* audio = audios[static_cast<int>(AudioType::HIT)];
+	if (audio) {
+		audio->SetPitch(rand() / (float)RAND_MAX * 0.3f + 0.85f);			
+		audio->Play();
+	}
 	PlayHitMaterialEffect();
 	timeSinceLastHurt = 0.0f;
 }
