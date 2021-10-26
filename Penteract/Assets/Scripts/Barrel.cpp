@@ -112,14 +112,14 @@ void Barrel::Update() {
 	}
 
 	if (!onFloor) {
-		if (parentTransform->GetGlobalPosition().y > 2.765f) {
+		if (parentTransform->GetGlobalPosition().y > 2.6f) {
 			float3 barrelPos = parentTransform->GetGlobalPosition();
 			barrelPos += float3(0, -forceOfFall, 0);
 			parentTransform->SetGlobalPosition(barrelPos);
 		}
 		else {
 			float3 barrelPos = parentTransform->GetGlobalPosition();
-			barrelPos.y = 2.765f;
+			barrelPos.y = 2.6f;
 			parentTransform->SetGlobalPosition(barrelPos);
 			startTimerToDestroy = true;
 			timerDestroyActivated = true;
