@@ -1,6 +1,8 @@
+#pragma once
+
 #include "GameObject.h"
 
-GameObject* SearchReferenceInHierarchy(GameObject* root, std::string name) {
+inline GameObject* SearchReferenceInHierarchy(GameObject* root, std::string name) {
 	if (root == nullptr) return nullptr;
 
 	if (root->name == name)	return root;

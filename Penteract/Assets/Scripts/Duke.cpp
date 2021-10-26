@@ -406,6 +406,7 @@ void Duke::TeleportDuke(bool toMapCenter)
 	}
 	else {
 		if (phase2Shield) phase2Shield->FadeShield();
+		mustAddAgent = true;
 		isInArena = true;
 	}
 }
