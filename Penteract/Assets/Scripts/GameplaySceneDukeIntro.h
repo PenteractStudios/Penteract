@@ -7,7 +7,6 @@ class GameObject;
 class ComponentAgent;
 class ComponentVideo;
 class ComponentAnimation;
-class ComponentTransform;
 class AIMovement;
 
 class GameplaySceneDukeIntro : public Script
@@ -30,7 +29,6 @@ public:
 	float dukeDisappearDistance = 45.f;
 	
 	float dukeTimeToGo = 5.f;
-	float rotationAngle = 77.783f;
 
 private:
 	GameObject* duke1 = nullptr;
@@ -43,8 +41,7 @@ private:
 	AIMovement* movementScript = nullptr;
 	AIState state = AIState::RUN;
 
-	float currentDukeTimeToChange = 0.f;
-	bool moveBackward = true;
+	float currentDukeTimeToWalkAway = 0.f;
 
 	void Movement();
 };
