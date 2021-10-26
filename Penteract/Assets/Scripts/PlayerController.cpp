@@ -9,6 +9,7 @@
 #include "OnimaruBullet.h"
 #include "SwitchParticles.h"
 #include "GlobalVariables.h"
+#include "AIDuke.h"
 
 #include "Math/Quat.h"
 #include "Geometry/Plane.h"
@@ -266,7 +267,8 @@ void PlayerController::SwitchCharacter() {
 			for (GameObject* enemy : switchCollisionedGO) {
 				AIMeleeGrunt* meleeScript = GET_SCRIPT(enemy, AIMeleeGrunt);
 				RangedAI* rangedScript = GET_SCRIPT(enemy, RangedAI);
-				if (rangedScript || meleeScript) {
+				AIDuke* dukeScript = GET_SCRIPT(enemy, AIDuke);
+				if (rangedScript || meleeScript || dukeScript) {
 					if (meleeScript) {
 						meleeScript->EnableBlastPushBack();
 						if (switchFirstHit) {
@@ -280,6 +282,9 @@ void PlayerController::SwitchCharacter() {
 							rangedScript->rangerGruntCharacter.GetHit(switchDamage);
 							rangedScript->PlayHit();
 						}
+					}
+					else if (dukeScript) {
+						dukeScript->EnableBlastPushBack();
 					}
 				}
 			}
@@ -467,7 +472,7 @@ void PlayerController::Update() {
 }
 
 void PlayerController::OnCollision(GameObject& collidedWith, float3 /* collisionNormal */ , float3 /* penetrationDistance */, void* /* particle */) {
-	if (collidedWith.name == "MeleeGrunt" || collidedWith.name == "RangedGrunt") {
+	if (collidedWith.name == "MeleeGrunt" || collidedWith.name == "RangedGrunt" || collidedWith.name == "Duke") {
 		switchCollisionedGO.push_back(&collidedWith);
 	}
 }

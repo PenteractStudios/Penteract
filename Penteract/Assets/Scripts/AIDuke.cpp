@@ -46,7 +46,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::INT, dukeCharacter.attackBurst),
 	MEMBER(MemberType::FLOAT, dukeCharacter.timeInterBurst),
 	MEMBER(MemberType::FLOAT, dukeCharacter.pushBackDistance),
-	MEMBER(MemberType::FLOAT, dukeCharacter.pushBackSpeed),
+	MEMBER(MemberType::FLOAT, dukeCharacter.pushBackTime),
 	MEMBER(MemberType::FLOAT, dukeCharacter.slowedDownTime),
 	MEMBER(MemberType::FLOAT, dukeCharacter.slowedDownSpeed),
 	MEMBER(MemberType::FLOAT, dukeCharacter.moveChangeEvery),
@@ -67,6 +67,10 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::FLOAT, timerBetweenAbilities),
 
 	MEMBER_SEPARATOR("Particles UIDs"),
+	MEMBER(MemberType::GAME_OBJECT_UID, punchSlashUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, chargeDustUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, areaChargeUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, chargeTelegraphAreaUID),
 
 	MEMBER_SEPARATOR("Prefabs UIDs"),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, barrelUID),
@@ -81,6 +85,8 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::SCENE_RESOURCE_UID, winSceneUID),
 	MEMBER(MemberType::BOOL, islevel2),
 
+	MEMBER_SEPARATOR("Dissolve material reference in placeholders"),
+	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID)
 
 };
 
@@ -120,8 +126,17 @@ void AIDuke::Start() {
 	// AttackDronesController
 	AttackDronesController* dronesController = GET_SCRIPT(&GetOwner(), AttackDronesController);
 
+	// Dissolve Material
+	GameObject* dissolveObj = GameplaySystems::GetGameObject(dissolveMaterialGOUID);
+	if (dissolveObj) {
+		ComponentMeshRenderer* dissolveMeshRenderer = dissolveObj->GetComponent<ComponentMeshRenderer>();
+		if (dissolveMeshRenderer) {
+			dissolveMaterialID = dissolveMeshRenderer->GetMaterial();
+		}
+	}
+
 	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, videoParentCanvasUID, videoCanvasUID, encounters, dronesController);
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, videoParentCanvasUID, videoCanvasUID, encounters, dronesController, punchSlashUID, chargeDustUID, areaChargeUID, chargeTelegraphAreaUID);
 
 	if (islevel2) triggerBosslvl2End = GameplaySystems::GetGameObject(triggerBosslvl2EndUID);
 
@@ -143,13 +158,7 @@ void AIDuke::Update() {
 
 	float speedToUse = dukeCharacter.slowedDown ? dukeCharacter.slowedDownSpeed : dukeCharacter.movementSpeed;
 
-	if (dukeCharacter.isDead) {
-		if (activeFireTiles && fireTilesScript) fireTilesScript->StopFire();
-		// TODO: Substitute the following for actual destruction of the troops
-		GameObject* encounter = GameplaySystems::GetGameObject(fourthEncounterUID);
-		if (encounter && encounter->IsActive()) encounter->Disable();
-		dukeCharacter.InitPlayerVictory();
-	}
+	if (dukeCharacter.isDead && !islevel2) dukeCharacter.InitPlayerVictory(); //TODO: remove this. This will be called differently when the boss post-encounter dialogues are developed
 
 	if (dukeCharacter.slowedDown) {
 		if (currentSlowedDownTime >= dukeCharacter.slowedDownTime) {
@@ -196,9 +205,13 @@ void AIDuke::Update() {
 			}
 			break;
 		} else if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints() && dukeCharacter.state != DukeState::BULLET_HELL && dukeCharacter.state != DukeState::CHARGE) {
-			if(islevel2) {// only for level 2
-				// call animation teleport and disable gameobject
+			if(islevel2) { // only for level 2
+				// "Fake" Duke death
+				PerformDeath();
+				SetReady(false);
+				// Activate the combat end trigger. This will activate a dialogue and dissolve Duke.
 				triggerBosslvl2End->Enable();
+				return;
 			}
 			phase = Phase::PHASE2;
 			if (lasers && !lasers->IsActive()) lasers->Enable();
@@ -317,7 +330,7 @@ void AIDuke::Update() {
 			}
 			break;
 		case DukeState::PUSHED:
-			UpdatePushBackPosition();
+			UpdatePushStatus();
 			break;
 		default:
 			break;
@@ -419,7 +432,7 @@ void AIDuke::Update() {
 				}
 				break;
 			case DukeState::PUSHED:
-				UpdatePushBackPosition();
+				UpdatePushStatus();
 				break;
 			default:
 				break;
@@ -520,12 +533,13 @@ void AIDuke::Update() {
 				}
 				break;
 			case DukeState::PUSHED:
-				UpdatePushBackPosition();
+				UpdatePushStatus();
 				break;
 			default:
 				break;
 			}
 		}
+		break;
 	default:
 		break;
 	}
@@ -552,13 +566,13 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 			GameplaySystems::DestroyGameObject(&collidedWith);
 			hitTaken = true;
 			if (IsInvulnerable())return;
+			float damage = playerController->playerFang.damageHit;
 			if (CanBeFullyHurtDuringCriticalMode()) {
-				float damage = playerController->playerFang.damageHit;
-				dukeCharacter.GetHit(dukeCharacter.reducedDamaged ? damage / 3 : damage + playerController->GetOverPowerMode());
+				dukeCharacter.GetHit(dukeCharacter.reducedDamaged ? damage / 2.f : damage + playerController->GetOverPowerMode());
 			}
 			else {
-				// In critical mode only receives 1 damage
-				dukeCharacter.GetHit(1.f + playerController->GetOverPowerMode());
+				// In critical mode only receives 1/3 damage
+				dukeCharacter.GetHit(damage / 3.f + playerController->GetOverPowerMode());
 			}
 		}
 		else if (collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet") {
@@ -578,16 +592,14 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 		}
 		else if (collidedWith.name == "DashDamage" && playerController->playerFang.level1Upgrade) {
 			hitTaken = true;
-			float damage = playerController->playerFang.dashDamage;
-			//dukeCharacter.GetHit(dukeCharacter.reducedDamaged ? damage / 3 : damage + playerController->GetOverPowerMode());
 			if (IsInvulnerable()) return;
+			float damage = playerController->playerFang.dashDamage;
 			if (CanBeFullyHurtDuringCriticalMode()) {
-				float damage = playerController->playerFang.dashDamage;
-				dukeCharacter.GetHit(dukeCharacter.reducedDamaged ? damage / 3 : damage + playerController->GetOverPowerMode());
+				dukeCharacter.GetHit(dukeCharacter.reducedDamaged ? damage / 2.f : damage + playerController->GetOverPowerMode());
 			}
 			else {
-				// In critical mode only receives 1 damage
-				dukeCharacter.GetHit(1.f + playerController->GetOverPowerMode());
+				// In critical mode only receives 1/3 damage
+				dukeCharacter.GetHit(damage / 3.f + playerController->GetOverPowerMode());
 			}
     }
 
@@ -614,18 +626,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 	}
 
 	if (!dukeCharacter.isAlive) {
-		movementScript->Stop();
-		dukeCharacter.StopShooting();
-		dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::DEATH]);
-
-		// TODO: play audio and VFX
-		//if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
-		ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
-		if (collider) collider->Disable();
-
-		dukeCharacter.agent->RemoveAgentFromCrowd();
-		if (dukeCharacter.beingPushed) dukeCharacter.beingPushed = false;
-		dukeCharacter.state = DukeState::DEATH;
+		PerformDeath();
 	}
 }
 
@@ -637,9 +638,10 @@ void AIDuke::EnableBlastPushBack() {
 	if (dukeCharacter.state != DukeState::INVULNERABLE && dukeCharacter.state != DukeState::BULLET_HELL) {
 		dukeCharacter.beingPushed = true;
 		dukeCharacter.state = DukeState::PUSHED;
+		pushBackTimer = 0.f;
 		dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::PUSHED]);
 		dukeCharacter.StopShooting();
-		CalculatePushBackRealDistance();
+		dukeCharacter.CalculatePushBackFinalPos(ownerTransform->GetGlobalPosition(), player->GetComponent<ComponentTransform>()->GetGlobalPosition(), dukeCharacter.pushBackDistance);
 
 		OnShieldInterrupted();
 
@@ -654,6 +656,7 @@ void AIDuke::EnableBlastPushBack() {
 		}
 
 		dukeCharacter.BePushed();
+		dukeCharacter.agent->Disable();
 	}
 
 }
@@ -663,6 +666,9 @@ void AIDuke::DisableBlastPushBack() {
 		dukeCharacter.beingPushed = false;
 		//if (animation->GetCurrentState()) animation->SendTrigger(animation->GetCurrentState()->name + "Idle");
 		dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
+		dukeCharacter.agent->Enable();
+		dukeCharacter.slowedDown = true;
+		currentSlowedDownTime = 0.f;
 	}
 }
 
@@ -670,49 +676,23 @@ bool AIDuke::IsBeingPushed() const {
 	return dukeCharacter.beingPushed;
 }
 
-void AIDuke::CalculatePushBackRealDistance() {
-	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
+void AIDuke::UpdatePushStatus() {
+	if (pushBackTimer > dukeCharacter.pushBackTime) {
+		pushBackTimer = dukeCharacter.pushBackTime;
+	}
 
-	float3 direction = (enemyPos - playerPos).Normalized();
+	UpdatePushBackPosition();
 
-	bool hitResult = false;
-
-	float3 finalPos = enemyPos + direction * dukeCharacter.pushBackDistance;
-	float3 resultPos = { 0,0,0 };
-
-	Navigation::Raycast(enemyPos, finalPos, hitResult, resultPos);
-
-	if (hitResult) {
-		pushBackRealDistance = resultPos.Distance(enemyPos) - 1; // Should be agent radius but it's not exposed
+	if (pushBackTimer == dukeCharacter.pushBackTime) {
+		DisableBlastPushBack();
+	}
+	else {
+		pushBackTimer += Time::GetDeltaTime();
 	}
 }
 
 void AIDuke::UpdatePushBackPosition() {
-
-	float3 playerPos = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
-	float3 enemyPos = GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
-	float3 initialPos = enemyPos;
-
-	float3 direction = (enemyPos - playerPos).Normalized();
-
-	if (dukeCharacter.agent) {
-		enemyPos += direction * dukeCharacter.pushBackSpeed * Time::GetDeltaTime();
-		dukeCharacter.agent->SetMoveTarget(enemyPos, false);
-		dukeCharacter.agent->SetMaxSpeed(dukeCharacter.pushBackSpeed);
-		float distance = enemyPos.Distance(initialPos);
-		currentPushBackDistance += distance;
-
-		if (currentPushBackDistance >= pushBackRealDistance) {
-
-			dukeCharacter.agent->SetMaxSpeed(dukeCharacter.slowedDownSpeed);
-			DisableBlastPushBack();
-			dukeCharacter.slowedDown = true;
-			currentPushBackDistance = 0.f;
-			currentSlowedDownTime = 0.f;
-			pushBackRealDistance = dukeCharacter.pushBackDistance;
-		}
-	}
+	ownerTransform->SetGlobalPosition(float3::Lerp(dukeCharacter.pushBackInitialPos, dukeCharacter.pushBackFinalPos, pushBackTimer / dukeCharacter.pushBackTime));
 }
 
 void AIDuke::ParticleHit(GameObject& collidedWith, void* particle, Player& player_) {
@@ -720,27 +700,27 @@ void AIDuke::ParticleHit(GameObject& collidedWith, void* particle, Player& playe
 	ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 	if (pSystem) pSystem->KillParticle(p);
-	float damage = dukeCharacter.reducedDamaged ? player_.damageHit / 3 : player_.damageHit;
+	float damage = dukeCharacter.reducedDamaged ? player_.damageHit / 2.f : player_.damageHit;
 
 	if (IsInvulnerable())return;
 
 	if (!dukeCharacter.criticalMode) {
 		if (dukeCharacter.state == DukeState::STUNNED && player_.level2Upgrade) {
-			dukeCharacter.GetHit(damage * 2 + playerController->GetOverPowerMode());
+			dukeCharacter.GetHit(damage * 2.f + playerController->GetOverPowerMode());
 		} else {
 			dukeCharacter.GetHit(damage + playerController->GetOverPowerMode());
 		}
 	} else {
 		if (CanBeFullyHurtDuringCriticalMode()) {
 			if (dukeCharacter.state == DukeState::STUNNED && player_.level2Upgrade) {
-				dukeCharacter.GetHit(damage * 2 + playerController->GetOverPowerMode());
+				dukeCharacter.GetHit(damage * 2.f + playerController->GetOverPowerMode());
 			}
 			else {
 				dukeCharacter.GetHit(damage + playerController->GetOverPowerMode());
 			}
 		}
 		else {
-			dukeCharacter.GetHit(1.f + playerController->GetOverPowerMode());
+			dukeCharacter.GetHit(player_.damageHit / 3.f + playerController->GetOverPowerMode());
 		}
 	}
 
@@ -808,6 +788,35 @@ void AIDuke::PerformBulletHell() {
 	}
 }
 
+void AIDuke::PerformDeath() {
+	movementScript->Stop();
+	OnShieldInterrupted();
+	dukeCharacter.StopShooting();
+	dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::DEATH]);
+
+	// TODO: play audio and VFX
+	//if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
+	ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
+	if (collider) collider->Disable();
+
+	dukeCharacter.agent->RemoveAgentFromCrowd();
+	if (dukeCharacter.beingPushed) dukeCharacter.beingPushed = false;
+	dukeCharacter.state = DukeState::DEATH;
+
+	// Stop environment hazards
+	if (!islevel2) {
+		if (activeFireTiles && fireTilesScript) fireTilesScript->StopFire();
+		if (lasers && lasers->IsActive()) lasers->Disable();
+		// TODO: Substitute the following for actual destruction of the troops
+		GameObject* encounter = GameplaySystems::GetGameObject(fourthEncounterUID);
+		if (encounter && encounter->IsActive()) encounter->Disable();
+	}
+}
+
 float AIDuke::GetDukeMaxHealth() const {
 	return dukeCharacter.GetTotalLifePoints();
+}
+
+void AIDuke::ActivateDissolve() {
+	dukeCharacter.ActivateDissolve(dissolveMaterialID);
 }
