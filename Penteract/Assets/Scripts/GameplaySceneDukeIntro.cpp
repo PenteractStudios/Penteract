@@ -17,7 +17,7 @@ EXPOSE_MEMBERS(GameplaySceneDukeIntro) {
     MEMBER_SEPARATOR("Duke Controller"),
     MEMBER(MemberType::FLOAT3, dukeRunTowards),
     MEMBER(MemberType::FLOAT, dukeSpeed),
-    MEMBER(MemberType::FLOAT, dukeTimeToChange),
+    MEMBER(MemberType::FLOAT, dukeTimeToGo),
     MEMBER(MemberType::FLOAT, dukeDisappearDistance)
 };
 
@@ -26,7 +26,6 @@ GENERATE_BODY_IMPL(GameplaySceneDukeIntro);
 void GameplaySceneDukeIntro::Start() {
     duke1 = GameplaySystems::GetGameObject(duke1UID);
     if (duke1) {
-        dukeTransform = duke1->GetComponent<ComponentTransform>();
         dukeAnimation = duke1->GetComponent<ComponentAnimation>();
         movementScript = GET_SCRIPT(duke1, AIMovement);
         dukeAgent = duke1->GetComponent<ComponentAgent>();
@@ -68,7 +67,7 @@ void GameplaySceneDukeIntro::Update() {
 void GameplaySceneDukeIntro::Movement()
 {
     currentDukeTimeToChange += Time::GetDeltaTime();
-    if (currentDukeTimeToChange >= dukeTimeToChange > 0) {
+    if (currentDukeTimeToChange >= dukeTimeToGo) {
         movementScript->Seek(state, dukeRunTowards, dukeAgent->GetMaxSpeed(), true);
         if (dukeAnimation->GetCurrentState() && dukeAnimation->GetCurrentState()->name == "Idle") {
             dukeAnimation->SendTrigger("IdleWalkForward");

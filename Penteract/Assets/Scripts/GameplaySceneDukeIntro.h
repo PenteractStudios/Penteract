@@ -29,7 +29,7 @@ public:
 	float dukeSpeed = 3.f;
 	float dukeDisappearDistance = 45.f;
 	
-	float dukeTimeToChange = 5.f;
+	float dukeTimeToGo = 5.f;
 	float rotationAngle = 77.783f;
 
 private:
@@ -40,7 +40,6 @@ private:
 	ComponentAnimation* dukeAnimation = nullptr;
 	ComponentAgent* dukeAgent = nullptr;
 	ComponentVideo* videoIntro = nullptr;
-	ComponentTransform* dukeTransform = nullptr;
 	AIMovement* movementScript = nullptr;
 	AIState state = AIState::RUN;
 
