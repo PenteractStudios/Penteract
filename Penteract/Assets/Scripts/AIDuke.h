@@ -20,6 +20,7 @@ class AIMovement;
 class FloorIsLava;
 
 enum class Phase {
+	PHASE0,
 	PHASE1,
 	PHASE2,
 	PHASE3
@@ -96,7 +97,7 @@ public:
 	Duke dukeCharacter = Duke();
 	DukeShield* dukeShield = nullptr;
 
-	Phase phase = Phase::PHASE1;
+	Phase phase = Phase::PHASE0;
 
 	float shieldCooldown = 0.f;
 	float shieldActiveTime = 5.f;
@@ -173,6 +174,7 @@ private:
 
 	float currentTimeBetweenAbilities = 0.f;
 	bool mustWaitForTimerBetweenAbilities = true;
+	bool mustPerformInitialAnimation = true;
 
 };
 

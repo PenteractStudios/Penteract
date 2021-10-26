@@ -147,9 +147,11 @@ void AIDuke::Update() {
 	if (!player || !movementScript) return;
 	if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) return;
 
+	/*
 	std::string life = std::to_string(dukeCharacter.lifePoints);
 	life = "Life points: " + life;
-	//Debug::Log(life.c_str());
+	Debug::Log(life.c_str());
+	*/
 
 	float speedToUse = dukeCharacter.slowedDown ? dukeCharacter.slowedDownSpeed : dukeCharacter.movementSpeed;
 
@@ -162,6 +164,14 @@ void AIDuke::Update() {
 	}
 
 	switch (phase) {
+	case Phase::PHASE0:
+		// Perform the "BOOM" animation
+		if (dukeCharacter.compAnimation && mustPerformInitialAnimation) {
+			dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::ENRAGE]); // TODO: change Enrage for the proper animation
+			mustPerformInitialAnimation = false;
+			dukeCharacter.state = DukeState::INVULNERABLE;
+		} else if (dukeCharacter.state == DukeState::BASIC_BEHAVIOUR) phase = Phase::PHASE1;
+		break;
 	case Phase::PHASE1:
 		currentShieldCooldown += Time::GetDeltaTime();
 		if ((dukeCharacter.lifePoints < 0.85 * dukeCharacter.GetTotalLifePoints()) && !activeFireTiles) {
@@ -360,9 +370,7 @@ void AIDuke::Update() {
 		break;
 	case Phase::PHASE3:
 		if (dukeCharacter.lifePoints <= 0.f) {
-			// TODO: Init victory sequence
-			Debug::Log("Ugh...I'm...Dead...");
-			if (playerController) playerController->RemoveEnemyFromMap(duke);
+			PerformDeath();
 			return;
 
 		}
@@ -814,12 +822,13 @@ void AIDuke::PerformDeath() {
 	if (collider) collider->Disable();
 
 	dukeCharacter.agent->RemoveAgentFromCrowd();
+	if (playerController) playerController->RemoveEnemyFromMap(duke);
 	if (dukeCharacter.beingPushed) dukeCharacter.beingPushed = false;
 	dukeCharacter.state = DukeState::DEATH;
 
 	// Activate the combat end trigger. This will activate a dialogue and dissolve Duke in level 2.
 	if (triggerBossEnd) triggerBossEnd->Enable();
-
+	
 	// Stop environment hazards
 	if (!islevel2) {
 		if (activeFireTiles && fireTilesScript) fireTilesScript->StopFire();
