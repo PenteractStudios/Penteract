@@ -67,20 +67,11 @@ void GameplaySceneDukeIntro::Update() {
 
 void GameplaySceneDukeIntro::Movement()
 {
-    movementScript->Seek(state, dukeRunTowards, dukeAgent->GetMaxSpeed(), true);
-    if (moveBackward) {
+    currentDukeTimeToChange += Time::GetDeltaTime();
+    if (currentDukeTimeToChange >= dukeTimeToChange > 0) {
+        movementScript->Seek(state, dukeRunTowards, dukeAgent->GetMaxSpeed(), true);
         if (dukeAnimation->GetCurrentState() && dukeAnimation->GetCurrentState()->name == "Idle") {
-            dukeAnimation->SendTrigger("IdleWalkBack");
+            dukeAnimation->SendTrigger("IdleWalkForward");
         }
-        currentDukeTimeToChange += Time::GetDeltaTime();
-        if (currentDukeTimeToChange >= dukeTimeToChange > 0) {
-            moveBackward = false;
-            if (dukeAnimation) {
-                dukeAnimation->SendTrigger("IdleWalkBack");
-            }
-        }
-
     }
-   
-
 }
