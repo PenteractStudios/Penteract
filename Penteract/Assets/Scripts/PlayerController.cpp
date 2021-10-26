@@ -301,7 +301,8 @@ void PlayerController::CheckCoolDowns() {
 		if (!noCooldownMode) switchInProgress = false;
 	}
 	else {
-		switchCooldownRemaining -= Time::GetDeltaTime();
+		if (playerOnimaru.characterGameObject->IsActive() && !GameplaySystems::GetGlobalVariable(globalSkill3TutorialReachedOni, true)) switchCooldownRemaining = switchCooldown; // during Onimaru tutorial, do not recover Switch cooldown
+		else switchCooldownRemaining -= Time::GetDeltaTime();
 	}
 
 	if (playerOnimaru.characterGameObject->IsActive() && playerFang.lifePoints != playerFang.GetTotalLifePoints()) {
@@ -451,14 +452,14 @@ void PlayerController::Update() {
 
 	if (CanSwitch()) {
 
-		if (switchInProgress || (noCooldownMode && (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R) && (!useGamepad || !Input::IsGamepadConnected(0))
+		if (switchInProgress || (noCooldownMode && (Player::GetInputBool(InputActions::SWITCH) && (!useGamepad || !Input::IsGamepadConnected(0))
 			|| useGamepad && Input::IsGamepadConnected(0) && Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0)))) {
 
 			switchInProgress = true;
 			SwitchCharacter();
 		}
 
-		if (!switchInProgress && (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R) && (!useGamepad || !Input::IsGamepadConnected(0))
+		if (!switchInProgress && (Player::GetInputBool(InputActions::SWITCH) && (!useGamepad || !Input::IsGamepadConnected(0))
 			|| useGamepad && Input::IsGamepadConnected(0) && Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0))) {
 
 			switchInProgress = true;
