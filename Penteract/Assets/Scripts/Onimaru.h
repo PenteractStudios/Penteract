@@ -12,12 +12,10 @@ public:
 
 	enum class ONIMARU_AUDIOS {
 		SHIELD_ON,
-		SHIELD_BLOCK,
 		SHIELD_OFF,
 		ENERGY_BLAST,
 		ULTIMATE,
 		SHOOT,
-		SPECIAL_SHOOT,
 		FOOTSTEP_RIGHT,
 		FOOTSTEP_LEFT,
 		HIT,
@@ -107,6 +105,7 @@ public:
 
 	void UpdateWeaponRotation();
 	void ResetToIdle() override;
+	void StopAudioOnSwitch(ONIMARU_AUDIOS audioType = ONIMARU_AUDIOS::SHOOT);
 
 private:
 
