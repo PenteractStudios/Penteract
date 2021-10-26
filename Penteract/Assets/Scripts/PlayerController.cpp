@@ -166,8 +166,6 @@ void PlayerController::Start() {
 	obtainedUpgradeCells = 0;
 }
 
-bool PlayerController::useGamepad = false;
-
 //Debug
 void PlayerController::SetInvincible(bool status) {
 	invincibleMode = status;
@@ -378,11 +376,6 @@ void PlayerController::TakeDamage(float damage) {
 	}
 }
 
-
-void PlayerController::SetUseGamepad(bool useGamepad_) {
-	//Other callbacks would go here
-	useGamepad = useGamepad_;
-}
 void PlayerController::AddEnemyInMap(GameObject* enemy) {
 	playerOnimaru.AddEnemy(enemy);
 }
@@ -433,14 +426,15 @@ void PlayerController::Update() {
 	if (!camera) return;
 
 	if (Input::GetKeyCodeDown(Input::KEY_KP_PLUS)) {
-		SetUseGamepad(!useGamepad);
+		GameplaySystems::SetGlobalVariable<bool>(globalUseGamepad, !GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false));
+		
 	}
 
 	if (playerFang.characterGameObject->IsActive()) {
-		playerFang.Update(useGamepad);
+		playerFang.Update(GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false));
 	}
 	else {
-		playerOnimaru.Update(useGamepad);
+		playerOnimaru.Update(GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false));
 	}
 
 	if (!IsPlayerDead()) {
@@ -451,15 +445,15 @@ void PlayerController::Update() {
 
 	if (CanSwitch()) {
 
-		if (switchInProgress || (noCooldownMode && (Player::GetInputBool(InputActions::SWITCH) && (!useGamepad || !Input::IsGamepadConnected(0))
-			|| useGamepad && Input::IsGamepadConnected(0) && Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0)))) {
+		if (switchInProgress || (noCooldownMode && (Player::GetInputBool(InputActions::SWITCH) && (!GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false) || !Input::IsGamepadConnected(0))
+			|| GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false) && Input::IsGamepadConnected(0) && Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0)))) {
 
 			switchInProgress = true;
 			SwitchCharacter();
 		}
 
-		if (!switchInProgress && (Player::GetInputBool(InputActions::SWITCH) && (!useGamepad || !Input::IsGamepadConnected(0))
-			|| useGamepad && Input::IsGamepadConnected(0) && Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0))) {
+		if (!switchInProgress && (Player::GetInputBool(InputActions::SWITCH) && (!GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false) || !Input::IsGamepadConnected(0))
+			|| GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false) && Input::IsGamepadConnected(0) && Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0))) {
 
 			switchInProgress = true;
 			switchCooldownRemaining = switchCooldown;

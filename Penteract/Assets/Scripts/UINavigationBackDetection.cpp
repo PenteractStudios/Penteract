@@ -50,14 +50,12 @@ void UINavigationBackDetection::ManageNullSelection() {
 }
 
 void UINavigationBackDetection::ListenForCancelInput() {
-	if (Player::GetInputBool(InputActions::CANCEL_A, GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, true)) || Player::GetInputBool(InputActions::CANCEL_B, GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, true))) {
+	if (Player::GetInputBool(InputActions::CANCEL_A, GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false)) || Player::GetInputBool(InputActions::CANCEL_B, GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false))) {
 		OnCancelInputPressed();
 	}
 }
 
 void UINavigationBackDetection::OnCancelInputPressed() {
-	Debug::Log("CancelPressed");
-
 	if (objectToDisableOnCancel) {
 		objectToDisableOnCancel->Disable();
 	}
@@ -69,7 +67,6 @@ void UINavigationBackDetection::OnCancelInputPressed() {
 }
 
 void UINavigationBackDetection::OnEnable() {
-	Debug::Log("OnEnable");
 	ComponentEventSystem* evSyst = UserInterface::GetCurrentEventSystem();
 	if (evSyst) {
 		if (selectableToSelectOnEnable) {
