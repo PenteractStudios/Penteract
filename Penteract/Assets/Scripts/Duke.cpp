@@ -19,7 +19,7 @@
 #define RNG_MAX 1.0f
 
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID,std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID, UID chargeDustUID, UID areaChargeUID, UID chargeTelegraphAreaUID)
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID,std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID, UID chargeDustUID, UID areaChargeUID, UID chargeTelegraphAreaUID, UID chargePunchVFXUID)
 {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(dukeUID);
@@ -117,6 +117,9 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 		dukeScale = dukeTransform->GetGlobalScale().x;
 		chargeTelegraphAreaPosOffset = chargeTelegraphAreaGO->GetComponent<ComponentTransform>()->GetPosition().z * dukeScale;
 	}
+
+	GameObject* chargePunchVFXGO = GameplaySystems::GetGameObject(chargePunchVFXUID);
+	if (chargePunchVFXGO) chargePunchVFX = chargePunchVFXGO->GetComponent<ComponentParticleSystem>();
 }
 
 void Duke::ShootAndMove(const float3& playerDirection) {
@@ -217,6 +220,7 @@ void Duke::UpdateCharge(bool forceStop)
 		if (chargeDust) chargeDust->SetParticlesPerSecondChild(float2(0.f, 0.f));
 		// Perform arm attack (either use the same or another collider as the melee attack)
 		if (chargeAttack) chargeAttack->Enable();
+		if (chargePunchVFX) chargePunchVFX->PlayChildParticles();
 		state = DukeState::CHARGE_ATTACK;
 
 		reducedDamaged = false;
