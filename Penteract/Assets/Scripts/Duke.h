@@ -206,6 +206,9 @@ private:
 	float dukeScale = 0.f;
 	float chargeTelegraphAreaPosOffset = 0.f;
 
+	//Shield
+	ComponentParticleSystem* phase2ShieldParticles = nullptr;
+
 	// Shooting
 	float attackTimePool = 0.f;
 	ComponentParticleSystem* bullet = nullptr;

@@ -34,6 +34,8 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 	GameObject* shieldObj = GameplaySystems::GetGameObject(phase2ShieldUID);
 	if (shieldObj) {
 		phase2Shield = GET_SCRIPT(shieldObj, DukeShield);
+		GameObject* shieldObjChild = shieldObj->GetChildren()[0];
+		if (shieldObjChild) phase2ShieldParticles = shieldObjChild->GetComponent<ComponentParticleSystem>();
 	}
 
 	GameObject* barrelSpawnerOBj = GameplaySystems::GetGameObject(barrelSpawnerUID);
@@ -410,6 +412,7 @@ void Duke::TeleportDuke(bool toMapCenter)
 	}
 	else {
 		if (phase2Shield) phase2Shield->FadeShield();
+		if (phase2ShieldParticles) phase2ShieldParticles->StopChildParticles();
 		isInArena = true;
 	}
 }
@@ -525,6 +528,7 @@ void Duke::StartPhase2Shield()
 		(dukeTransform->GetGlobalPosition() - phase2CenterPosition).Length() <= 0.5f) {
 
 		if (phase2Shield) phase2Shield->InitShield();
+		if (phase2ShieldParticles) phase2ShieldParticles->PlayChildParticles();
 		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[Duke::DUKE_ANIMATION_STATES::PDA]);
 		CallTroops();
 	}
