@@ -179,8 +179,8 @@ private:
 	float movementChangeThreshold = 2.0f;
 	float distanceCorrectionTimer = 0.f;
 	float distanceCorrectionThreshold = 2.0f;
-	bool navigationHit;
-	float3 navigationHitPos;
+	bool navigationHit = false;
+	float3 navigationHitPos = float3(0,0,0);
 	
 	// Melee Attack
 	GameObject* meleeAttackCollider = nullptr;

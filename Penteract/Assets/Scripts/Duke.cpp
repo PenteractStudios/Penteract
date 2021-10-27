@@ -201,7 +201,7 @@ void Duke::UpdateCharge(bool forceStop)
 			scale.x = dist / dukeScale;
 			chargeTelegraphAreaGO->GetComponent<ComponentTransform>()->SetScale(scale);
 			float3 pos = chargeTelegraphAreaGO->GetComponent<ComponentTransform>()->GetPosition();
-			pos.z = (scale.x * 0.5) + chargeTelegraphAreaPosOffset;
+			pos.z = (scale.x * 0.5f) + chargeTelegraphAreaPosOffset;
 			chargeTelegraphAreaGO->GetComponent<ComponentTransform>()->SetPosition(pos);
 		}
 	}
@@ -411,20 +411,20 @@ void Duke::TeleportDuke(bool toMapCenter)
 void Duke::OnAnimationFinished()
 {
 	if (!compAnimation) return;
-	State* currentState = compAnimation->GetCurrentState();
-	if (!currentState) return;
+	State* localCurrentState = compAnimation->GetCurrentState();
+	if (!localCurrentState) return;
 
-	if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PUNCH)]) {
+	if (localCurrentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PUNCH)]) {
 		hasMeleeAttacked = false;
-		compAnimation->SendTrigger(currentState->name + animationStates[DUKE_ANIMATION_STATES::IDLE]);
+		compAnimation->SendTrigger(localCurrentState->name + animationStates[DUKE_ANIMATION_STATES::IDLE]);
 		state = DukeState::BASIC_BEHAVIOUR;
-	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]) {
+	} else if (localCurrentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]) {
 		compAnimation->SendTrigger(animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)] + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
-	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_START)]) {
+	} else if (localCurrentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_START)]) {
 		agent->SetMoveTarget(chargeTarget);
 		agent->SetMaxSpeed(chargeSpeed);
 		if (chargeCollider) chargeCollider->Enable();
-		compAnimation->SendTrigger(currentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE)]);
+		compAnimation->SendTrigger(localCurrentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE)]);
 		if (areaChargeGO && !areaChargeGO->IsActive()) {
 			areaCharge->offset = float2(0, 0);
 			areaChargeGO->Enable();
@@ -433,14 +433,14 @@ void Duke::OnAnimationFinished()
 			chargeDust->SetParticlesPerSecondChild(chargeDustOriginalParticlesPerSecond);
 			chargeDust->PlayChildParticles();
 		}
-	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_END)]) {
+	} else if (localCurrentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_END)]) {
 		if (chargeAttack) chargeAttack->Disable();
 		state = nextState;
 		agent->SetMaxSpeed(movementSpeed);
-		compAnimation->SendTrigger(currentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
-	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::DEATH)]) {
+		compAnimation->SendTrigger(localCurrentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
+	} else if (localCurrentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::DEATH)]) {
 		isDead = true;
-	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::ENRAGE)]) {
+	} else if (localCurrentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::ENRAGE)]) {
 		state = DukeState::BASIC_BEHAVIOUR;
 	}
 }
@@ -528,7 +528,7 @@ void Duke::InstantiateBarrel()
 {
 	//Instantiate barrel and play animation throw barrels for Duke and the barrel
 	if (barrel) {
-		GameObject* auxBarrel = GameplaySystems::Instantiate(barrel, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), Quat(0, 0, 0, 1));
+		GameplaySystems::Instantiate(barrel, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), Quat(0, 0, 0, 1));
 	}
 }
 

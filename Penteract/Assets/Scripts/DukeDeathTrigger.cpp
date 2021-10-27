@@ -112,7 +112,7 @@ void DukeDeathTrigger::Update() {
         if (videoCanvas) {
             GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, true);
             videoCanvas->GetParent()->Enable();
-            VideoSceneEnd* videoSceneEndScript = GET_SCRIPT(videoCanvas, VideoSceneEnd);
+            videoSceneEndScript = GET_SCRIPT(videoCanvas, VideoSceneEnd);
             if (videoSceneEndScript) {
                 videoSceneEndScript->PlayVideo();
             }
