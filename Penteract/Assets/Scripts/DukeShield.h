@@ -37,5 +37,6 @@ private:
 	ComponentMeshRenderer* mesh;
 	enum class ShieldState { OFFLINE, GROWING, IDLE, FADING };
 	ShieldState shieldState = ShieldState::OFFLINE;
+	GameObject* shieldObstacle = nullptr;
 };
 

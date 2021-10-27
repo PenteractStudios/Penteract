@@ -55,7 +55,7 @@ public:
 	void ActivateDissolve();
 
 private:
-	void CalculatePushBackRealDistance();
+	void UpdatePushStatus();
 	void UpdatePushBackPosition();
 	void ParticleHit(GameObject& collidedWith, void* particle, Player& player_);
 	bool CanBeFullyHurtDuringCriticalMode() const;
@@ -164,9 +164,8 @@ private:
 	float timeSinceLastCharge = 0.f;
 
 	// Onimaru blast effect
-	float currentPushBackDistance = 0.f;
 	float currentSlowedDownTime = 0.f;
-	float pushBackRealDistance = 0.f;
+	float pushBackTimer = 0.f;
 
 	// Only for level2
 	GameObject* triggerBossEnd = nullptr;
