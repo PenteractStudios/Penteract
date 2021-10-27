@@ -19,7 +19,7 @@
 #define RNG_MAX 1.0f
 
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID,std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID, UID chargeDustUID, UID areaChargeUID, UID chargeTelegraphAreaUID, UID chargePunchVFXUID)
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID,std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID, UID chargeDustUID, UID areaChargeUID, UID chargeTelegraphAreaUID, UID chargePunchVFXUID, UID dustStepLeftUID, UID dustStepRightUID, UID bodyArmorUID)
 {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(dukeUID);
@@ -122,6 +122,14 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 
 	GameObject* chargePunchVFXGO = GameplaySystems::GetGameObject(chargePunchVFXUID);
 	if (chargePunchVFXGO) chargePunchVFX = chargePunchVFXGO->GetComponent<ComponentParticleSystem>();
+
+	bodyArmor = GameplaySystems::GetGameObject(bodyArmorUID);
+
+	GameObject* dustStep = GameplaySystems::GetGameObject(dustStepLeftUID);
+	if (dustStep) dustLeftStep = dustStep->GetComponent<ComponentParticleSystem>();
+
+	dustStep = GameplaySystems::GetGameObject(dustStepRightUID);
+	if(dustStep) dustRightStep = dustStep->GetComponent<ComponentParticleSystem>();
 }
 
 void Duke::ShootAndMove(const float3& playerDirection) {
@@ -451,6 +459,7 @@ void Duke::OnAnimationFinished()
 		isDead = true;
 	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::ENRAGE)]) {
 		state = DukeState::BASIC_BEHAVIOUR;
+		if (bodyArmor && !bodyArmor->IsActive()) bodyArmor->Enable();
 	}
 }
 
@@ -485,9 +494,7 @@ void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 			else {
 				chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
 			}
-		}
-
-		if (strcmp(eventName, "ThrowBarrels") == 0 && instantiateBarrel) {
+		} else if (strcmp(eventName, "ThrowBarrels") == 0 && instantiateBarrel) {
 			if (startSpawnBarrel && barrelSpawneScript) {
 				barrelSpawneScript->SpawnBarrels();
 				startSpawnBarrel = false;
@@ -497,6 +504,10 @@ void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 				startSpawnBarrel = true;
 			}
 			instantiateBarrel = false;
+		} else if (strcmp(eventName, "FootstepLeft") == 0) {
+			if (dustLeftStep) dustLeftStep->PlayChildParticles();
+		} else if (strcmp(eventName, "FootstepRight") == 0) {
+			if (dustRightStep) dustRightStep->PlayChildParticles();
 		}
 		break;
 	case StateMachineEnum::SECONDARY:
@@ -589,6 +600,24 @@ void Duke::ActivateDissolve(UID dissolveMaterialID) {
 	if (meshRenderer && dissolveMaterialID != 0) {
 		meshRenderer->SetMaterial(dissolveMaterialID);
 		meshRenderer->PlayDissolveAnimation();
+	}
+}
+
+void Duke::SetCriticalMode(bool activate)
+{
+	if (activate) {
+		if (compAnimation) {
+			StopShooting();
+			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[Duke::DUKE_ANIMATION_STATES::ENRAGE]);
+		}
+		state = DukeState::INVULNERABLE;
+
+	}
+	else {
+		if (bodyArmor && bodyArmor->IsActive()) bodyArmor->Disable();
+		state = DukeState::SHOOT_SHIELD;
+		CallTroops();
+		StartUsingShield();
 	}
 }
 

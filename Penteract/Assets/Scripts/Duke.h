@@ -58,7 +58,7 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID, UID chargeDustUID, UID areaChargeUID, UID chargeTelegraphAreaUID, UID chargePunchVFXUID);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID, UID chargeDustUID, UID areaChargeUID, UID chargeTelegraphAreaUID, UID chargePunchVFXUID, UID dustStepLeftUID, UID dustStepRightUID, UID bodyArmorUID);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void BulletHell();
@@ -89,6 +89,7 @@ public:
 
 	// ---- Auxiliary Functions ---- //
 	void ActivateDissolve(UID dissolveMaterialID);
+	void SetCriticalMode(bool activate);
 
 	// ------ Getters/Setters ------ //
 	ComponentMeshRenderer* GetDukeMeshRenderer() const;
@@ -213,6 +214,13 @@ private:
 	float attackTimePool = 0.f;
 	ComponentParticleSystem* bullet = nullptr;
 	float isShootingTimer = 0.f;
+
+	//Enrage
+	GameObject* bodyArmor = nullptr;
+
+	//Steps
+	ComponentParticleSystem* dustLeftStep = nullptr;
+	ComponentParticleSystem* dustRightStep = nullptr;
 
 	GameObject* meshObj = nullptr;	//Main mesh for Getting MeshRenderer reference and checking frustum presence (if not inside frustum shooting won't happen)
 

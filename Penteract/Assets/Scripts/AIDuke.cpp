@@ -66,12 +66,15 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::FLOAT, orientationThresholdBulletHell),
 	MEMBER(MemberType::FLOAT, timerBetweenAbilities),
 
-	MEMBER_SEPARATOR("Particles UIDs"),
+	MEMBER_SEPARATOR("VFX UIDs"),
 	MEMBER(MemberType::GAME_OBJECT_UID, punchSlashUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargeDustUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, areaChargeUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargeTelegraphAreaUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargePunchVFXUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dustStepLeftUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dustStepRightUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, bodyArmorUID),
 
 	MEMBER_SEPARATOR("Prefabs UIDs"),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, barrelUID),
@@ -137,7 +140,7 @@ void AIDuke::Start() {
 	}
 
 	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, videoParentCanvasUID, videoCanvasUID, encounters, dronesController, punchSlashUID, chargeDustUID, areaChargeUID, chargeTelegraphAreaUID, chargePunchVFXUID);
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, videoParentCanvasUID, videoCanvasUID, encounters, dronesController, punchSlashUID, chargeDustUID, areaChargeUID, chargeTelegraphAreaUID, chargePunchVFXUID, dustStepLeftUID, dustStepRightUID, bodyArmorUID);
 
 	if (islevel2) triggerBosslvl2End = GameplaySystems::GetGameObject(triggerBosslvl2EndUID);
 
@@ -188,17 +191,12 @@ void AIDuke::Update() {
 			phase = Phase::PHASE3;
 			lifeThreshold -= 0.1f;
 			Debug::Log("Phase3");
-			dukeCharacter.criticalMode = true;
+			dukeCharacter.SetCriticalMode(true);
 			// Phase change VFX? and anim?
 			movementScript->Stop();
 			if (dukeShield && dukeShield->GetIsActive()) {
 				OnShieldInterrupted();
 			}
-			if (dukeCharacter.compAnimation) {
-				dukeCharacter.StopShooting();
-				dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::ENRAGE]);
-			}
-			dukeCharacter.state = DukeState::INVULNERABLE;
 			if (fireTilesScript) {
 				fireTilesScript->StopFire();
 				fireTilesScript->SetInterphase(false);
@@ -418,16 +416,13 @@ void AIDuke::Update() {
 			case DukeState::STUNNED:
 				if (stunTimeRemaining <= 0.f) {
 					stunTimeRemaining = 0.f;
-					dukeCharacter.criticalMode = false;
-					dukeCharacter.state = DukeState::SHOOT_SHIELD;
+					dukeCharacter.SetCriticalMode(false);
 					movementScript->Stop();
 					if (fireTilesScript) {
 						fireTilesScript->StopFire();
 						fireTilesScript->SetInterphase(true);
 						fireTilesScript->StartFire();
-					}
-					dukeCharacter.CallTroops();
-					dukeCharacter.StartUsingShield();
+					}					
 				} else {
 					stunTimeRemaining -= Time::GetDeltaTime();
 				}
@@ -442,16 +437,11 @@ void AIDuke::Update() {
 			currentCriticalModeCooldown += Time::GetDeltaTime();
 			if (currentCriticalModeCooldown >= criticalModeCooldown && dukeCharacter.state != DukeState::CHARGE && dukeCharacter.state != DukeState::BULLET_HELL) {
 				currentCriticalModeCooldown = 0.f;
-				dukeCharacter.criticalMode = true;
+				dukeCharacter.SetCriticalMode(true);
 				movementScript->Stop();
 				if (dukeShield && dukeShield->GetIsActive()) {
 					OnShieldInterrupted();
 				}
-				if (dukeCharacter.compAnimation) {
-					dukeCharacter.StopShooting();
-					dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::ENRAGE]);
-				}
-				dukeCharacter.state = DukeState::INVULNERABLE;
 				if (fireTilesScript) {
 					fireTilesScript->StopFire();
 					fireTilesScript->SetInterphase(false);
