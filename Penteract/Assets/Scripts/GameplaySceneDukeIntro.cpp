@@ -16,7 +16,6 @@ EXPOSE_MEMBERS(GameplaySceneDukeIntro) {
     MEMBER(MemberType::GAME_OBJECT_UID, videoUID),
     MEMBER_SEPARATOR("Duke Controller"),
     MEMBER(MemberType::FLOAT3, dukeRunTowards),
-    MEMBER(MemberType::FLOAT, dukeSpeed),
     MEMBER(MemberType::FLOAT, dukeTimeToGo),
     MEMBER(MemberType::FLOAT, dukeDisappearDistance)
 };
