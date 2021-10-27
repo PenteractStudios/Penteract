@@ -421,6 +421,7 @@ void Duke::TeleportDuke(bool toMapCenter)
 	else {
 		if (phase2Shield) phase2Shield->FadeShield();
 		if (phase2ShieldParticles) phase2ShieldParticles->StopChildParticles();
+		mustAddAgent = true;
 		isInArena = true;
 	}
 }

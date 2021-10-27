@@ -124,6 +124,7 @@ public:
 
 	DukeState state = DukeState::BASIC_BEHAVIOUR;
 	bool criticalMode = false;
+	bool mustAddAgent = false;
 
 	// Effects' states
 	bool beingPushed = false;
