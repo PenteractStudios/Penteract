@@ -20,7 +20,6 @@ public:
 	UID objectToDisableOnCancelUID = 0;
 
 private:
-	void ManageNullSelection();
 	void ListenForCancelInput();
 	void OnCancelInputPressed();
 	void OnEnable() override;
@@ -28,7 +27,6 @@ private:
 
 	GameObject* objectToEnableOnCancel = nullptr;
 	GameObject* objectToDisableOnCancel = nullptr;
-	//GameObject* objectToSelectOnEnable = nullptr;
 	ComponentSelectable* selectableToSelectOnEnable = nullptr;
 
 };

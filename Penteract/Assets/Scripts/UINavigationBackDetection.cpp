@@ -14,40 +14,19 @@ EXPOSE_MEMBERS(UINavigationBackDetection) {
 GENERATE_BODY_IMPL(UINavigationBackDetection);
 
 void UINavigationBackDetection::Start() {
-	if (objectToEnableOnCancelUID != 0) {
-		objectToEnableOnCancel = GameplaySystems::GetGameObject(objectToEnableOnCancelUID);
-	}
-
-	if (objectToDisableOnCancelUID != 0) {
-		objectToDisableOnCancel = GameplaySystems::GetGameObject(objectToDisableOnCancelUID);
-	}
-
-	if (objectToSelectOnEnableUID != 0) {
-		GameObject* objectToSelectOnEnable = GameplaySystems::GetGameObject(objectToSelectOnEnableUID);
-		if (objectToSelectOnEnable) {
-			selectableToSelectOnEnable = objectToSelectOnEnable->GetComponent<ComponentSelectable>();
-		}
+	objectToEnableOnCancel = GameplaySystems::GetGameObject(objectToEnableOnCancelUID);
+	objectToDisableOnCancel = GameplaySystems::GetGameObject(objectToDisableOnCancelUID);
+	GameObject* objectToSelectOnEnable = GameplaySystems::GetGameObject(objectToSelectOnEnableUID);
+	if (objectToSelectOnEnable) {
+		selectableToSelectOnEnable = objectToSelectOnEnable->GetComponent<ComponentSelectable>();
 	}
 
 }
 
 void UINavigationBackDetection::Update() {
 	ListenForCancelInput();
-	ManageNullSelection();
 }
 
-void UINavigationBackDetection::ManageNullSelection() {
-	//if (selectOnUpdate) {
-	//	selectOnUpdate = false;
-
-	//	ComponentEventSystem* evSyst = UserInterface::GetCurrentEventSystem();
-	//	if (evSyst && objectToSelectOnEnableUID != 0) {
-	//		std::string message = "Tryna Select " + std::to_string(objectToSelectOnEnableUID);
-	//		Debug::Log(message.c_str());
-	//		evSyst->SetSelected(objectToSelectOnEnableUID);
-	//	}
-	//}
-}
 
 void UINavigationBackDetection::ListenForCancelInput() {
 	if (Player::GetInputBool(InputActions::CANCEL_A) || Player::GetInputBool(InputActions::CANCEL_B)) {
@@ -72,8 +51,6 @@ void UINavigationBackDetection::OnEnable() {
 		if (selectableToSelectOnEnable) {
 			evSyst->firstSelectedId = selectableToSelectOnEnable->GetID();
 			evSyst->SetSelected(selectableToSelectOnEnable->GetID());
-			//selectOnUpdate = true;
-			//Debug::Log((std::to_string(objectToSelectOnEnableUID) + " would be selected").c_str());
 		}
 	}
 }
