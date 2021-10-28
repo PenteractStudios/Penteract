@@ -177,8 +177,7 @@ void Onimaru::StartUltimate() {
 	movementSpeed = ultimateMovementSpeed;
 	movementInputDirection = MovementDirection::NONE;
 	Player::MoveTo();
-	// TODO: reset arm rotation
-	// weaponTransform->SetGlobalRotation(float3(0, 1.468, 50.899));
+	weaponTransform->SetRotation(float3(0, 1.468, 50.899));
 	ultimateOn = true;
 }
 
@@ -222,40 +221,29 @@ void Onimaru::UpdateWeaponRotation()
 
 	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, false);
 
-	if (useGamepad) {
-		//weaponTransform->SetGlobalRotation(weaponTransform->GetOwner().GetParent()->GetComponent<ComponentTransform>()->GetGlobalRotation());
-		//weaponTransform->SetRotation(Quat(0, 0, 0, 1));
-		Quat smallRot = Quat(0, 0, 0, 1);
-		smallRot.SetFromAxisAngle(float3(0, 1, 0), DEGTORAD * yCorrectionAngle);
-
-		Quat horizontalCorrection = Quat(0, 0, 0, 1);
-		horizontalCorrection.SetFromAxisAngle(float3(1, 0, 0), DEGTORAD * xCorrectionAngle);
-
-		weaponTransform->SetRotation(horizontalCorrection * smallRot);
-		return;
-	}
-
 	weaponPointDir = float3(0, 0, 0);
 	float2 mousePos = float2(0, 0);
 	if (!useGamepad) {
 		mousePos = Input::GetMousePositionNormalized();
 	} else {
 		mousePos = GetInputFloat2(InputActions::ORIENTATION);
-		if (abs(mousePos.x) < 0.05f && abs(mousePos.y) < 0.05f) return; //No gamepad input detected
-		mousePos = mousePos.Mul(float2(1.0f,-1.0f)).Normalized();
+		mousePos = mousePos.Mul(float2(1.0f, -1.0f));
+		if (abs(mousePos.x) > 0.05f || abs(mousePos.y) > 0.05f)// return; //No gamepad input detected
+			mousePos.Normalize();
 	}
 
-	//std::string msg = std::to_string(mousePos.x) + "," + std::to_string(mousePos.y);
-	//Debug::Log(msg.c_str());
+	if (!(mousePos.x == 0 && mousePos.y == 0)) {
+		lastMousePos = mousePos;
+	}
 
-
-	LineSegment ray = lookAtMouseCameraComp->frustum.UnProjectLineSegment(mousePos.x, mousePos.y);
+	LineSegment ray = lookAtMouseCameraComp->frustum.UnProjectLineSegment(lastMousePos.x, lastMousePos.y);
 	float3 planeTransform = lookAtMousePlanePosition;
 	Plane p = Plane(planeTransform, float3(0, 1, 0));
 	weaponPointDir = (p.ClosestPoint(ray) - (weaponTransform->GetGlobalPosition()));
 	float aux = p.ClosestPoint(ray).DistanceSq(weaponTransform->GetGlobalPosition());
 
-	if (weaponPointDir.x == 0 && weaponPointDir.z == 0) return;
+
+	//return;
 	Quat quat = weaponTransform->GetGlobalRotation();
 
 	float angle = Atan2(weaponPointDir.x, weaponPointDir.z);

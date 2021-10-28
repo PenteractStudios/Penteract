@@ -68,10 +68,13 @@ void Player::LookAtGamepadDir() {
 }
 
 void Player::LookAtFacePointTarget() {
-	if (facePointDir.x == 0 && facePointDir.z == 0) return;
+	if (!(facePointDir.x == 0 && facePointDir.z == 0)) lastFacePointDir = facePointDir;
+
+
+
 	Quat quat = playerMainTransform->GetGlobalRotation();
 
-	float angle = Atan2(facePointDir.x, facePointDir.z);
+	float angle = Atan2(lastFacePointDir.x, lastFacePointDir.z);
 	Quat rotation = quat.RotateAxisAngle(float3(0, 1, 0), angle);
 
 	float orientationSpeedToUse = IsInstantOrientation() ? -1 : orientationSpeed;
@@ -82,10 +85,10 @@ void Player::LookAtFacePointTarget() {
 		float3 aux2 = playerMainTransform->GetFront();
 		aux2.y = 0;
 
-		facePointDir.Normalize();
+		lastFacePointDir.Normalize();
 
-		angle = facePointDir.AngleBetween(aux2);
-		float3 cross = Cross(aux2, facePointDir.Normalized());
+		angle = lastFacePointDir.AngleBetween(aux2);
+		float3 cross = Cross(aux2, lastFacePointDir.Normalized());
 		float dot = Dot(cross, float3(0, 1, 0));
 		float multiplier = 1.0f;
 

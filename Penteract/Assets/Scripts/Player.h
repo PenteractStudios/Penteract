@@ -131,4 +131,5 @@ private:
 	float currentSwitchDelay = 0.f;
 	bool playSwitchParticles = true;
 	float switchDelay = 0.37f;
+	float3 lastFacePointDir = float3(0, 0, 0);
 };
