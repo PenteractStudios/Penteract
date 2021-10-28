@@ -69,8 +69,8 @@ void GameplaySceneWalkToFactory::Update() {
         cameraControllerScript->smoothCameraSpeed = cameraMoveSpeed;
         cameraControllerScript->ChangeCameraOffset(cameraNewPosition.x, cameraNewPosition.y, cameraNewPosition.z);
         movementScript->Seek(state, dukeRunTowards, dukeAgent->GetMaxSpeed(), true);
-        if (dukeAnimation) {
-            dukeAnimation->SendTrigger("IdleWalkForward");
+        if (dukeAnimation && dukeAnimation->GetCurrentState() && dukeAnimation->GetCurrentState()->name == "Idle") {
+            dukeAnimation->SendTrigger("IdleWalkForwardNoAim");
         }
 
         sceneStarted = true;

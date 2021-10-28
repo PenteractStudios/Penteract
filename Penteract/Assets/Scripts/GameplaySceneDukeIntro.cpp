@@ -69,7 +69,7 @@ void GameplaySceneDukeIntro::Movement()
     currentDukeTimeToWalkAway += Time::GetDeltaTime();
     if (currentDukeTimeToWalkAway >= dukeTimeToGo) {
         movementScript->Seek(state, dukeRunTowards, dukeAgent->GetMaxSpeed(), true);
-        if (dukeAnimation->GetCurrentState() && dukeAnimation->GetCurrentState()->name == "Idle") {
+        if (dukeAnimation && dukeAnimation->GetCurrentState() && dukeAnimation->GetCurrentState()->name == "Idle") {
             dukeAnimation->SendTrigger("IdleWalkForwardNoAim");
         }
     }
