@@ -501,6 +501,9 @@ void Onimaru::Init(UID onimaruUID,UID onimaruWeapon, UID onimaruLaserUID, UID on
 	if (rightFootVFXGO) rightFootstepsVFX = rightFootVFXGO->GetComponent<ComponentParticleSystem>();
 
 	if (characterGameObject) characterGameObject->Disable();
+
+	orientationSpeed = normalOrientationSpeed;
+
 }
 
 void Onimaru::OnAnimationFinished() {

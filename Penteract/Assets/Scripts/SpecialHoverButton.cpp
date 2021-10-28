@@ -5,14 +5,15 @@
 #include "Components/UI/ComponentSelectable.h"
 #include "Components/UI/ComponentText.h"
 #include "Components/ComponentAudioSource.h"
+#include "GlobalVariables.h"
 
 EXPOSE_MEMBERS(SpecialHoverButton) {
 	MEMBER(MemberType::GAME_OBJECT_UID, buttonIdleImageObjUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, buttonHoveredImageObjUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, buttonClickedImageObjUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, buttonTextWhiteObjUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, buttonTextShadowObjUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, audioSourcesUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, buttonHoveredImageObjUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, buttonClickedImageObjUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, buttonTextWhiteObjUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, buttonTextShadowObjUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, audioSourcesUID)
 };
 
 GENERATE_BODY_IMPL(SpecialHoverButton);
@@ -50,7 +51,7 @@ void SpecialHoverButton::Start() {
 }
 
 void SpecialHoverButton::Update() {
-	if (!buttonIdleImage || !buttonHoveredImage || !buttonClickedImage)return;
+	if (!buttonIdleImage || !buttonHoveredImage || !buttonClickedImage) return;
 	switch (buttonState) {
 	case ButtonState::IDLE:
 		if (selectable) {
@@ -59,18 +60,30 @@ void SpecialHoverButton::Update() {
 				ComponentSelectable* hoveredComponent = eventSystem->GetCurrentlyHovered();
 				ComponentSelectable* selectedComponent = eventSystem->GetCurrentSelected();
 
-				if (hoveredComponent) {
-					bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
-
-					if (hovered) {
-						EnterButtonState(ButtonState::HOVERED);
-					}
-				} else {
+				if (GameplaySystems::GetGlobalVariable(globalUseGamepad, false)) {
 					if (selectedComponent) {
 						bool selected = selectable->GetID() == selectedComponent->GetID() ? true : false;
 
 						if (selected) {
 							EnterButtonState(ButtonState::HOVERED);
+						}
+					}
+				} else {
+					if (hoveredComponent) {
+						bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
+
+						if (hovered) {
+							if (!GameplaySystems::GetGlobalVariable(globalUseGamepad, false)) {
+								EnterButtonState(ButtonState::HOVERED);
+							}
+						}
+					} else {
+						if (selectedComponent) {
+							bool selected = selectable->GetID() == selectedComponent->GetID() ? true : false;
+
+							if (selected) {
+								EnterButtonState(ButtonState::HOVERED);
+							}
 						}
 					}
 				}
@@ -87,17 +100,28 @@ void SpecialHoverButton::Update() {
 				if (hoveredComponent) {
 					bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
 
-					if (!hovered) {
-						EnterButtonState(ButtonState::IDLE);
+					if (!GameplaySystems::GetGlobalVariable(globalUseGamepad, false)) {
+						if (!hovered) {
+							EnterButtonState(ButtonState::IDLE);
+						} else {
+
+							if (Input::GetMouseButton(0)) {
+								EnterButtonState(ButtonState::CLICKED);
+							}
+						}
 					} else {
-						if (Input::GetMouseButton(0)) {
-							EnterButtonState(ButtonState::CLICKED);
+						if (selectedComponent) {
+							if (selectedComponent != selectable) {
+								EnterButtonState(ButtonState::IDLE);
+							}
 						}
 					}
 
 					if (selectedComponent) {
 						if (selectedComponent != hoveredComponent) {
-							eventSystem->SetSelected(hoveredComponent->GetID());
+							if (!GameplaySystems::GetGlobalVariable(globalUseGamepad, false)) {
+								eventSystem->SetSelected(hoveredComponent->GetID());
+							}
 						}
 					}
 

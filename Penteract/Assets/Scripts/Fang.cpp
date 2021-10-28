@@ -85,6 +85,7 @@ void Fang::Init(UID fangUID, UID dashParticleUID, UID leftGunUID, UID rightGunUI
 			ultimateScript = GET_SCRIPT(fangUltimateGameObject, UltimateFang);
 			ultimateCooldownRemaining = ultimateCooldown;
 		}
+		orientationSpeed = normalOrientationSpeed;
 	}
 
 	if (characterGameObject) {
