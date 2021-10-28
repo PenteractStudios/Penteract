@@ -105,6 +105,12 @@ void GameController::Start() {
 }
 
 void GameController::Update() {
+
+	if (Input::GetKeyCodeDown(Input::KEY_KP_PLUS)) {
+		GameplaySystems::SetGlobalVariable<bool>(globalUseGamepad, !GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false));
+	}
+
+
 	if (godModeController) {
 		if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_G) && !isPaused) {
 			if (godModeAvailable) {

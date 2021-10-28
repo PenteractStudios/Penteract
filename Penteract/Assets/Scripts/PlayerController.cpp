@@ -428,11 +428,6 @@ void PlayerController::Update() {
 	if (!playerOnimaru.characterGameObject) return;
 	if (!camera) return;
 
-	if (Input::GetKeyCodeDown(Input::KEY_KP_PLUS)) {
-		GameplaySystems::SetGlobalVariable<bool>(globalUseGamepad, !GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false));
-		
-	}
-
 	if (playerFang.characterGameObject->IsActive()) {
 		playerFang.Update(GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false));
 	}
