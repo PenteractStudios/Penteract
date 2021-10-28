@@ -44,16 +44,21 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 	GameObject* bulletGO = GameplaySystems::GetGameObject(bulletUID);
 	if (bulletGO) {
 		bullet = bulletGO->GetComponent<ComponentParticleSystem>();
-		ComponentParticleSystem* muzzleFlash = bulletGO->GetChild("MuzzleFlash")->GetComponent<ComponentParticleSystem>();
+
+		GameObject* muzzleFlashObj = bulletGO->GetChild("MuzzleFlash");
+		if (muzzleFlashObj) {
+			ComponentParticleSystem* muzzleFlash = bulletGO->GetChild("MuzzleFlash")->GetComponent<ComponentParticleSystem>();
+			if (muzzleFlash) {
+				muzzleFlash->SetDuration(attackBurst / attackSpeed);
+			}
+		}
 		if (bullet) {
 			bullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
 			bullet->SetMaxParticles(attackBurst*2);
 			bullet->SetParticlesPerSecond(float2(attackSpeed, attackSpeed));
 			bullet->SetDuration((attackBurst + 1) / attackSpeed);
 		}
-		if (muzzleFlash) {
-			muzzleFlash->SetDuration(attackBurst / attackSpeed);
-		}
+
 	}
 
 	if (characterGameObject) {
