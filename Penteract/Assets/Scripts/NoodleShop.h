@@ -17,7 +17,7 @@ public:
 public:
 	void Start() override;
 	void Update() override;
-	void OnCollision(GameObject& /* collidedWith */, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* particle = nullptr) override;
+	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) override;
 
 private:
 	GameObject* gameObject = nullptr;

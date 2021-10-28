@@ -1,0 +1,52 @@
+{
+    "Root": {
+        "Name": "FinalLigh",
+        "Active": true,
+        "RootBoneName": "",
+        "Mask": 0,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Active": true,
+                "Position": [
+                    47.28551483154297,
+                    23.647720336914064,
+                    12.981571197509766
+                ],
+                "Rotation": [
+                    0.6365917325019836,
+                    0.3157182037830353,
+                    0.3533630967140198,
+                    0.6084468960762024
+                ],
+                "Scale": [
+                    0.9999998807907105,
+                    1.0000001192092896,
+                    1.0000001192092896
+                ],
+                "LocalEulerAngles": [
+                    91.02356719970703,
+                    56.5213623046875,
+                    2.9134979248046877
+                ]
+            },
+            {
+                "Type": "Light",
+                "Active": true,
+                "LightType": 2,
+                "Color": [
+                    1.0,
+                    0.9336184859275818,
+                    0.6813725233078003
+                ],
+                "Intensity": 250.0,
+                "Radius": 50.0,
+                "UseCustomFalloff": true,
+                "FalloffExponent": 0.04500000178813934,
+                "InnerAngle": 0.3141592741012573,
+                "OuterAngle": 0.4588470757007599
+            }
+        ],
+        "Children": null
+    }
+}

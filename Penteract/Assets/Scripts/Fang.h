@@ -122,6 +122,9 @@ private:
 	GameObject* fangLaser = nullptr;
 	bool shooting = false;
 	int transitioning = 0;
+	bool reloading = false;
+	float reloadCooldownRemaining = 0.f;
+	float reloadCooldown = 0.f;
 
 	//Movement
 	MovementDirection dashMovementDirection = MovementDirection::NONE;

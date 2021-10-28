@@ -1,7 +1,7 @@
 {
     "Name": "IdleAim",
     "AnimationUID": 5614041873872763134,
-    "BeginIndex": 0,
+    "BeginIndex": 1,
     "EndIndex": 59,
     "Loop": true,
     "Speed": 1.0,

@@ -40,6 +40,14 @@
         0.0,
         0.0
     ],
+    "DissolveNoiseMap": 0,
+    "DissolveColor": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+    ],
+    "DissolveIntensity": 0.0,
     "DissolveScale": 0.0,
     "DissolveOffset": [
         0.0,
@@ -47,7 +55,7 @@
     ],
     "DissolveDuration": 0.0,
     "DissolveEdgeSize": 0.0,
-    "VolumetricLightIntensity": 0.30000001192092898,
+    "VolumetricLightIntensity": 0.3449999988079071,
     "VolumetricLightAttenuationExponent": 11.949999809265137,
     "IsSoft": false,
     "SoftRange": 0.0
