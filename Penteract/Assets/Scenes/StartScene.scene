@@ -166,7 +166,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 200.0,
-                            "HorizontalFov": 1.5060452222824097,
+                            "HorizontalFov": 1.2823829650878907,
                             "VerticalFov": 1.0
                         }
                     },
