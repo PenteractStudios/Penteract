@@ -126,12 +126,14 @@ void GameController::Update() {
 			}
 		}
 	}
-
-	if (CanPause() && ((Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)))) {
+	//&& ((Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)))
+	if (CanPause()) {
 		if (isPaused) {
-			ResumeGame();
+			if (Player::GetInputBool(InputActions::CANCEL_A) || Player::GetInputBool(InputActions::CANCEL_B))
+				ResumeGame();
 		} else {
-			PauseGame();
+			if (Player::GetInputBool(InputActions::CANCEL_A))
+				PauseGame();
 		}
 	}
 

@@ -217,14 +217,16 @@ float Onimaru::GetNormalizedRemainingUltimateTime() const {
 	return 0.0f;
 }
 
-void Onimaru::UpdateWeaponRotation(bool useGamepad)
+void Onimaru::UpdateWeaponRotation()
 {
+	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, false);
+
 	weaponPointDir = float3(0, 0, 0);
 	float2 mousePos = float2(0, 0);
 	if (!useGamepad) {
 		mousePos = Input::GetMousePositionNormalized();
 	} else {
-		mousePos = GetInputFloat2(InputActions::ORIENTATION, useGamepad);
+		mousePos = GetInputFloat2(InputActions::ORIENTATION);
 		if (abs(mousePos.x) < 0.05f && abs(mousePos.y) < 0.05f) return; //No gamepad input detected
 		mousePos = mousePos.Mul(float2(1.0f,-1.0f)).Normalized() * 1.5f;
 	}
@@ -391,8 +393,9 @@ void Onimaru::OnAnimationSecondaryFinished() {
 	}
 }
 
-bool Onimaru::IsInstantOrientation(bool useGamepad) const {
+bool Onimaru::IsInstantOrientation() const {
 	//This must return true only when ultimate not in use and Gamepad is either not used or not connected
+	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, false);
 	return !ultimateOn && (!useGamepad || !Input::IsGamepadConnected(0));
 }
 
@@ -591,7 +594,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */
 		Player::Update(useGamepad, lockMovement, false);
 
 		if (!ultimateOn) {
-			if (GetInputBool(InputActions::ABILITY_3, useGamepad)) {
+			if (GetInputBool(InputActions::ABILITY_3)) {
 				if (CanUltimate()) {
 					StartUltimate();
 				}
@@ -616,7 +619,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */
 		}
 
 		if (!ultimateOn) {
-			if (GetInputBool(InputActions::ABILITY_1, useGamepad)) {
+			if (GetInputBool(InputActions::ABILITY_1)) {
 				if (!shield->GetIsActive() && shield->CanUse() && !blastInUse) {
 					ResetIsInCombatValues();
 					InitShield();
@@ -627,11 +630,11 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */
 				shieldBeingUsed += Time::GetDeltaTime();
 			}
 
-			if ((!GetInputBool(InputActions::ABILITY_1, useGamepad) || !shield->CanUse()) && shield->GetIsActive()) {
+			if ((!GetInputBool(InputActions::ABILITY_1) || !shield->CanUse()) && shield->GetIsActive()) {
 				FadeShield();
 			}
 
-			if (GetInputBool(InputActions::SHOOT, useGamepad)) {
+			if (GetInputBool(InputActions::SHOOT)) {
 				if (CanShoot()) {
 					if (!shooting) {
 						shooting = true;
@@ -664,7 +667,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */
 		}
 
 		if (shooting) {
-			if (!GetInputBool(InputActions::SHOOT, useGamepad) || GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) || ultimateOn) {
+			if (!GetInputBool(InputActions::SHOOT) || GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) || ultimateOn) {
 				shooting = false;
 				if (compAnimation) {
 					if (shield->GetIsActive()) {
@@ -683,7 +686,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */
 		}
 
 		if (CanBlast()) {
-			if (GetInputBool(InputActions::ABILITY_2, useGamepad)) {
+			if (GetInputBool(InputActions::ABILITY_2)) {
 				blastInUse = true;
 				if (compAnimation && compAnimation->GetCurrentState()) {
 					if (shooting) {
@@ -716,7 +719,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */
 		Blast();
 	}
 	PlayAnimation();
-	if (!GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && !ultimateOn) UpdateWeaponRotation(useGamepad);
+	if (!GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && !ultimateOn) UpdateWeaponRotation();
 }
 
 float Onimaru::GetRealUltimateCooldown() {

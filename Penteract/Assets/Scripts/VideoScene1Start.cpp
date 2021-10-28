@@ -64,7 +64,7 @@ void VideoScene1Start::Start() {
 void VideoScene1Start::Update() {
 
     if (music && music->IsPlaying()) music->Stop();
-    if ((componentVideo->HasVideoFinished() && componentVideo->IsActive()) || Player::GetInputBool(InputActions::CANCEL_B, GameplaySystems::GetGlobalVariable(globalUseGamepad, false)) || Player::GetInputBool(InputActions::CANCEL_A, GameplaySystems::GetGlobalVariable(globalUseGamepad, false))) {
+    if ((componentVideo->HasVideoFinished() && componentVideo->IsActive()) || Player::GetInputBool(InputActions::CANCEL_B) || Player::GetInputBool(InputActions::CANCEL_A)) {
         BackToNormalGameplay();
     }
 }

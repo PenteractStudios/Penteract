@@ -89,7 +89,7 @@ public:
 	void IncreaseUltimateCounter() override;
 	void OnDeath() override;
 	void OnAnimationSecondaryFinished() override;
-	bool IsInstantOrientation(bool useGampead) const override;
+	bool IsInstantOrientation() const override;
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
 
 	float GetRealUltimateCooldown();
@@ -105,7 +105,7 @@ public:
 	bool IsVulnerable() const override;
 	float GetNormalizedRemainingUltimateTime()const;
 
-	void UpdateWeaponRotation(bool useGamepad = false);
+	void UpdateWeaponRotation();
 	void ResetToIdle() override;
 
 private:

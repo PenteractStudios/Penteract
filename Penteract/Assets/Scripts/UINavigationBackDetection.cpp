@@ -50,7 +50,7 @@ void UINavigationBackDetection::ManageNullSelection() {
 }
 
 void UINavigationBackDetection::ListenForCancelInput() {
-	if (Player::GetInputBool(InputActions::CANCEL_A, GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false)) || Player::GetInputBool(InputActions::CANCEL_B, GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false))) {
+	if (Player::GetInputBool(InputActions::CANCEL_A) || Player::GetInputBool(InputActions::CANCEL_B)) {
 		OnCancelInputPressed();
 	}
 }

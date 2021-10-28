@@ -152,7 +152,9 @@ void Fang::IncreaseUltimateCounter() {
 	if (!ultimateOn) ultimateCooldownRemaining++;
 }
 
-bool Fang::IsInstantOrientation(bool useGamepad) const {
+bool Fang::IsInstantOrientation() const {
+	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, false);
+
 	return !useGamepad || !Input::IsGamepadConnected(0);
 }
 
@@ -504,12 +506,12 @@ void Fang::Update(bool useGamepad, bool /* lockMovement */, bool /* lockRotation
 		if (EMP) {
 			faceToFront = !aiming;
 			Player::Update(useGamepad, dashing || EMP->IsActive(), dashing || EMP->IsActive() || ultimateOn);
-			if (GetInputBool(InputActions::ABILITY_1, useGamepad) && !EMP->IsActive() && !ultimateOn) {
+			if (GetInputBool(InputActions::ABILITY_1) && !EMP->IsActive() && !ultimateOn) {
 				InitDash();
 			}
 
 			if (!dashing && !EMP->IsActive()) {
-				if (GetInputBool(InputActions::SHOOT, useGamepad) && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
+				if (GetInputBool(InputActions::SHOOT) && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 					ResetIsInCombatValues();
 					Shoot();
 				}
@@ -520,7 +522,7 @@ void Fang::Update(bool useGamepad, bool /* lockMovement */, bool /* lockRotation
 			}
 
 			Dash();
-			if (!GetInputBool(InputActions::SHOOT, useGamepad) || dashing || EMP->IsActive() || ultimateOn || GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
+			if (!GetInputBool(InputActions::SHOOT) || dashing || EMP->IsActive() || ultimateOn || GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 				if (shooting) {
 					if (!reloading) {
 						shooting = false;
@@ -528,11 +530,11 @@ void Fang::Update(bool useGamepad, bool /* lockMovement */, bool /* lockRotation
 					if(compAnimation->GetCurrentStateSecondary()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 				}
 			}
-			if (GetInputBool(InputActions::ABILITY_2, useGamepad) && !ultimateOn) {
+			if (GetInputBool(InputActions::ABILITY_2) && !ultimateOn) {
 				ActivateEMP();
 			}
 
-			if (GetInputBool(InputActions::ABILITY_3, useGamepad)) {
+			if (GetInputBool(InputActions::ABILITY_3)) {
 				ActiveUltimate();
 			}
 		}
