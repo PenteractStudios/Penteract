@@ -24,19 +24,32 @@ void NoodleShop::Update() {
 	
 }
 
-void NoodleShop::OnCollision(GameObject& /* collidedWith */, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* /* particle */) {
+void NoodleShop::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
     if (script) {
-        script->Open();
-        ComponentCapsuleCollider* capsuleCollider = gameObject->GetComponent<ComponentCapsuleCollider>();
-	    if (capsuleCollider) capsuleCollider->Disable();
-        GameObject* noodleShopObstacleGO = GameplaySystems::GetGameObject(noodleShopObstacleUID);
-        if (noodleShopObstacleGO) {
-            noodleShopObstacleGO->Disable();
+        bool correctCollider = collidedWith.name == "FangRightBullet" || collidedWith.name == "FangLeftBullet" || collidedWith.name == "OnimaruBullet" ||
+                               collidedWith.name == "Onimaru" || collidedWith.name == "Fang";
+        if (correctCollider) {
+            if (particle) {
+                ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+                ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+                if (pSystem) pSystem->KillParticle(p);
+            }
+            ComponentCapsuleCollider* capsuleCollider = gameObject->GetComponent<ComponentCapsuleCollider>();
+            if (capsuleCollider) capsuleCollider->Disable();
+
+            GameObject* noodleShopObstacleGO = GameplaySystems::GetGameObject(noodleShopObstacleUID);
+            if (noodleShopObstacleGO) {
+                script->Open();
+                noodleShopObstacleGO->Disable();
+            }
+
+            GameObject* audioWarning = GameplaySystems::GetGameObject(audioWarningUID);
+            if (audioWarning) {
+                ComponentAudioSource* audioWarningComp = audioWarning->GetComponent<ComponentAudioSource>();
+                if (audioWarningComp) audioWarningComp->Stop();
+            }
         }
-        GameObject* audioWarning = GameplaySystems::GetGameObject(audioWarningUID);
-        if (audioWarning) {
-            ComponentAudioSource* audioWarningComp = audioWarning->GetComponent<ComponentAudioSource>();
-            if (audioWarningComp) audioWarningComp->Stop();
-        }
+
+
     }
 }
