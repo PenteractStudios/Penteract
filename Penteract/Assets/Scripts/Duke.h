@@ -58,7 +58,7 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID, UID chargeDustUID, UID areaChargeUID, UID chargeTelegraphAreaUID);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID, UID chargeDustUID, UID areaChargeUID, UID chargeTelegraphAreaUID, UID chargePunchVFXUID, UID dustStepLeftUID, UID dustStepRightUID, UID bodyArmorUID);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void BulletHell();
@@ -89,6 +89,7 @@ public:
 
 	// ---- Auxiliary Functions ---- //
 	void ActivateDissolve(UID dissolveMaterialID);
+	void SetCriticalMode(bool activate);
 
 	// ------ Getters/Setters ------ //
 	ComponentMeshRenderer* GetDukeMeshRenderer() const;
@@ -201,15 +202,26 @@ private:
 	GameObject* areaChargeGO = nullptr;
 	ResourceMaterial* areaCharge = nullptr;
 	ComponentParticleSystem* chargeDust = nullptr;
+	ComponentParticleSystem* chargePunchVFX = nullptr;
 	float2 chargeDustOriginalParticlesPerSecond = float2(0.f, 0.f);
 	float areaChargeSpeedMultiplier = 4;
 	float dukeScale = 0.f;
 	float chargeTelegraphAreaPosOffset = 0.f;
 
+	//Shield
+	ComponentParticleSystem* phase2ShieldParticles = nullptr;
+
 	// Shooting
 	float attackTimePool = 0.f;
 	ComponentParticleSystem* bullet = nullptr;
 	float isShootingTimer = 0.f;
+
+	//Enrage
+	GameObject* bodyArmor = nullptr;
+
+	//Steps
+	ComponentParticleSystem* dustLeftStep = nullptr;
+	ComponentParticleSystem* dustRightStep = nullptr;
 
 	GameObject* meshObj = nullptr;	//Main mesh for Getting MeshRenderer reference and checking frustum presence (if not inside frustum shooting won't happen)
 
