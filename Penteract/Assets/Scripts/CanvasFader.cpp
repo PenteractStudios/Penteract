@@ -23,18 +23,20 @@ void CanvasFader::Update() {
 	UpdateBlackImage();
 }
 
-void CanvasFader::FadeIn() {
+void CanvasFader::FadeIn(float fadeDuration_) {
 	if (!checkedForReferences) CheckForReferences();
 	if (!blackImage) return;
+	if (fadeDuration_ > 0) fadeDuration = fadeDuration_;
 
 	blackImage->SetColor(float4(blackImage->GetColor().xyz(), 1.0f));
 	Play();
 	fadeState = FadeState::FADE_IN;
 }
 
-void CanvasFader::FadeOut() {
+void CanvasFader::FadeOut(float fadeDuration_) {
 	if (!checkedForReferences) CheckForReferences();
 	if (!blackImage)return;
+	if (fadeDuration_ > 0) fadeDuration = fadeDuration_;
 	blackImage->SetColor(float4(blackImage->GetColor().xyz(), 0.0f));
 	Play();
 	fadeState = FadeState::FADE_OUT;
@@ -43,6 +45,7 @@ void CanvasFader::FadeOut() {
 void CanvasFader::Stop() {
 	fadeState = FadeState::IDLE;
 	playing = false;
+	fadeDuration = originalFadeDuration;
 }
 
 bool CanvasFader::IsPlaying() const {
