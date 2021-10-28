@@ -490,7 +490,7 @@ void RangedAI::UpdateState() {
 					currentFleeingUpdateTime -= Time::GetDeltaTime();
 					aiMovement->Seek(state, currentFleeDestination, speedToUse, false);
 
-					if (currentFleeingUpdateTime <= 0) {
+					if (currentFleeingUpdateTime <= 0 || GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition().Distance(currentFleeDestination) < 0.5) { // Stop animation and movement by time or if it reached the desired point
 						fleeingFarAway = false;
 						currentFleeingUpdateTime = 0;
 					}
