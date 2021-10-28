@@ -40,23 +40,23 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.searchRadius),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.attackRange),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.barrelDamageTaken),
+	MEMBER(MemberType::FLOAT, attackInterval),
+	MEMBER(MemberType::FLOAT, attackIntervalVariability),
+	MEMBER(MemberType::FLOAT, fleeingRange),
+	MEMBER(MemberType::FLOAT, fleeingUpdateTime),
+	MEMBER(MemberType::FLOAT, stunDuration),
+	MEMBER_SEPARATOR("Others"),
+	MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
+	MEMBER(MemberType::FLOAT, timeSinceLastHurt),
+	MEMBER(MemberType::FLOAT, approachOffset), //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
+	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
+	MEMBER(MemberType::FLOAT, groundPosition),
 	MEMBER(MemberType::BOOL, isSniper),
 	MEMBER_SEPARATOR("Push variables"),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackDistance),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.pushBackTime),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownSpeed),
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownTime),
-	MEMBER(MemberType::FLOAT, minAttackSpeed),
-	MEMBER(MemberType::FLOAT, maxAttackSpeed),
-	MEMBER(MemberType::FLOAT, fleeingRange),
-	MEMBER(MemberType::GAME_OBJECT_UID, dmgMaterialObj),
-	MEMBER(MemberType::FLOAT, timeSinceLastHurt),
-	MEMBER(MemberType::FLOAT, approachOffset), //This variable should be a positive float, it will be used to make AIs get a bit closer before stopping their approach
-	MEMBER(MemberType::FLOAT, stunDuration),
-	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
-	MEMBER(MemberType::FLOAT, groundPosition),
-	MEMBER(MemberType::FLOAT, fleeingUpdateTime),
-	MEMBER_SEPARATOR("Push Random Feedback"),
 	MEMBER(MemberType::FLOAT, minTimePushEffect),
 	MEMBER(MemberType::FLOAT, maxTimePushEffect),
 	MEMBER_SEPARATOR("Dissolve properties"),
@@ -167,7 +167,7 @@ void RangedAI::Start() {
 		}
 	}
 
-	attackTimePool = (minAttackSpeed + 1) + (((float)rand()) / (float)RAND_MAX) * (maxAttackSpeed - (minAttackSpeed + 1));
+	attackTimePool = ((((float)rand()) / (float)RAND_MAX) * attackIntervalVariability); // We do not add the attack interval time at the start, because we want him to shoot right after he spawns. 
 	aiMovement = GET_SCRIPT(&GetOwner(), AIMovement);
 
 	// TODO: ADD CHECK PLS
@@ -619,8 +619,7 @@ void RangedAI::ActualShot() {
 		}
 	}
 
-	attackSpeed = (minAttackSpeed + 1) + (((float)rand()) / (float)RAND_MAX) * (maxAttackSpeed - (minAttackSpeed + 1));
-	attackTimePool = attackSpeed;
+	attackTimePool = attackInterval + ((((float)rand()) / (float)RAND_MAX) * attackIntervalVariability);
 	actualShotTimer = -1.0f;
 
 	PlayAudio(AudioType::SHOOT);

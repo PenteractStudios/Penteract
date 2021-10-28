@@ -2,7 +2,7 @@
     "Name": "Shoot",
     "AnimationUID": 17180514647000583777,
     "BeginIndex": 90,
-    "EndIndex": 115,
+    "EndIndex": 113,
     "Loop": false,
     "Speed": 1.0,
     "FrameRate": 0.033259425312280658,
