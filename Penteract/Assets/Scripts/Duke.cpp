@@ -331,7 +331,7 @@ void Duke::Shoot()
 			if (!meshObj) return;
 			bullet->PlayChildParticles();
 		}
-		attackTimePool = (attackBurst + 1) / attackSpeed + timeInterBurst + RandomNumberGenerator::GenerateFloat(0.5f, 1.3f);
+		attackTimePool = (attackBurst + 1) / attackSpeed + timeInterBurst + RandomNumberGenerator::GenerateFloat(0.4f, 1.5f);
 		isShooting = true;
 		isShootingTimer = 0.f;
 		// Animation
@@ -606,6 +606,7 @@ void Duke::ActivateDissolve(UID dissolveMaterialID) {
 
 void Duke::SetCriticalMode(bool activate)
 {
+	criticalMode = activate;
 	if (activate) {
 		if (compAnimation) {
 			StopShooting();
