@@ -228,9 +228,8 @@ void Onimaru::UpdateWeaponRotation()
 	} else {
 		mousePos = GetInputFloat2(InputActions::ORIENTATION);
 		if (abs(mousePos.x) < 0.05f && abs(mousePos.y) < 0.05f) return; //No gamepad input detected
-		mousePos = mousePos.Mul(float2(1.0f,-1.0f)).Normalized() * 1.5f;
+		mousePos = mousePos.Mul(float2(1.0f,-1.0f)).Normalized();
 	}
-	
 
 	LineSegment ray = lookAtMouseCameraComp->frustum.UnProjectLineSegment(mousePos.x, mousePos.y);
 	float3 planeTransform = lookAtMousePlanePosition;
