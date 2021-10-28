@@ -482,8 +482,8 @@ void RangedAI::UpdateState() {
 				if (currentFleeingUpdateTime > fleeingUpdateTime && !fleeingFarAway) {  //Detecting it is time to move far away from player
 					if (animation->GetCurrentState() && animation->GetCurrentState()->name != "RunBackward") {
 						animation->SendTrigger(animation->GetCurrentState()->name + "RunBackward");
-						currentFleeDestination = ownerTransform->GetGlobalPosition() + (ownerTransform->GetFront() * -1 * fleeingRange);
 					}
+					currentFleeDestination = ownerTransform->GetGlobalPosition() + (ownerTransform->GetFront() * -1 * fleeingRange);
 					fleeingFarAway = true;
 				}
 				else if (currentFleeingUpdateTime >= 0 && fleeingFarAway) {   //Moving far away from player
@@ -497,7 +497,7 @@ void RangedAI::UpdateState() {
 				}
 				else { //Staying in same position
 					if (animation->GetCurrentState() && animation->GetCurrentState()->name != "Idle") animation->SendTrigger(animation->GetCurrentState()->name + "Idle");
-					currentFleeingUpdateTime += Time::GetDeltaTime();
+					currentFleeingUpdateTime += Time::GetDeltaTime() * fleeingUpdateTime; // Dont wait so long to start fleeing. This will make it always 1 second waiting.
 					aiMovement->Stop();
 				}
 			}
