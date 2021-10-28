@@ -25,7 +25,7 @@ void Barrel::Start() {
 	barrelMesh = barrel->GetParent()->GetChild("BarrelMesh");
 	if (barrelMesh) {
 		obstacle = barrelMesh->GetComponent<ComponentObstacle>();
-		if(!onFloor) obstacle->Disable();
+		if(!onFloor && obstacle) obstacle->Disable();
 	}
 
 	barrelCollider = barrel->GetParent()->GetChild("Barrel");
@@ -50,6 +50,12 @@ void Barrel::Start() {
 		audioForTimer = particleForTimerAux->GetComponent<ComponentAudioSource>();
 	}
 
+	GameObject* particleFlameLightAux = barrel->GetParent()->GetChild("MissileFlameLight");
+	if (particleFlameLightAux) {
+		particlesFlameLight = particleFlameLightAux->GetComponent<ComponentParticleSystem>();
+		audioFlameLight = particleFlameLightAux->GetComponent<ComponentAudioSource>();
+	}
+
 	if (!onFloor) {
 		float3 pos = parentTransform->GetGlobalPosition();
 		parentTransform->SetGlobalPosition(float3(pos.x, heightOfThrow, pos.z));
@@ -65,7 +71,7 @@ void Barrel::Start() {
 }
 
 void Barrel::Update() {
-	if (!barrelMesh || !barrelCollider || !cameraController || !particles || !audio || !particlesForTimer || !audioForTimer) return;
+	if (!barrelMesh || !barrelCollider || !cameraController || !particles || !audio ) return;
 
 	if (startTimerToDestroy && timerDestroyActivated) {
 		particlesForTimer->PlayChildParticles();
@@ -112,21 +118,25 @@ void Barrel::Update() {
 	}
 
 	if (!onFloor) {
-		if (parentTransform->GetGlobalPosition().y > 2.6f) {
+		if (parentTransform->GetGlobalPosition().y > 0.8f) {
 			float3 barrelPos = parentTransform->GetGlobalPosition();
 			barrelPos += float3(0, -forceOfFall, 0);
 			parentTransform->SetGlobalPosition(barrelPos);
 		}
 		else {
 			float3 barrelPos = parentTransform->GetGlobalPosition();
-			barrelPos.y = 2.6f;
+			barrelPos.y = 0.8f;
 			parentTransform->SetGlobalPosition(barrelPos);
-			startTimerToDestroy = true;
-			timerDestroyActivated = true;
+			//startTimerToDestroy = true;
+			//timerDestroyActivated = true;
+			isHit = true;
 			onFloor = true;
-			obstacle->Enable();
+			//obstacle->Enable();
 			if (particlesShadow) {
 				particlesShadow->StopChildParticles();
+			}
+			if (particlesFlameLight) {
+				particlesFlameLight->SetParticlesPerSecondChild(float2(0.f,0.f));
 			}
 		}
 	}

@@ -87,6 +87,10 @@ public:
 	UID chargeDustUID = 0;
 	UID areaChargeUID = 0;
 	UID chargeTelegraphAreaUID = 0;
+	UID chargePunchVFXUID = 0;
+	UID dustStepLeftUID = 0;
+	UID dustStepRightUID = 0;
+	UID bodyArmorUID = 0;
 	// Only for level2
 	UID triggerBossEndUID = 0;
 	UID dissolveMaterialGOUID = 0;
