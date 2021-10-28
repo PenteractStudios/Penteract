@@ -103,8 +103,8 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruWeaponUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerOnimaru.lookAtPointUID),
 
-	MEMBER(MemberType::FLOAT, playerOnimaru.xCorrectionAngle),
-	MEMBER(MemberType::FLOAT, playerOnimaru.yCorrectionAngle),
+	MEMBER(MemberType::FLOAT, playerOnimaru.cannonGamepadOrientationSpeed),
+	MEMBER(MemberType::FLOAT, playerOnimaru.cannonMouseOrientationSpeed),
 	MEMBER_SEPARATOR("Onimaru Abilities"),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruShieldUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruBlastEffectsUID),

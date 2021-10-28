@@ -270,10 +270,10 @@ void Onimaru::UpdateWeaponRotation()
 			multiplier = -1;
 		}
 	
-		
+	
 		if (Abs(angle) > DEGTORAD * orientationThreshold) {
 			if (aux > limitAngle) {
-				Quat rotationToAdd = Quat::Lerp(quat, rotation, Time::GetDeltaTime() * orientationSpeed);
+				Quat rotationToAdd = Quat::Lerp(quat, rotation, Time::GetDeltaTime() * (useGamepad ? cannonGamepadOrientationSpeed : cannonMouseOrientationSpeed));
 				weaponTransform->SetGlobalRotation(rotationToAdd);
 			}
 		}
