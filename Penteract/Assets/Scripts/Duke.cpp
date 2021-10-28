@@ -32,8 +32,11 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 	GameObject* shieldObj = GameplaySystems::GetGameObject(phase2ShieldUID);
 	if (shieldObj) {
 		phase2Shield = GET_SCRIPT(shieldObj, DukeShield);
-		GameObject* shieldObjChild = shieldObj->GetChildren()[0];
-		if (shieldObjChild) phase2ShieldParticles = shieldObjChild->GetComponent<ComponentParticleSystem>();
+		std::vector<GameObject*> children = shieldObj->GetChildren();
+		if (!children.empty()) {
+			GameObject* shieldObjChild = children[0];
+			if (shieldObjChild) phase2ShieldParticles = shieldObjChild->GetComponent<ComponentParticleSystem>();
+		}
 	}
 
 	GameObject* barrelSpawnerOBj = GameplaySystems::GetGameObject(barrelSpawnerUID);
@@ -44,15 +47,18 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 	GameObject* bulletGO = GameplaySystems::GetGameObject(bulletUID);
 	if (bulletGO) {
 		bullet = bulletGO->GetComponent<ComponentParticleSystem>();
-		ComponentParticleSystem* muzzleFlash = bulletGO->GetChild("MuzzleFlash")->GetComponent<ComponentParticleSystem>();
 		if (bullet) {
 			bullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
 			bullet->SetMaxParticles(attackBurst*2);
 			bullet->SetParticlesPerSecond(float2(attackSpeed, attackSpeed));
 			bullet->SetDuration((attackBurst + 1) / attackSpeed);
 		}
-		if (muzzleFlash) {
-			muzzleFlash->SetDuration(attackBurst / attackSpeed);
+		GameObject* muzzleFlashObj = bulletGO->GetChild("MuzzleFlash");
+		if (muzzleFlashObj) {
+			ComponentParticleSystem* muzzleFlash = bulletGO->GetChild("MuzzleFlash")->GetComponent<ComponentParticleSystem>();
+			if (muzzleFlash) {
+				muzzleFlash->SetDuration(attackBurst / attackSpeed);
+			}
 		}
 	}
 
