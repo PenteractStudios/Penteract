@@ -25,6 +25,7 @@ void RatRobot::Start() {
 	transform = GetOwner().GetComponent<ComponentTransform>();
 	agent = GetOwner().GetComponent<ComponentAgent>();
 	animation = GetOwner().GetComponent<ComponentAnimation>();
+	audioSplash = GetOwner().GetComponent<ComponentAudioSource>();
 	std::vector<GameObject*> children = GetOwner().GetChildren();
 	if (children.size() > HIERARCHY_INDEX_MESH_RENDERER)
 		meshRenderer = children[HIERARCHY_INDEX_MESH_RENDERER]->GetComponent<ComponentMeshRenderer>();
@@ -188,6 +189,9 @@ void RatRobot::SteppedOn() {
 	if (explosionParticleSystem) {
 		explosionParticleSystem->Play();
 		explosionParticleSystem->PlayChildParticles();
+	}
+	if (audioSplash) {
+		audioSplash->Play();
 	}
 }
 
