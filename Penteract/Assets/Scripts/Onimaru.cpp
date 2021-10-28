@@ -219,7 +219,21 @@ float Onimaru::GetNormalizedRemainingUltimateTime() const {
 
 void Onimaru::UpdateWeaponRotation()
 {
+
 	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, false);
+
+	if (useGamepad) {
+		//weaponTransform->SetGlobalRotation(weaponTransform->GetOwner().GetParent()->GetComponent<ComponentTransform>()->GetGlobalRotation());
+		//weaponTransform->SetRotation(Quat(0, 0, 0, 1));
+		Quat smallRot = Quat(0, 0, 0, 1);
+		smallRot.SetFromAxisAngle(float3(0, 1, 0), DEGTORAD * yCorrectionAngle);
+
+		Quat horizontalCorrection = Quat(0, 0, 0, 1);
+		horizontalCorrection.SetFromAxisAngle(float3(1, 0, 0), DEGTORAD * xCorrectionAngle);
+
+		weaponTransform->SetRotation(horizontalCorrection * smallRot);
+		return;
+	}
 
 	weaponPointDir = float3(0, 0, 0);
 	float2 mousePos = float2(0, 0);
@@ -230,6 +244,10 @@ void Onimaru::UpdateWeaponRotation()
 		if (abs(mousePos.x) < 0.05f && abs(mousePos.y) < 0.05f) return; //No gamepad input detected
 		mousePos = mousePos.Mul(float2(1.0f,-1.0f)).Normalized();
 	}
+
+	//std::string msg = std::to_string(mousePos.x) + "," + std::to_string(mousePos.y);
+	//Debug::Log(msg.c_str());
+
 
 	LineSegment ray = lookAtMouseCameraComp->frustum.UnProjectLineSegment(mousePos.x, mousePos.y);
 	float3 planeTransform = lookAtMousePlanePosition;

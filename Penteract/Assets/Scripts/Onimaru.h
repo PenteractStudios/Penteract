@@ -76,6 +76,9 @@ public:
 	float limitAngle = 10.0f;
 	float shieldBeingUsed = 0.f;
 
+	float xCorrectionAngle = 30.0f;
+	float yCorrectionAngle = 5.0f;
+
 public:
 	// ------- Contructors ------- //
 	Onimaru() {};
