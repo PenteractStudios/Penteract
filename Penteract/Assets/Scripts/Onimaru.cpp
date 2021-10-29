@@ -219,7 +219,7 @@ float Onimaru::GetNormalizedRemainingUltimateTime() const {
 void Onimaru::UpdateWeaponRotation()
 {
 
-	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, false);
+	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, false) && Input::IsGamepadConnected(0);
 
 	weaponPointDir = float3(0, 0, 0);
 	float2 mousePos = float2(0, 0);
