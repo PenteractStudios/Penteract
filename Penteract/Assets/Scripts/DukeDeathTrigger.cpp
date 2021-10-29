@@ -118,6 +118,7 @@ void DukeDeathTrigger::Update() {
             }
 
         }
+        playVideo = false;
     }
 }
 
