@@ -44,6 +44,11 @@
                         "Name": "canvasFaderObjUID",
                         "Type": "GameObjectUID",
                         "Value": 2596402260737554462
+                    },
+                    {
+                        "Name": "skipTextObjUID",
+                        "Type": "GameObjectUID",
+                        "Value": 3171449454238145239
                     }
                 ]
             }
@@ -88,7 +93,7 @@
                             {
                                 "Name": "decelerationDistance",
                                 "Type": "Float",
-                                "Value": 10.0
+                                "Value": 20.0
                             },
                             {
                                 "Name": "travellingDeceleration",
@@ -98,7 +103,12 @@
                             {
                                 "Name": "travellingAcceleration",
                                 "Type": "Float",
-                                "Value": 20.0
+                                "Value": 2.0
+                            },
+                            {
+                                "Name": "maxTravellingSpeed",
+                                "Type": "Float",
+                                "Value": 10.0
                             }
                         ]
                     }

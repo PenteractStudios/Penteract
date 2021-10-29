@@ -9,15 +9,16 @@
 
 EXPOSE_MEMBERS(BossSceneCameraEvent) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerControllerObjUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, canvasFaderObjUID),
-		MEMBER(MemberType::FLOAT, maxTravellingSpeed),
-		MEMBER(MemberType::FLOAT, minTravellingSpeed),
-		MEMBER(MemberType::FLOAT, travellingAcceleration),
-		MEMBER(MemberType::FLOAT, travellingDeceleration),
-		MEMBER(MemberType::FLOAT, decelerationDistance),
-		MEMBER(MemberType::FLOAT, finishDistanceThreshold),
-		MEMBER(MemberType::FLOAT, fadeInDuration),
-		MEMBER(MemberType::FLOAT, fadeOutDuration)
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasFaderObjUID),
+	MEMBER(MemberType::FLOAT, maxTravellingSpeed),
+	MEMBER(MemberType::FLOAT, minTravellingSpeed),
+	MEMBER(MemberType::FLOAT, travellingAcceleration),
+	MEMBER(MemberType::FLOAT, travellingDeceleration),
+	MEMBER(MemberType::FLOAT, decelerationDistance),
+	MEMBER(MemberType::FLOAT, finishDistanceThreshold),
+	MEMBER(MemberType::GAME_OBJECT_UID, skipTextObjUID),
+	MEMBER(MemberType::FLOAT, fadeInDuration),
+	MEMBER(MemberType::FLOAT, fadeOutDuration)
 };
 
 GENERATE_BODY_IMPL(BossSceneCameraEvent);
@@ -47,6 +48,10 @@ void BossSceneCameraEvent::Start() {
 	if (canvasFaderObj) {
 		canvasFader = GET_SCRIPT(canvasFaderObj, CanvasFader);
 	}
+
+	skipTextObj = GameplaySystems::GetGameObject(skipTextObjUID);
+
+	if (skipTextObj)skipTextObj->Enable(); //Enable at runtime if found, to prevent it from sticking around during gameplay if not assigned
 
 	if (cameraTransform) {
 		cameraOriginalRotation = cameraTransform->GetGlobalRotation();
@@ -155,6 +160,7 @@ void BossSceneCameraEvent::NextCameraTravel() {
 }
 
 void BossSceneCameraEvent::BackToNormalGameplay() {
+	if (skipTextObj)skipTextObj->Disable();
 	GameplaySystems::SetGlobalVariable(globalCameraEventOn, false);
 	GetOwner().Disable();
 	if (canvasFader) canvasFader->FadeIn(0.3f);

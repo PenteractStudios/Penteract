@@ -20,7 +20,7 @@ public:
 public:
 	UID playerControllerObjUID = 0;
 	UID canvasFaderObjUID = 0;
-
+	UID skipTextObjUID = 0;
 
 	float travellingAcceleration = 2.0f;
 	float travellingDeceleration = 2.0f;
@@ -61,6 +61,7 @@ private:
 	PlayerController* playerController = nullptr;
 	CameraController* cameraController = nullptr;
 	ComponentTransform* cameraTransform = nullptr;
+	GameObject* skipTextObj = nullptr;
 	CanvasFader* canvasFader = nullptr;
 	float3 originPosition;
 	bool finished = false;
