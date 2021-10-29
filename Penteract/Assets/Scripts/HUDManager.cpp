@@ -8,6 +8,7 @@
 #include "ImageColorFader.h"
 #include "AbilityRefeshFX.h"
 #include "GlobalVariables.h"
+#include "UIInputTextureChanger.h"
 
 #define HIERARCHY_INDEX_ABILITY_FILL 1
 #define HIERARCHY_INDEX_ABILITY_DURATION_FILL 2
@@ -240,22 +241,19 @@ void HUDManager::Update() {
 	// Shield
 	if (GameplaySystems::GetGlobalVariable(globalSkill1TutorialReachedOni, true)) {
 		if (skillsOni[0] && !skillsOni[0]->IsActive()) skillsOni[0]->Enable();
-	}
-	else {
+	} else {
 		if (skillsOni[0] && skillsOni[0]->IsActive()) skillsOni[0]->Disable();
 	}
 	// Blast
 	if (GameplaySystems::GetGlobalVariable(globalSkill2TutorialReachedOni, true)) {
 		if (skillsOni[1] && !skillsOni[1]->IsActive()) skillsOni[1]->Enable();
-	}
-	else {
+	} else {
 		if (skillsOni[1] && skillsOni[1]->IsActive()) skillsOni[1]->Disable();
 	}
 	// Onimaru Ultimate
 	if (GameplaySystems::GetGlobalVariable(globalSkill3TutorialReachedOni, true)) {
 		if (skillsOni[2] && !skillsOni[2]->IsActive()) skillsOni[2]->Enable();
-	}
-	else {
+	} else {
 		if (skillsOni[2] && skillsOni[2]->IsActive()) skillsOni[2]->Disable();
 	}
 
@@ -450,13 +448,24 @@ void HUDManager::UpdateVisualCooldowns(GameObject* canvas, int startingIt) {
 
 			if (ultCount != 2) {
 				pictogramImage = (*it)->GetChildren()[HIERARCHY_INDEX_ABILITY_PICTO_SHADE]->GetComponent<ComponentImage>();
-				textFill = children[HIERARCHY_INDEX_ABILITY_KEY_FILL]->GetComponent<ComponentImage>();
+
+				UIInputTextureChanger* changer = GET_SCRIPT(children[HIERARCHY_INDEX_ABILITY_KEY_FILL], UIInputTextureChanger);
+				if (changer) {
+					textFill = changer->GetActiveImage();
+				}
+
 			} else {
 
 				if (children.size() < HIERARCHY_INDEX_ULTIMATE_ABILITY_DECOR_FILL) return;
 
 				pictogramImage = (*it)->GetChildren()[HIERARCHY_INDEX_ULTIMATE_ABILITY_PICTO_SHADE]->GetComponent<ComponentImage>();
-				textFill = children[HIERARCHY_INDEX_ULTIMATE_ABILITY_KEY_FILL]->GetComponent<ComponentImage>();
+				//textFill = children[HIERARCHY_INDEX_ULTIMATE_ABILITY_KEY_FILL]->GetComponent<ComponentImage>();
+
+				UIInputTextureChanger* changer = GET_SCRIPT(children[HIERARCHY_INDEX_ULTIMATE_ABILITY_KEY_FILL], UIInputTextureChanger);
+				if (changer) {
+					textFill = changer->GetActiveImage();
+				}
+
 			}
 
 			if (fillImage && pictogramImage) {
@@ -647,15 +656,19 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 	ComponentImage* fillColor = children[HIERARCHY_INDEX_SWITCH_ABILITY_FILL]->GetComponent<ComponentImage>();
 	ComponentImage* image = children[HIERARCHY_INDEX_SWITCH_ABILITY_PICTO_SHADE]->GetComponent<ComponentImage>();
 
-	GameObject* textParent = children[HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL];
 	ComponentText* text = nullptr;
 
-	if (textParent) {
-		if (textParent->GetChildren().size() > 1)
-			text = textParent->GetChild(1)->GetComponent<ComponentText>();
+	ComponentImage* textFill = nullptr;
+	UIInputTextureChanger* changer = GET_SCRIPT(children[HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL], UIInputTextureChanger);
+	if (changer) {
+		textFill = changer->GetActiveImage();
 	}
 
-	ComponentImage* textFill = children[HIERARCHY_INDEX_SWITCH_ABILITY_KEY_FILL]->GetComponent<ComponentImage>();
+	if (textFill) {
+		const GameObject& textParent = textFill->GetOwner();
+		if (textParent.GetChildren().size() > 1)
+			text = textParent.GetChild(1)->GetComponent<ComponentText>();
+	}
 
 	if (fillColor && image) {
 
@@ -666,8 +679,7 @@ void HUDManager::UpdateCommonSkillVisualCooldown() {
 			if (playerController->AreBothCharactersAlive()) {
 				if (cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)] < 1) {
 					fillColor->SetColor(float4(switchSkillColorNotAvailable.xyz(), Clamp(WAVING_EFFECT_MIN_ALPHA + cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)], WAVING_EFFECT_MIN_ALPHA, WAVING_EFFECT_MAX_ALPHA)));
-				}
-				else {
+				} else {
 					fillColor->SetColor(float4(switchSkillColorAvailable.xyz(), Clamp(WAVING_EFFECT_MIN_ALPHA + cooldowns[static_cast<int>(Cooldowns::SWITCH_SKILL)], WAVING_EFFECT_MIN_ALPHA, WAVING_EFFECT_MAX_ALPHA)));
 				}
 			} else {

@@ -195,7 +195,9 @@ void DialogueManager::Update() {
 	if (activeDialogue) {
 		if (runOpenAnimation) ActivateDialogue();
 
-		if (Player::GetInputBool(activeDialogue->closeButton, PlayerController::useGamepad) && !(runOpenAnimation || runChangeAnimation || runCloseAnimation) && activeDialogueObject) {
+		bool pressedThisFrame = Player::GetInputBool(activeDialogue->closeButton) && !buttonPreviouslyPressed;
+
+		if (pressedThisFrame && !(runOpenAnimation || runChangeAnimation || runCloseAnimation) && activeDialogueObject) {
 			if (audios[static_cast<int>(AudioDialogue::BUTTON)]) {
 				audios[static_cast<int>(AudioDialogue::BUTTON)]->Play();
 			}
@@ -213,6 +215,8 @@ void DialogueManager::Update() {
 				}
 			} else runCloseAnimation = true;
 		}
+
+		buttonPreviouslyPressed = Player::GetInputBool(activeDialogue->closeButton);
 
 		if (runChangeAnimation && !runCloseAnimation) {
 			ActivateNextDialogue(activeDialogue);

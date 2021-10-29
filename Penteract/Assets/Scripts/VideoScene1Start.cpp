@@ -64,8 +64,7 @@ void VideoScene1Start::Start() {
 void VideoScene1Start::Update() {
 
     if (music && music->IsPlaying()) music->Stop();
-
-    if ((componentVideo->HasVideoFinished() && componentVideo->IsActive()) || Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE)) {
+    if ((componentVideo->HasVideoFinished() && componentVideo->IsActive()) || Player::GetInputBool(InputActions::CANCEL_B) || Player::GetInputBool(InputActions::CANCEL_A)) {
         BackToNormalGameplay();
     }
 }
