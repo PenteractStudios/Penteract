@@ -112,7 +112,7 @@ public:
 	void ResetToIdle() override;
 
 private:
-	float2 lastMousePos = float2(0, 0);
+	float2 lastMousePos = float2(1, 0);
 	ResourcePrefab* trail = nullptr;
 	ComponentParticleSystem* bullet = nullptr;
 
