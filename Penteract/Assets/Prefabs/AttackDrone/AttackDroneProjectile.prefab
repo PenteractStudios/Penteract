@@ -51,6 +51,11 @@
                         "Name": "speed",
                         "Type": "Float",
                         "Value": 30.0
+                    },
+                    {
+                        "Name": "destroyTimeOnCollision",
+                        "Type": "Float",
+                        "Value": 0.0
                     }
                 ]
             },

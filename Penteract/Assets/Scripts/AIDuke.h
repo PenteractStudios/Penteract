@@ -131,6 +131,7 @@ public:
 	UID winSceneUID = 0;
 
 private:
+	// Scripts and basic objects
 	ComponentTransform* ownerTransform = nullptr;
 	AIMovement* movementScript = nullptr;
 
@@ -138,8 +139,10 @@ private:
 	FloorIsLava* fireTilesScript = nullptr;
 
 	HUDManager* hudManager = nullptr;
+
 	GameObject* lasers = nullptr;
 
+	// Cooldowns and thresholds
 	bool isReady = true;
 
 	float currentShieldCooldown = 0.f;
@@ -175,9 +178,11 @@ private:
 	GameObject* triggerBossEnd = nullptr;
 	UID dissolveMaterialID = 0;
 
+	// Auxiliary
 	float currentTimeBetweenAbilities = 0.f;
 	bool mustWaitForTimerBetweenAbilities = true;
 	bool mustPerformInitialAnimation = true;
 
+	bool stunnedInBulletHell = false;
 };
 

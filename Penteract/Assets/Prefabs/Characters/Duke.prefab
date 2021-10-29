@@ -107,7 +107,7 @@
                     {
                         "Name": "dukeCharacter.moveChangeEvery",
                         "Type": "Float",
-                        "Value": 5.0
+                        "Value": 2.200000047683716
                     },
                     {
                         "Name": "dukeCharacter.searchRadius",
@@ -162,7 +162,7 @@
                     {
                         "Name": "dukeCharacter.distanceCorrectEvery",
                         "Type": "Float",
-                        "Value": 5.0
+                        "Value": 1.5
                     },
                     {
                         "Name": "thirdEncounterUID",
@@ -5247,8 +5247,8 @@
                                                                                 ],
                                                                                 "LifeRM": 0,
                                                                                 "Life": [
-                                                                                    1.0,
-                                                                                    5.0
+                                                                                    2.0,
+                                                                                    10.0
                                                                                 ],
                                                                                 "LifeCurve": [
                                                                                     [
@@ -32717,9 +32717,9 @@
                                 "Type": "Transform",
                                 "Active": false,
                                 "Position": [
+                                    -0.0000035762786865234377,
                                     0.0,
-                                    0.0,
-                                    0.0
+                                    -9.426209449768067
                                 ],
                                 "Rotation": [
                                     0.0,
@@ -32747,7 +32747,7 @@
                                     1.0
                                 ],
                                 "ObstacleType": 0,
-                                "DrawGizmo": true
+                                "DrawGizmo": false
                             }
                         ],
                         "Children": null
