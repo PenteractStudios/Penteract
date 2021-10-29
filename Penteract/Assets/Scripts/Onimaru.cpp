@@ -18,7 +18,7 @@ bool Onimaru::CanShoot() {
 }
 
 bool Onimaru::CanBlast() const {
-	return !blastInCooldown && !IsShielding() && !ultimateOn && !blastInUse && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true);
+	return !blastInCooldown && !IsShielding() && !ultimateOn && !blastInUse && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && GameplaySystems::GetGlobalVariable(globalSkill2TutorialReachedOni, true);
 }
 
 void Onimaru::GetHit(float damage_) {
@@ -177,6 +177,8 @@ void Onimaru::StartUltimate() {
 	movementSpeed = ultimateMovementSpeed;
 	movementInputDirection = MovementDirection::NONE;
 	Player::MoveTo();
+	// TODO: reset arm rotation
+	// weaponTransform->SetGlobalRotation(float3(0, 1.468, 50.899));
 	ultimateOn = true;
 }
 
@@ -324,7 +326,7 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 		if (!blastInUse) blastCooldownRemaining -= Time::GetDeltaTime();
 	}
 	//ShieldCooldown
-	if (shield->NeedsRecharging()) {
+	if (shield->NeedsRecharging() && !IsShielding()) {
 		if (shieldCooldownRemainingCharge <= 0.f) {
 			shield->IncreaseCharge();
 			shieldCooldownRemainingCharge = shield->GetChargeCooldown();
@@ -502,11 +504,11 @@ void Onimaru::OnAnimationFinished() {
 
 bool Onimaru::CanShield() const {
 	if (shield == nullptr || shieldGO == nullptr) return false;
-	return !ultimateOn && !shield->GetIsActive() && shield->CanUse() && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true);
+	return !ultimateOn && !shield->GetIsActive() && shield->CanUse() && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && GameplaySystems::GetGlobalVariable(globalSkill1TutorialReachedOni, true);
 }
 
 bool Onimaru::CanUltimate() const {
-	return !blastInUse && !IsShielding() && ultimateChargePoints >= ultimateChargePointsTotal && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && !switchInProgress;
+	return !blastInUse && !IsShielding() && ultimateChargePoints >= ultimateChargePointsTotal && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && !switchInProgress && GameplaySystems::GetGlobalVariable(globalSkill3TutorialReachedOni, true);
 }
 
 bool Onimaru::UltimateStarted() const {
@@ -706,7 +708,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */
 		Blast();
 	}
 	PlayAnimation();
-	if (!GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) UpdateWeaponRotation();
+	if (!GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && !ultimateOn) UpdateWeaponRotation();
 }
 
 float Onimaru::GetRealUltimateCooldown() {

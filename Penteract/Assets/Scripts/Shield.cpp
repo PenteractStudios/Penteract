@@ -8,6 +8,7 @@
 #include "Components/ComponentBillboard.h"
 #include "Components/ComponentAudioSource.h"
 #include "Components/ComponentAgent.h"
+#include "AttackDroneProjectile.h"
 #include "Math/float3.h"
 
 EXPOSE_MEMBERS(Shield) {
@@ -102,7 +103,7 @@ void Shield::FadeShield() {
 
 
 void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
-	if ((collidedWith.name == "WeaponParticles" || collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") && isActive && playerController) {
+	if ((collidedWith.name == "BulletRange" || collidedWith.name == "DukeProjectile" || collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade" || collidedWith.name == "AttackDroneProjectile") && isActive && playerController) {
 
 		if (!particle) {
 			collidedWith.Disable();
@@ -114,7 +115,7 @@ void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 			if(particlesCollider)GameplaySystems::Instantiate(particlesCollider,position, rotation);
 			if (pSystem) pSystem->KillParticle(p);
 
-			if (playerController->playerOnimaru.level1Upgrade && collidedWith.name == "WeaponParticles") {		// Reflect projectile
+			if (playerController->playerOnimaru.level1Upgrade && collidedWith.name == "BulletRange") {		// Reflect projectile
 				if (!particle) return;
 				// Separate Bullet from shield
 				float3 actualPenDistance = penetrationDistance.ProjectTo(collisionNormal);
@@ -135,7 +136,9 @@ void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 			} else {
 				if (particlesCollider)GameplaySystems::Instantiate(particlesCollider, position, rotation);
 			}
-			if (pSystem) pSystem->KillParticle(p);
+
+			AttackDroneProjectile* projectileScript = GET_SCRIPT(&collidedWith, AttackDroneProjectile);
+			if (projectileScript) projectileScript->Collide();
 		}
 
 		currentAvailableCharges--;

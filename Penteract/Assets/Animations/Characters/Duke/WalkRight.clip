@@ -1,8 +1,8 @@
 {
     "Name": "WalkRight",
     "AnimationUID": 16102588795477284283,
-    "BeginIndex": 37,
-    "EndIndex": 67,
+    "BeginIndex": 38,
+    "EndIndex": 66,
     "Loop": true,
     "Speed": 1.0,
     "FrameRate": 0.04163135588169098,

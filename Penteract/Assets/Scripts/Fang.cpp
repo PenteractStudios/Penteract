@@ -46,6 +46,7 @@ void Fang::Init(UID fangUID, UID dashParticleUID, UID leftGunUID, UID rightGunUI
 		leftBulletAux = GameplaySystems::GetGameObject(leftBulletUID);
 		if (leftBulletAux) {
 			leftBullet = leftBulletAux->GetComponent<ComponentParticleSystem>();
+			reloadCooldown = leftBulletAux->GetChild("FangLeftBullet")->GetComponent<ComponentParticleSystem>()->GetLife()[0];
 		}
 		if (compAnimation) {
 			currentState = compAnimation->GetCurrentState();
@@ -244,6 +245,15 @@ bool Fang::CanEMP() {
 void Fang::CheckCoolDowns(bool noCooldownMode) {
 	//Combat
 	if (aiming) {
+		if (reloading) {
+			if (reloadCooldownRemaining < reloadCooldown) {
+				reloadCooldownRemaining += Time::GetDeltaTime();
+			}
+			else {
+				reloading = false;
+				reloadCooldownRemaining = 0.f;
+			}
+		}
 		if (!isUltimate && !EMP->IsActive()) {
 			if (fangLaser && !fangLaser->IsActive()) {
 				fangLaser->Enable();
@@ -321,6 +331,8 @@ void Fang::OnAnimationFinished() {
 				movementSpeed = normalMovementSpeed;
 				ultimateScript->EndUltimate();
 
+				ultimateTimeRemaining = 0.0f;
+
 				if (hudManagerScript) {
 					hudManagerScript->StopUsingSkill(HUDManager::Cooldowns::FANG_SKILL_3);
 				}
@@ -361,6 +373,7 @@ void Fang::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 				fangAudios[static_cast<int>(FANG_AUDIOS::SHOOT)]->Play();
 			}
 			bullet->PlayChildParticles();
+			reloading = true;
 		}
 		bullet = nullptr;
 	}
@@ -392,7 +405,7 @@ void Fang::Shoot() {
 		shooting = true;
 		attackCooldownRemaining = 1.f / attackSpeed;
 		//setear la velocidad de animacion
-		if (compAnimation->GetCurrentState()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::SHOOTING)]);
+		if (compAnimation->GetCurrentState() && compAnimation->GetCurrentState()->name != states[static_cast<int>(FANG_STATES::SHOOTING)]) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::SHOOTING)]);
 		if (compAnimation->GetCurrentStateSecondary()) {
 			ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentStateSecondary()->clipUid);
 			clip->speed = attackSpeed;
@@ -509,8 +522,10 @@ void Fang::Update(bool useGamepad, bool /* lockMovement */, bool /* lockRotation
 			Dash();
 			if (!GetInputBool(InputActions::SHOOT, useGamepad) || dashing || EMP->IsActive() || ultimateOn || GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 				if (shooting) {
-					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
-					shooting = false;
+					if (!reloading) {
+						shooting = false;
+					}
+					if(compAnimation->GetCurrentStateSecondary()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 				}
 			}
 			if (GetInputBool(InputActions::ABILITY_2, useGamepad) && !ultimateOn) {

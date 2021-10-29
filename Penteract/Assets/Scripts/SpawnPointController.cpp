@@ -5,21 +5,26 @@
 #include "EnemySpawnPoint.h"
 #include "GameObjectUtils.h"
 #include "Components/ComponentLight.h"
+#include "FloorIsLava.h"
 
 EXPOSE_MEMBERS(SpawnPointController) {
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, meleeEnemyPrefabUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, rangeEnemyPrefabUID),
-	MEMBER(MemberType::BOOL, unlocksInitialDoor),
-	MEMBER(MemberType::BOOL, isInitiallyLocked),
-	MEMBER(MemberType::BOOL, isLastDoor),
-	MEMBER_SEPARATOR("Activated/Deactivated GameObject Refs"),
-	MEMBER(MemberType::GAME_OBJECT_UID, initialDoorUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, finalDoorUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, gameObjectActivatedOnCombatEndUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, gameObjectDeactivatedOnCombatEndUID),
-	MEMBER(MemberType::FLOAT, timerToUnlock),
-	MEMBER_SEPARATOR("Dissolve material reference in placeholders"),
-	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID)
+		MEMBER(MemberType::PREFAB_RESOURCE_UID, rangeEnemyPrefabUID),
+		MEMBER(MemberType::BOOL, unlocksInitialDoor),
+		MEMBER(MemberType::BOOL, isInitiallyLocked),
+		MEMBER(MemberType::BOOL, isLastDoor),
+		MEMBER_SEPARATOR("Activated/Deactivated GameObject Refs"),
+		MEMBER(MemberType::GAME_OBJECT_UID, initialDoorUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, finalDoorUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, gameObjectActivatedOnCombatEndUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, gameObjectDeactivatedOnCombatEndUID),
+		MEMBER(MemberType::FLOAT, timerToUnlock),
+		MEMBER_SEPARATOR("Dissolve material reference in placeholders"),
+		MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID),
+		MEMBER_SEPARATOR("FireTiles"),
+		MEMBER(MemberType::GAME_OBJECT_UID, fireBridgeUID),
+		MEMBER(MemberType::GAME_OBJECT_UID, fireArenaUID),
+		MEMBER(MemberType::BOOL, stopFire)
 };
 
 GENERATE_BODY_IMPL(SpawnPointController);
@@ -32,7 +37,22 @@ void SpawnPointController::Start() {
 	rangeEnemyPrefab = GameplaySystems::GetResource<ResourcePrefab>(rangeEnemyPrefabUID);
 
 	initialDoor = GameplaySystems::GetGameObject(initialDoorUID);
+	if (initialDoor) {
+		int i = 0;
+		for (ComponentAudioSource& src : initialDoor->GetComponents<ComponentAudioSource>()) {
+			if (i < static_cast<int>(Audios::TOTAL)) initialDoorAudios[i] = &src;
+			i++;
+		}
+	}
+
 	finalDoor = GameplaySystems::GetGameObject(finalDoorUID);
+	if (finalDoor) {
+		int i = 0;
+		for (ComponentAudioSource& src : finalDoor->GetComponents<ComponentAudioSource>()) {
+			if (i < static_cast<int>(Audios::TOTAL)) finalDoorAudios[i] = &src;
+			i++;
+		}
+	}
 
 	gameObjectActivatedOnCombatEnd = GameplaySystems::GetGameObject(gameObjectActivatedOnCombatEndUID);
 	gameObjectDeactivatedOnCombatEnd = GameplaySystems::GetGameObject(gameObjectDeactivatedOnCombatEndUID);
@@ -69,30 +89,39 @@ void SpawnPointController::Start() {
 			finalDoorLightStartIntensity = finalDoorLight->GetIntensity();
 		}
 	}
+
+	GameObject* fireBridge = GameplaySystems::GetGameObject(fireBridgeUID);
+	if (fireBridge) {
+		bridgeTilesScript = GET_SCRIPT(fireBridge, FloorIsLava);
+	}
+	GameObject* fireArena = GameplaySystems::GetGameObject(fireArenaUID);
+	if (fireArena) {
+		arenaTilesScript = GET_SCRIPT(fireArena, FloorIsLava);
+	}
 }
 
 void SpawnPointController::Update() {
 	if (unlockStarted) {
 		if (currentUnlockTime >= timerToUnlock) {
-			if (!isClosing) {			// Must open the door
+			if (!isClosing) {	// Must open the door
 				if (finalDoor && finalDoor->IsActive()) {
 					finalDoor->Disable();
+					if (stopFire) {
+						if (bridgeTilesScript) bridgeTilesScript->StopFire();
+						if (arenaTilesScript) arenaTilesScript->StopFire();
+					}
 				}
 				if (unlocksInitialDoor && initialDoor && initialDoor->IsActive()) {
 					initialDoor->Disable();
 				}
 				gameObject->Disable();
 			}
-			
 			unlockStarted = false;
-			
 			if (!mustKeepOpen) {			// Perform light animation
 				SetLightIntensity(initialDoorLight, isClosing ? initialDoorLightStartIntensity : 0.0f);
 				SetLightIntensity(finalDoorLight, isClosing ? finalDoorLightStartIntensity : 0.0f);
 			}
-
-		}
-		else {
+		} else {
 			currentUnlockTime += Time::GetDeltaTime();
 
 			if (!mustKeepOpen) {			// Perform light animation
@@ -113,6 +142,7 @@ void SpawnPointController::OnCollision(GameObject& /* collidedWith */, float3 /*
 	}
 	if (initialDoor && !initialDoor->IsActive()) initialDoor->Enable();
 	if (finalDoor && !finalDoor->IsActive()) finalDoor->Enable();
+
 	if (gameObjectActivatedOnCombatEnd && gameObjectActivatedOnCombatEnd->IsActive()) gameObjectActivatedOnCombatEnd->Disable();
 	if (gameObjectDeactivatedOnCombatEnd && !gameObjectDeactivatedOnCombatEnd->IsActive()) gameObjectDeactivatedOnCombatEnd->Enable();
 
@@ -153,7 +183,10 @@ void SpawnPointController::SetCurrentEnemyAmount(unsigned int pos, unsigned int 
 
 void SpawnPointController::SetEnemySpawnStatus(unsigned int pos, bool status) {
 	enemySpawnPointStatus[pos] = status;
-	if (!status) OpenDoor();
+	if (!status && CheckSpawnPointStatus() && !enemiesSpawned) {
+		OpenDoor();
+		enemiesSpawned = true;
+	}
 }
 
 bool SpawnPointController::CanSpawn() {
@@ -183,6 +216,26 @@ void SpawnPointController::PlayDissolveAnimation(GameObject* root, bool playReve
 			meshRenderer->SetMaterial(dissolveMaterialID);
 			meshRenderer->PlayDissolveAnimation(playReverse);
 		}
+	}
+
+	// Audio Manager
+	ComponentAudioSource* down = nullptr;
+	ComponentAudioSource* up = nullptr;
+	if (root == initialDoor) {
+		down = initialDoorAudios[static_cast<int>(Audios::DOWN)];
+		up = initialDoorAudios[static_cast<int>(Audios::UP)];
+	}
+	else if(root == finalDoor) {
+		down = finalDoorAudios[static_cast<int>(Audios::DOWN)];
+		up = finalDoorAudios[static_cast<int>(Audios::UP)];
+
+	}
+	if (playReverse) {
+		if (up) up->Play();
+	}
+	else {
+		if (down) down->Play();
+
 	}
 }
 

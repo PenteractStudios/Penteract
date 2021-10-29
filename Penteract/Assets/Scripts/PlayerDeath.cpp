@@ -2,10 +2,11 @@
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
-
+#include "GlobalVariables.h"
 #include "PlayerController.h"
 #include "SceneTransition.h"
 #include "GameOverUIController.h"
+#include "AttackDroneProjectile.h"
 
 #define LEFT_SHOT "LeftShot"
 #define RIGHT_SHOT "RightShot"
@@ -17,6 +18,7 @@ EXPOSE_MEMBERS(PlayerDeath) {
 	MEMBER(MemberType::FLOAT, meleeDamageTaken),
 	MEMBER(MemberType::FLOAT, dukeDamageTaken),
 	MEMBER(MemberType::FLOAT, dukeChargeDamageTaken),
+	MEMBER(MemberType::FLOAT, attackDroneDamageTaken),
 	MEMBER(MemberType::FLOAT, barrelDamageTaken),
 	MEMBER(MemberType::FLOAT, laserBeamTaken),
 	MEMBER(MemberType::FLOAT, laserHitCooldown),
@@ -41,6 +43,8 @@ void PlayerDeath::Start() {
 	if (gameOverGO)gameOverController = GET_SCRIPT(gameOverGO, GameOverUIController);
 
 	laserHitCooldownTimer = laserHitCooldown;
+
+	deadAnimationFinishedFlag = false;
 }
 
 void PlayerDeath::Update() {
@@ -76,7 +80,10 @@ void PlayerDeath::OnAnimationFinished() {
 	if (dead) {
 		if (playerController) {
 			if (playerController->IsPlayerDead()) {
-				OnLoseConditionMet();
+				if (!deadAnimationFinishedFlag) {
+					OnLoseConditionMet();
+					deadAnimationFinishedFlag = true; // Fix repeatedly calling OnLoseConditionMet().
+				}
 			} else {
 				playerController->OnCharacterDeath();
 			}
@@ -112,14 +119,30 @@ void PlayerDeath::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char
 	}
 }
 
-void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 /* penetrationDistance */, void* particle) {
-	if (collidedWith.name == "WeaponParticles") {
+void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+	if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) return;
+	if (collidedWith.name == "BulletRange") {
 		if (!particle) return;
 		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 		if (pSystem) pSystem->KillParticle(p);
 		if (playerController) playerController->TakeDamage(rangedDamageTaken);
-	} else if (collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") { //meleegrunt
+	}
+	else if (collidedWith.name == "Electricity") {
+		if (!particle) return;
+		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+		if (pSystem) pSystem->KillParticle(p);
+		if (pSystem) pSystem->SetParticlesPerSecond(float2(0.0f, 0.0f));
+	}
+	else if (collidedWith.name == "SmallParticles") {
+		if (!particle) return;
+		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+		if (pSystem) pSystem->KillParticle(p);
+		if (pSystem) pSystem->SetParticlesPerSecond(float2(0.0f,0.0f));
+	}
+	else if (collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade") { //meleegrunt
 		if (playerController) {
 			float3 onimaruFront = -playerController->playerOnimaru.playerMainTransform->GetFront();
 			if (!(playerController->playerOnimaru.IsShielding() && collisionNormal.Dot(onimaruFront) > 0.f)) {
@@ -155,6 +178,28 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 			PushPlayerBack(collisionNormal);
 		}
 		collidedWith.Disable();
+	} else if (collidedWith.name == "DukeShield" || collidedWith.name == "DukeShield360") {
+		if (playerController) {
+			// don't let the player penetrate duke shield
+			float3 truePenetrationDistance = penetrationDistance.ProjectTo(collisionNormal);
+			playerController->playerFang.IsActive() ? playerController->playerFang.agent->RemoveAgentFromCrowd() : playerController->playerOnimaru.agent->RemoveAgentFromCrowd();
+			ComponentTransform* playerTransform = playerController->playerFang.playerMainTransform;
+			playerTransform->SetGlobalPosition(playerTransform->GetGlobalPosition() + truePenetrationDistance);
+			playerController->playerFang.IsActive() ? playerController->playerFang.agent->AddAgentToCrowd() : playerController->playerOnimaru.agent->AddAgentToCrowd();
+		}
+
+	} else if (collidedWith.name == "ChargeAttack") {
+		if (playerController) playerController->TakeDamage(dukeChargeDamageTaken);
+		collidedWith.Disable();
+	}
+	else if (collidedWith.name == "AttackDroneProjectile") {
+		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
+		if (pSystem && p) pSystem->KillParticle(p);
+
+		if (playerController) playerController->TakeDamage(attackDroneDamageTaken);
+		AttackDroneProjectile* projectileScript = GET_SCRIPT(&collidedWith, AttackDroneProjectile);
+		if (projectileScript) projectileScript->Collide();
 	}
 }
 

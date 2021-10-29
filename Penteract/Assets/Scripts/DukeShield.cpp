@@ -7,6 +7,7 @@
 #include "Components/Physics/ComponentSphereCollider.h"
 #include "Components/ComponentAudioSource.h"
 #include "Components/ComponentTransform.h"
+#include "Components/ComponentMeshRenderer.h"
 #include "Math/float3.h"
 
 EXPOSE_MEMBERS(DukeShield) {
@@ -17,7 +18,6 @@ EXPOSE_MEMBERS(DukeShield) {
 	MEMBER(MemberType::FLOAT, fadeSpeed),
 	MEMBER(MemberType::FLOAT, growthThreshold),
 	MEMBER(MemberType::FLOAT, fadeThreshold)
-
 };
 
 GENERATE_BODY_IMPL(DukeShield);
@@ -27,6 +27,7 @@ void DukeShield::Start() {
 	if (dukeGO) duke = GET_SCRIPT(dukeGO, AIDuke);
 	audio = GetOwner().GetComponent<ComponentAudioSource>();
 	transform = GetOwner().GetComponent<ComponentTransform>();
+	mesh = GetOwner().GetComponent<ComponentMeshRenderer>();
 	GetOwner().Disable();
 }
 
@@ -60,12 +61,18 @@ void DukeShield::InitShield() {
 	GetOwner().Enable();
 	shieldState = ShieldState::GROWING;
 	isActive = true;
+	if (mesh) {
+		mesh->PlayDissolveAnimation(true);
+	}
 	transform->SetScale(float3(0.01f));
 }
 
 void DukeShield::FadeShield() {
 	shieldState = ShieldState::FADING;
 	isActive = false;
+	if (mesh) {
+		mesh->PlayDissolveAnimation();
+	}
 }
 
 void DukeShield::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, float3 /*penetrationDistance*/, void* particle) {

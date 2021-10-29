@@ -36,11 +36,15 @@ public:
 
 	UID pauseUID = 0;
 	UID hudUID = 0;
-	UID settingsPlusUID = 0;
+	UID settingsUID = 0;
+	UID controlsUID = 0;
+	UID controlsDevUID = 0;
 	UID dialoguesUID = 0;
 	UID statsDisplayerUID = 0;
 
 	UID godModeControllerUID = 0;
+
+	UID skyboxUID = 0;
 
 	float speed = 50.f;
 	float rotationSpeedX = 10.f;
@@ -67,10 +71,15 @@ private:
 	GameObject* pauseCanvas = nullptr;
 	GameObject* hudCanvas = nullptr;
 	GameObject* settingsCanvas = nullptr;
+	GameObject* controlsCanvas = nullptr;
+	GameObject* controlsDevCanvas = nullptr;
 	GameObject* dialogueCanvas = nullptr;
 	StatsDisplayer* statsController = nullptr;
 
 	GameObject* godModeController = nullptr;
+
+	GameObject* skybox = nullptr;
+
 	float yaw = 0.f;
 	float pitch = 0.f;
 	bool showWireframe = false;

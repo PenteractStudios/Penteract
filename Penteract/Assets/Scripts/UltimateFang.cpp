@@ -43,7 +43,7 @@ void UltimateFang::Update() {
 			float3 posFang = transformOwner->GetGlobalPosition();
 			float3 posTarget = transformTarget->GetGlobalPosition();
 			float3 dir = (posTarget - posFang).Normalized();
-			
+
 			GameObject* auxBullet =  GameplaySystems::Instantiate(bullet, transformOwner->GetGlobalPosition() + float3(0.0f, midHeight, 0.0f), (DirectionToQuat(dir) * float3x3::FromEulerXYZ(pi / 2, 0.0f, 0.0f)).ToQuat());
 			if (auxBullet->GetComponent<ComponentParticleSystem>()) {
 				auxBullet->GetComponent<ComponentParticleSystem>()->Play();
@@ -64,7 +64,7 @@ Quat UltimateFang::DirectionToQuat(float3 dir) {
 
 void UltimateFang::OnCollision(GameObject& collidedWith, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* /* particle */) {
 	if (tickOn) {
-		if (collidedWith.name == "MeleeGrunt" || collidedWith.name == "RangedGrunt") {
+		if (collidedWith.name == "MeleeGrunt" || collidedWith.name == "RangedGrunt" || collidedWith.name == "Duke") {
 			collisionedGameObject.push_back(collidedWith);
 		}
 	}

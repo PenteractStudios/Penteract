@@ -41,8 +41,6 @@ public:
 	void OnCollision(GameObject& collidedWith, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* particle = nullptr) override; //This is commented until merge with collisions
 	void ShootPlayerInRange(); //Sets in motion the shooting at the player, if found and close enough
 
-	void DoStunned();
-	void EnablePushFeedback();
 	void EnableBlastPushBack();
 	void DisableBlastPushBack();
 	bool IsBeingPushed() const;
@@ -77,6 +75,10 @@ public:
 	UID meshUID2 = 0;				//Third mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID fangUID = 0;
 
+
+	ResourcePrefab* bulletRange = nullptr;
+	UID bulletUID = 0;
+
 	ComponentParticleSystem* shootTrailPrefab = nullptr; //Reference to projectile prefab , for shooting
 	GameObject* player = nullptr;				//Reference to player main Gameobject, used to check distances
 	GameObject* fang = nullptr;
@@ -103,8 +105,8 @@ public:
 
 	float approachOffset = 4.0f;		//Offset to prevent AI from chasing after player immediately after getting close enough whenever player moves slightly
 	float fleeingRange = 7.f;			//Distance at which entity will start a flee motion
-	float minAttackSpeed = 2.0f;
-	float maxAttackSpeed = 6.0f;
+	float attackInterval = 2.0f;		//Seconds between shots
+	float attackIntervalVariability = 1.f;
 	float actualShotMaxTime = 0.3f;		//Internal variable used to match the shooting animation and the projectile creation
 	float timeSinceLastHurt = 0.5f;		//Timer to keep track of how long it's been since AI was hurt, if higher than hurtFeedbackTimeDuration, this tries to make AI turn red with DamagedMaterial
 	float stunDuration = 3.f;			//Max time the enemy will be stunned
@@ -116,6 +118,7 @@ public:
 	UID dissolveMaterialID = 0;			//Reference to dissolve material, used to be set whenever Ai has been recently hurt
 	float dissolveTimerToStart = 0.0f;	//Timer until the dissolve animation is played
 	UID materialsUID = 0;				//Reference to materials placeholder for random
+
 
 	//EMP Stun feedback
 	ComponentParticleSystem* particlesEmp = nullptr;
@@ -147,7 +150,6 @@ private:
 
 	float attackTimePool = 2.0f;			//Pool that counts down to 0 to make AI shoot a projectile
 	float actualShotTimer = -1.0f;			//Timer that counts down the seconds to match shooting animation with projectile creation
-	float attackSpeed = 0.5f;			//Shots per second
 
 	ComponentMeshRenderer* meshRenderer = nullptr;	//Reference to a meshRendererComponent, used for material setting on hurt
 	ComponentMeshRenderer* backpackMeshRenderer = nullptr;
@@ -165,7 +167,4 @@ private:
 	float currentDissolveTime = 0.0f;
 	bool dissolveAlreadyStarted = false;	//Used to control other material setters so it doesn't interfere with Dissolve's material
 	bool dissolveAlreadyPlayed = false;		//Controls whether the animation function has already been played (called material->PlayAnimation) or not
-
-	bool  pushEffectHasToStart = false;
-	float timeToSrartPush = 0.0f;
 };
