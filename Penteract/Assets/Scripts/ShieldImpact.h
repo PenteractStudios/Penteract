@@ -12,6 +12,6 @@ public:
 	void Update() override;
 
 public:
-	float lifeTime = 1.0f;
+	float lifeTime = 2.0f;
 };
 
