@@ -58,7 +58,7 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID, UID chargeDustUID, UID areaChargeUID, UID chargeTelegraphAreaUID, UID chargePunchVFXUID, UID dustStepLeftUID, UID dustStepRightUID, UID bodyArmorUID);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID, UID chargeDustUID, UID areaChargeUID, UID chargeTelegraphAreaUID, UID chargePunchVFXUID, UID dustStepLeftUID, UID dustStepRightUID, UID bodyArmorUID);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void BulletHell();
@@ -84,7 +84,6 @@ public:
 	void OnAnimationSecondaryFinished();
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
 	void StopShooting();
-	void InitPlayerVictory();
 	void StartPhase2Shield();
 
 	// ---- Auxiliary Functions ---- //
@@ -113,7 +112,6 @@ public:
 	float barrelDamageTaken = 3.f;
 	float moveChangeEvery = 2.0f;
 	float distanceCorrectEvery = 2.0f;
-	float delayForDisplayVideo = 1.0f;
 
 	float chargeSkidMaxSpeed = 5.f;
 	float chargeSkidMinSpeed = 2.f;
@@ -172,9 +170,6 @@ private:
 	GameObject* player = nullptr;
 	ComponentTransform* dukeTransform = nullptr;
 
-	GameObject* videoParentCanvas = nullptr;
-	GameObject* videoCanvas = nullptr;
-
 	bool hasMeleeAttacked = false;
 
 	BarrelSpawner* barrelSpawneScript = nullptr;
@@ -185,8 +180,8 @@ private:
 	float movementChangeThreshold = 2.0f;
 	float distanceCorrectionTimer = 0.f;
 	float distanceCorrectionThreshold = 2.0f;
-	bool navigationHit;
-	float3 navigationHitPos;
+	bool navigationHit = false;
+	float3 navigationHitPos = float3(0,0,0);
 	
 	// Melee Attack
 	GameObject* meleeAttackCollider = nullptr;
@@ -239,9 +234,6 @@ private:
 	/* Boss encounters */
 	std::vector<GameObject*> encounters;
 	unsigned currentEncounter = 0;
-
-	bool endVideoRunning= false;
-	float currentDelayVideo = 0.0f;
 
 	float3 phase2CenterPosition = float3(13.0f, 0.799f, 0.0f);
 

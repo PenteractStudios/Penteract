@@ -7,7 +7,6 @@
 #include "BarrelSpawner.h"
 #include "AIMovement.h"
 #include "GlobalVariables.h"
-#include "VideoSceneEnd.h"
 #include "AttackDronesController.h"
 #include "DukeShield.h"
 #include "RandomNumberGenerator.h"
@@ -19,7 +18,8 @@
 #define RNG_MAX 1.0f
 
 
-void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID,std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID, UID chargeDustUID, UID areaChargeUID, UID chargeTelegraphAreaUID, UID chargePunchVFXUID, UID dustStepLeftUID, UID dustStepRightUID, UID bodyArmorUID)
+
+void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID, UID chargeDustUID, UID areaChargeUID, UID chargeTelegraphAreaUID, UID chargePunchVFXUID, UID dustStepLeftUID, UID dustStepRightUID, UID bodyArmorUID)
 {
 	SetTotalLifePoints(lifePoints);
 	characterGameObject = GameplaySystems::GetGameObject(dukeUID);
@@ -28,14 +28,15 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 
 	meleeAttackCollider = GameplaySystems::GetGameObject(meleeAttackColliderUID);
 	chargeAttack = GameplaySystems::GetGameObject(chargeAttackColliderUID);
-	videoParentCanvas = GameplaySystems::GetGameObject(videoParentCanvasUID);
-	videoCanvas = GameplaySystems::GetGameObject(videoCanvasUID);
-
+	
 	GameObject* shieldObj = GameplaySystems::GetGameObject(phase2ShieldUID);
 	if (shieldObj) {
 		phase2Shield = GET_SCRIPT(shieldObj, DukeShield);
-		GameObject* shieldObjChild = shieldObj->GetChildren()[0];
-		if (shieldObjChild) phase2ShieldParticles = shieldObjChild->GetComponent<ComponentParticleSystem>();
+		std::vector<GameObject*> children = shieldObj->GetChildren();
+		if (!children.empty()) {
+			GameObject* shieldObjChild = children[0];
+			if (shieldObjChild) phase2ShieldParticles = shieldObjChild->GetComponent<ComponentParticleSystem>();
+		}
 	}
 
 	GameObject* barrelSpawnerOBj = GameplaySystems::GetGameObject(barrelSpawnerUID);
@@ -46,15 +47,18 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 	GameObject* bulletGO = GameplaySystems::GetGameObject(bulletUID);
 	if (bulletGO) {
 		bullet = bulletGO->GetComponent<ComponentParticleSystem>();
-		ComponentParticleSystem* muzzleFlash = bulletGO->GetChild("MuzzleFlash")->GetComponent<ComponentParticleSystem>();
 		if (bullet) {
 			bullet->SetParticlesPerSecond(float2(0.0f, 0.0f));
 			bullet->SetMaxParticles(attackBurst*2);
 			bullet->SetParticlesPerSecond(float2(attackSpeed, attackSpeed));
 			bullet->SetDuration((attackBurst + 1) / attackSpeed);
 		}
-		if (muzzleFlash) {
-			muzzleFlash->SetDuration(attackBurst / attackSpeed);
+		GameObject* muzzleFlashObj = bulletGO->GetChild("MuzzleFlash");
+		if (muzzleFlashObj) {
+			ComponentParticleSystem* muzzleFlash = bulletGO->GetChild("MuzzleFlash")->GetComponent<ComponentParticleSystem>();
+			if (muzzleFlash) {
+				muzzleFlash->SetDuration(attackBurst / attackSpeed);
+			}
 		}
 	}
 
@@ -217,7 +221,7 @@ void Duke::UpdateCharge(bool forceStop)
 			scale.x = dist / dukeScale;
 			chargeTelegraphAreaGO->GetComponent<ComponentTransform>()->SetScale(scale);
 			float3 pos = chargeTelegraphAreaGO->GetComponent<ComponentTransform>()->GetPosition();
-			pos.z = (scale.x * 0.5) + chargeTelegraphAreaPosOffset;
+			pos.z = (scale.x * 0.5f) + chargeTelegraphAreaPosOffset;
 			chargeTelegraphAreaGO->GetComponent<ComponentTransform>()->SetPosition(pos);
 		}
 	}
@@ -429,20 +433,20 @@ void Duke::TeleportDuke(bool toMapCenter)
 void Duke::OnAnimationFinished()
 {
 	if (!compAnimation) return;
-	State* currentState = compAnimation->GetCurrentState();
-	if (!currentState) return;
+	State* localCurrentState = compAnimation->GetCurrentState();
+	if (!localCurrentState) return;
 
-	if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PUNCH)]) {
+	if (localCurrentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PUNCH)]) {
 		hasMeleeAttacked = false;
-		compAnimation->SendTrigger(currentState->name + animationStates[DUKE_ANIMATION_STATES::IDLE]);
+		compAnimation->SendTrigger(localCurrentState->name + animationStates[DUKE_ANIMATION_STATES::IDLE]);
 		state = DukeState::BASIC_BEHAVIOUR;
-	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]) {
+	} else if (localCurrentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]) {
 		compAnimation->SendTrigger(animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)] + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
-	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_START)]) {
+	} else if (localCurrentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_START)]) {
 		agent->SetMoveTarget(chargeTarget);
 		agent->SetMaxSpeed(chargeSpeed);
 		if (chargeCollider) chargeCollider->Enable();
-		compAnimation->SendTrigger(currentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE)]);
+		compAnimation->SendTrigger(localCurrentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE)]);
 		if (areaChargeGO && !areaChargeGO->IsActive()) {
 			areaCharge->offset = float2(0, 0);
 			areaChargeGO->Enable();
@@ -451,14 +455,14 @@ void Duke::OnAnimationFinished()
 			chargeDust->SetParticlesPerSecondChild(chargeDustOriginalParticlesPerSecond);
 			chargeDust->PlayChildParticles();
 		}
-	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_END)]) {
+	} else if (localCurrentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_END)]) {
 		if (chargeAttack) chargeAttack->Disable();
 		state = nextState;
 		agent->SetMaxSpeed(movementSpeed);
-		compAnimation->SendTrigger(currentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
-	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::DEATH)]) {
+		compAnimation->SendTrigger(localCurrentState->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::IDLE)]);
+	} else if (localCurrentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::DEATH)]) {
 		isDead = true;
-	} else if (currentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::ENRAGE)]) {
+	} else if (localCurrentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::ENRAGE)]) {
 		state = DukeState::BASIC_BEHAVIOUR;
 		if (bodyArmor && !bodyArmor->IsActive()) bodyArmor->Enable();
 	}
@@ -550,7 +554,7 @@ void Duke::InstantiateBarrel()
 {
 	//Instantiate barrel and play animation throw barrels for Duke and the barrel
 	if (barrel) {
-		GameObject* auxBarrel = GameplaySystems::Instantiate(barrel, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), Quat(0, 0, 0, 1));
+		GameplaySystems::Instantiate(barrel, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), Quat(0, 0, 0, 1));
 	}
 }
 
@@ -573,27 +577,6 @@ int Duke::GetWalkAnimation()
 		}
 	}
 	return animNum;
-}
-
-void Duke::InitPlayerVictory()
-{
-	if (!endVideoRunning) {
-
-		currentDelayVideo += Time::GetDeltaTime();
-
-		if (currentDelayVideo >= delayForDisplayVideo) {
-			endVideoRunning = true;
-			GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, true);
-			if (videoParentCanvas && videoCanvas) {
-				videoParentCanvas->Enable();
-				VideoSceneEnd* videoSceneEndScript = GET_SCRIPT(videoCanvas, VideoSceneEnd);
-				if (videoSceneEndScript) {
-					videoSceneEndScript->PlayVideo();
-				}
-
-			}
-		}
-	}
 }
 
 void Duke::ActivateDissolve(UID dissolveMaterialID) {

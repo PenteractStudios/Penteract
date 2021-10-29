@@ -41,7 +41,7 @@ void AttackDroneBehavior::Start() {
         dronesContainerTransform = parent->GetComponent<ComponentTransform>();
     }
 
-    hoverCurrentTime = RandomNumberGenerator::GenerateFloat(-1.5708, 1.5708);
+    hoverCurrentTime = RandomNumberGenerator::GenerateFloat(-1.5708f, 1.5708f);
 }
 
 void AttackDroneBehavior::Update() {
@@ -52,7 +52,7 @@ void AttackDroneBehavior::Update() {
     Shoot();
 }
 
-void AttackDroneBehavior::Reposition(float3 newPosition) {
+void AttackDroneBehavior::Reposition(float3 /*newPosition*/) {
     mustReposition = true;
 }
 

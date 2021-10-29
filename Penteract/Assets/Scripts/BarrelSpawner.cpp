@@ -32,7 +32,7 @@ void BarrelSpawner::Update() {
             timerSapwn = 0.0f;
             for (int i = 0; i < numberBarrelsRound; i++) {
                 GameplaySystems::Instantiate(barrel, positionSpawners[currentBarrel], Quat(0, 0, 0, 1));
-                if (currentBarrel + 1 > positionSpawners.size()) {
+                if (currentBarrel + 1 > (int)(positionSpawners.size())) {
                     spawn = false;
                     currentBarrel = 0;
                     timerSapwn = secondsBetweenRounds;
