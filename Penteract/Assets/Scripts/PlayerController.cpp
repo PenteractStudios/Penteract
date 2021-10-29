@@ -443,16 +443,12 @@ void PlayerController::Update() {
 
 	if (CanSwitch()) {
 
-		if (switchInProgress || (noCooldownMode && (Player::GetInputBool(InputActions::SWITCH) && (!GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false) || !Input::IsGamepadConnected(0))
-			|| GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false) && Input::IsGamepadConnected(0) && Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0)))) {
-
+		if (switchInProgress || (noCooldownMode && (Player::GetInputBool(InputActions::SWITCH)))){
 			switchInProgress = true;
 			SwitchCharacter();
 		}
 
-		if (!switchInProgress && (Player::GetInputBool(InputActions::SWITCH) && (!GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false) || !Input::IsGamepadConnected(0))
-			|| GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false) && Input::IsGamepadConnected(0) && Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0))) {
-
+		if (!switchInProgress && (Player::GetInputBool(InputActions::SWITCH))){
 			switchInProgress = true;
 			switchCooldownRemaining = switchCooldown;
 		}

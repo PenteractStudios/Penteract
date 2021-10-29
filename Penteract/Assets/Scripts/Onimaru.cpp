@@ -228,7 +228,7 @@ void Onimaru::UpdateWeaponRotation()
 	} else {
 		mousePos = GetInputFloat2(InputActions::ORIENTATION);
 		mousePos = mousePos.Mul(float2(1.0f, -1.0f));
-		if (abs(mousePos.x) > 0.05f || abs(mousePos.y) > 0.05f)// return; //No gamepad input detected
+		if (abs(mousePos.x) > 0.05f || abs(mousePos.y) > 0.05f) //No gamepad input detected
 			mousePos.Normalize();
 	}
 
@@ -242,8 +242,6 @@ void Onimaru::UpdateWeaponRotation()
 	weaponPointDir = (p.ClosestPoint(ray) - (weaponTransform->GetGlobalPosition()));
 	float aux = p.ClosestPoint(ray).DistanceSq(weaponTransform->GetGlobalPosition());
 
-
-	//return;
 	Quat quat = weaponTransform->GetGlobalRotation();
 
 	float angle = Atan2(weaponPointDir.x, weaponPointDir.z);

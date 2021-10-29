@@ -132,7 +132,7 @@ void GameController::Update() {
 			}
 		}
 	}
-	//&& ((Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)))
+
 	if (CanPause()) {
 		if (isPaused) {
 			if (Player::GetInputBool(InputActions::CANCEL_A) || Player::GetInputBool(InputActions::CANCEL_B))
