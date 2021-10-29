@@ -16,10 +16,13 @@ EXPOSE_MEMBERS(Shield) {
 	MEMBER(MemberType::FLOAT, chargeCooldown),
 	MEMBER_SEPARATOR("Life Effect"),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-	MEMBER(MemberType::PREFAB_RESOURCE_UID, particlesColliderUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, ShieldBilboardUID),
 	MEMBER(MemberType::FLOAT, maxFrames),
+	MEMBER_SEPARATOR("Shield Impact"),
+	MEMBER(MemberType::PREFAB_RESOURCE_UID, particlesColliderUID),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, particlesUpgradeColliderUID),
+	MEMBER(MemberType::FLOAT, rangeBulletLifeRebound),
+	MEMBER(MemberType::GAME_OBJECT_UID, ShieldBilboardUID),
 	MEMBER_SEPARATOR("Debug only"),
 	MEMBER(MemberType::INT, currentAvailableCharges),
 	MEMBER(MemberType::FLOAT, shieldMaxScale),
@@ -110,21 +113,31 @@ void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 		} else {
 			ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 			ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
-			float3 position = p->position;
+			float3 position = pSystem->GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
 			Quat rotation = GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation()  * float3x3::FromEulerXYZ(pi / 2, 0.0f, 0.0f).ToQuat();
-			if(particlesCollider)GameplaySystems::Instantiate(particlesCollider,position, rotation);
-			if (pSystem) pSystem->KillParticle(p);
+			float3 front = collidedWith.GetComponent<ComponentTransform>()->GetGlobalRotation() * float3(0.0f, 0.f, 1.f);
+			//if (pSystem) pSystem->KillParticle(p);
 
-			if (playerController->playerOnimaru.level1Upgrade && collidedWith.name == "BulletRange") {		// Reflect projectile
+			if (collidedWith.name == "BulletRange") {		// Reflect projectile
 				if (!particle) return;
-				// Separate Bullet from shield
-				float3 actualPenDistance = penetrationDistance.ProjectTo(collisionNormal);
-				p->position = p->position + actualPenDistance;
 				// Reflect
-				float3 front = p->direction;
+				Debug::Log(std::to_string(front.x).c_str());
+				Debug::Log(std::to_string(front.y).c_str());
+				Debug::Log(std::to_string(front.z).c_str());
 				float3 normal = -float3(collisionNormal.x, 0, collisionNormal.z);
-				float3 newFront = front - 2 * front.ProjectTo(normal);
+				float3 newFront = (front - 2 * front.ProjectTo(normal)).Normalized();
 				p->direction = newFront;
+				RangerProjectileScript* rangeBulletScript = GET_SCRIPT(&collidedWith, RangerProjectileScript);
+				float3 right = Cross(newFront, float3(0.0f, 1.f, 0.f)).Normalized();
+				float3x3 newMatrix;
+				newMatrix.SetCol(0, right);
+				newMatrix.SetCol(1, float3(0.0f, 1.f, 0.f));
+				newMatrix.SetCol(2, newFront);
+				if (rangeBulletScript) {
+					collidedWith.GetComponent<ComponentTransform>()->SetGlobalRotation(newMatrix.ToQuat());
+					rangeBulletScript->SetRangerDirection(newMatrix.ToQuat());
+					rangeBulletScript->life = rangeBulletLifeRebound;
+				}
 				// Convert to player Bullet
 				pSystem->layer = WorldLayers::BULLET;
 				pSystem->layerIndex = 5;
@@ -135,6 +148,7 @@ void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 				if (particlesReboundCollider)GameplaySystems::Instantiate(particlesReboundCollider, position, rotation);
 			} else {
 				if (particlesCollider)GameplaySystems::Instantiate(particlesCollider, position, rotation);
+				if (pSystem) pSystem->KillParticle(p);
 			}
 
 			AttackDroneProjectile* projectileScript = GET_SCRIPT(&collidedWith, AttackDroneProjectile);

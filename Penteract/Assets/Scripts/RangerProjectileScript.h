@@ -16,6 +16,7 @@ public:
 	int speed = 200;
 	float life = 0.2f;
 
+
 private:
 	float restLife = 0.0f;
 	bool itsVertical = false;

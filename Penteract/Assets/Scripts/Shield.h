@@ -43,7 +43,7 @@ public:
 	float fadeSpeed = 4.0f;
 	float growthThreshold = 0.05f;
 	float fadeThreshold = 0.05f;
-
+	float rangeBulletLifeRebound = 2.0f;
 	UID particlesColliderUID = 0;
 	UID particlesUpgradeColliderUID = 0;
 	ResourcePrefab* particlesReboundCollider = nullptr;
