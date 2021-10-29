@@ -28,7 +28,7 @@ void Duke::Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID ch
 
 	meleeAttackCollider = GameplaySystems::GetGameObject(meleeAttackColliderUID);
 	chargeAttack = GameplaySystems::GetGameObject(chargeAttackColliderUID);
-	
+
 	GameObject* shieldObj = GameplaySystems::GetGameObject(phase2ShieldUID);
 	if (shieldObj) {
 		phase2Shield = GET_SCRIPT(shieldObj, DukeShield);

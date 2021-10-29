@@ -366,14 +366,13 @@ void AIDuke::Update() {
 			currentBulletHellCooldown = 0.f;
 			currentShieldCooldown = 0.f;
 		} else {
+			static float3 dir;
 			if (dukeCharacter.phase2Shield && !dukeCharacter.phase2Shield->GetIsActive()) {
 				dukeCharacter.StartPhase2Shield();
+				if (player) dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
 			}
 			else {
-				/*if (player) {
-					float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
-					movementScript->Orientate(dir);
-				}*/
+				movementScript->Orientate(dir);
 				currentBarrelTimer += Time::GetDeltaTime();
 				if (currentBarrelTimer >= throwBarrelTimer) {
 					dukeCharacter.ThrowBarrels();
