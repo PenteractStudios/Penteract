@@ -29,7 +29,7 @@ void DukeShield::Start() {
 	audio = GetOwner().GetComponent<ComponentAudioSource>();
 	transform = GetOwner().GetComponent<ComponentTransform>();
 	mesh = GetOwner().GetComponent<ComponentMeshRenderer>();
-	shieldObstacle = SearchReferenceInHierarchy(&GetOwner(), "ShieldObstacle");
+	shieldObstacle = GameObjectUtils::SearchReferenceInHierarchy(&GetOwner(), "ShieldObstacle");
 	GetOwner().Disable();
 }
 

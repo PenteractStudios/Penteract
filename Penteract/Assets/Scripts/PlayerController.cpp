@@ -397,7 +397,7 @@ void PlayerController::RemoveEnemyFromMap(GameObject* enemy) {
 
 void PlayerController::ObtainUpgradeCell() {
 	if (++obtainedUpgradeCells == 3) {
-		// TODO: Check whether in level1 or level2
+		// TODO: Check whether in level1 or level2 or boss scene
 		if (currentLevel == 1) Player::level1Upgrade = true;
 		else if (currentLevel == 2) Player::level2Upgrade = true;
 	}

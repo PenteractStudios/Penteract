@@ -131,7 +131,9 @@ void SceneTransition::OnFinish() {
 	if (sceneUID != 0) {
 		isExit ? SceneManager::ExitGame() : SceneManager::ChangeScene(sceneUID);
 		if (Time::GetDeltaTime() == 0.f) Time::ResumeGame();
-		if (levelNum == 2) {
+		if (levelNum == 3) {
+			PlayerController::currentLevel = 3;
+		} else if (levelNum == 2) {
 			PlayerController::currentLevel = 2;
 			Player::level2Upgrade = false;
 		} else if (levelNum == 1) {

@@ -32,11 +32,13 @@ public:
 	CameraController* cameraController = nullptr;
 	ComponentParticleSystem* particles = nullptr;
 	ComponentParticleSystem* particlesForTimer = nullptr;
+	ComponentParticleSystem* particlesFlameLight = nullptr;
 	GameObject* barrel = nullptr;
 	GameObject* barrelMesh = nullptr;
 	ComponentObstacle* obstacle = nullptr;
 	ComponentAudioSource* audio = nullptr;
 	ComponentAudioSource* audioForTimer = nullptr;
+	ComponentAudioSource* audioFlameLight = nullptr;
 	GameObject* barrelShadow = nullptr;
 	ComponentParticleSystem* particlesShadow = nullptr;
 

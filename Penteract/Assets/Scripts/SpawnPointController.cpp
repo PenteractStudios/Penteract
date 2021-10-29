@@ -74,7 +74,7 @@ void SpawnPointController::Start() {
 		}
 	}
 
-	GameObject* laserDoorLightInitial = SearchReferenceInHierarchy(initialDoor, doorLightGameObjectName);
+	GameObject* laserDoorLightInitial = GameObjectUtils::SearchReferenceInHierarchy(initialDoor, doorLightGameObjectName);
 	if (laserDoorLightInitial) {
 		initialDoorLight = laserDoorLightInitial->GetComponent<ComponentLight>();
 		if (initialDoorLight) {
@@ -82,7 +82,7 @@ void SpawnPointController::Start() {
 		}
 	}
 
-	GameObject* laserDoorLightFinal = SearchReferenceInHierarchy(finalDoor, doorLightGameObjectName);
+	GameObject* laserDoorLightFinal = GameObjectUtils::SearchReferenceInHierarchy(finalDoor, doorLightGameObjectName);
 	if (laserDoorLightFinal) {
 		finalDoorLight = laserDoorLightFinal->GetComponent<ComponentLight>();
 		if (finalDoorLight) {
@@ -200,7 +200,7 @@ bool SpawnPointController::CheckSpawnPointStatus() {
 void SpawnPointController::PlayDissolveAnimation(GameObject* root, bool playReverse) {
 	if (dissolveMaterialID == 0 || !root) return;
 
-	GameObject* doorBack = SearchReferenceInHierarchy(root, doorEnergyBack);
+	GameObject* doorBack = GameObjectUtils::SearchReferenceInHierarchy(root, doorEnergyBack);
 	if (doorBack) {
 		ComponentMeshRenderer* meshRenderer = doorBack->GetComponent<ComponentMeshRenderer>();
 		if (meshRenderer) {
@@ -209,7 +209,7 @@ void SpawnPointController::PlayDissolveAnimation(GameObject* root, bool playReve
 		}
 	}
 
-	GameObject* doorFront = SearchReferenceInHierarchy(root, doorEnergyFront);
+	GameObject* doorFront = GameObjectUtils::SearchReferenceInHierarchy(root, doorEnergyFront);
 	if (doorFront) {
 		ComponentMeshRenderer* meshRenderer = doorFront->GetComponent<ComponentMeshRenderer>();
 		if (meshRenderer ) {

@@ -28,12 +28,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, fourthEncounterUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, hudManagerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fireTilesUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, triggerBosslvl2EndUID),
-
-	MEMBER_SEPARATOR("Video UIDs"),
-	MEMBER(MemberType::GAME_OBJECT_UID, videoParentCanvasUID),
-	MEMBER(MemberType::GAME_OBJECT_UID, videoCanvasUID),
-	MEMBER(MemberType::FLOAT, dukeCharacter.delayForDisplayVideo),
+	MEMBER(MemberType::GAME_OBJECT_UID, triggerBossEndUID),
 
 	MEMBER_SEPARATOR("Duke Atributes"),
 	MEMBER(MemberType::FLOAT, dukeCharacter.lifePoints),
@@ -66,11 +61,15 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::FLOAT, orientationThresholdBulletHell),
 	MEMBER(MemberType::FLOAT, timerBetweenAbilities),
 
-	MEMBER_SEPARATOR("Particles UIDs"),
+	MEMBER_SEPARATOR("VFX UIDs"),
 	MEMBER(MemberType::GAME_OBJECT_UID, punchSlashUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargeDustUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, areaChargeUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, chargeTelegraphAreaUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, chargePunchVFXUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dustStepLeftUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dustStepRightUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, bodyArmorUID),
 
 	MEMBER_SEPARATOR("Prefabs UIDs"),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, barrelUID),
@@ -136,9 +135,9 @@ void AIDuke::Start() {
 	}
 
 	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, videoParentCanvasUID, videoCanvasUID, encounters, dronesController, punchSlashUID, chargeDustUID, areaChargeUID, chargeTelegraphAreaUID);
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, encounters, dronesController, punchSlashUID, chargeDustUID, areaChargeUID, chargeTelegraphAreaUID, chargePunchVFXUID, dustStepLeftUID, dustStepRightUID, bodyArmorUID);
 
-	if (islevel2) triggerBosslvl2End = GameplaySystems::GetGameObject(triggerBosslvl2EndUID);
+	triggerBossEnd = GameplaySystems::GetGameObject(triggerBossEndUID);
 
 	dukeCharacter.winSceneUID = winSceneUID; // TODO: REPLACE
 
@@ -152,13 +151,14 @@ void AIDuke::Update() {
 	if (!player || !movementScript) return;
 	if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) return;
 
+	/*
 	std::string life = std::to_string(dukeCharacter.lifePoints);
 	life = "Life points: " + life;
-	//Debug::Log(life.c_str());
+	Debug::Log(life.c_str());
+	*/
 
 	float speedToUse = dukeCharacter.slowedDown ? dukeCharacter.slowedDownSpeed : dukeCharacter.movementSpeed;
 
-	if (dukeCharacter.isDead && !islevel2) dukeCharacter.InitPlayerVictory(); //TODO: remove this. This will be called differently when the boss post-encounter dialogues are developed
 	if (dukeCharacter.mustAddAgent && dukeCharacter.agent) {
 		dukeCharacter.agent->RemoveAgentFromCrowd();
 		dukeCharacter.agent->AddAgentToCrowd();
@@ -174,6 +174,14 @@ void AIDuke::Update() {
 	}
 
 	switch (phase) {
+	case Phase::PHASE0:
+		// Perform the "BOOM" animation
+		if (dukeCharacter.compAnimation && mustPerformInitialAnimation) {
+			dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::ENRAGE]); // TODO: change Enrage for the proper animation
+			mustPerformInitialAnimation = false;
+			dukeCharacter.state = DukeState::INVULNERABLE;
+		} else if (dukeCharacter.state == DukeState::BASIC_BEHAVIOUR) phase = Phase::PHASE1;
+		break;
 	case Phase::PHASE1:
 		currentShieldCooldown += Time::GetDeltaTime();
 		if ((dukeCharacter.lifePoints < 0.85 * dukeCharacter.GetTotalLifePoints()) && !activeFireTiles) {
@@ -192,30 +200,23 @@ void AIDuke::Update() {
 			phase = Phase::PHASE3;
 			lifeThreshold -= 0.1f;
 			Debug::Log("Phase3");
-			dukeCharacter.criticalMode = true;
+			dukeCharacter.SetCriticalMode(true);
 			// Phase change VFX? and anim?
 			movementScript->Stop();
 			if (dukeShield && dukeShield->GetIsActive()) {
 				OnShieldInterrupted();
 			}
-			if (dukeCharacter.compAnimation) {
-				dukeCharacter.StopShooting();
-				dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::ENRAGE]);
-			}
-			dukeCharacter.state = DukeState::INVULNERABLE;
 			if (fireTilesScript) {
 				fireTilesScript->StopFire();
 				fireTilesScript->SetInterphase(false);
 				fireTilesScript->StartFire();
 			}
 			break;
-		} else if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints() && dukeCharacter.state != DukeState::BULLET_HELL && dukeCharacter.state != DukeState::CHARGE) {
+		} else if (dukeCharacter.lifePoints < lifeThreshold * dukeCharacter.GetTotalLifePoints() && dukeCharacter.BulletHellFinished() && dukeCharacter.state != DukeState::CHARGE) {
 			if(islevel2) { // only for level 2
 				// "Fake" Duke death
 				PerformDeath();
 				SetReady(false);
-				// Activate the combat end trigger. This will activate a dialogue and dissolve Duke.
-				triggerBosslvl2End->Enable();
 				return;
 			}
 			phase = Phase::PHASE2;
@@ -329,9 +330,18 @@ void AIDuke::Update() {
 		case DukeState::STUNNED:
 			if (stunTimeRemaining <= 0.f) {
 				stunTimeRemaining = 0.f;
-				dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
+				if (stunnedInBulletHell && !dukeCharacter.BulletHellFinished()) {
+					dukeCharacter.state = DukeState::BULLET_HELL;
+				}
+				else {
+					dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
+				}
+				if (stunnedInBulletHell) stunnedInBulletHell = false;
 			} else {
 				stunTimeRemaining -= Time::GetDeltaTime();
+				if (stunnedInBulletHell && !dukeCharacter.BulletHellFinished()) {
+					PerformBulletHell();
+				}
 			}
 			break;
 		case DukeState::PUSHED:
@@ -356,14 +366,13 @@ void AIDuke::Update() {
 			currentBulletHellCooldown = 0.f;
 			currentShieldCooldown = 0.f;
 		} else {
+			static float3 dir;
 			if (dukeCharacter.phase2Shield && !dukeCharacter.phase2Shield->GetIsActive()) {
 				dukeCharacter.StartPhase2Shield();
+				if (player) dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
 			}
 			else {
-				/*if (player) {
-					float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
-					movementScript->Orientate(dir);
-				}*/
+				movementScript->Orientate(dir);
 				currentBarrelTimer += Time::GetDeltaTime();
 				if (currentBarrelTimer >= throwBarrelTimer) {
 					dukeCharacter.ThrowBarrels();
@@ -374,9 +383,7 @@ void AIDuke::Update() {
 		break;
 	case Phase::PHASE3:
 		if (dukeCharacter.lifePoints <= 0.f) {
-			// TODO: Init victory sequence
-			Debug::Log("Ugh...I'm...Dead...");
-			if (playerController) playerController->RemoveEnemyFromMap(duke);
+			PerformDeath();
 			return;
 
 		}
@@ -422,18 +429,30 @@ void AIDuke::Update() {
 			case DukeState::STUNNED:
 				if (stunTimeRemaining <= 0.f) {
 					stunTimeRemaining = 0.f;
-					dukeCharacter.criticalMode = false;
-					dukeCharacter.state = DukeState::SHOOT_SHIELD;
+					// Critical mode management
+					dukeCharacter.SetCriticalMode(false);
 					movementScript->Stop();
 					if (fireTilesScript) {
 						fireTilesScript->StopFire();
 						fireTilesScript->SetInterphase(true);
 						fireTilesScript->StartFire();
 					}
-					dukeCharacter.CallTroops();
-					dukeCharacter.StartUsingShield();
-				} else {
+					// Normal stun management
+					if (stunnedInBulletHell && !dukeCharacter.BulletHellFinished()) {
+						OnShieldInterrupted();
+						if (dukeCharacter.compAnimation) {
+							dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[static_cast<int>(Duke::DUKE_ANIMATION_STATES::PDA)]);
+						}
+						dukeCharacter.state = DukeState::BULLET_HELL;
+					}
+
+					if (stunnedInBulletHell) stunnedInBulletHell = false;
+				}
+				else {
 					stunTimeRemaining -= Time::GetDeltaTime();
+					if (stunnedInBulletHell && !dukeCharacter.BulletHellFinished()) {
+						PerformBulletHell();
+					}
 				}
 				break;
 			case DukeState::PUSHED:
@@ -444,18 +463,13 @@ void AIDuke::Update() {
 			}
 		} else {
 			currentCriticalModeCooldown += Time::GetDeltaTime();
-			if (currentCriticalModeCooldown >= criticalModeCooldown && dukeCharacter.state != DukeState::CHARGE && dukeCharacter.state != DukeState::BULLET_HELL) {
+			if (currentCriticalModeCooldown >= criticalModeCooldown && dukeCharacter.state != DukeState::CHARGE && dukeCharacter.BulletHellFinished()) {
 				currentCriticalModeCooldown = 0.f;
-				dukeCharacter.criticalMode = true;
+				dukeCharacter.SetCriticalMode(true);
 				movementScript->Stop();
 				if (dukeShield && dukeShield->GetIsActive()) {
 					OnShieldInterrupted();
 				}
-				if (dukeCharacter.compAnimation) {
-					dukeCharacter.StopShooting();
-					dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::ENRAGE]);
-				}
-				dukeCharacter.state = DukeState::INVULNERABLE;
 				if (fireTilesScript) {
 					fireTilesScript->StopFire();
 					fireTilesScript->SetInterphase(false);
@@ -531,10 +545,19 @@ void AIDuke::Update() {
 			case DukeState::STUNNED:
 				if (stunTimeRemaining <= 0.f) {
 					stunTimeRemaining = 0.f;
-					dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
-					//animation->SendTrigger("StunStunEnd");
-				} else {
+					if (stunnedInBulletHell && !dukeCharacter.BulletHellFinished()) {
+						dukeCharacter.state = DukeState::BULLET_HELL;
+					}
+					else {
+						dukeCharacter.state = DukeState::SHOOT_SHIELD;
+					}
+					if (stunnedInBulletHell) stunnedInBulletHell = false;
+				}
+				else {
 					stunTimeRemaining -= Time::GetDeltaTime();
+					if (stunnedInBulletHell && !dukeCharacter.BulletHellFinished()) {
+						PerformBulletHell();
+					}
 				}
 				break;
 			case DukeState::PUSHED:
@@ -606,26 +629,27 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 				// In critical mode only receives 1/3 damage
 				dukeCharacter.GetHit(damage / 3.f + playerController->GetOverPowerMode());
 			}
-    }
+		}
 
 		if (hitTaken) {
 			if (hudManager) hudManager->UpdateDukeHealth(dukeCharacter.lifePoints);
-      // TODO: play audio and VFX
-      /*if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
-      if (componentMeshRenderer) {
-        if (damageMaterialID != 0) componentMeshRenderer->materialId = damageMaterialID;
-      }
+			  // TODO: play audio and VFX
+			  /*if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
+			  if (componentMeshRenderer) {
+				if (damageMaterialID != 0) componentMeshRenderer->materialId = damageMaterialID;
+			  }
 
-			timeSinceLastHurt = 0.0f;*/
+					timeSinceLastHurt = 0.0f;*/
 		}
 
 
-		if (collidedWith.name == "EMP" && dukeCharacter.state != DukeState::INVULNERABLE && dukeCharacter.state != DukeState::BULLET_HELL) {
+		if (collidedWith.name == "EMP" && dukeCharacter.state != DukeState::INVULNERABLE) {
 			OnShieldInterrupted();
 			dukeCharacter.BecomeStunned();
 			dukeCharacter.StopShooting();
 			movementScript->Stop();
 			stunTimeRemaining = stunDuration;
+			if (dukeCharacter.state == DukeState::BULLET_HELL) stunnedInBulletHell = true;
 			dukeCharacter.state = DukeState::STUNNED;
 		}
 	}
@@ -640,7 +664,18 @@ void AIDuke::SetReady(bool value) {
 }
 
 void AIDuke::EnableBlastPushBack() {
-	if (dukeCharacter.state != DukeState::INVULNERABLE && dukeCharacter.state != DukeState::BULLET_HELL) {
+	if (dukeCharacter.state != DukeState::INVULNERABLE) {
+		if (dukeCharacter.state == DukeState::BULLET_HELL) stunnedInBulletHell = true;
+		// Critical mode management
+		if (dukeCharacter.criticalMode) {
+			dukeCharacter.SetCriticalMode(false);
+			if (fireTilesScript) {
+				fireTilesScript->StopFire();
+				fireTilesScript->SetInterphase(true);
+				fireTilesScript->StartFire();
+			}
+		}
+
 		dukeCharacter.beingPushed = true;
 		dukeCharacter.state = DukeState::PUSHED;
 		pushBackTimer = 0.f;
@@ -662,6 +697,7 @@ void AIDuke::EnableBlastPushBack() {
 
 		dukeCharacter.BePushed();
 		dukeCharacter.agent->Disable();
+
 	}
 
 }
@@ -669,8 +705,18 @@ void AIDuke::EnableBlastPushBack() {
 void AIDuke::DisableBlastPushBack() {
 	if (dukeCharacter.state != DukeState::INVULNERABLE) {
 		dukeCharacter.beingPushed = false;
-		//if (animation->GetCurrentState()) animation->SendTrigger(animation->GetCurrentState()->name + "Idle");
-		dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
+
+		if (stunnedInBulletHell) {
+			stunnedInBulletHell = false;
+			dukeCharacter.state = DukeState::BULLET_HELL;
+			if (dukeCharacter.compAnimation) {
+				dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[static_cast<int>(Duke::DUKE_ANIMATION_STATES::PDA)]);
+			}
+		}
+		else {
+			dukeCharacter.state = DukeState::BASIC_BEHAVIOUR;
+		}
+
 		dukeCharacter.agent->Enable();
 		dukeCharacter.slowedDown = true;
 		currentSlowedDownTime = 0.f;
@@ -776,7 +822,7 @@ void AIDuke::PerformBulletHell() {
 		bulletHellIsActive = true;
 	}
 
-	if (!dukeCharacter.IsBulletHellCircular()) {
+	if (!dukeCharacter.IsBulletHellCircular() && dukeCharacter.state != DukeState::STUNNED) {
 		float3 dir = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - ownerTransform->GetGlobalPosition();
 		dir.y = 0.0f;
 		movementScript->Orientate(dir, orientationSpeedBulletHell, orientationThresholdBulletHell);
@@ -805,9 +851,13 @@ void AIDuke::PerformDeath() {
 	if (collider) collider->Disable();
 
 	dukeCharacter.agent->RemoveAgentFromCrowd();
+	if (playerController) playerController->RemoveEnemyFromMap(duke);
 	if (dukeCharacter.beingPushed) dukeCharacter.beingPushed = false;
 	dukeCharacter.state = DukeState::DEATH;
 
+	// Activate the combat end trigger. This will activate a dialogue and dissolve Duke in level 2.
+	if (triggerBossEnd) triggerBossEnd->Enable();
+	
 	// Stop environment hazards
 	if (!islevel2) {
 		if (activeFireTiles && fireTilesScript) fireTilesScript->StopFire();

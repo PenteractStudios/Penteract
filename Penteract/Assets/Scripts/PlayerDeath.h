@@ -48,6 +48,8 @@ public:
 
 	float cooldownFireDamage = 1.0f;
 
+	float pushBackForce = 1.5f;
+
 private:
 	GameObject* transitionGO = nullptr;
 	SceneTransition* sceneTransition = nullptr;

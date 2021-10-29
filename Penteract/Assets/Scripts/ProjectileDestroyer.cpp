@@ -13,7 +13,7 @@ void ProjectileDestroyer::Start() {
 void ProjectileDestroyer::Update() {
 }
 
-void ProjectileDestroyer::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+void ProjectileDestroyer::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, float3 /*penetrationDistance*/, void* particle) {
 	if (collidedWith.name == "DukeProjectile") {
 		if (!particle) return;
 		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
