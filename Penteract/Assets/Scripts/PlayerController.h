@@ -159,7 +159,6 @@ private:
 	bool switchFirstHit = true;
 
 	//Upgrades
-	GameObject* upgradeEffects = nullptr;
 	ComponentParticleSystem* upgradeParticles = nullptr;
 	//Camera
 	ComponentCamera* compCamera = nullptr;

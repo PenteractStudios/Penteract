@@ -152,7 +152,7 @@ void PlayerController::Start() {
 
 	switchEffects = GameplaySystems::GetGameObject(switchParticlesUID);
 
-	upgradeEffects = GameplaySystems::GetGameObject(upgradesParticlesUID);
+	GameObject* upgradeEffects = GameplaySystems::GetGameObject(upgradesParticlesUID);
 	if (upgradeEffects) {
 		upgradeParticles = upgradeEffects->GetComponent<ComponentParticleSystem>();
 	}
