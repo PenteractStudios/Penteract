@@ -349,5 +349,5 @@ void GameController::EnablePauseMenus() {
 }
 
 bool GameController::CanPause() {
-	return /*!GameplaySystems::GetGlobalVariable(isVideoActive, true) &&*/ (!playerController || playerController && !playerController->IsPlayerDead());
+	return !GameplaySystems::GetGlobalVariable(isVideoActive, true) && (!playerController || playerController && !playerController->IsPlayerDead());
 }
