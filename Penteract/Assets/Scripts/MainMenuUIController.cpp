@@ -1,6 +1,7 @@
 #include "MainMenuUIController.h"
 
 #include "GameplaySystems.h"
+#include "GlobalVariables.h"
 #include "GameObject.h"
 #include "Components/UI/ComponentImage.h"
 
@@ -27,6 +28,12 @@ void MainMenuUIController::Start() {
 }
 
 void MainMenuUIController::Update() {
+
+	if (Input::GetKeyCodeDown(Input::KEY_KP_PLUS)) {
+		GameplaySystems::SetGlobalVariable<bool>(globalUseGamepad, !GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false));
+
+	}
+
 	if (!rightFaderImage || !leftFaderImage) return;
 
 	float4 color = rightFaderImage->GetColor();

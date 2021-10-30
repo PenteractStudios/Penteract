@@ -9,7 +9,6 @@
 
 #define PI 3.14159f
 
-
 EXPOSE_MEMBERS(CameraController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerControllerObjUID),
 	MEMBER_SEPARATOR("Camera Positioning"),
@@ -55,7 +54,23 @@ void CameraController::Update() {
 
 	if (useSmoothCamera) {
 		if (useAimingCamera && (playerController->playerFang.IsAiming() || playerController->playerOnimaru.IsAiming())) {
-			float2 mousePosition = Input::GetMousePositionNormalized();
+
+			float2 mousePosition = float2(0, 0);
+
+			if (GameplaySystems::GetGlobalVariable(globalUseGamepad, false) && Input::IsGamepadConnected(0)) {
+				if (playerController->playerFang.playerMainTransform) {
+
+					float2 orientationInput = playerController->playerFang.GetInputFloat2(InputActions::ORIENTATION);
+					if (orientationInput.x != 0 || orientationInput.y != 0) {
+						mousePosition = orientationInput;
+						mousePosition = mousePosition.Mul(axisInverter).Normalized();
+					}
+				}
+			} else {
+				mousePosition = Input::GetMousePositionNormalized();
+			}
+
+
 			LineSegment ray = camera->frustum.UnProjectLineSegment(mousePosition.x, mousePosition.y);
 			Plane p = Plane(playerGlobalPos, float3(0, 1, 0));
 			float3 aimingPosition = playerGlobalPos + (p.ClosestPoint(ray) - playerGlobalPos) * aimingDistance + float3(cameraOffsetX, cameraOffsetY, cameraOffsetZ);

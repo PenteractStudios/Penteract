@@ -76,6 +76,9 @@ public:
 	float limitAngle = 10.0f;
 	float shieldBeingUsed = 0.f;
 
+	float cannonGamepadOrientationSpeed = 1.0f;
+	float cannonMouseOrientationSpeed = 12.0f;
+
 public:
 	// ------- Contructors ------- //
 	Onimaru() {};
@@ -89,7 +92,7 @@ public:
 	void IncreaseUltimateCounter() override;
 	void OnDeath() override;
 	void OnAnimationSecondaryFinished() override;
-	bool IsInstantOrientation(bool useGampead) const override;
+	bool IsInstantOrientation() const override;
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
 
 	float GetRealUltimateCooldown();
@@ -109,7 +112,7 @@ public:
 	void ResetToIdle() override;
 
 private:
-
+	float2 lastMousePos = float2(1, 0);
 	ResourcePrefab* trail = nullptr;
 	ComponentParticleSystem* bullet = nullptr;
 
