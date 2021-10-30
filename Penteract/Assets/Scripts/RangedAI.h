@@ -105,8 +105,8 @@ public:
 
 	float approachOffset = 4.0f;		//Offset to prevent AI from chasing after player immediately after getting close enough whenever player moves slightly
 	float fleeingRange = 7.f;			//Distance at which entity will start a flee motion
-	float minAttackSpeed = 2.0f;
-	float maxAttackSpeed = 6.0f;
+	float attackInterval = 2.0f;		//Seconds between shots
+	float attackIntervalVariability = 1.f;
 	float actualShotMaxTime = 0.3f;		//Internal variable used to match the shooting animation and the projectile creation
 	float timeSinceLastHurt = 0.5f;		//Timer to keep track of how long it's been since AI was hurt, if higher than hurtFeedbackTimeDuration, this tries to make AI turn red with DamagedMaterial
 	float stunDuration = 3.f;			//Max time the enemy will be stunned
@@ -150,7 +150,6 @@ private:
 
 	float attackTimePool = 2.0f;			//Pool that counts down to 0 to make AI shoot a projectile
 	float actualShotTimer = -1.0f;			//Timer that counts down the seconds to match shooting animation with projectile creation
-	float attackSpeed = 0.5f;			//Shots per second
 
 	ComponentMeshRenderer* meshRenderer = nullptr;	//Reference to a meshRendererComponent, used for material setting on hurt
 	ComponentMeshRenderer* backpackMeshRenderer = nullptr;

@@ -11,9 +11,14 @@ constexpr const char* globalCameraEventOn = "CameraEventOn"; //Is some camera ev
 constexpr const char* globalMovePlayerFromCode = "MovePlayerFromCode"; // MovePlayerFromCode is used to allow to move the Player from code while the gameplay is blocked, used during the "gameplay scenes" in Boss level with Player::MoveTo(newPosition).
 
 // Tutorials - these booleans control when the skills are available to the player
-constexpr const char* globalSkill1TutorialReached = "Skill1Reached";	// Dash/Shield
-constexpr const char* globalSkill2TutorialReached = "Skill2Reached";	// EMP/Blast
-constexpr const char* globalSkill3TutorialReached = "Skill3Reached";	// Ultimate
-constexpr const char* globalSwitchTutorialReached = "SwitchReached";	// Switch
+constexpr const char* globalSkill1TutorialReached = "Skill1Reached";		// Dash
+constexpr const char* globalSkill2TutorialReached = "Skill2Reached";		// EMP
+constexpr const char* globalSkill3TutorialReached = "Skill3Reached";		// Fang Ultimate
+constexpr const char* globalSwitchTutorialReached = "SwitchReached";		// Switch
+constexpr const char* globalSkill1TutorialReachedOni = "Skill1ReachedOni";	// Shield
+constexpr const char* globalSkill2TutorialReachedOni = "Skill2ReachedOni";	// Blast
+constexpr const char* globalSkill3TutorialReachedOni = "Skill3ReachedOni";	// Oni Ultimate
 constexpr const char* globalswitchTutorialActive = "IsSwitchTutorialActive";	// This overrides globalSwitchTutorialReached on Fang's 'CanSwitch()', used when the Switch Tutorial appears to allow the use of the Switch then.
 
+
+constexpr const char* globalUseGamepad = "UseGamepad";

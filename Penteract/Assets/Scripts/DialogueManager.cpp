@@ -6,7 +6,7 @@
 #include "GameObject.h"
 #include "Components/UI/ComponentTransform2D.h"
 #include "Components/UI/ComponentText.h"
-#include "Components/UI/Componentimage.h"
+#include "Components/UI/ComponentImage.h"
 #include "GlobalVariables.h"
 
 EXPOSE_MEMBERS(DialogueManager) {
@@ -134,8 +134,8 @@ void DialogueManager::Start() {
 	dialoguesArray[23] = Dialogue(DialogueWindow::ONIMARU, true, "In long hallways\nis where I perform best.\nWatch how it is done.", nullptr);
 
 	// LEVEL 1 - ONIMARU TUTORIAL
-	dialoguesArray[24] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "Particle Push", nullptr);
-	dialoguesArray[25] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "(Hold) Shield", nullptr);
+	dialoguesArray[24] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "(Hold) Shield", nullptr);
+	dialoguesArray[25] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "Particle Push", nullptr);
 	dialoguesArray[26] = Dialogue(DialogueWindow::TUTO_ONIMARU, true, "Ultimate", &dialoguesArray[27]);
 	dialoguesArray[27] = Dialogue(DialogueWindow::TUTO_ONIMARU_ULTI, true, "", nullptr);
 
@@ -195,7 +195,9 @@ void DialogueManager::Update() {
 	if (activeDialogue) {
 		if (runOpenAnimation) ActivateDialogue();
 
-		if (Player::GetInputBool(activeDialogue->closeButton, PlayerController::useGamepad) && !(runOpenAnimation || runChangeAnimation || runCloseAnimation) && activeDialogueObject) {
+		bool pressedThisFrame = Player::GetInputBool(activeDialogue->closeButton) && !buttonPreviouslyPressed;
+
+		if (pressedThisFrame && !(runOpenAnimation || runChangeAnimation || runCloseAnimation) && activeDialogueObject) {
 			if (audios[static_cast<int>(AudioDialogue::BUTTON)]) {
 				audios[static_cast<int>(AudioDialogue::BUTTON)]->Play();
 			}
@@ -213,6 +215,8 @@ void DialogueManager::Update() {
 				}
 			} else runCloseAnimation = true;
 		}
+
+		buttonPreviouslyPressed = Player::GetInputBool(activeDialogue->closeButton);
 
 		if (runChangeAnimation && !runCloseAnimation) {
 			ActivateNextDialogue(activeDialogue);
@@ -317,6 +321,23 @@ void DialogueManager::SetActiveDialogue(Dialogue* dialogue, bool runAnimation) {
 			skillIconName = "Buttons" + std::to_string(tutorialSkillNumber);
 			GameObject* skillButtonIcon = activeDialogueObject->GetChild("Skill Buttons")->GetChild(skillIconName.c_str());
 			if (skillButtonIcon) skillButtonIcon->Enable();
+
+			// Activate the use of the skill
+			switch (tutorialSkillNumber) {
+			case 1:
+				GameplaySystems::SetGlobalVariable(globalSkill1TutorialReachedOni, true);
+				break;
+			case 2:
+				GameplaySystems::SetGlobalVariable(globalSkill2TutorialReachedOni, true);
+				break;
+			case 3:
+				GameplaySystems::SetGlobalVariable(globalSkill3TutorialReachedOni, true);
+				break;
+			default:
+				// Do nothing
+				break;
+			}
+
 			break;
 		}
 		case DialogueWindow::TUTO_ONIMARU_ULTI:
