@@ -17,5 +17,5 @@ constexpr const char* globalSkill2TutorialReachedOni = "Skill2ReachedOni";	// Bl
 constexpr const char* globalSkill3TutorialReachedOni = "Skill3ReachedOni";	// Oni Ultimate
 constexpr const char* globalswitchTutorialActive = "IsSwitchTutorialActive";	// This overrides globalSwitchTutorialReached on Fang's 'CanSwitch()', used when the Switch Tutorial appears to allow the use of the Switch then.
 
-
+constexpr const char* globalBackDetectionInUse = "BackDetectionInUse"; //globalBackDetectionInUse determines if cancel buttons must do navigation stuff or just UnPause, a UINavigationBackDetection script with nullreferences should only be found on the resume button, thus only with that button calling ONEnable should this be set to false
 constexpr const char* globalUseGamepad = "UseGamepad";
