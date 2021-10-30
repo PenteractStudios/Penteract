@@ -25,3 +25,5 @@ constexpr const char* globalUpgradeLevel1_Presecurity = "UpgradeLevel1_Presecuri
 constexpr const char* globalUpgradeLevel2_Catwalks = "UpgradeLevel2_Catwalks";
 constexpr const char* globalUpgradeLevel2_AfterArena1 = "UpgradeLevel2_AfterArena1";
 constexpr const char* globalUpgradeLevel2_FireBridge = "UpgradeLevel2_FireBridge";
+
+constexpr const char* globalUseGamepad = "UseGamepad";

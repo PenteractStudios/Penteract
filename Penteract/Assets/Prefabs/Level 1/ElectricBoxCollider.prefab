@@ -1,0 +1,74 @@
+{
+    "Root": {
+        "Name": "ElectricBoxCollider",
+        "Active": false,
+        "RootBoneName": "",
+        "Mask": 0,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Active": false,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "LocalEulerAngles": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ]
+            },
+            {
+                "Type": "Script",
+                "Active": false,
+                "Script": 16898266092950705264,
+                "Values": [
+                    {
+                        "Name": "doorUID",
+                        "Type": "GameObjectUID",
+                        "Value": 6606724254415103315
+                    },
+                    {
+                        "Name": "noodleShopObstacleUID",
+                        "Type": "GameObjectUID",
+                        "Value": 3564957962285708562
+                    },
+                    {
+                        "Name": "audioWarningUID",
+                        "Type": "GameObjectUID",
+                        "Value": 14291232549087887408
+                    }
+                ]
+            },
+            {
+                "Type": "CapsuleCollider",
+                "Active": false,
+                "colliderType": 2,
+                "layerType": 2,
+                "mass": 1.0,
+                "radius": 0.699999988079071,
+                "height": 0.8999999761581421,
+                "capsuleType": 1,
+                "centerOffset": [
+                    12.850000381469727,
+                    -6.599999904632568,
+                    3.0999999046325685
+                ],
+                "freezeRotation": false
+            }
+        ],
+        "Children": null
+    }
+}

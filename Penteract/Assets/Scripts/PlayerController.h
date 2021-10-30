@@ -49,7 +49,6 @@ public:
 	bool IsActiveCharacterDead() { return (playerFang.characterGameObject->IsActive() && !playerFang.isAlive) || (playerOnimaru.characterGameObject->IsActive() && !playerOnimaru.isAlive); }
 	bool AreBothCharactersAlive() { return playerFang.isAlive && playerOnimaru.isAlive; }
 	void TakeDamage(float damage);
-	static void SetUseGamepad(bool useGamepad_);
 
 	void AddEnemyInMap(GameObject* enemy);
 	void RemoveEnemyFromMap(GameObject* enemy);
@@ -65,7 +64,6 @@ public:
 	bool noCooldownMode = false;
 	bool debugGetHit = false;
 
-	static bool useGamepad;
 	static int currentLevel;
 
 	Onimaru playerOnimaru = Onimaru();

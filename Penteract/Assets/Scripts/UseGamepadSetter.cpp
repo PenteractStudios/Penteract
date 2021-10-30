@@ -1,5 +1,7 @@
 #include "UseGamepadSetter.h"
+
 #include "PlayerController.h"
+#include "GlobalVariables.h"
 
 EXPOSE_MEMBERS(UseGamepadSetter) {
 };
@@ -20,8 +22,7 @@ void UseGamepadSetter::OnToggled(bool toggled) {
 
 	if (!playerController) return;
 
-	playerController->SetUseGamepad(toggled);
-
+	GameplaySystems::SetGlobalVariable<bool>(globalUseGamepad, toggled);
 }
 
 void UseGamepadSetter::SearchForPlayerRef() {
