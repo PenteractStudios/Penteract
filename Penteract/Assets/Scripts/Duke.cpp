@@ -465,6 +465,8 @@ void Duke::OnAnimationFinished()
 	} else if (localCurrentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::ENRAGE)]) {
 		state = DukeState::BASIC_BEHAVIOUR;
 		if (bodyArmor && !bodyArmor->IsActive()) bodyArmor->Enable();
+	} else if (localCurrentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::INITIAL_ENRAGE)]) {
+		state = DukeState::BASIC_BEHAVIOUR;
 	}
 }
 

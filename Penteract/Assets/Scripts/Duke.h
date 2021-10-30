@@ -144,6 +144,7 @@ public:
 		DEATH,
 		IDLE,
 		ENRAGE,
+		INITIAL_ENRAGE,
 		SHOOT,
 		PDA,
 		PUSHED,
@@ -158,7 +159,7 @@ public:
 		LENGTH
 	};
 	std::string animationStates[static_cast<int>(DUKE_ANIMATION_STATES::LENGTH)] = { "Charge", "ChargeEnd", "ChargeStart",
-		"Punch", "Death", "Idle", "Enrage", "Shooting", "PDA", "Pushed", "Shield", "ShootingShield", "Stun",
+		"Punch", "Death", "Idle", "Enrage", "InitialEnrage", "Shooting", "PDA", "Pushed", "Shield", "ShootingShield", "Stun",
 		"WalkBack", "WalkForward", "WalkForwardNoAim", "WalkLeft", "WalkRight" };
 
 	UID winSceneUID = 0; // TODO: Delete

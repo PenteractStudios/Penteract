@@ -177,7 +177,7 @@ void AIDuke::Update() {
 	case Phase::PHASE0:
 		// Perform the "BOOM" animation
 		if (dukeCharacter.compAnimation && mustPerformInitialAnimation) {
-			dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::ENRAGE]); // TODO: change Enrage for the proper animation
+			dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::INITIAL_ENRAGE]);
 			mustPerformInitialAnimation = false;
 			dukeCharacter.state = DukeState::INVULNERABLE;
 		} else if (dukeCharacter.state == DukeState::BASIC_BEHAVIOUR) phase = Phase::PHASE1;
