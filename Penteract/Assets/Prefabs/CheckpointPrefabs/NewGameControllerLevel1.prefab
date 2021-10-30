@@ -4331,7 +4331,7 @@
                             {
                                 "Name": "dialogs5UID",
                                 "Type": "GameObjectUID",
-                                "Value": 10139818949958212650
+                                "Value": 0
                             },
                             {
                                 "Name": "encounter1UID",
@@ -4376,7 +4376,7 @@
                             {
                                 "Name": "encounter7UID",
                                 "Type": "GameObjectUID",
-                                "Value": 10285884496521410135
+                                "Value": 0
                             },
                             {
                                 "Name": "doors2UID",
@@ -4386,7 +4386,7 @@
                             {
                                 "Name": "doors4UID",
                                 "Type": "GameObjectUID",
-                                "Value": 9841789898228557983
+                                "Value": 16511487900052151977
                             },
                             {
                                 "Name": "triggersUID",
@@ -4396,12 +4396,12 @@
                             {
                                 "Name": "doors5UID",
                                 "Type": "GameObjectUID",
-                                "Value": 16511487900052151977
+                                "Value": 0
                             },
                             {
                                 "Name": "video2UID",
                                 "Type": "GameObjectUID",
-                                "Value": 11614609741653606452
+                                "Value": 14757028133518280949
                             },
                             {
                                 "Name": "dialogs4UID",

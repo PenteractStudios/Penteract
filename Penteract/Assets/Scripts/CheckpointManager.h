@@ -44,35 +44,27 @@ public:
 	GameObject* upgrades3 = nullptr;
 
 	/* Encounters Level */
-	UID encounter1UID, encounter2UID, encounter3UID, encounter4UID, encounter5UID, encounter6UID, encounter7UID;
+	UID encounter1UID, encounter2UID, encounter3UID, encounter4UID, encounter5UID, encounter6UID;
 	GameObject* encounter1 = nullptr;
 	GameObject* encounter2 = nullptr;
 	GameObject* encounter3 = nullptr;
 	GameObject* encounter4 = nullptr;
 	GameObject* encounter5 = nullptr;
 	GameObject* encounter6 = nullptr;
-	GameObject* encounter7 = nullptr;
 
 	/* Doors Level */
-	UID doors1UID, doors2UID, doors3UID, doors4UID, doors5UID;
+	UID doors1UID, doors2UID, doors3UID, doors4UID;
 	GameObject* doors1 = nullptr;
 	GameObject* doors2 = nullptr;
 	GameObject* doors3 = nullptr;
 	GameObject* doors4 = nullptr;
-	GameObject* doors5 = nullptr;
 
 	/* Dialogs Level */
-	UID dialogs1UID, dialogs2UID, dialogs3UID, dialogs4UID, dialogs5UID;
+	UID dialogs1UID, dialogs2UID, dialogs3UID, dialogs4UID;
 	GameObject* dialogs1 = nullptr;
 	GameObject* dialogs2 = nullptr;
 	GameObject* dialogs3 = nullptr;
 	GameObject* dialogs4 = nullptr;
-	GameObject* dialogs5 = nullptr;
-
-	/* Videos Level */
-	UID video1UID, video2UID;
-	GameObject* video1 = nullptr;
-	GameObject* video2 = nullptr;
 
 private:
 	void CheckDistanceWithCheckpoints();

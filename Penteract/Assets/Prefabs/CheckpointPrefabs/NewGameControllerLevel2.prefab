@@ -4301,7 +4301,7 @@
                             {
                                 "Name": "dialogs5UID",
                                 "Type": "GameObjectUID",
-                                "Value": 3916424496225397013
+                                "Value": 0
                             },
                             {
                                 "Name": "encounter1UID",
@@ -4326,7 +4326,7 @@
                             {
                                 "Name": "encounter5UID",
                                 "Type": "GameObjectUID",
-                                "Value": 385333707702835129
+                                "Value": 0
                             },
                             {
                                 "Name": "dialogs2UID",
@@ -4336,7 +4336,7 @@
                             {
                                 "Name": "encounter6UID",
                                 "Type": "GameObjectUID",
-                                "Value": 14850089520415277479
+                                "Value": 0
                             },
                             {
                                 "Name": "dialogs3UID",
@@ -4346,7 +4346,7 @@
                             {
                                 "Name": "encounter7UID",
                                 "Type": "GameObjectUID",
-                                "Value": 4396264297265798077
+                                "Value": 0
                             },
                             {
                                 "Name": "doors2UID",
@@ -4356,12 +4356,12 @@
                             {
                                 "Name": "doors4UID",
                                 "Type": "GameObjectUID",
-                                "Value": 7889528598443778876
+                                "Value": 0
                             },
                             {
                                 "Name": "doors5UID",
                                 "Type": "GameObjectUID",
-                                "Value": 5058726078179898670
+                                "Value": 0
                             },
                             {
                                 "Name": "dialogs4UID",

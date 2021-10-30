@@ -26,26 +26,20 @@ EXPOSE_MEMBERS(CheckpointManager) {
 	MEMBER(MemberType::GAME_OBJECT_UID, encounter4UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, encounter5UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, encounter6UID),
-	MEMBER(MemberType::GAME_OBJECT_UID, encounter7UID),
 	MEMBER_SEPARATOR("DOORS & LASERS LEVEL"),
 	MEMBER(MemberType::GAME_OBJECT_UID, doors1UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, doors2UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, doors3UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, doors4UID),
-	MEMBER(MemberType::GAME_OBJECT_UID, doors5UID),
 	MEMBER_SEPARATOR("DIALOGS LEVEL"),
 	MEMBER(MemberType::GAME_OBJECT_UID, dialogs1UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, dialogs2UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, dialogs3UID),
-	MEMBER(MemberType::GAME_OBJECT_UID, dialogs4UID),
-	MEMBER(MemberType::GAME_OBJECT_UID, dialogs5UID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dialogs4UID),  
 	MEMBER_SEPARATOR("UPGRADES LEVEL"),
 	MEMBER(MemberType::GAME_OBJECT_UID, upgrades1UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, upgrades2UID),
 	MEMBER(MemberType::GAME_OBJECT_UID, upgrades3UID),
-	MEMBER_SEPARATOR("VIDEOS LEVEL"),
-	MEMBER(MemberType::GAME_OBJECT_UID, video1UID),
-	MEMBER(MemberType::GAME_OBJECT_UID, video2UID),
 };
 
 GENERATE_BODY_IMPL(CheckpointManager);
@@ -88,73 +82,62 @@ void CheckpointManager::Start() {
 	encounter4 = GameplaySystems::GetGameObject(encounter4UID);
 	encounter5 = GameplaySystems::GetGameObject(encounter5UID);
 	encounter6 = GameplaySystems::GetGameObject(encounter6UID);
-	encounter7 = GameplaySystems::GetGameObject(encounter7UID);
 
 	doors1 = GameplaySystems::GetGameObject(doors1UID);
 	doors2 = GameplaySystems::GetGameObject(doors2UID);
 	doors3 = GameplaySystems::GetGameObject(doors3UID);
 	doors4 = GameplaySystems::GetGameObject(doors4UID);
-	doors5 = GameplaySystems::GetGameObject(doors5UID);
 
 	dialogs1 = GameplaySystems::GetGameObject(dialogs1UID);
 	dialogs2 = GameplaySystems::GetGameObject(dialogs2UID);
 	dialogs3 = GameplaySystems::GetGameObject(dialogs3UID);
 	dialogs4 = GameplaySystems::GetGameObject(dialogs4UID);
-	dialogs5 = GameplaySystems::GetGameObject(dialogs5UID);
 
 	upgrades1 = GameplaySystems::GetGameObject(upgrades1UID);
 	upgrades2 = GameplaySystems::GetGameObject(upgrades2UID);
 	upgrades3 = GameplaySystems::GetGameObject(upgrades3UID);
 
-	video1 = GameplaySystems::GetGameObject(video1UID);
-	video2 = GameplaySystems::GetGameObject(video2UID);
-
-	if (!triggers) return;
-	if (!video1 && !video2) return;
-	if (!encounter1 && !encounter2 && !encounter3 && !encounter4 && !encounter5 && !encounter6 && !encounter7) return;
-	if (!doors1 && !doors2 && !doors3 && !doors4 && !doors5) return;
-	if (!upgrades1 && !upgrades2 && !upgrades3) return;
-	if (!dialogs1 && !dialogs2 && !dialogs3 && !dialogs4 && !dialogs5) return;
-
 	/* Disabled the upgrade that are already enabled */
 	if (GameplaySystems::GetGlobalVariable(globalLevel, 0) == 1) {
 		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Plaza, false)) {
 			playerScript->obtainedUpgradeCells += 1;
-			upgrades1->Disable();
+			if (upgrades1) upgrades1->Disable();
 		}
 		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Cafeteria, false)) {
 			playerScript->obtainedUpgradeCells += 1;
-			upgrades2->Disable();
+			if (upgrades2) upgrades2->Disable();
 		}
 		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel1_Presecurity, false)) {
 			playerScript->obtainedUpgradeCells += 1;
-			upgrades3->Disable();
+			if (upgrades3) upgrades3->Disable();
 		}
 	}
 
 	if (GameplaySystems::GetGlobalVariable(globalLevel, 0) == 2) {
 		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_Catwalks, false)) {
 			playerScript->obtainedUpgradeCells += 1;
-			upgrades1->Disable();
+			if (upgrades1) upgrades1->Disable();
 		}
 		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_AfterArena1, false)) {
 			playerScript->obtainedUpgradeCells += 1;
-			upgrades2->Disable();
+			if (upgrades2) upgrades2->Disable();
 		}
 		if (GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_FireBridge, false)) {
 			playerScript->obtainedUpgradeCells += 1;
-			upgrades3->Disable();
+			if (upgrades3) upgrades3->Disable();
 		}
 	}
 
-	/* Disabled the triggers of the checkpoint that already passed */
-	listTriggers = triggers->GetChildren();
-	for (int i = 0; i < listTriggers.size(); i++) {
-		if (i < GameplaySystems::GetGlobalVariable(globalCheckpoint, 0)) {
-			// Disabled the trigger
-			ComponentBoxCollider* boxCollider = listTriggers[i]->GetComponent<ComponentBoxCollider>();
-			if (boxCollider) boxCollider->Disable();
-			listTriggers[i]->Disable();
+	/* Disabled the triggers of the checkpoint that already passed - CheckpointTriggers */
+	if (triggers) {
+		listTriggers = triggers->GetChildren();
+		for (int i = 0; i < listTriggers.size(); i++) {
+			if (i < GameplaySystems::GetGlobalVariable(globalCheckpoint, 0)) {
+				// Disabled the trigger
+				ComponentBoxCollider* boxCollider = listTriggers[i]->GetComponent<ComponentBoxCollider>();
+				if (boxCollider) boxCollider->Disable();
+				listTriggers[i]->Disable();
+			}
 		}
 	}
 
@@ -169,29 +152,30 @@ void CheckpointManager::Start() {
 				GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, true);
 				GameplaySystems::SetGlobalVariable(globalSkill2TutorialReached, true);
 				GameplaySystems::SetGlobalVariable(globalSkill3TutorialReached, true);
-				dialogs1->Disable();
-				encounter1->Disable();
-				doors5->Disable(); // Its Duke object!
+				if (dialogs1) dialogs1->Disable();											// Trigger Fang Tutorial 1
+				if (encounter1) encounter1->Disable();										// Encounter_Plaza
+				if (doors4) doors4->Disable();												// Its Duke object! - Duke1
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 1) break;
 			case 2: // After Cafeteria - In Transport
 				GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, true);
 				GameplaySystems::SetGlobalVariable(globalSkill1TutorialReachedOni, true);
 				GameplaySystems::SetGlobalVariable(globalSkill2TutorialReachedOni, true);
 				GameplaySystems::SetGlobalVariable(globalSkill3TutorialReachedOni, true);
-				dialogs2->Disable();
-				encounter2->Disable();
-				doors1->Disable();
-				doors2->Disable();
+				if (dialogs2) dialogs2->Disable();											// TriggerSwapCharacters
+				if (encounter2) encounter2->Disable();										// Encounter_Cafeteria
+				if (doors1) doors1->Disable();												// DoorObstacle - Plaza
+				if (doors2) doors2->Disable();												// DoorObstacle - Cafeteria
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 2) break;
 			case 3: // After Transport - In Pre-security
-				encounter3->Disable();
-				encounter4->Disable();
+				if (encounter3) encounter3->Disable();										// Encounter Transport
+				if (encounter4) encounter4->Disable();										// Encounter Patrolling
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 3) break;
 			case 4: // After Pre-security - In Security
-				encounter5->Disable();
-				encounter6->Disable();
-				dialogs3->Disable();
-				dialogs4->Disable();
+				if (encounter5) encounter5->Disable();										// Encounter Presecurity
+				if (encounter6) encounter6->Disable();										// Encounter Catwalk
+				if (doors3) doors3->Disable();												// Lasers Presecurity
+				if (dialogs3) dialogs3->Disable();											// Scene - WalkToFactory
+				if (dialogs4) dialogs4->Disable();											// Its Duke Object - Duke2
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 4) break;
 			default:
 				break;
@@ -204,21 +188,21 @@ void CheckpointManager::Start() {
 			/* Control encounters by actual checkpoint */
 			switch (1) {
 			case 1: // After Elevator - In Test Arena 1
-				encounter1->Disable();
-				doors1->Disable();
-				doors2->Disable();
-				dialogs1->Disable();
+				if (encounter1) encounter1->Disable();										// Encounter Catwalks
+				if (doors1) doors1->Disable();												// Door Obstacle Elevator
+				if (doors2) doors2->Disable();												// Door Obstacle Catwalks Left
+				if (dialogs1) dialogs1->Disable();											// Trigger StartScene
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 1) break;
 			case 2: // After Test Arena 1 - In Fire Bridge
-				encounter2->Disable();
-				encounter3->Disable();
-				doors3->Disable();
-				dialogs2->Disable();
-				dialogs3->Disable();
-				dialogs4->Disable();
+				if (encounter2) encounter2->Disable();										// Encounter Arena 1
+				if (encounter3) encounter3->Disable();										// Lasers Arena 1
+				if (doors3) doors3->Disable();												// Door Obstacle Arena 1
+				if (dialogs2) dialogs2->Disable();											// TriggerDukeBegin
+				if (dialogs3) dialogs3->Disable();											// Its Duke Object - Duke
+				if (dialogs4) dialogs4->Disable();											// TriggerDukeEnd
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 2) break;
 			case 3: // After Fire Bridge -  In Test Arena 2
-				encounter4->Enable(); // Enable fire & door
+				if (encounter4) encounter4->Enable();										// Enable triegger fire & door
 				if (GameplaySystems::GetGlobalVariable(globalCheckpoint, 0) == 3) break;
 			default:
 				break;
