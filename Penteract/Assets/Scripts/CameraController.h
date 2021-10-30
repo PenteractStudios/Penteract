@@ -43,6 +43,7 @@ public:
 
 private:
 	float2 GetRandomPosInUnitaryCircle(float2 center);
+	const float2 axisInverter = float2(1.0f, -1.0f);
 	float shakeMultiplierStoredValue = 0.2f;
 };
 

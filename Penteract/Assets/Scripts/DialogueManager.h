@@ -148,4 +148,5 @@ private:
 	bool runSecondaryOpen = false;
 	bool mustFlash = false;
 	bool triggerAudio = true;
+	bool buttonPreviouslyPressed = false;
 };
