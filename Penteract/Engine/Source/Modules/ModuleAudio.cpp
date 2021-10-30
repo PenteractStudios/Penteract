@@ -2,16 +2,35 @@
 
 #include "Globals.h"
 #include "Application.h"
+#include "Modules/ModuleScene.h"
 #include "Utils/alErrors.h"
 #include "Utils/alcErrors.h"
+#include "Scene.h"
 
 #include "AL/al.h"
-#include "AL/alc.h"
 
 #include "Utils/Leaks.h"
 
 bool ModuleAudio::Init() {
-	openALDevice = alcOpenDevice(nullptr); // Get Sound Device. nullptr = default
+	return OpenSoundDevice();
+}
+
+UpdateStatus ModuleAudio::Update() {
+	size_t listeners = App->scene->scene->audioListenerComponents.Count();
+	if (listeners <= 0) {
+		LOG("Warning: Missing audio listener in scene");
+	} else if (listeners > 1) {
+		LOG("Warning: More than one audio listener in scene");
+	}
+	return UpdateStatus::CONTINUE;
+}
+
+bool ModuleAudio::CleanUp() {
+	return CloseSoundDevice();
+}
+
+bool ModuleAudio::OpenSoundDevice(ALCchar* device) {
+	openALDevice = alcOpenDevice(device); // Get Sound Device. nullptr = default
 	if (!openALDevice) {
 		LOG("ERROR: Failed to get sound device");
 		return false;
@@ -38,27 +57,66 @@ bool ModuleAudio::Init() {
 	LOG("Using Sound Device: \"%s\"", name);
 
 	// Generate Sources
-	alGenSources(NUM_SOURCES, sources);
+	alCall(alGenSources, NUM_SOURCES, sources);
+	return true;
+}
+
+bool ModuleAudio::CloseSoundDevice() {
+	StopAllSources();
+	alCall(alDeleteSources, NUM_SOURCES, sources);
+	memset(sources, 0, sizeof(sources));
+	alcCall(alcMakeContextCurrent, contextMadeCurrent, openALDevice, nullptr);
+	alcCall(alcDestroyContext, openALDevice, openALContext);
+	alcCloseDevice(openALDevice);
 
 	return true;
 }
 
-ALuint ModuleAudio::GetAvailableSource(bool reverse) const {
+void ModuleAudio::GetSoundDevices(std::vector<std::string>& devicesParsed) {
+	devices.clear();
+	devicesParsed.clear();
+	ALCchar* devicesList = (ALCchar*) alcGetString(NULL, ALC_ALL_DEVICES_SPECIFIER);
+	ALCchar* nptr;
+
+	nptr = devicesList;
+	while (*(nptr += strlen(devicesList) + 1) != 0) {
+		devices.push_back(devicesList);
+		devicesList = nptr;
+	}
+	devices.push_back(devicesList);
+
+	for (std::string device : devices) {
+		std::string newDevice = device.substr(15, device.length());
+		devicesParsed.push_back(newDevice.c_str());
+	}
+}
+
+const std::string ModuleAudio::GetCurrentDevice() {
+	std::string currentDevice = alcGetString(openALDevice, ALC_ALL_DEVICES_SPECIFIER);
+	return currentDevice.substr(15, currentDevice.length());
+}
+
+void ModuleAudio::SetSoundDevice(int pos) {
+	CloseSoundDevice();
+	OpenSoundDevice(devices[pos]);
+}
+
+unsigned ModuleAudio::GetAvailableSource(bool reverse) const {
 	if (reverse) {
 		for (int i = NUM_SOURCES - 1; i >= 0; --i) {
-			if (isAvailable(sources[i])) {
+			if (!isActive(sources[i])) {
 				return sources[i];
 			}
 		}
-		return false;
+		return 0;
 
 	} else {
 		for (int i = 0; i < NUM_SOURCES; ++i) {
-			if (isAvailable(sources[i])) {
+			if (!isActive(sources[i])) {
 				return sources[i];
 			}
 		}
-		return false;
+		return 0;
 	}
 }
 
@@ -78,6 +136,7 @@ void ModuleAudio::Stop(unsigned sourceId) const {
 	if (sourceId) {
 		alSourceStop(sourceId);
 		alSourcei(sourceId, AL_BUFFER, NULL);
+		sourceId = 0;
 	}
 }
 
@@ -89,11 +148,53 @@ void ModuleAudio::StopAllSources() {
 	}
 }
 
-bool ModuleAudio::CleanUp() {
-	alCall(alDeleteSources, 16, sources);
-	alcCall(alcMakeContextCurrent, contextMadeCurrent, openALDevice, nullptr);
-	alcCall(alcDestroyContext, openALDevice, openALContext);
-	alcCloseDevice(openALDevice);
+float ModuleAudio::GetGainMainChannel() {
+	return gainMainChannel;
+}
 
-	return true;
+float ModuleAudio::GetGainMusicChannel() const {
+	return gainMusicChannel;
+}
+
+float ModuleAudio::GetGainSFXChannel() const {
+	return gainSFXChannel;
+}
+
+void ModuleAudio::SetGainMainChannel(float _gainMainChannel) {
+	if (App->scene->scene->audioListenerComponents.Count() == 0) {
+		return;
+	}
+	gainMainChannel = _gainMainChannel;
+	Pool<ComponentAudioListener>::Iterator audioListener = App->scene->scene->audioListenerComponents.begin();
+	(*audioListener).SetAudioVolume(gainMainChannel);
+}
+
+void ModuleAudio::SetGainMusicChannel(float _gainMusicChannel) {
+	gainMusicChannel = _gainMusicChannel;
+	for (ComponentAudioSource& audioSource : App->scene->scene->audioSourceComponents) {
+		if (audioSource.GetIsMusic()) {
+			audioSource.SetGainMultiplier(gainMusicChannel);
+		}
+	}
+}
+
+void ModuleAudio::SetGainSFXChannel(float _gainSFXChannel) {
+	gainSFXChannel = _gainSFXChannel;
+	for (ComponentAudioSource& audioSource : App->scene->scene->audioSourceComponents) {
+		if (!audioSource.GetIsMusic()) {
+			audioSource.SetGainMultiplier(gainSFXChannel);
+		}
+	}
+}
+
+void ModuleAudio::SetGainMainChannelInternal(float _gainMainChannel) {
+	gainMainChannel = _gainMainChannel;
+}
+
+void ModuleAudio::SetGainMusicChannelInternal(float _gainMusicChannel) {
+	gainMusicChannel = _gainMusicChannel;
+}
+
+void ModuleAudio::SetGainSFXChannelInternal(float _gainSFXChannel) {
+	gainSFXChannel = _gainSFXChannel;
 }

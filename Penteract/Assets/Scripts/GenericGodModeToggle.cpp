@@ -24,7 +24,7 @@ void GenericGodModeToggle::Start() {
 
 void GenericGodModeToggle::Update() {}
 
-void GenericGodModeToggle::OnToggled(bool toggled_) {
+void GenericGodModeToggle::OnToggled(bool /* toggled_ */) {
 	if (godController) {
 		GodModeController* gmControllerScript = GET_SCRIPT(godController, GodModeController);
 		gmControllerScript->OnChildToggle(index, toggle->IsChecked());

@@ -57,10 +57,6 @@ void EnemySpawnPoint::Update() {
 	if (it != enemies.end() && spawn) {
 		RenderEnemy(EnemyType::MELEE, std::get<0>(*it));
 		RenderEnemy(EnemyType::RANGE, std::get<1>(*it));
-		/* Rotate the spawn point to the player location */
-		float3 playerDirection = player->GetComponent<ComponentTransform>()->GetGlobalPosition() - gameObjectTransform->GetGlobalPosition();
-		playerDirection.y = 0.f;		
-		LookAtPlayer(playerDirection);
 
 		/* Stop the spawn until all the wave enemies die */
 		spawn = false;
@@ -92,7 +88,7 @@ void EnemySpawnPoint::RenderEnemy(EnemyType type, unsigned int amount) {
 		GameObject* go = GameplaySystems::GetGameObject(prefabUID);
 		ComponentTransform* goTransform = go->GetComponent<ComponentTransform>();
 		if (go) {
-			goTransform->SetPosition(EnemyLocation(amount, i, type == EnemyType::MELEE ? 0 : -2));
+			goTransform->SetPosition(EnemyLocation(amount, i, type == EnemyType::MELEE ? 0 : -0.5));
 			if (playerScript) playerScript->AddEnemyInMap(go);
 		}
 	}
@@ -109,10 +105,6 @@ float3 EnemySpawnPoint::EnemyLocation(int N, int k, int z) {
 		kudos to Pol for the formula
 	*/
 	int d = 2;
-	return float3(((N/2 - k) * d - ((N + 1)%2) * d/2), 0, z);
-}
-
-void EnemySpawnPoint::LookAtPlayer(const float3& direction) {
-	Quat newRotation = Quat::LookAt(float3(0, 0, 1), direction.Normalized(), float3(0, 1, 0), float3(0, 1, 0));
-	gameObjectTransform->SetGlobalRotation(newRotation);
+	float x = static_cast<float>(((N / 2 - k) * d - ((N + 1) % 2) * d / 2));
+	return float3(x, 0.0f, static_cast<float>(z));
 }

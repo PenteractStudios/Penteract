@@ -2,7 +2,7 @@
 
 #include "Components/Component.h"
 
-#include <vector>
+#include <list>
 
 class GameObject;
 class ComponentSelectable;
@@ -12,7 +12,7 @@ public:
 	REGISTER_COMPONENT(ComponentEventSystem, ComponentType::EVENT_SYSTEM, false);
 	~ComponentEventSystem();
 
-	void Init() override;
+	void Start() override;
 	void Update() override;
 	void OnEditorUpdate() override;
 	void Save(JsonValue jComponent) const override;
@@ -20,14 +20,15 @@ public:
 	void OnEnable() override;
 	void OnDisable() override;
 
-	void SetSelected(UID newSelectableComponentId);
+	TESSERACT_ENGINE_API void SetSelected(UID newSelectableComponentId);
 	void SetSelected(ComponentSelectable* newSelectable);
 	void EnteredPointerOnSelectable(ComponentSelectable* newHoveredComponent);	//Interface implementation
 	void ExitedPointerOnSelectable(ComponentSelectable* newUnHoveredComponent); //Interface implementation
-	ComponentSelectable* GetCurrentSelected() const;							//Returns currently selected ComponentSelectable
+	TESSERACT_ENGINE_API ComponentSelectable* GetCurrentSelected() const;		//Returns currently selected ComponentSelectable
 	TESSERACT_ENGINE_API ComponentSelectable* GetCurrentlyHovered() const;		//Returns last Selectable that was hovered over with mouse
 	void SetClickedGameObject(GameObject* clickedObj_);
 	GameObject* GetClickedGameObject();
+	std::list<ComponentSelectable*> activeSelectableComponents;
 
 private:
 	UID selectedId = 0; //Currently selected SelectableComponent*

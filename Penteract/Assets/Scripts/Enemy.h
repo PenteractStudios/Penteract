@@ -9,13 +9,13 @@ public:
 	// ------- Contructors ------- //
 	Enemy() {};
 
-	Enemy(float lifePoints_, float movementSpeed_, float damageHit_, int fallingSpeed_, float searchRadius_, float attackRange_, float timeToDie_, float pushBackDistance_, float pushBackSpeed_, float slowedDownSpeed_, float slowedDownTime_)
+	Enemy(float lifePoints_, float movementSpeed_, float damageHit_, float fallingSpeed_, float searchRadius_, float attackRange_, float timeToDie_, float pushBackDistance_, float pushBackTime_, float slowedDownSpeed_, float slowedDownTime_)
 		: fallingSpeed(fallingSpeed_)
 		, searchRadius(searchRadius_)
 		, attackRange(attackRange_)
 		, timeToDie(timeToDie_)
 		, pushBackDistance(pushBackDistance_)
-		, pushBackSpeed(pushBackSpeed_)
+		, pushBackTime(pushBackTime_)
 		, slowedDownSpeed(slowedDownSpeed_)
 		, slowedDownTime(slowedDownTime_) {
 		lifePoints = lifePoints_;
@@ -25,19 +25,19 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void SetFallingSpeed(int fallingSpeed_);
+	void SetFallingSpeed(float fallingSpeed_);
 	void SetSearchRadius(float searchRadius_);
 	void SetAttackRange(float attackRange_);
 	void SetTimeToDie(float timeToDie_);
 	void IncreasePlayerUltimateCharges(PlayerController* player);
 
 public:
-	int fallingSpeed = 5;
+	float fallingSpeed = 5.0f;
 	float searchRadius = 10.f;
 	float attackRange = 2.0f;
 	float timeToDie = 5.f;
-	float pushBackDistance = 5.f;
-	float pushBackSpeed = 5.f;
+	float pushBackDistance = 15.f;
+	float pushBackTime = 0.2f;
 	float slowedDownSpeed = 3.f;
 	float slowedDownTime = 2.f;
 	bool destroying = false;

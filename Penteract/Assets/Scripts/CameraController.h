@@ -14,7 +14,7 @@ public:
 
 	void Start() override;
 	void Update() override;
-	void StartShake();
+	void StartShake(float shakeMult);	// If shakeMult > 0, sets the 'shakeMultiplier' to shakeMult. Else, uses the default value of 'shakeMultiplier', stored in 'shakeMultiplierStoredValue'
 	void ChangeCameraOffset(float x, float y, float z);
 	void RestoreCameraOffset();
 
@@ -41,10 +41,8 @@ public:
 	float aimingPositionX = 0.0f;
 	float aimingPositionZ = 0.0;
 
-	float3 aimingPosition = float3(0.0f, 0.0f, 0.0f);
-
 private:
 	float2 GetRandomPosInUnitaryCircle(float2 center);
-	
+	float shakeMultiplierStoredValue = 0.2f;
 };
 

@@ -2,6 +2,7 @@
 
 #include "Character.h"
 #include "Math/float3.h"
+#include "Math/float2.h"
 
 class CameraController;
 
@@ -45,14 +46,14 @@ public:
 
 	// ------- Core Functions ------ //
 	void SetAttackSpeed(float attackSpeed_);
-	virtual void GetHit(float damage_) override;
+	virtual void GetHit(float /* damage_ */) override;
 
 	void LookAtMouse();
-	MovementDirection GetInputMovementDirection(bool useGamepad) const;
+	MovementDirection GetInputMovementDirection(bool useGamepad);
 	float3 GetDirection() const;
 	virtual void Shoot() {}
 	virtual void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockRotation = false);
-	virtual void CheckCoolDowns(bool noCooldownMode = false) {}
+	virtual void CheckCoolDowns(bool /* noCooldownMode = false */) {}
 	virtual bool CanSwitch() const = 0;
 
 	virtual void OnAnimationFinished() = 0;
@@ -63,12 +64,13 @@ public:
 	int GetMouseDirectionState();
 	bool IsActive();
 	static bool GetInputBool(InputActions action, bool useGamepad = false);
-	float2 GetInputFloat2(InputActions action, bool useGamepad = false) const;
-	void UpdateFacePointDir(bool useGamepad, bool faceToFront = false);
+	float2 GetInputFloat2(InputActions action, bool useGamepad = false);
+	void UpdateFacePointDir(bool useGamepad, bool faceToFront_ = false);
 	virtual void IncreaseUltimateCounter();
-	void SetClipSpeed(ResourceClip* clip, float movementSpeed) {
-		clip->speed = movementSpeed * animationSpeedFactor;
+	void SetClipSpeed(ResourceClip* clip, float speed) {
+		clip->speed = speed * animationSpeedFactor;
 	}
+	virtual void ResetToIdle(){}
 
 public:
 	float rangedDamageTaken = 1.0f;
@@ -92,6 +94,7 @@ public:
 	ComponentCamera* lookAtMouseCameraComp = nullptr;
 	CameraController* cameraController = nullptr;
 	float3 facePointDir = float3(0.f, 0.f, 0.f);
+	float3 weaponPointDir = float3(0.f, 0.f, 0.f);
 	MovementDirection movementInputDirection = MovementDirection::NONE;
 	ComponentTransform* playerMainTransform = nullptr;
 	float ultimateTimeRemaining = 0.0f;
@@ -101,6 +104,8 @@ public:
 	float aimTime = 5.f;
 	float decelerationRatio = 16.f;
 	UID lookAtPointUID = 0;
+
+	float2 result = float2(0, 0);
 protected:
 	void MoveTo();
 	//Combat
@@ -115,7 +120,7 @@ protected:
 private:
 	virtual bool CanShoot();
 	void ResetSwitchStatus();
-	MovementDirection GetControllerMovementDirection(bool useGamepad = false) const;
+	MovementDirection GetControllerMovementDirection(bool useGamepad = false);
 	float2 GetControllerOrientationDirection() const;
 	void LookAtGamepadDir();
 	void LookAtFacePointTarget(bool useGamepad);

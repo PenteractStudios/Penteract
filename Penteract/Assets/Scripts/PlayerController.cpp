@@ -8,7 +8,7 @@
 #include "HUDManager.h"
 #include "OnimaruBullet.h"
 #include "SwitchParticles.h"
-#include "GameController.h"
+#include "GlobalVariables.h"
 
 #include "Math/Quat.h"
 #include "Geometry/Plane.h"
@@ -93,11 +93,14 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, playerOnimaru.sprintMovementSpeed),
 	MEMBER(MemberType::FLOAT, playerOnimaru.aimTime),
 	MEMBER(MemberType::FLOAT, onimaruRecoveryRate),
+		MEMBER(MemberType::FLOAT, playerOnimaru.offsetWeaponAngle),
+		MEMBER(MemberType::FLOAT, playerOnimaru.limitAngle),
 	MEMBER_SEPARATOR("Onimaru Shoot"),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruBulletUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruLaserUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruGunUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruRightHandUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, onimaruWeaponUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerOnimaru.lookAtPointUID),
 	MEMBER_SEPARATOR("Onimaru Abilities"),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruShieldUID),
@@ -121,8 +124,16 @@ EXPOSE_MEMBERS(PlayerController) {
 GENERATE_BODY_IMPL(PlayerController);
 
 void PlayerController::Start() {
+	// Audio Listener
+	listener = GetOwner().GetComponent<ComponentAudioListener>();
+	transform = GetOwner().GetComponent<ComponentTransform>();
+	if (listener) {
+		listener->SetDirection(float3(0.0f, 0.0f, -1.0f), float3(0.0f, 1.0f, 0.0f));
+		listener->SetPosition(transform->GetGlobalPosition());
+	}
+
 	playerFang.Init(fangUID, fangParticleDashUID, fangLeftGunUID, fangRightGunUID, fangRightBulletUID, fangLeftBulletUID, fangLaserUID, cameraUID, HUDManagerObjectUID, fangDashDamageUID, EMPUID, EMPEffectsUID, fangUltimateUID, fangUltimateVFXUID, fangRightFootVFX, fangLeftFootVFX);
-	playerOnimaru.Init(onimaruUID, onimaruLaserUID, onimaruBulletUID, onimaruGunUID, onimaruRightHandUID, onimaruShieldUID, onimaruUltimateBulletUID, onimaruBlastEffectsUID, cameraUID, HUDManagerObjectUID, onimaruRightFootVFX, onimaruLeftFootVFX);
+	playerOnimaru.Init(onimaruUID, onimaruWeaponUID, onimaruLaserUID, onimaruBulletUID, onimaruGunUID, onimaruRightHandUID, onimaruShieldUID, onimaruUltimateBulletUID, onimaruBlastEffectsUID, cameraUID, HUDManagerObjectUID, onimaruRightFootVFX, onimaruLeftFootVFX);
 
 	GameObject* HUDManagerGO = GameplaySystems::GetGameObject(HUDManagerObjectUID);
 	if (HUDManagerGO) {
@@ -186,7 +197,7 @@ float PlayerController::GetFangMaxHealth() const {
 }
 
 bool PlayerController::IsPlayerDead() {
-	return !playerFang.isAlive && (!playerOnimaru.isAlive || !GameController::IsSwitchTutorialReached());
+	return !playerFang.isAlive && (!playerOnimaru.isAlive || !GameplaySystems::GetGlobalVariable(globalSwitchTutorialReached, true));
 }
 
 void PlayerController::SetNoCooldown(bool status) {
@@ -224,11 +235,13 @@ void PlayerController::SwitchCharacter() {
 			audios[static_cast<int>(AudioType::SWITCH)]->Play();
 		}
 		if (playerFang.characterGameObject->IsActive()) {
+			playerOnimaru.ResetToIdle();
 			playerFang.characterGameObject->Disable();
 			playerOnimaru.characterGameObject->Enable();
 
 			fangRecovering = 0.0f;
 		} else {
+			playerFang.ResetToIdle();
 			playerOnimaru.characterGameObject->Disable();
 			playerFang.characterGameObject->Enable();
 
@@ -242,9 +255,10 @@ void PlayerController::SwitchCharacter() {
 		if (sCollider) sCollider->Disable();
 		switchFirstHit = true;
 
-		if (GameController::IsSwitchTutorialActive()) GameController::ActivateSwitchTutorial(false);
+		if (GameplaySystems::GetGlobalVariable(globalswitchTutorialActive, true)) GameplaySystems::SetGlobalVariable(globalswitchTutorialActive, false);
 
-	} else {
+	}
+	else {
 		if (playSwitchParticles) {
 			if (switchEffects) {
 				SwitchParticles* script = GET_SCRIPT(switchEffects, SwitchParticles);
@@ -266,7 +280,8 @@ void PlayerController::SwitchCharacter() {
 							meleeScript->gruntCharacter.GetHit(switchDamage);
 							meleeScript->PlayHit();
 						}
-					} else if (rangedScript) {
+					}
+					else if (rangedScript) {
 						rangedScript->EnableBlastPushBack();
 						if (switchFirstHit) {
 							rangedScript->rangerGruntCharacter.GetHit(switchDamage);
@@ -290,8 +305,10 @@ void PlayerController::CheckCoolDowns() {
 		switchCooldownRemaining = 0.f;
 		switchInCooldown = false;
 		if (!noCooldownMode) switchInProgress = false;
-	} else {
-		switchCooldownRemaining -= Time::GetDeltaTime();
+	}
+	else {
+		if (playerOnimaru.characterGameObject->IsActive() && !GameplaySystems::GetGlobalVariable(globalSkill3TutorialReachedOni, true)) switchCooldownRemaining = switchCooldown; // during Onimaru tutorial, do not recover Switch cooldown
+		else switchCooldownRemaining -= Time::GetDeltaTime();
 	}
 
 	if (playerOnimaru.characterGameObject->IsActive() && playerFang.lifePoints != playerFang.GetTotalLifePoints()) {
@@ -306,7 +323,8 @@ void PlayerController::CheckCoolDowns() {
 				}
 			}
 
-		} else {
+		}
+		else {
 			fangRecovering += Time::GetDeltaTime();
 
 		}
@@ -323,7 +341,8 @@ void PlayerController::CheckCoolDowns() {
 				}
 			}
 
-		} else {
+		}
+		else {
 			onimaruRecovering += Time::GetDeltaTime();
 		}
 	}
@@ -340,7 +359,8 @@ void PlayerController::UpdatePlayerStats() {
 
 		if (playerFang.IsActive() && playerOnimaru.lifePoints <= playerOnimaru.GetTotalLifePoints()) {
 			hudManagerScript->HealthRegeneration(playerOnimaru.lifePoints);
-		} else if (playerOnimaru.IsActive() && playerFang.lifePoints <= playerFang.GetTotalLifePoints()) {
+		}
+		else if (playerOnimaru.IsActive() && playerFang.lifePoints <= playerFang.GetTotalLifePoints()) {
 			hudManagerScript->HealthRegeneration(playerFang.lifePoints);
 		}
 
@@ -353,13 +373,15 @@ void PlayerController::TakeDamage(float damage) {
 		if (playerFang.IsActive()) {
 			if (playerFang.IsVulnerable()) {
 				playerFang.GetHit(damage);
-			}
-		} else {
-			if (playerOnimaru.IsVulnerable()) {
-				playerOnimaru.GetHit(damage);
+				hitTaken = true;
 			}
 		}
-		hitTaken = true;
+		else {
+			if (playerOnimaru.IsVulnerable()) {
+				playerOnimaru.GetHit(damage);
+				hitTaken = true;
+			}
+		}
 	}
 }
 
@@ -390,7 +412,8 @@ void PlayerController::OnCharacterDeath() {
 
 	if (playerFang.isAlive) {
 		playerFang.agent->AddAgentToCrowd();
-	} else {
+	}
+	else {
 		playerOnimaru.agent->AddAgentToCrowd();
 	}
 
@@ -408,6 +431,11 @@ void PlayerController::OnCharacterResurrect() {
 }
 
 void PlayerController::Update() {
+	// Audio Listener
+	if (listener) {
+		listener->SetPosition(transform->GetGlobalPosition());
+	}
+
 	if (!playerFang.characterGameObject) return;
 	if (!playerOnimaru.characterGameObject) return;
 	if (!camera) return;
@@ -418,7 +446,8 @@ void PlayerController::Update() {
 
 	if (playerFang.characterGameObject->IsActive()) {
 		playerFang.Update(useGamepad);
-	} else {
+	}
+	else {
 		playerOnimaru.Update(useGamepad);
 	}
 
@@ -430,14 +459,14 @@ void PlayerController::Update() {
 
 	if (CanSwitch()) {
 
-		if (switchInProgress || (noCooldownMode && (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R) && (!useGamepad || !Input::IsGamepadConnected(0))
+		if (switchInProgress || (noCooldownMode && (Player::GetInputBool(InputActions::SWITCH) && (!useGamepad || !Input::IsGamepadConnected(0))
 			|| useGamepad && Input::IsGamepadConnected(0) && Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0)))) {
 
 			switchInProgress = true;
 			SwitchCharacter();
 		}
 
-		if (!switchInProgress && (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R) && (!useGamepad || !Input::IsGamepadConnected(0))
+		if (!switchInProgress && (Player::GetInputBool(InputActions::SWITCH) && (!useGamepad || !Input::IsGamepadConnected(0))
 			|| useGamepad && Input::IsGamepadConnected(0) && Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0))) {
 
 			switchInProgress = true;
@@ -446,17 +475,8 @@ void PlayerController::Update() {
 	}
 }
 
-void PlayerController::OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle) {
+void PlayerController::OnCollision(GameObject& collidedWith, float3 /* collisionNormal */ , float3 /* penetrationDistance */, void* /* particle */) {
 	if (collidedWith.name == "MeleeGrunt" || collidedWith.name == "RangedGrunt") {
 		switchCollisionedGO.push_back(&collidedWith);
-		if (playerOnimaru.IsActive()) {
-			ComponentAgent* agent = collidedWith.GetComponent<ComponentAgent>();
-			if (agent) {
-				agent->RemoveAgentFromCrowd();
-				float3 actualPenDistance = -penetrationDistance.ProjectTo(collisionNormal);
-				collidedWith.GetComponent<ComponentTransform>()->SetGlobalPosition(collidedWith.GetComponent<ComponentTransform>()->GetGlobalPosition() + actualPenDistance);
-				agent->AddAgentToCrowd();
-			}
-		}
 	}
 }

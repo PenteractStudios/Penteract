@@ -24,6 +24,7 @@ public:
 private:
 	void UpdateBlackImage();
 	void Play();
+	void CheckForReferences();
 
 private:
 	enum class FadeState { IDLE, FADE_IN, FADE_OUT };
@@ -33,6 +34,6 @@ private:
 	float fadeTimer = 0.0f;
 	const float4 alphaBlack = float4(0, 0, 0, 1);
 	const float4 noAlphaBlack = float4(0, 0, 0, 0);
-
+	bool checkedForReferences = false;
 };
 

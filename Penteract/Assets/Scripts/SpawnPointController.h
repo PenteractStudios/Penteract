@@ -6,12 +6,21 @@
 
 class GameObject;
 class ResourcePrefab;
+class ComponentAudioSource;
 class ComponentLight;
+class FloorIsLava;
 
 class SpawnPointController : public Script {
 	GENERATE_BODY(SpawnPointController);
 
 public:
+
+	enum class Audios {
+		DOWN,
+		UP,
+		TOTAL
+	};
+
 	/* Enemy prefab UIDs */
 	UID meleeEnemyPrefabUID = 0;
 	UID rangeEnemyPrefabUID = 0;
@@ -21,6 +30,13 @@ public:
 	UID finalDoorUID = 0;
 	UID gameObjectActivatedOnCombatEndUID = 0;
 	UID gameObjectDeactivatedOnCombatEndUID = 0;
+
+	//UID to stop fire
+	UID fireBridgeUID = 0;
+	UID fireArenaUID = 0;
+
+	//Bool to stop fire
+	bool stopFire = false;
 
 	std::string doorEnergyBack = "DoorEnergyBack";
 	std::string doorEnergyFront = "DoorEnergyFront";
@@ -38,7 +54,7 @@ public:
 	void Update() override;
 
 	/* Enable the spawn points on trigger  */
-	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override;
+	void OnCollision(GameObject& /* collidedWith */, float3 /* collisionNormal */, float3 penetrationDistance, void* particle = nullptr) override;
 	void OpenDoor();
 
 	ResourcePrefab* GetMeleePrefab() { return meleeEnemyPrefab; };
@@ -59,7 +75,9 @@ private:
 
 	/* Door object */
 	GameObject* initialDoor = nullptr;
+	ComponentAudioSource* initialDoorAudios[static_cast<int>(Audios::TOTAL)] = { nullptr };
 	GameObject* finalDoor = nullptr;
+	ComponentAudioSource* finalDoorAudios[static_cast<int>(Audios::TOTAL)] = { nullptr };
 
 	GameObject* gameObjectActivatedOnCombatEnd = nullptr;	// This gameObject will be disabled when triggering the combat, and will be enabled again when the combat ends (in 'OpenDoor()'). Useful to set up triggers and other gameplay features after a combat encounter.
 	GameObject* gameObjectDeactivatedOnCombatEnd = nullptr;	// This gameObject will be enabled when triggering the combat, and will be disabled again when the combat ends (in 'OpenDoor()'). Useful to set down triggers and other gameplay features after a combat encounter.
@@ -84,6 +102,11 @@ private:
 	float finalDoorLightStartIntensity = 0.0f;				// Initial intensity of the finalDoorLight
 
 	bool isClosing = false;
+	bool enemiesSpawned = false;
+
+	//Scripts to stop fire
+	FloorIsLava* bridgeTilesScript = nullptr;
+	FloorIsLava* arenaTilesScript = nullptr;
 
 private:
 	bool CheckSpawnPointStatus();

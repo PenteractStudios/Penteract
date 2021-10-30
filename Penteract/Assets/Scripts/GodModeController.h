@@ -31,6 +31,7 @@ public:
 	UID plazaDoorUID = 0;
 	UID cafeteriaDoorUID = 0;
 	UID bridgeDoorUID = 0;
+	UID extraDoorUID = 0;
 
 	/* Dialog triggers */
 	UID dialogTriggersUID = 0;
@@ -66,9 +67,17 @@ private:
 	GameObject* plazaDoor = nullptr;
 	GameObject* cafeteriaDoor = nullptr;
 	GameObject* bridgeDoor = nullptr;
+	GameObject* extraDoor = nullptr;
 
 	/* Dialog triggers */
 	GameObject* dialogTriggers = nullptr;
+	bool skill1WasActive = false;
+	bool skill2WasActive = false;
+	bool skill3WasActive = false;
+	bool skill1OniWasActive = false;
+	bool skill2OniWasActive = false;
+	bool skill3OniWasActive = false;
+	bool switchWasActive = false;
 
 	/* Door array to keep previous state */
 	std::vector <std::pair<GameObject*, bool>> doorPreviousStates;

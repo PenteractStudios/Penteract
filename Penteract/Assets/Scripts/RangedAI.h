@@ -38,7 +38,7 @@ public:
 	void OnAnimationFinished() override;
 	void OnAnimationSecondaryFinished() override;
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) override;
-	void OnCollision(GameObject& collidedWith, float3 collisionNormal, float3 penetrationDistance, void* particle = nullptr) override; //This is commented until merge with collisions
+	void OnCollision(GameObject& collidedWith, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* particle = nullptr) override; //This is commented until merge with collisions
 	void ShootPlayerInRange(); //Sets in motion the shooting at the player, if found and close enough
 
 	void EnableBlastPushBack();
@@ -59,22 +59,25 @@ private:
 	void PlayAudio(AudioType audioType);											//Plays audio (if not null)
 
 	void UpdatePushBackPosition();
-	void CalculatePushBackRealDistance();											// Calculates the real distance of the pushback taking into account any obstacles in the path
 	void PlayHitMaterialEffect();													// Changes material hit
 	void UpdateDissolveTimer();														// If the currentDissolveTime is reached, Plays animation
-	void ParticleHit(GameObject& collidedWith, void* particle, Player& player);
+	void ParticleHit(GameObject& collidedWith, void* particle, Player& player_);
 	void SetRandomMaterial();
 	void SetMaterial(ComponentMeshRenderer* mesh, UID newMaterialID, bool needToPlayDissolve = false);
 
 
 public:
-	Enemy rangerGruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 5.f, 5.f, 3.f, 2.f); //Enemy class instance (for shared values)
+	Enemy rangerGruntCharacter = Enemy(5.0f, 8.0f, 1.0f, 30, 40.f, 5.f, 5.f, 15.f, 0.2f, 3.f, 2.f); //Enemy class instance (for shared values)
 	UID playerUID = 0;				//Reference to player main Gameobject UID, used to check distances
 	UID playerMeshUIDFang = 0;		//Reference to player Fang mesh holding Gameobject UID, used for raycasting if fang is active
 	UID playerMeshUIDOnimaru = 0;	//Reference to player Fang mesh holding Gameobject UID, used for raycasting if onimaru is active
 	UID meshUID1 = 0;				//Second mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID meshUID2 = 0;				//Third mesh UID for checking frustum presence (if not inside frustum shooting won't happen)
 	UID fangUID = 0;
+
+
+	ResourcePrefab* bulletRange = nullptr;
+	UID bulletUID = 0;
 
 	ComponentParticleSystem* shootTrailPrefab = nullptr; //Reference to projectile prefab , for shooting
 	GameObject* player = nullptr;				//Reference to player main Gameobject, used to check distances
@@ -102,7 +105,8 @@ public:
 
 	float approachOffset = 4.0f;		//Offset to prevent AI from chasing after player immediately after getting close enough whenever player moves slightly
 	float fleeingRange = 7.f;			//Distance at which entity will start a flee motion
-	float attackSpeed = 0.5f;			//Shots per second
+	float attackInterval = 2.0f;		//Seconds between shots
+	float attackIntervalVariability = 1.f;
 	float actualShotMaxTime = 0.3f;		//Internal variable used to match the shooting animation and the projectile creation
 	float timeSinceLastHurt = 0.5f;		//Timer to keep track of how long it's been since AI was hurt, if higher than hurtFeedbackTimeDuration, this tries to make AI turn red with DamagedMaterial
 	float stunDuration = 3.f;			//Max time the enemy will be stunned
@@ -114,6 +118,19 @@ public:
 	UID dissolveMaterialID = 0;			//Reference to dissolve material, used to be set whenever Ai has been recently hurt
 	float dissolveTimerToStart = 0.0f;	//Timer until the dissolve animation is played
 	UID materialsUID = 0;				//Reference to materials placeholder for random
+
+
+	//EMP Stun feedback
+	ComponentParticleSystem* particlesEmp = nullptr;
+	GameObject* objectEMP = nullptr;
+
+	//Push Stun feedback
+	ComponentParticleSystem* particlesPush = nullptr;
+	GameObject* objectPush = nullptr;
+	float maxTimePushEffect = 1.0f;
+	float minTimePushEffect = 0.0f;
+
+	bool isSniper = false;	// This is set for ranged enemies that will not chase the player
 
 private:
 
@@ -140,9 +157,8 @@ private:
 
 	ComponentAudioSource* audios[static_cast<int>(AudioType::TOTAL)] = { nullptr }; //Array of ints used to play audios
 
-	float currentPushBackDistance = 0.f;
+	float pushBackTimer = 0.f;
 	float currentSlowedDownTime = 0.f;
-	float pushBackRealDistance = 0.f;
 
 	float currentFleeingUpdateTime = 0.f; // Current Time that needs to compare against the fleeingUpdateTime in the flee state
 	float3 currentFleeDestination;        // Destination position where it is going to move far away from the player

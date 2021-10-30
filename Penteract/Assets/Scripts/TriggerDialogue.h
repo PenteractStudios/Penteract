@@ -22,4 +22,5 @@ public:
 
 private:
 	AfterDialogCallback* afterDialogCallbackScript = nullptr;
+	bool triggered = false; // Two objects can collide with the trigger at the same time. This boolean prevents the OnCollision() code to be executed twice when that happens
 };

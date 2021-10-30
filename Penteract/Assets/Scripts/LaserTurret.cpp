@@ -16,14 +16,15 @@ GENERATE_BODY_IMPL(LaserTurret);
 
 void LaserTurret::Start() {
 
-    GameObject* owner = &GetOwner();
+    GameObject* ownerGo = &GetOwner();
 
-    if (owner) {
-        animationComp = owner->GetComponent<ComponentAnimation>();
+    if (ownerGo) {
+        animationComp = ownerGo->GetComponent<ComponentAnimation>();
     }
 
     laserObject = GameplaySystems::GetGameObject(laserTargetUID);
     if (laserObject) {
+        laserAudio = laserObject->GetComponent<ComponentAudioSource>();
         laserObject->Disable();
     }
 
@@ -32,6 +33,11 @@ void LaserTurret::Start() {
         laserWarning->Disable();
     }
 
+    int i = 0;
+    for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
+        if (i < static_cast<int>(Audios::TOTAL)) audios[i] = &src;
+        i++;
+    }
 }
 
 void LaserTurret::Update() {
@@ -49,9 +55,15 @@ void LaserTurret::Update() {
                 if (laserWarning) {
                     laserWarning->Enable();
                     ComponentParticleSystem* laserWarningVFX = laserWarning->GetComponent<ComponentParticleSystem>();
-                    if (laserWarningVFX) laserWarningVFX->PlayChildParticles();
+                    ComponentAudioSource* audioWarning = laserWarning->GetComponent<ComponentAudioSource>();
+                    if (laserWarningVFX) {
+                        laserWarningVFX->PlayChildParticles();
+                        if (audioWarning) audioWarning->Play();
+                    }
                 }
                 animationComp->SendTrigger(states[static_cast<unsigned int>(TurretState::IDLE_START)] + states[static_cast<unsigned int>(TurretState::START)]);
+
+                if (audios[static_cast<int>(Audios::UP)]) audios[static_cast<int>(Audios::UP)]->Play();
             }
         }
         break;
@@ -62,16 +74,24 @@ void LaserTurret::Update() {
                 coolDownOnTimer = 0;
                 currentState = TurretState::END;
                 animationComp->SendTrigger(states[static_cast<unsigned int>(TurretState::SHOOTING_END)] + states[static_cast<unsigned int>(TurretState::END)]);
+
+                if (audios[static_cast<int>(Audios::DOWN)]) audios[static_cast<int>(Audios::DOWN)]->Play();
             }
         }
         break;
     }
 
     if (currentState != TurretState::SHOOT && currentState != TurretState::SHOOTING_END) {
-        if (laserObject && laserObject->IsActive()) laserObject->Disable();
+        if (laserObject && laserObject->IsActive()) {
+            if (laserAudio) laserAudio->Stop();
+            laserObject->Disable();
+        }
     }
     else {
-        if (laserObject && !laserObject->IsActive()) laserObject->Enable();
+        if (laserObject && !laserObject->IsActive()) {
+            laserObject->Enable();
+            if (laserAudio) laserAudio->Play();
+        }
     }
 
 }
