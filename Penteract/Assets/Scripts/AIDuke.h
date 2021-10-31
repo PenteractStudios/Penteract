@@ -8,6 +8,7 @@ class ComponentTransform;
 class ComponentAgent;
 class ComponentAudioSource;
 class ComponentMeshRenderer;
+class ComponentParticleSystem;
 class ResourcePrefab;
 class HUDController;
 class PlayerController;
@@ -19,6 +20,7 @@ class AIMovement;
 class FloorIsLava;
 
 enum class Phase {
+	PHASE0,
 	PHASE1,
 	PHASE2,
 	PHASE3
@@ -50,14 +52,17 @@ public:
 	bool IsBeingPushed() const;
 	float GetDukeMaxHealth() const;
 
+	void ActivateDissolve();
+
 private:
-	void CalculatePushBackRealDistance();
+	void UpdatePushStatus();
 	void UpdatePushBackPosition();
 	void ParticleHit(GameObject& collidedWith, void* particle, Player& player_);
-	bool CanBeHurtDuringCriticalMode() const;
+	bool CanBeFullyHurtDuringCriticalMode() const;
 	bool IsInvulnerable()const;
 	void OnShieldInterrupted();
 	void PerformBulletHell();
+	void PerformDeath();
 
 public:
 	UID dukeUID = 0;
@@ -75,11 +80,20 @@ public:
 	UID barrelSpawnerUID = 0;
 	UID chargeAttackUID = 0;
 	UID lasersUID = 0;
-	UID videoParentCanvasUID = 0;
-	UID videoCanvasUID = 0;
 	UID hudManagerUID = 0;
 	UID fireTilesUID = 0;
-	UID triggerBosslvl2EndUID = 0;
+	// Effects
+	UID punchSlashUID = 0;
+	UID chargeDustUID = 0;
+	UID areaChargeUID = 0;
+	UID chargeTelegraphAreaUID = 0;
+	UID chargePunchVFXUID = 0;
+	UID dustStepLeftUID = 0;
+	UID dustStepRightUID = 0;
+	UID bodyArmorUID = 0;
+	// Only for level2
+	UID triggerBossEndUID = 0;
+	UID dissolveMaterialGOUID = 0;
 
 	GameObject* duke = nullptr;
 	GameObject* player = nullptr;
@@ -87,7 +101,7 @@ public:
 	Duke dukeCharacter = Duke();
 	DukeShield* dukeShield = nullptr;
 
-	Phase phase = Phase::PHASE1;
+	Phase phase = Phase::PHASE0;
 
 	float shieldCooldown = 0.f;
 	float shieldActiveTime = 5.f;
@@ -95,6 +109,8 @@ public:
 	float bulletHellCooldown = 0.f;
 
 	float abilityChangeCooldown = 8.f;
+
+	float criticalModeCooldown = 7.0f;
 
 	float stunDuration = 3.f;
 
@@ -115,6 +131,7 @@ public:
 	UID winSceneUID = 0;
 
 private:
+	// Scripts and basic objects
 	ComponentTransform* ownerTransform = nullptr;
 	AIMovement* movementScript = nullptr;
 
@@ -122,8 +139,10 @@ private:
 	FloorIsLava* fireTilesScript = nullptr;
 
 	HUDManager* hudManager = nullptr;
+
 	GameObject* lasers = nullptr;
 
+	// Cooldowns and thresholds
 	bool isReady = true;
 
 	float currentShieldCooldown = 0.f;
@@ -133,6 +152,8 @@ private:
 	bool bulletHellIsActive = false;
 
 	float currentAbilityChangeCooldown = 0.f;
+
+	float currentCriticalModeCooldown = 0.f;
 
 	float currentMovingTime = 0.f;
 
@@ -150,15 +171,18 @@ private:
 	float timeSinceLastCharge = 0.f;
 
 	// Onimaru blast effect
-	float currentPushBackDistance = 0.f;
 	float currentSlowedDownTime = 0.f;
-	float pushBackRealDistance = 0.f;
+	float pushBackTimer = 0.f;
 
-	//Only for level2
-	GameObject* triggerBosslvl2End = nullptr;
+	// Only for level2
+	GameObject* triggerBossEnd = nullptr;
+	UID dissolveMaterialID = 0;
 
+	// Auxiliary
 	float currentTimeBetweenAbilities = 0.f;
 	bool mustWaitForTimerBetweenAbilities = true;
+	bool mustPerformInitialAnimation = true;
 
+	bool stunnedInBulletHell = false;
 };
 

@@ -11,13 +11,14 @@ public:
 
 	void Start() override;
 	void Update() override;
-	void FadeOut();
-	void FadeIn();
+	void FadeOut(float fadeDuration_ = -1.0f);
+	void FadeIn(float fadeDuration_ = -1.0f);
 	void Stop();
 	bool IsPlaying() const;
 
 public:
 	float fadeDuration = 0.5f;
+	float originalFadeDuration = 0.5f;
 	UID blackImageObjUID = 0;
 	bool fadeInOnStart = false;
 

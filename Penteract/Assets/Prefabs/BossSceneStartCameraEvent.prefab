@@ -1,0 +1,307 @@
+{
+    "Root": {
+        "Name": "BossSceneStartCameraEvent",
+        "Active": true,
+        "RootBoneName": "",
+        "Mask": 0,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Active": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "LocalEulerAngles": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ]
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 6478671148398940516,
+                "Values": [
+                    {
+                        "Name": "playerControllerObjUID",
+                        "Type": "GameObjectUID",
+                        "Value": 15261592491771467264
+                    },
+                    {
+                        "Name": "canvasFaderObjUID",
+                        "Type": "GameObjectUID",
+                        "Value": 2596402260737554462
+                    },
+                    {
+                        "Name": "skipTextObjUID",
+                        "Type": "GameObjectUID",
+                        "Value": 3171449454238145239
+                    }
+                ]
+            }
+        ],
+        "Children": [
+            {
+                "Name": "TravelStart2",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            -24.0,
+                            -10.0,
+                            -51.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.7071068286895752,
+                            0.0,
+                            -0.7071068286895752
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            270.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Script",
+                        "Active": true,
+                        "Script": 7895521107267370213,
+                        "Values": [
+                            {
+                                "Name": "decelerationDistance",
+                                "Type": "Float",
+                                "Value": 20.0
+                            },
+                            {
+                                "Name": "travellingDeceleration",
+                                "Type": "Float",
+                                "Value": 20.0
+                            },
+                            {
+                                "Name": "travellingAcceleration",
+                                "Type": "Float",
+                                "Value": 2.0
+                            },
+                            {
+                                "Name": "maxTravellingSpeed",
+                                "Type": "Float",
+                                "Value": 10.0
+                            }
+                        ]
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "TravelEnd2",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            74.00273895263672,
+                            -10.0,
+                            -51.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "TravelStart1",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            -45.75095748901367,
+                            10.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.17303156852722169,
+                            0.0,
+                            0.0,
+                            0.9849162697792053
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            19.928255081176759,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "Script",
+                        "Active": true,
+                        "Script": 7895521107267370213,
+                        "Values": [
+                            {
+                                "Name": "travellingAcceleration",
+                                "Type": "Float",
+                                "Value": 0.0
+                            },
+                            {
+                                "Name": "startingTravellingSpeed",
+                                "Type": "Float",
+                                "Value": 3.0
+                            }
+                        ]
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "TravelEnd1",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            -30.242889404296876,
+                            10.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "TravelStart4",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            -23.854022979736329,
+                            18.000003814697267,
+                            9.561237335205079
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "TravelEnd4",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            -52.0,
+                            18.0,
+                            15.94778060913086
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    }
+                ],
+                "Children": null
+            }
+        ]
+    }
+}

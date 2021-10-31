@@ -9,6 +9,7 @@ class ComponentAgent;
 class ComponentAnimation;
 class ComponentMeshRenderer;
 class ComponentParticleSystem;
+class ComponentAudioSource;
 
 class RatRobot : public Script {
 	GENERATE_BODY(RatRobot);
@@ -47,5 +48,6 @@ private:
 	float respawnTimer = 0.0f;
 	ComponentMeshRenderer* meshRenderer = nullptr;
 	ComponentParticleSystem* explosionParticleSystem = nullptr;
+	ComponentAudioSource* audioSplash = nullptr;
 };
 

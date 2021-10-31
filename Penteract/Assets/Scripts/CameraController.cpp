@@ -48,6 +48,7 @@ void CameraController::Start() {
 void CameraController::Update() {
 	if (playerController == nullptr || transform == nullptr || camera == nullptr) return;
 	if (playerController->IsPlayerDead()) return;
+	if (GameplaySystems::GetGlobalVariable(globalCameraEventOn, false)) return;
 	float3 playerGlobalPos = playerController->playerFang.playerMainTransform->GetGlobalPosition();
 	float3 desiredPosition = playerGlobalPos + float3(cameraOffsetX, cameraOffsetY, cameraOffsetZ);
 	float3 smoothedPosition = desiredPosition;

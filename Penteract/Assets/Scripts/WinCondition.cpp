@@ -33,5 +33,5 @@ void WinCondition::OnCollision(GameObject& /* collidedWith */, float3 /* collisi
 		if (sceneUID) SceneManager::ChangeScene(sceneUID);
 	}
 
-	PlayerController::currentLevel = 2;
+	PlayerController::currentLevel++;
 }
