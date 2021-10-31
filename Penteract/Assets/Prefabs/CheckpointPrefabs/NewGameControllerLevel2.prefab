@@ -4427,6 +4427,80 @@
                 ],
                 "Children": [
                     {
+                        "Name": "TriggerElevator",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Active": true,
+                                "Position": [
+                                    -36.19208526611328,
+                                    0.7134075164794922,
+                                    61.69383239746094
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "BoxCollider",
+                                "Active": true,
+                                "colliderType": 3,
+                                "layerType": 1,
+                                "mass": 1.0,
+                                "size": [
+                                    10.0,
+                                    10.0,
+                                    10.0
+                                ],
+                                "centerOffset": [
+                                    0.0,
+                                    0.0,
+                                    0.0
+                                ],
+                                "freezeRotation": false
+                            },
+                            {
+                                "Type": "Script",
+                                "Active": true,
+                                "Script": 5154794321518481601,
+                                "Values": [
+                                    {
+                                        "Name": "actualLevel",
+                                        "Type": "Int",
+                                        "Value": 2
+                                    },
+                                    {
+                                        "Name": "newCheckpoint",
+                                        "Type": "Int",
+                                        "Value": 0
+                                    },
+                                    {
+                                        "Name": "newLevel",
+                                        "Type": "Int",
+                                        "Value": 2
+                                    }
+                                ]
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
                         "Name": "TriggerTestArena1",
                         "Active": true,
                         "RootBoneName": "",
@@ -4489,6 +4563,11 @@
                                         "Name": "newCheckpoint",
                                         "Type": "Int",
                                         "Value": 1
+                                    },
+                                    {
+                                        "Name": "newLevel",
+                                        "Type": "Int",
+                                        "Value": 2
                                     }
                                 ]
                             }
@@ -4513,7 +4592,7 @@
                                     0.0,
                                     0.7071068286895752,
                                     0.0,
-                                    0.7071068286895752
+                                    0.7071067094802856
                                 ],
                                 "Scale": [
                                     1.0,
@@ -4521,9 +4600,9 @@
                                     1.0
                                 ],
                                 "LocalEulerAngles": [
-                                    -0.0,
-                                    90.0,
-                                    -0.0
+                                    -180.0,
+                                    89.98021697998047,
+                                    -180.0
                                 ]
                             },
                             {
@@ -4558,6 +4637,11 @@
                                         "Name": "newCheckpoint",
                                         "Type": "Int",
                                         "Value": 2
+                                    },
+                                    {
+                                        "Name": "newLevel",
+                                        "Type": "Int",
+                                        "Value": 2
                                     }
                                 ]
                             }
@@ -4582,7 +4666,7 @@
                                     0.0,
                                     0.7071068286895752,
                                     0.0,
-                                    0.7071068286895752
+                                    0.7071067094802856
                                 ],
                                 "Scale": [
                                     1.0,
@@ -4590,9 +4674,9 @@
                                     1.0
                                 ],
                                 "LocalEulerAngles": [
-                                    -0.0,
-                                    90.0,
-                                    -0.0
+                                    -180.0,
+                                    89.98021697998047,
+                                    -180.0
                                 ]
                             },
                             {
@@ -4627,6 +4711,11 @@
                                         "Name": "newCheckpoint",
                                         "Type": "Int",
                                         "Value": 3
+                                    },
+                                    {
+                                        "Name": "newLevel",
+                                        "Type": "Int",
+                                        "Value": 2
                                     }
                                 ]
                             }
@@ -4655,8 +4744,8 @@
                                 ],
                                 "Scale": [
                                     1.0,
-                                    1.0000001192092896,
-                                    1.0000001192092896
+                                    0.9999999403953552,
+                                    0.9999999403953552
                                 ],
                                 "LocalEulerAngles": [
                                     -90.00000762939453,

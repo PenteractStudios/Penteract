@@ -2,6 +2,7 @@
 
 #include "GameObject.h"
 #include "GameplaySystems.h"
+#include "GlobalVariables.h"
 #include "PlayerController.h"
 #include "SceneTransition.h"
 
@@ -34,4 +35,6 @@ void WinCondition::OnCollision(GameObject& /* collidedWith */, float3 /* collisi
 	}
 
 	PlayerController::currentLevel++;
+	GameplaySystems::SetGlobalVariable(globalLevel, PlayerController::currentLevel);
+	GameplaySystems::SetGlobalVariable(globalCheckpoint, 0);
 }
