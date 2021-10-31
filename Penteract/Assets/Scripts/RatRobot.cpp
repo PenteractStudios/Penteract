@@ -25,13 +25,12 @@ void RatRobot::Start() {
 	transform = GetOwner().GetComponent<ComponentTransform>();
 	agent = GetOwner().GetComponent<ComponentAgent>();
 	animation = GetOwner().GetComponent<ComponentAnimation>();
+	audioSplash = GetOwner().GetComponent<ComponentAudioSource>();
 	std::vector<GameObject*> children = GetOwner().GetChildren();
 	if (children.size() > HIERARCHY_INDEX_MESH_RENDERER)
 		meshRenderer = children[HIERARCHY_INDEX_MESH_RENDERER]->GetComponent<ComponentMeshRenderer>();
 
 	if (children.size() > HIERARCHY_INDEX_EXPLOSION_PARTICLE_SYSTEM) {
-		std::string message = "Size is " + std::to_string(children.size()) + " and this line shouldn't execute unless children was > than " + std::to_string(HIERARCHY_INDEX_EXPLOSION_PARTICLE_SYSTEM - 1);
-		Debug::Log(message.c_str());
 		explosionParticleSystem = children[HIERARCHY_INDEX_EXPLOSION_PARTICLE_SYSTEM]->GetComponent<ComponentParticleSystem>();
 	}
 }
@@ -188,6 +187,9 @@ void RatRobot::SteppedOn() {
 	if (explosionParticleSystem) {
 		explosionParticleSystem->Play();
 		explosionParticleSystem->PlayChildParticles();
+	}
+	if (audioSplash) {
+		audioSplash->Play();
 	}
 }
 
