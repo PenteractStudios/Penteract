@@ -367,14 +367,14 @@ void Player::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 	if (!lockMovement && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 		movementInputDirection = GetInputMovementDirection();
 		MoveTo();
-	} else if (!GameplaySystems::GetGlobalVariable(globalMovePlayerFromCode, true)) {
+	} else if (!GameplaySystems::GetGlobalVariable(globalMovePlayerFromCode, false)) {
 		movementInputDirection = MovementDirection::NONE;
 		if (agent) agent->SetMoveTarget(playerMainTransform->GetGlobalPosition(), false);
 	}
 	if (!lockRotation && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 		UpdateFacePointDir(useGamepad && Input::IsGamepadConnected(0), faceToFront);
-    LookAtFacePointTarget();
-	} else if (GameplaySystems::GetGlobalVariable(globalMovePlayerFromCode, true)) {
+		LookAtFacePointTarget();
+	} else if (GameplaySystems::GetGlobalVariable(globalMovePlayerFromCode, false)) {
 		LookAtFacePointTarget();
 	}
 }
