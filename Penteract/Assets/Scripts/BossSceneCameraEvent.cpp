@@ -79,7 +79,7 @@ void BossSceneCameraEvent::Update() {
 		break;
 	case EventState::FADE_IN:
 		if (!canvasFader->IsPlaying()) {
-			canvasFader->FadeIn(0.3f);
+			canvasFader->FadeIn(fadeInDuration);
 			eventState = EventState::TRAVELLING;
 			travellingSpeed = minTravellingSpeed;
 		}
@@ -96,7 +96,7 @@ void BossSceneCameraEvent::Update() {
 		if (!canvasFader->IsPlaying()) {
 			if ((Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0))) {
 				//SKIPPING
-				canvasFader->FadeOut(0.1f);
+				canvasFader->FadeOut(fadeOutDuration);
 				eventState = EventState::FADE_OUT;
 				break;
 			}
@@ -130,7 +130,7 @@ void BossSceneCameraEvent::TravelToCurrentTargetPointUpdate() {
 	} else {
 		eventState = EventState::FADE_OUT;
 		if (!canvasFader->IsPlaying()) {
-			canvasFader->FadeOut(0.3f);
+			canvasFader->FadeOut(fadeOutDuration);
 		}
 		//Decelerating
 		travellingSpeed = Max(travellingSpeed - travellingDeceleration * Time::GetDeltaTime(), minTravellingSpeed);
@@ -163,7 +163,7 @@ void BossSceneCameraEvent::BackToNormalGameplay() {
 	if (skipTextObj)skipTextObj->Disable();
 	GameplaySystems::SetGlobalVariable(globalCameraEventOn, false);
 	GetOwner().Disable();
-	if (canvasFader) canvasFader->FadeIn(0.3f);
+	if (canvasFader) canvasFader->FadeIn(fadeInDuration);
 	if (cameraTransform) cameraTransform->SetGlobalRotation(cameraOriginalRotation);
 }
 
