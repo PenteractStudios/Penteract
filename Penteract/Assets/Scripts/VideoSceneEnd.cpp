@@ -52,7 +52,6 @@ void VideoSceneEnd::BackToNormalGameplay()
     Time::ResumeGame();
     componentVideo->Stop();
     GameplaySystems::SetGlobalVariable(isVideoActive, false);
-    parent->Disable();
 
     GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, false);
 }

@@ -1,0 +1,17 @@
+{
+    "InitialState": 14145246118595496650,
+    "Clips": [
+        17883801471264958813
+    ],
+    "States": [
+        {
+            "Id": 14145246118595496650,
+            "Name": "Close",
+            "ClipId": 17883801471264958813
+        }
+    ],
+    "Transitions": null,
+    "Bones": [
+        "FEED_ME_WITH_BONES_IAM_STARVING"
+    ]
+}

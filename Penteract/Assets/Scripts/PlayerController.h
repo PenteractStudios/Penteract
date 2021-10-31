@@ -128,6 +128,7 @@ public:
 
 	//Upgrades
 	int obtainedUpgradeCells = 0;
+	UID upgradesParticlesUID = 0;
 
 private:
 	void CheckCoolDowns();
@@ -155,6 +156,8 @@ private:
 	std::vector<GameObject*> switchCollisionedGO;
 	bool switchFirstHit = true;
 
+	//Upgrades
+	ComponentParticleSystem* upgradeParticles = nullptr;
 	//Camera
 	ComponentCamera* compCamera = nullptr;
 	ComponentTransform* cameraTransform = nullptr;

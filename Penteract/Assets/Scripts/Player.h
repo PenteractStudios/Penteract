@@ -63,6 +63,7 @@ public:
 	virtual bool IsInstantOrientation() const = 0;
 	virtual bool IsVulnerable() const = 0;
 
+	void MoveTo(float3 targetForcedPosition = float3(0, 0, 0));
 	int GetMouseDirectionState();
 	bool IsActive();
 	static bool GetInputBool (InputActions action);
@@ -109,7 +110,6 @@ public:
 
 	float2 result = float2(0, 0);
 protected:
-	void MoveTo();
 	//Combat
 	float timeWithoutCombat = 0.f;
 	bool aiming = false;

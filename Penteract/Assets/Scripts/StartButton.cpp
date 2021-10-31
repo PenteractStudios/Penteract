@@ -94,7 +94,9 @@ void StartButton::DoTransition() {
 		sceneTransition->StartTransition();
 	} else {
 		if (sceneUID != 0) SceneManager::ChangeScene(sceneUID);
-		if (levelNum == 2) {
+		if (levelNum == 3) {
+			PlayerController::currentLevel = 3;
+		} else if (levelNum == 2) {
 			PlayerController::currentLevel = 2;
 			Player::level2Upgrade = GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_Catwalks, false) &&
 				GameplaySystems::GetGlobalVariable(globalUpgradeLevel2_AfterArena1, false) &&

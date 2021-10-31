@@ -107,9 +107,16 @@ void Player::LookAtFacePointTarget() {
 	}
 }
 
-void Player::MoveTo() {
+void Player::MoveTo(float3 targetForcedPosition) {
+	if (!targetForcedPosition.Equals(float3(0, 0, 0))) {
+		// This is done only when MoveTo is used to move the player by code, and not from the player input.
+		movementInputDirection = MovementDirection::RIGHT;
+		facePointDir = targetForcedPosition - playerMainTransform->GetGlobalPosition();
+	}
+
 	float3 dir = GetDirection();
-	float3 newPosition = playerMainTransform->GetGlobalPosition() + ((deceleration > 0.f) ? decelerationDirection : dir);
+	float3 newPosition = targetForcedPosition.Equals(float3(0, 0, 0)) ? playerMainTransform->GetGlobalPosition() + ((deceleration > 0.f) ? decelerationDirection : dir) : targetForcedPosition;
+
 	if (decelerating)
 	{
 		deceleration += decelerationRatio * Time::GetDeltaTime();
@@ -360,12 +367,14 @@ void Player::Update(bool useGamepad, bool lockMovement, bool lockRotation) {
 	if (!lockMovement && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 		movementInputDirection = GetInputMovementDirection();
 		MoveTo();
-	} else {
+	} else if (!GameplaySystems::GetGlobalVariable(globalMovePlayerFromCode, false)) {
 		movementInputDirection = MovementDirection::NONE;
 		if (agent) agent->SetMoveTarget(playerMainTransform->GetGlobalPosition(), false);
 	}
 	if (!lockRotation && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 		UpdateFacePointDir(useGamepad && Input::IsGamepadConnected(0), faceToFront);
+		LookAtFacePointTarget();
+	} else if (GameplaySystems::GetGlobalVariable(globalMovePlayerFromCode, false)) {
 		LookAtFacePointTarget();
 	}
 }

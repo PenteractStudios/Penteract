@@ -7,6 +7,7 @@
 
 class ComponentParticleSystem;
 class ResourcePrefab;
+class ResourceMaterial;
 class AttackDronesController;
 class BarrelSpawner;
 class DukeShield;
@@ -44,12 +45,12 @@ public:
 	// ------- Contructors ------- //
 	Duke() {}
 
-	Duke(float lifePoints_, float movementSpeed_, float damageHit_, float searchRadius_, float attackRange_, float timeToDie_, float pushBackDistance_, float pushBackSpeed_)
+	Duke(float lifePoints_, float movementSpeed_, float damageHit_, float searchRadius_, float attackRange_, float timeToDie_, float pushBackDistance_, float pushBackTime_)
 		: searchRadius(searchRadius_)
 		, attackRange(attackRange_)
 		, timeToDie(timeToDie_)
 		, pushBackDistance(pushBackDistance_)
-		, pushBackSpeed(pushBackSpeed_) {
+		, pushBackTime(pushBackTime_) {
 		lifePoints = lifePoints_;
 		movementSpeed = movementSpeed_;
 		damageHit = damageHit_;
@@ -57,7 +58,7 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, UID videoParentCanvasUID, UID videoCanvasUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID, UID chargeDustUID, UID areaChargeUID, UID chargeTelegraphAreaUID, UID chargePunchVFXUID, UID dustStepLeftUID, UID dustStepRightUID, UID bodyArmorUID);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void BulletHell();
@@ -65,8 +66,10 @@ public:
 	bool BulletHellActive() const;
 	bool BulletHellFinished() const;
 	bool IsBulletHellCircular() const;
+	bool PlayerIsInChargeRangeDistance() const;
 	void InitCharge(DukeState nextState);
 	void UpdateCharge(bool forceStop = false);
+	void UpdateChargeAttack();
 	void CallTroops();
 	void Move(const float3& playerDirection);
 	void Shoot();
@@ -81,8 +84,14 @@ public:
 	void OnAnimationSecondaryFinished();
 	void OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName);
 	void StopShooting();
-	void InitPlayerVictory();
 	void StartPhase2Shield();
+
+	// ---- Auxiliary Functions ---- //
+	void ActivateDissolve(UID dissolveMaterialID);
+	void SetCriticalMode(bool activate);
+
+	// ------ Getters/Setters ------ //
+	ComponentMeshRenderer* GetDukeMeshRenderer() const;
 
 private:
 	int GetWalkAnimation();
@@ -96,19 +105,24 @@ public:
 	int attackBurst = 3;
 	float timeInterBurst = 1.0f;
 	float timeToDie = 5.f;
-	float pushBackDistance = 5.f;
-	float pushBackSpeed = 5.f;
+	float pushBackDistance = 7.f;
+	float pushBackTime = 1.f;
 	float slowedDownSpeed = 3.f;
 	float slowedDownTime = 2.f;
 	float barrelDamageTaken = 3.f;
 	float moveChangeEvery = 2.0f;
 	float distanceCorrectEvery = 2.0f;
-	float delayForDisplayVideo = 1.0f;
+
+	float chargeSkidMaxSpeed = 5.f;
+	float chargeSkidMinSpeed = 2.f;
+	float chargeSkidDuration = 1.0f;
+
 
 	DukeShield* phase2Shield = nullptr;
 
 	DukeState state = DukeState::BASIC_BEHAVIOUR;
 	bool criticalMode = false;
+	bool mustAddAgent = false;
 
 	// Effects' states
 	bool beingPushed = false;
@@ -130,6 +144,7 @@ public:
 		DEATH,
 		IDLE,
 		ENRAGE,
+		INITIAL_ENRAGE,
 		SHOOT,
 		PDA,
 		PUSHED,
@@ -144,7 +159,7 @@ public:
 		LENGTH
 	};
 	std::string animationStates[static_cast<int>(DUKE_ANIMATION_STATES::LENGTH)] = { "Charge", "ChargeEnd", "ChargeStart",
-		"Punch", "Death", "Idle", "Enrage", "Shooting", "PDA", "Pushed", "Shield", "ShootingShield", "Stun",
+		"Punch", "Death", "Idle", "Enrage", "InitialEnrage", "Shooting", "PDA", "Pushed", "Shield", "ShootingShield", "Stun",
 		"WalkBack", "WalkForward", "WalkForwardNoAim", "WalkLeft", "WalkRight" };
 
 	UID winSceneUID = 0; // TODO: Delete
@@ -154,13 +169,7 @@ private:
 
 private:
 	GameObject* player = nullptr;
-	GameObject* chargeCollider = nullptr;
-	GameObject* meleeAttackCollider = nullptr;
-	GameObject* chargeAttack = nullptr;
 	ComponentTransform* dukeTransform = nullptr;
-
-	GameObject* videoParentCanvas = nullptr;
-	GameObject* videoCanvas = nullptr;
 
 	bool hasMeleeAttacked = false;
 
@@ -172,16 +181,43 @@ private:
 	float movementChangeThreshold = 2.0f;
 	float distanceCorrectionTimer = 0.f;
 	float distanceCorrectionThreshold = 2.0f;
-	bool navigationHit;
-	float3 navigationHitPos;
+	bool navigationHit = false;
+	float3 navigationHitPos = float3(0,0,0);
+	
+	// Melee Attack
+	GameObject* meleeAttackCollider = nullptr;
+	ComponentParticleSystem* punchSlash = nullptr;
+	bool firstTimePunchParticlesActive = true;
 
 	// Charge
+	GameObject* chargeCollider = nullptr;
+	GameObject* chargeAttack = nullptr;
 	bool trackingChargeTarget = false;
+	ComponentBillboard* chargeTelegraphArea = nullptr;
+	GameObject* chargeTelegraphAreaGO = nullptr;
+	GameObject* areaChargeGO = nullptr;
+	ResourceMaterial* areaCharge = nullptr;
+	ComponentParticleSystem* chargeDust = nullptr;
+	ComponentParticleSystem* chargePunchVFX = nullptr;
+	float2 chargeDustOriginalParticlesPerSecond = float2(0.f, 0.f);
+	float areaChargeSpeedMultiplier = 4;
+	float dukeScale = 0.f;
+	float chargeTelegraphAreaPosOffset = 0.f;
+
+	//Shield
+	ComponentParticleSystem* phase2ShieldParticles = nullptr;
 
 	// Shooting
 	float attackTimePool = 0.f;
 	ComponentParticleSystem* bullet = nullptr;
 	float isShootingTimer = 0.f;
+
+	//Enrage
+	GameObject* bodyArmor = nullptr;
+
+	//Steps
+	ComponentParticleSystem* dustLeftStep = nullptr;
+	ComponentParticleSystem* dustRightStep = nullptr;
 
 	GameObject* meshObj = nullptr;	//Main mesh for Getting MeshRenderer reference and checking frustum presence (if not inside frustum shooting won't happen)
 
@@ -195,16 +231,13 @@ private:
 	ComponentAudioSource* dukeAudios[static_cast<int>(DUKE_AUDIOS::TOTAL)] = { nullptr };
 
 	DukeState nextState = DukeState::BASIC_BEHAVIOUR;
-	std::random_device rd;
-	std::minstd_rand gen;
 
 	/* Boss encounters */
 	std::vector<GameObject*> encounters;
 	unsigned currentEncounter = 0;
 
-	bool endVideoRunning= false;
-	float currentDelayVideo = 0.0f;
-
 	float3 phase2CenterPosition = float3(13.0f, 0.799f, 0.0f);
 
+	float3 chargeDir = float3(0, 0, 0);
+	float chargeSkidTimer = 0.0f;
 };

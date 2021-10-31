@@ -25,6 +25,7 @@ EXPOSE_MEMBERS(PlayerDeath) {
 	MEMBER(MemberType::FLOAT, laserHitCooldownTimer),
 	MEMBER(MemberType::FLOAT, fireDamageTaken),
 	MEMBER(MemberType::FLOAT, cooldownFireDamage),
+	MEMBER(MemberType::FLOAT, pushBackForce),
 	MEMBER(MemberType::GAME_OBJECT_UID, transitionUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, gameOverUID)
 };
@@ -178,7 +179,7 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 			PushPlayerBack(collisionNormal);
 		}
 		collidedWith.Disable();
-	} else if (collidedWith.name == "DukeShield" || collidedWith.name == "DukeShield360") {
+	} else if (collidedWith.name == "DukeShield" || collidedWith.name == "DukeShield360" || collidedWith.name == "DukeAdditionalSeparator") {
 		if (playerController) {
 			// don't let the player penetrate duke shield
 			float3 truePenetrationDistance = penetrationDistance.ProjectTo(collisionNormal);
@@ -190,6 +191,7 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 
 	} else if (collidedWith.name == "ChargeAttack") {
 		if (playerController) playerController->TakeDamage(dukeChargeDamageTaken);
+		PushPlayerBack(collisionNormal);
 		collidedWith.Disable();
 	}
 	else if (collidedWith.name == "AttackDroneProjectile") {
@@ -220,6 +222,6 @@ void PlayerDeath::PushPlayerBack(float3 collisionNormal)
 	playerController->playerFang.IsActive() ? playerController->playerFang.agent->RemoveAgentFromCrowd() : playerController->playerOnimaru.agent->RemoveAgentFromCrowd();
 	ComponentTransform* playerTransform = playerController->playerFang.playerMainTransform;
 	collisionNormal.y = 0;
-	playerTransform->SetGlobalPosition(playerTransform->GetGlobalPosition() + 1.2f * collisionNormal.Normalized());
+	playerTransform->SetGlobalPosition(playerTransform->GetGlobalPosition() + pushBackForce * collisionNormal.Normalized());
 	playerController->playerFang.IsActive() ? playerController->playerFang.agent->AddAgentToCrowd() : playerController->playerOnimaru.agent->AddAgentToCrowd();
 }

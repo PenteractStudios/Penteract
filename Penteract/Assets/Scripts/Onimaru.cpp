@@ -49,18 +49,8 @@ void Onimaru::Shoot() {
 		shootingOnCooldown = true;
 		attackCooldownRemaining = 1.f / attackSpeed;
 
-		//NullRef on ultimate values
-		if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SPECIAL_SHOOT)] == nullptr) {
-			onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SPECIAL_SHOOT)] = onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHOOT)];
-		}
 		if (ultimateBullet == nullptr) {
 			ultimateBullet = bullet;
-		}
-
-		ComponentAudioSource* audioSourceToPlay = !ultimateOn ? onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHOOT)] : onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SPECIAL_SHOOT)];
-
-		if (audioSourceToPlay) {
-			audioSourceToPlay->Play();
 		}
 	}
 }
@@ -68,7 +58,10 @@ void Onimaru::Shoot() {
 void Onimaru::Blast() {
 	bool releaseBlast = currentBlastDuration <= blastDelay ? false : true;
 	if (releaseBlast && calculateEnemiesInRange) {
-		if (blastParticles) blastParticles->PlayChildParticles();
+		if (blastParticles) { 
+			blastParticles->PlayChildParticles(); 
+			if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::ENERGY_BLAST)]) onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::ENERGY_BLAST)]->Play();
+		}
 		calculateEnemiesInRange = false;
 		for (GameObject* enemy : enemiesInMap) {
 			AIMeleeGrunt* meleeScript = GET_SCRIPT(enemy, AIMeleeGrunt);
@@ -289,6 +282,13 @@ void Onimaru::ResetToIdle()
 	}
 }
 
+void Onimaru::StopAudioOnSwitch(ONIMARU_AUDIOS audioType)
+{
+	ComponentAudioSource* audio = onimaruAudios[static_cast<int>(audioType)];
+	if (audio) audio->Stop();
+	shooting = false;
+}
+
 float Onimaru::GetRealShieldCooldown() {
 	if (shield == nullptr || shieldGO == nullptr) return 0.0f;
 	float realShieldCooldown = 5.0f;
@@ -405,14 +405,18 @@ bool Onimaru::IsInstantOrientation() const {
 void Onimaru::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
 	if (stateMachineEnum == StateMachineEnum::PRINCIPAL) {
 		if (std::strcmp(eventName, "FootstepRight")) {
-			if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_RIGHT)]) {
-				onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_RIGHT)]->Play();
+			ComponentAudioSource* audio = onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_RIGHT)];
+			if (audio) {
+				audio->SetPitch((float) rand() / RAND_MAX * 0.5 + 0.75f);
+				audio->Play();
 			}
 			if (rightFootstepsVFX) rightFootstepsVFX->PlayChildParticles();
 		}
 		else if (std::strcmp(eventName, "FootstepLeft")) {
-			if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_LEFT)]) {
-				onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_LEFT)]->Play();
+			ComponentAudioSource* audio = onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_LEFT)];
+			if (audio) {
+				audio->SetPitch((float) rand() / RAND_MAX * 0.5 + 0.75f);
+				audio->Play();
 			}
 			if (leftFootstepsVFX) leftFootstepsVFX->PlayChildParticles();
 		}
@@ -649,6 +653,11 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */
 						if (bullet) {
 							bullet->SetParticlesPerSecondChild(float2(attackSpeed, attackSpeed));
 							bullet->PlayChildParticles();
+
+							ComponentAudioSource* audioSourceToPlay = onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHOOT)];
+							if (audioSourceToPlay) {
+								audioSourceToPlay->Play();
+							}
 						}
 						if (compAnimation) {
 							if (!shield->GetIsActive()) {
@@ -686,7 +695,14 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */
 							compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 						}
 					}
-					if (bullet) bullet->SetParticlesPerSecondChild(float2(0.0f,0.0f));
+					if (bullet) {
+						bullet->SetParticlesPerSecondChild(float2(0.0f, 0.0f));
+						ComponentAudioSource* audioSourceToPlay = onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHOOT)];
+
+						if (audioSourceToPlay) {
+							audioSourceToPlay->Stop();
+						}
+					}
 				}
 			}
 		}

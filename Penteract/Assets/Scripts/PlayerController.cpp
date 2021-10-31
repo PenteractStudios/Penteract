@@ -9,6 +9,7 @@
 #include "OnimaruBullet.h"
 #include "SwitchParticles.h"
 #include "GlobalVariables.h"
+#include "AIDuke.h"
 
 #include "Math/Quat.h"
 #include "Geometry/Plane.h"
@@ -117,6 +118,8 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, switchDamage),
 	MEMBER(MemberType::FLOAT, switchSphereRadius),
 	MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
+	MEMBER_SEPARATOR("Upgrade Effect"),
+	MEMBER(MemberType::GAME_OBJECT_UID, upgradesParticlesUID),
 	MEMBER_SEPARATOR("Debug settings"),
 	MEMBER(MemberType::BOOL, debugGetHit),
 
@@ -152,6 +155,11 @@ void PlayerController::Start() {
 	}
 
 	switchEffects = GameplaySystems::GetGameObject(switchParticlesUID);
+
+	GameObject* upgradeEffects = GameplaySystems::GetGameObject(upgradesParticlesUID);
+	if (upgradeEffects) {
+		upgradeParticles = upgradeEffects->GetComponent<ComponentParticleSystem>();
+	}
 
 	//Get audio sources
 	int i = 0;
@@ -236,6 +244,7 @@ void PlayerController::SwitchCharacter() {
 			fangRecovering = 0.0f;
 		} else {
 			playerFang.ResetToIdle();
+			playerOnimaru.StopAudioOnSwitch();
 			playerOnimaru.characterGameObject->Disable();
 			playerFang.characterGameObject->Enable();
 
@@ -267,7 +276,8 @@ void PlayerController::SwitchCharacter() {
 			for (GameObject* enemy : switchCollisionedGO) {
 				AIMeleeGrunt* meleeScript = GET_SCRIPT(enemy, AIMeleeGrunt);
 				RangedAI* rangedScript = GET_SCRIPT(enemy, RangedAI);
-				if (rangedScript || meleeScript) {
+				AIDuke* dukeScript = GET_SCRIPT(enemy, AIDuke);
+				if (rangedScript || meleeScript || dukeScript) {
 					if (meleeScript) {
 						meleeScript->EnableBlastPushBack();
 						if (switchFirstHit) {
@@ -281,6 +291,9 @@ void PlayerController::SwitchCharacter() {
 							rangedScript->rangerGruntCharacter.GetHit(switchDamage);
 							rangedScript->PlayHit();
 						}
+					}
+					else if (dukeScript) {
+						dukeScript->EnableBlastPushBack();
 					}
 				}
 			}
@@ -389,7 +402,8 @@ void PlayerController::RemoveEnemyFromMap(GameObject* enemy) {
 
 void PlayerController::ObtainUpgradeCell() {
 	if (++obtainedUpgradeCells == 3) {
-		// TODO: Check whether in level1 or level2
+		// TODO: Check whether in level1 or level2 or boss scene
+		if (upgradeParticles)upgradeParticles->PlayChildParticles();
 		if (currentLevel == 1) Player::level1Upgrade = true;
 		else if (currentLevel == 2) Player::level2Upgrade = true;
 	}
@@ -419,6 +433,9 @@ void PlayerController::OnCharacterResurrect() {
 }
 
 void PlayerController::Update() {
+	
+	if (GameplaySystems::GetGlobalVariable(globalCameraEventOn, false)) return;
+	
 	// Audio Listener
 	if (listener) {
 		listener->SetPosition(transform->GetGlobalPosition());
@@ -456,7 +473,7 @@ void PlayerController::Update() {
 }
 
 void PlayerController::OnCollision(GameObject& collidedWith, float3 /* collisionNormal */ , float3 /* penetrationDistance */, void* /* particle */) {
-	if (collidedWith.name == "MeleeGrunt" || collidedWith.name == "RangedGrunt") {
+	if (collidedWith.name == "MeleeGrunt" || collidedWith.name == "RangedGrunt" || collidedWith.name == "Duke") {
 		switchCollisionedGO.push_back(&collidedWith);
 	}
 }
