@@ -350,13 +350,17 @@ void Fang::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 	switch (stateMachineEnum) {
 	case StateMachineEnum::PRINCIPAL:
 		if (std::strcmp(eventName, "FootstepRight") == 0) {
-			if (fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_RIGHT)]) {
-				fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_RIGHT)]->Play();
+			ComponentAudioSource* audio = fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_RIGHT)];
+			if (audio) {
+				audio->SetPitch((float) rand() / RAND_MAX * 0.75 + 0.75f);
+				audio->Play();
 			}
 			if (rightFootstepsVFX) rightFootstepsVFX->PlayChildParticles();
 		} else if (std::strcmp(eventName, "FootstepLeft") == 0) {
-			if (fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_LEFT)]) {
-				fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_LEFT)]->Play();
+			ComponentAudioSource* audio = fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_LEFT)];
+			if (audio) {
+				audio->SetPitch((float) rand() / RAND_MAX * 0.75 + 0.75f);
+				audio->Play();
 			}
 			if (leftFootstepsVFX) leftFootstepsVFX->PlayChildParticles();
 		}
@@ -372,8 +376,10 @@ void Fang::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 	if (bullet) {
 		transitioning++;
 		if (transitioning > 1) {
-			if (fangAudios[static_cast<int>(FANG_AUDIOS::SHOOT)]) {
-				fangAudios[static_cast<int>(FANG_AUDIOS::SHOOT)]->Play();
+			ComponentAudioSource* audio = fangAudios[static_cast<int>(FANG_AUDIOS::SHOOT)];
+			if (audio) {
+				audio->SetPitch((float) rand() / RAND_MAX * 0.75 + 0.75f);
+				audio->Play();
 			}
 			bullet->PlayChildParticles();
 			reloading = true;
