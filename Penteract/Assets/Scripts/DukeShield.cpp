@@ -8,6 +8,7 @@
 #include "Components/ComponentAudioSource.h"
 #include "Components/ComponentTransform.h"
 #include "Components/ComponentMeshRenderer.h"
+#include "GameObjectUtils.h"
 #include "Math/float3.h"
 
 EXPOSE_MEMBERS(DukeShield) {
@@ -28,6 +29,7 @@ void DukeShield::Start() {
 	audio = GetOwner().GetComponent<ComponentAudioSource>();
 	transform = GetOwner().GetComponent<ComponentTransform>();
 	mesh = GetOwner().GetComponent<ComponentMeshRenderer>();
+	shieldObstacle = GameObjectUtils::SearchReferenceInHierarchy(&GetOwner(), "ShieldObstacle");
 	GetOwner().Disable();
 }
 
@@ -41,6 +43,9 @@ void DukeShield::Update() {
 		} else {
 			transform->SetScale(float3(shieldMaxScale));
 			shieldState = ShieldState::IDLE;
+			if (shieldObstacle) {
+				shieldObstacle->Enable();
+			}
 		}
 		break;
 	case  ShieldState::IDLE:
@@ -72,6 +77,10 @@ void DukeShield::FadeShield() {
 	isActive = false;
 	if (mesh) {
 		mesh->PlayDissolveAnimation();
+	}
+
+	if (shieldObstacle) {
+		shieldObstacle->Disable();
 	}
 }
 

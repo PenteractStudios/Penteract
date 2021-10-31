@@ -1,0 +1,21 @@
+{
+    "InitialState": 14145246118595496650,
+    "Clips": [
+        17883801471264958813
+    ],
+    "States": [
+        {
+            "Id": 14145246118595496650,
+            "Name": "Close",
+            "ClipId": 17883801471264958813
+        }
+    ],
+    "Transitions": null,
+    "Bones": [
+        "joint1",
+		"joint2",
+		"joint3",
+		"joint4",
+		"joint5"
+    ]
+}

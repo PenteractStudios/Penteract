@@ -32,10 +32,11 @@ public:
 
 private:
 	bool isActive = false;
-	ComponentAudioSource* audio;
-	ComponentTransform* transform;
-	ComponentMeshRenderer* mesh;
+	ComponentAudioSource* audio = nullptr;
+	ComponentTransform* transform = nullptr;
+	ComponentMeshRenderer* mesh = nullptr;
 	enum class ShieldState { OFFLINE, GROWING, IDLE, FADING };
 	ShieldState shieldState = ShieldState::OFFLINE;
+	GameObject* shieldObstacle = nullptr;
 };
 

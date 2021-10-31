@@ -1,0 +1,47 @@
+{
+    "Root": {
+        "Name": "ShieldObstacle",
+        "Active": true,
+        "RootBoneName": "",
+        "Mask": 0,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Active": false,
+                "Position": [
+                    0.0,
+                    -0.6000000238418579,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "LocalEulerAngles": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ]
+            },
+            {
+                "Type": "Obstacle",
+                "Active": false,
+                "Size": [
+                    5.0,
+                    1.0,
+                    1.0
+                ],
+                "ObstacleType": 0,
+                "DrawGizmo": true
+            }
+        ],
+        "Children": null
+    }
+}
