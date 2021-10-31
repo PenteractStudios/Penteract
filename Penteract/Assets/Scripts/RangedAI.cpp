@@ -279,10 +279,12 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 /* collisionNormal *
 				hitTaken = true;
 				rangerGruntCharacter.GetHit(playerController->playerFang.dashDamage + playerController->GetOverPowerMode());
 			}
-			else if (collidedWith.name == "WeaponParticles" && playerController->playerOnimaru.level1Upgrade) {
+			else if (collidedWith.name == "BulletRange" && playerController->playerFang.level1Upgrade) {
 				hitTaken = true;
+				GameplaySystems::DestroyGameObject(&collidedWith);
 				ParticleHit(collidedWith, particle, playerController->playerOnimaru);
 			}
+
 
 			if (hitTaken) {
 				PlayHit();

@@ -56,5 +56,5 @@ private:
 	float factor = 0;
 	ComponentTransform* transform;
 	enum class ShieldState { OFFLINE, GROWING, IDLE, FADING };
-	ShieldState shieldState = ShieldState::OFFLINE;
+	ShieldState shieldState = ShieldState::OFFLINE;;
 };

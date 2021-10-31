@@ -118,32 +118,29 @@ void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 			float3 front = collidedWith.GetComponent<ComponentTransform>()->GetGlobalRotation() * float3(0.0f, 0.f, 1.f);
 			//if (pSystem) pSystem->KillParticle(p);
 
-			if (collidedWith.name == "BulletRange") {		// Reflect projectile
+			if (collidedWith.name == "BulletRange" && playerController->playerFang.level1Upgrade) {		// Reflect projectile
 				if (!particle) return;
 				// Reflect
-				Debug::Log(std::to_string(front.x).c_str());
-				Debug::Log(std::to_string(front.y).c_str());
-				Debug::Log(std::to_string(front.z).c_str());
-				float3 normal = -float3(collisionNormal.x, 0, collisionNormal.z);
+				//TODO MAY LOWY NEED IT TO IMPROVE TO REBOUND
+				/*float3 normal = -float3(collisionNormal.x, 0, collisionNormal.z);
 				float3 newFront = (front - 2 * front.ProjectTo(normal)).Normalized();
-				p->direction = newFront;
+				p->direction = newFront;*/
 				RangerProjectileScript* rangeBulletScript = GET_SCRIPT(&collidedWith, RangerProjectileScript);
-				float3 right = Cross(newFront, float3(0.0f, 1.f, 0.f)).Normalized();
+				/*float3 right = Cross(newFront, float3(0.0f, 1.f, 0.f)).Normalized();
 				float3x3 newMatrix;
 				newMatrix.SetCol(0, right);
 				newMatrix.SetCol(1, float3(0.0f, 1.f, 0.f));
-				newMatrix.SetCol(2, newFront);
+				newMatrix.SetCol(2, newFront);*/
 				if (rangeBulletScript) {
-					collidedWith.GetComponent<ComponentTransform>()->SetGlobalRotation(newMatrix.ToQuat());
-					rangeBulletScript->SetRangerDirection(newMatrix.ToQuat());
+					//collidedWith.GetComponent<ComponentTransform>()->SetGlobalRotation(collidedWith.GetComponent<ComponentTransform>()->GetGlobalRotation().Inverted());
+					rangeBulletScript->SetSpeed(-rangeBulletScript->GetSpeed());
 					rangeBulletScript->life = rangeBulletLifeRebound;
 				}
 				// Convert to player Bullet
 				pSystem->layer = WorldLayers::BULLET;
 				pSystem->layerIndex = 5;
 				Physics::UpdateParticleRigidbody(p);
-				pSystem->layer = WorldLayers::BULLET_ENEMY;
-				pSystem->layerIndex = 6;
+	
 
 				if (particlesReboundCollider)GameplaySystems::Instantiate(particlesReboundCollider, position, rotation);
 			} else {

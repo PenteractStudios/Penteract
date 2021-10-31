@@ -12,6 +12,13 @@ public:
 	void OnCollision(GameObject& collidedWith, float3 /* collisionNormal */, float3 /* penetrationDistance */, void* particle = nullptr) override;
 	void SetRangerDirection(Quat rangerDirection_);
 	Quat& GetRangerDirection();
+
+	void SetSpeed(float newSpeed) {
+		speed = newSpeed;
+	}
+
+	float GetSpeed() { return speed; }
+
 public:
 	int speed = 200;
 	float life = 0.2f;
