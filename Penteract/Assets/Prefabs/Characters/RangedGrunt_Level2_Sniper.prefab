@@ -83,7 +83,7 @@
                     {
                         "Name": "bulletUID",
                         "Type": "PrefabResourceUID",
-                        "Value": 18310981961101033254
+                        "Value": 2801318647741966804
                     },
                     {
                         "Name": "rangerGruntCharacter.pushBackSpeed",
@@ -171,12 +171,12 @@
                 "Type": "AudioSource",
                 "Active": true,
                 "Pitch": 1.0,
-                "Gain": 0.20000000298023225,
+                "Gain": 0.4000000059604645,
                 "Mute": false,
                 "Looping": false,
                 "PlayOnAwake": false,
-                "AudioClipId": 3408669197192801730,
-                "SpatialBlend": 0,
+                "AudioClipId": 7982197600783991743,
+                "SpatialBlend": 1,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
@@ -195,7 +195,7 @@
                 "Looping": false,
                 "PlayOnAwake": false,
                 "AudioClipId": 11505540831480452867,
-                "SpatialBlend": 0,
+                "SpatialBlend": 1,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
@@ -214,7 +214,7 @@
                 "Looping": false,
                 "PlayOnAwake": false,
                 "AudioClipId": 5583254593256726173,
-                "SpatialBlend": 0,
+                "SpatialBlend": 1,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
@@ -233,7 +233,7 @@
                 "Looping": false,
                 "PlayOnAwake": false,
                 "AudioClipId": 16630848835753496155,
-                "SpatialBlend": 0,
+                "SpatialBlend": 1,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
@@ -247,7 +247,7 @@
                 "Type": "AudioSource",
                 "Active": true,
                 "Pitch": 1.0,
-                "Gain": 0.25,
+                "Gain": 0.5,
                 "Mute": false,
                 "Looping": false,
                 "PlayOnAwake": false,
@@ -270,8 +270,8 @@
                 "Mute": false,
                 "Looping": false,
                 "PlayOnAwake": false,
-                "AudioClipId": 158916888946945514,
-                "SpatialBlend": 0,
+                "AudioClipId": 4592999880172812865,
+                "SpatialBlend": 1,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
@@ -2203,15 +2203,15 @@
                                     0.0,
                                     0.0
                                 ],
-                                "EmitterRotation": [
-                                    -0.0,
-                                    0.0,
-                                    -0.0
-                                ],
                                 "EmitterScale": [
                                     1.0,
                                     1.0,
                                     1.0
+                                ],
+                                "EmitterRotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
                                 ],
                                 "ConeRadiusUp": 0.0,
                                 "RandomConeRadiusUp": false,
@@ -3218,15 +3218,15 @@
                             0.0,
                             0.0
                         ],
-                        "EmitterRotation": [
-                            -0.0,
-                            0.0,
-                            -0.0
-                        ],
                         "EmitterScale": [
                             1.0,
                             1.0,
                             1.0
+                        ],
+                        "EmitterRotation": [
+                            -0.0,
+                            0.0,
+                            -0.0
                         ],
                         "ConeRadiusUp": 1.0,
                         "RandomConeRadiusUp": false,
@@ -4124,15 +4124,15 @@
                                     0.0,
                                     0.0
                                 ],
-                                "EmitterRotation": [
-                                    -0.0,
-                                    0.0,
-                                    -0.0
-                                ],
                                 "EmitterScale": [
                                     1.0,
                                     1.0,
                                     1.0
+                                ],
+                                "EmitterRotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
                                 ],
                                 "ConeRadiusUp": 0.30000001192092898,
                                 "RandomConeRadiusUp": false,
@@ -5023,15 +5023,15 @@
                                     0.0,
                                     0.0
                                 ],
-                                "EmitterRotation": [
-                                    -0.0,
-                                    0.0,
-                                    -0.0
-                                ],
                                 "EmitterScale": [
                                     1.0,
                                     1.0,
                                     1.0
+                                ],
+                                "EmitterRotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
                                 ],
                                 "ConeRadiusUp": 1.0,
                                 "RandomConeRadiusUp": false,
@@ -5951,15 +5951,15 @@
                                     0.0,
                                     0.0
                                 ],
-                                "EmitterRotation": [
-                                    -0.0,
-                                    0.0,
-                                    -0.0
-                                ],
                                 "EmitterScale": [
                                     1.0,
                                     1.0,
                                     1.0
+                                ],
+                                "EmitterRotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
                                 ],
                                 "ConeRadiusUp": 1.0,
                                 "RandomConeRadiusUp": false,
@@ -6879,15 +6879,15 @@
                                     0.0,
                                     0.0
                                 ],
-                                "EmitterRotation": [
-                                    -0.0,
-                                    0.0,
-                                    -0.0
-                                ],
                                 "EmitterScale": [
                                     1.0,
                                     1.0,
                                     1.0
+                                ],
+                                "EmitterRotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
                                 ],
                                 "ConeRadiusUp": 0.800000011920929,
                                 "RandomConeRadiusUp": false,
@@ -7765,15 +7765,15 @@
                             0.0,
                             0.0
                         ],
-                        "EmitterRotation": [
-                            -0.0,
-                            0.0,
-                            -0.0
-                        ],
                         "EmitterScale": [
                             1.0,
                             1.0,
                             1.0
+                        ],
+                        "EmitterRotation": [
+                            -0.0,
+                            0.0,
+                            -0.0
                         ],
                         "ConeRadiusUp": 1.0,
                         "RandomConeRadiusUp": false,
@@ -8664,15 +8664,15 @@
                                     0.0,
                                     0.0
                                 ],
-                                "EmitterRotation": [
-                                    -0.0,
-                                    0.0,
-                                    -0.0
-                                ],
                                 "EmitterScale": [
                                     1.0,
                                     1.0,
                                     1.0
+                                ],
+                                "EmitterRotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
                                 ],
                                 "ConeRadiusUp": 0.0,
                                 "RandomConeRadiusUp": false,
@@ -9571,15 +9571,15 @@
                                     0.0,
                                     0.0
                                 ],
-                                "EmitterRotation": [
-                                    -0.0,
-                                    0.0,
-                                    -0.0
-                                ],
                                 "EmitterScale": [
                                     1.0,
                                     1.0,
                                     1.0
+                                ],
+                                "EmitterRotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
                                 ],
                                 "ConeRadiusUp": 0.0,
                                 "RandomConeRadiusUp": false,
@@ -10478,15 +10478,15 @@
                                     0.0,
                                     0.0
                                 ],
-                                "EmitterRotation": [
-                                    -0.0,
-                                    0.0,
-                                    -0.0
-                                ],
                                 "EmitterScale": [
                                     1.0,
                                     1.0,
                                     1.0
+                                ],
+                                "EmitterRotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
                                 ],
                                 "ConeRadiusUp": 1.0,
                                 "RandomConeRadiusUp": false,
@@ -11392,15 +11392,15 @@
                                     0.0,
                                     0.0
                                 ],
-                                "EmitterRotation": [
-                                    -0.0,
-                                    0.0,
-                                    -0.0
-                                ],
                                 "EmitterScale": [
                                     1.0,
                                     1.0,
                                     1.0
+                                ],
+                                "EmitterRotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
                                 ],
                                 "ConeRadiusUp": 0.699999988079071,
                                 "RandomConeRadiusUp": false,
@@ -12308,15 +12308,15 @@
                             0.0,
                             0.0
                         ],
-                        "EmitterRotation": [
-                            -0.0,
-                            0.0,
-                            -0.0
-                        ],
                         "EmitterScale": [
                             1.0,
                             1.0,
                             1.0
+                        ],
+                        "EmitterRotation": [
+                            -0.0,
+                            0.0,
+                            -0.0
                         ],
                         "ConeRadiusUp": 1.0,
                         "RandomConeRadiusUp": false,
@@ -13226,15 +13226,15 @@
                                     0.0,
                                     0.0
                                 ],
-                                "EmitterRotation": [
-                                    -0.0,
-                                    0.0,
-                                    -0.0
-                                ],
                                 "EmitterScale": [
                                     1.0,
                                     1.0,
                                     1.0
+                                ],
+                                "EmitterRotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
                                 ],
                                 "ConeRadiusUp": 0.0,
                                 "RandomConeRadiusUp": false,
@@ -14133,15 +14133,15 @@
                                     0.0,
                                     0.0
                                 ],
-                                "EmitterRotation": [
-                                    -0.0,
-                                    0.0,
-                                    -0.0
-                                ],
                                 "EmitterScale": [
                                     1.0,
                                     1.0,
                                     1.0
+                                ],
+                                "EmitterRotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
                                 ],
                                 "ConeRadiusUp": 0.0,
                                 "RandomConeRadiusUp": false,
@@ -15054,15 +15054,15 @@
                                     0.0,
                                     0.0
                                 ],
-                                "EmitterRotation": [
-                                    -0.0,
-                                    0.0,
-                                    -0.0
-                                ],
                                 "EmitterScale": [
                                     1.0,
                                     1.0,
                                     1.0
+                                ],
+                                "EmitterRotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
                                 ],
                                 "ConeRadiusUp": 0.0,
                                 "RandomConeRadiusUp": false,
@@ -15961,15 +15961,15 @@
                                     0.0,
                                     0.0
                                 ],
-                                "EmitterRotation": [
-                                    -0.0,
-                                    0.0,
-                                    -0.0
-                                ],
                                 "EmitterScale": [
                                     1.0,
                                     1.0,
                                     1.0
+                                ],
+                                "EmitterRotation": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
                                 ],
                                 "ConeRadiusUp": 0.0,
                                 "RandomConeRadiusUp": false,
