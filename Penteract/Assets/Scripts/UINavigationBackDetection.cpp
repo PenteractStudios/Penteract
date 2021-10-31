@@ -53,4 +53,11 @@ void UINavigationBackDetection::OnEnable() {
 			evSyst->SetSelected(selectableToSelectOnEnable->GetID());
 		}
 	}
+
+	if (objectToDisableOnCancel != nullptr) {
+		GameplaySystems::SetGlobalVariable(globalBackDetectionInUse, true);
+	} else {
+		GameplaySystems::SetGlobalVariable(globalBackDetectionInUse, false);
+	}
+
 }

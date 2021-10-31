@@ -42,11 +42,13 @@ EXPOSE_MEMBERS(GameController) {
 GENERATE_BODY_IMPL(GameController);
 
 void GameController::Start() {
+	Debug::Log("Start");
 	isPaused = false;
 	showWireframe = false;
 	transitionFinished = false;
 	GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, false);
 	GameplaySystems::SetGlobalVariable(globalswitchTutorialActive, false);
+	GameplaySystems::SetGlobalVariable(globalBackDetectionInUse, false);
 
 	if (PlayerController::currentLevel == 1) {
 		GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, false);
@@ -135,8 +137,11 @@ void GameController::Update() {
 
 	if (CanPause()) {
 		if (isPaused) {
-			if (Player::GetInputBool(InputActions::CANCEL_A) || Player::GetInputBool(InputActions::CANCEL_B))
-				ResumeGame();
+			if (Player::GetInputBool(InputActions::CANCEL_A) || Player::GetInputBool(InputActions::CANCEL_B)) {
+				if (!GameplaySystems::GetGlobalVariable(globalBackDetectionInUse,false)) { //globalBackDetectionInUse determines if cancel buttons must do navigation stuff or just UnPause
+					ResumeGame();
+				}
+			}
 		} else {
 			if (Player::GetInputBool(InputActions::CANCEL_A))
 				PauseGame();
