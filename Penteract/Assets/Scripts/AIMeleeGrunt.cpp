@@ -224,7 +224,11 @@ void AIMeleeGrunt::Update() {
 		if (ownerTransform->GetGlobalPosition().y < 3.5f + 0e-5f) {
 			ownerTransform->SetGlobalPosition(float3(ownerTransform->GetGlobalPosition().x, groundPosition, ownerTransform->GetGlobalPosition().z));
 			animation->SendTrigger("StartSpawn");
-			if (audios[static_cast<int>(AudioType::SPAWN)]) audios[static_cast<int>(AudioType::SPAWN)]->Play();
+			ComponentAudioSource* audio = audios[static_cast<int>(AudioType::SPAWN)];
+			if (audio) { 
+				audio->SetPitch(rand() / (float) RAND_MAX * 0.05f + 0.95f);
+				audio->Play();
+			}
 			state = AIState::SPAWN;
 		}
 		break;
@@ -245,26 +249,31 @@ void AIMeleeGrunt::Update() {
 	case AIState::RUN:
 		movementScript->Seek(state, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), speedToUse, true);
 		if (movementScript->CharacterInAttackRange(player, gruntCharacter.attackRange)) {
+			ComponentAudioSource* audio = audios[static_cast<int>(AudioType::ATTACK)];
 			int random = std::rand() % 100;
 			if (random < att1AbilityChance) {
 				attackNumber = 1;
 				attackSpeed = att1AttackSpeed;
 				attackMovementSpeed = att1MovementSpeedWhileAttacking;
+				if (audio) audio->SetPitch(1.3f);
 			}
 			else if (random < att1AbilityChance + att2AbilityChance) {
 				attackNumber = 2;
 				attackSpeed = att2AttackSpeed;
 				attackMovementSpeed = att2MovementSpeedWhileAttacking;
+				if (audio) audio->SetPitch(1.0f);
 			}
 			else {
 				attackNumber = 3;
 				attackSpeed = att3AttackSpeed;
 				attackMovementSpeed = att3MovementSpeedWhileAttacking;
+				audio = audios[static_cast<int>(AudioType::ATTACK_SECONDARY)];
+				if (audio) audio->SetPitch(1.0f);
 			}
 
 			animation->SendTrigger("WalkForwardAttack" + std::to_string(attackNumber));
 			movementScript->SetClipSpeed(animation->GetCurrentState()->clipUid, attackSpeed);
-			if (audios[static_cast<int>(AudioType::ATTACK)]) audios[static_cast<int>(AudioType::ATTACK)]->Play();
+			if (audio) audio->Play();
 			state = AIState::ATTACK;
 		}
 		break;
@@ -485,7 +494,11 @@ void AIMeleeGrunt::EnableBlastPushBack() {
 		if (playerController->playerOnimaru.level2Upgrade) {
 			gruntCharacter.GetHit(playerController->playerOnimaru.blastDamage + playerController->GetOverPowerMode());
 
-			if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
+			ComponentAudioSource* audio = audios[static_cast<int>(AudioType::HIT)];
+			if (audio) {
+				audio->SetPitch(rand() / (float)RAND_MAX * 0.3f + 0.85f);
+				audio->Play();
+			}
 			PlayHitMaterialEffect();
 			timeSinceLastHurt = 0.0f;
 		}
@@ -515,7 +528,11 @@ bool AIMeleeGrunt::IsBeingPushed() const {
 
 void AIMeleeGrunt::PlayHit()
 {
-	if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
+	ComponentAudioSource* audio = audios[static_cast<int>(AudioType::HIT)];
+	if (audio) {
+		audio->SetPitch(rand() / (float)RAND_MAX * 0.3f + 0.85f);			
+		audio->Play();
+	}
 	PlayHitMaterialEffect();
 	timeSinceLastHurt = 0.0f;
 }
@@ -591,8 +608,11 @@ void AIMeleeGrunt::Death()
 			deathType = 1 + rand() % 2;
 			std::string deathTypeStr = std::to_string(deathType);
 			animation->SendTrigger(changeState + deathTypeStr);
-
-			if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
+			ComponentAudioSource* audio = audios[static_cast<int>(AudioType::DEATH)];
+			if (audio) {
+				audio->SetPitch(rand() / (float) RAND_MAX * 0.3f + 0.85f);
+				audio->Play();
+			}
 			ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
 			if (collider) collider->Disable();
 

@@ -7,6 +7,7 @@ class GameObject;
 class ComponentAgent;
 class AIMovement;
 class CameraController;
+class ComponentAnimation;
 class DialogueManager;
 
 class GameplaySceneWalkToFactory : public Script
@@ -38,6 +39,8 @@ private:
 	GameObject* duke2 = nullptr;
 	ComponentAgent* dukeAgent = nullptr;
 	AIMovement* movementScript = nullptr;
+	ComponentAnimation* dukeAnimation = nullptr;
+
 	AIState state = AIState::RUN;
 
 	GameObject* gameCamera = nullptr;

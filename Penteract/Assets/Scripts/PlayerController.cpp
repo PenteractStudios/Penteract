@@ -244,6 +244,7 @@ void PlayerController::SwitchCharacter() {
 			fangRecovering = 0.0f;
 		} else {
 			playerFang.ResetToIdle();
+			playerOnimaru.StopAudioOnSwitch();
 			playerOnimaru.characterGameObject->Disable();
 			playerFang.characterGameObject->Enable();
 
