@@ -4,6 +4,7 @@
 #include "GameController.h"
 #include "AIMovement.h"
 #include "Components/ComponentAgent.h"
+#include "Components/ComponentAnimation.h"
 #include "Components/UI/ComponentVideo.h"
 #include "GlobalVariables.h"
 
@@ -16,16 +17,16 @@ EXPOSE_MEMBERS(GameplaySceneDukeIntro) {
     MEMBER_SEPARATOR("Duke Controller"),
     MEMBER(MemberType::FLOAT3, dukeRunTowards),
     MEMBER(MemberType::FLOAT, dukeSpeed),
+    MEMBER(MemberType::FLOAT, dukeTimeToGo),
     MEMBER(MemberType::FLOAT, dukeDisappearDistance)
 };
 
 GENERATE_BODY_IMPL(GameplaySceneDukeIntro);
 
 void GameplaySceneDukeIntro::Start() {
-
-    // TODO: Duke is a placeholder for the real duke. The prefab or a part of it should be used instead to be congruent with the other duke instances in the game
     duke1 = GameplaySystems::GetGameObject(duke1UID);
     if (duke1) {
+        dukeAnimation = duke1->GetComponent<ComponentAnimation>();
         movementScript = GET_SCRIPT(duke1, AIMovement);
         dukeAgent = duke1->GetComponent<ComponentAgent>();
         if (dukeAgent) {
@@ -49,7 +50,8 @@ void GameplaySceneDukeIntro::Update() {
     if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) return;
 
     // Make Duke move away
-    movementScript->Seek(state, dukeRunTowards, dukeAgent->GetMaxSpeed(), true);
+    Movement();
+   
 
     // Enable encounter 1
     if (encounterPlaza && !encounterPlaza->IsActive()) encounterPlaza->Enable();
@@ -59,5 +61,20 @@ void GameplaySceneDukeIntro::Update() {
         dukeAgent->RemoveAgentFromCrowd();
         duke1->Disable();
         GetOwner().Disable();
+    }
+}
+
+void GameplaySceneDukeIntro::Movement()
+{
+    currentDukeTimeToWalkAway += Time::GetDeltaTime();
+    if (currentDukeTimeToWalkAway >= dukeTimeToGo) {
+        movementScript->Seek(state, dukeRunTowards, dukeAgent->GetMaxSpeed(), true);
+        if (dukeAnimation && dukeAnimation->GetCurrentState() && dukeAnimation->GetCurrentState()->name != "WalkForwardNoAim") {
+            dukeAnimation->SendTrigger(dukeAnimation->GetCurrentState()->name + "WalkForwardNoAim");
+        }
+    } else {
+        if (dukeAnimation && dukeAnimation->GetCurrentState() && dukeAnimation->GetCurrentState()->name != "PDA") {
+            dukeAnimation->SendTrigger(dukeAnimation->GetCurrentState()->name + "PDA");
+        }
     }
 }

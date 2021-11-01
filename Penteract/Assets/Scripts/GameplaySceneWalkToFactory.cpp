@@ -7,6 +7,7 @@
 #include "AIMovement.h"
 #include "Components/ComponentAgent.h"
 #include "GlobalVariables.h"
+#include "Components/ComponentAnimation.h"
 
 EXPOSE_MEMBERS(GameplaySceneWalkToFactory) {
     MEMBER_SEPARATOR("Duke Controller"),
@@ -29,9 +30,9 @@ GENERATE_BODY_IMPL(GameplaySceneWalkToFactory);
 
 void GameplaySceneWalkToFactory::Start() {
     // Duke
-    // TODO: Duke is a placeholder for the real duke. The prefab or a part of it should be used instead to be congruent with the other duke instances in the game
     duke2 = GameplaySystems::GetGameObject(duke2UID);
     if (duke2) {
+        dukeAnimation = duke2->GetComponent<ComponentAnimation>();
         movementScript = GET_SCRIPT(duke2, AIMovement);
         dukeAgent = duke2->GetComponent<ComponentAgent>();
         if (dukeAgent) {
@@ -68,6 +69,9 @@ void GameplaySceneWalkToFactory::Update() {
         cameraControllerScript->smoothCameraSpeed = cameraMoveSpeed;
         cameraControllerScript->ChangeCameraOffset(cameraNewPosition.x, cameraNewPosition.y, cameraNewPosition.z);
         movementScript->Seek(state, dukeRunTowards, dukeAgent->GetMaxSpeed(), true);
+        if (dukeAnimation && dukeAnimation->GetCurrentState() && dukeAnimation->GetCurrentState()->name == "Idle") {
+            dukeAnimation->SendTrigger("IdleWalkForwardNoAim");
+        }
 
         sceneStarted = true;
         triggered = false;
