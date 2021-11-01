@@ -70,6 +70,9 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, dustStepLeftUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, dustStepRightUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, bodyArmorUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dukeBuffFlashUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dukeStunUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dukeSlowUID),
 
 	MEMBER_SEPARATOR("Prefabs UIDs"),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, barrelUID),
@@ -135,7 +138,7 @@ void AIDuke::Start() {
 	}
 
 	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, encounters, dronesController, punchSlashUID, chargeDustUID, areaChargeUID, chargeTelegraphAreaUID, chargePunchVFXUID, dustStepLeftUID, dustStepRightUID, bodyArmorUID);
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, encounters, dronesController, punchSlashUID, chargeDustUID, areaChargeUID, chargeTelegraphAreaUID, chargePunchVFXUID, dustStepLeftUID, dustStepRightUID, bodyArmorUID, dukeBuffFlashUID, dukeStunUID, dukeSlowUID);
 
 	triggerBossEnd = GameplaySystems::GetGameObject(triggerBossEndUID);
 
