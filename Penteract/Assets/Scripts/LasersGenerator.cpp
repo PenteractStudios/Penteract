@@ -122,3 +122,8 @@ void LasersGenerator::Update() {
 void LasersGenerator::Init() {
     currentState = GeneratorState::IDLE;
 }
+
+void LasersGenerator::StopAudio()
+{
+    if (laserAudio) laserAudio->Stop();
+}
