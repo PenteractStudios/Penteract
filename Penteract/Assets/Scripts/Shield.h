@@ -4,6 +4,7 @@
 
 class PlayerController;
 class ComponentAudioSource;
+class ResourcePrefab;
 class ComponentBillboard;
 class ComponentTransform;
 
@@ -42,6 +43,11 @@ public:
 	float fadeSpeed = 4.0f;
 	float growthThreshold = 0.05f;
 	float fadeThreshold = 0.05f;
+	float rangeBulletLifeRebound = 2.0f;
+	UID particlesColliderUID = 0;
+	UID particlesUpgradeColliderUID = 0;
+	ResourcePrefab* particlesReboundCollider = nullptr;
+	ResourcePrefab* particlesCollider = nullptr;
 
 private:
 	bool isActive = false;
@@ -50,5 +56,5 @@ private:
 	float factor = 0;
 	ComponentTransform* transform;
 	enum class ShieldState { OFFLINE, GROWING, IDLE, FADING };
-	ShieldState shieldState = ShieldState::OFFLINE;
+	ShieldState shieldState = ShieldState::OFFLINE;;
 };

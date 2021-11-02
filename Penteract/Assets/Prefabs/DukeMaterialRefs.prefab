@@ -1,0 +1,129 @@
+{
+    "Root": {
+        "Name": "Duke",
+        "Active": false,
+        "RootBoneName": "",
+        "Mask": 0,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Active": false,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "LocalEulerAngles": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ]
+            }
+        ],
+        "Children": [
+            {
+                "Name": "Duke_Damage",
+                "Active": false,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": false,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "MeshRenderer",
+                        "Active": false,
+                        "MeshID": 0,
+                        "MaterialID": 7135388999977986815
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "Duke_Default",
+                "Active": false,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": false,
+                        "Position": [
+                            21.3799991607666,
+                            0.7125656008720398,
+                            -0.3959999978542328
+                        ],
+                        "Rotation": [
+                            0.0,
+                            -0.7071068286895752,
+                            0.0,
+                            0.7071067094802856
+                        ],
+                        "Scale": [
+                            0.03699999302625656,
+                            0.03700000047683716,
+                            0.03699999302625656
+                        ],
+                        "LocalEulerAngles": [
+                            180.0,
+                            -89.98021697998047,
+                            180.0
+                        ]
+                    },
+                    {
+                        "Type": "MeshRenderer",
+                        "Active": false,
+                        "MeshID": 0,
+                        "MaterialID": 6551607575832800652
+                    },
+                    {
+                        "Type": "BoundingBox",
+                        "Active": false,
+                        "LocalBoundingBox": [
+                            -58.588722229003909,
+                            0.64532470703125,
+                            -24.840238571166993,
+                            71.07378387451172,
+                            153.26132202148438,
+                            22.94312858581543
+                        ]
+                    }
+                ],
+                "Children": null
+            }
+        ]
+    }
+}
