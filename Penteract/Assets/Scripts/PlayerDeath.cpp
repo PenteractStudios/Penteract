@@ -222,6 +222,9 @@ void PlayerDeath::PushPlayerBack(float3 collisionNormal)
 	playerController->playerFang.IsActive() ? playerController->playerFang.agent->RemoveAgentFromCrowd() : playerController->playerOnimaru.agent->RemoveAgentFromCrowd();
 	ComponentTransform* playerTransform = playerController->playerFang.playerMainTransform;
 	collisionNormal.y = 0;
-	playerTransform->SetGlobalPosition(playerTransform->GetGlobalPosition() + pushBackForce * collisionNormal.Normalized());
+	float3 finalPos = playerTransform->GetGlobalPosition() + pushBackForce * collisionNormal.Normalized();
+	bool outsideMesh;
+	Navigation::Raycast(playerTransform->GetGlobalPosition(), finalPos, outsideMesh, finalPos);
+	playerTransform->SetGlobalPosition(finalPos);
 	playerController->playerFang.IsActive() ? playerController->playerFang.agent->AddAgentToCrowd() : playerController->playerOnimaru.agent->AddAgentToCrowd();
 }
