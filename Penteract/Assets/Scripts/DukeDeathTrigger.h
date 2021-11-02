@@ -3,6 +3,7 @@
 #include "Scripting/Script.h"
 
 class GameObject;
+class ComponentAudioSource;
 class PlayerController;
 class DialogueManager;
 class CameraController;
@@ -25,6 +26,8 @@ public:
 	UID gameCameraUID = 0;
 	UID canvasHudUID = 0;
 	UID videoCanvasUID = 0;
+	UID audioControllerUID = 0;
+	UID audioVideoSourceUID = 0;
 
 	float relaxTime = 1.75f;
 	float talkingDistance = 10.f;
@@ -37,6 +40,10 @@ private:
 	DialogueManager* dialogueManagerScript = nullptr;
 	CameraController* camera = nullptr;
 	VideoSceneEnd* videoSceneEndScript = nullptr;
+
+	// Audio
+	ComponentAudioSource* music = nullptr;
+	ComponentAudioSource* audioVideo = nullptr;
 
 	// Scene flow controls
 	bool triggered = false;

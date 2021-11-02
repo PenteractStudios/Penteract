@@ -16,6 +16,8 @@ EXPOSE_MEMBERS(DukeDeathTrigger) {
     MEMBER(MemberType::GAME_OBJECT_UID, gameCameraUID),
     MEMBER(MemberType::GAME_OBJECT_UID, canvasHudUID),
     MEMBER(MemberType::GAME_OBJECT_UID, videoCanvasUID),
+    MEMBER(MemberType::GAME_OBJECT_UID, audioControllerUID),
+    MEMBER(MemberType::GAME_OBJECT_UID, audioVideoSourceUID),
     MEMBER(MemberType::FLOAT, relaxTime),
     MEMBER(MemberType::FLOAT, talkingDistance),
     MEMBER(MemberType::INT, dialogueID)
@@ -41,6 +43,13 @@ void DukeDeathTrigger::Start() {
 
     // Get videoObject
     videoCanvas = GameplaySystems::GetGameObject(videoCanvasUID);
+
+    // Set Up Audio
+    GameObject* musicObj = GameplaySystems::GetGameObject(audioControllerUID);
+    if (musicObj) music = musicObj->GetComponent<ComponentAudioSource>();
+
+    GameObject* audioObj = GameplaySystems::GetGameObject(audioVideoSourceUID);
+    if (audioObj) audioVideo = audioObj->GetComponent<ComponentAudioSource>();
 
     // Scene flow controls
     triggered = false;
@@ -117,6 +126,11 @@ void DukeDeathTrigger::Update() {
                 videoSceneEndScript->PlayVideo();
             }
 
+            // play video audio, and stop level music
+            if (music && audioVideo) {
+                music->Stop();
+                audioVideo->Play();
+            }
         }
         playVideo = false;
     }
