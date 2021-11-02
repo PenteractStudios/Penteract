@@ -115,36 +115,29 @@ void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 			ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 			float3 position = pSystem->GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition();
 			Quat rotation = GetOwner().GetComponent<ComponentTransform>()->GetGlobalRotation()  * float3x3::FromEulerXYZ(pi / 2, 0.0f, 0.0f).ToQuat();
-			float3 front = collidedWith.GetComponent<ComponentTransform>()->GetGlobalRotation() * float3(0.0f, 0.f, 1.f);
-			//if (pSystem) pSystem->KillParticle(p);
 
-			if (collidedWith.name == "BulletRange" && playerController->playerFang.level1Upgrade) {		// Reflect projectile
+			if (collidedWith.name == "BulletRange" && playerController->playerOnimaru.level1Upgrade) {		// Reflect projectile
 				if (!particle) return;
 				// Reflect
-				//TODO MAY LOWY NEED IT TO IMPROVE TO REBOUND
-				/*float3 normal = -float3(collisionNormal.x, 0, collisionNormal.z);
-				float3 newFront = (front - 2 * front.ProjectTo(normal)).Normalized();
-				p->direction = newFront;*/
 				RangerProjectileScript* rangeBulletScript = GET_SCRIPT(&collidedWith, RangerProjectileScript);
-				/*float3 right = Cross(newFront, float3(0.0f, 1.f, 0.f)).Normalized();
-				float3x3 newMatrix;
-				newMatrix.SetCol(0, right);
-				newMatrix.SetCol(1, float3(0.0f, 1.f, 0.f));
-				newMatrix.SetCol(2, newFront);*/
 				if (rangeBulletScript) {
-					//collidedWith.GetComponent<ComponentTransform>()->SetGlobalRotation(collidedWith.GetComponent<ComponentTransform>()->GetGlobalRotation().Inverted());
-					rangeBulletScript->SetSpeed(-rangeBulletScript->GetSpeed());
+
+					float3 direction = - rangeBulletScript->GetRangerDirection().ToEulerXYZ();
+					Quat newDirection = float3x3::FromEulerXYZ(direction.x, direction.y, direction.z).ToQuat();
+
+					collidedWith.GetComponent<ComponentTransform>()->SetGlobalRotation(newDirection);
+					rangeBulletScript->SetRangerDirection(newDirection);
 					rangeBulletScript->life = rangeBulletLifeRebound;
 				}
+
 				// Convert to player Bullet
 				pSystem->layer = WorldLayers::BULLET;
 				pSystem->layerIndex = 5;
 				Physics::UpdateParticleRigidbody(p);
 	
-
-				if (particlesReboundCollider)GameplaySystems::Instantiate(particlesReboundCollider, position, rotation);
+				if (particlesReboundCollider) GameplaySystems::Instantiate(particlesReboundCollider, position, rotation);
 			} else {
-				if (particlesCollider)GameplaySystems::Instantiate(particlesCollider, position, rotation);
+				if (particlesCollider) GameplaySystems::Instantiate(particlesCollider, position, rotation);
 				if (pSystem) pSystem->KillParticle(p);
 			}
 
