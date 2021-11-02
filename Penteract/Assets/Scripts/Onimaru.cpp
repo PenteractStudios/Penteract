@@ -383,6 +383,7 @@ void Onimaru::OnAnimationSecondaryFinished() {
 		blastInCooldown = true;
 		currentBlastDuration = 0.f;
 		calculateEnemiesInRange = true;
+
 		if (compAnimation) {
 			if (compAnimation->GetCurrentStateSecondary() && compAnimation->GetCurrentState()) {
 				if (shooting) {
