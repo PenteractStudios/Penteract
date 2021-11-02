@@ -38,7 +38,18 @@ class Duke : public Character
 public:
 
 	enum class DUKE_AUDIOS {
-		DEATH,
+		FOOTSTEP,
+		SHOOT,
+		MELEE_ATTACK,
+		SHIELD_ON,
+		SHIELD_OFF,
+		CHARGE,
+		CHARGE_ATTACK,
+		PHASE2_SHIELD_ON,
+		PHASE2_SHIELD_ACTIVE,
+		PHASE2_SHIELD_OFF,
+		ENRAGE,
+		BULLET_HELL,
 		TOTAL
 	};
 
@@ -89,12 +100,11 @@ public:
 	// ---- Auxiliary Functions ---- //
 	void ActivateDissolve(UID dissolveMaterialID);
 	void SetCriticalMode(bool activate);
+	void PlayAudio(DUKE_AUDIOS audioType);
+	void StopAudio(DUKE_AUDIOS audioType);
 
 	// ------ Getters/Setters ------ //
 	ComponentMeshRenderer* GetDukeMeshRenderer() const;
-
-private:
-	int GetWalkAnimation();
 
 public:
 	float chargeSpeed = 5.f;
@@ -123,6 +133,9 @@ public:
 	DukeState state = DukeState::BASIC_BEHAVIOUR;
 	bool criticalMode = false;
 	bool mustAddAgent = false;
+
+	// Audios
+	ComponentAudioSource* dukeAudios[static_cast<int>(DUKE_AUDIOS::TOTAL)] = { nullptr };
 
 	// Effects' states
 	bool beingPushed = false;
@@ -165,7 +178,8 @@ public:
 	UID winSceneUID = 0; // TODO: Delete
 
 private:
-	void InstantiateBarrel();
+	void InstantiateBarrel();	
+	int GetWalkAnimation();
 
 private:
 	GameObject* player = nullptr;
@@ -231,9 +245,6 @@ private:
 
 	// AttackDrones
 	AttackDronesController* attackDronesController = nullptr;
-
-	// Audios
-	ComponentAudioSource* dukeAudios[static_cast<int>(DUKE_AUDIOS::TOTAL)] = { nullptr };
 
 	DukeState nextState = DukeState::BASIC_BEHAVIOUR;
 

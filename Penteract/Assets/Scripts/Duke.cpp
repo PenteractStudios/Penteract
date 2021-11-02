@@ -163,6 +163,7 @@ void Duke::MeleeAttack()
 		if (compAnimation) {
 			if (compAnimation->GetCurrentState()) {
 				compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PUNCH)]);
+				PlayAudio(DUKE_AUDIOS::MELEE_ATTACK);
 				hasMeleeAttacked = true;
 			}
 		}
@@ -170,18 +171,19 @@ void Duke::MeleeAttack()
 }
 
 void Duke::BulletHell() {
-	Debug::Log("Bullet hell");
 	if (attackDronesController) {
 		if (compAnimation) compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]);
 		ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentState()->clipUid);
 		if (clip) clip->loop = true;
 		attackDronesController->StartBulletHell();
+		PlayAudio(DUKE_AUDIOS::BULLET_HELL);
 	}
 }
 
 void Duke::DisableBulletHell() {
 	ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentState()->clipUid);
 	if (clip) clip->loop = false;
+	StopAudio(DUKE_AUDIOS::BULLET_HELL);
 }
 
 bool Duke::BulletHellActive() const {
@@ -251,6 +253,9 @@ void Duke::UpdateCharge(bool forceStop)
 			PlayerController* playerController = GET_SCRIPT(player, PlayerController);
 			if (playerController) playerController->playerOnimaru.shieldBeingUsed = 0.0f;
 		}
+
+		StopAudio(DUKE_AUDIOS::CHARGE);
+		PlayAudio(DUKE_AUDIOS::CHARGE_ATTACK);
 	}
 	else {
 		if (areaCharge) {
@@ -344,6 +349,7 @@ void Duke::Shoot()
 			if (!meshObj) return;
 			bullet->PlayChildParticles();
 		}
+		PlayAudio(DUKE_AUDIOS::SHOOT);
 		attackTimePool = (attackBurst + 1) / attackSpeed + timeInterBurst + RandomNumberGenerator::GenerateFloat(0.4f, 1.5f);
 		isShooting = true;
 		isShootingTimer = 0.f;
@@ -440,6 +446,8 @@ void Duke::TeleportDuke(bool toMapCenter)
 	else {
 		if (phase2Shield) phase2Shield->FadeShield();
 		if (phase2ShieldParticles) phase2ShieldParticles->StopChildParticles();
+		StopAudio(DUKE_AUDIOS::PHASE2_SHIELD_ACTIVE);
+		PlayAudio(DUKE_AUDIOS::PHASE2_SHIELD_OFF);
 		mustAddAgent = true;
 		isInArena = true;
 	}
@@ -470,6 +478,7 @@ void Duke::OnAnimationFinished()
 			chargeDust->SetParticlesPerSecondChild(chargeDustOriginalParticlesPerSecond);
 			chargeDust->PlayChildParticles();
 		}
+		PlayAudio(DUKE_AUDIOS::CHARGE);
 	} else if (localCurrentState->name == animationStates[static_cast<int>(DUKE_ANIMATION_STATES::CHARGE_END)]) {
 		if (chargeAttack) chargeAttack->Disable();
 		state = nextState;
@@ -527,8 +536,10 @@ void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 			instantiateBarrel = false;
 		} else if (strcmp(eventName, "FootstepLeft") == 0) {
 			if (dustLeftStep) dustLeftStep->PlayChildParticles();
+			PlayAudio(DUKE_AUDIOS::FOOTSTEP);
 		} else if (strcmp(eventName, "FootstepRight") == 0) {
 			if (dustRightStep) dustRightStep->PlayChildParticles();
+			PlayAudio(DUKE_AUDIOS::FOOTSTEP);
 		} else if (strcmp(eventName, "FistBump") == 0) {
 			if (bodyArmor && !bodyArmor->IsActive()) bodyArmor->Enable();
 		}
@@ -563,6 +574,8 @@ void Duke::StartPhase2Shield()
 
 		if (phase2Shield) phase2Shield->InitShield();
 		if (phase2ShieldParticles) phase2ShieldParticles->PlayChildParticles();
+		PlayAudio(DUKE_AUDIOS::PHASE2_SHIELD_ON);
+		PlayAudio(DUKE_AUDIOS::PHASE2_SHIELD_ACTIVE);
 		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[Duke::DUKE_ANIMATION_STATES::PDA]);
 		CallTroops();
 	}
@@ -573,6 +586,22 @@ void Duke::InstantiateBarrel()
 	//Instantiate barrel and play animation throw barrels for Duke and the barrel
 	if (barrel) {
 		GameplaySystems::Instantiate(barrel, player->GetComponent<ComponentTransform>()->GetGlobalPosition(), Quat(0, 0, 0, 1));
+	}
+}
+
+void Duke::PlayAudio(DUKE_AUDIOS audioType)
+{
+	ComponentAudioSource* audio = dukeAudios[static_cast<int>(audioType)];
+	if (audio) {
+		audio->Play();
+	}
+}
+
+void Duke::StopAudio(DUKE_AUDIOS audioType)
+{
+	ComponentAudioSource* audio = dukeAudios[static_cast<int>(audioType)];
+	if (audio) {
+		audio->Stop();
 	}
 }
 
@@ -613,6 +642,7 @@ void Duke::SetCriticalMode(bool activate)
 			StopShooting();
 			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[Duke::DUKE_ANIMATION_STATES::ENRAGE]);
 			if (dukeBuffFlash) dukeBuffFlash->PlayChildParticles();
+			PlayAudio(DUKE_AUDIOS::ENRAGE);
 		}
 		state = DukeState::INVULNERABLE;
 

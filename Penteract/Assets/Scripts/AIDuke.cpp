@@ -144,6 +144,12 @@ void AIDuke::Start() {
 
 	dukeCharacter.winSceneUID = winSceneUID; // TODO: REPLACE
 
+	int i = 0;
+	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
+		if (i < static_cast<int>(Duke::DUKE_AUDIOS::TOTAL)) dukeCharacter.dukeAudios[i] = &src;
+		++i;
+	}
+
 	GameObject* hudManagerGO = GameplaySystems::GetGameObject(hudManagerUID);
 
 	if (hudManagerGO) hudManager = GET_SCRIPT(hudManagerGO, HUDManager);
@@ -307,6 +313,7 @@ void AIDuke::Update() {
 			//Actual activating of the shield, when it is found not active during this state
 			if (dukeShield && !dukeShield->GetIsActive()) {
 				dukeShield->InitShield();
+				dukeCharacter.PlayAudio(Duke::DUKE_AUDIOS::SHIELD_ON);
 				movementScript->Stop();
 			}
 
@@ -486,6 +493,7 @@ void AIDuke::Update() {
 				//Actual activating of the shield, when it is found not active during this state
 				if (dukeShield && !dukeShield->GetIsActive()) {
 					dukeShield->InitShield();
+					dukeCharacter.PlayAudio(Duke::DUKE_AUDIOS::SHIELD_ON);
 					movementScript->Stop();
 				}
 
@@ -795,6 +803,7 @@ bool AIDuke::IsInvulnerable() const {
 void AIDuke::OnShieldInterrupted() {
 	if (dukeShield&&dukeShield->GetIsActive()) {
 		dukeShield->FadeShield();
+		dukeCharacter.PlayAudio(Duke::DUKE_AUDIOS::SHIELD_OFF);
 	}
 	currentShieldCooldown = 0.f;
 	currentShieldActiveTime = 0.f;
