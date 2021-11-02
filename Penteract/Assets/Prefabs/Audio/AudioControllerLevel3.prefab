@@ -1,0 +1,803 @@
+{
+    "Root": {
+        "Name": "AudioControllerBossLevel",
+        "Active": true,
+        "RootBoneName": "",
+        "Mask": 0,
+        "Components": [
+            {
+                "Type": "Transform",
+                "Active": true,
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "LocalEulerAngles": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ]
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 1.0,
+                "Gain": 0.5,
+                "Mute": false,
+                "Looping": true,
+                "PlayOnAwake": true,
+                "AudioClipId": 16099714896762730979,
+                "SpatialBlend": 0,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0,
+                "RolloffFactor": 1.0,
+                "ReferenceDistance": 10.0,
+                "MaxDistance": 30.0,
+                "IsMusic": true
+            },
+            {
+                "Type": "Script",
+                "Active": true,
+                "Script": 9961171467095894443,
+                "Values": [
+                    {
+                        "Name": "mainGain",
+                        "Type": "Float",
+                        "Value": 0.5
+                    },
+                    {
+                        "Name": "sfxGain",
+                        "Type": "Float",
+                        "Value": 0.5
+                    },
+                    {
+                        "Name": "musicGain",
+                        "Type": "Float",
+                        "Value": 0.5
+                    }
+                ]
+            }
+        ],
+        "Children": [
+            {
+                "Name": "PauseController",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": true,
+                        "Pitch": 1.0,
+                        "Gain": 0.25,
+                        "Mute": false,
+                        "Looping": false,
+                        "PlayOnAwake": false,
+                        "AudioClipId": 14669723821457207248,
+                        "SpatialBlend": 0,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0,
+                        "RolloffFactor": 1.0,
+                        "ReferenceDistance": 10.0,
+                        "MaxDistance": 30.0,
+                        "IsMusic": false
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": true,
+                        "Pitch": 1.0,
+                        "Gain": 0.25,
+                        "Mute": false,
+                        "Looping": false,
+                        "PlayOnAwake": false,
+                        "AudioClipId": 9936858215729922947,
+                        "SpatialBlend": 0,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0,
+                        "RolloffFactor": 1.0,
+                        "ReferenceDistance": 10.0,
+                        "MaxDistance": 30.0,
+                        "IsMusic": false
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": true,
+                        "Pitch": 1.0,
+                        "Gain": 0.15000000596046449,
+                        "Mute": false,
+                        "Looping": true,
+                        "PlayOnAwake": false,
+                        "AudioClipId": 9739304253324649107,
+                        "SpatialBlend": 0,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0,
+                        "RolloffFactor": 1.0,
+                        "ReferenceDistance": 10.0,
+                        "MaxDistance": 30.0,
+                        "IsMusic": false
+                    },
+                    {
+                        "Type": "Script",
+                        "Active": true,
+                        "Script": 7841855527186595200,
+                        "Values": null
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "GameOverController",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": true,
+                        "Pitch": 1.0,
+                        "Gain": 0.800000011920929,
+                        "Mute": false,
+                        "Looping": false,
+                        "PlayOnAwake": false,
+                        "AudioClipId": 10106490787549704851,
+                        "SpatialBlend": 0,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0,
+                        "RolloffFactor": 1.0,
+                        "ReferenceDistance": 10.0,
+                        "MaxDistance": 30.0,
+                        "IsMusic": false
+                    },
+                    {
+                        "Type": "Script",
+                        "Active": true,
+                        "Script": 10499609378428226968,
+                        "Values": null
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "LowHP Sound",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": true,
+                        "Pitch": 1.0,
+                        "Gain": 0.4000000059604645,
+                        "Mute": false,
+                        "Looping": true,
+                        "PlayOnAwake": false,
+                        "AudioClipId": 2337378594816163446,
+                        "SpatialBlend": 0,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0,
+                        "RolloffFactor": 1.0,
+                        "ReferenceDistance": 10.0,
+                        "MaxDistance": 30.0,
+                        "IsMusic": false
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "ButtonAudioSources",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": true,
+                        "Pitch": 1.0,
+                        "Gain": 0.05000000074505806,
+                        "Mute": false,
+                        "Looping": false,
+                        "PlayOnAwake": false,
+                        "AudioClipId": 16312503048627496786,
+                        "SpatialBlend": 0,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0,
+                        "RolloffFactor": 1.0,
+                        "ReferenceDistance": 10.0,
+                        "MaxDistance": 30.0,
+                        "IsMusic": false
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": true,
+                        "Pitch": 1.0,
+                        "Gain": 0.10000000149011612,
+                        "Mute": false,
+                        "Looping": false,
+                        "PlayOnAwake": false,
+                        "AudioClipId": 18015964674914082021,
+                        "SpatialBlend": 0,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0,
+                        "RolloffFactor": 1.0,
+                        "ReferenceDistance": 10.0,
+                        "MaxDistance": 30.0,
+                        "IsMusic": false
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "GlitchyTitleAudioSources",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": true,
+                        "Pitch": 1.0,
+                        "Gain": 0.10000000149011612,
+                        "Mute": false,
+                        "Looping": false,
+                        "PlayOnAwake": false,
+                        "AudioClipId": 6834645009129902300,
+                        "SpatialBlend": 0,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0,
+                        "RolloffFactor": 1.0,
+                        "ReferenceDistance": 10.0,
+                        "MaxDistance": 30.0,
+                        "IsMusic": false
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": true,
+                        "Pitch": 1.0,
+                        "Gain": 0.10000000149011612,
+                        "Mute": false,
+                        "Looping": false,
+                        "PlayOnAwake": false,
+                        "AudioClipId": 6834645009129902300,
+                        "SpatialBlend": 0,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0,
+                        "RolloffFactor": 1.0,
+                        "ReferenceDistance": 10.0,
+                        "MaxDistance": 30.0,
+                        "IsMusic": false
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": true,
+                        "Pitch": 1.0,
+                        "Gain": 0.10000000149011612,
+                        "Mute": false,
+                        "Looping": false,
+                        "PlayOnAwake": false,
+                        "AudioClipId": 6834645009129902300,
+                        "SpatialBlend": 0,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0,
+                        "RolloffFactor": 1.0,
+                        "ReferenceDistance": 10.0,
+                        "MaxDistance": 30.0,
+                        "IsMusic": false
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "VideoAudioSource",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "AudioSource",
+                        "Active": true,
+                        "Pitch": 1.0,
+                        "Gain": 1.0,
+                        "Mute": false,
+                        "Looping": false,
+                        "PlayOnAwake": false,
+                        "AudioClipId": 5175357037020712145,
+                        "SpatialBlend": 0,
+                        "SourceType": 0,
+                        "InnerAngle": 90.0,
+                        "OuterAngle": 180.0,
+                        "OuterGain": 0.0,
+                        "RolloffFactor": 1.0,
+                        "ReferenceDistance": 10.0,
+                        "MaxDistance": 30.0,
+                        "IsMusic": true
+                    }
+                ],
+                "Children": null
+            },
+            {
+                "Name": "Fire Arena",
+                "Active": true,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": true,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    }
+                ],
+                "Children": [
+                    {
+                        "Name": "Fire Arena 1",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Active": true,
+                                "Position": [
+                                    13.0,
+                                    4.0,
+                                    0.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "AudioSource",
+                                "Active": true,
+                                "Pitch": 1.0,
+                                "Gain": 0.10000000149011612,
+                                "Mute": false,
+                                "Looping": true,
+                                "PlayOnAwake": false,
+                                "AudioClipId": 16063283265337744389,
+                                "SpatialBlend": 1,
+                                "SourceType": 0,
+                                "InnerAngle": 90.0,
+                                "OuterAngle": 180.0,
+                                "OuterGain": 0.0,
+                                "RolloffFactor": 1.0,
+                                "ReferenceDistance": 25.0,
+                                "MaxDistance": 30.0,
+                                "IsMusic": false
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Name": "Fire Arena 2",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Active": true,
+                                "Position": [
+                                    -2.0,
+                                    4.0,
+                                    11.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "AudioSource",
+                                "Active": true,
+                                "Pitch": 1.0,
+                                "Gain": 0.10000000149011612,
+                                "Mute": false,
+                                "Looping": true,
+                                "PlayOnAwake": false,
+                                "AudioClipId": 16063283265337744389,
+                                "SpatialBlend": 1,
+                                "SourceType": 0,
+                                "InnerAngle": 90.0,
+                                "OuterAngle": 180.0,
+                                "OuterGain": 0.0,
+                                "RolloffFactor": 1.0,
+                                "ReferenceDistance": 25.0,
+                                "MaxDistance": 30.0,
+                                "IsMusic": false
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Name": "Fire Arena 3",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Active": true,
+                                "Position": [
+                                    26.0,
+                                    4.0,
+                                    11.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "AudioSource",
+                                "Active": true,
+                                "Pitch": 1.0,
+                                "Gain": 0.10000000149011612,
+                                "Mute": false,
+                                "Looping": true,
+                                "PlayOnAwake": false,
+                                "AudioClipId": 16063283265337744389,
+                                "SpatialBlend": 1,
+                                "SourceType": 0,
+                                "InnerAngle": 90.0,
+                                "OuterAngle": 180.0,
+                                "OuterGain": 0.0,
+                                "RolloffFactor": 1.0,
+                                "ReferenceDistance": 25.0,
+                                "MaxDistance": 30.0,
+                                "IsMusic": false
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Name": "Fire Arena 4",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Active": true,
+                                "Position": [
+                                    26.0,
+                                    4.0,
+                                    -11.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "AudioSource",
+                                "Active": true,
+                                "Pitch": 1.0,
+                                "Gain": 0.10000000149011612,
+                                "Mute": false,
+                                "Looping": true,
+                                "PlayOnAwake": false,
+                                "AudioClipId": 16063283265337744389,
+                                "SpatialBlend": 1,
+                                "SourceType": 0,
+                                "InnerAngle": 90.0,
+                                "OuterAngle": 180.0,
+                                "OuterGain": 0.0,
+                                "RolloffFactor": 1.0,
+                                "ReferenceDistance": 25.0,
+                                "MaxDistance": 30.0,
+                                "IsMusic": false
+                            }
+                        ],
+                        "Children": null
+                    },
+                    {
+                        "Name": "Fire Arena 5",
+                        "Active": true,
+                        "RootBoneName": "",
+                        "Mask": 0,
+                        "Components": [
+                            {
+                                "Type": "Transform",
+                                "Active": true,
+                                "Position": [
+                                    -2.0,
+                                    4.0,
+                                    -11.0
+                                ],
+                                "Rotation": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "Scale": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "LocalEulerAngles": [
+                                    -0.0,
+                                    0.0,
+                                    -0.0
+                                ]
+                            },
+                            {
+                                "Type": "AudioSource",
+                                "Active": true,
+                                "Pitch": 1.0,
+                                "Gain": 0.10000000149011612,
+                                "Mute": false,
+                                "Looping": true,
+                                "PlayOnAwake": false,
+                                "AudioClipId": 16063283265337744389,
+                                "SpatialBlend": 1,
+                                "SourceType": 0,
+                                "InnerAngle": 90.0,
+                                "OuterAngle": 180.0,
+                                "OuterGain": 0.0,
+                                "RolloffFactor": 1.0,
+                                "ReferenceDistance": 25.0,
+                                "MaxDistance": 30.0,
+                                "IsMusic": false
+                            }
+                        ],
+                        "Children": null
+                    }
+                ]
+            }
+        ]
+    }
+}

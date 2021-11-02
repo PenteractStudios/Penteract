@@ -7,6 +7,7 @@
 #include "HUDManager.h"
 #include "AttackDronesController.h"
 #include "FloorIsLava.h"
+#include "BossLasersPatterns.h"
 #include <string>
 #include <vector>
 
@@ -873,7 +874,11 @@ void AIDuke::PerformDeath() {
 	// Stop environment hazards
 	if (!islevel2) {
 		if (activeFireTiles && fireTilesScript) fireTilesScript->StopFire();
-		if (lasers && lasers->IsActive()) lasers->Disable();
+		if (lasers && lasers->IsActive()) {
+			BossLasersPatterns* script = GET_SCRIPT(lasers, BossLasersPatterns);
+			if (script) script->StopAudio();
+			lasers->Disable();
+		}
 		// TODO: Substitute the following for actual destruction of the troops
 		GameObject* encounter = GameplaySystems::GetGameObject(fourthEncounterUID);
 		if (encounter && encounter->IsActive()) encounter->Disable();
