@@ -188,6 +188,7 @@ void AIDuke::Update() {
 		// Perform the "BOOM" animation
 		if (dukeCharacter.compAnimation && mustPerformInitialAnimation) {
 			dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::INITIAL_ENRAGE]);
+			dukeCharacter.PlayAudio(Duke::DUKE_AUDIOS::SCREAM);
 			mustPerformInitialAnimation = false;
 			dukeCharacter.state = DukeState::INVULNERABLE;
 		} else if (dukeCharacter.state == DukeState::BASIC_BEHAVIOUR) phase = Phase::PHASE1;
@@ -644,6 +645,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 		}
 
 		if (hitTaken) {
+			dukeCharacter.PlayAudio(Duke::DUKE_AUDIOS::HIT);
 			if (hudManager) hudManager->UpdateDukeHealth(dukeCharacter.lifePoints);
 			  // TODO: play audio and VFX
 			  /*if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
@@ -857,9 +859,11 @@ void AIDuke::PerformDeath() {
 	OnShieldInterrupted();
 	dukeCharacter.StopShooting();
 	dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::DEATH]);
+	if (!dukeCharacter.audioDeath) {
+		dukeCharacter.PlayAudio(Duke::DUKE_AUDIOS::DEATH);
+		dukeCharacter.audioDeath = true;
+	}
 
-	// TODO: play audio and VFX
-	//if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
 	ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
 	if (collider) collider->Disable();
 

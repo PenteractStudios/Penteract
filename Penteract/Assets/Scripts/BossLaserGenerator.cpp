@@ -121,4 +121,7 @@ void BossLaserGenerator::Init() {
 
 void BossLaserGenerator::StopAudio() {
     if (laserAudio) laserAudio->Stop();
+    if (audioComp) audioComp->Stop();
+    if (pairAudioComp) pairAudioComp->Stop();
+    if (laserWarningAudio) laserWarningAudio->Stop();
 }

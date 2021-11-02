@@ -216,14 +216,14 @@
                                 "Script": 8700738987126077181,
                                 "Values": [
                                     {
-                                        "Name": "BarrelUID",
-                                        "Type": "GameObjectUID",
-                                        "Value": 525968066063556863
-                                    },
-                                    {
                                         "Name": "barrelUID",
                                         "Type": "GameObjectUID",
                                         "Value": 8082100637965124385
+                                    },
+                                    {
+                                        "Name": "BarrelUID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 525968066063556863
                                     },
                                     {
                                         "Name": "cameraUID",
@@ -231,19 +231,19 @@
                                         "Value": 680618938873982628
                                     },
                                     {
-                                        "Name": "particlesUID",
-                                        "Type": "GameObjectUID",
-                                        "Value": 16072293829161371648
-                                    },
-                                    {
                                         "Name": "shakeMultiplier",
                                         "Type": "Float",
-                                        "Value": 0.5
+                                        "Value": 0.20000000298023225
                                     },
                                     {
                                         "Name": "sphereColliderUID",
                                         "Type": "GameObjectUID",
                                         "Value": 8504797570965665090
+                                    },
+                                    {
+                                        "Name": "particlesUID",
+                                        "Type": "GameObjectUID",
+                                        "Value": 16072293829161371648
                                     },
                                     {
                                         "Name": "timeToDestroy",
@@ -273,7 +273,7 @@
                                     {
                                         "Name": "forceOfFall",
                                         "Type": "Float",
-                                        "Value": 0.25
+                                        "Value": 0.30000001192092898
                                     },
                                     {
                                         "Name": "heightOfThrow",

@@ -34,7 +34,7 @@
                 "Type": "AudioSource",
                 "Active": true,
                 "Pitch": 1.0,
-                "Gain": 0.5,
+                "Gain": 0.75,
                 "Mute": false,
                 "Looping": true,
                 "PlayOnAwake": true,
@@ -60,12 +60,12 @@
                         "Value": 0.5
                     },
                     {
-                        "Name": "sfxGain",
+                        "Name": "musicGain",
                         "Type": "Float",
                         "Value": 0.5
                     },
                     {
-                        "Name": "musicGain",
+                        "Name": "sfxGain",
                         "Type": "Float",
                         "Value": 0.5
                     }

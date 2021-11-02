@@ -50,6 +50,9 @@ public:
 		PHASE2_SHIELD_OFF,
 		ENRAGE,
 		BULLET_HELL,
+		HIT,
+		SCREAM,
+		DEATH,
 		TOTAL
 	};
 
@@ -136,6 +139,7 @@ public:
 
 	// Audios
 	ComponentAudioSource* dukeAudios[static_cast<int>(DUKE_AUDIOS::TOTAL)] = { nullptr };
+	bool audioDeath = false;
 
 	// Effects' states
 	bool beingPushed = false;
