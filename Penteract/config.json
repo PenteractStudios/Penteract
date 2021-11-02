@@ -26,5 +26,45 @@
     "ChromaticAberrationStrength": 1.5,
     "GainMainChannel": 0.5,
     "GainMusicChannel": 0.5,
-    "GainSFXChannel": 0.5
+    "GainSFXChannel": 0.5,
+    "ShadowsAttenuation": 0.30000001192092898,
+    "StaticFrustumsCount": 1,
+    "DynamicFrustumsCount": 1,
+    "MainEntitiesFrustumsCount": 1,
+    "StaticFrustum": [
+        {
+            "FarPlane": 50.0,
+            "NearPlane": 0.0010000000474974514,
+            "Multiplier": 1.0,
+            "Color": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        }
+    ],
+    "DynamicFrustum": [
+        {
+            "FarPlane": 50.0,
+            "NearPlane": 0.0010000000474974514,
+            "Multiplier": 1.0,
+            "Color": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        }
+    ],
+    "MainEntityFrustum": [
+        {
+            "FarPlane": 50.0,
+            "NearPlane": 0.0010000000474974514,
+            "Multiplier": 1.0,
+            "Color": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        }
+    ]
 }
