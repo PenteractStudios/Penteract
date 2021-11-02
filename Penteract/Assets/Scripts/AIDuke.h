@@ -91,6 +91,9 @@ public:
 	UID dustStepLeftUID = 0;
 	UID dustStepRightUID = 0;
 	UID bodyArmorUID = 0;
+	UID dukeBuffFlashUID = 0;
+	UID dukeStunUID = 0;
+	UID dukeSlowUID = 0;
 	// Only for level2
 	UID triggerBossEndUID = 0;
 	UID dissolveMaterialGOUID = 0;
