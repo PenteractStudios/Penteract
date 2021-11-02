@@ -197,5 +197,8 @@ private:
 	bool mustPerformInitialAnimation = true;
 
 	bool stunnedInBulletHell = false;
+
+	bool dissolveAlreadyPlayed = false;		//Controls whether the animation function has already been played (called material->PlayAnimation) or not
+
 };
 

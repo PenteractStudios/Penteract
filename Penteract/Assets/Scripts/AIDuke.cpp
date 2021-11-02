@@ -179,7 +179,7 @@ void AIDuke::Update() {
 	if (!defaultMaterialID || !damagedMaterialID) return;
 	if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) return;
 
-	if (componentMeshRenderer) {
+	if (!dissolveAlreadyPlayed && componentMeshRenderer) {
 		if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
 			timeSinceLastHurt += Time::GetDeltaTime();
 			if (timeSinceLastHurt > hurtFeedbackTimeDuration) {
@@ -901,7 +901,7 @@ void AIDuke::PerformDeath() {
 }
 
 void AIDuke::SetMaterial(ComponentMeshRenderer* mesh, UID newMaterialID, bool needToPlayDissolve) {
-	if (newMaterialID > 0 && mesh) {
+	if (!dissolveAlreadyPlayed && newMaterialID > 0 && mesh) {
 		mesh->SetMaterial(newMaterialID);
 		if (needToPlayDissolve) {
 			mesh->PlayDissolveAnimation();
@@ -915,4 +915,5 @@ float AIDuke::GetDukeMaxHealth() const {
 
 void AIDuke::ActivateDissolve() {
 	dukeCharacter.ActivateDissolve(dissolveMaterialID);
+	dissolveAlreadyPlayed = true;
 }
