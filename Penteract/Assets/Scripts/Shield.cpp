@@ -109,7 +109,12 @@ void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 	if ((collidedWith.name == "BulletRange" || collidedWith.name == "DukeProjectile" || collidedWith.name == "RightBlade" || collidedWith.name == "LeftBlade" || collidedWith.name == "AttackDroneProjectile") && isActive && playerController) {
 
 		if (!particle) {
-			collidedWith.Disable();
+			if(collidedWith.name == "AttackDroneProjectile"){
+				AttackDroneProjectile* projectileScript = GET_SCRIPT(&collidedWith, AttackDroneProjectile);
+				if (projectileScript) projectileScript->Collide();
+			} else {
+				collidedWith.Disable();
+			}			
 		} else {
 			ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
 			ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
@@ -157,9 +162,6 @@ void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 				if (particlesCollider) GameplaySystems::Instantiate(particlesCollider, position, rotation);
 				if (pSystem) pSystem->KillParticle(p);
 			}
-
-			AttackDroneProjectile* projectileScript = GET_SCRIPT(&collidedWith, AttackDroneProjectile);
-			if (projectileScript) projectileScript->Collide();
 		}
 
 		currentAvailableCharges--;

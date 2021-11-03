@@ -42,9 +42,13 @@ void AttackDroneProjectile::Collide() {
 		collider->Disable();
 	}
 
-	ComponentMeshRenderer* mesh = GetOwner().GetComponent<ComponentMeshRenderer>();
-	if (mesh) {
-		mesh->Disable();
+	std::vector<GameObject*> children = GetOwner().GetChildren();
+
+	if (children.size() == 2) {
+		ComponentParticleSystem* particles = children[0]->GetComponent<ComponentParticleSystem>();
+		if (particles) particles->StopChildParticles();
+		particles = children[1]->GetComponent<ComponentParticleSystem>();
+		if (particles) particles->PlayChildParticles();
 	}
 
 	mustStopMovement = true;
