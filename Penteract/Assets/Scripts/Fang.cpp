@@ -154,7 +154,7 @@ void Fang::IncreaseUltimateCounter() {
 }
 
 bool Fang::IsInstantOrientation() const {
-	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, false);
+	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, true);
 
 	return !useGamepad || !Input::IsGamepadConnected(0);
 }
