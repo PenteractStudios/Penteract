@@ -17,19 +17,19 @@
 
 EXPOSE_MEMBERS(DukeDoor) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, dukeUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, doorObstacleUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, canvasHUDUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, gameControllerUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, gameCameraUID),
-		MEMBER_SEPARATOR("Scene Parameters"),
-		MEMBER(MemberType::INT, dialogueID),
-		MEMBER(MemberType::FLOAT3, initialTalkPosition),
-		MEMBER_SEPARATOR("Level 2 only references"),
-		MEMBER(MemberType::GAME_OBJECT_UID, optionalExitDoorObstacleUID),
-		MEMBER(MemberType::GAME_OBJECT_UID, optionalLaserUID),
-		MEMBER_SEPARATOR("Dissolve material reference in placeholders"),
-		MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dukeUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, doorObstacleUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, canvasHUDUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, gameControllerUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, gameCameraUID),
+	MEMBER_SEPARATOR("Scene Parameters"),
+	MEMBER(MemberType::INT, dialogueID),
+	MEMBER(MemberType::FLOAT3, initialTalkPosition),
+	MEMBER_SEPARATOR("Level 2 only references"),
+	MEMBER(MemberType::GAME_OBJECT_UID, optionalExitDoorObstacleUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, optionalLaserUID),
+	MEMBER_SEPARATOR("Dissolve material reference in placeholders"),
+	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID)
 };
 
 GENERATE_BODY_IMPL(DukeDoor);
@@ -58,7 +58,7 @@ void DukeDoor::Start() {
 		exitObstacle->Disable();
 	}
 
-	// Get dissolve object
+	// Get dissolve material
 	GameObject* dissolveObj = GameplaySystems::GetGameObject(dissolveMaterialGOUID);
 	if (dissolveObj) {
 		ComponentMeshRenderer* dissolveMeshRenderer = dissolveObj->GetComponent<ComponentMeshRenderer>();
@@ -127,7 +127,6 @@ void DukeDoor::Update() {
 
 		// Duke Ready animation
 		if (aiDuke) aiDuke->SetReady(true);
-		// TODO Send trigger to Ragé
 
 		// If final scene, Start boss music and stop previous music
 		if (playerController->currentLevel == 3) {}

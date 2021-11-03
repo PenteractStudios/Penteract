@@ -54,6 +54,7 @@ public:
 	void TurnOff();
 	bool BeingUsed();
 	void Synchronize(bool movingToInit);
+	void StopAudio();
 
 private:
 

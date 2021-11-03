@@ -891,6 +891,7 @@ void AIDuke::PerformBulletHell() {
 }
 
 void AIDuke::PerformDeath() {
+	SetMaterial(componentMeshRenderer, defaultMaterialID);
 	movementScript->Stop();
 	OnShieldInterrupted();
 	dukeCharacter.StopShooting();

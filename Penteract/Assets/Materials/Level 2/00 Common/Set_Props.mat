@@ -1,7 +1,7 @@
 {
     "ShaderType": 2,
     "RenderingMode": 0,
-    "CastShadows": false,
+    "CastShadows": true,
     "ShadowType": 0,
     "DiffuseColor": [
         1.0,
@@ -40,6 +40,14 @@
         0.0,
         0.0
     ],
+    "DissolveNoiseMap": 0,
+    "DissolveColor": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+    ],
+    "DissolveIntensity": 0.0,
     "DissolveScale": 10.0,
     "DissolveOffset": [
         0.0,
