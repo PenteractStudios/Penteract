@@ -59,6 +59,13 @@ EXPOSE_MEMBERS(RangedAI) {
 	MEMBER(MemberType::FLOAT, rangerGruntCharacter.slowedDownTime),
 	MEMBER(MemberType::FLOAT, minTimePushEffect),
 	MEMBER(MemberType::FLOAT, maxTimePushEffect),
+	MEMBER_SEPARATOR("Stun variables"),
+	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration),
+	MEMBER(MemberType::FLOAT, stunDuration),
+	MEMBER(MemberType::FLOAT, groundPosition),
+	MEMBER_SEPARATOR("Push Random Feedback"),
+	MEMBER(MemberType::FLOAT, minTimePushEffect),
+	MEMBER(MemberType::FLOAT, maxTimePushEffect),
 	MEMBER_SEPARATOR("Dissolve properties"),
 	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialObj),
 	MEMBER(MemberType::FLOAT, dissolveTimerToStart)
@@ -123,6 +130,24 @@ void RangedAI::Start() {
 		ComponentMeshRenderer* dissolveMeshRenderer = dissolveObj->GetComponent<ComponentMeshRenderer>();
 		if (dissolveMeshRenderer) {
 			dissolveMaterialID = dissolveMeshRenderer->GetMaterial();
+		}
+	}
+
+	//EMP Feedback
+	objectEMP = GetOwner().GetChild("EmpParticles");
+	if (objectEMP) {
+		ComponentParticleSystem* particlesEmpAux = objectEMP->GetComponent<ComponentParticleSystem>();
+		if (particlesEmpAux) {
+			particlesEmp = particlesEmpAux;
+		}
+	}
+
+	//Push Feedback
+	objectPush = GetOwner().GetChild("PushParticles");
+	if (objectPush) {
+		ComponentParticleSystem* particlesPushAux = objectPush->GetComponent<ComponentParticleSystem>();
+		if (particlesPushAux) {
+			particlesPush = particlesPushAux;
 		}
 	}
 
@@ -291,13 +316,36 @@ void RangedAI::OnCollision(GameObject& collidedWith, float3 /* collisionNormal *
 			}
 
 			if (collidedWith.name == "EMP") {
-				if (agent) agent->RemoveAgentFromCrowd();
-				stunTimeRemaining = stunDuration;
-				if (state != AIState::STUNNED) ChangeState(AIState::STUNNED);
+				DoStunned();
 			}
 		}
 	}
 }
+
+void RangedAI::DoStunned()
+{
+	if (state != AIState::STUNNED) {
+		if (animation->GetCurrentState()) {
+			animation->SendTrigger(animation->GetCurrentState()->name + "StunStart");
+		}
+		if (particlesEmp)particlesEmp->PlayChildParticles();
+		agent->RemoveAgentFromCrowd();
+		stunTimeRemaining = stunDuration;
+		if (state != AIState::STUNNED) ChangeState(AIState::STUNNED);
+	}
+}
+
+
+void RangedAI::EnablePushFeedback() {
+	if (timeToSrartPush < 0) {
+		pushEffectHasToStart = false;
+		if (particlesPush) particlesPush->PlayChildParticles();
+	}
+	else {
+		timeToSrartPush -= Time::GetDeltaTime();
+	}
+}
+
 
 void RangedAI::Update() {
 	if (!agent) return;
@@ -349,7 +397,7 @@ void RangedAI::Update() {
 		ChangeState(AIState::DEATH);
 		if (playerController) playerController->RemoveEnemyFromMap(&GetOwner());
 	}
-
+	if (pushEffectHasToStart)EnablePushFeedback();
 	UpdateState();
 }
 
@@ -643,6 +691,8 @@ void RangedAI::PlayAudio(AudioType audioType) {
 void RangedAI::EnableBlastPushBack() {
 	if (state != AIState::START && state != AIState::SPAWN && state != AIState::DEATH) {
 		ChangeState(AIState::PUSHED);
+		pushEffectHasToStart = true;
+		timeToSrartPush = (minTimePushEffect + 1) + (((float)rand()) / (float)RAND_MAX) * (maxTimePushEffect - (minTimePushEffect + 1));
 		rangerGruntCharacter.beingPushed = true;
 		pushBackTimer = 0.f;
 		rangerGruntCharacter.CalculatePushBackFinalPos(GetOwner().GetComponent<ComponentTransform>()->GetGlobalPosition(), player->GetComponent<ComponentTransform>()->GetGlobalPosition(), rangerGruntCharacter.pushBackDistance);
