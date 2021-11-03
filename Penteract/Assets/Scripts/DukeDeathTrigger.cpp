@@ -20,6 +20,7 @@ EXPOSE_MEMBERS(DukeDeathTrigger) {
     MEMBER(MemberType::GAME_OBJECT_UID, audioVideoSourceUID),
     MEMBER(MemberType::FLOAT, relaxTime),
     MEMBER(MemberType::FLOAT, talkingDistance),
+    MEMBER(MemberType::FLOAT, talkingTimer),
     MEMBER(MemberType::INT, dialogueID)
 };
 
@@ -97,8 +98,11 @@ void DukeDeathTrigger::Update() {
             
 
         // Move the character in front of Duke
-        if (talkPosition.Distance(playerReference->playerMainTransform->GetGlobalPosition()) > 0.5f) playerReference->MoveTo(talkPosition);
-        else {
+        if (talkPosition.Distance(playerReference->playerMainTransform->GetGlobalPosition()) > 0.5f) { 
+            playerReference->MoveTo(talkPosition); 
+            currentTalkingTimer += Time::GetDeltaTime();
+        }
+        if (talkPosition.Distance(playerReference->playerMainTransform->GetGlobalPosition()) <= 0.5f || currentTalkingTimer >= talkingTimer) {
             sceneStart = false;
             startDialogue = true;
             GameplaySystems::SetGlobalVariable(globalMovePlayerFromCode, false);
@@ -128,7 +132,7 @@ void DukeDeathTrigger::Update() {
 
             // play video audio, and stop level music
             if (music && audioVideo) {
-                music->Stop();
+                Audio::StopAllSources();
                 audioVideo->Play();
             }
         }

@@ -4,5 +4,7 @@
             "Id": 7672060493007433567,
             "Type": "Audio"
         }
-    ]
+    ],
+    "IsMono": false,
+    "AudioFormat": 0
 }

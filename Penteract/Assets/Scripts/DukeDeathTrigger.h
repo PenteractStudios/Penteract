@@ -31,6 +31,7 @@ public:
 
 	float relaxTime = 1.75f;
 	float talkingDistance = 10.f;
+	float talkingTimer = 3.f;
 	int dialogueID = 0;
 
 private:
@@ -53,5 +54,6 @@ private:
 
 	float elapsedRelaxTime = 0;
 	float3 talkPosition = float3(0, 0, 0);
+	float currentTalkingTimer = 0.0f;
 };
 
