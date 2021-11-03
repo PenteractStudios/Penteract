@@ -2,7 +2,7 @@
 
 Basic engine created for UPC's Master in Advanced Programming for AAA Videogames.
 
-![Photo of the Engine](https://imgur.com/NPpU4XW.jpeg)
+![Photo of the Engine](https://i.imgur.com/pbHht8v.png)
 
 ## Features
 
