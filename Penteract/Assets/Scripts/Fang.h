@@ -54,7 +54,7 @@ public:
 	void GetHit(float damage_) override;;
 	bool IsAiming();
 	bool CanSwitch() const override;
-	bool IsInstantOrientation(bool useGamepad) const override;
+	bool IsInstantOrientation() const override;
 	float GetRealDashCooldown();
 	float GetRealEMPCooldown();
 	float GetRealUltimateCooldown();
@@ -122,6 +122,10 @@ private:
 	GameObject* fangLaser = nullptr;
 	bool shooting = false;
 	int transitioning = 0;
+	bool reloading = false;
+	bool unlockShoot = true;
+	float reloadCooldownRemaining = 0.f;
+	float reloadCooldown = 0.f;
 
 	//Movement
 	MovementDirection dashMovementDirection = MovementDirection::NONE;

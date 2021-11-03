@@ -5,6 +5,7 @@
 class GameObject;
 class ResourcePrefab;
 class ComponentTransform;
+class ComponentAudioSource;
 
 class BridgesTransportController : public Script
 {
@@ -43,5 +44,10 @@ private:
 	/* Transforms */
 	ComponentTransform* transformInitialBridge = nullptr;
 	ComponentTransform* transformFinalBridge = nullptr;
+
+	/* Audios */
+	ComponentAudioSource* audioInitialBridge = nullptr;
+	ComponentAudioSource* audioFinalBridge = nullptr;
+	bool audioPlayed = false;
 };
 

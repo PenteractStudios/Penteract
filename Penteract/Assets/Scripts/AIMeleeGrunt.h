@@ -26,6 +26,7 @@ public:
 	enum class AudioType {
 		SPAWN,
 		ATTACK,
+		ATTACK_SECONDARY,
 		FOOTSTEP_RIGHT,
 		FOOTSTEP_LEFT,
 		HIT,
@@ -110,6 +111,7 @@ public:
 	float maxTimePushEffect = 1.0f;
 	float minTimePushEffect = 0.0f;
 private:
+	bool mustOrientateFirstTime = true;
 	bool track = true;
 	bool attackStep = false;
 	bool alreadyHit = false;
@@ -160,4 +162,5 @@ private:
 	void UpdateDissolveTimer();
 	void SetRandomMaterial();
 	void SetMaterial(ComponentMeshRenderer* mesh, UID newMaterialID, bool needToPlayDissolve = false);
+	void OrientateTo(const float3& direction);										//Makes character look in a particular direcion
 };

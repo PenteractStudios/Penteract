@@ -9,6 +9,7 @@
 #include "OnimaruBullet.h"
 #include "SwitchParticles.h"
 #include "GlobalVariables.h"
+#include "AIDuke.h"
 
 #include "Math/Quat.h"
 #include "Geometry/Plane.h"
@@ -93,8 +94,8 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, playerOnimaru.sprintMovementSpeed),
 	MEMBER(MemberType::FLOAT, playerOnimaru.aimTime),
 	MEMBER(MemberType::FLOAT, onimaruRecoveryRate),
-		MEMBER(MemberType::FLOAT, playerOnimaru.offsetWeaponAngle),
-		MEMBER(MemberType::FLOAT, playerOnimaru.limitAngle),
+	MEMBER(MemberType::FLOAT, playerOnimaru.offsetWeaponAngle),
+	MEMBER(MemberType::FLOAT, playerOnimaru.limitAngle),
 	MEMBER_SEPARATOR("Onimaru Shoot"),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruBulletUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruLaserUID),
@@ -102,6 +103,9 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruRightHandUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruWeaponUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, playerOnimaru.lookAtPointUID),
+
+	MEMBER(MemberType::FLOAT, playerOnimaru.cannonGamepadOrientationSpeed),
+	MEMBER(MemberType::FLOAT, playerOnimaru.cannonMouseOrientationSpeed),
 	MEMBER_SEPARATOR("Onimaru Abilities"),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruShieldUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, onimaruBlastEffectsUID),
@@ -114,6 +118,8 @@ EXPOSE_MEMBERS(PlayerController) {
 	MEMBER(MemberType::FLOAT, switchDamage),
 	MEMBER(MemberType::FLOAT, switchSphereRadius),
 	MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
+	MEMBER_SEPARATOR("Upgrade Effect"),
+	MEMBER(MemberType::GAME_OBJECT_UID, upgradesParticlesUID),
 	MEMBER_SEPARATOR("Debug settings"),
 	MEMBER(MemberType::BOOL, debugGetHit),
 
@@ -150,6 +156,11 @@ void PlayerController::Start() {
 
 	switchEffects = GameplaySystems::GetGameObject(switchParticlesUID);
 
+	GameObject* upgradeEffects = GameplaySystems::GetGameObject(upgradesParticlesUID);
+	if (upgradeEffects) {
+		upgradeParticles = upgradeEffects->GetComponent<ComponentParticleSystem>();
+	}
+
 	//Get audio sources
 	int i = 0;
 
@@ -165,8 +176,6 @@ void PlayerController::Start() {
 	}
 	obtainedUpgradeCells = 0;
 }
-
-bool PlayerController::useGamepad = false;
 
 //Debug
 void PlayerController::SetInvincible(bool status) {
@@ -235,6 +244,7 @@ void PlayerController::SwitchCharacter() {
 			fangRecovering = 0.0f;
 		} else {
 			playerFang.ResetToIdle();
+			playerOnimaru.StopAudioOnSwitch();
 			playerOnimaru.characterGameObject->Disable();
 			playerFang.characterGameObject->Enable();
 
@@ -266,7 +276,8 @@ void PlayerController::SwitchCharacter() {
 			for (GameObject* enemy : switchCollisionedGO) {
 				AIMeleeGrunt* meleeScript = GET_SCRIPT(enemy, AIMeleeGrunt);
 				RangedAI* rangedScript = GET_SCRIPT(enemy, RangedAI);
-				if (rangedScript || meleeScript) {
+				AIDuke* dukeScript = GET_SCRIPT(enemy, AIDuke);
+				if (rangedScript || meleeScript || dukeScript) {
 					if (meleeScript) {
 						meleeScript->EnableBlastPushBack();
 						if (switchFirstHit) {
@@ -280,6 +291,9 @@ void PlayerController::SwitchCharacter() {
 							rangedScript->rangerGruntCharacter.GetHit(switchDamage);
 							rangedScript->PlayHit();
 						}
+					}
+					else if (dukeScript) {
+						dukeScript->EnableBlastPushBack();
 					}
 				}
 			}
@@ -300,7 +314,8 @@ void PlayerController::CheckCoolDowns() {
 		if (!noCooldownMode) switchInProgress = false;
 	}
 	else {
-		switchCooldownRemaining -= Time::GetDeltaTime();
+		if (playerOnimaru.characterGameObject->IsActive() && !GameplaySystems::GetGlobalVariable(globalSkill3TutorialReachedOni, true)) switchCooldownRemaining = switchCooldown; // during Onimaru tutorial, do not recover Switch cooldown
+		else switchCooldownRemaining -= Time::GetDeltaTime();
 	}
 
 	if (playerOnimaru.characterGameObject->IsActive() && playerFang.lifePoints != playerFang.GetTotalLifePoints()) {
@@ -377,11 +392,6 @@ void PlayerController::TakeDamage(float damage) {
 	}
 }
 
-
-void PlayerController::SetUseGamepad(bool useGamepad_) {
-	//Other callbacks would go here
-	useGamepad = useGamepad_;
-}
 void PlayerController::AddEnemyInMap(GameObject* enemy) {
 	playerOnimaru.AddEnemy(enemy);
 }
@@ -392,7 +402,8 @@ void PlayerController::RemoveEnemyFromMap(GameObject* enemy) {
 
 void PlayerController::ObtainUpgradeCell() {
 	if (++obtainedUpgradeCells == 3) {
-		// TODO: Check whether in level1 or level2
+		// TODO: Check whether in level1 or level2 or boss scene
+		if (upgradeParticles)upgradeParticles->PlayChildParticles();
 		if (currentLevel == 1) Player::level1Upgrade = true;
 		else if (currentLevel == 2) Player::level2Upgrade = true;
 	}
@@ -422,6 +433,9 @@ void PlayerController::OnCharacterResurrect() {
 }
 
 void PlayerController::Update() {
+	
+	if (GameplaySystems::GetGlobalVariable(globalCameraEventOn, false)) return;
+	
 	// Audio Listener
 	if (listener) {
 		listener->SetPosition(transform->GetGlobalPosition());
@@ -431,15 +445,11 @@ void PlayerController::Update() {
 	if (!playerOnimaru.characterGameObject) return;
 	if (!camera) return;
 
-	if (Input::GetKeyCodeDown(Input::KEY_KP_PLUS)) {
-		SetUseGamepad(!useGamepad);
-	}
-
 	if (playerFang.characterGameObject->IsActive()) {
-		playerFang.Update(useGamepad);
+		playerFang.Update(GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false));
 	}
 	else {
-		playerOnimaru.Update(useGamepad);
+		playerOnimaru.Update(GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false));
 	}
 
 	if (!IsPlayerDead()) {
@@ -450,16 +460,12 @@ void PlayerController::Update() {
 
 	if (CanSwitch()) {
 
-		if (switchInProgress || (noCooldownMode && (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R) && (!useGamepad || !Input::IsGamepadConnected(0))
-			|| useGamepad && Input::IsGamepadConnected(0) && Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0)))) {
-
+		if (switchInProgress || (noCooldownMode && (Player::GetInputBool(InputActions::SWITCH)))){
 			switchInProgress = true;
 			SwitchCharacter();
 		}
 
-		if (!switchInProgress && (Input::GetKeyCodeUp(Input::KEYCODE::KEY_R) && (!useGamepad || !Input::IsGamepadConnected(0))
-			|| useGamepad && Input::IsGamepadConnected(0) && Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_Y, 0))) {
-
+		if (!switchInProgress && (Player::GetInputBool(InputActions::SWITCH))){
 			switchInProgress = true;
 			switchCooldownRemaining = switchCooldown;
 		}
@@ -467,7 +473,7 @@ void PlayerController::Update() {
 }
 
 void PlayerController::OnCollision(GameObject& collidedWith, float3 /* collisionNormal */ , float3 /* penetrationDistance */, void* /* particle */) {
-	if (collidedWith.name == "MeleeGrunt" || collidedWith.name == "RangedGrunt") {
+	if (collidedWith.name == "MeleeGrunt" || collidedWith.name == "RangedGrunt" || collidedWith.name == "Duke") {
 		switchCollisionedGO.push_back(&collidedWith);
 	}
 }

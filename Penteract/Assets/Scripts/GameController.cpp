@@ -35,26 +35,36 @@ EXPOSE_MEMBERS(GameController) {
 	MEMBER(MemberType::FLOAT, rotationSpeedY),
 	MEMBER(MemberType::FLOAT, focusDistance),
 	MEMBER(MemberType::FLOAT, transitionSpeed),
+	MEMBER_SEPARATOR("Skybox GameObject"),
+	MEMBER(MemberType::GAME_OBJECT_UID, skyboxUID),
 };
 
 GENERATE_BODY_IMPL(GameController);
 
 void GameController::Start() {
+	Debug::Log("Start");
 	isPaused = false;
 	showWireframe = false;
 	transitionFinished = false;
 	GameplaySystems::SetGlobalVariable(globalIsGameplayBlocked, false);
 	GameplaySystems::SetGlobalVariable(globalswitchTutorialActive, false);
+	GameplaySystems::SetGlobalVariable(globalBackDetectionInUse, false);
 
 	if (PlayerController::currentLevel == 1) {
 		GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, false);
 		GameplaySystems::SetGlobalVariable(globalSkill2TutorialReached, false);
 		GameplaySystems::SetGlobalVariable(globalSkill3TutorialReached, false);
+		GameplaySystems::SetGlobalVariable(globalSkill1TutorialReachedOni, false);
+		GameplaySystems::SetGlobalVariable(globalSkill2TutorialReachedOni, false);
+		GameplaySystems::SetGlobalVariable(globalSkill3TutorialReachedOni, false);
 		GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, false);
 	} else {
 		GameplaySystems::SetGlobalVariable(globalSkill1TutorialReached, true);
 		GameplaySystems::SetGlobalVariable(globalSkill2TutorialReached, true);
 		GameplaySystems::SetGlobalVariable(globalSkill3TutorialReached, true);
+		GameplaySystems::SetGlobalVariable(globalSkill1TutorialReachedOni, true);
+		GameplaySystems::SetGlobalVariable(globalSkill2TutorialReachedOni, true);
+		GameplaySystems::SetGlobalVariable(globalSkill3TutorialReachedOni, true);
 		GameplaySystems::SetGlobalVariable(globalSwitchTutorialReached, true);
 	}
 
@@ -87,6 +97,8 @@ void GameController::Start() {
 		GameplaySystems::SetRenderCamera(camera);
 	}
 
+	skybox = GameplaySystems::GetGameObject(skyboxUID);
+
 	Debug::SetGodModeOn(false);
 	if (gameCamera && godCamera) godModeAvailable = true;
 	godModeController = GameplaySystems::GetGameObject(godModeControllerUID);
@@ -95,6 +107,12 @@ void GameController::Start() {
 }
 
 void GameController::Update() {
+
+	if (Input::GetKeyCodeDown(Input::KEY_KP_PLUS)) {
+		GameplaySystems::SetGlobalVariable<bool>(globalUseGamepad, !GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false));
+	}
+
+
 	if (godModeController) {
 		if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_G) && !isPaused) {
 			if (godModeAvailable) {
@@ -104,6 +122,7 @@ void GameController::Update() {
 					if (showWireframe) { // If Wireframe enabled when leaving God Mode, update to Shaded
 						Debug::UpdateShadingMode("Shaded");
 					}
+					if (camera) GameplaySystems::SetRenderCamera(camera);
 					godModeController->Disable();
 				} else {
 					if (showWireframe) { // If Wireframe enabled when entering GodMode, update to Wireframe
@@ -116,36 +135,36 @@ void GameController::Update() {
 		}
 	}
 
-	if (CanPause() && ((Input::GetKeyCodeDown(Input::KEYCODE::KEY_ESCAPE) || Input::GetControllerButtonDown(Input::SDL_CONTROLLER_BUTTON_START, 0)))) {
+	if (CanPause()) {
 		if (isPaused) {
-			ResumeGame();
+			if (Player::GetInputBool(InputActions::CANCEL_A) || Player::GetInputBool(InputActions::CANCEL_B)) {
+				if (!GameplaySystems::GetGlobalVariable(globalBackDetectionInUse,false)) { //globalBackDetectionInUse determines if cancel buttons must do navigation stuff or just UnPause
+					ResumeGame();
+				}
+			}
 		} else {
-			PauseGame();
+			if (Player::GetInputBool(InputActions::CANCEL_A))
+				PauseGame();
 		}
 	}
 
 	// Static cameras
-	if (!Debug::IsGodModeOn() && !isPaused) {
-		if (Input::GetKeyCode(Input::KEYCODE::KEY_0) && gameCamera) {
+	if (Debug::IsGodModeOn() && !isPaused) {
+		if (Input::GetKeyCode(Input::KEYCODE::KEY_F5) && gameCamera) {
 			camera = gameCamera->GetComponent<ComponentCamera>();
 			GameplaySystems::SetRenderCamera(camera);
-			Debug::SetGodModeOn(false);
 		}
-		if (Input::GetKeyCode(Input::KEYCODE::KEY_1) && staticCamera1) {
+		if (Input::GetKeyCode(Input::KEYCODE::KEY_F6) && staticCamera1) {
 			GameplaySystems::SetRenderCamera(staticCamera1);
-			Debug::SetGodModeOn(false);
 		}
-		if (Input::GetKeyCode(Input::KEYCODE::KEY_2) && staticCamera2) {
+		if (Input::GetKeyCode(Input::KEYCODE::KEY_F7) && staticCamera2) {
 			GameplaySystems::SetRenderCamera(staticCamera2);
-			Debug::SetGodModeOn(false);
 		}
-		if (Input::GetKeyCode(Input::KEYCODE::KEY_3) && staticCamera3) {
+		if (Input::GetKeyCode(Input::KEYCODE::KEY_F8) && staticCamera3) {
 			GameplaySystems::SetRenderCamera(staticCamera3);
-			Debug::SetGodModeOn(false);
 		}
-		if (Input::GetKeyCode(Input::KEYCODE::KEY_4) && staticCamera4) {
+		if (Input::GetKeyCode(Input::KEYCODE::KEY_F9) && staticCamera4) {
 			GameplaySystems::SetRenderCamera(staticCamera4);
-			Debug::SetGodModeOn(false);
 		}
 	}
 
@@ -234,11 +253,13 @@ void GameController::Update() {
 		}
 		// --- Show/Hide Skybox
 		if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_K)) {
-			ComponentSkyBox* skybox = gameCamera->GetComponent<ComponentSkyBox>();
-			if (skybox->IsActive()) {
-				skybox->Disable();
-			} else {
-				skybox->Enable();
+			if (skybox) {
+				if (skybox->IsActive()) {
+					skybox->Disable();
+				}
+				else {
+					skybox->Enable();
+				}
 			}
 		}
 	}
@@ -328,5 +349,5 @@ void GameController::EnablePauseMenus() {
 }
 
 bool GameController::CanPause() {
-	return !GameplaySystems::GetGlobalVariable(isVideoActive, true) && (!playerController || playerController && !playerController->IsPlayerDead());
+	return !GameplaySystems::GetGlobalVariable(globalCameraEventOn, false) && !GameplaySystems::GetGlobalVariable(isVideoActive, false) && (!playerController || playerController && !playerController->IsPlayerDead());
 }

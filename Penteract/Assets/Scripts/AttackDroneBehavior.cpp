@@ -4,6 +4,7 @@
 #include "Components/ComponentTransform.h"
 #include "Components/ComponentParticleSystem.h"
 #include "AttackDronesController.h"
+#include "AttackDroneProjectile.h"
 #include "RandomNumberGenerator.h"
 #include "CurvesGenerator.h"
 
@@ -40,7 +41,7 @@ void AttackDroneBehavior::Start() {
         dronesContainerTransform = parent->GetComponent<ComponentTransform>();
     }
 
-    hoverCurrentTime = RandomNumberGenerator::GenerateFloat(-1.5708, 1.5708);
+    hoverCurrentTime = RandomNumberGenerator::GenerateFloat(-1.5708f, 1.5708f);
 }
 
 void AttackDroneBehavior::Update() {
@@ -51,7 +52,7 @@ void AttackDroneBehavior::Update() {
     Shoot();
 }
 
-void AttackDroneBehavior::Reposition(float3 newPosition) {
+void AttackDroneBehavior::Reposition(float3 /*newPosition*/) {
     mustReposition = true;
 }
 
@@ -80,7 +81,14 @@ void AttackDroneBehavior::Shoot() {
     if (remainingWaves > 0 && availableShot) {
         if (currentTime >= delay) {
             remainingWaves--;
-            shooter.Shoot(projectilePrefabUID, transform->GetGlobalPosition(), transform->GetGlobalRotation());
+            GameObject* projectile = shooter.Shoot(projectilePrefabUID, transform->GetGlobalPosition(), transform->GetGlobalRotation());
+            if (projectile) {
+                AttackDroneProjectile* projectileScript = GET_SCRIPT(projectile, AttackDroneProjectile);
+                if (projectileScript && dronesControllerScript) {
+                    projectileScript->SetSpeed(dronesControllerScript->GetPatternProjectileSpeed());
+                }
+            }
+
             currentTime = 0.0f;
             if (droneMustRecoil) isRecoiling = true;
             if (mustWaitEndOfWave) availableShot = false;

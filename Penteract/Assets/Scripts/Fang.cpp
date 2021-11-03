@@ -46,6 +46,7 @@ void Fang::Init(UID fangUID, UID dashParticleUID, UID leftGunUID, UID rightGunUI
 		leftBulletAux = GameplaySystems::GetGameObject(leftBulletUID);
 		if (leftBulletAux) {
 			leftBullet = leftBulletAux->GetComponent<ComponentParticleSystem>();
+			reloadCooldown = leftBulletAux->GetChild("FangLeftBullet")->GetComponent<ComponentParticleSystem>()->GetLife()[0];
 		}
 		if (compAnimation) {
 			currentState = compAnimation->GetCurrentState();
@@ -84,6 +85,7 @@ void Fang::Init(UID fangUID, UID dashParticleUID, UID leftGunUID, UID rightGunUI
 			ultimateScript = GET_SCRIPT(fangUltimateGameObject, UltimateFang);
 			ultimateCooldownRemaining = ultimateCooldown;
 		}
+		orientationSpeed = normalOrientationSpeed;
 	}
 
 	if (characterGameObject) {
@@ -151,7 +153,9 @@ void Fang::IncreaseUltimateCounter() {
 	if (!ultimateOn) ultimateCooldownRemaining++;
 }
 
-bool Fang::IsInstantOrientation(bool useGamepad) const {
+bool Fang::IsInstantOrientation() const {
+	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, false);
+
 	return !useGamepad || !Input::IsGamepadConnected(0);
 }
 
@@ -244,6 +248,15 @@ bool Fang::CanEMP() {
 void Fang::CheckCoolDowns(bool noCooldownMode) {
 	//Combat
 	if (aiming) {
+		if (reloading) {
+			if (reloadCooldownRemaining < reloadCooldown) {
+				reloadCooldownRemaining += Time::GetDeltaTime();
+			}
+			else {
+				reloading = false;
+				reloadCooldownRemaining = 0.f;
+			}
+		}
 		if (!isUltimate && !EMP->IsActive()) {
 			if (fangLaser && !fangLaser->IsActive()) {
 				fangLaser->Enable();
@@ -337,13 +350,17 @@ void Fang::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 	switch (stateMachineEnum) {
 	case StateMachineEnum::PRINCIPAL:
 		if (std::strcmp(eventName, "FootstepRight") == 0) {
-			if (fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_RIGHT)]) {
-				fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_RIGHT)]->Play();
+			ComponentAudioSource* audio = fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_RIGHT)];
+			if (audio) {
+				audio->SetPitch((float) rand() / RAND_MAX * 0.75 + 0.75f);
+				audio->Play();
 			}
 			if (rightFootstepsVFX) rightFootstepsVFX->PlayChildParticles();
 		} else if (std::strcmp(eventName, "FootstepLeft") == 0) {
-			if (fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_LEFT)]) {
-				fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_LEFT)]->Play();
+			ComponentAudioSource* audio = fangAudios[static_cast<int>(FANG_AUDIOS::FOOTSTEP_LEFT)];
+			if (audio) {
+				audio->SetPitch((float) rand() / RAND_MAX * 0.75 + 0.75f);
+				audio->Play();
 			}
 			if (leftFootstepsVFX) leftFootstepsVFX->PlayChildParticles();
 		}
@@ -359,10 +376,15 @@ void Fang::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 	if (bullet) {
 		transitioning++;
 		if (transitioning > 1) {
-			if (fangAudios[static_cast<int>(FANG_AUDIOS::SHOOT)]) {
-				fangAudios[static_cast<int>(FANG_AUDIOS::SHOOT)]->Play();
+			ComponentAudioSource* audio = fangAudios[static_cast<int>(FANG_AUDIOS::SHOOT)];
+			if (audio) {
+				audio->SetPitch((float) rand() / RAND_MAX * 0.75 + 0.75f);
+				audio->Play();
 			}
 			bullet->PlayChildParticles();
+			reloading = true;
+			unlockShoot = false;
+			reloadCooldownRemaining = 0.f;
 		}
 		bullet = nullptr;
 	}
@@ -394,7 +416,7 @@ void Fang::Shoot() {
 		shooting = true;
 		attackCooldownRemaining = 1.f / attackSpeed;
 		//setear la velocidad de animacion
-		if (compAnimation->GetCurrentState()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::SHOOTING)]);
+		if (compAnimation->GetCurrentState() && compAnimation->GetCurrentState()->name != states[static_cast<int>(FANG_STATES::SHOOTING)]) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::SHOOTING)]);
 		if (compAnimation->GetCurrentStateSecondary()) {
 			ResourceClip* clip = GameplaySystems::GetResource<ResourceClip>(compAnimation->GetCurrentStateSecondary()->clipUid);
 			clip->speed = attackSpeed;
@@ -493,14 +515,20 @@ void Fang::Update(bool useGamepad, bool /* lockMovement */, bool /* lockRotation
 		if (EMP) {
 			faceToFront = !aiming;
 			Player::Update(useGamepad, dashing || EMP->IsActive(), dashing || EMP->IsActive() || ultimateOn);
-			if (GetInputBool(InputActions::ABILITY_1, useGamepad) && !EMP->IsActive() && !ultimateOn) {
+			if (GetInputBool(InputActions::ABILITY_1) && !EMP->IsActive() && !ultimateOn) {
 				InitDash();
 			}
 
 			if (!dashing && !EMP->IsActive()) {
-				if (GetInputBool(InputActions::SHOOT, useGamepad) && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
+				if (GetInputBool(InputActions::SHOOT) && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 					ResetIsInCombatValues();
-					Shoot();
+					if (unlockShoot) Shoot();
+					else {
+						if (!reloading) {
+							shooting = false;
+							unlockShoot = true;
+						}
+					}
 				}
 				
 				if (ultimateOn) {
@@ -509,17 +537,20 @@ void Fang::Update(bool useGamepad, bool /* lockMovement */, bool /* lockRotation
 			}
 
 			Dash();
-			if (!GetInputBool(InputActions::SHOOT, useGamepad) || dashing || EMP->IsActive() || ultimateOn || GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
+			if (!GetInputBool(InputActions::SHOOT) || dashing || EMP->IsActive() || ultimateOn || GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 				if (shooting) {
-					compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
-					shooting = false;
+					if (!reloading) {
+						shooting = false;
+						unlockShoot = true;
+					}
+					if(compAnimation->GetCurrentStateSecondary()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 				}
 			}
-			if (GetInputBool(InputActions::ABILITY_2, useGamepad) && !ultimateOn) {
+			if (GetInputBool(InputActions::ABILITY_2) && !ultimateOn) {
 				ActivateEMP();
 			}
 
-			if (GetInputBool(InputActions::ABILITY_3, useGamepad)) {
+			if (GetInputBool(InputActions::ABILITY_3)) {
 				ActiveUltimate();
 			}
 		}

@@ -222,7 +222,7 @@ void AttackDronesController::RecalculateFormations() {
 }
 
 void AttackDronesController::RepositionDrones() {
-    for (int i = 0; i < dronesScripts.size(); ++i) {
+    for (unsigned int i = 0; i < dronesScripts.size(); ++i) {
         dronesScripts[i]->SetPositionOffset(formationsOffsetPositions[i]);
         dronesScripts[i]->SetMustForceRotation(cycle == WaveCycle::CENTERED && formation == DronesFormation::CIRCLE);
     }
@@ -231,7 +231,7 @@ void AttackDronesController::RepositionDrones() {
 void AttackDronesController::CheckDronesWaitEndOfWave() {
     SetDronesWaitEndOfWave(false);      // clear and initialize
 
-    if (chosenPattern.cycles.size() > 1 && waves <= chosenPattern.cycles.size()) {
+    if (chosenPattern.cycles.size() > 1 && waves <= (int)(chosenPattern.cycles.size())) {
         bool mustWaitEndOfWave = MustWaitEndOfWave();
         if (mustWaitEndOfWave) {
             SetDronesWaitEndOfWave(true);
@@ -290,7 +290,7 @@ std::vector<float3> AttackDronesController::GenerateCircleFormation() {
     std::vector<float3> result(size);
 
     for (int i = 0; i < size; ++i) {
-        float theta = ((PI * 2) / size);
+        float theta = (float)((PI * 2) / size);
         float angle = (theta * i) + rotationOffset;
         
         result[i] = float3x3::RotateY(transform->GetGlobalRotation().ToEulerXZY().z) * (float3(cos(angle), 0.0f, sin(angle)) * chosenPattern.droneRadiusFormation);
@@ -316,7 +316,7 @@ void AttackDronesController::StartWave() {
             mostDelayedDrone = dronesScripts.size() - 1;
             float accumulatedDelay = 0.0f + delayWaitWave;
 
-            for (int i = 0; i < dronesScripts.size(); ++i) {
+            for (unsigned int i = 0u; i < dronesScripts.size(); ++i) {
                 if (accumulatedDelay >= maxDelay) {
                     maxDelay = accumulatedDelay;
                     mostDelayedDrone = i;
@@ -349,11 +349,11 @@ void AttackDronesController::StartWave() {
             mostDelayedDrone = dronesScripts.size() - 1;
 
             bool hasEvenDrones = dronesScripts.size() % 2 == 0;
-            float orderedI = dronesScripts.size() / 2 - (hasEvenDrones ? 1 : 0);
+            float orderedI = dronesScripts.size() / 2.f - (hasEvenDrones ? 1 : 0);
             float accumulatedDelay = (orderedI * chosenPattern.droneShotDelay) + delayWaitWave;
             float multiplier = -1.0f;
 
-            for (int i = 0; i < dronesScripts.size(); ++i) {
+            for (unsigned int i = 0u; i < dronesScripts.size(); ++i) {
                 if (accumulatedDelay >= maxDelay) {
                     maxDelay = accumulatedDelay;
                     mostDelayedDrone = i;
@@ -399,7 +399,7 @@ bool AttackDronesController::MustWaitEndOfWave() const {
 }
 
 bool AttackDronesController::HadToWaitEndOfWave() const {
-    if (waves > 1 && waves <= chosenPattern.cycles.size()) {
+    if (waves > 1 && waves <= (int)(chosenPattern.cycles.size())) {
         if (chosenPattern.cycles[waves - 1] != chosenPattern.cycles[waves - 2]) {           // If current 
             return true;
         }
@@ -413,4 +413,12 @@ bool AttackDronesController::BulletHellActive() const {
 
 bool AttackDronesController::BulletHellFinished() const {
     return bulletHellFinished;
+}
+
+bool AttackDronesController::IsBulletHellCircular() const {
+    return chosenPattern.droneFormation == DronesFormation::CIRCLE;
+}
+
+float AttackDronesController::GetPatternProjectileSpeed() const {
+    return chosenPattern.droneProjectileSpeed;
 }

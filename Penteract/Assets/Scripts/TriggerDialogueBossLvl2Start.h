@@ -6,6 +6,7 @@ class GameObject;
 class DialogueManager;
 class AfterDialogCallback;
 class MovingLasers;
+class AIDuke;
 
 class TriggerDialogueBossLvl2Start : public Script {
 	GENERATE_BODY(TriggerDialogueBossLvl2Start);
@@ -20,6 +21,7 @@ public:
 	UID gameControllerUID = 0;
 	UID afterDialogCallbackUID = 0;
 	UID laserUID = 0;
+	UID HUDUID = 0;
 	bool SwitchOn = true;
 	GameObject* boss = nullptr;
 	GameObject* gameController = nullptr;
@@ -29,6 +31,7 @@ public:
 private:
 	AfterDialogCallback* afterDialogCallbackScript = nullptr;
 	MovingLasers* laserScript = nullptr;
+	AIDuke* aiDuke = nullptr;
 
 	bool triggered = false; // Two objects can collide with the trigger at the same time. This boolean prevents the OnCollision() code to be executed twice when that happens
 };

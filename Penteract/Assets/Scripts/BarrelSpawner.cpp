@@ -15,7 +15,8 @@ void BarrelSpawner::Start() {
     GameObject* spawner = &GetOwner();
     std::vector<GameObject*> children = spawner->GetChildren();
     for (GameObject* child : children) {
-        positionSpawners.push_back(child->GetComponent<ComponentTransform>()->GetGlobalPosition());
+        float3 pos = child->GetComponent<ComponentTransform>()->GetGlobalPosition();
+        positionSpawners.push_back(float3(pos.x,0,pos.z));
     }
 
     barrel = GameplaySystems::GetResource<ResourcePrefab>(barrelBossUID);
@@ -31,7 +32,7 @@ void BarrelSpawner::Update() {
             timerSapwn = 0.0f;
             for (int i = 0; i < numberBarrelsRound; i++) {
                 GameplaySystems::Instantiate(barrel, positionSpawners[currentBarrel], Quat(0, 0, 0, 1));
-                if (currentBarrel + 1 > positionSpawners.size()) {
+                if (currentBarrel + 1 > (int)(positionSpawners.size())) {
                     spawn = false;
                     currentBarrel = 0;
                     timerSapwn = secondsBetweenRounds;

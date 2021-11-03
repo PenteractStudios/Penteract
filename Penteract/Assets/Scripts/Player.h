@@ -27,7 +27,9 @@ enum class InputActions {
 	ABILITY_2,
 	ABILITY_3,
 	INTERACT,
-	AIM
+	AIM,
+	CANCEL_A,
+	CANCEL_B
 };
 
 class Player : public Character {
@@ -49,7 +51,7 @@ public:
 	virtual void GetHit(float /* damage_ */) override;
 
 	void LookAtMouse();
-	MovementDirection GetInputMovementDirection(bool useGamepad);
+	MovementDirection GetInputMovementDirection();
 	float3 GetDirection() const;
 	virtual void Shoot() {}
 	virtual void Update(bool lastInputGamepad = false, bool lockMovement = false, bool lockRotation = false);
@@ -58,13 +60,14 @@ public:
 
 	virtual void OnAnimationFinished() = 0;
 	virtual void OnAnimationSecondaryFinished() = 0;
-	virtual bool IsInstantOrientation(bool useGamepad) const = 0;
+	virtual bool IsInstantOrientation() const = 0;
 	virtual bool IsVulnerable() const = 0;
 
+	void MoveTo(float3 targetForcedPosition = float3(0, 0, 0));
 	int GetMouseDirectionState();
 	bool IsActive();
-	static bool GetInputBool(InputActions action, bool useGamepad = false);
-	float2 GetInputFloat2(InputActions action, bool useGamepad = false);
+	static bool GetInputBool (InputActions action);
+	float2 GetInputFloat2(InputActions action);
 	void UpdateFacePointDir(bool useGamepad, bool faceToFront_ = false);
 	virtual void IncreaseUltimateCounter();
 	void SetClipSpeed(ResourceClip* clip, float speed) {
@@ -107,7 +110,6 @@ public:
 
 	float2 result = float2(0, 0);
 protected:
-	void MoveTo();
 	//Combat
 	float timeWithoutCombat = 0.f;
 	bool aiming = false;
@@ -120,13 +122,14 @@ protected:
 private:
 	virtual bool CanShoot();
 	void ResetSwitchStatus();
-	MovementDirection GetControllerMovementDirection(bool useGamepad = false);
+	MovementDirection GetControllerMovementDirection();
 	float2 GetControllerOrientationDirection() const;
 	void LookAtGamepadDir();
-	void LookAtFacePointTarget(bool useGamepad);
+	void LookAtFacePointTarget();
 
 private:
 	float currentSwitchDelay = 0.f;
 	bool playSwitchParticles = true;
 	float switchDelay = 0.37f;
+	float3 lastFacePointDir = float3(0, 0, 0);
 };

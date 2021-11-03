@@ -18,7 +18,7 @@ bool Onimaru::CanShoot() {
 }
 
 bool Onimaru::CanBlast() const {
-	return !blastInCooldown && !IsShielding() && !ultimateOn && !blastInUse && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true);
+	return !blastInCooldown && !IsShielding() && !ultimateOn && !blastInUse && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && GameplaySystems::GetGlobalVariable(globalSkill2TutorialReachedOni, true);
 }
 
 void Onimaru::GetHit(float damage_) {
@@ -49,18 +49,8 @@ void Onimaru::Shoot() {
 		shootingOnCooldown = true;
 		attackCooldownRemaining = 1.f / attackSpeed;
 
-		//NullRef on ultimate values
-		if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SPECIAL_SHOOT)] == nullptr) {
-			onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SPECIAL_SHOOT)] = onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHOOT)];
-		}
 		if (ultimateBullet == nullptr) {
 			ultimateBullet = bullet;
-		}
-
-		ComponentAudioSource* audioSourceToPlay = !ultimateOn ? onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHOOT)] : onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SPECIAL_SHOOT)];
-
-		if (audioSourceToPlay) {
-			audioSourceToPlay->Play();
 		}
 	}
 }
@@ -68,7 +58,10 @@ void Onimaru::Shoot() {
 void Onimaru::Blast() {
 	bool releaseBlast = currentBlastDuration <= blastDelay ? false : true;
 	if (releaseBlast && calculateEnemiesInRange) {
-		if (blastParticles) blastParticles->PlayChildParticles();
+		if (blastParticles) { 
+			blastParticles->PlayChildParticles(); 
+			if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::ENERGY_BLAST)]) onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::ENERGY_BLAST)]->Play();
+		}
 		calculateEnemiesInRange = false;
 		for (GameObject* enemy : enemiesInMap) {
 			AIMeleeGrunt* meleeScript = GET_SCRIPT(enemy, AIMeleeGrunt);
@@ -177,8 +170,7 @@ void Onimaru::StartUltimate() {
 	movementSpeed = ultimateMovementSpeed;
 	movementInputDirection = MovementDirection::NONE;
 	Player::MoveTo();
-	// TODO: reset arm rotation
-	// weaponTransform->SetGlobalRotation(float3(0, 1.468, 50.899));
+	weaponTransform->SetRotation(float3(0, 1.468, 50.899));
 	ultimateOn = true;
 }
 
@@ -220,15 +212,29 @@ float Onimaru::GetNormalizedRemainingUltimateTime() const {
 void Onimaru::UpdateWeaponRotation()
 {
 
-	float2 mousePos = Input::GetMousePositionNormalized();
-	LineSegment ray = lookAtMouseCameraComp->frustum.UnProjectLineSegment(mousePos.x, mousePos.y);
+	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, false) && Input::IsGamepadConnected(0);
+
+	weaponPointDir = float3(0, 0, 0);
+	float2 mousePos = float2(0, 0);
+	if (!useGamepad) {
+		mousePos = Input::GetMousePositionNormalized();
+	} else {
+		mousePos = GetInputFloat2(InputActions::ORIENTATION);
+		mousePos = mousePos.Mul(float2(1.0f, -1.0f));
+		if (abs(mousePos.x) > 0.05f || abs(mousePos.y) > 0.05f) //No gamepad input detected
+			mousePos.Normalize();
+	}
+
+	if (!(mousePos.x == 0 && mousePos.y == 0)) {
+		lastMousePos = mousePos;
+	}
+
+	LineSegment ray = lookAtMouseCameraComp->frustum.UnProjectLineSegment(lastMousePos.x, lastMousePos.y);
 	float3 planeTransform = lookAtMousePlanePosition;
 	Plane p = Plane(planeTransform, float3(0, 1, 0));
-	weaponPointDir = float3(0, 0, 0);
 	weaponPointDir = (p.ClosestPoint(ray) - (weaponTransform->GetGlobalPosition()));
 	float aux = p.ClosestPoint(ray).DistanceSq(weaponTransform->GetGlobalPosition());
 
-	if (weaponPointDir.x == 0 && weaponPointDir.z == 0) return;
 	Quat quat = weaponTransform->GetGlobalRotation();
 
 	float angle = Atan2(weaponPointDir.x, weaponPointDir.z);
@@ -255,10 +261,10 @@ void Onimaru::UpdateWeaponRotation()
 			multiplier = -1;
 		}
 	
-		
+	
 		if (Abs(angle) > DEGTORAD * orientationThreshold) {
 			if (aux > limitAngle) {
-				Quat rotationToAdd = Quat::Lerp(quat, rotation, Time::GetDeltaTime() * orientationSpeed);
+				Quat rotationToAdd = Quat::Lerp(quat, rotation, Time::GetDeltaTime() * (useGamepad ? cannonGamepadOrientationSpeed : cannonMouseOrientationSpeed));
 				weaponTransform->SetGlobalRotation(rotationToAdd);
 			}
 		}
@@ -274,6 +280,13 @@ void Onimaru::ResetToIdle()
 			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(IDLE)]);
 		}
 	}
+}
+
+void Onimaru::StopAudioOnSwitch(ONIMARU_AUDIOS audioType)
+{
+	ComponentAudioSource* audio = onimaruAudios[static_cast<int>(audioType)];
+	if (audio) audio->Stop();
+	shooting = false;
 }
 
 float Onimaru::GetRealShieldCooldown() {
@@ -326,7 +339,7 @@ void Onimaru::CheckCoolDowns(bool noCooldownMode) {
 		if (!blastInUse) blastCooldownRemaining -= Time::GetDeltaTime();
 	}
 	//ShieldCooldown
-	if (shield->NeedsRecharging()) {
+	if (shield->NeedsRecharging() && !IsShielding()) {
 		if (shieldCooldownRemainingCharge <= 0.f) {
 			shield->IncreaseCharge();
 			shieldCooldownRemainingCharge = shield->GetChargeCooldown();
@@ -383,22 +396,27 @@ void Onimaru::OnAnimationSecondaryFinished() {
 	}
 }
 
-bool Onimaru::IsInstantOrientation(bool useGamepad) const {
+bool Onimaru::IsInstantOrientation() const {
 	//This must return true only when ultimate not in use and Gamepad is either not used or not connected
+	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, false);
 	return !ultimateOn && (!useGamepad || !Input::IsGamepadConnected(0));
 }
 
 void Onimaru::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* eventName) {
 	if (stateMachineEnum == StateMachineEnum::PRINCIPAL) {
 		if (std::strcmp(eventName, "FootstepRight")) {
-			if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_RIGHT)]) {
-				onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_RIGHT)]->Play();
+			ComponentAudioSource* audio = onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_RIGHT)];
+			if (audio) {
+				audio->SetPitch((float) rand() / RAND_MAX * 0.5 + 0.75f);
+				audio->Play();
 			}
 			if (rightFootstepsVFX) rightFootstepsVFX->PlayChildParticles();
 		}
 		else if (std::strcmp(eventName, "FootstepLeft")) {
-			if (onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_LEFT)]) {
-				onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_LEFT)]->Play();
+			ComponentAudioSource* audio = onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::FOOTSTEP_LEFT)];
+			if (audio) {
+				audio->SetPitch((float) rand() / RAND_MAX * 0.5 + 0.75f);
+				audio->Play();
 			}
 			if (leftFootstepsVFX) leftFootstepsVFX->PlayChildParticles();
 		}
@@ -490,6 +508,9 @@ void Onimaru::Init(UID onimaruUID,UID onimaruWeapon, UID onimaruLaserUID, UID on
 	if (rightFootVFXGO) rightFootstepsVFX = rightFootVFXGO->GetComponent<ComponentParticleSystem>();
 
 	if (characterGameObject) characterGameObject->Disable();
+
+	orientationSpeed = normalOrientationSpeed;
+
 }
 
 void Onimaru::OnAnimationFinished() {
@@ -504,11 +525,11 @@ void Onimaru::OnAnimationFinished() {
 
 bool Onimaru::CanShield() const {
 	if (shield == nullptr || shieldGO == nullptr) return false;
-	return !ultimateOn && !shield->GetIsActive() && shield->CanUse() && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true);
+	return !ultimateOn && !shield->GetIsActive() && shield->CanUse() && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && GameplaySystems::GetGlobalVariable(globalSkill1TutorialReachedOni, true);
 }
 
 bool Onimaru::CanUltimate() const {
-	return !blastInUse && !IsShielding() && ultimateChargePoints >= ultimateChargePointsTotal && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && !switchInProgress;
+	return !blastInUse && !IsShielding() && ultimateChargePoints >= ultimateChargePointsTotal && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) && !switchInProgress && GameplaySystems::GetGlobalVariable(globalSkill3TutorialReachedOni, true);
 }
 
 bool Onimaru::UltimateStarted() const {
@@ -583,7 +604,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */
 		Player::Update(useGamepad, lockMovement, false);
 
 		if (!ultimateOn) {
-			if (GetInputBool(InputActions::ABILITY_3, useGamepad)) {
+			if (GetInputBool(InputActions::ABILITY_3)) {
 				if (CanUltimate()) {
 					StartUltimate();
 				}
@@ -608,7 +629,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */
 		}
 
 		if (!ultimateOn) {
-			if (GetInputBool(InputActions::ABILITY_1, useGamepad)) {
+			if (GetInputBool(InputActions::ABILITY_1)) {
 				if (!shield->GetIsActive() && shield->CanUse() && !blastInUse) {
 					ResetIsInCombatValues();
 					InitShield();
@@ -619,11 +640,11 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */
 				shieldBeingUsed += Time::GetDeltaTime();
 			}
 
-			if ((!GetInputBool(InputActions::ABILITY_1, useGamepad) || !shield->CanUse()) && shield->GetIsActive()) {
+			if ((!GetInputBool(InputActions::ABILITY_1) || !shield->CanUse()) && shield->GetIsActive()) {
 				FadeShield();
 			}
 
-			if (GetInputBool(InputActions::SHOOT, useGamepad)) {
+			if (GetInputBool(InputActions::SHOOT)) {
 				if (CanShoot()) {
 					if (!shooting) {
 						shooting = true;
@@ -632,6 +653,11 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */
 						if (bullet) {
 							bullet->SetParticlesPerSecondChild(float2(attackSpeed, attackSpeed));
 							bullet->PlayChildParticles();
+
+							ComponentAudioSource* audioSourceToPlay = onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHOOT)];
+							if (audioSourceToPlay) {
+								audioSourceToPlay->Play();
+							}
 						}
 						if (compAnimation) {
 							if (!shield->GetIsActive()) {
@@ -656,7 +682,7 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */
 		}
 
 		if (shooting) {
-			if (!GetInputBool(InputActions::SHOOT, useGamepad) || GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) || ultimateOn) {
+			if (!GetInputBool(InputActions::SHOOT) || GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true) || ultimateOn) {
 				shooting = false;
 				if (compAnimation) {
 					if (shield->GetIsActive()) {
@@ -669,13 +695,20 @@ void Onimaru::Update(bool useGamepad, bool lockMovement, bool /* lockRotation */
 							compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 						}
 					}
-					if (bullet) bullet->SetParticlesPerSecondChild(float2(0.0f,0.0f));
+					if (bullet) {
+						bullet->SetParticlesPerSecondChild(float2(0.0f, 0.0f));
+						ComponentAudioSource* audioSourceToPlay = onimaruAudios[static_cast<int>(ONIMARU_AUDIOS::SHOOT)];
+
+						if (audioSourceToPlay) {
+							audioSourceToPlay->Stop();
+						}
+					}
 				}
 			}
 		}
 
 		if (CanBlast()) {
-			if (GetInputBool(InputActions::ABILITY_2, useGamepad)) {
+			if (GetInputBool(InputActions::ABILITY_2)) {
 				blastInUse = true;
 				if (compAnimation && compAnimation->GetCurrentState()) {
 					if (shooting) {

@@ -6,5 +6,14 @@
     "Loop": true,
     "Speed": 1.0,
     "FrameRate": 0.04163135588169098,
-    "KeyEventClip": null
+    "KeyEventClip": [
+        {
+            "KeyFrame": 20,
+            "Name": "FootstepLeft"
+        },
+        {
+            "KeyFrame": 33,
+            "Name": "FootstepRight"
+        }
+    ]
 }

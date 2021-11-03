@@ -34,8 +34,8 @@ void SwapPanels::OnButtonClick() {
 
 void SwapPanels::DoSwapPanels() {
 	if (target != nullptr && current != nullptr) {
-		target->Enable();
 		current->Disable();
+		target->Enable();
 
 		// TODO: This is a very ugly solution. An object OnEnable() function, or a video IsPlaying(), would be needed to have this in a separate script
 		if (video) {

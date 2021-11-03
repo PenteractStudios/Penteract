@@ -5,10 +5,14 @@
 
 #include "Math/MathFunc.h"
 
+#define HIERARCHY_INDEX_MESH_RENDERER 1
+#define HIERARCHY_INDEX_EXPLOSION_PARTICLE_SYSTEM 2
+
 EXPOSE_MEMBERS(RatRobot) {
 	MEMBER(MemberType::GAME_OBJECT_UID, playerId),
-		MEMBER(MemberType::FLOAT, fleeRange),
-		MEMBER(MemberType::FLOAT, rotationSmoothness)
+	MEMBER(MemberType::FLOAT, fleeRange),
+	MEMBER(MemberType::FLOAT, steppedOnRange),
+	MEMBER(MemberType::FLOAT, rotationSmoothness)
 };
 
 GENERATE_BODY_IMPL(RatRobot);
@@ -21,15 +25,39 @@ void RatRobot::Start() {
 	transform = GetOwner().GetComponent<ComponentTransform>();
 	agent = GetOwner().GetComponent<ComponentAgent>();
 	animation = GetOwner().GetComponent<ComponentAnimation>();
+	audioSplash = GetOwner().GetComponent<ComponentAudioSource>();
+	std::vector<GameObject*> children = GetOwner().GetChildren();
+	if (children.size() > HIERARCHY_INDEX_MESH_RENDERER)
+		meshRenderer = children[HIERARCHY_INDEX_MESH_RENDERER]->GetComponent<ComponentMeshRenderer>();
+
+	if (children.size() > HIERARCHY_INDEX_EXPLOSION_PARTICLE_SYSTEM) {
+		explosionParticleSystem = children[HIERARCHY_INDEX_EXPLOSION_PARTICLE_SYSTEM]->GetComponent<ComponentParticleSystem>();
+	}
 }
 
 void RatRobot::Update() {
 	if (!transform || !agent) return;
+	
+	if (meshRenderer) {
+		if (!meshRenderer->IsActive()) {
+			if (respawnTimer > timeToRespawn) {
+				OnRespawn();
+			}
+			else {
+				respawnTimer += Time::GetDeltaTime();
+			}
+			return;
+		}
+	}
 
 	float3 position = transform->GetGlobalPosition();
 	float3 playerPosition = playerTransform->GetGlobalPosition();
 	float3 playerToRat = position - playerPosition;
 	float distanceSq = playerToRat.LengthSq();
+
+	if (distanceSq < steppedOnRange * steppedOnRange) {
+		SteppedOn();
+	}
 
 	if (distanceSq < fleeRange * fleeRange) {
 		float3 fleeDestination = playerPosition + playerToRat.Normalized() * fleeRange;
@@ -149,4 +177,23 @@ void RatRobot::ChangeState(RatRobotState newState) {
 	}
 
 	state = newState;
+}
+
+void RatRobot::SteppedOn() {
+	if (meshRenderer) {
+		meshRenderer->Disable();
+		respawnTimer = 0.0f;
+	}
+	if (explosionParticleSystem) {
+		explosionParticleSystem->Play();
+		explosionParticleSystem->PlayChildParticles();
+	}
+	if (audioSplash) {
+		audioSplash->Play();
+	}
+}
+
+void RatRobot::OnRespawn(){
+	if(meshRenderer)
+		meshRenderer->Enable();
 }

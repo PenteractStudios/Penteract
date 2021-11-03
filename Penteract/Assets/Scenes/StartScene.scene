@@ -14,9 +14,9 @@
         0.0
     ],
     "NavMesh": 0,
-    "CursorHeight": 0,
-    "CursorWidth": 0,
-    "Cursor": 0,
+    "CursorHeight": 90,
+    "CursorWidth": 90,
+    "Cursor": 13004582807876962819,
     "Root": {
         "Id": 15386627610009304279,
         "Name": "Scene",
@@ -166,7 +166,7 @@
                             ],
                             "NearPlaneDistance": 0.10000000149011612,
                             "FarPlaneDistance": 200.0,
-                            "HorizontalFov": 1.9240119457244874,
+                            "HorizontalFov": 1.3190813064575196,
                             "VerticalFov": 1.0
                         }
                     },
@@ -237,7 +237,7 @@
                         "Type": "EventSystem",
                         "Id": 13518061956158977320,
                         "Active": true,
-                        "FirstSelectedId": 0
+                        "FirstSelectedId": 14236826082248599462
                     }
                 ],
                 "Children": null
@@ -1275,6 +1275,19 @@
                                                 "Type": "Canvas",
                                                 "Id": 14432693726675547713,
                                                 "Active": true
+                                            },
+                                            {
+                                                "Type": "Script",
+                                                "Id": 8961786263547350921,
+                                                "Active": true,
+                                                "Script": 7424050549663101145,
+                                                "Values": [
+                                                    {
+                                                        "Name": "objectToSelectOnEnableUID",
+                                                        "Type": "GameObjectUID",
+                                                        "Value": 14236826082248599462
+                                                    }
+                                                ]
                                             }
                                         ],
                                         "Children": [
@@ -1364,13 +1377,13 @@
                                                             1.0
                                                         ],
                                                         "Interactable": true,
-                                                        "NavigationType": 1,
+                                                        "NavigationType": 2,
                                                         "TransitionType": 1,
                                                         "SelectableType": 10,
-                                                        "OnAxisDown": 0,
-                                                        "OnAxisUp": 0,
-                                                        "OnAxisRight": 0,
-                                                        "OnAxisLeft": 0
+                                                        "OnAxisDown": 11551898492828407159,
+                                                        "OnAxisUp": 6295768977641343250,
+                                                        "OnAxisRight": 6295768977641343250,
+                                                        "OnAxisLeft": 6295768977641343250
                                                     },
                                                     {
                                                         "Type": "Button",
@@ -1948,13 +1961,13 @@
                                                             1.0
                                                         ],
                                                         "Interactable": true,
-                                                        "NavigationType": 1,
+                                                        "NavigationType": 2,
                                                         "TransitionType": 1,
                                                         "SelectableType": 10,
-                                                        "OnAxisDown": 0,
-                                                        "OnAxisUp": 0,
-                                                        "OnAxisRight": 0,
-                                                        "OnAxisLeft": 0
+                                                        "OnAxisDown": 3277696390209271332,
+                                                        "OnAxisUp": 14236826082248599462,
+                                                        "OnAxisRight": 6295768977641343250,
+                                                        "OnAxisLeft": 6295768977641343250
                                                     },
                                                     {
                                                         "Type": "Button",
@@ -2527,13 +2540,13 @@
                                                             1.0
                                                         ],
                                                         "Interactable": true,
-                                                        "NavigationType": 1,
+                                                        "NavigationType": 2,
                                                         "TransitionType": 1,
                                                         "SelectableType": 10,
-                                                        "OnAxisDown": 0,
-                                                        "OnAxisUp": 0,
-                                                        "OnAxisRight": 0,
-                                                        "OnAxisLeft": 0
+                                                        "OnAxisDown": 5176024885232545214,
+                                                        "OnAxisUp": 11551898492828407159,
+                                                        "OnAxisRight": 6295768977641343250,
+                                                        "OnAxisLeft": 6295768977641343250
                                                     },
                                                     {
                                                         "Type": "Button",
@@ -3106,13 +3119,13 @@
                                                             1.0
                                                         ],
                                                         "Interactable": true,
-                                                        "NavigationType": 1,
+                                                        "NavigationType": 2,
                                                         "TransitionType": 1,
                                                         "SelectableType": 10,
-                                                        "OnAxisDown": 0,
-                                                        "OnAxisUp": 0,
-                                                        "OnAxisRight": 0,
-                                                        "OnAxisLeft": 0
+                                                        "OnAxisDown": 9534173058871378180,
+                                                        "OnAxisUp": 3277696390209271332,
+                                                        "OnAxisRight": 6295768977641343250,
+                                                        "OnAxisLeft": 6295768977641343250
                                                     },
                                                     {
                                                         "Type": "Button",
@@ -3685,13 +3698,13 @@
                                                             1.0
                                                         ],
                                                         "Interactable": true,
-                                                        "NavigationType": 1,
+                                                        "NavigationType": 2,
                                                         "TransitionType": 1,
                                                         "SelectableType": 10,
-                                                        "OnAxisDown": 0,
-                                                        "OnAxisUp": 0,
-                                                        "OnAxisRight": 0,
-                                                        "OnAxisLeft": 0
+                                                        "OnAxisDown": 6295768977641343250,
+                                                        "OnAxisUp": 5176024885232545214,
+                                                        "OnAxisRight": 6295768977641343250,
+                                                        "OnAxisLeft": 6295768977641343250
                                                     },
                                                     {
                                                         "Type": "Button",
@@ -4269,13 +4282,13 @@
                                                             1.0
                                                         ],
                                                         "Interactable": true,
-                                                        "NavigationType": 1,
+                                                        "NavigationType": 2,
                                                         "TransitionType": 1,
                                                         "SelectableType": 10,
-                                                        "OnAxisDown": 0,
-                                                        "OnAxisUp": 0,
-                                                        "OnAxisRight": 0,
-                                                        "OnAxisLeft": 0
+                                                        "OnAxisDown": 14236826082248599462,
+                                                        "OnAxisUp": 9534173058871378180,
+                                                        "OnAxisRight": 9534173058871378180,
+                                                        "OnAxisLeft": 9534173058871378180
                                                     },
                                                     {
                                                         "Type": "Button",
@@ -10756,13 +10769,13 @@
                                                             1.0
                                                         ],
                                                         "Interactable": true,
-                                                        "NavigationType": 1,
+                                                        "NavigationType": 2,
                                                         "TransitionType": 1,
                                                         "SelectableType": 10,
-                                                        "OnAxisDown": 0,
-                                                        "OnAxisUp": 0,
-                                                        "OnAxisRight": 0,
-                                                        "OnAxisLeft": 0
+                                                        "OnAxisDown": 281963797459852112,
+                                                        "OnAxisUp": 6577422233106427681,
+                                                        "OnAxisRight": 17162910725830051840,
+                                                        "OnAxisLeft": 6577422233106427681
                                                     },
                                                     {
                                                         "Type": "Button",
@@ -11080,7 +11093,7 @@
                                                         "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 8.0,
+                                                        "LetterSpacing": 3.0,
                                                         "Alignment": 1,
                                                         "Value": "PLAZA",
                                                         "Color": [
@@ -11158,7 +11171,7 @@
                                                         "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 8.0,
+                                                        "LetterSpacing": 3.0,
                                                         "Alignment": 1,
                                                         "Value": "PLAZA",
                                                         "Color": [
@@ -11319,13 +11332,13 @@
                                                             1.0
                                                         ],
                                                         "Interactable": true,
-                                                        "NavigationType": 1,
+                                                        "NavigationType": 2,
                                                         "TransitionType": 1,
                                                         "SelectableType": 10,
-                                                        "OnAxisDown": 0,
-                                                        "OnAxisUp": 0,
-                                                        "OnAxisRight": 0,
-                                                        "OnAxisLeft": 0
+                                                        "OnAxisDown": 5613295694175774906,
+                                                        "OnAxisUp": 1747747154870432410,
+                                                        "OnAxisRight": 15362622519543685095,
+                                                        "OnAxisLeft": 6577422233106427681
                                                     },
                                                     {
                                                         "Type": "Button",
@@ -11643,7 +11656,7 @@
                                                         "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 8.0,
+                                                        "LetterSpacing": 3.0,
                                                         "Alignment": 1,
                                                         "Value": "CAFETERIA",
                                                         "Color": [
@@ -11721,7 +11734,7 @@
                                                         "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 8.0,
+                                                        "LetterSpacing": 3.0,
                                                         "Alignment": 1,
                                                         "Value": "CAFETERIA",
                                                         "Color": [
@@ -11882,13 +11895,13 @@
                                                             1.0
                                                         ],
                                                         "Interactable": true,
-                                                        "NavigationType": 1,
+                                                        "NavigationType": 2,
                                                         "TransitionType": 1,
                                                         "SelectableType": 10,
-                                                        "OnAxisDown": 0,
-                                                        "OnAxisUp": 0,
-                                                        "OnAxisRight": 0,
-                                                        "OnAxisLeft": 0
+                                                        "OnAxisDown": 1096461153493180124,
+                                                        "OnAxisUp": 281963797459852112,
+                                                        "OnAxisRight": 4484874144964247836,
+                                                        "OnAxisLeft": 6577422233106427681
                                                     },
                                                     {
                                                         "Type": "Button",
@@ -12206,7 +12219,7 @@
                                                         "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 8.0,
+                                                        "LetterSpacing": 3.0,
                                                         "Alignment": 1,
                                                         "Value": "TRANSPORT",
                                                         "Color": [
@@ -12284,7 +12297,7 @@
                                                         "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 8.0,
+                                                        "LetterSpacing": 3.0,
                                                         "Alignment": 1,
                                                         "Value": "TRANSPORT",
                                                         "Color": [
@@ -12445,13 +12458,13 @@
                                                             1.0
                                                         ],
                                                         "Interactable": true,
-                                                        "NavigationType": 1,
+                                                        "NavigationType": 2,
                                                         "TransitionType": 1,
                                                         "SelectableType": 10,
-                                                        "OnAxisDown": 0,
-                                                        "OnAxisUp": 0,
-                                                        "OnAxisRight": 0,
-                                                        "OnAxisLeft": 0
+                                                        "OnAxisDown": 14912236078829996330,
+                                                        "OnAxisUp": 5613295694175774906,
+                                                        "OnAxisRight": 10145710763248954129,
+                                                        "OnAxisLeft": 6577422233106427681
                                                     },
                                                     {
                                                         "Type": "Button",
@@ -12769,7 +12782,7 @@
                                                         "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 8.0,
+                                                        "LetterSpacing": 3.0,
                                                         "Alignment": 1,
                                                         "Value": "SECURITY BRIDGE",
                                                         "Color": [
@@ -12847,7 +12860,7 @@
                                                         "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 8.0,
+                                                        "LetterSpacing": 3.0,
                                                         "Alignment": 1,
                                                         "Value": "SECURITY BRIDGE",
                                                         "Color": [
@@ -13008,13 +13021,13 @@
                                                             1.0
                                                         ],
                                                         "Interactable": true,
-                                                        "NavigationType": 1,
+                                                        "NavigationType": 2,
                                                         "TransitionType": 1,
                                                         "SelectableType": 10,
-                                                        "OnAxisDown": 0,
-                                                        "OnAxisUp": 0,
-                                                        "OnAxisRight": 0,
-                                                        "OnAxisLeft": 0
+                                                        "OnAxisDown": 6577422233106427681,
+                                                        "OnAxisUp": 1096461153493180124,
+                                                        "OnAxisRight": 10145710763248954129,
+                                                        "OnAxisLeft": 6577422233106427681
                                                     },
                                                     {
                                                         "Type": "Button",
@@ -13332,7 +13345,7 @@
                                                         "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 8.0,
+                                                        "LetterSpacing": 3.0,
                                                         "Alignment": 1,
                                                         "Value": "SECURITY",
                                                         "Color": [
@@ -13410,7 +13423,7 @@
                                                         "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 8.0,
+                                                        "LetterSpacing": 3.0,
                                                         "Alignment": 1,
                                                         "Value": "SECURITY",
                                                         "Color": [
@@ -13571,13 +13584,13 @@
                                                             1.0
                                                         ],
                                                         "Interactable": true,
-                                                        "NavigationType": 1,
+                                                        "NavigationType": 2,
                                                         "TransitionType": 1,
                                                         "SelectableType": 10,
-                                                        "OnAxisDown": 0,
-                                                        "OnAxisUp": 0,
-                                                        "OnAxisRight": 0,
-                                                        "OnAxisLeft": 0
+                                                        "OnAxisDown": 15362622519543685095,
+                                                        "OnAxisUp": 6577422233106427681,
+                                                        "OnAxisRight": 11037456295699248503,
+                                                        "OnAxisLeft": 1747747154870432410
                                                     },
                                                     {
                                                         "Type": "Button",
@@ -13895,7 +13908,7 @@
                                                         "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 8.0,
+                                                        "LetterSpacing": 3.0,
                                                         "Alignment": 1,
                                                         "Value": "ELEVATOR",
                                                         "Color": [
@@ -13973,7 +13986,7 @@
                                                         "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 8.0,
+                                                        "LetterSpacing": 3.0,
                                                         "Alignment": 1,
                                                         "Value": "ELEVATOR",
                                                         "Color": [
@@ -14134,13 +14147,13 @@
                                                             1.0
                                                         ],
                                                         "Interactable": true,
-                                                        "NavigationType": 1,
+                                                        "NavigationType": 2,
                                                         "TransitionType": 1,
                                                         "SelectableType": 10,
-                                                        "OnAxisDown": 0,
-                                                        "OnAxisUp": 0,
-                                                        "OnAxisRight": 0,
-                                                        "OnAxisLeft": 0
+                                                        "OnAxisDown": 4484874144964247836,
+                                                        "OnAxisUp": 17162910725830051840,
+                                                        "OnAxisRight": 11037456295699248503,
+                                                        "OnAxisLeft": 281963797459852112
                                                     },
                                                     {
                                                         "Type": "Button",
@@ -14458,7 +14471,7 @@
                                                         "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 8.0,
+                                                        "LetterSpacing": 3.0,
                                                         "Alignment": 1,
                                                         "Value": "TEST ARENA 01",
                                                         "Color": [
@@ -14536,7 +14549,7 @@
                                                         "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 8.0,
+                                                        "LetterSpacing": 3.0,
                                                         "Alignment": 1,
                                                         "Value": "TEST ARENA 01",
                                                         "Color": [
@@ -14697,13 +14710,13 @@
                                                             1.0
                                                         ],
                                                         "Interactable": true,
-                                                        "NavigationType": 1,
+                                                        "NavigationType": 2,
                                                         "TransitionType": 1,
                                                         "SelectableType": 10,
-                                                        "OnAxisDown": 0,
-                                                        "OnAxisUp": 0,
-                                                        "OnAxisRight": 0,
-                                                        "OnAxisLeft": 0
+                                                        "OnAxisDown": 10145710763248954129,
+                                                        "OnAxisUp": 15362622519543685095,
+                                                        "OnAxisRight": 11037456295699248503,
+                                                        "OnAxisLeft": 5613295694175774906
                                                     },
                                                     {
                                                         "Type": "Button",
@@ -15021,7 +15034,7 @@
                                                         "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 8.0,
+                                                        "LetterSpacing": 3.0,
                                                         "Alignment": 1,
                                                         "Value": "FIRE BRIDGE",
                                                         "Color": [
@@ -15099,7 +15112,7 @@
                                                         "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 8.0,
+                                                        "LetterSpacing": 3.0,
                                                         "Alignment": 1,
                                                         "Value": "FIRE BRIDGE",
                                                         "Color": [
@@ -15260,13 +15273,13 @@
                                                             1.0
                                                         ],
                                                         "Interactable": true,
-                                                        "NavigationType": 1,
+                                                        "NavigationType": 2,
                                                         "TransitionType": 1,
                                                         "SelectableType": 10,
-                                                        "OnAxisDown": 0,
-                                                        "OnAxisUp": 0,
-                                                        "OnAxisRight": 0,
-                                                        "OnAxisLeft": 0
+                                                        "OnAxisDown": 6577422233106427681,
+                                                        "OnAxisUp": 4484874144964247836,
+                                                        "OnAxisRight": 11037456295699248503,
+                                                        "OnAxisLeft": 1096461153493180124
                                                     },
                                                     {
                                                         "Type": "Button",
@@ -15584,7 +15597,7 @@
                                                         "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 8.0,
+                                                        "LetterSpacing": 3.0,
                                                         "Alignment": 1,
                                                         "Value": "TEST ARENA 02",
                                                         "Color": [
@@ -15662,7 +15675,7 @@
                                                         "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 8.0,
+                                                        "LetterSpacing": 3.0,
                                                         "Alignment": 1,
                                                         "Value": "TEST ARENA 02",
                                                         "Color": [
@@ -15823,13 +15836,13 @@
                                                             1.0
                                                         ],
                                                         "Interactable": true,
-                                                        "NavigationType": 1,
+                                                        "NavigationType": 2,
                                                         "TransitionType": 1,
                                                         "SelectableType": 10,
-                                                        "OnAxisDown": 0,
-                                                        "OnAxisUp": 0,
-                                                        "OnAxisRight": 0,
-                                                        "OnAxisLeft": 0
+                                                        "OnAxisDown": 6577422233106427681,
+                                                        "OnAxisUp": 6577422233106427681,
+                                                        "OnAxisRight": 6577422233106427681,
+                                                        "OnAxisLeft": 17162910725830051840
                                                     },
                                                     {
                                                         "Type": "Button",
@@ -16147,7 +16160,7 @@
                                                         "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 8.0,
+                                                        "LetterSpacing": 3.0,
                                                         "Alignment": 1,
                                                         "Value": "THE DEN",
                                                         "Color": [
@@ -16225,7 +16238,7 @@
                                                         "FontID": 18326526522212889354,
                                                         "FontSize": 24.0,
                                                         "LineHeight": 16.0,
-                                                        "LetterSpacing": 8.0,
+                                                        "LetterSpacing": 3.0,
                                                         "Alignment": 1,
                                                         "Value": "THE DEN",
                                                         "Color": [
@@ -16299,6 +16312,29 @@
                                         "Type": "Canvas",
                                         "Id": 16249285368394755122,
                                         "Active": true
+                                    },
+                                    {
+                                        "Type": "Script",
+                                        "Id": 6884449203973977380,
+                                        "Active": true,
+                                        "Script": 7424050549663101145,
+                                        "Values": [
+                                            {
+                                                "Name": "objectToEnableOnCancelUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 7223621991022962539
+                                            },
+                                            {
+                                                "Name": "objectToDisableOnCancelUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 709472931683047972
+                                            },
+                                            {
+                                                "Name": "objectToSelectOnEnableUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 6577422233106427681
+                                            }
+                                        ]
                                     }
                                 ],
                                 "Children": [
@@ -16388,13 +16424,13 @@
                                                     1.0
                                                 ],
                                                 "Interactable": true,
-                                                "NavigationType": 1,
+                                                "NavigationType": 2,
                                                 "TransitionType": 1,
                                                 "SelectableType": 10,
-                                                "OnAxisDown": 0,
-                                                "OnAxisUp": 0,
-                                                "OnAxisRight": 0,
-                                                "OnAxisLeft": 0
+                                                "OnAxisDown": 11037456295699248503,
+                                                "OnAxisUp": 11037456295699248503,
+                                                "OnAxisRight": 11037456295699248503,
+                                                "OnAxisLeft": 1747747154870432410
                                             },
                                             {
                                                 "Type": "Button",
@@ -17670,25 +17706,25 @@
                                                                 "Id": 10807998343209974509,
                                                                 "Active": true,
                                                                 "ColorHover": [
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
+                                                                    0.0,
+                                                                    0.6941176652908325,
+                                                                    0.8901960849761963,
                                                                     1.0
                                                                 ],
                                                                 "ColorDisable": [
-                                                                    0.5,
-                                                                    0.5,
-                                                                    0.5,
+                                                                    0.0,
+                                                                    0.6941176652908325,
+                                                                    0.8901960849761963,
                                                                     1.0
                                                                 ],
                                                                 "Interactable": true,
-                                                                "NavigationType": 1,
+                                                                "NavigationType": 2,
                                                                 "TransitionType": 1,
                                                                 "SelectableType": 15,
-                                                                "OnAxisDown": 0,
-                                                                "OnAxisUp": 0,
-                                                                "OnAxisRight": 0,
-                                                                "OnAxisLeft": 0
+                                                                "OnAxisDown": 5432107788687870408,
+                                                                "OnAxisUp": 4606768487413541671,
+                                                                "OnAxisRight": 1500607406920224858,
+                                                                "OnAxisLeft": 12246593072046595834
                                                             },
                                                             {
                                                                 "Type": "Slider",
@@ -17698,11 +17734,11 @@
                                                                 "MaxValue": 100.0,
                                                                 "CurrentValue": 27.69986343383789,
                                                                 "Direction": 0,
-                                                                "StopOnEdges": false,
+                                                                "StopOnEdges": true,
                                                                 "ColorClick": [
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
                                                                     1.0
                                                                 ],
                                                                 "ColorManualInput": [
@@ -18223,25 +18259,25 @@
                                                                 "Id": 11178335822358928852,
                                                                 "Active": true,
                                                                 "ColorHover": [
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
+                                                                    0.0,
+                                                                    0.6941176652908325,
+                                                                    0.8901960849761963,
                                                                     1.0
                                                                 ],
                                                                 "ColorDisable": [
-                                                                    0.5,
-                                                                    0.5,
-                                                                    0.5,
+                                                                    0.0,
+                                                                    0.6941176652908325,
+                                                                    0.8901960849761963,
                                                                     1.0
                                                                 ],
                                                                 "Interactable": true,
-                                                                "NavigationType": 1,
+                                                                "NavigationType": 2,
                                                                 "TransitionType": 1,
                                                                 "SelectableType": 15,
-                                                                "OnAxisDown": 0,
-                                                                "OnAxisUp": 0,
-                                                                "OnAxisRight": 0,
-                                                                "OnAxisLeft": 0
+                                                                "OnAxisDown": 10977386911451700401,
+                                                                "OnAxisUp": 15777271348677138761,
+                                                                "OnAxisRight": 1500607406920224858,
+                                                                "OnAxisLeft": 12246593072046595834
                                                             },
                                                             {
                                                                 "Type": "Slider",
@@ -18251,11 +18287,11 @@
                                                                 "MaxValue": 100.0,
                                                                 "CurrentValue": 27.69986343383789,
                                                                 "Direction": 0,
-                                                                "StopOnEdges": false,
+                                                                "StopOnEdges": true,
                                                                 "ColorClick": [
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
                                                                     1.0
                                                                 ],
                                                                 "ColorManualInput": [
@@ -18776,25 +18812,25 @@
                                                                 "Id": 16607991870564774825,
                                                                 "Active": true,
                                                                 "ColorHover": [
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
+                                                                    0.0,
+                                                                    0.6941176652908325,
+                                                                    0.8901960849761963,
                                                                     1.0
                                                                 ],
                                                                 "ColorDisable": [
-                                                                    0.5,
-                                                                    0.5,
-                                                                    0.5,
+                                                                    0.0,
+                                                                    0.6941176652908325,
+                                                                    0.8901960849761963,
                                                                     1.0
                                                                 ],
                                                                 "Interactable": true,
-                                                                "NavigationType": 1,
+                                                                "NavigationType": 2,
                                                                 "TransitionType": 1,
                                                                 "SelectableType": 15,
-                                                                "OnAxisDown": 0,
-                                                                "OnAxisUp": 0,
-                                                                "OnAxisRight": 0,
-                                                                "OnAxisLeft": 0
+                                                                "OnAxisDown": 4606768487413541671,
+                                                                "OnAxisUp": 5432107788687870408,
+                                                                "OnAxisRight": 1500607406920224858,
+                                                                "OnAxisLeft": 12246593072046595834
                                                             },
                                                             {
                                                                 "Type": "Slider",
@@ -18804,11 +18840,11 @@
                                                                 "MaxValue": 100.0,
                                                                 "CurrentValue": 27.69986343383789,
                                                                 "Direction": 0,
-                                                                "StopOnEdges": false,
+                                                                "StopOnEdges": true,
                                                                 "ColorClick": [
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
                                                                     1.0
                                                                 ],
                                                                 "ColorManualInput": [
@@ -19351,13 +19387,13 @@
                                                                             1.0
                                                                         ],
                                                                         "Interactable": true,
-                                                                        "NavigationType": 1,
+                                                                        "NavigationType": 2,
                                                                         "TransitionType": 1,
                                                                         "SelectableType": 10,
-                                                                        "OnAxisDown": 0,
-                                                                        "OnAxisUp": 0,
-                                                                        "OnAxisRight": 0,
-                                                                        "OnAxisLeft": 0
+                                                                        "OnAxisDown": 8556567552828096376,
+                                                                        "OnAxisUp": 4606768487413541671,
+                                                                        "OnAxisRight": 12246593072046595834,
+                                                                        "OnAxisLeft": 15777271348677138761
                                                                     },
                                                                     {
                                                                         "Type": "Button",
@@ -19998,13 +20034,13 @@
                                                                             1.0
                                                                         ],
                                                                         "Interactable": true,
-                                                                        "NavigationType": 1,
+                                                                        "NavigationType": 2,
                                                                         "TransitionType": 1,
                                                                         "SelectableType": 10,
-                                                                        "OnAxisDown": 0,
-                                                                        "OnAxisUp": 0,
-                                                                        "OnAxisRight": 0,
-                                                                        "OnAxisLeft": 0
+                                                                        "OnAxisDown": 8556567552828096376,
+                                                                        "OnAxisUp": 4606768487413541671,
+                                                                        "OnAxisRight": 15777271348677138761,
+                                                                        "OnAxisLeft": 1500607406920224858
                                                                     },
                                                                     {
                                                                         "Type": "Button",
@@ -20562,9 +20598,9 @@
                                                                 "Id": 246329652480785741,
                                                                 "Active": true,
                                                                 "ColorHover": [
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
+                                                                    0.0,
+                                                                    0.6941176652908325,
+                                                                    0.8901960849761963,
                                                                     1.0
                                                                 ],
                                                                 "ColorDisable": [
@@ -20588,9 +20624,9 @@
                                                                 "Active": true,
                                                                 "Clicked": false,
                                                                 "ColorClick": [
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
+                                                                    1.0,
+                                                                    1.0,
+                                                                    1.0,
                                                                     1.0
                                                                 ]
                                                             },
@@ -21232,9 +21268,9 @@
                                                                 "Id": 5301066684851907687,
                                                                 "Active": true,
                                                                 "ColorHover": [
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
+                                                                    0.0,
+                                                                    0.6941176652908325,
+                                                                    0.8901960849761963,
                                                                     1.0
                                                                 ],
                                                                 "ColorDisable": [
@@ -21259,9 +21295,9 @@
                                                                 "IsOn": true,
                                                                 "EnabledImageID": 10528254761752465755,
                                                                 "ClickedColor": [
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
+                                                                    1.0,
+                                                                    0.9999899864196777,
+                                                                    0.9999899864196777,
                                                                     1.0
                                                                 ]
                                                             },
@@ -21626,9 +21662,9 @@
                                                                 "Id": 15948953506686998874,
                                                                 "Active": true,
                                                                 "ColorHover": [
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
-                                                                    0.8399999737739563,
+                                                                    0.0,
+                                                                    0.6941176652908325,
+                                                                    0.8901960849761963,
                                                                     1.0
                                                                 ],
                                                                 "ColorDisable": [
@@ -21653,9 +21689,9 @@
                                                                 "IsOn": true,
                                                                 "EnabledImageID": 2245618589352332313,
                                                                 "ClickedColor": [
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
-                                                                    0.6399999856948853,
+                                                                    1.0,
+                                                                    0.9999899864196777,
+                                                                    0.9999899864196777,
                                                                     1.0
                                                                 ]
                                                             },
@@ -21840,6 +21876,29 @@
                                         "Type": "Canvas",
                                         "Id": 5705389424455659838,
                                         "Active": true
+                                    },
+                                    {
+                                        "Type": "Script",
+                                        "Id": 12286965943669612875,
+                                        "Active": true,
+                                        "Script": 7424050549663101145,
+                                        "Values": [
+                                            {
+                                                "Name": "objectToEnableOnCancelUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 7223621991022962539
+                                            },
+                                            {
+                                                "Name": "objectToDisableOnCancelUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 5940874028493122443
+                                            },
+                                            {
+                                                "Name": "objectToSelectOnEnableUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 4606768487413541671
+                                            }
+                                        ]
                                     }
                                 ],
                                 "Children": [
@@ -21929,13 +21988,13 @@
                                                     1.0
                                                 ],
                                                 "Interactable": true,
-                                                "NavigationType": 1,
+                                                "NavigationType": 2,
                                                 "TransitionType": 1,
                                                 "SelectableType": 10,
-                                                "OnAxisDown": 0,
-                                                "OnAxisUp": 0,
-                                                "OnAxisRight": 0,
-                                                "OnAxisLeft": 0
+                                                "OnAxisDown": 12246593072046595834,
+                                                "OnAxisUp": 6340730506307052440,
+                                                "OnAxisRight": 10977386911451700401,
+                                                "OnAxisLeft": 12246593072046595834
                                             },
                                             {
                                                 "Type": "Button",
@@ -22856,8 +22915,8 @@
                                             0.5
                                         ],
                                         "Size": [
-                                            917.5,
-                                            656.0
+                                            1658.5,
+                                            692.0
                                         ],
                                         "AnchorMin": [
                                             0.5,
@@ -22884,7 +22943,7 @@
                                         "Type": "Image",
                                         "Id": 18244676851741471503,
                                         "Active": true,
-                                        "TextureId": 12501726326517736061,
+                                        "TextureId": 3153736267259101651,
                                         "Color": [
                                             1.0,
                                             1.0,
@@ -23052,13 +23111,13 @@
                                                     1.0
                                                 ],
                                                 "Interactable": true,
-                                                "NavigationType": 1,
+                                                "NavigationType": 2,
                                                 "TransitionType": 1,
                                                 "SelectableType": 10,
-                                                "OnAxisDown": 0,
-                                                "OnAxisUp": 0,
-                                                "OnAxisRight": 0,
-                                                "OnAxisLeft": 0
+                                                "OnAxisDown": 13782806613542514815,
+                                                "OnAxisUp": 13782806613542514815,
+                                                "OnAxisRight": 13782806613542514815,
+                                                "OnAxisLeft": 13782806613542514815
                                             },
                                             {
                                                 "Type": "Button",
@@ -23537,6 +23596,29 @@
                                         "Type": "Canvas",
                                         "Id": 10116443353099720113,
                                         "Active": true
+                                    },
+                                    {
+                                        "Type": "Script",
+                                        "Id": 2266832590450900688,
+                                        "Active": true,
+                                        "Script": 7424050549663101145,
+                                        "Values": [
+                                            {
+                                                "Name": "objectToDisableOnCancelUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 4803151671752383218
+                                            },
+                                            {
+                                                "Name": "objectToEnableOnCancelUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 7223621991022962539
+                                            },
+                                            {
+                                                "Name": "objectToSelectOnEnableUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 13782806613542514815
+                                            }
+                                        ]
                                     }
                                 ],
                                 "Children": [
@@ -23626,13 +23708,13 @@
                                                     1.0
                                                 ],
                                                 "Interactable": true,
-                                                "NavigationType": 1,
+                                                "NavigationType": 2,
                                                 "TransitionType": 1,
                                                 "SelectableType": 10,
-                                                "OnAxisDown": 0,
-                                                "OnAxisUp": 0,
-                                                "OnAxisRight": 0,
-                                                "OnAxisLeft": 0
+                                                "OnAxisDown": 8170423438466530587,
+                                                "OnAxisUp": 8170423438466530587,
+                                                "OnAxisRight": 8170423438466530587,
+                                                "OnAxisLeft": 8170423438466530587
                                             },
                                             {
                                                 "Type": "Button",
@@ -24061,7 +24143,7 @@
                         "Name": "CanvasControlsDevelopment",
                         "Active": false,
                         "Static": false,
-                        "ActiveHierarchy": false,
+                        "ActiveHierarchy": true,
                         "RootBoneId": 0,
                         "Mask": 0,
                         "Components": [
@@ -24660,6 +24742,29 @@
                                         "Type": "Canvas",
                                         "Id": 13682567474577808222,
                                         "Active": true
+                                    },
+                                    {
+                                        "Type": "Script",
+                                        "Id": 1435467166165994273,
+                                        "Active": true,
+                                        "Script": 7424050549663101145,
+                                        "Values": [
+                                            {
+                                                "Name": "objectToEnableOnCancelUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 4803151671752383218
+                                            },
+                                            {
+                                                "Name": "objectToDisableOnCancelUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 3666765508128991856
+                                            },
+                                            {
+                                                "Name": "objectToSelectOnEnableUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 15687019737042349550
+                                            }
+                                        ]
                                     }
                                 ],
                                 "Children": [
@@ -25457,6 +25562,29 @@
                                         "Type": "Canvas",
                                         "Id": 5657727322436896651,
                                         "Active": true
+                                    },
+                                    {
+                                        "Type": "Script",
+                                        "Id": 14358417040161845899,
+                                        "Active": true,
+                                        "Script": 7424050549663101145,
+                                        "Values": [
+                                            {
+                                                "Name": "objectToEnableOnCancelUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 7223621991022962539
+                                            },
+                                            {
+                                                "Name": "objectToDisableOnCancelUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 6017349740093421903
+                                            },
+                                            {
+                                                "Name": "objectToSelectOnEnableUID",
+                                                "Type": "GameObjectUID",
+                                                "Value": 11539946398339232984
+                                            }
+                                        ]
                                     }
                                 ],
                                 "Children": [

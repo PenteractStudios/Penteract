@@ -27,7 +27,8 @@ public:
 						float droneShotDelay_, int dronesNumber_, DronesFormation droneFormation_, int waves_, float timeBetweenWaves_,
 						std::vector<WaveCycle> cycles_,
 						int pickChance_,
-						bool rotationDronesActive_, bool rotationDronesClockwise_, float rotationDronesSpeed_)
+						bool rotationDronesActive_, bool rotationDronesClockwise_, float rotationDronesSpeed_,
+						float droneProjectileSpeed_)
 
 		: droneSeparationHorizontal(droneSeparationHorizontal_)
 		, droneSeparationDepth(droneSeparationDepth_)
@@ -43,7 +44,8 @@ public:
 		, pickChance(pickChance_)
 		, rotationDronesActive(rotationDronesActive_)
 		, rotationDronesClockwise(rotationDronesClockwise_)
-		, rotationDronesSpeed(rotationDronesSpeed_) {}
+		, rotationDronesSpeed(rotationDronesSpeed_)
+		, droneProjectileSpeed(droneProjectileSpeed_) {}
 
 	float droneSeparationHorizontal = 1.0f;
 	float droneSeparationDepth = 1.0f;
@@ -63,6 +65,8 @@ public:
 	bool rotationDronesActive = false;
 	bool rotationDronesClockwise = true;
 	float rotationDronesSpeed = 4.0f;
+
+	float droneProjectileSpeed = 1.0f;
 };
 
 
@@ -75,27 +79,31 @@ public:
 extern inline std::vector<AttackDronesPattern> patterns = {
 
 	AttackDronesPattern(3.0f, 4.0f, 6.0f, 2.0f, 4.0f,
-						0.1f, 7, DronesFormation::ARROW, 7, 0.5f,
-						{ WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED},
+						0.1f, 7, DronesFormation::ARROW, 6, 0.5f,
+						{ WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED},
 						15,
-						false, false, 0.0f),
+						false, false, 0.0f,
+						15.0f),
 
 	AttackDronesPattern(3.0f, 4.0f, 6.0f, 2.0f, 2.0f,
-						0.0f, 9, DronesFormation::CIRCLE, 12, 0.5f,
+						0.0f, 7, DronesFormation::CIRCLE, 12, 0.5f,
 						{ WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED },
-						35,
-						true, true, 1.0f),
+						15,
+						false, false, 0.0f,
+						15.0f),
 
 	AttackDronesPattern(2.0f, 4.0f, 6.0f, 2.0f, 3.0f,
 						0.3f, 7, DronesFormation::LINE, 6, 0.5f,
 						{ WaveCycle::LEFT_TO_RIGHT, WaveCycle::RIGHT_TO_LEFT, WaveCycle::LEFT_TO_RIGHT, WaveCycle::RIGHT_TO_LEFT, WaveCycle::LEFT_TO_RIGHT, WaveCycle::RIGHT_TO_LEFT },
 						15,
-						false, false, 0.0f),
+						false, false, 0.0f,
+						15.0f),
 
 	AttackDronesPattern(3.0f, 4.0f, 6.0f, 2.0f, 2.0f,
-						0.1f, 9, DronesFormation::CIRCLE, 12, 0.5f,
+						0.1f, 7, DronesFormation::CIRCLE, 12, 0.5f,
 						{ WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED, WaveCycle::CENTERED },
-						35,
-						true, true, 1.0f),
+						55,
+						true, true, 1.0f,
+						15.0f),
 
 };
