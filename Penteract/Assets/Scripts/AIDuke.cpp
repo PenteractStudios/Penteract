@@ -7,6 +7,7 @@
 #include "HUDManager.h"
 #include "AttackDronesController.h"
 #include "FloorIsLava.h"
+#include "BossLasersPatterns.h"
 #include <string>
 #include <vector>
 
@@ -168,6 +169,12 @@ void AIDuke::Start() {
 
 	dukeCharacter.winSceneUID = winSceneUID; // TODO: REPLACE
 
+	int i = 0;
+	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
+		if (i < static_cast<int>(Duke::DUKE_AUDIOS::TOTAL)) dukeCharacter.dukeAudios[i] = &src;
+		++i;
+	}
+
 	GameObject* hudManagerGO = GameplaySystems::GetGameObject(hudManagerUID);
 
 	if (hudManagerGO) hudManager = GET_SCRIPT(hudManagerGO, HUDManager);
@@ -176,7 +183,6 @@ void AIDuke::Start() {
 void AIDuke::Update() {
 	if (!isReady) return;
 	if (!player || !movementScript) return;
-	if (!defaultMaterialID || !damagedMaterialID) return;
 	if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) return;
 
 	if (!dissolveAlreadyPlayed && componentMeshRenderer) {
@@ -209,6 +215,7 @@ void AIDuke::Update() {
 		// Perform the "BOOM" animation
 		if (dukeCharacter.compAnimation && mustPerformInitialAnimation) {
 			dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::INITIAL_ENRAGE]);
+			dukeCharacter.PlayAudio(Duke::DUKE_AUDIOS::SCREAM);
 			mustPerformInitialAnimation = false;
 			dukeCharacter.state = DukeState::INVULNERABLE;
 		} else if (dukeCharacter.state == DukeState::BASIC_BEHAVIOUR) phase = Phase::PHASE1;
@@ -335,6 +342,7 @@ void AIDuke::Update() {
 			//Actual activating of the shield, when it is found not active during this state
 			if (dukeShield && !dukeShield->GetIsActive()) {
 				dukeShield->InitShield();
+				dukeCharacter.PlayAudio(Duke::DUKE_AUDIOS::SHIELD_ON);
 				movementScript->Stop();
 			}
 
@@ -514,6 +522,7 @@ void AIDuke::Update() {
 				//Actual activating of the shield, when it is found not active during this state
 				if (dukeShield && !dukeShield->GetIsActive()) {
 					dukeShield->InitShield();
+					dukeCharacter.PlayAudio(Duke::DUKE_AUDIOS::SHIELD_ON);
 					movementScript->Stop();
 				}
 
@@ -663,6 +672,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 		}
 
 		if (hitTaken && dukeCharacter.state != DukeState::INVULNERABLE) {
+			dukeCharacter.PlayAudio(Duke::DUKE_AUDIOS::HIT);
 			if (hudManager) hudManager->UpdateDukeHealth(dukeCharacter.lifePoints);
 			SetMaterial(componentMeshRenderer, damagedMaterialID);
 			  // TODO: play audio and VFX
@@ -824,6 +834,7 @@ bool AIDuke::IsInvulnerable() const {
 void AIDuke::OnShieldInterrupted() {
 	if (dukeShield&&dukeShield->GetIsActive()) {
 		dukeShield->FadeShield();
+		dukeCharacter.PlayAudio(Duke::DUKE_AUDIOS::SHIELD_OFF);
 	}
 	currentShieldCooldown = 0.f;
 	currentShieldActiveTime = 0.f;
@@ -876,9 +887,11 @@ void AIDuke::PerformDeath() {
 	OnShieldInterrupted();
 	dukeCharacter.StopShooting();
 	dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::DEATH]);
+	if (!dukeCharacter.audioDeath) {
+		dukeCharacter.PlayAudio(Duke::DUKE_AUDIOS::DEATH);
+		dukeCharacter.audioDeath = true;
+	}
 
-	// TODO: play audio and VFX
-	//if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
 	ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
 	if (collider) collider->Disable();
 
@@ -893,7 +906,11 @@ void AIDuke::PerformDeath() {
 	// Stop environment hazards
 	if (!islevel2) {
 		if (activeFireTiles && fireTilesScript) fireTilesScript->StopFire();
-		if (lasers && lasers->IsActive()) lasers->Disable();
+		if (lasers && lasers->IsActive()) {
+			BossLasersPatterns* script = GET_SCRIPT(lasers, BossLasersPatterns);
+			if (script) script->StopAudio();
+			lasers->Disable();
+		}
 		// TODO: Substitute the following for actual destruction of the troops
 		GameObject* encounter = GameplaySystems::GetGameObject(fourthEncounterUID);
 		if (encounter && encounter->IsActive()) encounter->Disable();

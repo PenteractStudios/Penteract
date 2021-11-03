@@ -138,6 +138,9 @@ void Barrel::Update() {
 			if (particlesFlameLight) {
 				particlesFlameLight->SetParticlesPerSecondChild(float2(0.f,0.f));
 			}
+			if (audioFlameLight) {
+				audioFlameLight->Stop();
+			}
 		}
 	}
 }

@@ -15,7 +15,6 @@ class PlayerController;
 class DukeShield;
 class Player;
 class HUDManager;
-//class PlayerDeath;
 class AIMovement;
 class FloorIsLava;
 
