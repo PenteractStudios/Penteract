@@ -22,6 +22,7 @@
 
 #define PI 3.14159
 #define AUDIOSOURCE_NULL_MSG "shootAudioSource is NULL"
+#define SWITCH_INVULNERABILITY_TIME 1.0f
 
 int PlayerController::currentLevel = 1;
 
@@ -218,7 +219,7 @@ void PlayerController::ResetSwitchStatus() {
 }
 
 bool PlayerController::IsVulnerable() const {
-	return !invincibleMode;
+	return !invincibleMode && timeSinceLastSwitch >= SWITCH_INVULNERABILITY_TIME;
 }
 
 void PlayerController::SwitchCharacter() {
@@ -441,6 +442,8 @@ void PlayerController::Update() {
 		listener->SetPosition(transform->GetGlobalPosition());
 	}
 
+	timeSinceLastSwitch = Min(timeSinceLastSwitch + Time::GetDeltaTime(), SWITCH_INVULNERABILITY_TIME);
+
 	if (!playerFang.characterGameObject) return;
 	if (!playerOnimaru.characterGameObject) return;
 	if (!camera) return;
@@ -467,6 +470,7 @@ void PlayerController::Update() {
 
 		if (!switchInProgress && (Player::GetInputBool(InputActions::SWITCH))){
 			switchInProgress = true;
+			timeSinceLastSwitch = 0.0f;
 			switchCooldownRemaining = switchCooldown;
 		}
 	}
