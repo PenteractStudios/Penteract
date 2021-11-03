@@ -21,6 +21,7 @@ public:
 	void Update() override;
 
 	void Init();
+	void StopAudio();
 
 	UID laserTargetUID = 0;
 	UID laserWarningUID = 0;

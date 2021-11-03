@@ -58,7 +58,7 @@ void CameraController::Update() {
 
 			float2 mousePosition = float2(0, 0);
 
-			if (GameplaySystems::GetGlobalVariable(globalUseGamepad, false) && Input::IsGamepadConnected(0)) {
+			if (GameplaySystems::GetGlobalVariable(globalUseGamepad, true) && Input::IsGamepadConnected(0)) {
 				if (playerController->playerFang.playerMainTransform) {
 
 					float2 orientationInput = playerController->playerFang.GetInputFloat2(InputActions::ORIENTATION);
