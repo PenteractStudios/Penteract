@@ -233,7 +233,7 @@
                                     {
                                         "Name": "shakeMultiplier",
                                         "Type": "Float",
-                                        "Value": 0.5
+                                        "Value": 0.20000000298023225
                                     },
                                     {
                                         "Name": "sphereColliderUID",
@@ -273,7 +273,7 @@
                                     {
                                         "Name": "forceOfFall",
                                         "Type": "Float",
-                                        "Value": 0.25
+                                        "Value": 0.30000001192092898
                                     },
                                     {
                                         "Name": "heightOfThrow",
@@ -287,7 +287,7 @@
                                 "Active": true,
                                 "Pitch": 1.0,
                                 "Gain": 1.0,
-                                "Mute": false,
+                                "Mute": true,
                                 "Looping": false,
                                 "PlayOnAwake": false,
                                 "AudioClipId": 1127207810524922228,
@@ -1182,7 +1182,7 @@
                                 "Type": "AudioSource",
                                 "Active": true,
                                 "Pitch": 1.0,
-                                "Gain": 1.0,
+                                "Gain": 0.5,
                                 "Mute": false,
                                 "Looping": false,
                                 "PlayOnAwake": false,
@@ -10189,6 +10189,25 @@
                                 ],
                                 "NumberColorsLights": 2,
                                 "MaxLights": 0
+                            },
+                            {
+                                "Type": "AudioSource",
+                                "Active": true,
+                                "Pitch": 1.0,
+                                "Gain": 0.5,
+                                "Mute": false,
+                                "Looping": false,
+                                "PlayOnAwake": true,
+                                "AudioClipId": 12697049003439932096,
+                                "SpatialBlend": 1,
+                                "SourceType": 0,
+                                "InnerAngle": 90.0,
+                                "OuterAngle": 180.0,
+                                "OuterGain": 0.0,
+                                "RolloffFactor": 1.0,
+                                "ReferenceDistance": 10.0,
+                                "MaxDistance": 30.0,
+                                "IsMusic": false
                             }
                         ],
                         "Children": [
@@ -13852,7 +13871,7 @@
                         "Active": true,
                         "Pitch": 1.0,
                         "Gain": 1.0,
-                        "Mute": false,
+                        "Mute": true,
                         "Looping": false,
                         "PlayOnAwake": false,
                         "AudioClipId": 0,

@@ -7,6 +7,7 @@
 #include "HUDManager.h"
 #include "AttackDronesController.h"
 #include "FloorIsLava.h"
+#include "BossLasersPatterns.h"
 #include <string>
 #include <vector>
 
@@ -29,6 +30,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, hudManagerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fireTilesUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, triggerBossEndUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, BHExtraColliderUID),
 
 	MEMBER_SEPARATOR("Duke Atributes"),
 	MEMBER(MemberType::FLOAT, dukeCharacter.lifePoints),
@@ -70,6 +72,10 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, dustStepLeftUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, dustStepRightUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, bodyArmorUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dukeBuffFlashUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dukeStunUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, dukeSlowUID),
+
 
 	MEMBER_SEPARATOR("Prefabs UIDs"),
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, barrelUID),
@@ -85,8 +91,11 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::BOOL, islevel2),
 
 	MEMBER_SEPARATOR("Dissolve material reference in placeholders"),
-	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID)
+	MEMBER(MemberType::GAME_OBJECT_UID, dissolveMaterialGOUID),
 
+	MEMBER_SEPARATOR("Damaged material reference in placeholders"),
+	MEMBER(MemberType::GAME_OBJECT_UID, damagedMaterialPlaceholderUID),
+	MEMBER(MemberType::FLOAT, hurtFeedbackTimeDuration)
 };
 
 GENERATE_BODY_IMPL(AIDuke);
@@ -134,12 +143,41 @@ void AIDuke::Start() {
 		}
 	}
 
+	// Damaged Material
+	GameObject* damagedObj = GameplaySystems::GetGameObject(damagedMaterialPlaceholderUID);
+	if (damagedObj) {
+		ComponentMeshRenderer* damagedMeshRenderer = damagedObj->GetComponent<ComponentMeshRenderer>();
+		if (damagedMeshRenderer) {
+			damagedMaterialID = damagedMeshRenderer->GetMaterial();
+		}
+	}
+
+	// Default material
+	if (duke) {
+		GameObject* mesh = duke->GetChild("DukeLP");
+		if (mesh) {
+			componentMeshRenderer = mesh->GetComponent<ComponentMeshRenderer>();
+			if (componentMeshRenderer) {
+				defaultMaterialID = componentMeshRenderer->GetMaterial();
+			}
+		}
+	}
+
+	// BH extra collider
+	bulletHellExtraCollider = GameplaySystems::GetGameObject(BHExtraColliderUID);
+
 	// Init Duke character
-	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, encounters, dronesController, punchSlashUID, chargeDustUID, areaChargeUID, chargeTelegraphAreaUID, chargePunchVFXUID, dustStepLeftUID, dustStepRightUID, bodyArmorUID);
+	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, encounters, dronesController, punchSlashUID, chargeDustUID, areaChargeUID, chargeTelegraphAreaUID, chargePunchVFXUID, dustStepLeftUID, dustStepRightUID, bodyArmorUID, dukeBuffFlashUID, dukeStunUID, dukeSlowUID);
 
 	triggerBossEnd = GameplaySystems::GetGameObject(triggerBossEndUID);
 
 	dukeCharacter.winSceneUID = winSceneUID; // TODO: REPLACE
+
+	int i = 0;
+	for (ComponentAudioSource& src : GetOwner().GetComponents<ComponentAudioSource>()) {
+		if (i < static_cast<int>(Duke::DUKE_AUDIOS::TOTAL)) dukeCharacter.dukeAudios[i] = &src;
+		++i;
+	}
 
 	GameObject* hudManagerGO = GameplaySystems::GetGameObject(hudManagerUID);
 
@@ -151,11 +189,14 @@ void AIDuke::Update() {
 	if (!player || !movementScript) return;
 	if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) return;
 
-	/*
-	std::string life = std::to_string(dukeCharacter.lifePoints);
-	life = "Life points: " + life;
-	Debug::Log(life.c_str());
-	*/
+	if (!dissolveAlreadyPlayed && componentMeshRenderer) {
+		if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
+			timeSinceLastHurt += Time::GetDeltaTime();
+			if (timeSinceLastHurt > hurtFeedbackTimeDuration) {
+				SetMaterial(componentMeshRenderer, defaultMaterialID);
+			}
+		}
+	}
 
 	float speedToUse = dukeCharacter.slowedDown ? dukeCharacter.slowedDownSpeed : dukeCharacter.movementSpeed;
 
@@ -178,6 +219,7 @@ void AIDuke::Update() {
 		// Perform the "BOOM" animation
 		if (dukeCharacter.compAnimation && mustPerformInitialAnimation) {
 			dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::INITIAL_ENRAGE]);
+			dukeCharacter.PlayAudio(Duke::DUKE_AUDIOS::SCREAM);
 			mustPerformInitialAnimation = false;
 			dukeCharacter.state = DukeState::INVULNERABLE;
 		} else if (dukeCharacter.state == DukeState::BASIC_BEHAVIOUR) phase = Phase::PHASE1;
@@ -195,7 +237,7 @@ void AIDuke::Update() {
 		if (activeFireTiles) {
 			currentBulletHellCooldown += Time::GetDeltaTime();
 		}
-		if (dukeCharacter.lifePoints < 0.4 * dukeCharacter.GetTotalLifePoints() &&
+		if (dukeCharacter.lifePoints < 0.3 * dukeCharacter.GetTotalLifePoints() &&
 			dukeCharacter.state != DukeState::BULLET_HELL && dukeCharacter.state != DukeState::CHARGE) {
 			phase = Phase::PHASE3;
 			lifeThreshold -= 0.1f;
@@ -225,7 +267,7 @@ void AIDuke::Update() {
 			if (!phase2Reached) phase2Reached = true;
 			// Phase change VFX?
 			// Anim + dissolve for teleportation
-			lifeThreshold -= 0.15f;
+			lifeThreshold -= 0.25f;
 
 			Debug::Log("Fire tiles disabled");
 			if (fireTilesScript && activeFireTiles) {
@@ -304,6 +346,7 @@ void AIDuke::Update() {
 			//Actual activating of the shield, when it is found not active during this state
 			if (dukeShield && !dukeShield->GetIsActive()) {
 				dukeShield->InitShield();
+				dukeCharacter.PlayAudio(Duke::DUKE_AUDIOS::SHIELD_ON);
 				movementScript->Stop();
 			}
 
@@ -483,6 +526,7 @@ void AIDuke::Update() {
 				//Actual activating of the shield, when it is found not active during this state
 				if (dukeShield && !dukeShield->GetIsActive()) {
 					dukeShield->InitShield();
+					dukeCharacter.PlayAudio(Duke::DUKE_AUDIOS::SHIELD_ON);
 					movementScript->Stop();
 				}
 
@@ -608,7 +652,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 			hitTaken = true;
 			ParticleHit(collidedWith, particle, playerController->playerFang);
 		}
-		else if (collidedWith.name == "OnimaruBullet") {
+		else if (collidedWith.name == "OnimaruBullet" || collidedWith.name == "DukeProjectile") {
 			if (!particle) return;
 			hitTaken = true;
 			ParticleHit(collidedWith, particle, playerController->playerOnimaru);
@@ -631,15 +675,17 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 			}
 		}
 
-		if (hitTaken) {
+		if (hitTaken && dukeCharacter.state != DukeState::INVULNERABLE) {
+			dukeCharacter.PlayAudio(Duke::DUKE_AUDIOS::HIT);
 			if (hudManager) hudManager->UpdateDukeHealth(dukeCharacter.lifePoints);
+			SetMaterial(componentMeshRenderer, damagedMaterialID);
 			  // TODO: play audio and VFX
 			  /*if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
 			  if (componentMeshRenderer) {
 				if (damageMaterialID != 0) componentMeshRenderer->materialId = damageMaterialID;
-			  }
+			  }*/
 
-					timeSinceLastHurt = 0.0f;*/
+			timeSinceLastHurt = 0.0f;
 		}
 
 
@@ -691,8 +737,8 @@ void AIDuke::EnableBlastPushBack() {
 			if (hudManager) hudManager->UpdateDukeHealth(dukeCharacter.lifePoints);
 			// TODO: play audio and VFX
 			//if (audios[static_cast<int>(AudioType::HIT)]) audios[static_cast<int>(AudioType::HIT)]->Play();
-			//PlayHitMaterialEffect();
-			//timeSinceLastHurt = 0.0f;
+			SetMaterial(componentMeshRenderer, damagedMaterialID);
+		    timeSinceLastHurt = 0.0f;
 		}
 
 		dukeCharacter.BePushed();
@@ -752,6 +798,8 @@ void AIDuke::ParticleHit(GameObject& collidedWith, void* particle, Player& playe
 	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 	if (pSystem) pSystem->KillParticle(p);
 	float damage = dukeCharacter.reducedDamaged ? player_.damageHit / 2.f : player_.damageHit;
+	// Hard-coded onimaru nerf
+	if (collidedWith.name == "OnimaruBullet") damage * 0.4f;
 
 	if (IsInvulnerable())return;
 
@@ -792,6 +840,7 @@ bool AIDuke::IsInvulnerable() const {
 void AIDuke::OnShieldInterrupted() {
 	if (dukeShield&&dukeShield->GetIsActive()) {
 		dukeShield->FadeShield();
+		dukeCharacter.PlayAudio(Duke::DUKE_AUDIOS::SHIELD_OFF);
 	}
 	currentShieldCooldown = 0.f;
 	currentShieldActiveTime = 0.f;
@@ -820,6 +869,7 @@ void AIDuke::PerformBulletHell() {
 	if (!bulletHellIsActive) {
 		dukeCharacter.BulletHell();
 		bulletHellIsActive = true;
+		if (bulletHellExtraCollider) bulletHellExtraCollider->Enable();
 	}
 
 	if (!dukeCharacter.IsBulletHellCircular() && dukeCharacter.state != DukeState::STUNNED) {
@@ -830,6 +880,7 @@ void AIDuke::PerformBulletHell() {
 
 	if (dukeCharacter.BulletHellFinished()) {
 		dukeCharacter.DisableBulletHell();
+		if (bulletHellExtraCollider) bulletHellExtraCollider->Disable();
 		bulletHellIsActive = false;
 		dukeCharacter.reducedDamaged = false;
 		currentBulletHellCooldown = 0.f;
@@ -844,9 +895,11 @@ void AIDuke::PerformDeath() {
 	OnShieldInterrupted();
 	dukeCharacter.StopShooting();
 	dukeCharacter.compAnimation->SendTrigger(dukeCharacter.compAnimation->GetCurrentState()->name + dukeCharacter.animationStates[Duke::DUKE_ANIMATION_STATES::DEATH]);
+	if (!dukeCharacter.audioDeath) {
+		dukeCharacter.PlayAudio(Duke::DUKE_AUDIOS::DEATH);
+		dukeCharacter.audioDeath = true;
+	}
 
-	// TODO: play audio and VFX
-	//if (audios[static_cast<int>(AudioType::DEATH)]) audios[static_cast<int>(AudioType::DEATH)]->Play();
 	ComponentCapsuleCollider* collider = GetOwner().GetComponent<ComponentCapsuleCollider>();
 	if (collider) collider->Disable();
 
@@ -857,14 +910,27 @@ void AIDuke::PerformDeath() {
 
 	// Activate the combat end trigger. This will activate a dialogue and dissolve Duke in level 2.
 	if (triggerBossEnd) triggerBossEnd->Enable();
-	
+
 	// Stop environment hazards
 	if (!islevel2) {
 		if (activeFireTiles && fireTilesScript) fireTilesScript->StopFire();
-		if (lasers && lasers->IsActive()) lasers->Disable();
+		if (lasers && lasers->IsActive()) {
+			BossLasersPatterns* script = GET_SCRIPT(lasers, BossLasersPatterns);
+			if (script) script->StopAudio();
+			lasers->Disable();
+		}
 		// TODO: Substitute the following for actual destruction of the troops
 		GameObject* encounter = GameplaySystems::GetGameObject(fourthEncounterUID);
 		if (encounter && encounter->IsActive()) encounter->Disable();
+	}
+}
+
+void AIDuke::SetMaterial(ComponentMeshRenderer* mesh, UID newMaterialID, bool needToPlayDissolve) {
+	if (!dissolveAlreadyPlayed && newMaterialID > 0 && mesh) {
+		mesh->SetMaterial(newMaterialID);
+		if (needToPlayDissolve) {
+			mesh->PlayDissolveAnimation();
+		}
 	}
 }
 
@@ -874,4 +940,5 @@ float AIDuke::GetDukeMaxHealth() const {
 
 void AIDuke::ActivateDissolve() {
 	dukeCharacter.ActivateDissolve(dissolveMaterialID);
+	dissolveAlreadyPlayed = true;
 }

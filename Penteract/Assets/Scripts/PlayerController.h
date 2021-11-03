@@ -122,6 +122,7 @@ public:
 	UID switchParticlesUID = 0;
 	float switchCooldown = 5.f;
 	bool switchInProgress = false;
+	float timeSinceLastSwitch = 1.0f;
 	float switchDelay = 0.37f;
 	float switchSphereRadius = 5.f;
 	float switchDamage = 1.f;

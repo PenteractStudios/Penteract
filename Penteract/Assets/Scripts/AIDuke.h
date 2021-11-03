@@ -15,7 +15,6 @@ class PlayerController;
 class DukeShield;
 class Player;
 class HUDManager;
-//class PlayerDeath;
 class AIMovement;
 class FloorIsLava;
 
@@ -63,6 +62,7 @@ private:
 	void OnShieldInterrupted();
 	void PerformBulletHell();
 	void PerformDeath();
+	void SetMaterial(ComponentMeshRenderer* mesh, UID newMaterialID, bool needToPlayDissolve = false);
 
 public:
 	UID dukeUID = 0;
@@ -82,6 +82,7 @@ public:
 	UID lasersUID = 0;
 	UID hudManagerUID = 0;
 	UID fireTilesUID = 0;
+	UID BHExtraColliderUID = 0;
 	// Effects
 	UID punchSlashUID = 0;
 	UID chargeDustUID = 0;
@@ -91,6 +92,14 @@ public:
 	UID dustStepLeftUID = 0;
 	UID dustStepRightUID = 0;
 	UID bodyArmorUID = 0;
+	UID dukeBuffFlashUID = 0;
+	UID dukeStunUID = 0;
+	UID dukeSlowUID = 0;
+	// Materials
+	UID damagedMaterialPlaceholderUID = 0;
+	UID defaultMaterialID = 0;
+	UID damagedMaterialID = 0;
+	ComponentMeshRenderer* componentMeshRenderer = nullptr;
 	// Only for level2
 	UID triggerBossEndUID = 0;
 	UID dissolveMaterialGOUID = 0;
@@ -100,6 +109,8 @@ public:
 
 	Duke dukeCharacter = Duke();
 	DukeShield* dukeShield = nullptr;
+
+	GameObject* bulletHellExtraCollider = nullptr;
 
 	Phase phase = Phase::PHASE0;
 
@@ -126,6 +137,8 @@ public:
 
 	float timerBetweenAbilities = 1.5f;
 
+	float hurtFeedbackTimeDuration = 0.5f;
+
 	bool islevel2 = false;
 
 	UID winSceneUID = 0;
@@ -144,6 +157,8 @@ private:
 
 	// Cooldowns and thresholds
 	bool isReady = true;
+
+	float timeSinceLastHurt = 0.5f;
 
 	float currentShieldCooldown = 0.f;
 	float currentShieldActiveTime = 0.f;
@@ -184,5 +199,8 @@ private:
 	bool mustPerformInitialAnimation = true;
 
 	bool stunnedInBulletHell = false;
+
+	bool dissolveAlreadyPlayed = false;		//Controls whether the animation function has already been played (called material->PlayAnimation) or not
+
 };
 
