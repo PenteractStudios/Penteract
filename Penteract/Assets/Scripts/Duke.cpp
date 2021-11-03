@@ -344,7 +344,7 @@ void Duke::Shoot()
 			if (!meshObj) return;
 			bullet->PlayChildParticles();
 		}
-		attackTimePool = (attackBurst + 1) / attackSpeed + timeInterBurst + RandomNumberGenerator::GenerateFloat(0.4f, 1.5f);
+		attackTimePool = ((attackBurst + 1) / attackSpeed) + timeInterBurst + RandomNumberGenerator::GenerateFloat(1.f, 2.f);
 		isShooting = true;
 		isShootingTimer = 0.f;
 		// Animation
@@ -359,8 +359,10 @@ void Duke::Shoot()
 }
 
 void Duke::ThrowBarrels() {
-	if (compAnimation->GetCurrentState()->name != animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]) {
-		compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]);
+	if (state == DukeState::INVULNERABLE) {
+		if (compAnimation->GetCurrentState()->name != animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]) {
+			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + animationStates[static_cast<int>(DUKE_ANIMATION_STATES::PDA)]);
+		}
 		instantiateBarrel = true;
 	}
 }
