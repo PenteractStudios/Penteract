@@ -6,6 +6,7 @@
 #include "GameObjectUtils.h"
 #include "Components/ComponentLight.h"
 #include "FloorIsLava.h"
+#include "SecurityLasersPatterns.h"
 
 EXPOSE_MEMBERS(SpawnPointController) {
 	MEMBER(MemberType::PREFAB_RESOURCE_UID, meleeEnemyPrefabUID),
@@ -168,7 +169,11 @@ void SpawnPointController::OpenDoor() {
 		}
 
 		if (gameObjectActivatedOnCombatEnd && !gameObjectActivatedOnCombatEnd->IsActive()) gameObjectActivatedOnCombatEnd->Enable();
-		if (gameObjectDeactivatedOnCombatEnd && gameObjectDeactivatedOnCombatEnd->IsActive()) gameObjectDeactivatedOnCombatEnd->Disable();
+		if (gameObjectDeactivatedOnCombatEnd && gameObjectDeactivatedOnCombatEnd->IsActive()) {
+			SecurityLasersPatterns* script = GET_SCRIPT(gameObjectDeactivatedOnCombatEnd, SecurityLasersPatterns);
+			if (script) script->StopAudio();
+			gameObjectDeactivatedOnCombatEnd->Disable();
+		}
 
 		if (!unlockStarted) ResetUnlockAnimation();
 		if (!isLastDoor) mustKeepOpen = true;

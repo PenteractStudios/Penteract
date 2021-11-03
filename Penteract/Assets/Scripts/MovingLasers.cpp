@@ -131,11 +131,17 @@ void MovingLasers::Update() {
     }
 
     if (currentState != GeneratorState::SHOOT && currentState != GeneratorState::WAIT) {
-        if (laserObject && laserObject->IsActive()) laserObject->Disable();
+        if (laserObject && laserObject->IsActive()) {
+            if (laserObjectSFX) laserObjectSFX->Stop();
+            laserObject->Disable();
+        }
         if (laserCollider && laserCollider->IsActive()) laserCollider->Disable();
     }
     else {
-        if (laserObject && !laserObject->IsActive())  laserObject->Enable();
+        if (laserObject && !laserObject->IsActive()) {
+            laserObject->Enable();
+            if (laserObjectSFX) laserObjectSFX->Play();
+        }
         if (laserCollider && !laserCollider->IsActive()) laserCollider->Enable();
     }
 }
@@ -223,4 +229,11 @@ void MovingLasers::Synchronize(bool movingToInit_) {
     movingToInit = movingToInit_;
     
     if (pairScript->movingToInit != movingToInit) pairScript->Synchronize(movingToInit);
+}
+
+void MovingLasers::StopAudio()
+{
+    if (laserObjectSFX) laserObjectSFX->Stop();
+    if (audioComp) audioComp->Stop();
+    if (laserWarningSFX) laserWarningSFX->Stop();
 }

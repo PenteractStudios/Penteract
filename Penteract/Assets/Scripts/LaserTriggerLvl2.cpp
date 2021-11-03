@@ -22,6 +22,7 @@ void LaserTriggerLvl2::Update() {
 void LaserTriggerLvl2::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, float3 /*penetrationDistance*/, void* /*particle*/) {
     if (collidedWith.name == "Fang" || collidedWith.name == "Onimaru") {
         if (laserScript) (SwitchOn)? laserScript->TurnOn() : laserScript->TurnOff();
+        if (laserScript) laserScript->StopAudio();
         GameObject* ownerGo = &GetOwner();
         if(ownerGo) ownerGo->Disable();
     }

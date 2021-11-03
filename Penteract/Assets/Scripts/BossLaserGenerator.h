@@ -3,6 +3,7 @@
 #include "Scripting/Script.h"
 
 class ComponentAnimation;
+class ComponentAudioSource;
 
 class BossLaserGenerator : public Script {
 	GENERATE_BODY(BossLaserGenerator);
@@ -19,6 +20,7 @@ public:
 	void Update() override;
 
 	void Init();
+	void StopAudio();
 
 	UID laserTargetUID = 0;
 	UID laserWarningUID = 0;
@@ -35,10 +37,14 @@ public:
 private:
 	ComponentAnimation* animationComp = nullptr;
 	ComponentAnimation* pairAnimationComp = nullptr;
+	ComponentAudioSource* audioComp = nullptr;
+	ComponentAudioSource* pairAudioComp = nullptr;
 	GeneratorState currentState = GeneratorState::OFF;
 
 	GameObject* laserObject = nullptr;
+	ComponentAudioSource* laserAudio = nullptr;
 	GameObject* laserWarning = nullptr;
+	ComponentAudioSource* laserWarningAudio = nullptr;
 	BossLaserGenerator* pairScript = nullptr;
 
 	bool beingUsed = false;

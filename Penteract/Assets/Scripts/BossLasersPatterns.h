@@ -13,6 +13,8 @@ public:
 	void Start() override;
 	void Update() override;
 
+	void StopAudio();
+
 	float laserActiveDuration = 2.0f;
 
 	float intervalDuration = 2.0f;

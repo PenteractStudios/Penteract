@@ -73,3 +73,30 @@ void BossLasersPatterns::Update() {
 		}
 	}
 }
+
+void BossLasersPatterns::StopAudio() {
+	GameObject* generator1 = GameplaySystems::GetGameObject(generatorA1UID);
+	GameObject* generator2 = GameplaySystems::GetGameObject(generatorB1UID);
+	GameObject* generator3 = GameplaySystems::GetGameObject(generatorC1UID);
+	GameObject* generator4 = GameplaySystems::GetGameObject(generatorD1UID);
+
+	if (generator1) {
+		BossLaserGenerator* script = GET_SCRIPT(generator1, BossLaserGenerator);
+		if (script) script->StopAudio();
+	}
+
+	if (generator2) {
+		BossLaserGenerator* script = GET_SCRIPT(generator2, BossLaserGenerator);
+		if (script) script->StopAudio();
+	}
+
+	if (generator3) {
+		BossLaserGenerator* script = GET_SCRIPT(generator3, BossLaserGenerator);
+		if (script) script->StopAudio();
+	}
+
+	if (generator4) {
+		BossLaserGenerator* script = GET_SCRIPT(generator4, BossLaserGenerator);
+		if (script) script->StopAudio();
+	}
+}

@@ -5,6 +5,6 @@
             "Type": "Audio"
         }
     ],
-    "IsMono": false,
+    "IsMono": true,
     "AudioFormat": 0
 }

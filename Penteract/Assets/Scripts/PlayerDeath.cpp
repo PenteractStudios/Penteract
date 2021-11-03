@@ -179,7 +179,7 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 			PushPlayerBack(collisionNormal);
 		}
 		collidedWith.Disable();
-	} else if (collidedWith.name == "DukeShield" || collidedWith.name == "DukeShield360" || collidedWith.name == "DukeAdditionalSeparator") {
+	} else if (collidedWith.name == "DukeShield" || collidedWith.name == "DukeShield360" || collidedWith.name == "DukeAdditionalSeparator" || collidedWith.name == "BHExtraCollider") {
 		if (playerController) {
 			// don't let the player penetrate duke shield
 			float3 truePenetrationDistance = penetrationDistance.ProjectTo(collisionNormal);
@@ -195,10 +195,6 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 		collidedWith.Disable();
 	}
 	else if (collidedWith.name == "AttackDroneProjectile") {
-		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
-		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
-		if (pSystem && p) pSystem->KillParticle(p);
-
 		if (playerController) playerController->TakeDamage(attackDroneDamageTaken);
 		AttackDroneProjectile* projectileScript = GET_SCRIPT(&collidedWith, AttackDroneProjectile);
 		if (projectileScript) projectileScript->Collide();
@@ -222,6 +218,9 @@ void PlayerDeath::PushPlayerBack(float3 collisionNormal)
 	playerController->playerFang.IsActive() ? playerController->playerFang.agent->RemoveAgentFromCrowd() : playerController->playerOnimaru.agent->RemoveAgentFromCrowd();
 	ComponentTransform* playerTransform = playerController->playerFang.playerMainTransform;
 	collisionNormal.y = 0;
-	playerTransform->SetGlobalPosition(playerTransform->GetGlobalPosition() + pushBackForce * collisionNormal.Normalized());
+	float3 finalPos = playerTransform->GetGlobalPosition() + pushBackForce * collisionNormal.Normalized();
+	bool outsideMesh;
+	Navigation::Raycast(playerTransform->GetGlobalPosition(), finalPos, outsideMesh, finalPos);
+	playerTransform->SetGlobalPosition(finalPos);
 	playerController->playerFang.IsActive() ? playerController->playerFang.agent->AddAgentToCrowd() : playerController->playerOnimaru.agent->AddAgentToCrowd();
 }
