@@ -446,10 +446,10 @@ void PlayerController::Update() {
 	if (!camera) return;
 
 	if (playerFang.characterGameObject->IsActive()) {
-		playerFang.Update(GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false));
+		playerFang.Update(GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, true));
 	}
 	else {
-		playerOnimaru.Update(GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, false));
+		playerOnimaru.Update(GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, true));
 	}
 
 	if (!IsPlayerDead()) {

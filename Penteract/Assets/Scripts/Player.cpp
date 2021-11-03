@@ -179,7 +179,7 @@ void Player::IncreaseUltimateCounter() {
 }
 
 bool Player::GetInputBool(InputActions action) {
-	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, false);
+	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, true);
 	switch (action) {
 	case InputActions::SWITCH:
 		if (useGamepad && Input::IsGamepadConnected(0)) {
@@ -252,7 +252,7 @@ bool Player::GetInputBool(InputActions action) {
 }
 
 float2 Player::GetInputFloat2(InputActions action) {
-	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, false);
+	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, true);
 
 	result = float2(0, 0);
 

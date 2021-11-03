@@ -60,7 +60,7 @@ void SpecialHoverButton::Update() {
 				ComponentSelectable* hoveredComponent = eventSystem->GetCurrentlyHovered();
 				ComponentSelectable* selectedComponent = eventSystem->GetCurrentSelected();
 
-				if (GameplaySystems::GetGlobalVariable(globalUseGamepad, false)) {
+				if (GameplaySystems::GetGlobalVariable(globalUseGamepad, true)) {
 					if (selectedComponent) {
 						bool selected = selectable->GetID() == selectedComponent->GetID() ? true : false;
 
@@ -98,7 +98,7 @@ void SpecialHoverButton::Update() {
 				if (hoveredComponent) {
 					bool hovered = selectable->GetID() == hoveredComponent->GetID() ? true : false;
 
-					if (!GameplaySystems::GetGlobalVariable(globalUseGamepad, false)) {
+					if (!GameplaySystems::GetGlobalVariable(globalUseGamepad, true)) {
 						if (!hovered) {
 							EnterButtonState(ButtonState::IDLE);
 						} else {
@@ -117,7 +117,7 @@ void SpecialHoverButton::Update() {
 
 					if (selectedComponent) {
 						if (selectedComponent != hoveredComponent) {
-							if (!GameplaySystems::GetGlobalVariable(globalUseGamepad, false)) {
+							if (!GameplaySystems::GetGlobalVariable(globalUseGamepad, true)) {
 								eventSystem->SetSelected(hoveredComponent->GetID());
 							}
 						}

@@ -26,7 +26,7 @@ void UIInputTextureChanger::Start() {
 
 void UIInputTextureChanger::Update() {
 
-	bool gamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, false) && Input::IsGamepadConnected(0);
+	bool gamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, true) && Input::IsGamepadConnected(0);
 
 	if (lastSerializedGamepadOn) {
 		if (!gamepad) {

@@ -212,7 +212,7 @@ float Onimaru::GetNormalizedRemainingUltimateTime() const {
 void Onimaru::UpdateWeaponRotation()
 {
 
-	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, false) && Input::IsGamepadConnected(0);
+	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, true) && Input::IsGamepadConnected(0);
 
 	weaponPointDir = float3(0, 0, 0);
 	float2 mousePos = float2(0, 0);
@@ -383,6 +383,7 @@ void Onimaru::OnAnimationSecondaryFinished() {
 		blastInCooldown = true;
 		currentBlastDuration = 0.f;
 		calculateEnemiesInRange = true;
+
 		if (compAnimation) {
 			if (compAnimation->GetCurrentStateSecondary() && compAnimation->GetCurrentState()) {
 				if (shooting) {
@@ -398,7 +399,7 @@ void Onimaru::OnAnimationSecondaryFinished() {
 
 bool Onimaru::IsInstantOrientation() const {
 	//This must return true only when ultimate not in use and Gamepad is either not used or not connected
-	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, false);
+	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, true);
 	return !ultimateOn && (!useGamepad || !Input::IsGamepadConnected(0));
 }
 
