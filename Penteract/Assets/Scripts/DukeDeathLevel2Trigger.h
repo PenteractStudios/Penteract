@@ -4,6 +4,7 @@
 
 class GameObject;
 class ComponentMeshRenderer;
+class ComponentParticleSystem;
 class DialogueManager;
 class AfterDialogCallback;
 class MovingLasers;
@@ -25,6 +26,7 @@ public:
 	UID gameControllerUID = 0;
 	UID laserUID = 0;
 	UID HUDUID = 0;
+	UID switchParticlesUID = 0;
 	
 	int dialogueID = 0;
 
@@ -37,6 +39,7 @@ public:
 private:
 	GameObject* duke = nullptr;
 	GameObject* gameController = nullptr;
+	ComponentParticleSystem* switchParticles = nullptr;
 	ComponentMeshRenderer* dukeMaterial = nullptr;
 	DialogueManager* dialogueManagerScript = nullptr;
 	MovingLasers* laserScript = nullptr;

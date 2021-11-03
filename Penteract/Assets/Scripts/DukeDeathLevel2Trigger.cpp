@@ -17,6 +17,7 @@ EXPOSE_MEMBERS(DukeDeathLevel2Trigger) {
     MEMBER(MemberType::GAME_OBJECT_UID, gameControllerUID),
     MEMBER(MemberType::GAME_OBJECT_UID, laserUID),
     MEMBER(MemberType::GAME_OBJECT_UID, HUDUID),
+    MEMBER(MemberType::GAME_OBJECT_UID, switchParticlesUID),
     MEMBER(MemberType::INT, dialogueID),
     MEMBER_SEPARATOR("Laser Doors"),
     MEMBER(MemberType::GAME_OBJECT_UID, entranceDoorUID),
@@ -40,6 +41,10 @@ void DukeDeathLevel2Trigger::Start() {
     GameObject* laser = GameplaySystems::GetGameObject(laserUID);
     laserScript = GET_SCRIPT(laser, MovingLasers);
 
+    // Get Switch particle effect
+    GameObject* switchParticlesGO = GameplaySystems::GetGameObject(switchParticlesUID);
+    if (switchParticlesGO) switchParticles = switchParticlesGO->GetComponent<ComponentParticleSystem>();
+
     // Get Doors
     entraceDoor = GameplaySystems::GetGameObject(entranceDoorUID);
     exitDoor = GameplaySystems::GetGameObject(exitDoorUID);
@@ -62,7 +67,10 @@ void DukeDeathLevel2Trigger::Update() {
     if (triggered && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
         // make Duke disappear
         if (laserScript) laserScript->TurnOff();
-        if (aiDuke) aiDuke->ActivateDissolve();
+        if (aiDuke) {
+            aiDuke->ActivateDissolve();
+            if (switchParticles) switchParticles->PlayChildParticles();
+        }
 
         // Unlock doors
         if (entraceDoor) entraceDoor->Disable();
