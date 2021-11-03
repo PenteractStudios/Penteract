@@ -16,8 +16,11 @@ EXPOSE_MEMBERS(DukeDeathTrigger) {
     MEMBER(MemberType::GAME_OBJECT_UID, gameCameraUID),
     MEMBER(MemberType::GAME_OBJECT_UID, canvasHudUID),
     MEMBER(MemberType::GAME_OBJECT_UID, videoCanvasUID),
+    MEMBER(MemberType::GAME_OBJECT_UID, audioControllerUID),
+    MEMBER(MemberType::GAME_OBJECT_UID, audioVideoSourceUID),
     MEMBER(MemberType::FLOAT, relaxTime),
     MEMBER(MemberType::FLOAT, talkingDistance),
+    MEMBER(MemberType::FLOAT, talkingTimer),
     MEMBER(MemberType::INT, dialogueID)
 };
 
@@ -41,6 +44,13 @@ void DukeDeathTrigger::Start() {
 
     // Get videoObject
     videoCanvas = GameplaySystems::GetGameObject(videoCanvasUID);
+
+    // Set Up Audio
+    GameObject* musicObj = GameplaySystems::GetGameObject(audioControllerUID);
+    if (musicObj) music = musicObj->GetComponent<ComponentAudioSource>();
+
+    GameObject* audioObj = GameplaySystems::GetGameObject(audioVideoSourceUID);
+    if (audioObj) audioVideo = audioObj->GetComponent<ComponentAudioSource>();
 
     // Scene flow controls
     triggered = false;
@@ -88,8 +98,11 @@ void DukeDeathTrigger::Update() {
             
 
         // Move the character in front of Duke
-        if (talkPosition.Distance(playerReference->playerMainTransform->GetGlobalPosition()) > 0.5f) playerReference->MoveTo(talkPosition);
-        else {
+        if (talkPosition.Distance(playerReference->playerMainTransform->GetGlobalPosition()) > 0.5f) { 
+            playerReference->MoveTo(talkPosition); 
+            currentTalkingTimer += Time::GetDeltaTime();
+        }
+        if (talkPosition.Distance(playerReference->playerMainTransform->GetGlobalPosition()) <= 0.5f || currentTalkingTimer >= talkingTimer) {
             sceneStart = false;
             startDialogue = true;
             GameplaySystems::SetGlobalVariable(globalMovePlayerFromCode, false);
@@ -117,6 +130,11 @@ void DukeDeathTrigger::Update() {
                 videoSceneEndScript->PlayVideo();
             }
 
+            // play video audio, and stop level music
+            if (music && audioVideo) {
+                Audio::StopAllSources();
+                audioVideo->Play();
+            }
         }
         playVideo = false;
     }

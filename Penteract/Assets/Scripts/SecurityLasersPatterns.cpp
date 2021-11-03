@@ -66,3 +66,30 @@ void SecurityLasersPatterns::Update() {
         }
     }
 }
+
+void SecurityLasersPatterns::StopAudio() {
+    GameObject* generator1 = GameplaySystems::GetGameObject(generator1UID);
+    GameObject* generator2 = GameplaySystems::GetGameObject(generator2UID);
+    GameObject* generator3 = GameplaySystems::GetGameObject(generator3UID);
+    GameObject* generator4 = GameplaySystems::GetGameObject(generator4UID);
+
+    if (generator1) {
+        LasersGenerator* script = GET_SCRIPT(generator1, LasersGenerator);
+        if (script) script->StopAudio();
+    }
+
+    if (generator2) {
+        LasersGenerator* script = GET_SCRIPT(generator2, LasersGenerator);
+        if (script) script->StopAudio();
+    }
+
+    if (generator3) {
+        LasersGenerator* script = GET_SCRIPT(generator3, LasersGenerator);
+        if (script) script->StopAudio();
+    }
+
+    if (generator4) {
+        LasersGenerator* script = GET_SCRIPT(generator4, LasersGenerator);
+        if (script) script->StopAudio();
+    }
+}

@@ -154,7 +154,7 @@ void Fang::IncreaseUltimateCounter() {
 }
 
 bool Fang::IsInstantOrientation() const {
-	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, false);
+	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, true);
 
 	return !useGamepad || !Input::IsGamepadConnected(0);
 }
@@ -383,6 +383,8 @@ void Fang::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 			}
 			bullet->PlayChildParticles();
 			reloading = true;
+			unlockShoot = false;
+			reloadCooldownRemaining = 0.f;
 		}
 		bullet = nullptr;
 	}
@@ -520,7 +522,13 @@ void Fang::Update(bool useGamepad, bool /* lockMovement */, bool /* lockRotation
 			if (!dashing && !EMP->IsActive()) {
 				if (GetInputBool(InputActions::SHOOT) && !GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) {
 					ResetIsInCombatValues();
-					Shoot();
+					if (unlockShoot) Shoot();
+					else {
+						if (!reloading) {
+							shooting = false;
+							unlockShoot = true;
+						}
+					}
 				}
 				
 				if (ultimateOn) {
@@ -533,6 +541,7 @@ void Fang::Update(bool useGamepad, bool /* lockMovement */, bool /* lockRotation
 				if (shooting) {
 					if (!reloading) {
 						shooting = false;
+						unlockShoot = true;
 					}
 					if(compAnimation->GetCurrentStateSecondary()) compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + compAnimation->GetCurrentState()->name);
 				}

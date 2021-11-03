@@ -38,6 +38,20 @@ class Duke : public Character
 public:
 
 	enum class DUKE_AUDIOS {
+		FOOTSTEP,
+		SHOOT,
+		MELEE_ATTACK,
+		SHIELD_ON,
+		SHIELD_OFF,
+		CHARGE,
+		CHARGE_ATTACK,
+		PHASE2_SHIELD_ON,
+		PHASE2_SHIELD_ACTIVE,
+		PHASE2_SHIELD_OFF,
+		ENRAGE,
+		BULLET_HELL,
+		HIT,
+		SCREAM,
 		DEATH,
 		TOTAL
 	};
@@ -58,7 +72,7 @@ public:
 	}
 
 	// ------- Core Functions ------ //
-	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID, UID chargeDustUID, UID areaChargeUID, UID chargeTelegraphAreaUID, UID chargePunchVFXUID, UID dustStepLeftUID, UID dustStepRightUID, UID bodyArmorUID);
+	void Init(UID dukeUID, UID playerUID, UID bulletUID, UID barrelUID, UID chargeColliderUID, UID meleeAttackColliderUID, UID barrelSpawnerUID, UID chargeAttackColliderUID, UID phase2ShieldUID, std::vector<UID> encounterUIDs, AttackDronesController* dronesController, UID punchSlashUID, UID chargeDustUID, UID areaChargeUID, UID chargeTelegraphAreaUID, UID chargePunchVFXUID, UID dustStepLeftUID, UID dustStepRightUID, UID bodyArmorUID, UID dukeBuffFlashUID, UID dukeStunUID, UID dukeSlowUID);
 	void ShootAndMove(const float3& playerDirection);
 	void MeleeAttack();
 	void BulletHell();
@@ -89,12 +103,11 @@ public:
 	// ---- Auxiliary Functions ---- //
 	void ActivateDissolve(UID dissolveMaterialID);
 	void SetCriticalMode(bool activate);
+	void PlayAudio(DUKE_AUDIOS audioType);
+	void StopAudio(DUKE_AUDIOS audioType);
 
 	// ------ Getters/Setters ------ //
 	ComponentMeshRenderer* GetDukeMeshRenderer() const;
-
-private:
-	int GetWalkAnimation();
 
 public:
 	float chargeSpeed = 5.f;
@@ -123,6 +136,10 @@ public:
 	DukeState state = DukeState::BASIC_BEHAVIOUR;
 	bool criticalMode = false;
 	bool mustAddAgent = false;
+
+	// Audios
+	ComponentAudioSource* dukeAudios[static_cast<int>(DUKE_AUDIOS::TOTAL)] = { nullptr };
+	bool audioDeath = false;
 
 	// Effects' states
 	bool beingPushed = false;
@@ -165,7 +182,8 @@ public:
 	UID winSceneUID = 0; // TODO: Delete
 
 private:
-	void InstantiateBarrel();
+	void InstantiateBarrel();	
+	int GetWalkAnimation();
 
 private:
 	GameObject* player = nullptr;
@@ -173,7 +191,7 @@ private:
 
 	bool hasMeleeAttacked = false;
 
-	BarrelSpawner* barrelSpawneScript = nullptr;
+	BarrelSpawner* barrelSpawnerScript = nullptr;
 
 	// Movement
 	float3 perpendicular;
@@ -184,12 +202,12 @@ private:
 	bool navigationHit = false;
 	float3 navigationHitPos = float3(0,0,0);
 	
-	// Melee Attack
+	// Melee Attack objects & VFX
 	GameObject* meleeAttackCollider = nullptr;
 	ComponentParticleSystem* punchSlash = nullptr;
 	bool firstTimePunchParticlesActive = true;
 
-	// Charge
+	// Charge objects & VFX
 	GameObject* chargeCollider = nullptr;
 	GameObject* chargeAttack = nullptr;
 	bool trackingChargeTarget = false;
@@ -204,20 +222,25 @@ private:
 	float dukeScale = 0.f;
 	float chargeTelegraphAreaPosOffset = 0.f;
 
-	//Shield
+	// Shield VFX
 	ComponentParticleSystem* phase2ShieldParticles = nullptr;
 
-	// Shooting
+	// Shooting objects & VFX
 	float attackTimePool = 0.f;
 	ComponentParticleSystem* bullet = nullptr;
 	float isShootingTimer = 0.f;
 
-	//Enrage
+	// Enrage VFX
 	GameObject* bodyArmor = nullptr;
+	ComponentParticleSystem* dukeBuffFlash = nullptr;
 
-	//Steps
+	// Steps VFX
 	ComponentParticleSystem* dustLeftStep = nullptr;
 	ComponentParticleSystem* dustRightStep = nullptr;
+
+	// Stun & Slowed VFX
+	ComponentParticleSystem* dukeStun = nullptr;
+	ComponentParticleSystem* dukeSlow = nullptr;
 
 	GameObject* meshObj = nullptr;	//Main mesh for Getting MeshRenderer reference and checking frustum presence (if not inside frustum shooting won't happen)
 
@@ -226,9 +249,6 @@ private:
 
 	// AttackDrones
 	AttackDronesController* attackDronesController = nullptr;
-
-	// Audios
-	ComponentAudioSource* dukeAudios[static_cast<int>(DUKE_AUDIOS::TOTAL)] = { nullptr };
 
 	DukeState nextState = DukeState::BASIC_BEHAVIOUR;
 
