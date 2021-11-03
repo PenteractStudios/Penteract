@@ -195,10 +195,6 @@ void PlayerDeath::OnCollision(GameObject& collidedWith, float3 collisionNormal, 
 		collidedWith.Disable();
 	}
 	else if (collidedWith.name == "AttackDroneProjectile") {
-		ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
-		ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
-		if (pSystem && p) pSystem->KillParticle(p);
-
 		if (playerController) playerController->TakeDamage(attackDroneDamageTaken);
 		AttackDroneProjectile* projectileScript = GET_SCRIPT(&collidedWith, AttackDroneProjectile);
 		if (projectileScript) projectileScript->Collide();
