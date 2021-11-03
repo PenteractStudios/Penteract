@@ -349,9 +349,9 @@ void Duke::Shoot()
 			if (!meshObj) return;
 			bullet->PlayChildParticles();
 		}
-    
+
 		PlayAudio(DUKE_AUDIOS::SHOOT);
-		attackTimePool = (attackBurst + 1) / attackSpeed + timeInterBurst + RandomNumberGenerator::GenerateFloat(0.4f, 1.5f);
+		attackTimePool = (attackBurst + 1) / attackSpeed + timeInterBurst + RandomNumberGenerator::GenerateFloat(1.f, 2.f);
 		isShooting = true;
 		isShootingTimer = 0.f;
 		// Animation

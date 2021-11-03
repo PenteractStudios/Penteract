@@ -82,6 +82,7 @@ public:
 	UID lasersUID = 0;
 	UID hudManagerUID = 0;
 	UID fireTilesUID = 0;
+	UID BHExtraColliderUID = 0;
 	// Effects
 	UID punchSlashUID = 0;
 	UID chargeDustUID = 0;
@@ -108,6 +109,8 @@ public:
 
 	Duke dukeCharacter = Duke();
 	DukeShield* dukeShield = nullptr;
+
+	GameObject* bulletHellExtraCollider = nullptr;
 
 	Phase phase = Phase::PHASE0;
 

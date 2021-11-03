@@ -30,6 +30,7 @@ EXPOSE_MEMBERS(AIDuke) {
 	MEMBER(MemberType::GAME_OBJECT_UID, hudManagerUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, fireTilesUID),
 	MEMBER(MemberType::GAME_OBJECT_UID, triggerBossEndUID),
+	MEMBER(MemberType::GAME_OBJECT_UID, BHExtraColliderUID),
 
 	MEMBER_SEPARATOR("Duke Atributes"),
 	MEMBER(MemberType::FLOAT, dukeCharacter.lifePoints),
@@ -161,6 +162,9 @@ void AIDuke::Start() {
 			}
 		}
 	}
+
+	// BH extra collider
+	bulletHellExtraCollider = GameplaySystems::GetGameObject(BHExtraColliderUID);
 
 	// Init Duke character
 	dukeCharacter.Init(dukeUID, playerUID, bulletUID, barrelUID, chargeColliderUID, meleeAttackColliderUID, barrelSpawnerUID, chargeAttackUID, phase2ShieldUID, encounters, dronesController, punchSlashUID, chargeDustUID, areaChargeUID, chargeTelegraphAreaUID, chargePunchVFXUID, dustStepLeftUID, dustStepRightUID, bodyArmorUID, dukeBuffFlashUID, dukeStunUID, dukeSlowUID);
@@ -863,6 +867,7 @@ void AIDuke::PerformBulletHell() {
 	if (!bulletHellIsActive) {
 		dukeCharacter.BulletHell();
 		bulletHellIsActive = true;
+		if (bulletHellExtraCollider) bulletHellExtraCollider->Enable();
 	}
 
 	if (!dukeCharacter.IsBulletHellCircular() && dukeCharacter.state != DukeState::STUNNED) {
@@ -873,6 +878,7 @@ void AIDuke::PerformBulletHell() {
 
 	if (dukeCharacter.BulletHellFinished()) {
 		dukeCharacter.DisableBulletHell();
+		if (bulletHellExtraCollider) bulletHellExtraCollider->Disable();
 		bulletHellIsActive = false;
 		dukeCharacter.reducedDamaged = false;
 		currentBulletHellCooldown = 0.f;

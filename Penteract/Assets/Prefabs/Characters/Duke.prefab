@@ -70,6 +70,11 @@
                         "Value": 800.0
                     },
                     {
+                        "Name": "damagedMaterialPlaceholderUID",
+                        "Type": "GameObjectUID",
+                        "Value": 15197783816410440042
+                    },
+                    {
                         "Name": "dukeUID",
                         "Type": "GameObjectUID",
                         "Value": 6391292472212719813
@@ -102,12 +107,12 @@
                     {
                         "Name": "dukeCharacter.movementSpeed",
                         "Type": "Float",
-                        "Value": 4.0
+                        "Value": 4.300000190734863
                     },
                     {
                         "Name": "dukeCharacter.moveChangeEvery",
                         "Type": "Float",
-                        "Value": 2.200000047683716
+                        "Value": 2.299999952316284
                     },
                     {
                         "Name": "dukeCharacter.searchRadius",
@@ -142,7 +147,7 @@
                     {
                         "Name": "dukeCharacter.timeInterBurst",
                         "Type": "Float",
-                        "Value": 0.800000011920929
+                        "Value": 0.8999999761581421
                     },
                     {
                         "Name": "dukeCharacter.pushBackSpeed",
@@ -167,7 +172,7 @@
                     {
                         "Name": "dukeCharacter.distanceCorrectEvery",
                         "Type": "Float",
-                        "Value": 1.5
+                        "Value": 1.7000000476837159
                     },
                     {
                         "Name": "thirdEncounterUID",
@@ -183,6 +188,11 @@
                         "Name": "shieldCooldown",
                         "Type": "Float",
                         "Value": 11.0
+                    },
+                    {
+                        "Name": "BHExtraColliderUID",
+                        "Type": "GameObjectUID",
+                        "Value": 14493315348911283565
                     },
                     {
                         "Name": "shieldActiveTime",
@@ -227,7 +237,7 @@
                     {
                         "Name": "orientationThresholdBulletHell",
                         "Type": "Float",
-                        "Value": 0.05000000074505806
+                        "Value": 0.07000000029802323
                     },
                     {
                         "Name": "winSceneUID",
@@ -338,6 +348,11 @@
                         "Name": "dukeSlowUID",
                         "Type": "GameObjectUID",
                         "Value": 14049988121865858773
+                    },
+                    {
+                        "Name": "hurtFeedbackTimeDuration",
+                        "Type": "Float",
+                        "Value": 0.10000000149011612
                     }
                 ]
             },
@@ -383,7 +398,7 @@
                 "Looping": false,
                 "PlayOnAwake": false,
                 "AudioClipId": 10644738434778290819,
-                "SpatialBlend": 1,
+                "SpatialBlend": 0,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
@@ -397,12 +412,12 @@
                 "Type": "AudioSource",
                 "Active": true,
                 "Pitch": 1.0,
-                "Gain": 1.0,
+                "Gain": 0.4000000059604645,
                 "Mute": false,
                 "Looping": false,
                 "PlayOnAwake": false,
                 "AudioClipId": 7810624367526288198,
-                "SpatialBlend": 1,
+                "SpatialBlend": 0,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
@@ -421,7 +436,7 @@
                 "Looping": false,
                 "PlayOnAwake": false,
                 "AudioClipId": 5106399445641278066,
-                "SpatialBlend": 1,
+                "SpatialBlend": 0,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
@@ -440,7 +455,7 @@
                 "Looping": false,
                 "PlayOnAwake": false,
                 "AudioClipId": 12091694643601042335,
-                "SpatialBlend": 1,
+                "SpatialBlend": 0,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
@@ -454,12 +469,12 @@
                 "Type": "AudioSource",
                 "Active": true,
                 "Pitch": 1.0,
-                "Gain": 1.0,
+                "Gain": 0.6000000238418579,
                 "Mute": false,
                 "Looping": false,
                 "PlayOnAwake": false,
                 "AudioClipId": 9837957794940744878,
-                "SpatialBlend": 1,
+                "SpatialBlend": 0,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
@@ -478,7 +493,7 @@
                 "Looping": false,
                 "PlayOnAwake": false,
                 "AudioClipId": 761089562097069247,
-                "SpatialBlend": 1,
+                "SpatialBlend": 0,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
@@ -497,7 +512,7 @@
                 "Looping": false,
                 "PlayOnAwake": false,
                 "AudioClipId": 17234442155680871456,
-                "SpatialBlend": 1,
+                "SpatialBlend": 0,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
@@ -516,7 +531,7 @@
                 "Looping": false,
                 "PlayOnAwake": false,
                 "AudioClipId": 7383518452583688896,
-                "SpatialBlend": 1,
+                "SpatialBlend": 0,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
@@ -530,12 +545,12 @@
                 "Type": "AudioSource",
                 "Active": true,
                 "Pitch": 1.0,
-                "Gain": 1.0,
+                "Gain": 0.5,
                 "Mute": false,
                 "Looping": true,
                 "PlayOnAwake": false,
                 "AudioClipId": 9895918578855516170,
-                "SpatialBlend": 1,
+                "SpatialBlend": 0,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
@@ -554,7 +569,7 @@
                 "Looping": false,
                 "PlayOnAwake": false,
                 "AudioClipId": 15297403375327734289,
-                "SpatialBlend": 1,
+                "SpatialBlend": 0,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
@@ -573,7 +588,45 @@
                 "Looping": false,
                 "PlayOnAwake": false,
                 "AudioClipId": 18157004738772553721,
-                "SpatialBlend": 1,
+                "SpatialBlend": 0,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0,
+                "RolloffFactor": 1.0,
+                "ReferenceDistance": 10.0,
+                "MaxDistance": 30.0,
+                "IsMusic": false
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 1.0,
+                "Gain": 0.5,
+                "Mute": false,
+                "Looping": false,
+                "PlayOnAwake": false,
+                "AudioClipId": 6290572201170993271,
+                "SpatialBlend": 0,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0,
+                "RolloffFactor": 1.0,
+                "ReferenceDistance": 10.0,
+                "MaxDistance": 30.0,
+                "IsMusic": false
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 0.8999999761581421,
+                "Gain": 0.30000001192092898,
+                "Mute": false,
+                "Looping": false,
+                "PlayOnAwake": false,
+                "AudioClipId": 14797407959954530087,
+                "SpatialBlend": 0,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
@@ -591,8 +644,27 @@
                 "Mute": false,
                 "Looping": false,
                 "PlayOnAwake": false,
-                "AudioClipId": 6290572201170993271,
-                "SpatialBlend": 1,
+                "AudioClipId": 8638313243517837801,
+                "SpatialBlend": 0,
+                "SourceType": 0,
+                "InnerAngle": 90.0,
+                "OuterAngle": 180.0,
+                "OuterGain": 0.0,
+                "RolloffFactor": 1.0,
+                "ReferenceDistance": 10.0,
+                "MaxDistance": 30.0,
+                "IsMusic": false
+            },
+            {
+                "Type": "AudioSource",
+                "Active": true,
+                "Pitch": 1.0,
+                "Gain": 1.0,
+                "Mute": false,
+                "Looping": false,
+                "PlayOnAwake": false,
+                "AudioClipId": 2967621900338004021,
+                "SpatialBlend": 0,
                 "SourceType": 0,
                 "InnerAngle": 90.0,
                 "OuterAngle": 180.0,
@@ -20221,7 +20293,7 @@
                 "Children": [
                     {
                         "Name": "DukeShield",
-                        "Active": false,
+                        "Active": true,
                         "RootBoneName": "",
                         "Mask": 16,
                         "Components": [
@@ -49385,6 +49457,56 @@
                         "Children": null
                     }
                 ]
+            },
+            {
+                "Name": "BHExtraCollider",
+                "Active": false,
+                "RootBoneName": "",
+                "Mask": 0,
+                "Components": [
+                    {
+                        "Type": "Transform",
+                        "Active": false,
+                        "Position": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "Rotation": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            1.0
+                        ],
+                        "Scale": [
+                            1.0,
+                            1.0,
+                            1.0
+                        ],
+                        "LocalEulerAngles": [
+                            -0.0,
+                            0.0,
+                            -0.0
+                        ]
+                    },
+                    {
+                        "Type": "CapsuleCollider",
+                        "Active": false,
+                        "colliderType": 2,
+                        "layerType": 6,
+                        "mass": 1.0,
+                        "radius": 3.0,
+                        "height": 2.134999990463257,
+                        "capsuleType": 1,
+                        "centerOffset": [
+                            0.0,
+                            1.7999999523162842,
+                            0.0
+                        ],
+                        "freezeRotation": false
+                    }
+                ],
+                "Children": null
             }
         ]
     }
