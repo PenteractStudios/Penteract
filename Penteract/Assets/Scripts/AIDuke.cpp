@@ -183,7 +183,6 @@ void AIDuke::Start() {
 void AIDuke::Update() {
 	if (!isReady) return;
 	if (!player || !movementScript) return;
-	if (!defaultMaterialID || !damagedMaterialID) return;
 	if (GameplaySystems::GetGlobalVariable(globalIsGameplayBlocked, true)) return;
 
 	if (!dissolveAlreadyPlayed && componentMeshRenderer) {
