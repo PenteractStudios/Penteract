@@ -652,7 +652,7 @@ void AIDuke::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, f
 			hitTaken = true;
 			ParticleHit(collidedWith, particle, playerController->playerFang);
 		}
-		else if (collidedWith.name == "OnimaruBullet") {
+		else if (collidedWith.name == "OnimaruBullet" || collidedWith.name == "DukeProjectile") {
 			if (!particle) return;
 			hitTaken = true;
 			ParticleHit(collidedWith, particle, playerController->playerOnimaru);
@@ -798,6 +798,8 @@ void AIDuke::ParticleHit(GameObject& collidedWith, void* particle, Player& playe
 	ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 	if (pSystem) pSystem->KillParticle(p);
 	float damage = dukeCharacter.reducedDamaged ? player_.damageHit / 2.f : player_.damageHit;
+	// Hard-coded onimaru nerf
+	if (collidedWith.name == "OnimaruBullet") damage * 0.4f;
 
 	if (IsInvulnerable())return;
 

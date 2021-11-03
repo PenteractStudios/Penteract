@@ -520,12 +520,15 @@ void Duke::OnAnimationEvent(StateMachineEnum stateMachineEnum, const char* event
 			if (!trackingChargeTarget) return;
 			trackingChargeTarget = false;
 			float3 dukePos = dukeTransform->GetGlobalPosition();
+			bool result;
 			if ((player->GetComponent<ComponentTransform>()->GetGlobalPosition() - dukePos).Length() <= chargeMinimumDistance) {
-				bool result;
 				Navigation::Raycast(dukePos, dukePos + chargeMinimumDistance * dukeTransform->GetFront(), result, chargeTarget);
+				chargeTarget -= (chargeTarget - dukePos) * 0.13f;
 			}
 			else {
 				chargeTarget = player->GetComponent<ComponentTransform>()->GetGlobalPosition();
+				Navigation::Raycast(dukePos, chargeTarget, result, chargeTarget);
+				chargeTarget -= (chargeTarget - dukePos) * 0.13f;
 			}
 		} else if (strcmp(eventName, "ThrowBarrels") == 0 && instantiateBarrel) {
 			if (startSpawnBarrel && barrelSpawnerScript) {

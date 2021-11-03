@@ -86,13 +86,14 @@ void DukeShield::FadeShield() {
 
 void DukeShield::OnCollision(GameObject& collidedWith, float3 /*collisionNormal*/, float3 /*penetrationDistance*/, void* particle) {
 	if ((collidedWith.name == "OnimaruBullet" || collidedWith.name == "FangLeftBullet" || collidedWith.name == "FangRightBullet" ||
-		collidedWith.name == "OnimaruBulletUltimate" || collidedWith.name == "FangBullet")
+		collidedWith.name == "OnimaruBulletUltimate" || collidedWith.name == "FangBullet" || collidedWith.name == "DukeProjectile")
 		&& isActive && duke) {
 
 		if (!particle) {
 			collidedWith.Disable();
 		} else {
 			ComponentParticleSystem::Particle* p = (ComponentParticleSystem::Particle*)particle;
+			if (p->direction.Dot(transform->GetGlobalRotation() * float3(0,0,1)) > 0.f) return;
 			ComponentParticleSystem* pSystem = collidedWith.GetComponent<ComponentParticleSystem>();
 			if (pSystem) pSystem->KillParticle(p);
 		}

@@ -433,9 +433,9 @@ void PlayerController::OnCharacterResurrect() {
 }
 
 void PlayerController::Update() {
-	
+
 	if (GameplaySystems::GetGlobalVariable(globalCameraEventOn, false)) return;
-	
+
 	// Audio Listener
 	if (listener) {
 		listener->SetPosition(transform->GetGlobalPosition());

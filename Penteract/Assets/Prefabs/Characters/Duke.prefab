@@ -55,21 +55,6 @@
                 "Script": 14370151214457210467,
                 "Values": [
                     {
-                        "Name": "fireTilesUID",
-                        "Type": "GameObjectUID",
-                        "Value": 1023270552641025325
-                    },
-                    {
-                        "Name": "dukeCharacter.chargeSpeed",
-                        "Type": "Float",
-                        "Value": 28.0
-                    },
-                    {
-                        "Name": "dukeCharacter.lifePoints",
-                        "Type": "Float",
-                        "Value": 800.0
-                    },
-                    {
                         "Name": "damagedMaterialPlaceholderUID",
                         "Type": "GameObjectUID",
                         "Value": 15197783816410440042
@@ -78,6 +63,21 @@
                         "Name": "dukeUID",
                         "Type": "GameObjectUID",
                         "Value": 6391292472212719813
+                    },
+                    {
+                        "Name": "dukeCharacter.lifePoints",
+                        "Type": "Float",
+                        "Value": 800.0
+                    },
+                    {
+                        "Name": "fireTilesUID",
+                        "Type": "GameObjectUID",
+                        "Value": 1023270552641025325
+                    },
+                    {
+                        "Name": "dukeCharacter.chargeSpeed",
+                        "Type": "Float",
+                        "Value": 28.0
                     },
                     {
                         "Name": "playerUID",
@@ -110,14 +110,14 @@
                         "Value": 4.300000190734863
                     },
                     {
-                        "Name": "dukeCharacter.moveChangeEvery",
-                        "Type": "Float",
-                        "Value": 2.299999952316284
-                    },
-                    {
                         "Name": "dukeCharacter.searchRadius",
                         "Type": "Float",
                         "Value": 12.0
+                    },
+                    {
+                        "Name": "dukeCharacter.moveChangeEvery",
+                        "Type": "Float",
+                        "Value": 2.299999952316284
                     },
                     {
                         "Name": "dukeCharacter.attackRange",
@@ -125,24 +125,24 @@
                         "Value": 4.5
                     },
                     {
-                        "Name": "abilityChangeCooldown",
-                        "Type": "Float",
-                        "Value": 5.0
-                    },
-                    {
                         "Name": "dukeCharacter.attackSpeed",
                         "Type": "Float",
                         "Value": 6.0
                     },
                     {
-                        "Name": "dukeCharacter.attackBurst",
-                        "Type": "Int",
-                        "Value": 6
+                        "Name": "abilityChangeCooldown",
+                        "Type": "Float",
+                        "Value": 5.0
                     },
                     {
                         "Name": "lasersUID",
                         "Type": "GameObjectUID",
                         "Value": 18374255519345746520
+                    },
+                    {
+                        "Name": "dukeCharacter.attackBurst",
+                        "Type": "Int",
+                        "Value": 6
                     },
                     {
                         "Name": "dukeCharacter.timeInterBurst",
@@ -155,9 +155,9 @@
                         "Value": 9.0
                     },
                     {
-                        "Name": "dukeCharacter.slowedDownSpeed",
-                        "Type": "Float",
-                        "Value": 2.5
+                        "Name": "dukeStunUID",
+                        "Type": "GameObjectUID",
+                        "Value": 7578200092339820046
                     },
                     {
                         "Name": "secondEncounterUID",
@@ -165,14 +165,9 @@
                         "Value": 16194292000292830055
                     },
                     {
-                        "Name": "dukeStunUID",
-                        "Type": "GameObjectUID",
-                        "Value": 7578200092339820046
-                    },
-                    {
-                        "Name": "dukeCharacter.distanceCorrectEvery",
+                        "Name": "dukeCharacter.slowedDownSpeed",
                         "Type": "Float",
-                        "Value": 1.7000000476837159
+                        "Value": 2.5
                     },
                     {
                         "Name": "thirdEncounterUID",
@@ -180,9 +175,9 @@
                         "Value": 17832956304688334123
                     },
                     {
-                        "Name": "barrelUID",
-                        "Type": "PrefabResourceUID",
-                        "Value": 17661954173970697245
+                        "Name": "dukeCharacter.distanceCorrectEvery",
+                        "Type": "Float",
+                        "Value": 1.7000000476837159
                     },
                     {
                         "Name": "shieldCooldown",
@@ -190,9 +185,9 @@
                         "Value": 11.0
                     },
                     {
-                        "Name": "BHExtraColliderUID",
-                        "Type": "GameObjectUID",
-                        "Value": 14493315348911283565
+                        "Name": "barrelUID",
+                        "Type": "PrefabResourceUID",
+                        "Value": 17661954173970697245
                     },
                     {
                         "Name": "shieldActiveTime",
@@ -200,9 +195,14 @@
                         "Value": 6.0
                     },
                     {
-                        "Name": "bulletHellCooldown",
-                        "Type": "Float",
-                        "Value": 13.0
+                        "Name": "BHExtraColliderUID",
+                        "Type": "GameObjectUID",
+                        "Value": 14493315348911283565
+                    },
+                    {
+                        "Name": "dukeBuffFlashUID",
+                        "Type": "GameObjectUID",
+                        "Value": 12792163889725325105
                     },
                     {
                         "Name": "meleeAttackColliderUID",
@@ -210,9 +210,9 @@
                         "Value": 5748956022661331108
                     },
                     {
-                        "Name": "dukeBuffFlashUID",
-                        "Type": "GameObjectUID",
-                        "Value": 12792163889725325105
+                        "Name": "bulletHellCooldown",
+                        "Type": "Float",
+                        "Value": 13.0
                     },
                     {
                         "Name": "bulletHellActiveTime",
@@ -225,19 +225,14 @@
                         "Value": 2.5
                     },
                     {
-                        "Name": "orientationSpeed",
-                        "Type": "Float",
-                        "Value": 30.0
-                    },
-                    {
                         "Name": "fourthEncounterUID",
                         "Type": "GameObjectUID",
                         "Value": 17206302483077437515
                     },
                     {
-                        "Name": "orientationThresholdBulletHell",
+                        "Name": "orientationSpeed",
                         "Type": "Float",
-                        "Value": 0.07000000029802323
+                        "Value": 30.0
                     },
                     {
                         "Name": "winSceneUID",
@@ -245,9 +240,9 @@
                         "Value": 7141310542589317769
                     },
                     {
-                        "Name": "chargeDustUID",
-                        "Type": "GameObjectUID",
-                        "Value": 15686464557399342675
+                        "Name": "orientationThresholdBulletHell",
+                        "Type": "Float",
+                        "Value": 0.07000000029802323
                     },
                     {
                         "Name": "chargeAttackUID",
@@ -255,9 +250,9 @@
                         "Value": 9076045893085021422
                     },
                     {
-                        "Name": "dustStepLeftUID",
+                        "Name": "chargeDustUID",
                         "Type": "GameObjectUID",
-                        "Value": 13266086007782000369
+                        "Value": 15686464557399342675
                     },
                     {
                         "Name": "firstEncounterUID",
@@ -265,9 +260,9 @@
                         "Value": 12552755766892827335
                     },
                     {
-                        "Name": "dustStepRightUID",
+                        "Name": "dustStepLeftUID",
                         "Type": "GameObjectUID",
-                        "Value": 1767553823276722974
+                        "Value": 13266086007782000369
                     },
                     {
                         "Name": "barrelSpawnerUID",
@@ -275,14 +270,19 @@
                         "Value": 18209467939129192391
                     },
                     {
-                        "Name": "hudManagerUID",
+                        "Name": "dustStepRightUID",
                         "Type": "GameObjectUID",
-                        "Value": 16209022649167995326
+                        "Value": 1767553823276722974
                     },
                     {
                         "Name": "chargePunchVFXUID",
                         "Type": "GameObjectUID",
                         "Value": 10479928278247387895
+                    },
+                    {
+                        "Name": "hudManagerUID",
+                        "Type": "GameObjectUID",
+                        "Value": 16209022649167995326
                     },
                     {
                         "Name": "videoParentCanvasUID",

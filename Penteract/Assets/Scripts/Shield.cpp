@@ -134,7 +134,24 @@ void Shield::OnCollision(GameObject& collidedWith, float3 collisionNormal, float
 				pSystem->layer = WorldLayers::BULLET;
 				pSystem->layerIndex = 5;
 				Physics::UpdateParticleRigidbody(p);
-	
+
+				if (particlesReboundCollider) GameplaySystems::Instantiate(particlesReboundCollider, position, rotation);
+			} else if (collidedWith.name == "DukeProjectile" && playerController->playerOnimaru.level1Upgrade) {		// Reflect projectile
+				if (!particle) return;
+				// Separate Bullet from shield
+				float3 actualPenDistance = penetrationDistance.ProjectTo(collisionNormal);
+				p->position = p->position + actualPenDistance;
+				// Reflect
+				float3 newFront = -p->direction;
+				newFront.y = 0;
+				p->direction = newFront;
+				// Convert to player Bullet
+				pSystem->layer = WorldLayers::BULLET;
+				pSystem->layerIndex = 5;
+				Physics::UpdateParticleRigidbody(p);
+				pSystem->layer = WorldLayers::BULLET_ENEMY;
+				pSystem->layerIndex = 6;
+
 				if (particlesReboundCollider) GameplaySystems::Instantiate(particlesReboundCollider, position, rotation);
 			} else {
 				if (particlesCollider) GameplaySystems::Instantiate(particlesCollider, position, rotation);
