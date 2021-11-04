@@ -76,7 +76,8 @@ public:
 
 	float cannonGamepadOrientationSpeed = 1.0f;
 	float cannonMouseOrientationSpeed = 12.0f;
-
+	Quat onimaruCannonDefaultLocalRotation = Quat(0.06f, -0.09f, 0.54f, 0.83f).Normalized();
+	float3 onimaruCannonUltimateLocalRotationFloat3 = float3(0, 1.468, 50.899);
 public:
 	// ------- Contructors ------- //
 	Onimaru() {};

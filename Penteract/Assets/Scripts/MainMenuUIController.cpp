@@ -29,9 +29,8 @@ void MainMenuUIController::Start() {
 
 void MainMenuUIController::Update() {
 
-	if (Input::GetKeyCodeDown(Input::KEY_KP_PLUS)) {
+	if (Input::GetKeyCodeDown(Input::KEYCODE::KEY_L)) {
 		GameplaySystems::SetGlobalVariable<bool>(globalUseGamepad, !GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, true));
-
 	}
 
 	if (!rightFaderImage || !leftFaderImage) return;
