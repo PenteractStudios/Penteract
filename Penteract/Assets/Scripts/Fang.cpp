@@ -141,6 +141,9 @@ void Fang::ResetToIdle()
 		if (compAnimation->GetCurrentState()) {
 			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(FANG_STATES::IDLE)]);
 		}
+		if (compAnimation->GetCurrentStateSecondary()) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(FANG_STATES::IDLE)]);
+		}
 	}
 }
 
