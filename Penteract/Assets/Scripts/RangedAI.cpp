@@ -351,14 +351,12 @@ void RangedAI::Update() {
 	if (!agent) return;
 
 	if (!dissolveAlreadyStarted && meshRenderer) {
-		if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
-			timeSinceLastHurt += Time::GetDeltaTime();
-			if (timeSinceLastHurt > hurtFeedbackTimeDuration) {
-				SetMaterial(meshRenderer, defaultMaterialID);
-				SetMaterial(backpackMeshRenderer, backpackMaterialID);
-				SetMaterial(weaponMeshRenderer, weaponMaterialID);
-			}
+		if (timeSinceLastHurt > hurtFeedbackTimeDuration) {
+			SetMaterial(meshRenderer, defaultMaterialID);
+			SetMaterial(backpackMeshRenderer, backpackMaterialID);
+			SetMaterial(weaponMeshRenderer, weaponMaterialID);
 		}
+		timeSinceLastHurt += Time::GetDeltaTime();
 	}
 
 	UpdateDissolveTimer();

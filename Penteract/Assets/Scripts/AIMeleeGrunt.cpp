@@ -191,16 +191,12 @@ void AIMeleeGrunt::Update() {
 		mustOrientateFirstTime = false;
 	}
 
-	if (!dissolveAlreadyPlayed && componentMeshRenderer) {
-		if (timeSinceLastHurt < hurtFeedbackTimeDuration) {
-			timeSinceLastHurt += Time::GetDeltaTime();
-			if (timeSinceLastHurt > hurtFeedbackTimeDuration) {
-				SetMaterial(componentMeshRenderer, defaultMaterialID);
-				SetMaterial(componentMeshRendererLeftBlade, bladesMaterialID);
-				SetMaterial(componentMeshRendererRightBlade, bladesMaterialID);
-			}
-		}
+	if (timeSinceLastHurt > hurtFeedbackTimeDuration) {
+		SetMaterial(componentMeshRenderer, defaultMaterialID);
+		SetMaterial(componentMeshRendererLeftBlade, bladesMaterialID);
+		SetMaterial(componentMeshRendererRightBlade, bladesMaterialID);
 	}
+	timeSinceLastHurt += Time::GetDeltaTime();
 
 	UpdateDissolveTimer();
 
