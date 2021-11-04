@@ -108,7 +108,7 @@ void GameController::Start() {
 
 void GameController::Update() {
 
-	if (Input::GetKeyCodeDown(Input::KEY_KP_PLUS)) {
+	if (Input::GetKeyCodeDown(Input::KEY_L)) {
 		GameplaySystems::SetGlobalVariable<bool>(globalUseGamepad, !GameplaySystems::GetGlobalVariable<bool>(globalUseGamepad, true));
 	}
 
