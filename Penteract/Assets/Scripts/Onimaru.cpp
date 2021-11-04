@@ -279,6 +279,10 @@ void Onimaru::ResetToIdle()
 		if (compAnimation->GetCurrentState()) {
 			compAnimation->SendTrigger(compAnimation->GetCurrentState()->name + states[static_cast<int>(IDLE)]);
 		}
+		if (compAnimation->GetCurrentStateSecondary()) {
+			compAnimation->SendTriggerSecondary(compAnimation->GetCurrentStateSecondary()->name + states[static_cast<int>(IDLE)]);
+		}
+		if (bullet) bullet->StopChildParticles();
 	}
 }
 
