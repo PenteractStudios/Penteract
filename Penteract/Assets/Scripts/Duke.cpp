@@ -292,6 +292,12 @@ void Duke::CallTroops() {
 	currentEncounter++;
 }
 
+void Duke::DismissTroops() {
+	for (auto itr : encounters) {
+		if (itr->IsActive()) itr->Disable();
+	}
+}
+
 void Duke::Move(const float3& playerDirection) {
 	movementTimer += Time::GetDeltaTime();
 	if (movementTimer >= movementChangeThreshold) {

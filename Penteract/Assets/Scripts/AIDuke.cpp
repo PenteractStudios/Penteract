@@ -920,9 +920,7 @@ void AIDuke::PerformDeath() {
 			if (script) script->StopAudio();
 			lasers->Disable();
 		}
-		// TODO: Substitute the following for actual destruction of the troops
-		GameObject* encounter = GameplaySystems::GetGameObject(fourthEncounterUID);
-		if (encounter && encounter->IsActive()) encounter->Disable();
+		dukeCharacter.DismissTroops();
 	}
 }
 

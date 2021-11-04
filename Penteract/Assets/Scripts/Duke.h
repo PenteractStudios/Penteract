@@ -85,6 +85,7 @@ public:
 	void UpdateCharge(bool forceStop = false);
 	void UpdateChargeAttack();
 	void CallTroops();
+	void DismissTroops();
 	void Move(const float3& playerDirection);
 	void Shoot();
 	void ThrowBarrels();

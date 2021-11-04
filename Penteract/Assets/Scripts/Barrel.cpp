@@ -120,7 +120,7 @@ void Barrel::Update() {
 	if (!onFloor) {
 		if (parentTransform->GetGlobalPosition().y > 0.8f) {
 			float3 barrelPos = parentTransform->GetGlobalPosition();
-			barrelPos += float3(0, -forceOfFall, 0);
+			barrelPos += float3(0, -forceOfFall * Time::GetDeltaTime(), 0);
 			parentTransform->SetGlobalPosition(barrelPos);
 		}
 		else {

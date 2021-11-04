@@ -273,7 +273,7 @@
                                     {
                                         "Name": "forceOfFall",
                                         "Type": "Float",
-                                        "Value": 0.30000001192092898
+                                        "Value": 13.0
                                     },
                                     {
                                         "Name": "heightOfThrow",

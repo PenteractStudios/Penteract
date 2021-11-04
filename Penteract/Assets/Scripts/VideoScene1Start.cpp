@@ -51,7 +51,6 @@ void VideoScene1Start::Start() {
         if (GameplaySystems::GetGlobalVariable(globalVariableKeyPlayVideoScene1,true)) {
             componentVideo->Play();
             GameplaySystems::SetGlobalVariable(isVideoActive, true);
-            Time::PauseGame();
             GameplaySystems::SetGlobalVariable(globalVariableKeyPlayVideoScene1, false);
         } else {
             BackToNormalGameplay();
@@ -70,7 +69,6 @@ void VideoScene1Start::Update() {
 }
 
 void VideoScene1Start::BackToNormalGameplay() {
-    Time::ResumeGame();
     componentVideo->Stop();
     if (audioVideo) audioVideo->Stop();
     if (music) music->Play();

@@ -170,7 +170,7 @@ void Onimaru::StartUltimate() {
 	movementSpeed = ultimateMovementSpeed;
 	movementInputDirection = MovementDirection::NONE;
 	Player::MoveTo();
-	weaponTransform->SetRotation(float3(0, 1.468, 50.899));
+	weaponTransform->SetRotation(onimaruCannonUltimateLocalRotationFloat3);
 	ultimateOn = true;
 }
 
@@ -211,19 +211,17 @@ float Onimaru::GetNormalizedRemainingUltimateTime() const {
 
 void Onimaru::UpdateWeaponRotation()
 {
-
 	bool useGamepad = GameplaySystems::GetGlobalVariable(globalUseGamepad, true) && Input::IsGamepadConnected(0);
+	if (useGamepad) {
+		if (weaponTransform) {
+			weaponTransform->SetRotation(onimaruCannonDefaultLocalRotation);
+		}
+		return;
+	}
 
 	weaponPointDir = float3(0, 0, 0);
 	float2 mousePos = float2(0, 0);
-	if (!useGamepad) {
-		mousePos = Input::GetMousePositionNormalized();
-	} else {
-		mousePos = GetInputFloat2(InputActions::ORIENTATION);
-		mousePos = mousePos.Mul(float2(1.0f, -1.0f));
-		if (abs(mousePos.x) > 0.05f || abs(mousePos.y) > 0.05f) //No gamepad input detected
-			mousePos.Normalize();
-	}
+	mousePos = Input::GetMousePositionNormalized();
 
 	if (!(mousePos.x == 0 && mousePos.y == 0)) {
 		lastMousePos = mousePos;
